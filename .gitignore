@@ -63,8 +63,12 @@ atlassian*
 /vendor/*
 !/vendor/.htaccess
 /generated/*
+/generated1/*
 !/generated/.htaccess
 .DS_Store
 
 *.sql.gz
 *.zip
+*.tar.gz
+/pub/media/*
+/media/*
