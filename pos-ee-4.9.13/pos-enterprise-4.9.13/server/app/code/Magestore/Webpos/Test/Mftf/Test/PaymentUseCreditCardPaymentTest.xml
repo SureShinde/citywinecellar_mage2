@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="PaymentUseCreditCardPaymentFullyTest">
+        <annotations>
+            <features value="Payment"/>
+            <stories value="Credit Card - Full payment"/>
+            <title value="Pay fully with Credit Card."/>
+            <description value="Pay fully with payment method: Credit Card."/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="SPM-03"/>
+            <group value="useCreditCardForPayFully"/>
+            <group value="useCreditCard"/>
+            <group value="pwapos"/>
+        </annotations>
+        <before>
+            <createData stepKey="enableCreditCardPayment" entity="config_enable_credit_card" />
+
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <actionGroup ref="AddProductAndCharge" stepKey="AddProductAndCharge">
+                <argument name="dataProduct" value="pos_simple_product_2" />
+            </actionGroup>
+            <waitForElementVisible selector="{{PosCheckoutCartTotalsSection.cartTotalsBlock}}" time="120" stepKey="waitForCartTotalsVisible"/>
+        </before>
+
+        <waitForElementVisible selector="{{PosCheckoutPaymentSection.cc}}" time="120" stepKey="waitCreditCardPaymentVisible"/>
+        <click selector="{{PosCheckoutPaymentSection.cc}}" stepKey="clickCreditCard"/>
+
+        <!-- Check: Amount box of Credit Card is auto filled = total amount of order  -->
+        <grabTextFrom selector="{{PosCheckoutPaymentSection.amountValue}}" stepKey="grabPaymentAmount"/>
+        <grabTextFrom selector="{{TotalSection.grandTotal}}" stepKey="grabGrandTotal"/>
+        <assertEquals message="Payment amount is correct." stepKey="compareAmountPayment">
+            <expectedResult type="variable">grabGrandTotal</expectedResult>
+            <actualResult type="variable">grabPaymentAmount</actualResult>
+        </assertEquals>
+        <!-- End check: Amount box of Credit Card is auto filled = total amount of order  -->
+
+        <fillField selector="{{PosCheckoutPaymentCCSection.referenceNo}}" userInput="0123456789" stepKey="enterReferenceNo"/>
+        <click selector="{{PosCheckoutPaymentSection.accept}}" stepKey="clickAccept"/>
+
+        <waitForElementVisible selector="{{PosCheckoutPaymentSection.complete}}" time="120" stepKey="waitCompleteOrderPageVisible"/>
+
+        <seeElement selector="{{PosCheckoutPaymentSection.iconCCForPos}}" stepKey="findCreditCardOnPaymentList" />
+        <!-- Check: Display Remaining amount = $0.00 -->
+        <grabTextFrom selector="{{PosCheckoutPaymentSection.totalLabel}}" stepKey="grabTotalPaymentLabel"/>
+        <grabTextFrom selector="{{PosCheckoutPaymentSection.totalValue}}" stepKey="grabTotalPaymentValue"/>
+        <assertEquals message="Remaining total label is correct." stepKey="compareRemainingTotalLabel">
+            <expectedResult type="string">Remaining</expectedResult>
+            <actualResult type="variable">grabTotalPaymentLabel</actualResult>
+        </assertEquals>
+        <assertEquals message="Remaining total value is correct." stepKey="compareRemainingTotalValue">
+            <expectedResult type="string">$0.00</expectedResult>
+            <actualResult type="variable">grabTotalPaymentValue</actualResult>
+        </assertEquals>
+        <!-- End Check: Display Remaining amount = $0.00 -->
+        <!-- Check: Show the button that named as Complete Order -->
+        <grabTextFrom selector="{{PosCheckoutPaymentSection.complete}}" stepKey="grabCompleteButtonLabel"/>
+        <assertEquals message="Complete button label is correct." stepKey="compareCompleteButtonLabel">
+            <expectedResult type="string">Complete Order</expectedResult>
+            <actualResult type="variable">grabCompleteButtonLabel</actualResult>
+        </assertEquals>
+        <!-- End Check: Show the button that named as Complete Order -->
+        <actionGroup ref="DisablePrintPopup" stepKey="DisablePrintPopup"/>
+        <click selector="{{PosCheckoutPaymentSection.complete}}" stepKey="clickToCompleteButton" />
+
+        <waitForElementVisible selector="{{ProductListSection.toastSuccessMessage}}" time="120" stepKey="seeToastSuccessShow"/>
+        <seeElement selector="{{ProductListSection.contentSuccessMessage('Order #', 'has been created successfully!')}}" stepKey="checkSuccessMessage"/>
+    </test>
+    <test name="PaymentUseCreditCardPaymentPartialTest">
+        <annotations>
+            <features value="Payment"/>
+            <stories value="Credit Card - Partial payment"/>
+            <title value="Partial payment with Credit Card."/>
+            <description value="Partial payment with paymentment method: Credit Card."/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="SPM-04"/>
+            <group value="useCreditCardForPayPartial"/>
+            <group value="useCreditCard"/>
+            <group value="pwapos"/>
+        </annotations>
+        <before>
+            <createData stepKey="enableCreditCardPayment" entity="config_enable_credit_card" />
+
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <actionGroup ref="AddProductAndCharge" stepKey="AddProductAndCharge">
+                <argument name="dataProduct" value="pos_simple_product_2" />
+            </actionGroup>
+            <waitForElementVisible selector="{{PosCheckoutCartTotalsSection.cartTotalsBlock}}" time="120" stepKey="waitForCartTotalsVisible"/>
+        </before>
+
+        <waitForElementVisible selector="{{PosCheckoutPaymentSection.cc}}" time="120" stepKey="waitCreditCardPaymentVisible"/>
+        <click selector="{{PosCheckoutPaymentSection.cc}}" stepKey="clickCreditCard"/>
+
+        <!-- Check: Amount box of Credit Card is auto filled = total amount of order  -->
+        <grabTextFrom selector="{{PosCheckoutPaymentSection.amountValue}}" stepKey="grabPaymentAmount"/>
+        <grabTextFrom selector="{{TotalSection.grandTotal}}" stepKey="grabGrandTotal"/>
+        <assertEquals message="Payment amount is correct." stepKey="compareAmountPayment">
+            <expectedResult type="variable">grabGrandTotal</expectedResult>
+            <actualResult type="variable">grabPaymentAmount</actualResult>
+        </assertEquals>
+        <!-- End check: Amount box of Credit Card is auto filled = total amount of order  -->
+
+        <actionGroup ref="PosPaymentEnterCC" stepKey="enterAmountAndReferenceNo">
+            <argument name="amount" value="10.00"/>
+            <argument name="referenceNo" value="0123456789"/>
+        </actionGroup>
+        <!-- Check amount payment is correct -->
+        <grabTextFrom selector="{{PosCheckoutPaymentSection.amountValue}}" stepKey="grabPaymentInputAmount"/>
+        <assertEquals message="Amount which is inputted is correct." stepKey="compareInputtedAmount">
+            <expectedResult type="string">$10.00</expectedResult>
+            <actualResult type="variable">grabPaymentInputAmount</actualResult>
+        </assertEquals>
+
+        <click selector="{{PosCheckoutPaymentSection.accept}}" stepKey="clickAccept"/>
+
+        <waitForElementVisible selector="{{PosCheckoutPaymentSection.partial}}" time="120" stepKey="waitCompleteOrderPageVisible"/>
+
+        <seeElement selector="{{PosCheckoutPaymentSection.iconCCForPos}}" stepKey="findCreditCardOnPaymentList" />
+        <!-- Check button add payment -->
+        <seeElement selector="{{PosCheckoutPaymentSection.add}}" stepKey="findButtonAddPayment" />
+        <!-- Check: Display Remaining amount = $24.64 -->
+        <grabTextFrom selector="{{PosCheckoutPaymentSection.totalLabel}}" stepKey="grabTotalPaymentLabel"/>
+        <grabTextFrom selector="{{PosCheckoutPaymentSection.totalValue}}" stepKey="grabTotalPaymentValue"/>
+        <assertEquals message="Remaining total label is correct." stepKey="compareRemainingTotalLabel">
+            <expectedResult type="string">Remaining</expectedResult>
+            <actualResult type="variable">grabTotalPaymentLabel</actualResult>
+        </assertEquals>
+        <assertEquals message="Remaining total value is correct." stepKey="compareRemainingTotalValue">
+            <expectedResult type="string">$24.64</expectedResult>
+            <actualResult type="variable">grabTotalPaymentValue</actualResult>
+        </assertEquals>
+        <!-- End Check: Display Remaining amount = $24.64 -->
+        <!-- Check: Show the button that named as Mark as Partial -->
+        <grabTextFrom selector="{{PosCheckoutPaymentSection.partial}}" stepKey="grabCompleteButtonLabel"/>
+        <assertEquals message="Mark as Partial button label is correct." stepKey="compareCompleteButtonLabel">
+            <expectedResult type="string">Mark as Partial</expectedResult>
+            <actualResult type="variable">grabCompleteButtonLabel</actualResult>
+        </assertEquals>
+        <!-- End Check: Show the button that named as Mark as Partial -->
+        <actionGroup ref="DisablePrintPopup" stepKey="DisablePrintPopup"/>
+        <click selector="{{PosCheckoutPaymentSection.partial}}" stepKey="clickToMarkAsPartialButton" />
+
+        <waitForElementVisible selector="{{CheckoutSection.popupConfirmPartial}}" time="120" stepKey="waitPopupConfirmedPartial"/>
+        <wait time="3" stepKey="wait3SecondsBeforeCompleteOrder"/>
+        <click selector="{{CheckoutSection.popupConfirmPartialButtonComplete}}" stepKey="clickToCompleteButton"/>
+
+        <waitForElementVisible selector="{{ProductListSection.toastSuccessMessage}}" time="120" stepKey="seeToastSuccessShow"/>
+        <seeElement selector="{{ProductListSection.contentSuccessMessage('Order #', 'has been created successfully!')}}" stepKey="checkSuccessMessage"/>
+    </test>
+</tests>

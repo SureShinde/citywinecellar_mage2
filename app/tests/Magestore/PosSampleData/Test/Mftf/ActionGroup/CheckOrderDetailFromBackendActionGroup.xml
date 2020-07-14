@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright © 2019 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  ~
+  -->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="CheckOrderDetailFromBackendActionGroup">
+        <arguments>
+            <argument name="orderId" defaultValue="" type="string"/>
+            <argument name="customer" defaultValue="" type="string"/>
+            <argument name="grandTotal" defaultValue="" type="string"/>
+            <argument name="status" defaultValue="" type="string"/>
+        </arguments>
+
+        <amOnPage url="{{AdminOrdersPage.url}}" stepKey="onOrdersPage"/>
+        <waitForLoadingMaskToDisappear stepKey="waitForLoadingMask3"/>
+        <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}" dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true" stepKey="clearExistingOrderFilters"/>
+        <fillField selector="{{AdminOrdersGridSection.search}}" userInput="{{orderId}}" stepKey="searchOrderNum"/>
+        <click selector="{{AdminOrdersGridSection.submitSearch}}" stepKey="submitSearch"/>
+        <waitForLoadingMaskToDisappear stepKey="waitForLoadingMask4"/>
+        <waitForElementVisible selector="{{AdminOrdersGridSection.firstRow}}" time="5" stepKey="waitFirstOrderShow" />
+        <wait time="1" stepKey="wait1"/>
+
+        <see selector="{{AdminOrdersGridSection.firstRow}}" userInput="{{orderId}}" stepKey="seeIncrementId"/>
+        <see selector="{{AdminOrdersGridSection.firstRow}}" userInput="{{status}}" stepKey="seeStatus"/>
+        <see selector="{{AdminOrdersGridSection.firstRow}}" userInput="{{grandTotal}}" stepKey="seeGrandTotal"/>
+        <see selector="{{AdminOrdersGridSection.firstRow}}" userInput="{{customer}}" stepKey="seeCustomer"/>
+    </actionGroup>
+</actionGroups>

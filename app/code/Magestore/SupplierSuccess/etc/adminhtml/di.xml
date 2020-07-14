@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- supplier form -->
+    <virtualType name="Magestore\SupplierSuccess\Ui\DataProvider\Supplier\DataForm\Modifier\Pool" type="Magento\Ui\DataProvider\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="information" xsi:type="array">
+                    <item name="class" xsi:type="string">Magestore\SupplierSuccess\Ui\DataProvider\Supplier\DataForm\Modifier\Information</item>
+                    <item name="sortOrder" xsi:type="number">20</item>
+                </item>
+                <item name="address" xsi:type="array">
+                    <item name="class" xsi:type="string">Magestore\SupplierSuccess\Ui\DataProvider\Supplier\DataForm\Modifier\Address</item>
+                    <item name="sortOrder" xsi:type="number">30</item>
+                </item>
+                <item name="password" xsi:type="array">
+                    <item name="class" xsi:type="string">Magestore\SupplierSuccess\Ui\DataProvider\Supplier\DataForm\Modifier\Password</item>
+                    <item name="sortOrder" xsi:type="number">40</item>
+                </item>
+                <item name="product_listing" xsi:type="array">
+                    <item name="class" xsi:type="string">Magestore\SupplierSuccess\Ui\DataProvider\Supplier\DataForm\Modifier\ProductList</item>
+                    <item name="sortOrder" xsi:type="number">10</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Magestore\SupplierSuccess\Ui\DataProvider\Supplier\DataForm\SupplierDataProvider">
+        <arguments>
+            <argument name="pool" xsi:type="object">Magestore\SupplierSuccess\Ui\DataProvider\Supplier\DataForm\Modifier\Pool</argument>
+        </arguments>
+    </type>
+    <!-- end supplier form -->
+
+    <!-- supplier pricelist form -->
+    <virtualType name="Magestore\SupplierSuccess\Ui\DataProvider\SupplierPricingList\DataForm\Modifier\Pool" type="Magento\Ui\DataProvider\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="pricing_listing" xsi:type="array">
+                    <item name="class" xsi:type="string">Magestore\SupplierSuccess\Ui\DataProvider\SupplierPricingList\DataForm\Modifier\SupplierPricingList</item>
+                    <item name="sortOrder" xsi:type="number">10</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Magestore\SupplierSuccess\Ui\DataProvider\SupplierPricingList\DataForm\SupplierPricingListDataProvider">
+        <arguments>
+            <argument name="pool" xsi:type="object">Magestore\SupplierSuccess\Ui\DataProvider\SupplierPricingList\DataForm\Modifier\Pool</argument>
+        </arguments>
+    </type>
+    <!-- end supplier pricelist form -->
+
+    <!-- add pricelist form -->
+    <virtualType name="addPricingListModifierPool" type="Magento\Ui\DataProvider\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="general" xsi:type="array">
+                    <item name="class" xsi:type="string">Magestore\SupplierSuccess\Ui\DataProvider\SupplierPricingList\DataForm\PricingList\Modifier\General</item>
+                    <item name="sortOrder" xsi:type="number">10</item>
+                </item>
+                <item name="product_list" xsi:type="array">
+                    <item name="class" xsi:type="string">Magestore\SupplierSuccess\Ui\DataProvider\SupplierPricingList\DataForm\PricingList\Modifier\PricingList</item>
+                    <item name="sortOrder" xsi:type="number">20</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Magestore\SupplierSuccess\Ui\DataProvider\SupplierPricingList\DataForm\PricingList\AddPricingList">
+        <arguments>
+            <argument name="pool" xsi:type="object">addPricingListModifierPool</argument>
+        </arguments>
+    </type>
+    <!-- end add pricelist form -->
+
+
+    <virtualType name="Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="supplier" xsi:type="array">
+                    <item name="class" xsi:type="string">Magestore\SupplierSuccess\Ui\DataProvider\Product\Form\Modifier\Supplier</item>
+                    <item name="sortOrder" xsi:type="number">500</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+</config>

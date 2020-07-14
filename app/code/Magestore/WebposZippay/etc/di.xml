@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ Copyright © 2018 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <type name="Magestore\Payment\Model\Payment\Type\EwalletPayments">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="zippay_integration" xsi:type="string">zippay_integration</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magestore\Payment\Model\Payment\RefundType\AcceptedPayments">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="zippay_integration" xsi:type="string">zippay_integration</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magestore\Payment\Model\Payment\RefundType\UseTransactionPayments">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="zippay_integration" xsi:type="string">zippay_integration</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <preference for="Magestore\WebposZippay\Api\ZippayServiceInterface" type="Magestore\WebposZippay\Model\ZippayService"/>
+    <preference for="Magestore\WebposZippay\Api\ZippayInterface" type="Magestore\WebposZippay\Model\Zippay"/>
+
+    <preference for="Magestore\WebposZippay\Api\Data\ZippayErrorFieldInterface" type="Magestore\WebposZippay\Model\Data\ZippayErrorField"/>
+    <preference for="Magestore\WebposZippay\Api\Data\ZippayErrorInterface" type="Magestore\WebposZippay\Model\Data\ZippayError"/>
+    <preference for="Magestore\WebposZippay\Api\Data\ZippayPurchaseRequestInterface" type="Magestore\WebposZippay\Model\Data\ZippayPurchaseRequest"/>
+    <preference for="Magestore\WebposZippay\Api\Data\ZippayPurchaseResponseInterface" type="Magestore\WebposZippay\Model\Data\ZippayPurchaseResponse"/>
+    <preference for="Magestore\WebposZippay\Api\Data\ZippayRefundRequestInterface" type="Magestore\WebposZippay\Model\Data\ZippayRefundRequest"/>
+    <preference for="Magestore\WebposZippay\Api\Data\ZippayCancelRequestInterface" type="Magestore\WebposZippay\Model\Data\ZippayCancelRequest"/>
+    <preference for="Magestore\WebposZippay\Api\Data\ZippayOriginatorInterface" type="Magestore\WebposZippay\Model\Data\ZippayOriginator"/>
+    <preference for="Magestore\WebposZippay\Api\Data\ZippayStaffActorInterface" type="Magestore\WebposZippay\Model\Data\ZippayStaffActor"/>
+
+    <preference for="Magestore\WebposZippay\Api\Data\ZippayResponseInterface" type="Magestore\WebposZippay\Model\Data\ZippayResponse"/>
+</config>

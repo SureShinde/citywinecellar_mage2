@@ -1,0 +1,23 @@
+<?php
+/**
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+/* @var \Magestore\TransferStock\Block\Adminhtml\InventoryTransfer\Import\NoticeMessage $block*/
+?>
+<?php if ($block->isHasError()) :?>
+    <div class="messages">
+        <div class="message message-error message-in-rating-edit">
+            <div>
+                <b><?php /* @escapeNotVerified */echo __('Invalid data'); ?></b>
+            </div>
+            <div>
+                <?php /* @escapeNotVerified */
+                    echo __('The file contains invalid data. You can download the error list ');
+                ?>
+                <a href="<?php echo $block->getInvalidFileCsvUrl();?>"><?php echo __('here');?></a>
+                <?php echo __(' to modify and try to upload them again.'); ?>
+            </div>
+        </div>
+    </div>
+<?php endif;?>

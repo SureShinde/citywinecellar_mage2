@@ -1,0 +1,44 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+?>
+<?php
+/** @var \Amasty\Blog\Block\Amp\Switcher $block */
+?>
+<?php if (count($block->getStores()) > 1) : ?>
+    <?php $id = $block->getIdModifier() ? '-' . $block->getIdModifier() : '' ?>
+
+<div class="switcher language switcher-language amblog-amp-navigation"
+     data-ui-id="language-switcher"
+     id="switcher-language<?= $block->escapeHtml($id) ?>">
+    <p class="label switcher-label amblog-amp-title">
+        <strong>
+            <?= $block->escapeHtml(__('Language')) ?>
+        </strong>
+    </p>
+
+    <amp-accordion animate class="switcher-options">
+        <section>
+            <h3 class="amblog-amp-title view-<?= $block->escapeHtml($block->getCurrentStoreCode()) ?>"
+                id="switcher-language-trigger<?= $block->escapeHtml($id) ?>">
+                <?= $block->escapeHtml($block->getStoreName()) ?>
+                <i class="fas fa-angle-down icon"></i>
+            </h3>
+            <ul class="dropdown switcher-dropdown links amblog-amp-submenu ">
+                <?php foreach ($block->getStores() as $store) : ?>
+                    <?php if ($store->getId() != $block->getCurrentStoreId()) : ?>
+                        <li class="store view-<?= $block->escapeHtml($store->getCode()) ?> switcher-option">
+                            <a href="<?= $block->escapeUrl($block->getStoreUrlAmp($store)); ?>">
+                                <?= $block->escapeHtml($store->getName()); ?>
+                            </a>
+                        </li>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            </ul>
+        </section>
+    </amp-accordion>
+</div>
+<?php endif; ?>

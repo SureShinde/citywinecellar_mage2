@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ Copyright © 2018 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Magestore\WebposIntegration\Api\ApiServiceInterface" type="Magestore\WebposIntegration\Model\ApiService"/>
+    <type name="Magento\Webapi\Controller\Rest">
+        <plugin name="webposIntegrationRestPlugin" type="Magestore\WebposIntegration\Plugin\Controller\Rest" sortOrder="1" />
+    </type>
+</config>

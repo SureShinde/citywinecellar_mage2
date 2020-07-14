@@ -1,0 +1,22 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+?>
+<?php
+/**
+ * @var $block \Magento\Theme\Block\Html\Topmenu
+ */
+?>
+
+<?php $columnsLimit = $block->getColumnsLimit() ?: 0; ?>
+<?php $_menu = $block->getHtml('level-top', 'submenu', $columnsLimit, []) ?>
+
+<nav class="navigation amblog-amp-navigation" data-action="navigation">
+    <amp-accordion animate  class="amblog-amp-nav0">
+        <?= /* @noEscape */ $_menu; ?>
+    </amp-accordion>
+    <?= /* @noEscape */ $block->getChildHtml(); ?>
+</nav>

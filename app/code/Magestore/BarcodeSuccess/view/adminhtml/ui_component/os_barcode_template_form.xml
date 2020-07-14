@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright © 2016 Magestore. All rights reserved.
+See COPYING.txt for license details.
+-->
+
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">os_barcode_template_form.os_barcode_template_form_data_source</item>
+            <item name="deps" xsi:type="string">os_barcode_template_form.os_barcode_template_form_data_source</item>
+        </item>
+        <item name="template" xsi:type="string">templates/form/collapsible</item>
+        <item name="config" xsi:type="array">
+            <item name="dataScope" xsi:type="string">data</item>
+            <item name="namespace" xsi:type="string">os_barcode_template_form</item>
+        </item>
+        <item name="buttons" xsi:type="array">
+            <item name="back" xsi:type="string">Magestore\BarcodeSuccess\Block\Adminhtml\Template\Edit\Button\Back</item>
+            <item name="save" xsi:type="string">Magestore\BarcodeSuccess\Block\Adminhtml\Template\Edit\Button\Save</item>
+            <item name="delete" xsi:type="string">Magestore\BarcodeSuccess\Block\Adminhtml\Template\Edit\Button\Delete</item>
+        </item>
+    </argument>
+    <dataSource name="os_barcode_template_form_data_source">
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">Magestore\BarcodeSuccess\Ui\DataProvider\Template\DataProvider</argument>
+            <argument name="name" xsi:type="string">os_barcode_template_form_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">template_id</argument>
+            <argument name="requestFieldName" xsi:type="string">id</argument>
+            <argument name="data" xsi:type="array">
+                <item name="type_provider" xsi:type="string">form</item>
+                <item name="config" xsi:type="array">
+                    <item name="submit_url" xsi:type="url" path="barcodesuccess/template/save"/>
+                </item>
+            </argument>
+        </argument>
+        <argument name="data" xsi:type="array">
+            <item name="js_config" xsi:type="array">
+                <item name="component" xsi:type="string">Magento_Ui/js/form/provider</item>
+            </item>
+        </argument>
+    </dataSource>
+
+    <fieldset name="barcode_template_information">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="label" xsi:type="string" translate="true">Barcode Template Information</item>
+                <item name="collapsible" xsi:type="boolean">true</item>
+                <item name="opened" xsi:type="boolean">true</item>
+            </item>
+        </argument>
+        <field name="template_id">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="sortOrder" xsi:type="number">1</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="visible" xsi:type="boolean">false</item>
+                </item>
+            </argument>
+        </field>
+        <field name="type">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">Magestore\BarcodeSuccess\Model\Source\TemplateType</item>
+                <item name="config" xsi:type="array">
+                    <item name="sortOrder" xsi:type="number">10</item>
+                    <item name="formElement" xsi:type="string">select</item>
+                    <item name="label" xsi:type="string" translate="true">Select Barcode Label Format</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+        <field name="name">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="sortOrder" xsi:type="number">15</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="label" xsi:type="string" translate="true">Template Name</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+        <field name="status">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">Magestore\BarcodeSuccess\Model\Source\Status</item>
+                <item name="config" xsi:type="array">
+                    <item name="sortOrder" xsi:type="number">17</item>
+                    <item name="formElement" xsi:type="string">select</item>
+                    <item name="label" xsi:type="string" translate="true">Status</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+        <field name="symbology">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">Magestore\BarcodeSuccess\Model\Source\Symbology</item>
+                <item name="config" xsi:type="array">
+                    <item name="sortOrder" xsi:type="number">20</item>
+                    <item name="formElement" xsi:type="string">select</item>
+                    <item name="label" xsi:type="string" translate="true">Barcode symbology</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+        <field name="measurement_unit">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">Magestore\BarcodeSuccess\Model\Source\MeasurementUnit</item>
+                <item name="config" xsi:type="array">
+                    <item name="sortOrder" xsi:type="number">30</item>
+                    <item name="formElement" xsi:type="string">select</item>
+                    <item name="label" xsi:type="string" translate="true">Measurement unit</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+        <field name="label_per_row">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="sortOrder" xsi:type="number">35</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="label" xsi:type="string" translate="true">Label per row</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                        <item name="validate-number" xsi:type="boolean">true</item>
+                    </item>
+                    <item name="notice" xsi:type="string">Only use one label per row for jewelry template</item>
+                </item>
+            </argument>
+        </field>
+        <field name="paper_width">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="sortOrder" xsi:type="number">40</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="label" xsi:type="string" translate="true">Paper width</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                        <item name="validate-number" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+        <field name="paper_height">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="sortOrder" xsi:type="number">50</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="label" xsi:type="string" translate="true">Paper height</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                        <item name="validate-number" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+        <field name="label_width">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="sortOrder" xsi:type="number">60</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="label" xsi:type="string" translate="true">Label width</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                        <item name="validate-number" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+        <field name="label_height">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="sortOrder" xsi:type="number">70</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="label" xsi:type="string" translate="true">Label height</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                        <item name="validate-number" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+        <field name="font_size">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="sortOrder" xsi:type="number">80</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="label" xsi:type="string" translate="true">Font size</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                        <item name="validate-number" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+        <field name="top_margin">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="sortOrder" xsi:type="number">90</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="label" xsi:type="string" translate="true">Margin top</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                        <item name="validate-number" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+        <field name="left_margin">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="sortOrder" xsi:type="number">100</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="label" xsi:type="string" translate="true">Margin left</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                        <item name="validate-number" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+        <field name="bottom_margin">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="sortOrder" xsi:type="number">110</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="label" xsi:type="string" translate="true">Margin bottom</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                        <item name="validate-number" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+        <field name="right_margin">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="sortOrder" xsi:type="number">120</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="label" xsi:type="string" translate="true">Margin right</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                        <item name="validate-number" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+
+        <field name="product_attribute_show_on_barcode">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">Magestore\BarcodeSuccess\Model\Source\Attributes</item>
+                <item name="config" xsi:type="array">
+                    <item name="sortOrder" xsi:type="number">120</item>
+                    <item name="formElement" xsi:type="string">multiselect</item>
+                    <item name="label" xsi:type="string" translate="true">Product Attributes</item>
+                    <item name="component" xsi:type="string">Magestore_BarcodeSuccess/js/form/component/product-attributes</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">false</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+
+        <!--<container name="attributes_list_edit">-->
+            <!--<dynamicRows name="attribute_row">-->
+                <!--<argument name="data" xsi:type="array">-->
+                    <!--<item name="config" xsi:type="array">-->
+                        <!--<item name="dataScope" xsi:type="string">attribute_edit</item>-->
+                        <!--<item name="itemTemplate" xsi:type="string">record</item>-->
+                        <!--<item name="label" xsi:type="string" translate="true">Attributes</item>-->
+                        <!--<item name="dndConfig" xsi:type="boolean">false</item>-->
+                        <!--<item name="template" xsi:type="string">ui/dynamic-rows/templates/default</item>-->
+                    <!--</item>-->
+                <!--</argument>-->
+                <!--<container name="record">-->
+                    <!--<argument name="data" xsi:type="array">-->
+                        <!--<item name="config" xsi:type="array">-->
+                            <!--<item name="isTemplate" xsi:type="boolean">true</item>-->
+                            <!--<item name="is_collection" xsi:type="boolean">true</item>-->
+                            <!--<item name="component" xsi:type="string">Magento_Ui/js/lib/core/collection</item>-->
+                        <!--</item>-->
+                    <!--</argument>-->
+                    <!--<field name="attribute_select">-->
+                        <!--<argument name="data" xsi:type="array">-->
+                            <!--<item name="options" xsi:type="object">Magestore\BarcodeSuccess\Model\Source\Attributes</item>-->
+                            <!--<item name="config" xsi:type="array">-->
+                                <!--<item name="dataType" xsi:type="string">text</item>-->
+                                <!--<item name="formElement" xsi:type="string">select</item>-->
+                                <!--<item name="dataScope" xsi:type="string">attribute_select</item>-->
+                                <!--<item name="label" xsi:type="string" translate="true">Attributes</item>-->
+                            <!--</item>-->
+                        <!--</argument>-->
+                    <!--</field>-->
+                    <!--<field name="possition">-->
+                        <!--<argument name="data" xsi:type="array">-->
+                            <!--<item name="config" xsi:type="array">-->
+                                <!--<item name="dataType" xsi:type="string">text</item>-->
+                                <!--<item name="formElement" xsi:type="string">input</item>-->
+                                <!--<item name="dataScope" xsi:type="string">possition</item>-->
+                                <!--<item name="label" xsi:type="string" translate="true">Sort Order</item>-->
+                            <!--</item>-->
+                        <!--</argument>-->
+                    <!--</field>-->
+                    <!--<field name="algin">-->
+                        <!--<argument name="data" xsi:type="array">-->
+                            <!--<item name="config" xsi:type="array">-->
+                                <!--<item name="dataType" xsi:type="string">text</item>-->
+                                <!--<item name="formElement" xsi:type="string">input</item>-->
+                                <!--<item name="dataScope" xsi:type="string">algin</item>-->
+                                <!--<item name="label" xsi:type="string" translate="true">Algin</item>-->
+                            <!--</item>-->
+                        <!--</argument>-->
+                    <!--</field>-->
+
+                    <!--<field name="action_delete">-->
+                        <!--<argument name="data" xsi:type="array">-->
+                            <!--<item name="config" xsi:type="array">-->
+                                <!--<item name="dataType" xsi:type="string">text</item>-->
+                                <!--<item name="formElement" xsi:type="string">input</item>-->
+                                <!--<item name="elementTmpl" xsi:type="string">ui/dynamic-rows/cells/action-delete</item>-->
+                                <!--<item name="dataScope" xsi:type="string"/>-->
+                                <!--<item name="label" xsi:type="string" translate="true">Remove</item>-->
+                            <!--</item>-->
+                        <!--</argument>-->
+                    <!--</field>-->
+                <!--</container>-->
+            <!--</dynamicRows>-->
+        <!--</container>-->
+
+        <field name="preview">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="sortOrder" xsi:type="number">130</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="label" xsi:type="string" translate="true">Preview</item>
+                    <item name="component" xsi:type="string">Magestore_BarcodeSuccess/js/form/element/barcode/template/preview</item>
+                    <item name="elementTmpl" xsi:type="string">Magestore_BarcodeSuccess/form/element/barcode/template/preview</item>
+                </item>
+            </argument>
+        </field>
+        <container name="description" >
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="sortOrder" xsi:type="number">140</item>
+                </item>
+            </argument>
+            <htmlContent name="html_content">
+                <argument name="block" xsi:type="object">Magestore\BarcodeSuccess\Block\Adminhtml\Template\Description</argument>
+            </htmlContent>
+        </container>
+    </fieldset>
+</form>

@@ -1,0 +1,37 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Xlanding
+ */
+?>
+<?php /** @var \Amasty\Xlanding\Block\Adminhtml\Page\Edit\Tab\Product $block */ ?>
+<div id="am-page-products" class="am-page-products" data-role="am-page-products">
+    <div id="am-sorting" class="am-sorting">
+        <div class="am-toolbar">
+            <?= $block->getChildHtml('store') ?>
+            <?= $block->getChildHtml('sort_order') ?>
+            <?= $block->getChildHtml('sort_products_button') ?>
+        </div>
+    </div>
+    <div class="am-tabs" data-role="am-tabs">
+        <div id="tab_tile" class="tabs-tab-tile am-tab" role="tabpanel">
+            <?= $block->getChildHtml('product.listing') ?>
+        </div>
+        <div class="no-display">
+            <input type="hidden" data-form-part="category_form" name="vm_landing_products" id="vm_landing_products" value="<?= $block->escapeHtml($block->getPositionDataJson()) ?>" />
+            <input type="hidden" data-form-part="category_form" name="vm_landing_products_manual" id="vm_landing_products_manual" value="<?= $block->escapeHtml($block->getPositionDataJson()) ?>" />
+        </div>
+    </div>
+</div>
+<script type="text/x-magento-init">
+    {
+        "[data-role=am-page-products]": {
+            "Amasty_Xlanding/js/products": {
+                "savePositionsUrl": "<?= /* @escapeNotVerified */ $block->getSavePositionsUrl() ?>",
+                "currentPageId": "<?= /* @escapeNotVerified */ $block->getPageId() ?>",
+                "formSelector": "#edit_form"
+            }
+        }
+    }
+</script>

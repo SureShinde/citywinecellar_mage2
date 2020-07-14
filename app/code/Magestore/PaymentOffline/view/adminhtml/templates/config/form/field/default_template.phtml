@@ -1,0 +1,258 @@
+<?php
+    //Get Object Manager Instance
+    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+    /** @var \Magestore\PaymentOffline\Helper\Data $helperData */
+    $helperData = $objectManager->get('\Magestore\PaymentOffline\Helper\Data');
+?>
+<tr id="row_webpos_payment_wpo_<?php echo strtotime("now"); ?>">
+    <td colspan="4">
+        <div class="section-config">
+            <div class="entry-edit-head admin__collapsible-block">
+                <span id="webpos_payment_wpo_<?php echo strtotime("now"); ?>-link" class="entry-edit-head-link"></span>
+                <a id="webpos_payment_wpo_<?php echo strtotime("now"); ?>-head" href="#webpos_payment_wpo_<?php echo strtotime("now"); ?>-link" onclick="Fieldset.toggleCollapse('webpos_payment_wpo_<?php echo strtotime("now"); ?>', ''); return false;" class="">
+                    Custom_payment_<?php echo strtotime("now"); ?>
+                </a>
+            </div>
+            <input id="webpos_payment_wpo_<?php echo strtotime("now"); ?>-state" name="config_state[webpos_payment_wpo_<?php echo strtotime("now"); ?>]" type="hidden" value="0">
+            <fieldset class="config admin__collapsible-block" id="webpos_payment_wpo_<?php echo strtotime("now"); ?>" style="display: block;">
+                <legend>Custom_payment_<?php echo strtotime("now"); ?></legend>
+                <table cellspacing="0" class="form-list">
+                    <colgroup class="label"></colgroup>
+                    <colgroup class="value"></colgroup>
+                    <colgroup class="scope-labSetupel"></colgroup>
+                    <colgroup class=""></colgroup>
+                    <tbody>
+                        <tr id="row_webpos_payment_wpo_<?php echo strtotime("now"); ?>_enable">
+                            <td class="label">
+                                <label for="webpos_payment_wpo_<?php echo strtotime("now"); ?>_enable">
+                                    <span data-config-scope="[GLOBAL]"><?php echo __('Enabled'); ?></span>
+                                </label>
+                            </td>
+                            <td class="value">
+                                <select id="webpos_payment_wpo_<?php echo strtotime("now"); ?>_enable" name="payment_offline[payment][groups][wpo_<?php echo strtotime("now"); ?>][fields][enable][value]" class=" select admin__control-select" data-ui-id="select-groups-payment-groups-wpo_<?php echo strtotime("now"); ?>-fields-active-value">
+                                    <?php foreach ($helperData->getEnableOption() as $enableOption): ?>
+                                        <option value="<?php echo $enableOption['value']; ?>"><?php echo $enableOption['label']; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </td>
+                            <td class=""></td>
+                        </tr>
+                        <tr id="row_webpos_payment_wpo_<?php echo strtotime("now"); ?>_title">
+                            <td class="label">
+                                <label for="webpos_payment_wpo_<?php echo strtotime("now"); ?>_title">
+                                    <span data-config-scope="[GLOBAL]"><?php echo __('Title'); ?></span>
+                                </label>
+                            </td>
+                            <td class="value">
+                                <input id="webpos_payment_wpo_<?php echo strtotime("now"); ?>_title" name="payment_offline[payment][groups][wpo_<?php echo strtotime("now"); ?>][fields][title][value]" data-ui-id="file-groups-payment-groups-wpo_<?php echo strtotime("now"); ?>-fields-title-value" value="Custom payment [<?php echo strtotime("now"); ?>]" class="required-entry input-text admin__control-text" type="text">
+                            </td>
+                            <td class=""></td>
+                        </tr>
+                        <tr id="row_webpos_payment_wpo_<?php echo strtotime("now"); ?>_use_reference_number">
+                            <td class="label">
+                                <label for="webpos_payment_wpo_<?php echo strtotime("now"); ?>_use_reference_number">
+                                    <span data-config-scope="[GLOBAL]"><?php echo __('Reference number'); ?></span>
+                                </label>
+                            </td>
+                            <td class="value">
+                                <select id="webpos_payment_wpo_<?php echo strtotime("now"); ?>_use_reference_number" name="payment_offline[payment][groups][wpo_<?php echo strtotime("now"); ?>][fields][use_reference_number][value]" class=" select admin__control-select" data-ui-id="select-groups-payment-groups-wpo_<?php echo strtotime("now"); ?>-fields-use_reference_number-value">
+                                    <?php foreach ($helperData->getUseReferenceNumberOption() as $useReferenceNumberOption): ?>
+                                        <option value="<?php echo $useReferenceNumberOption['value']; ?>"><?php echo $useReferenceNumberOption['label']; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </td>
+                            <td class=""></td>
+                        </tr>
+                        <tr id="row_webpos_payment_wpo_<?php echo strtotime("now"); ?>_icon_path">
+                            <td class="label">
+                                <label for="webpos_payment_wpo_<?php echo strtotime("now"); ?>_icon_path">
+                                    <span data-config-scope="[GLOBAL]"><?php echo __('Icon'); ?></span>
+                                </label>
+                            </td>
+                            <td class="value">
+                                <p>
+                                    <input type="radio" name="payment_offline[payment][groups][wpo_<?php echo strtotime("now"); ?>][fields][icon_type][value]"
+                                           value="<?php echo \Magestore\PaymentOffline\Model\Source\Adminhtml\IconType::USE_SUGGEST;?>"
+                                           checked="checked"
+                                           id="use_suggest_wpo_<?php echo strtotime("now"); ?>"
+                                           onclick="hideUploadPaymentIcon('wpo_<?php echo strtotime("now"); ?>')"
+                                    />
+                                    <label for="use_suggest_wpo_<?php echo strtotime("now"); ?>">
+                                        <?php echo __('Use the Suggested Icons'); ?>
+                                    </label>
+                                    <p style="padding-left: 16px;">
+                                        <input type="radio" name="payment_offline[payment][groups][wpo_<?php echo strtotime("now"); ?>][fields][icon_default][value]"
+                                               value="<?php echo 'default/Cash.svg';?>"
+                                               title="<?php echo __('Cash'); ?>"
+                                               checked="checked"
+                                               id="Cash_wpo_<?php echo strtotime("now"); ?>"
+                                        />
+                                        <label for="Cash_wpo_<?php echo strtotime("now"); ?>">
+                                            <img src="<?php echo $helperData->getIconUrl('default/Cash.svg'); ?>"
+                                                 id="webpos_payment_wpo_<?php echo strtotime("now"); ?>_icon_default_cash_image"
+                                                 title="<?php echo __('Cash'); ?>"
+                                                 alt="<?php echo __('Cash'); ?>"
+                                                 height="30" width="50"
+                                                 class="small-image-preview v-middle"
+                                                 data-ui-id="file-groups-payment-fields-webpos_payment_wpo_<?php echo strtotime("now"); ?>_icon_default_cash_path-value"
+                                            />
+                                        </label>
+
+                                        <input type="radio" name="payment_offline[payment][groups][wpo_<?php echo strtotime("now"); ?>][fields][icon_default][value]"
+                                               value="<?php echo 'default/BankTransfer.svg';?>"
+                                               title="<?php echo __('Bank Transfer'); ?>"
+                                               id="BankTransfer_wpo_<?php echo strtotime("now"); ?>"
+                                        />
+                                        <label for="BankTransfer_wpo_<?php echo strtotime("now"); ?>">
+                                            <img src="<?php echo $helperData->getIconUrl('default/BankTransfer.svg'); ?>"
+                                                 id="webpos_payment_wpo_<?php echo strtotime("now"); ?>_icon_default_bank_transfer_image"
+                                                 title="<?php echo __('Bank Transfer'); ?>"
+                                                 alt="<?php echo __('Bank Transfer'); ?>"
+                                                 height="30" width="50"
+                                                 class="small-image-preview v-middle"
+                                                 data-ui-id="file-groups-payment-fields-webpos_payment_wpo_<?php echo strtotime("now"); ?>_icon_default_bank_transfer_path-value"
+                                            />
+                                        </label>
+
+                                        <input type="radio" name="payment_offline[payment][groups][wpo_<?php echo strtotime("now"); ?>][fields][icon_default][value]"
+                                               value="<?php echo 'default/Check.svg';?>"
+                                               title="<?php echo __('Check'); ?>"
+                                               id="Check_wpo_<?php echo strtotime("now"); ?>"
+                                        />
+                                        <label for="Check_wpo_<?php echo strtotime("now"); ?>">
+                                            <img src="<?php echo $helperData->getIconUrl('default/Check.svg'); ?>"
+                                                 id="webpos_payment_wpo_<?php echo strtotime("now"); ?>_icon_default_check_image"
+                                                 title="<?php echo __('Check'); ?>"
+                                                 alt="<?php echo __('Check'); ?>"
+                                                 height="30" width="50"
+                                                 class="small-image-preview v-middle"
+                                                 data-ui-id="file-groups-payment-fields-webpos_payment_wpo_<?php echo strtotime("now"); ?>_icon_default_check_path-value"
+                                            />
+                                        </label>
+                                        <br />
+                                        <br />
+                                        <input type="radio" name="payment_offline[payment][groups][wpo_<?php echo strtotime("now"); ?>][fields][icon_default][value]"
+                                               value="<?php echo 'default/COD.svg';?>"
+                                               title="<?php echo __('COD'); ?>"
+                                               id="COD_wpo_<?php echo strtotime("now"); ?>"
+                                        />
+                                        <label for="COD_wpo_<?php echo strtotime("now"); ?>">
+                                            <img src="<?php echo $helperData->getIconUrl('default/COD.svg'); ?>"
+                                                 id="webpos_payment_wpo_<?php echo strtotime("now"); ?>_icon_default_cod_image"
+                                                 title="<?php echo __('COD'); ?>"
+                                                 alt="<?php echo __('COD'); ?>"
+                                                 height="30" width="50"
+                                                 class="small-image-preview v-middle"
+                                                 data-ui-id="file-groups-payment-fields-webpos_payment_wpo_<?php echo strtotime("now"); ?>_icon_default_cod_path-value"
+                                            />
+                                        </label>
+
+                                        <input type="radio" name="payment_offline[payment][groups][wpo_<?php echo strtotime("now"); ?>][fields][icon_default][value]"
+                                               value="<?php echo 'default/CreditCard.svg';?>"
+                                               title="<?php echo __('Credit Card'); ?>"
+                                               id="CreditCard_wpo_<?php echo strtotime("now"); ?>"
+                                        />
+                                        <label for="CreditCard_wpo_<?php echo strtotime("now"); ?>">
+                                            <img src="<?php echo $helperData->getIconUrl('default/CreditCard.svg'); ?>"
+                                                 id="webpos_payment_wpo_<?php echo strtotime("now"); ?>_icon_default_credit_cart_image"
+                                                 title="<?php echo __('Credit Card'); ?>"
+                                                 alt="<?php echo __('Credit Card'); ?>"
+                                                 height="30" width="50"
+                                                 class="small-image-preview v-middle"
+                                                 data-ui-id="file-groups-payment-fields-webpos_payment_wpo_<?php echo strtotime("now"); ?>_icon_default_credit_cart_path-value"
+                                            />
+                                        </label>
+                                        <input type="radio" name="payment_offline[payment][groups][wpo_<?php echo strtotime("now"); ?>][fields][icon_default][value]"
+                                               value="<?php echo 'default/MobilePayment.svg';?>"
+                                               title="<?php echo __('Mobile Payment'); ?>"
+                                               id="MobilePayment_wpo_<?php echo strtotime("now"); ?>"
+                                        />
+                                        <label for="MobilePayment_wpo_<?php echo strtotime("now"); ?>">
+                                            <img src="<?php echo $helperData->getIconUrl('default/MobilePayment.svg'); ?>"
+                                                 id="webpos_payment_wpo_<?php echo strtotime("now"); ?>_icon_default_mobile_payment_image"
+                                                 title="<?php echo __('Mobile Payment'); ?>"
+                                                 alt="<?php echo __('Mobile Payment'); ?>"
+                                                 height="30" width="50"
+                                                 class="small-image-preview v-middle"
+                                                 data-ui-id="file-groups-payment-fields-webpos_payment_wpo_<?php echo strtotime("now"); ?>_icon_default_mobile_payment_path-value"
+                                            />
+                                        </label>
+                                    </p>
+                                </p>
+                                <p>
+                                    <input type="radio" name="payment_offline[payment][groups][wpo_<?php echo strtotime("now"); ?>][fields][icon_type][value]"
+                                           value="<?php echo \Magestore\PaymentOffline\Model\Source\Adminhtml\IconType::USE_CUSTOM;?>"
+                                           id="custom_icon_wpo_<?php echo strtotime("now"); ?>"
+                                           onclick="showUploadPaymentIcon('wpo_<?php echo strtotime("now"); ?>')"
+                                    />
+                                    <label for="custom_icon_wpo_<?php echo strtotime("now"); ?>">
+                                        <?php echo __('Use the Custom Icon'); ?>
+                                    </label>
+                                </p>
+                                <div id="webpos_payment_custom_icon_info_wpo_<?php echo strtotime("now"); ?>"
+                                     style="display: none;"
+                                >
+                                    <input id="webpos_payment_wpo_<?php echo strtotime("now"); ?>_icon_path" name="payment_offline[payment][groups][wpo_<?php echo strtotime("now"); ?>][fields][icon_path][value]" data-ui-id="file-groups-payment-groups-wpo_<?php echo strtotime("now"); ?>-fields-icon_path-value" value="" class="input-file" type="file">
+                                    <p class="note">
+                                        <span>
+                                            <?php echo __('Recommended size: 76x46 px'); ?>
+                                            <br>
+                                            <?php echo __('Supported file: jpeg, png, svg'); ?>
+                                        </span>
+                                    </p>
+                                </div>
+                            </td>
+                            <td class=""></td>
+                        </tr>
+                        <tr id="row_webpos_payment_wpo_<?php echo strtotime("now"); ?>_use_pay_later">
+                            <td class="label">
+                                <label for="webpos_payment_wpo_<?php echo strtotime("now"); ?>_use_pay_later">
+                                    <span data-config-scope="[GLOBAL]"><?php echo __('Pay Later'); ?></span>
+                                </label>
+                            </td>
+                            <td class="value">
+                                <select id="webpos_payment_wpo_<?php echo strtotime("now"); ?>_use_pay_later" name="payment_offline[payment][groups][wpo_<?php echo strtotime("now"); ?>][fields][use_pay_later][value]" class=" select admin__control-select" data-ui-id="select-groups-payment-groups-wpo_<?php echo strtotime("now"); ?>-fields-use_pay_later-value">
+                                    <?php foreach ($helperData->getPayLaterOption() as $payLaterOption): ?>
+                                        <option value="<?php echo $payLaterOption['value']; ?>"><?php echo $payLaterOption['label']; ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <p class="note">
+                                    <span>
+                                        <?php echo __('If enabled, the system will not create invoice after the checkout. You wont be able to use this method to refund or take due amount.'); ?>
+                                    </span>
+                                </p>
+                            </td>
+                            <td class=""></td>
+                        </tr>
+                        <tr id="row_webpos_payment_wpo_<?php echo strtotime("now"); ?>_sort_order">
+                            <td class="label">
+                                <label for="webpos_payment_wpo_<?php echo strtotime("now"); ?>_sort_order">
+                                    <span data-config-scope="[GLOBAL]"><?php echo __('Sort Order'); ?></span>
+                                </label>
+                            </td>
+                            <td class="value">
+                                <input id="webpos_payment_wpo_<?php echo strtotime("now"); ?>_sort_order" name="payment_offline[payment][groups][wpo_<?php echo strtotime("now"); ?>][fields][sort_order][value]" data-ui-id="file-groups-payment-groups-wpo_<?php echo strtotime("now"); ?>-fields-sort_order-value" value="" class="input-text admin__control-text" type="text">
+                            </td>
+                            <td class=""></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <button type="button"
+                                        class="action-default"
+                                        onclick="removePaymentOffline('wpo_<?php echo strtotime("now"); ?>');"
+                                >
+                                    <?php echo __('Cancel') ?>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </fieldset>
+            <script type="text/javascript">
+                //<![CDATA[
+                    require(['prototype'], function(){Fieldset.applyCollapse('webpos_payment_wpo_<?php echo strtotime("now"); ?>');});
+                //]]>
+            </script>
+        </div>
+    </td>
+</tr>

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+
+    <!-- Integrate webpos -->
+    <event name="webpos_product_get_barcode_after">
+        <observer name="inventorysuccess_webpos_product_get_barcode_after" instance="Magestore\BarcodeSuccess\Observer\Webpos\Catalog\Product\WebposProductGetBarcodeAfter"/>
+    </event>
+
+    <event name="webpos_catalog_product_search_online">
+        <observer name="webpos_catalog_product_search_online" instance="Magestore\BarcodeSuccess\Observer\Webpos\Catalog\Product\WebposProductSearchOnline"/>
+    </event>
+    <!-- End integrate webpos -->
+
+</config>

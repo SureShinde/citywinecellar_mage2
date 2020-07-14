@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="SearchProductOneResultActionGroup">
+        <arguments>
+            <argument name="dataProduct" defaultValue=""/>
+        </arguments>
+        <fillField stepKey="fillProductSearchBox" selector="{{ProductListSection.searchBox}}" userInput="{{dataProduct}}"/>
+        <wait time="2" stepKey="wait5"/>
+
+        <waitForElementVisible  time="30" selector="{{ProductListSection.firstProduct}}"  stepKey="seeAtLeaseOneProductAfterSearch"/>
+
+        <seeElementInDOM selector="{{ProductListSection.productN('1')}}" stepKey="seeFirstProduct"/>
+        <dontSeeElementInDOM selector="{{ProductListSection.productN('2')}}" stepKey="dontSeeSecondProduct"/>
+    </actionGroup>
+</actionGroups>

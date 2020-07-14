@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="SearchOrderAndCountResultActionGroup">
+        <arguments>
+            <argument name="keyword" defaultValue=""/>
+            <argument name="numberOrders" defaultValue="1"/>
+        </arguments>
+
+        <waitForElementVisible selector="{{OrderListSection.firstItem}}" time="30" stepKey="waitFirstOrderShow" />
+        <fillField selector="{{OrderListSection.inputSearch}}" userInput="{{keyword}}" stepKey="searchOrder" />
+        <wait time="3" stepKey="loadSearch"/>
+        <waitForElementNotVisible selector="{{OrderListSection.loader}}" time="30" stepKey="waitLoaderNotVisible" />
+        <waitForElementVisible selector="{{OrderListSection.firstItem}}" stepKey="waitFirstOrderShowAfterSearch" />
+
+        <grabMultiple selector="{{OrderListSection.items}}" stepKey="grabItemsInOrderList"/>
+        <assertCount stepKey="assertItemsInOrderList" message="Count items in order list">
+            <expectedResult type="int">{{numberOrders}}</expectedResult>
+            <actualResult type="variable">grabItemsInOrderList</actualResult>
+        </assertCount>
+    </actionGroup>
+</actionGroups>

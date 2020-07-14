@@ -1,0 +1,45 @@
+<?php
+/**
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/* Account Information */ ?>
+<?php /** @var \Magestore\FulfilSuccess\Block\Adminhtml\AbstractRequest\Detail\Shipping $block */ ?>
+<?php $_order = $block->getOrder() ?>
+
+<?php /* Shipping Address */ ?>
+<div class="admin__page-section-item-title">
+    <span class="title"><?php /* @escapeNotVerified */
+        echo __('Shipping Information') ?></span>
+</div>
+<div class="admin__page-section-item-content shipping-description-wrapper">
+    <div class="shipping-description-title">
+        <?php
+        if ($_order->getShippingMethod() == 'storepickup_storepickup') {
+            echo $_order->getShippingDescription();
+        } else {
+            echo $block->escapeHtml($_order->getShippingDescription());
+        }
+        ?>
+    </div>
+    <div class="shipping-description-content">
+        <?php /* @escapeNotVerified */
+        echo __('Total Shipping Charges'); ?>:
+
+        <?php if ($this->helper('Magento\Tax\Helper\Data')->displayShippingPriceIncludingTax()): ?>
+            <?php $_excl = $block->displayShippingPriceInclTax($_order); ?>
+        <?php else: ?>
+            <?php $_excl = $block->displayPriceAttribute('shipping_amount', false, ' '); ?>
+        <?php endif; ?>
+        <?php $_incl = $block->displayShippingPriceInclTax($_order); ?>
+        <?php /* @escapeNotVerified */
+        echo $_excl; ?>
+        <?php if ($this->helper('Magento\Tax\Helper\Data')->displayShippingBothPrices() && $_incl != $_excl): ?>
+            (<?php /* @escapeNotVerified */
+            echo __('Incl. Tax'); ?><?php /* @escapeNotVerified */
+            echo $_incl; ?>)
+        <?php endif; ?>
+    </div>
+</div>
+<!--    <div>--><?php //echo $block->getChildHtml('shipment_tracking') ?><!--</div>-->

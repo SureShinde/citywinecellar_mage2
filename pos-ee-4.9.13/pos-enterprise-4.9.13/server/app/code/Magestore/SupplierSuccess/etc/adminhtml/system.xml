@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="magestore" translate="label" sortOrder="100">
+            <label>magestore</label>
+        </tab>
+        <section id="suppliersuccess" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+            <class>separator-top</class>
+            <label>Supplier Configuration</label>
+            <tab>magestore</tab>
+            <resource>Magestore_SupplierSuccess::configuration</resource>
+            <group id="pricelist" translate="label" sortOrder="1" type="text" showInDefault="1" showInWebsite="0">
+                <label>Pricelist Configuration</label>
+                <field id="enable" translate="label comment" sortOrder="10" type="select" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Allow using and importing supplier pricelist</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

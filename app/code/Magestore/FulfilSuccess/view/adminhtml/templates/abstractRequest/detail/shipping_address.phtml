@@ -1,0 +1,20 @@
+<?php
+/**
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/* Account Information */ ?>
+<?php /** @var \Magestore\FulfilSuccess\Block\Adminhtml\AbstractRequest\Detail\Account $block */ ?>
+<?php $_order = $block->getOrder() ?>
+<?php if (!$block->getOrder()->getIsVirtual()): ?>
+    <?php /* Shipping Address */ ?>
+    <div class="admin__page-section-item-title">
+                <span class="title"><?php /* @escapeNotVerified */
+                    echo __('Shipping Address') ?></span>
+        <div class="actions"><?php /* @escapeNotVerified */
+            echo $block->getAddressEditLink($_order->getShippingAddress()); ?></div>
+    </div>
+    <address class="admin__page-section-item-content"><?php /* @escapeNotVerified */
+        echo $block->getFormattedAddress($_order->getShippingAddress()); ?></address>
+<?php endif; ?>

@@ -1,0 +1,29 @@
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+<div class="admin__field" data-bind="visible: false" id="receive-transfer-barcode-field">
+    <div class="admin__field-label">
+        <label data-bind="text: label, attr: {for: inputName}">
+            <span data-bind="i18n: label"></span>
+        </label>
+    </div>
+    <div class="admin__field-control">
+        <input class="admin__control-text" type="text"
+               id="receive-transfer-barcode-input"
+               onfocus="this.select()"
+               data-bind="
+                    event: {change: userChanges},
+                    value: value,
+                    hasFocus: focused,
+                    valueUpdate: valueUpdate,
+                    attr: {
+                        name: inputName,
+                        placeholder: placeholder,
+                        'aria-describedby': noticeId,
+                        disabled: disabled
+                }"/><br />
+        <span data-bind="i18n: warningMessage, style: {color: 'red'}, visible: warningMessage"></span>
+        <span data-bind="i18n: successMessage, style: {color: 'green'}, visible: successMessage"></span>
+    </div>
+</div>

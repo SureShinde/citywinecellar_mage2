@@ -1,0 +1,354 @@
+<?php $existedPaymentOfflines = $block->getExistedPaymentOffline(); ?>
+<?php
+    //Get Object Manager Instance
+    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+    /** @var \Magestore\PaymentOffline\Helper\Data $helperData */
+    $helperData = $objectManager->get('\Magestore\PaymentOffline\Helper\Data');
+?>
+<tr id = 'row_webpos_payment_payment_offline_button'>
+    <td colspan="4">
+        <div class="" style="float: right; padding-bottom: 20px;">
+            <button type="button"
+                    class="action-default"
+                    onclick="addMorePayment();"
+            >
+                <?php echo __('Add more payment') ?>
+            </button>
+        </div>
+    </td>
+</tr>
+<div id="saved_payment" style="display: none;">
+    <?php if ($existedPaymentOfflines->getSize()): ?>
+        <?php /** @var \Magestore\PaymentOffline\Model\ResourceModel\PaymentOffline $existedPaymentOffline */ ?>
+        <?php
+        /** @var \Magestore\PaymentOffline\Model\PaymentOffline $existedPaymentOffline */
+        foreach ($existedPaymentOfflines as $existedPaymentOffline):
+        ?>
+            <tr id="row_webpos_payment_<?php echo $existedPaymentOffline->getPaymentCode(); ?>">
+                <td colspan="4">
+                    <div class="section-config">
+                        <div class="entry-edit-head admin__collapsible-block">
+                            <span id="webpos_payment_<?php echo $existedPaymentOffline->getPaymentCode(); ?>-link" class="entry-edit-head-link"></span>
+                            <a id="webpos_payment_<?php echo $existedPaymentOffline->getPaymentCode(); ?>-head" href="#webpos_payment_<?php echo $existedPaymentOffline->getPaymentCode(); ?>-link" onclick="Fieldset.toggleCollapse('webpos_payment_<?php echo $existedPaymentOffline->getPaymentCode(); ?>', ''); return false;" class="">
+                                <?php echo $existedPaymentOffline->getTitle(); ?>
+                            </a>
+                        </div>
+                        <input id="webpos_payment_<?php echo $existedPaymentOffline->getPaymentCode(); ?>-state" name="config_state[webpos_payment_<?php echo $existedPaymentOffline->getPaymentCode(); ?>; ?>]" type="hidden" value="0">
+                        <fieldset class="config admin__collapsible-block" id="webpos_payment_<?php echo $existedPaymentOffline->getPaymentCode(); ?>" style="display: block;">
+                            <legend><?php echo $existedPaymentOffline->getPaymentCode(); ?></legend>
+                            <table cellspacing="0" class="form-list">
+                                <colgroup class="label"></colgroup>
+                                <colgroup class="value"></colgroup>
+                                <colgroup class="scope-labSetupel"></colgroup>
+                                <colgroup class=""></colgroup>
+                                <tbody>
+                                    <tr id="row_webpos_payment_<?php echo $existedPaymentOffline->getPaymentCode(); ?>_enable">
+                                        <td class="label">
+                                            <label for="webpos_payment_<?php echo $existedPaymentOffline->getPaymentCode(); ?>_enable">
+                                                <span data-config-scope="[GLOBAL]"><?php echo __('Enabled'); ?></span>
+                                            </label>
+                                        </td>
+                                        <td class="value">
+                                            <select id="webpos_payment_<?php echo $existedPaymentOffline->getPaymentCode(); ?>_enable" name="payment_offline[payment][groups][<?php echo $existedPaymentOffline->getPaymentCode(); ?>][fields][enable][value]" class=" select admin__control-select" data-ui-id="select-groups-payment-groups-<?php echo $existedPaymentOffline->getPaymentCode(); ?>-fields-active-value">
+                                                <option value="1" <?php if ($existedPaymentOffline->getEnable() == \Magestore\PaymentOffline\Model\Source\Adminhtml\Enable::YES): ?>selected="selected"<?php endif; ?>>Yes</option>
+                                                <option value="0" <?php if ($existedPaymentOffline->getEnable() == \Magestore\PaymentOffline\Model\Source\Adminhtml\Enable::NO): ?>selected="selected"<?php endif; ?>>No</option>
+                                            </select>
+                                        </td>
+                                        <td class=""></td>
+                                    </tr>
+                                    <tr id="row_webpos_payment_<?php echo $existedPaymentOffline->getPaymentCode(); ?>_title">
+                                        <td class="label">
+                                            <label for="webpos_payment_<?php echo $existedPaymentOffline->getPaymentCode(); ?>_title">
+                                                <span data-config-scope="[GLOBAL]"><?php echo __('Title'); ?></span>
+                                            </label>
+                                        </td>
+                                        <td class="value">
+                                            <input id="webpos_payment_<?php echo $existedPaymentOffline->getPaymentCode(); ?>_title" name="payment_offline[payment][groups][<?php echo $existedPaymentOffline->getPaymentCode(); ?>][fields][title][value]" data-ui-id="file-groups-payment-groups-<?php echo $existedPaymentOffline->getPaymentCode(); ?>-fields-title-value" value="<?php echo $existedPaymentOffline->getTitle(); ?>" class="required-entry input-text admin__control-text" type="text">
+                                        </td>
+                                        <td class=""></td>
+                                    </tr>
+                                    <tr id="row_webpos_payment_<?php echo $existedPaymentOffline->getPaymentCode(); ?>_use_reference_number">
+                                        <td class="label">
+                                            <label for="webpos_payment_<?php echo $existedPaymentOffline->getPaymentCode(); ?>_use_reference_number">
+                                                <span data-config-scope="[GLOBAL]"><?php echo __('Reference number'); ?></span>
+                                            </label>
+                                        </td>
+                                        <td class="value">
+                                            <select id="webpos_payment_<?php echo $existedPaymentOffline->getPaymentCode(); ?>_use_reference_number" name="payment_offline[payment][groups][<?php echo $existedPaymentOffline->getPaymentCode(); ?>][fields][use_reference_number][value]" class=" select admin__control-select" data-ui-id="select-groups-payment-groups-<?php echo $existedPaymentOffline->getPaymentCode(); ?>-fields-use_reference_number-value">
+                                                <option value="1" <?php if ($existedPaymentOffline->getUseReferenceNumber() == \Magestore\PaymentOffline\Model\Source\Adminhtml\UseReferenceNumber::YES): ?>selected="selected"<?php endif; ?>>Yes</option>
+                                                <option value="0" <?php if ($existedPaymentOffline->getUseReferenceNumber() == \Magestore\PaymentOffline\Model\Source\Adminhtml\UseReferenceNumber::NO): ?>selected="selected"<?php endif; ?>>No</option>
+                                            </select>
+                                        </td>
+                                        <td class=""></td>
+                                    </tr>
+                                    <tr id="row_webpos_payment_<?php echo $existedPaymentOffline->getPaymentCode(); ?>_icon_path">
+                                        <td class="label">
+                                            <label for="webpos_payment_<?php echo $existedPaymentOffline->getPaymentCode(); ?>_icon_path">
+                                                <span data-config-scope="[GLOBAL]"><?php echo ('Icon'); ?></span>
+                                            </label>
+                                        </td>
+                                        <td class="value">
+                                            <p>
+                                                <input type="radio" name="payment_offline[payment][groups][<?php echo $existedPaymentOffline->getPaymentCode(); ?>][fields][icon_type][value]"
+                                                       value="<?php echo \Magestore\PaymentOffline\Model\Source\Adminhtml\IconType::USE_SUGGEST;?>"
+                                                       <?php if ($existedPaymentOffline->getIconType() == \Magestore\PaymentOffline\Model\Source\Adminhtml\IconType::USE_SUGGEST): ?> checked="checked"<?php endif; ?>
+                                                        id="use_suggest_<?php echo $existedPaymentOffline->getPaymentCode(); ?>"
+                                                       onclick="hideUploadPaymentIcon('<?php echo $existedPaymentOffline->getPaymentCode(); ?>')"
+                                                />
+                                                <label for="use_suggest_<?php echo $existedPaymentOffline->getPaymentCode(); ?>"><?php echo __('Use the Suggested Icons'); ?></label>
+                                                <p style="padding-left: 16px;">
+                                                    <input type="radio" name="payment_offline[payment][groups][<?php echo $existedPaymentOffline->getPaymentCode(); ?>][fields][icon_default][value]"
+                                                           value="<?php echo 'default/Cash.svg';?>"
+                                                        <?php if ($existedPaymentOffline->getIconType() == \Magestore\PaymentOffline\Model\Source\Adminhtml\IconType::USE_SUGGEST
+                                                            && $existedPaymentOffline->getIconPath() == 'default/Cash.svg'): ?> checked="checked"<?php endif; ?>
+                                                           title="<?php echo __('Cash'); ?>"
+                                                           id="Cash_<?php echo $existedPaymentOffline->getPaymentCode(); ?>"
+                                                    />
+                                                    <label for="Cash_<?php echo $existedPaymentOffline->getPaymentCode(); ?>">
+                                                        <img src="<?php echo $helperData->getIconUrl('default/Cash.svg'); ?>"
+                                                             id="webpos_payment_<?php echo $existedPaymentOffline->getPaymentCode(); ?>_icon_default_cash_image"
+                                                             title="<?php echo __('Cash'); ?>"
+                                                             alt="<?php echo __('Cash'); ?>"
+                                                             height="30" width="50"
+                                                             class="small-image-preview v-middle"
+                                                             data-ui-id="file-groups-payment-fields-webpos_payment_<?php echo $existedPaymentOffline->getPaymentCode(); ?>_icon_default_cash_path-value"
+                                                        />
+                                                    </label>
+
+                                                    <input type="radio" name="payment_offline[payment][groups][<?php echo $existedPaymentOffline->getPaymentCode(); ?>][fields][icon_default][value]"
+                                                           value="<?php echo 'default/BankTransfer.svg';?>"
+                                                            <?php if ($existedPaymentOffline->getIconType() == \Magestore\PaymentOffline\Model\Source\Adminhtml\IconType::USE_SUGGEST
+                                                                        && $existedPaymentOffline->getIconPath() == 'default/BankTransfer.svg'): ?> checked="checked"<?php endif; ?>
+                                                           title="<?php echo __('Bank Transfer'); ?>"
+                                                           id="BankTransfer_<?php echo $existedPaymentOffline->getPaymentCode(); ?>"
+                                                    />
+                                                    <label for="BankTransfer_<?php echo $existedPaymentOffline->getPaymentCode(); ?>">
+                                                        <img src="<?php echo $helperData->getIconUrl('default/BankTransfer.svg'); ?>"
+                                                             id="webpos_payment_<?php echo $existedPaymentOffline->getPaymentCode(); ?>_icon_default_bank_transfer_image"
+                                                             title="<?php echo __('Bank Transfer'); ?>"
+                                                             alt="<?php echo __('Bank Transfer'); ?>"
+                                                             height="30" width="50"
+                                                             class="small-image-preview v-middle"
+                                                             data-ui-id="file-groups-payment-fields-webpos_payment_<?php echo $existedPaymentOffline->getPaymentCode(); ?>_icon_default_bank_transfer_path-value"
+                                                        />
+                                                    </label>
+
+                                                    <input type="radio" name="payment_offline[payment][groups][<?php echo $existedPaymentOffline->getPaymentCode(); ?>][fields][icon_default][value]"
+                                                           value="<?php echo 'default/Check.svg';?>"
+                                                            <?php if ($existedPaymentOffline->getIconType() == \Magestore\PaymentOffline\Model\Source\Adminhtml\IconType::USE_SUGGEST
+                                                                && $existedPaymentOffline->getIconPath() == 'default/Check.svg'): ?> checked="checked"<?php endif; ?>
+                                                           title="<?php echo __('Check'); ?>"
+                                                           id="Check_<?php echo $existedPaymentOffline->getPaymentCode(); ?>"
+                                                    />
+                                                    <label for="Check_<?php echo $existedPaymentOffline->getPaymentCode(); ?>">
+                                                        <img src="<?php echo $helperData->getIconUrl('default/Check.svg'); ?>"
+                                                             id="webpos_payment_<?php echo $existedPaymentOffline->getPaymentCode(); ?>_icon_default_check_image"
+                                                             title="<?php echo __('Check'); ?>"
+                                                             alt="<?php echo __('Check'); ?>"
+                                                             height="30" width="50"
+                                                             class="small-image-preview v-middle"
+                                                             data-ui-id="file-groups-payment-fields-webpos_payment_<?php echo $existedPaymentOffline->getPaymentCode(); ?>_icon_default_check_path-value"
+                                                        />
+                                                    </label>
+                                                    <br />
+                                                    <br />
+
+                                                    <input type="radio" name="payment_offline[payment][groups][<?php echo $existedPaymentOffline->getPaymentCode(); ?>][fields][icon_default][value]"
+                                                           value="<?php echo 'default/COD.svg';?>"
+                                                            <?php if ($existedPaymentOffline->getIconType() == \Magestore\PaymentOffline\Model\Source\Adminhtml\IconType::USE_SUGGEST
+                                                                && $existedPaymentOffline->getIconPath() == 'default/COD.svg'): ?> checked="checked"<?php endif; ?>
+                                                           title="<?php echo __('COD'); ?>"
+                                                           id="COD_<?php echo $existedPaymentOffline->getPaymentCode(); ?>"
+                                                    />
+                                                    <label for="COD_<?php echo $existedPaymentOffline->getPaymentCode(); ?>">
+                                                        <img src="<?php echo $helperData->getIconUrl('default/COD.svg'); ?>"
+                                                             id="webpos_payment_<?php echo $existedPaymentOffline->getPaymentCode(); ?>_icon_default_cod_image"
+                                                             title="<?php echo __('COD'); ?>"
+                                                             alt="<?php echo __('COD'); ?>"
+                                                             height="30" width="50"
+                                                             class="small-image-preview v-middle"
+                                                             data-ui-id="file-groups-payment-fields-webpos_payment_<?php echo $existedPaymentOffline->getPaymentCode(); ?>_icon_default_cod_path-value"
+                                                        />
+                                                    </label>
+                                                    <input type="radio" name="payment_offline[payment][groups][<?php echo $existedPaymentOffline->getPaymentCode(); ?>][fields][icon_default][value]"
+                                                           value="<?php echo 'default/CreditCard.svg';?>"
+                                                            <?php if ($existedPaymentOffline->getIconType() == \Magestore\PaymentOffline\Model\Source\Adminhtml\IconType::USE_SUGGEST
+                                                                && $existedPaymentOffline->getIconPath() == 'default/CreditCard.svg'): ?> checked="checked"<?php endif; ?>
+                                                           title="<?php echo __('Credit Card'); ?>"
+                                                           id="CreditCard_<?php echo $existedPaymentOffline->getPaymentCode(); ?>"
+                                                    />
+                                                    <label for="CreditCard_<?php echo $existedPaymentOffline->getPaymentCode(); ?>">
+                                                        <img src="<?php echo $helperData->getIconUrl('default/CreditCard.svg'); ?>"
+                                                             id="webpos_payment_<?php echo $existedPaymentOffline->getPaymentCode(); ?>_icon_default_credit_cart_image"
+                                                             title="<?php echo __('Credit Card'); ?>"
+                                                             alt="<?php echo __('Credit Card'); ?>"
+                                                             height="30" width="50"
+                                                             class="small-image-preview v-middle"
+                                                             data-ui-id="file-groups-payment-fields-webpos_payment_<?php echo $existedPaymentOffline->getPaymentCode(); ?>_icon_default_credit_cart_path-value"
+                                                        />
+                                                    </label>
+
+                                                    <input type="radio" name="payment_offline[payment][groups][<?php echo $existedPaymentOffline->getPaymentCode(); ?>][fields][icon_default][value]"
+                                                           value="<?php echo 'default/MobilePayment.svg';?>"
+                                                            <?php if ($existedPaymentOffline->getIconType() == \Magestore\PaymentOffline\Model\Source\Adminhtml\IconType::USE_SUGGEST
+                                                                && $existedPaymentOffline->getIconPath() == 'default/MobilePayment.svg'): ?> checked="checked"<?php endif; ?>
+                                                           title="<?php echo __('Mobile Payment'); ?>"
+                                                           id="MobilePayment_<?php echo $existedPaymentOffline->getPaymentCode(); ?>"
+                                                    />
+                                                    <label for="MobilePayment_<?php echo $existedPaymentOffline->getPaymentCode(); ?>">
+                                                        <img src="<?php echo $helperData->getIconUrl('default/MobilePayment.svg'); ?>"
+                                                             id="webpos_payment_<?php echo $existedPaymentOffline->getPaymentCode(); ?>_icon_default_mobile_payment_image"
+                                                             title="<?php echo __('Mobile Payment'); ?>"
+                                                             alt="<?php echo __('Mobile Payment'); ?>"
+                                                             height="30" width="50"
+                                                             class="small-image-preview v-middle"
+                                                             data-ui-id="file-groups-payment-fields-webpos_payment_<?php echo $existedPaymentOffline->getPaymentCode(); ?>_icon_default_mobile_payment_path-value"
+                                                        />
+                                                    </label>
+                                                </p>
+                                            </p>
+                                            <p>
+                                                <input type="radio" name="payment_offline[payment][groups][<?php echo $existedPaymentOffline->getPaymentCode(); ?>][fields][icon_type][value]"
+                                                      value="<?php echo \Magestore\PaymentOffline\Model\Source\Adminhtml\IconType::USE_CUSTOM;?>"
+                                                    <?php if ($existedPaymentOffline->getIconType() == \Magestore\PaymentOffline\Model\Source\Adminhtml\IconType::USE_CUSTOM): ?> checked="checked"<?php endif; ?>
+                                                      id="custom_icon_<?php echo $existedPaymentOffline->getPaymentCode(); ?>"
+                                                       onclick="showUploadPaymentIcon('<?php echo $existedPaymentOffline->getPaymentCode(); ?>')"
+                                                />
+                                                <label for="custom_icon_<?php echo $existedPaymentOffline->getPaymentCode(); ?>">
+                                                    <?php echo __('Use the Custom Icon'); ?>
+                                                </label>
+                                            </p>
+                                            <div id="webpos_payment_custom_icon_info_<?php echo $existedPaymentOffline->getPaymentCode(); ?>"
+                                                 style="<?php if ($existedPaymentOffline->getIconType() != \Magestore\PaymentOffline\Model\Source\Adminhtml\IconType::USE_CUSTOM): ?> display: none<?php endif; ?>"
+                                            >
+                                                <?php if ($existedPaymentOffline->getIconPath()): ?>
+                                                    <a href="<?php echo $helperData->getIconUrl($existedPaymentOffline->getIconPath()); ?>"
+                                                       onclick="imagePreview('webpos_payment_<?php echo $existedPaymentOffline->getPaymentCode(); ?>_icon_path_image'); return false;"
+                                                       data-ui-id="file-groups-payment-fields-webpos_payment_<?php echo $existedPaymentOffline->getPaymentCode(); ?>_icon_path-value-link">
+                                                        <img src="<?php echo $helperData->getIconUrl($existedPaymentOffline->getIconPath()); ?>"
+                                                             id="webpos_payment_<?php echo $existedPaymentOffline->getPaymentCode(); ?>_icon_path_image"
+                                                             title="default/img.png"
+                                                             alt="default/img.png"
+                                                             height="22" width="22"
+                                                             class="small-image-preview v-middle"
+                                                             data-ui-id="file-groups-payment-fields-webpos_payment_<?php echo $existedPaymentOffline->getPaymentCode(); ?>_icon_path-value">
+                                                    </a>
+                                                <?php endif; ?>
+                                                <input id="webpos_payment_<?php echo $existedPaymentOffline->getPaymentCode(); ?>_icon_path" name="payment_offline[payment][groups][<?php echo $existedPaymentOffline->getPaymentCode(); ?>][fields][icon_path][value]" data-ui-id="file-groups-payment-groups-<?php echo $existedPaymentOffline->getPaymentCode(); ?>-fields-icon_path-value" value="" class="input-file" type="file">
+                                                <?php if ($existedPaymentOffline->getIconPath()): ?>
+                                                    <span class="delete-image">
+                                                        <input type="checkbox" name="payment_offline[payment][groups][<?php echo $existedPaymentOffline->getPaymentCode(); ?>][fields][icon_path][delete]" value="1" class="checkbox" id="webpos_payment_webpos_payment_<?php echo $existedPaymentOffline->getPaymentCode(); ?>_icon_path_delete">
+                                                        <label for="webpos_payment_webpos_payment_<?php echo $existedPaymentOffline->getPaymentCode(); ?>_icon_path_delete"><?php echo __('Delete Image'); ?></label>
+                                                        <input type="hidden" name="groups[payment][fields][webpos_payment_<?php echo $existedPaymentOffline->getPaymentCode(); ?>_icon_path][value][value]" value="default/img.png">
+                                                    </span>
+                                                <?php endif; ?>
+                                                <p class="note">
+                                                    <span>
+                                                        <?php echo __('Recommended size: 76x46 px'); ?>
+                                                        <br>
+                                                        <?php echo __('Supported file: jpeg, png, svg'); ?>
+                                                    </span>
+                                                </p>
+                                            </div>
+                                        </td>
+                                        <td class=""></td>
+                                    </tr>
+                                    <tr id="row_webpos_payment_<?php echo $existedPaymentOffline->getPaymentCode(); ?>_use_pay_later">
+                                        <td class="label">
+                                            <label for="webpos_payment_<?php echo $existedPaymentOffline->getPaymentCode(); ?>_use_pay_later">
+                                                <span data-config-scope="[GLOBAL]"><?php echo __('Pay Later'); ?></span>
+                                            </label>
+                                        </td>
+                                        <td class="value">
+                                            <select id="webpos_payment_<?php echo $existedPaymentOffline->getPaymentCode(); ?>_use_pay_later" name="payment_offline[payment][groups][<?php echo $existedPaymentOffline->getPaymentCode(); ?>][fields][use_pay_later][value]" class=" select admin__control-select" data-ui-id="select-groups-payment-groups-<?php echo $existedPaymentOffline->getPaymentCode(); ?>-fields-use_pay_later-value">
+                                                <option value="1" <?php if ($existedPaymentOffline->getUsePayLater() == \Magestore\PaymentOffline\Model\Source\Adminhtml\UsePayLater::YES): ?>selected="selected"<?php endif; ?>>Yes</option>
+                                                <option value="0" <?php if ($existedPaymentOffline->getUsePayLater() == \Magestore\PaymentOffline\Model\Source\Adminhtml\UsePayLater::NO): ?>selected="selected"<?php endif; ?>>No</option>
+                                            </select>
+                                            <p class="note">
+                                                <span>
+                                                    <?php echo __('If enabled, the system will not create invoice after the checkout. You wont be able to use this method to refund or take due amount.'); ?>
+                                                </span>
+                                            </p>
+                                        </td>
+                                        <td class=""></td>
+                                    </tr>
+                                    <tr id="row_webpos_payment_<?php echo $existedPaymentOffline->getPaymentCode(); ?>_sort_order">
+                                        <td class="label">
+                                            <label for="webpos_payment_<?php echo $existedPaymentOffline->getPaymentCode(); ?>_sort_order">
+                                                <span data-config-scope="[GLOBAL]"><?php echo __('Sort Order'); ?></span>
+                                            </label>
+                                        </td>
+                                        <td class="value">
+                                            <input id="webpos_payment_<?php echo $existedPaymentOffline->getPaymentCode(); ?>_sort_order" name="payment_offline[payment][groups][<?php echo $existedPaymentOffline->getPaymentCode(); ?>][fields][sort_order][value]" data-ui-id="file-groups-payment-groups-<?php echo $existedPaymentOffline->getPaymentCode(); ?>-fields-sort_order-value" value="<?php echo $existedPaymentOffline->getSortOrder(); ?>" class="input-text admin__control-text" type="text">
+                                        </td>
+                                        <td class=""></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </fieldset>
+                        <script type="text/javascript">
+                            //<![CDATA[
+                            require(['prototype'], function(){Fieldset.applyCollapse('webpos_payment_<?php echo $existedPaymentOffline->getPaymentCode(); ?>');});
+                            //]]>
+                        </script>
+                    </div>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    <?php endif; ?>
+</div>
+<script type="text/javascript">
+    /**
+     * add more payment offline
+     */
+    function addMorePayment() {
+        this.requestDefaultTemplate();
+    }
+
+    /**
+     * get payment form default
+     */
+    function requestDefaultTemplate() {
+        jQuery.get('<?php echo $block->getTemplateUrl(); ?>', function(data, status){
+            if (data) {
+                jQuery('#row_webpos_payment_payment_offline_button').after(data);
+            }
+        });
+    }
+    
+    setTimeout(function(){
+        jQuery('#webpos_payment tbody:first').append(jQuery('#saved_payment').html());
+        jQuery('#saved_payment').remove();
+    }, 1000);
+
+    /**
+     * remove payment offline
+     * @param payment_code
+     */
+    function removePaymentOffline(payment_code) {
+        jQuery.get('<?php echo $block->removePaymentUrl(); ?>' + 'payment_code/' + payment_code, function(data, status){
+            jQuery('#row_webpos_payment_' + payment_code).remove();
+        });
+    }
+
+    /**
+     * hide upload payment icon
+     * @param payment_code
+     */
+    function hideUploadPaymentIcon(payment_code) {
+        if (jQuery('#webpos_payment_custom_icon_info_'+payment_code)) {
+            jQuery('#webpos_payment_custom_icon_info_'+payment_code).hide();
+        }
+    }
+
+    /**
+     * show upload payment icon
+     * @param payment_code
+     */
+    function showUploadPaymentIcon(payment_code) {
+        if (jQuery('#webpos_payment_custom_icon_info_'+payment_code)) {
+            jQuery('#webpos_payment_custom_icon_info_'+payment_code).show();
+        }
+    }
+    
+</script>

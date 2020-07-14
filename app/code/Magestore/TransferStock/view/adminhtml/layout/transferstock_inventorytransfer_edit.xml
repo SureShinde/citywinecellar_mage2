@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="admin-2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="editor"/>
+    <update handle="styles"/>
+    <head>
+        <css src="Magestore_TransferStock::css/transferstock.css"/>
+    </head>
+    <body>
+        <referenceContainer name="page.main.actions">
+            <block class="Magestore\TransferStock\Block\Adminhtml\InventoryTransfer\Edit\Steps\Timeline" name="variation-steps-wizard">
+                <arguments>
+                    <argument name="config" xsi:type="array">
+                        <item name="form" xsi:type="string">os_inventorytransfer_form.os_inventorytransfer_form</item>
+                    </argument>
+                </arguments>
+                <block class="Magestore\TransferStock\Block\Adminhtml\InventoryTransfer\Edit\Steps\StatusNew" name="new">
+                    <arguments>
+                        <argument name="config" xsi:type="array">
+                            <item name="form" xsi:type="string">os_inventorytransfer_form.os_inventorytransfer_form</item>
+                        </argument>
+                    </arguments>
+                </block>
+                <block class="Magestore\TransferStock\Block\Adminhtml\InventoryTransfer\Edit\Steps\StatusSent" name="sent">
+                    <arguments>
+                        <argument name="config" xsi:type="array">
+                            <item name="form" xsi:type="string">os_inventorytransfer_form.os_inventorytransfer_form</item>
+                        </argument>
+                    </arguments>
+                </block>
+                <block class="Magestore\TransferStock\Block\Adminhtml\InventoryTransfer\Edit\Steps\StatusReceiving" name="receiving">
+                    <arguments>
+                        <argument name="config" xsi:type="array">
+                            <item name="form" xsi:type="string">os_inventorytransfer_form.os_inventorytransfer_form</item>
+                        </argument>
+                    </arguments>
+                </block>
+                <block class="Magestore\TransferStock\Block\Adminhtml\InventoryTransfer\Edit\Steps\StatusCompleted" name="completed">
+                    <arguments>
+                        <argument name="config" xsi:type="array">
+                            <item name="form" xsi:type="string">os_inventorytransfer_form.os_inventorytransfer_form</item>
+                        </argument>
+                    </arguments>
+                </block>
+            </block>
+        </referenceContainer>
+        <referenceContainer name="messages.wrapper">
+            <block class="Magestore\TransferStock\Block\Adminhtml\InventoryTransfer\Import\NoticeMessage" name="transferstock_success_message" template="Magestore_TransferStock::import/message.phtml" before="-"/>
+        </referenceContainer>
+        <referenceContainer name="content">
+            <uiComponent name="os_inventorytransfer_edit_form"/>
+            <block class="Magestore\TransferStock\Block\Adminhtml\InventoryTransfer\Import\Form" name="import-form" template="Magestore_TransferStock::import/form.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

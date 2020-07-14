@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:DataGenerator/etc/dataProfileSchema.xsd">
+    <!-- fix magento 2.3.0 simple product has tax -->
+    <entity name="pos_simple_product_with_tax" type="product">
+        <data key="sku">24-UG06</data>
+        <data key="name">Affirm Water Bottle</data>
+    </entity>
+    <entity name="pos_simple_product" type="product">
+        <data key="sku">24-MB01</data>
+        <data key="name">Joust Duffle Bag</data>
+    </entity>
+    <entity name="pos_simple_product_2" type="product">
+        <data key="sku">24-MB04</data>
+        <data key="name">Strive Shoulder Pack</data>
+    </entity>
+    <entity name="pos_simple_product_with_custom_option" type="enable_visible_on_pos">
+        <data key="sku">simple-option</data>
+        <data key="name">Simple Product With Custom Option</data>
+    </entity>
+    <entity name="pos_config_product_MH09" type="product">
+        <data key="sku">MH09</data>
+        <data key="name">Abominable Hoodie</data>
+
+        <!--attributes that are used for select options when add to cart-->
+        <data key="size">XS</data>
+        <data key="color">rgb(24, 87, 247)</data>
+        <!-- End of attributes that are used for select options when add to cart-->
+    </entity>
+    <entity name="pos_grouped_product" type="product">
+        <data key="sku">24-WG085_Group</data>
+        <data key="name">Set of Sprite Yoga Straps</data>
+    </entity>
+    <entity name="pos_bundle_product" type="product">
+        <data key="sku">24-WG080</data>
+        <data key="name">Sprite Yoga Companion Kit</data>
+    </entity>
+    <entity name="pos_virtual_product" type="enable_visible_on_pos">
+        <data key="sku">virtual-test</data>
+        <data key="name">Virtual test</data>
+    </entity>
+    <entity name="pos_virtual_product_with_custom_option" type="enable_visible_on_pos">
+        <data key="sku">virtual-test-co</data>
+        <data key="name">Virtual test CO</data>
+    </entity>
+
+    <!-- Custom sale -->
+    <entity name="custom_sale" type="product">
+        <data key="name">Custom sale</data>
+        <data key="tax_class">None</data>
+        <data key="price">32.00</data>
+        <data key="qty">1</data>
+        <data key="note">Test custom sale</data>
+    </entity>
+
+    <!-- Product for custom price discount creating -->
+    <entity name="pos_simple_product_test_custom_price_discount" type="product">
+        <data key="sku">24-MG04</data>
+        <data key="name">Aim Analog Watch</data>
+        <data key="qty">1</data>
+    </entity>
+
+    <entity name="pos_simple_product_test_custom_price_discount_increase_qty" type="product">
+        <data key="sku">24-MG04</data>
+        <data key="name">Aim Analog Watch</data>
+        <data key="qty">3</data>
+    </entity>
+
+    <!-- Product for test order creating -->
+    <entity name="pos_simple_product_test_order" type="product">
+        <data key="sku">24-MG04</data>
+        <data key="name">Aim Analog Watch</data>
+        <data key="qty">2</data>
+    </entity>
+
+    <entity name="ApiCategory" type="category">
+        <data key="name" unique="suffix">ApiCategory</data>
+        <data key="is_active">true</data>
+    </entity>
+    <entity name="ApiSimpleProductHold" type="product">
+        <data key="sku">api-simple-product-hold</data>
+        <data key="type_id">simple</data>
+        <data key="attribute_set_id">4</data>
+        <data key="visibility">4</data>
+        <data key="name">Api Simple Product Hold</data>
+        <data key="price">123.00</data>
+        <data key="urlKey" unique="suffix">api-simple-product-hold</data>
+        <data key="status">1</data>
+        <data key="quantity">1</data>
+        <requiredEntity type="product_extension_attribute">EavStockItem</requiredEntity>
+        <requiredEntity type="custom_attribute_array">CustomAttributeCategoryIds</requiredEntity>
+    </entity>
+    <entity name="EavStockItem" type="product_extension_attribute">
+        <requiredEntity type="stock_item">Qty_1</requiredEntity>
+    </entity>
+    <entity name="CustomAttributeCategoryIds" type="custom_attribute_array">
+        <data key="attribute_code">category_ids</data>
+        <var key="value" entityType="category" entityKey="id"/>
+    </entity>
+    <entity name="Qty_1" type="stock_item">
+        <data key="qty">1</data>
+        <data key="is_in_stock">true</data>
+    </entity>
+
+    <entity name="SimpleProductTestHoldVisibleOnPos" type="enable_visible_on_pos">
+        <data key="sku">api-simple-product-hold</data>
+        <data key="name">Api Simple Product Hold</data>
+    </entity>
+</entities>
+

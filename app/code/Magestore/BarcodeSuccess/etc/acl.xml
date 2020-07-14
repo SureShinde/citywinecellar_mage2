@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!--
+Copyright © 2016 Magestore. All rights reserved.
+See COPYING.txt for license details.
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="Magento_Catalog::catalog">
+                    <resource id="Magestore_BarcodeSuccess::barcode" title="Barcode Management" sortOrder="999" translate="title">
+                        <resource id="Magestore_BarcodeSuccess::manage_barcode" title="Barcode Listing" sortOrder="1" translate="title"/>
+                        <resource id="Magestore_BarcodeSuccess::import_barcode" title="Import Barcodes" sortOrder="3" translate="title"/>
+                        <resource id="Magestore_BarcodeSuccess::generate_barcode" title="Generate Barcodes" sortOrder="2" translate="title"/>
+                        <resource id="Magestore_BarcodeSuccess::scan_barcode" title="Scan Barcode" sortOrder="4" translate="title"/>                            
+                        <resource id="Magestore_BarcodeSuccess::print_barcode" title="Print Barcodes" sortOrder="5" translate="title"/>
+                        <resource id="Magestore_BarcodeSuccess::history" title="Barcode Generated History" sortOrder="6" translate="title"/>
+                        <resource id="Magestore_BarcodeSuccess::barcode_template" title="Barcode Label Templates" sortOrder="7" translate="title"/>
+                        <resource id="Magestore_BarcodeSuccess::settings" title="Barcode Settings" sortOrder="8" translate="title"/>
+                    </resource>
+                </resource>
+                <resource id="Magento_Backend::stores">
+                    <resource id="Magento_Backend::stores_settings">
+                        <resource id="Magento_Config::config">
+                            <resource id="Magestore_BarcodeSuccess::configuration" title="Barcode Settings" translate="title" />
+                        </resource>
+                    </resource>
+                </resource>                 
+            </resource>    
+        </resources>     
+    </acl>
+</config>

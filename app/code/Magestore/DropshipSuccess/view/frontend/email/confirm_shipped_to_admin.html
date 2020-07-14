@@ -1,0 +1,47 @@
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<!--@subject {{var store.getFrontendName()}}: Confirm Shipped Dropship Request # {{var dropshiprequest.id}}@-->
+<!--@vars
+{"store url=\"\"":"Store Url",
+"var logo_url":"Email Logo Image Url",
+"var logo_alt":"Email Logo Image Alt",
+"htmlescape var receipient_name":"Admin",
+"var dropshiprequest.id":"Dropship Request Id",
+"var store.getFrontendName()":"Store Name"}
+@-->
+{{template config_path="design/email/header_template"}}
+<table>
+    <tr>
+        <td>
+            <!-- [ header starts here] -->
+            <table>
+                 <tr>
+                    <td valign="top">
+                        <p class="greeting">{{trans "Dear store owner,"}}</p>
+                        <p>
+                            On behalf of {{var supplier.getSupplierName()}}, we are glad to confirm you that products requested  in the dropship request ID #{{var dropshiprequest.getId()}} have been delivered to your customer.<br/>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <h1>Dropship Request #{{var dropshiprequest.getId()}} for Order #{{var order.getIncrementId()}}</h1>
+                    </td>
+                </tr>
+                <tr class="email-information">
+                    <td>
+                        {{layout handle="sales_email_order_shipment_items" shipment=$shipment order=$order}}
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p style="font-size:12px; margin:0;">{{trans 'Thank you, ' }}<strong>{{var supplier.getSupplierName()}}</strong></p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>

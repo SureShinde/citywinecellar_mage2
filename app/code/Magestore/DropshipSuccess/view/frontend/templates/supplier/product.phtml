@@ -1,0 +1,45 @@
+<?php
+/**
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+?>
+<?php /** @var \Magestore\DropshipSuccess\Block\Supplier\Product $block */?>
+<style>
+    .order-products-toolbar div.limiter {float: right;}
+</style>
+<?php $products = $block->getProducts(); ?>
+<?php if ($products && count($products)): ?>
+    <div class="table-wrapper orders-history">
+        <table class="data table table-order-items history" id="my-orders-table">
+            <caption class="table-caption"><?php /* @escapeNotVerified */ echo __('Supplier\'s Products') ?></caption>
+            <thead>
+                <tr>
+                    <th scope="col" class="col id"><?php /* @escapeNotVerified */ echo __('Product Sku') ?></th>
+                    <th scope="col" class="col shipping"><?php /* @escapeNotVerified */ echo __('Product Supplier Sku') ?></th>
+                    <th scope="col" class="col total"><?php /* @escapeNotVerified */ echo __('Cost') ?></th>
+                    <th scope="col" class="col status"><?php /* @escapeNotVerified */ echo __('Tax (%)') ?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php /** @var \Magestore\SupplierSuccess\Model\Supplier\Product $product */?>
+                <?php foreach ($products as $product): ?>
+                    <tr>
+                        <td data-th="<?php echo $block->escapeHtml(__('Product Sku')) ?>" class="col sku"><?php /* @escapeNotVerified */ echo $product->getProductSku() ?></td>
+                        <td data-th="<?php echo $block->escapeHtml(__('Product Supplier Sku')) ?>" class="col sku"><?php /* @escapeNotVerified */ echo $product->getProductSupplierSku() ?></td>
+                        <td data-th="<?php echo $block->escapeHtml(__('Cost')) ?>" class="col cost"><?php echo $product->getCost()   ?></td>
+                        <td data-th="<?php echo $block->escapeHtml(__('Tax (%)')) ?>" class="col tax"><?php /* @escapeNotVerified */ echo $product->getTax() ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+    <?php if ($block->getPagerHtml()): ?>
+        <div class="order-products-toolbar toolbar bottom"><?php echo $block->getPagerHtml(); ?></div>
+    <?php endif ?>
+<?php else: ?>
+    <div class="message info empty"><span><?php /* @escapeNotVerified */ echo __('You have no products.'); ?></span></div>
+<?php endif ?>

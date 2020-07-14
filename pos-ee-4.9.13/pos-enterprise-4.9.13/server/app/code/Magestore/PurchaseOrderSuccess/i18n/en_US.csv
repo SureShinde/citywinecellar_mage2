@@ -1,0 +1,207 @@
+Name,Name
+Description,Description
+Status,Status
+Cancel,Cancel
+"Complete PO","Complete PO"
+"Confirm Purchase Order","Confirm Purchase Order"
+Print,Print
+"Receive Items","Receive Items"
+"Prepare Product List","Prepare Product List"
+Save,Save
+"Transfer Items","Transfer Items"
+Delete,Delete
+SKU,SKU
+"Product Name","Product Name"
+"Supplier SKU","Supplier SKU"
+"Current Cost","Current Cost"
+"Purchase Cost","Purchase Cost"
+"Tax (%)","Tax (%)"
+"Discount (%)","Discount (%)"
+"Qty Orderring","Qty Orderring"
+Action,Action
+N/A,N/A
+Canceled,Canceled
+Completed,Completed
+New,New
+Pending,Pending
+Processing,Processing
+"Convert Quotation to PO","Convert Quotation to PO"
+"%1 has been canceled.","%1 has been canceled."
+"Can not cancel this %1.","Can not cancel this %1."
+"Please select a purchase order to complete","Please select a purchase order to complete"
+"This purchase order is completed.","This purchase order is completed."
+"Purchase order has been confirmed","Purchase order has been confirmed"
+"Can not confirm purchase order","Can not confirm purchase order"
+"Manage Purchase Order","Manage Purchase Order"
+"Please select an purchase order to register payment","Please select an purchase order to register payment"
+"Please select an invoice to register payment.","Please select an invoice to register payment."
+"Register an payment successfully.","Register an payment successfully."
+"Please select an purchase order to submit refund","Please select an purchase order to submit refund"
+"Please select an invoice to submit refund.","Please select an invoice to submit refund."
+"Submit refund successfully.","Submit refund successfully."
+"Please select a purchase order to create invoice","Please select a purchase order to create invoice"
+"Please create invoice for at least one product.","Please create invoice for at least one product."
+"Create invoice successfully.","Create invoice successfully."
+"Please select a purchase order to view invoice","Please select a purchase order to view invoice"
+"Please select an invoice to view.","Please select an invoice to view."
+"View Invoice #%1 (Purchase Order #%2)","View Invoice #%1 (Purchase Order #%2)"
+"You must install mPDF if you want to print purchase order. Please visit here ""%1"" to do it.","You must install mPDF if you want to print purchase order. Please visit here ""%1"" to do it."
+"Could not print this Purchase Order","Could not print this Purchase Order"
+"Can not find the Purchase Order to print.","Can not find the Purchase Order to print."
+"%1 item has been imported.","%1 item has been imported."
+"No item has been imported.","No item has been imported."
+"Please select a purchase order to received product","Please select a purchase order to received product"
+"Please received at least one product.","Please received at least one product."
+"Received products successfully.","Received products successfully."
+"Received all products successfully.","Received all products successfully."
+"Please select a purchase order to return product","Please select a purchase order to return product"
+"Please return at least one product.","Please return at least one product."
+"Return products successfully.","Return products successfully."
+"This item is not existed.","This item is not existed."
+"An email has been sent to supplier","An email has been sent to supplier"
+"Could not send email to supplier","Could not send email to supplier"
+"%1 has been saved.","%1 has been saved."
+"Could not find supplier email address","Could not find supplier email address"
+"Please select a purchase order to transfer received product","Please select a purchase order to transfer received product"
+"Please transfer at least one product.","Please transfer at least one product."
+"Please transfer at least one product qty.","Please transfer at least one product qty."
+"Transfer products successfully.","Transfer products successfully."
+"View %1 #%2","View %1 #%2"
+"New %1 ","New %1 "
+"Convert to purchase order successfully.","Convert to purchase order successfully."
+"Can not convert to purchase order","Can not convert to purchase order"
+"Manage Quotation","Manage Quotation"
+Enable,Enable
+Disable,Disable
+"Warehouse: ","Warehouse: "
+Global,Global
+Email,Email
+Phone,Phone
+Fax,Fax
+"Vendor website","Vendor website"
+"Select a payment method","Select a payment method"
+"New payment method","New payment method"
+"Select a payment term","Select a payment term"
+"New payment term","New payment term"
+"Select a shipping method","Select a shipping method"
+"New shipping method","New shipping method"
+Confirmed,Confirmed
+"Please select a supplier","Please select a supplier"
+"Please select a warehouse","Please select a warehouse"
+"This item was not created.","This item was not created."
+"Could not delete this item.","Could not delete this item."
+"This invoice item was not created.","This invoice item was not created."
+"Could not delete this invoice item.","Could not delete this invoice item."
+"This payment was not created.","This payment was not created."
+"Could not delete this payment.","Could not delete this payment."
+"This refund was not created.","This refund was not created."
+"Could not delete this refund.","Could not delete this refund."
+"This invoice was not created.","This invoice was not created."
+"Could not delete this invoice.","Could not delete this invoice."
+"Could not delete purchase order.","Could not delete purchase order."
+"%1 is not existed.","%1 is not existed."
+"Required field is null","Required field is null"
+"Invalid file upload attempt.","Invalid file upload attempt."
+"Invalid file format.","Invalid file format."
+"Purchase order #%1","Purchase order #%1"
+"Transfer stock from purchase order #%1","Transfer stock from purchase order #%1"
+"Can not find this purchase order","Can not find this purchase order"
+"Can not received products: %1","Can not received products: %1"
+"Can not transfer product.","Can not transfer product."
+View,View
+"Create an Invoice (Purchase Order #%1)","Create an Invoice (Purchase Order #%1)"
+"Add Selected Products","Add Selected Products"
+From,From
+To,To
+"Import Product","Import Product"
+Import,Import
+"Returned Product","Returned Product"
+"Billed From","Billed From"
+"Billed Date","Billed Date"
+"Register Payment","Register Payment"
+"Save Payment","Save Payment"
+"Select Products","Select Products"
+Select,Select
+Remove,Remove
+Actions,Actions
+"Refund Invoice","Refund Invoice"
+"Submit Refund","Submit Refund"
+"New Payment Method","New Payment Method"
+"Payment Amount","Payment Amount"
+"Received Date","Received Date"
+"Receive Qty","Receive Qty"
+"Returned Date","Returned Date"
+"Returned Qty","Returned Qty"
+"Transferred Date","Transferred Date"
+"Transferred Qty","Transferred Qty"
+"Purchase From","Purchase From"
+"Delivery To","Delivery To"
+"Purchase Order","Purchase Order"
+"Telephone: ","Telephone: "
+"Email: ","Email: "
+"P.O#: ","P.O#: "
+"Created At: ","Created At: "
+"Status: ","Status: "
+"Items Ordered","Items Ordered"
+Product,Product
+Qty,Qty
+"Qty Received","Qty Received"
+Tax(%),Tax(%)
+Discount(%),Discount(%)
+Amount,Amount
+"Order Totals","Order Totals"
+"Grand Total (excl. Tax)","Grand Total (excl. Tax)"
+"Grand Total (incl. Tax)","Grand Total (incl. Tax)"
+"Total Bill","Total Bill"
+"Total Due","Total Due"
+Subtotal,Subtotal
+"Shipping Cost","Shipping Cost"
+Discount,Discount
+Tax,Tax
+Instruction,Instruction
+"Please choose a CSV file to import products to purchase order. You can download this sample CSV file","Please choose a CSV file to import products to purchase order. You can download this sample CSV file"
+Download,Download
+"Please choose  a CSV file to import:","Please choose  a CSV file to import:"
+"Created At","Created At"
+"Purchase from","Purchase from"
+"Payment Term","Payment Term"
+"Shipping Method","Shipping Method"
+Comments,Comments
+"Invoice Totals","Invoice Totals"
+"Total Refund","Total Refund"
+Error,Error
+"Please select at least one item.","Please select at least one item."
+"Order Success","Order Success"
+"Purchase Order","Purchase Order"
+"Manage Quotation","Manage Quotation"
+"List Quotations","List Quotations"
+"New Quotation","New Quotation"
+"View Quotation","View Quotation"
+"Save Quotation","Save Quotation"
+"Convert Quotation To Purchase Order","Convert Quotation To Purchase Order"
+"Manage Purchase Order","Manage Purchase Order"
+"List Purchase Order","List Purchase Order"
+"New Purchase Order","New Purchase Order"
+"View Purchase Order","View Purchase Order"
+"Save Purchase Order","Save Purchase Order"
+"Send Purchase Order Request","Send Purchase Order Request"
+"Print Purchase Order","Print Purchase Order"
+"Cancel Purchase Order","Cancel Purchase Order"
+"Confirm Purchase Order","Confirm Purchase Order"
+"Receive Purchase Order Products","Receive Purchase Order Products"
+"Return Purchase Order Products","Return Purchase Order Products"
+"Transfer Purchase Order Products","Transfer Purchase Order Products"
+"Manage Purchase Order Invoice","Manage Purchase Order Invoice"
+"Create Purchase Order Invoice","Create Purchase Order Invoice"
+"View Purchase Order Invoice","View Purchase Order Invoice"
+"Register Payment Purchase Order Invoice","Register Payment Purchase Order Invoice"
+"Refund Purchase Order Invoice","Refund Purchase Order Invoice"
+"Purchase Order Settings","Purchase Order Settings"
+"Purchase Management","Purchase Management"
+"Quotation Management","Quotation Management"
+Quotations,Quotations
+"Create Quotation","Create Quotation"
+"Purchase Order Management","Purchase Order Management"
+"Purchase Orders","Purchase Orders"
+"Create Purchase Order","Create Purchase Order"
+Settings,Settings

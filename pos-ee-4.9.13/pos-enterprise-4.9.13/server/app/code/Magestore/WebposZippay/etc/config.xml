@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+
+<!--
+  ~ Copyright © 2018 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <!-- Set default settings -->
+        <webpos>
+            <payment>
+                <zippay>
+                    <enable>0</enable>
+                    <title><![CDATA[Zippay]]></title>
+                    <api_url><![CDATA[https://merchantapi.sandbox.zipmoney.com.au/v1]]></api_url>
+                    <!--<api_key><![CDATA[T5rPbBU8R1t2qTFfZBXltlKh7AhnB/CJjroqZkWVan0=]]></api_key>-->
+                    <sort_order>999</sort_order>
+                </zippay>
+            </payment>
+        </webpos>
+    </default>
+</config>

@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="Magestore_OrderSuccess::all">                    
+                    <resource id="Magestore_OrderSuccess::fulfil_reports" title="Fulfilment Reports" sortOrder="100" translate="title">
+                        <resource id="Magestore_FulfilReport::fulfil_dashboard" title="Dashboard" sortOrder="10" translate="title"/>
+                        <resource id="Magestore_FulfilReport::reports" title="Reports" sortOrder="20" translate="title"/>
+                    </resource>
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>

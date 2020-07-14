@@ -1,0 +1,445 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright © 2019 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  ~
+  -->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+    <test name="SwitchOfflineSearchCustomerStabilityByFullName1">
+        <annotations>
+            <features value="Customer"/>
+            <stories value="Search Customer Stable Offline"/>
+            <title value="Search Customer Stable By Full Name Offline - Number 1"/>
+            <description value="Search Customer Stable By Full Name Offline - Number 1"/>
+            <severity value="MAJOR"/>
+            <group value="Stable"/>
+            <group value="Stable-Offline"/>
+            <group value="Stable-Offline-Customer"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+
+        <actionGroup ref="SearchCustomerByKeywordActionGroup" stepKey="SearchCustomerByKeywordActionGroup">
+            <argument name="keyword" value="stability_customer_00000002.fullname"/>
+            <argument name="customer" value="stability_customer_00000002"/>
+        </actionGroup>
+    </test>
+
+    <test name="SwitchOfflineSearchCustomerStabilityByFullName2">
+        <annotations>
+            <features value="Customer"/>
+            <stories value="Search Customer Stable Offline"/>
+            <title value="Search Customer Stable By Full Name Offline - Number 2"/>
+            <description value="Search Customer Stable By Full Name Offline - Number 2"/>
+            <severity value="MAJOR"/>
+            <group value="Stable"/>
+            <group value="Stable-Offline"/>
+            <group value="Stable-Offline-Customer"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+
+        <actionGroup ref="SearchCustomerByKeywordActionGroup" stepKey="SearchCustomerByKeywordActionGroup">
+            <argument name="keyword" value="stability_customer_00000003.fullname"/>
+            <argument name="customer" value="stability_customer_00000003"/>
+        </actionGroup>
+    </test>
+
+    <test name="SwitchOfflineSearchCustomerStabilityByFullName3">
+        <annotations>
+            <features value="Customer"/>
+            <stories value="Search Customer Stable Offline"/>
+            <title value="Search Customer Stable By Full Name Offline - Number 3"/>
+            <description value="Search Customer Stable By Full Name Offline - Number 3"/>
+            <severity value="MAJOR"/>
+            <group value="Stable"/>
+            <group value="Stable-Offline"/>
+            <group value="Stable-Offline-Customer"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+
+        <actionGroup ref="SearchCustomerByKeywordActionGroup" stepKey="SearchCustomerByKeywordActionGroup">
+            <argument name="keyword" value="stability_customer_00000004.fullname"/>
+            <argument name="customer" value="stability_customer_00000004"/>
+        </actionGroup>
+    </test>
+
+    <test name="SwitchOfflineSearchCustomerStabilityByFullName4">
+        <annotations>
+            <features value="Customer"/>
+            <stories value="Search Customer Stable Offline"/>
+            <title value="Search Customer Stable By Full Name Offline - Number 4"/>
+            <description value="Search Customer Stable By Full Name Offline - Number 4"/>
+            <severity value="MAJOR"/>
+            <group value="Stable"/>
+            <group value="Stable-Offline"/>
+            <group value="Stable-Offline-Customer"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+
+        <actionGroup ref="SearchCustomerByKeywordActionGroup" stepKey="SearchCustomerByKeywordActionGroup">
+            <argument name="keyword" value="stability_customer_00000005.fullname"/>
+            <argument name="customer" value="stability_customer_00000005"/>
+        </actionGroup>
+    </test>
+
+    <test name="SwitchOfflineSearchCustomerStabilityByFullName5">
+        <annotations>
+            <features value="Customer"/>
+            <stories value="Search Customer Stable Offline"/>
+            <title value="Search Customer Stable By Full Name Offline - Number 5"/>
+            <description value="Search Customer Stable By Full Name Offline - Number 5"/>
+            <severity value="MAJOR"/>
+            <group value="Stable"/>
+            <group value="Stable-Offline"/>
+            <group value="Stable-Offline-Customer"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+
+        <actionGroup ref="SearchCustomerByKeywordActionGroup" stepKey="SearchCustomerByKeywordActionGroup">
+            <argument name="keyword" value="stability_customer_00000006.fullname"/>
+            <argument name="customer" value="stability_customer_00000006"/>
+        </actionGroup>
+    </test>
+
+    <test name="SwitchOfflineSearchCustomerStabilityByFullName6">
+        <annotations>
+            <features value="Customer"/>
+            <stories value="Search Customer Stable Offline"/>
+            <title value="Search Customer Stable By Full Name Offline - Number 6"/>
+            <description value="Search Customer Stable By Full Name Offline - Number 6"/>
+            <severity value="MAJOR"/>
+            <group value="Stable"/>
+            <group value="Stable-Offline"/>
+            <group value="Stable-Offline-Customer"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+
+        <actionGroup ref="SearchCustomerByKeywordActionGroup" stepKey="SearchCustomerByKeywordActionGroup">
+            <argument name="keyword" value="stability_customer_00000007.fullname"/>
+            <argument name="customer" value="stability_customer_00000007"/>
+        </actionGroup>
+    </test>
+
+    <test name="SwitchOfflineSearchCustomerStabilityByFullName7">
+        <annotations>
+            <features value="Customer"/>
+            <stories value="Search Customer Stable Offline"/>
+            <title value="Search Customer Stable By Full Name Offline - Number 7"/>
+            <description value="Search Customer Stable By Full Name Offline - Number 7"/>
+            <severity value="MAJOR"/>
+            <group value="Stable"/>
+            <group value="Stable-Offline"/>
+            <group value="Stable-Offline-Customer"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+
+        <actionGroup ref="SearchCustomerByKeywordActionGroup" stepKey="SearchCustomerByKeywordActionGroup">
+            <argument name="keyword" value="stability_customer_00000008.fullname"/>
+            <argument name="customer" value="stability_customer_00000008"/>
+        </actionGroup>
+    </test>
+
+    <test name="SwitchOfflineSearchCustomerStabilityByFullName8">
+        <annotations>
+            <features value="Customer"/>
+            <stories value="Search Customer Stable Offline"/>
+            <title value="Search Customer Stable By Full Name Offline - Number 8"/>
+            <description value="Search Customer Stable By Full Name Offline - Number 8"/>
+            <severity value="MAJOR"/>
+            <group value="Stable"/>
+            <group value="Stable-Offline"/>
+            <group value="Stable-Offline-Customer"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+
+        <actionGroup ref="SearchCustomerByKeywordActionGroup" stepKey="SearchCustomerByKeywordActionGroup">
+            <argument name="keyword" value="stability_customer_00000009.fullname"/>
+            <argument name="customer" value="stability_customer_00000009"/>
+        </actionGroup>
+    </test>
+
+    <test name="SwitchOfflineSearchCustomerStabilityByFullName9">
+        <annotations>
+            <features value="Customer"/>
+            <stories value="Search Customer Stable Offline"/>
+            <title value="Search Customer Stable By Full Name Offline - Number 9"/>
+            <description value="Search Customer Stable By Full Name Offline - Number 9"/>
+            <severity value="MAJOR"/>
+            <group value="Stable"/>
+            <group value="Stable-Offline"/>
+            <group value="Stable-Offline-Customer"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+
+        <actionGroup ref="SearchCustomerByKeywordActionGroup" stepKey="SearchCustomerByKeywordActionGroup">
+            <argument name="keyword" value="stability_customer_00000010.fullname"/>
+            <argument name="customer" value="stability_customer_00000010"/>
+        </actionGroup>
+    </test>
+
+    <test name="SwitchOfflineSearchCustomerStabilityByFullName10">
+        <annotations>
+            <features value="Customer"/>
+            <stories value="Search Customer Stable Offline"/>
+            <title value="Search Customer Stable By Full Name Offline - Number 10"/>
+            <description value="Search Customer Stable By Full Name Offline - Number 10"/>
+            <severity value="MAJOR"/>
+            <group value="Stable"/>
+            <group value="Stable-Offline"/>
+            <group value="Stable-Offline-Customer"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+
+        <actionGroup ref="SearchCustomerByKeywordActionGroup" stepKey="SearchCustomerByKeywordActionGroup">
+            <argument name="keyword" value="stability_customer_00000011.fullname"/>
+            <argument name="customer" value="stability_customer_00000011"/>
+        </actionGroup>
+    </test>
+
+    <test name="SwitchOfflineSearchCustomerStabilityByFullName11">
+        <annotations>
+            <features value="Customer"/>
+            <stories value="Search Customer Stable Offline"/>
+            <title value="Search Customer Stable By Full Name Offline - Number 11"/>
+            <description value="Search Customer Stable By Full Name Offline - Number 11"/>
+            <severity value="MAJOR"/>
+            <group value="Stable"/>
+            <group value="Stable-Offline"/>
+            <group value="Stable-Offline-Customer"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+
+        <actionGroup ref="SearchCustomerByKeywordActionGroup" stepKey="SearchCustomerByKeywordActionGroup">
+            <argument name="keyword" value="stability_customer_00000012.fullname"/>
+            <argument name="customer" value="stability_customer_00000012"/>
+        </actionGroup>
+    </test>
+
+    <test name="SwitchOfflineSearchCustomerStabilityByFullName12">
+        <annotations>
+            <features value="Customer"/>
+            <stories value="Search Customer Stable Offline"/>
+            <title value="Search Customer Stable By Full Name Offline - Number 12"/>
+            <description value="Search Customer Stable By Full Name Offline - Number 12"/>
+            <severity value="MAJOR"/>
+            <group value="Stable"/>
+            <group value="Stable-Offline"/>
+            <group value="Stable-Offline-Customer"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+
+        <actionGroup ref="SearchCustomerByKeywordActionGroup" stepKey="SearchCustomerByKeywordActionGroup">
+            <argument name="keyword" value="stability_customer_00000013.fullname"/>
+            <argument name="customer" value="stability_customer_00000013"/>
+        </actionGroup>
+    </test>
+
+    <test name="SwitchOfflineSearchCustomerStabilityByFullName13">
+        <annotations>
+            <features value="Customer"/>
+            <stories value="Search Customer Stable Offline"/>
+            <title value="Search Customer Stable By Full Name Offline - Number 13"/>
+            <description value="Search Customer Stable By Full Name Offline - Number 13"/>
+            <severity value="MAJOR"/>
+            <group value="Stable"/>
+            <group value="Stable-Offline"/>
+            <group value="Stable-Offline-Customer"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+
+        <actionGroup ref="SearchCustomerByKeywordActionGroup" stepKey="SearchCustomerByKeywordActionGroup">
+            <argument name="keyword" value="stability_customer_00000014.fullname"/>
+            <argument name="customer" value="stability_customer_00000014"/>
+        </actionGroup>
+    </test>
+
+    <test name="SwitchOfflineSearchCustomerStabilityByFullName14">
+        <annotations>
+            <features value="Customer"/>
+            <stories value="Search Customer Stable Offline"/>
+            <title value="Search Customer Stable By Full Name Offline - Number 14"/>
+            <description value="Search Customer Stable By Full Name Offline - Number 14"/>
+            <severity value="MAJOR"/>
+            <group value="Stable"/>
+            <group value="Stable-Offline"/>
+            <group value="Stable-Offline-Customer"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+
+        <actionGroup ref="SearchCustomerByKeywordActionGroup" stepKey="SearchCustomerByKeywordActionGroup">
+            <argument name="keyword" value="stability_customer_00000015.fullname"/>
+            <argument name="customer" value="stability_customer_00000015"/>
+        </actionGroup>
+    </test>
+
+    <test name="SwitchOfflineSearchCustomerStabilityByFullName15">
+        <annotations>
+            <features value="Customer"/>
+            <stories value="Search Customer Stable Offline"/>
+            <title value="Search Customer Stable By Full Name Offline - Number 15"/>
+            <description value="Search Customer Stable By Full Name Offline - Number 15"/>
+            <severity value="MAJOR"/>
+            <group value="Stable"/>
+            <group value="Stable-Offline"/>
+            <group value="Stable-Offline-Customer"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+
+        <actionGroup ref="SearchCustomerByKeywordActionGroup" stepKey="SearchCustomerByKeywordActionGroup">
+            <argument name="keyword" value="stability_customer_00000016.fullname"/>
+            <argument name="customer" value="stability_customer_00000016"/>
+        </actionGroup>
+    </test>
+
+    <test name="SwitchOfflineSearchCustomerStabilityByFullName16">
+        <annotations>
+            <features value="Customer"/>
+            <stories value="Search Customer Stable Offline"/>
+            <title value="Search Customer Stable By Full Name Offline - Number 16"/>
+            <description value="Search Customer Stable By Full Name Offline - Number 16"/>
+            <severity value="MAJOR"/>
+            <group value="Stable"/>
+            <group value="Stable-Offline"/>
+            <group value="Stable-Offline-Customer"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+
+        <actionGroup ref="SearchCustomerByKeywordActionGroup" stepKey="SearchCustomerByKeywordActionGroup">
+            <argument name="keyword" value="stability_customer_00000017.fullname"/>
+            <argument name="customer" value="stability_customer_00000017"/>
+        </actionGroup>
+    </test>
+
+    <test name="SwitchOfflineSearchCustomerStabilityFourResultByFullName1">
+        <annotations>
+            <features value="Customer"/>
+            <stories value="Search Customer Stable Offline"/>
+            <title value="Search Customer Stable Four Result By Full Name Offline - Number 1"/>
+            <description value="Search Customer Stable Four Result By Full Name Offline - Number 1"/>
+            <severity value="MAJOR"/>
+            <group value="Stable"/>
+            <group value="Stable-Offline"/>
+            <group value="Stable-Offline-Customer"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+
+        <actionGroup ref="SearchCustomerByKeywordMultiResultsActionGroup" stepKey="SearchCustomerByKeywordActionGroup">
+            <argument name="keyword" value="four_result.keyword_full"/>
+        </actionGroup>
+    </test>
+
+    <test name="SwitchOfflineSearchCustomerStabilityFourResultByFullName2">
+        <annotations>
+            <features value="Customer"/>
+            <stories value="Search Customer Stable Offline"/>
+            <title value="Search Customer Stable Four Result By Full Name Offline - Number 2"/>
+            <description value="Search Customer Stable Four Result By Full Name Offline - Number 2"/>
+            <severity value="MAJOR"/>
+            <group value="Stable"/>
+            <group value="Stable-Offline"/>
+            <group value="Stable-Offline-Customer"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+
+        <actionGroup ref="SearchCustomerByKeywordMultiResultsActionGroup" stepKey="SearchCustomerByKeywordActionGroup">
+            <argument name="keyword" value="four_result.keyword_full"/>
+        </actionGroup>
+    </test>
+
+    <test name="SwitchOfflineSearchCustomerStabilityElevenResultByFullName1">
+        <annotations>
+            <features value="Customer"/>
+            <stories value="Search Customer Stable Offline"/>
+            <title value="Search Customer Stable Eleven Result By Full Name Offline - Number 1"/>
+            <description value="Search Customer Stable Eleven Result By Full Name Offline - Number 1"/>
+            <severity value="MAJOR"/>
+            <group value="Stable"/>
+            <group value="Stable-Offline"/>
+            <group value="Stable-Offline-Customer"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+
+        <actionGroup ref="SearchCustomerByKeywordMultiResultsMultiPagesActionGroup" stepKey="SearchCustomerByKeywordActionGroup">
+            <argument name="keyword" value="eleven_result.keyword_full"/>
+        </actionGroup>
+    </test>
+
+    <test name="SwitchOfflineSearchCustomerStabilityElevenResultByFullName2">
+        <annotations>
+            <features value="Customer"/>
+            <stories value="Search Customer Stable Offline"/>
+            <title value="Search Customer Stable Eleven Result By Full Name Offline - Number 2"/>
+            <description value="Search Customer Stable Eleven Result By Full Name Offline - Number 2"/>
+            <severity value="MAJOR"/>
+            <group value="Stable"/>
+            <group value="Stable-Offline"/>
+            <group value="Stable-Offline-Customer"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+
+        <actionGroup ref="SearchCustomerByKeywordMultiResultsMultiPagesActionGroup" stepKey="SearchCustomerByKeywordActionGroup">
+            <argument name="keyword" value="eleven_result.keyword_full"/>
+        </actionGroup>
+    </test>
+</tests>

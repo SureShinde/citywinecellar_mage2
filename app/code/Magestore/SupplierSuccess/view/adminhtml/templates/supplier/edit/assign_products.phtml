@@ -1,0 +1,33 @@
+<?php
+    /**
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+    /** @var \Magestore\SupplierSuccess\Block\Adminhtml\Supplier\Edit\AssignProduct $block */
+
+    /** @var \Magestore\SupplierSuccess\Block\Adminhtml\Supplier\Edit\Tab\Product $blockGrid */
+    $blockGrid = $block->getBlockGrid();
+    $gridJsObjectName = $blockGrid->getJsObjectName();
+    $editAbleFields = $blockGrid->getEditableFields();
+    $hiddenField = $blockGrid->getHiddenInputField();
+?>
+<?php  echo $block->getGridHtml(); ?>
+<input type="hidden" name="supplier_products" id="supplier_products" data-form-part="os_supplier_form" value="" />
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "Magestore_SupplierSuccess/js/supplier/product/assign-product": {
+                "hiddenInputField": <?php /* @escapeNotVerified */ echo '"' . $hiddenField . '"' ?: ''; ?>,
+                "selectedProducts": <?php /* @escapeNotVerified */ echo $block->getProductsJson(); ?>,
+                "gridJsObjectName": <?php /* @escapeNotVerified */ echo '"' . $gridJsObjectName . '"' ?: '{}'; ?>,
+                "editFields": <?php /* @escapeNotVerified */ echo $editAbleFields; ?>,
+                "deleteUrl": <?php /* @escapeNotVerified */ echo '"' . $blockGrid->getDeleteUrl() . '"' ?: '""'; ?>
+            }
+        }
+    }
+</script>
+<!-- @todo remove when "UI components" will support such initialization -->
+<script>
+    require('mage/apply/main').apply();
+</script>

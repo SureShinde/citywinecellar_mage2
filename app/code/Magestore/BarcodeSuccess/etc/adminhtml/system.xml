@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<!--
+Copyright © 2016 Magestore. All rights reserved.
+See COPYING.txt for license details.
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="magestore" translate="label" sortOrder="100">
+            <label>magestore</label>
+        </tab>
+        <section id="barcodesuccess" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <class>separator-top</class>
+            <label>Barcode Configuration</label>
+            <tab>magestore</tab>
+            <resource>Magestore_BarcodeSuccess::configuration</resource>
+            <group id="general" translate="label" sortOrder="1" type="text" showInDefault="1" showInWebsite="0">
+                <label>General Configuration</label>
+                <field id="one_barcode_per_sku" translate="label comment" sortOrder="10" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>One barcode per product sku</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="barcode_pattern" translate="label comment" sortOrder="20" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Barcode pattern</label>
+                    <comment><![CDATA[Used to generate barcodes. For example:<br/>
+                        <strong>[A.8] : 8 alpha characters<br/>
+                        [N.4] : 4 numeric characters<br/>
+                        [AN.6] : 6 alphanumeric characters<br/>
+                        BAR[A.4][AN.6] : BARADFA12NF0O</strong><br/>
+                        <i>Warning: BarcodeSuccess extension does NOT support generating barcode EAN-13</i>]]>
+                    </comment>
+                </field>
+                <field id="default_barcode_template" translate="label comment" sortOrder="30" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Default barcode template for printing</label>
+                    <source_model>Magestore\BarcodeSuccess\Model\Source\Config\Template</source_model>
+                </field>
+                <field id="attribute_code" translate="label comment" type="select" sortOrder="40" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Use the attribute as barcode</label>
+                    <source_model>Magestore\BarcodeSuccess\Model\System\Config\Source\AttributeCode</source_model>
+                    <comment>
+                        <![CDATA[<strong style="color:red">Warning!</strong> Value of this attribute will be imported to barcode. All existed barcode will be <strong style="color:red">DELETED</strong> and <strong style="color:red">OVERRIDED</strong>. It will override the barcode pattern.]]>
+                    </comment>
+                </field>
+            </group>
+            <group id="guide" translate="label" sortOrder="100" type="text" showInDefault="1" showInWebsite="0">
+                <label>Guide</label>
+                <field id="setup_guide" translate="label" sortOrder="1" type="text" showInDefault="1" showInWebsite="0">
+                    <label>Setup guide</label>
+                    <frontend_model>Magestore\BarcodeSuccess\Block\Adminhtml\Config\Instruction</frontend_model>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="ConfigurableProductSelectOptionsAndAddToCartActionGroup">
+        <arguments>
+            <argument name="product" defaultValue="pos_config_product_MH09"/>
+        </arguments>
+
+        <waitForElementVisible selector="{{PosCheckoutPopupAddConfigurableProductSection.configProductPopup}}" time="120" stepKey="waitForConfigurablePopupVisible"/>
+        <waitForElementVisible selector="{{PosCheckoutPopupAddConfigurableProductSection.productOptionsAtribute}}" time="120" stepKey="waitForOptionsVisible"/>
+        <click selector="{{PosCheckoutPopupAddConfigurableProductSection.sizeOption(product.size)}}" stepKey="selectSize"/>
+        <click selector="{{PosCheckoutPopupAddConfigurableProductSection.colorOption(product.color)}}" stepKey="selectColor"/>
+        <wait time="1" stepKey="wait1second"/>
+        <waitForElementNotVisible selector="{{PosCheckoutPopupAddConfigurableProductSection.loaderProduct}}" time="120" stepKey="waitForLoaderNotVisible"/>
+        <wait time="3" stepKey="wait3second"/>
+        <click selector="{{PosCheckoutPopupAddConfigurableProductSection.addToCartButton}}" stepKey="clickAddToCart"/>
+    </actionGroup>
+</actionGroups>

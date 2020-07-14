@@ -1,0 +1,56 @@
+<?php
+/**
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+?>
+<?php $_orderItem = $block->getItem() ?>
+<?php if ($_orderItem && !$_orderItem->isShipSeparately() && $_orderItem->getChildrenItems() && count($_orderItem->getChildrenItems())) :?>
+    <?php $randomId = rand(); ?>
+    <?php foreach ($_orderItem->getChildrenItems() as $child): ?>
+    <tr class="data-grid-controls-row data-row">
+        <td>
+            <label class="data-grid-checkbox-cell-inner">
+                <input type="checkbox"
+                       disabled="true"
+                       id="select-item-<?php /* @noEscape */ echo $randomId . '-' . $child->getItemId(); ?>"
+                       value="<?php /* @escapeNotVerified */ echo $child->getItemId(); ?>"
+                       class="checkbox admin__control-checkbox child-check-box" />
+            </label>       
+        </td>
+        <td>
+            <?php /* @escapeNotVerified */ echo $child->getName(); ?>
+        </td>
+        <td>
+            <?php /* @escapeNotVerified */ echo $child->getSku(); ?>
+        </td>
+        <td>
+            <?php /* @escapeNotVerified */ echo $block->getBundleQty($child) * $_orderItem->getQtyToShip(); ?>
+        </td>
+        <td>
+            <input type="hidden" class="bundle-qty" value="<?php /* @escapeNotVerified */ echo $block->getBundleQty($child)?>"/>
+            <input type="number"
+                   min="0"
+                   name="qty"
+                   disabled="true"
+                   value="<?php /* @escapeNotVerified */ echo $block->getBundleQty($child) * $_orderItem->getQtyToShip(); ?>"
+                   class="input-text admin__control-text pick-qty pick-qty-<?php echo $_orderItem->getItemId()?> child-qty-<?php /* @escapeNotVerified */ echo $_orderItem->getItemId() ?> qty<?php if ($child->getIsQtyDecimal()): ?> qty-decimal<?php endif ?>">&nbsp;
+        </td>
+        <td data-role="item-resource">
+            <input type="hidden" class="pick-product" value="<?php /* @escapeNotVerified */ echo $child->getProductId(); ?>">
+            <input type="hidden" class="pick-item" value="<?php /* @escapeNotVerified */ echo $child->getItemId(); ?>">
+            <select name="resource" 
+                    class="admin__control-select pick-warehouse pick-warehouse-<?php echo $_orderItem->getItemId()?> child-wh-<?php /* @escapeNotVerified */ echo $_orderItem->getItemId() ?>" 
+                    disabled="true">
+                <?php foreach ($block->getAvailableWarehouses($child) as $warehouseId => $warehouseData): ?>
+                    <option value="<?php /* @escapeNotVerified */ echo $warehouseId ?>">
+                        <?php echo /* @escapeNotVerified */  $warehouseData['warehouse'] . ' - Avail. Qty: ' . 1 * $warehouseData['available_qty'] ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </td>
+    </tr>
+    <?php endforeach; ?>
+<?php endif; ?>

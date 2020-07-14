@@ -1,0 +1,56 @@
+<?php
+/**
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/* Account Information */ ?>
+<?php /** @var \Magestore\FulfilSuccess\Block\Adminhtml\AbstractRequest\Detail\Account $block */ ?>
+<?php $_order = $block->getOrder() ?>
+<div class="admin__page-section-item-title">
+        <span class="title"><?php /* @escapeNotVerified */
+            echo __('Account Information') ?></span>
+    <div class="actions"><?php /* @escapeNotVerified */
+        echo $block->getAccountEditLink() ?></div>
+</div>
+<div class="admin__page-section-item-content">
+    <table class="admin__table-secondary order-account-information-table">
+        <tr>
+            <th><?php /* @escapeNotVerified */
+                echo __('Customer Name') ?></th>
+            <td>
+                <?php if ($_customerUrl = $block->getCustomerViewUrl()) : ?>
+                    <a href="<?php /* @escapeNotVerified */
+                    echo $_customerUrl ?>" target="_blank">
+                        <span><?php echo $block->escapeHtml($_order->getCustomerName()) ?></span>
+                    </a>
+                <?php else: ?>
+                    <?php echo $block->escapeHtml($_order->getCustomerName()) ?>
+                <?php endif; ?>
+            </td>
+        </tr>
+        <tr>
+            <th><?php /* @escapeNotVerified */
+                echo __('Email') ?></th>
+            <td>
+                <a href="mailto:<?php echo $block->escapeHtml($_order->getCustomerEmail()) ?>"><?php echo $block->escapeHtml($_order->getCustomerEmail()) ?></a>
+            </td>
+        </tr>
+        <?php if ($_groupName = $block->getCustomerGroupName()) : ?>
+            <tr>
+                <th><?php /* @escapeNotVerified */
+                    echo __('Customer Group') ?></th>
+                <td><?php /* @escapeNotVerified */
+                    echo $_groupName ?></td>
+            </tr>
+        <?php endif; ?>
+        <?php foreach ($block->getCustomerAccountData() as $data): ?>
+            <tr>
+                <th><?php /* @escapeNotVerified */
+                    echo $data['label'] ?></th>
+                <td><?php /* @escapeNotVerified */
+                    echo $data['value'] ?></td>
+            </tr>
+        <?php endforeach; ?>
+    </table>
+</div>

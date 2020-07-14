@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2015 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="sales_order_save_before">
+        <observer name="StorepickupSaveShippingDecription" instance="Magestore\Storepickup\Observer\SaveStorepickupDecription" />
+    </event>
+    <event name="sales_model_service_quote_submit_success">
+        <observer name="SalesModelServiceQuoteSubmitSuccess" instance="Magestore\Storepickup\Observer\SalesModelServiceQuoteSubmitSuccess" />
+    </event>
+    <!--<event name='payment_method_is_active'>
+        <observer name='StorepickupPaymentMethodIsActive' instance='Magestore\Storepickup\Observer\PaymentActive' />
+    </event>-->
+    <event name='inventorysuccess_get_current_warehouse_by_store'>
+        <observer name='storepickup_get_current_warehouse_by_store' instance='Magestore\Storepickup\Observer\GetCurrentWarehouseByStore' />
+    </event>
+</config>

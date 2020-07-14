@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_PromoBanners
+ */
+-->
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content">
+            <block before="category.products" class="Amasty\PromoBanners\Block\Container"
+                   name="ambanners.category" template="container.phtml">
+                <action method="setPosition">
+                    <argument name="position" xsi:type="string">4</argument>
+                </action>
+            </block>
+            <block after="category.products" class="Amasty\PromoBanners\Block\Container"
+                   name="ambanners.category.bottom" template="container.phtml">
+                <action method="setPosition">
+                    <argument name="position" xsi:type="string">5</argument>
+                </action>
+            </block>
+            <block after="category.products" class="Amasty\PromoBanners\Block\Container"
+                   name="ambanners.inject" template="container.phtml">
+                <action method="setPosition">
+                    <argument name="position" xsi:type="string">14</argument>
+                </action>
+            </block>
+            <block before="category.products" class="Amasty\PromoBanners\Block\Container"
+                   name="ambanners.category.add.to.cart" template="container.phtml">
+                <action method="setPosition">
+                    <argument name="position" xsi:type="string">15</argument>
+                </action>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    
+    <event name="ordersuccess_process_shipment">
+        <observer name="create_dropship_request"
+                  instance="Magestore\DropshipSuccess\Observer\DropshipRequest\OrderSuccessProcessShipment" />
+    </event>
+
+    <!-- skip update qty to warehouse after shipment from dropship -->
+    <event name="inventorysuccess_create_shipment_warehouse">
+        <observer name="dropshipsuccess_ordersuccess_skip_update_qty_warehouse"
+                  instance="Magestore\DropshipSuccess\Observer\Shipment\SkipUpdateQtyToWarehouse"/>
+    </event>
+    <!-- End skip update qty to warehouse after shipment from dropship -->
+
+    <!-- Sales Sales events -->
+    <event name="order_cancel_after">
+        <observer name="dropshipsuccess_order_cancel_after"
+                  instance="Magestore\DropshipSuccess\Observer\Sales\OrderCancelAfter"/>
+    </event>
+    <event name="sales_order_creditmemo_save_after">
+        <observer name="dropshipsuccess_sales_order_creditmemo_save_after"
+                  instance="Magestore\DropshipSuccess\Observer\Sales\CreditmemoSaveAfter"/>
+    </event>
+    <!-- End of Sales Sales events -->
+</config>

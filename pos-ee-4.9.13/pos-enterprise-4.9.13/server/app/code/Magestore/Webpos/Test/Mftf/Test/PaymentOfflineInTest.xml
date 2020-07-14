@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="PaymentOfflineInTestASetting">
+        <annotations>
+            <features value="Payment"/>
+            <stories value="Setup Offline Payment"/>
+            <title value="Setup Offline Payment"/>
+            <description value="Setup Offline Payment"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="PMO-01"/>
+            <group value="pwapos"/>
+        </annotations>
+
+        <before>
+            <wait time="10" stepKey="waitBeforeLoginBackend" />
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="CreateNewOfflinePaymentMethod" stepKey="CreateNewOfflinePaymentMethod"/>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <after>
+            <amOnPage url="admin/admin/auth/logout/" stepKey="amOnLogoutPage"/>
+            <wait time="10" stepKey="wait10SecondsBeforeFinish" />
+        </after>
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+        <actionGroup ref="AddProductAndCharge" stepKey="AddProductAndCharge">
+            <argument name="dataProduct" value="pos_simple_product_2" />
+        </actionGroup>
+        <waitForElementVisible selector="{{PosCheckoutPaymentOfflineSection.iconFirstOfflinePayment}}" time="5" stepKey="waitPaymentOfflineVisible1"/>
+        <seeElement selector="{{PosCheckoutPaymentOfflineSection.iconFirstOfflinePayment}}" stepKey="seeIconOfflinePayment1" />
+        <seeElement selector="{{PosCheckoutPaymentOfflineSection.iconSecondOfflinePayment}}" stepKey="seeIconOfflinePayment2" />
+        <seeElement selector="{{PosCheckoutPaymentOfflineSection.iconThirdOfflinePayment}}" stepKey="seeIconOfflinePayment3" />
+        <wait time="3" stepKey="waitBeforeFinishActionGroup1"/>
+    </test>
+
+    <test name="PaymentOfflineInTestBPartialPayment">
+        <annotations>
+            <features value="Payment"/>
+            <stories value="Offline payment method- Partial payment"/>
+            <title value="Offline payment method- Partial payment"/>
+            <description value="Offline payment method- Partial payment"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="PMO-02"/>
+            <group value="pwapos"/>
+        </annotations>
+
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+        <actionGroup ref="AddProductAndCharge" stepKey="AddProductAndCharge">
+            <argument name="dataProduct" value="pos_simple_product_2" />
+        </actionGroup>
+
+        <waitForElementVisible selector="{{PosCheckoutPaymentOfflineSection.iconFirstOfflinePayment}}" time="5" stepKey="waitPaymentOfflineVisible1"/>
+        <click selector="{{PosCheckoutPaymentOfflineSection.iconFirstOfflinePayment}}" stepKey="clickOfflinePayment1"/>
+        <click selector="{{PosCheckoutPaymentSection.accept}}" stepKey="clickAccept"/>
+
+        <!-- Check: Display Remaining amount = $34.64 -->
+        <grabTextFrom selector="{{PosCheckoutPaymentSection.totalLabel}}" stepKey="grabTotalPaymentLabel"/>
+        <grabTextFrom selector="{{PosCheckoutPaymentSection.totalValue}}" stepKey="grabTotalPaymentValue"/>
+        <assertEquals message="Remaining total label is correct." stepKey="compareRemainingTotalLabel">
+            <expectedResult type="string">Remaining</expectedResult>
+            <actualResult type="variable">grabTotalPaymentLabel</actualResult>
+        </assertEquals>
+        <assertEquals message="Remaining total value is correct." stepKey="compareRemainingTotalValue">
+            <expectedResult type="string">$34.64</expectedResult>
+            <actualResult type="variable">grabTotalPaymentValue</actualResult>
+        </assertEquals>
+        <!-- End Check: Display Remaining amount = $34.64-->
+
+        <!-- Add Offline Payment Method 2 -->
+        <waitForElementVisible selector="{{CheckoutSection.CompleteOrder}}" time="10" stepKey="waitCompleteOrderPageVisible"/>
+        <seeElement selector="{{CheckoutSection.addPaymentButton}}" stepKey="seeAddPaymentButton" />
+        <click selector="{{CheckoutSection.addPaymentButton}}" stepKey="clickAddPaymentButton"/>
+
+        <waitForElementVisible selector="{{PosCheckoutPaymentOfflineSection.iconSecondOfflinePayment}}" time="10" stepKey="waitPaymentOfflineVisible2"/>
+        <wait time="1" stepKey="waitBeforeClickSecondOfflinePayment" />
+        <click selector="{{PosCheckoutPaymentOfflineSection.iconSecondOfflinePayment}}" stepKey="clickOfflinePayment2"/>
+        <!-- End Add Offline Payment Method 2 -->
+
+        <!-- Check Message: You can select only one Pay Later method for an order. Please choose another payment method. -->
+        <waitForElementVisible selector="{{ToastSection.message}}" time="30" stepKey="waitForWarningMessage"/>
+        <grabTextFrom selector="{{ToastSection.message}}" stepKey="grabMessageText"/>
+        <assertContains message="Check message is correct." stepKey="checkMessageIsCorrect1">
+            <expectedResult type="string">You can select only one Pay Later method for an order. Please choose another payment method.</expectedResult>
+            <actualResult type="variable">grabMessageText</actualResult>
+        </assertContains>
+        <!-- End Check-->
+
+        <click selector="{{PosCheckoutPaymentSection.back}}" stepKey="clickBackButton"/>
+
+        <!-- Partial button and Complete Order -->
+        <waitForElementVisible selector="{{PosCheckoutPaymentSection.addPayment}}" time="120" stepKey="addPaymentCheck"/>
+        <seeElement selector="{{PosCheckoutPaymentSection.addPayment}}" stepKey="addPaymentSee" />
+        <click selector="{{PosCheckoutPaymentSection.partial}}" stepKey="clickPartial"/>
+
+
+        <waitForElementVisible selector="{{CheckoutSection.popupConfirmPartial}}" time="120" stepKey="waitPopupConfirmedPartial"/>
+        <waitForElementVisible selector="{{CheckoutSection.popupConfirmPartialButtonComplete}}" time="120" stepKey="waitButtonCompleteButtonVisible"/>
+        <actionGroup ref="DisablePrintPopup" stepKey="DisablePrintPopup1"/>
+        <wait time="1" stepKey="waitBeforeClickComplete"/>
+        <click selector="{{CheckoutSection.popupConfirmPartialButtonComplete}}" stepKey="clickToCompleteButton"/>
+        <!--End of partial button and confirm order-->
+        <waitForElementNotVisible selector="{{PosCheckoutPaymentSection.popupCompleteOrder}}" time="120" stepKey="popupCompleteWaitNotVisible"/>
+    </test>
+
+    <test name="PaymentOfflineInTestCRefund">
+        <annotations>
+            <features value="Payment"/>
+            <stories value="Order Refund"/>
+            <title value="Order Refund"/>
+            <description value="Order Refund"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="PMO-03"/>
+            <group value="pwapos"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+        <actionGroup ref="AddProductAndCharge" stepKey="AddProductAndCharge">
+            <argument name="dataProduct" value="pos_simple_product_2" />
+        </actionGroup>
+
+        <waitForElementVisible selector="{{PosCheckoutPaymentOfflineSection.iconThirdOfflinePayment}}" time="120" stepKey="waitPaymentOfflineVisible3"/>
+        <click selector="{{PosCheckoutPaymentOfflineSection.iconThirdOfflinePayment}}" stepKey="clickOfflinePayment3"/>
+        <click selector="{{PosCheckoutPaymentSection.accept}}" stepKey="clickAccept"/>
+
+        <!-- Check: Display Remaining amount = $0.00-->
+        <grabTextFrom selector="{{PosCheckoutPaymentSection.totalLabel}}" stepKey="grabTotalPaymentLabel"/>
+        <grabTextFrom selector="{{PosCheckoutPaymentSection.totalValue}}" stepKey="grabTotalPaymentValue"/>
+        <assertEquals message="Remaining total label is correct." stepKey="compareRemainingTotalLabel">
+            <expectedResult type="string">Remaining</expectedResult>
+            <actualResult type="variable">grabTotalPaymentLabel</actualResult>
+        </assertEquals>
+        <assertEquals message="Remaining total value is correct." stepKey="compareRemainingTotalValue">
+            <expectedResult type="string">$0.00</expectedResult>
+            <actualResult type="variable">grabTotalPaymentValue</actualResult>
+        </assertEquals>
+        <!-- End Check: Display Remaining amount = $0.00-->
+
+        <!-- Complete Order and see success message -->
+        <actionGroup ref="DisablePrintPopup" stepKey="DisablePrintPopup2"/>
+        <click selector="{{CheckoutSection.CompleteOrder}}" stepKey="completePayment"/>
+        <waitForElementVisible selector="{{ProductListSection.toastSuccessMessage}}" time="120" stepKey="seeToastSuccessShow"/>
+        <seeElement selector="{{ProductListSection.contentSuccessMessage('Order #', 'has been created successfully!')}}" stepKey="checkSuccessMessage"/>
+        <!-- End Complete Order and see success message -->
+
+        <actionGroup ref="GetOrderIdFromToast" stepKey="GetOrderIdFromToast1"/>
+
+        <!-- Refund First Order -->
+        <actionGroup ref="GetOrderIdFromToast" stepKey="GetOrderIdFromToast"/>
+        <actionGroup ref="GoToFirstOrderDetailFrontend" stepKey="GoToFirstOrderDetailFrontend">
+            <argument name="orderId" value="{$orderIdGetOrderIdFromToast}"/>
+        </actionGroup>
+        <wait time="2" stepKey="waitBeforeRefund" />
+        <click selector="{{OrderDetailSection.actionButton('Refund')}}" stepKey="clickOnRefundActionButton" />
+        <waitForElementVisible selector="{{RefundSection.popupLabel('Refund Items')}}" time="120" stepKey="waitRefundPopupIsShowed" />
+        <waitForElementVisible selector="{{RefundSection.firstItemOnRefundList}}" time="120" stepKey="waitFirstItemOnRefundPopupIsShowed" />
+        <wait time="1" stepKey="waitBeforeStartRefund" />
+        <seeElement stepKey="checkOrderIdOnRefundPopup" selector="{{RefundSection.popupLabel({$orderIdGetOrderIdFromToast})}}" />
+        <click selector="{{RefundSection.increaseQtyRefundButton}}" stepKey="clickOnIncreaseRefundQtyActionButton" />
+        <see stepKey="checkRefundQtyBeforeNextStep" selector="{{RefundSection.qtyRefundBox}}" userInput="{{multi_currency_refund_order.qtyRefund}}" />
+        <click selector="{{RefundSection.buttonBottom('Next')}}" stepKey="clickOnNextActionButton" />
+
+        <!-- Adjustment step -->
+        <seeElement stepKey="checkStepLabelOnAdjustmentsPopup" selector="{{RefundSection.popupLabel('Refund Adjustments')}}" />
+        <click selector="{{RefundSection.buttonBottom('Next')}}" stepKey="clickOnNextActionButtonToCompleteRefund" />
+
+        <!-- Payment step -->
+        <seeElement stepKey="checkStepLabelOnPaymentPopup" selector="{{RefundSection.popupLabel('Refund Payment Method')}}" />
+        <seeElement stepKey="seeFirstOfflinePayment" selector="{{PosCheckoutPaymentOfflineSection.refundFirstOfflinePayment}}" />
+        <click selector="{{PosCheckoutPaymentOfflineSection.refundFirstOfflinePaymentAmount}}" stepKey="clickOnPaymentAmount" />
+        <pressKey selector="{{RefundSection.numpad}}" userInput="{{multi_currency_refund_order.cashValue}}" stepKey="enterValue"/>
+        <executeJS function="
+              closeNumpadPopup = function() {
+                  let ele = document.querySelector('{{RefundSection.closeNumpad}}');
+                  window.scrollTo(20, 20);
+                  ele.click();
+              };
+              closeNumpadPopup();
+          " stepKey="executeJSToCancelNumpad"/>
+        <wait time="5" stepKey="waitBeforeCompletePayment" />
+        <click selector="{{RefundSection.buttonBottom('Refund')}}" stepKey="clickOnRefundActionButtonToCompleteRefund" />
+
+        <!-- Popup message -->
+        <wait time="1" stepKey="waitBeforeCheckPopupMessage" />
+        <click selector="{{RefundSection.popupButton('Yes')}}" stepKey="finishPopupMessageRefund" />
+        <wait time="1" stepKey="waitBeforeFinishRefund" />
+        <click selector="{{RefundSection.popupButton('Yes')}}" stepKey="finishRefund" />
+
+        <!-- Refund success -->
+        <seeElement stepKey="checkStepLabelOnFinishPopup" selector="{{RefundSection.popupLabel('Refund Success')}}" />
+        <wait time="3" stepKey="beforeClickReturnToOrder" />
+        <click selector="{{RefundSection.buttonBottom('Return to Order')}}" stepKey="clickButtonToReturnToOrder" />
+
+        <!-- Back to checkout page -->
+        <click selector="{{MenuSection.menuButton}}" stepKey="clickMenuButtonCheckout" />
+        <waitForElementVisible selector="{{MenuSection.menuItem('item-checkout')}}" time="120" stepKey="waitMenuOrderShowCheckout" />
+        <click selector="{{MenuSection.menuItem('item-checkout')}}" stepKey="goToPageCheckout" />
+        <wait time="2" stepKey="waitBeforeFinishActionGroup" />
+    </test>
+</tests>

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AddSimpleProductWithoutCustomOptionToCartAsNewItemTest">
+        <annotations>
+            <features value="Add product to cart"/>
+            <stories value="Add simple product to cart"/>
+            <title value="Add new simple product without custom option."/>
+            <description value="Add simple product without custom option as a new item."/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="ASP-01"/>
+            <group value="addSimpleProductWithoutOptionAsNewItem"/>
+            <group value="addSimpleProduct"/>
+            <group value="pwapos"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart">
+        </actionGroup>
+
+        <actionGroup ref="SearchAndClickProduct" stepKey="SearchAndClickProduct">
+            <argument name="dataProduct" value="pos_simple_product"/>
+        </actionGroup>
+
+        <waitForElementVisible selector="{{CartSection.productFoundOnCartByName(pos_simple_product.name)}}" time="120" stepKey="waitProductIsAddedToCartSuccessfully"/>
+    </test>
+
+    <test name="AddSimpleProductWithoutCustomOptionToCartForIncreaseQtyTest">
+        <annotations>
+            <features value="Add product to cart"/>
+            <stories value="Add simple product to cart"/>
+            <title value="Increase qty of simple product without custom option in cart."/>
+            <description value="Add simple product without custom option to cart, then qty of the same item in cart will increase."/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="ASP-02"/>
+            <group value="addSimpleProductWithoutOptionForIncreaseQty"/>
+            <group value="addSimpleProduct"/>
+            <group value="pwapos"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart">
+        </actionGroup>
+
+        <actionGroup ref="SearchAndClickProduct" stepKey="SearchAndClickProduct">
+            <argument name="dataProduct" value="pos_simple_product"/>
+        </actionGroup>
+
+        <waitForElementVisible selector="{{CartSection.productFoundOnCartByName(pos_simple_product.name)}}" time="120" stepKey="waitProductIsAddedToCartSuccessfully"/>
+
+        <click stepKey="clickOnProductFoundInListAgain" selector="{{ProductListSection.firstProduct}}"/>
+
+        <waitForElementVisible selector="{{CartSection.productQtyInCart(pos_simple_product.name))}}" time="120" stepKey="waitProductIsAddedToCartSuccessfullySecondTime"/>
+
+        <grabTextFrom selector="{{CartSection.productQtyInCart(pos_simple_product.name)}}" stepKey="grabQtyOfItem"/>
+        <assertEquals message="Product's qty is correct." stepKey="compareQty">
+            <expectedResult type="float">2</expectedResult>
+            <actualResult type="variable">grabQtyOfItem</actualResult>
+        </assertEquals>
+    </test>
+
+    <test name="AddSimpleProductWithCustomOptionToCartAsNewItemTest">
+        <annotations>
+            <features value="Add product to cart"/>
+            <stories value="Add simple product to cart"/>
+            <title value="Add new simple product with custom option."/>
+            <description value="Add simple product with custom option as a new item."/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="ASP-03"/>
+            <group value="addSimpleProductWithOptionAsNewItem"/>
+            <group value="addSimpleProduct"/>
+            <group value="pwapos"/>
+        </annotations>
+        <before>
+            <createData stepKey="visibleProductOnPos" entity="pos_simple_product_with_custom_option" />
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart">
+        </actionGroup>
+
+        <actionGroup ref="SearchAndClickProduct" stepKey="SearchAndClickProduct">
+            <argument name="dataProduct" value="pos_simple_product_with_custom_option"/>
+        </actionGroup>
+
+        <waitForElementVisible selector="{{PosCheckoutPopupSimpleProductSection.customOptionInputBox}}" time="120" stepKey="waitProductPopupCustomOptionShow"/>
+
+        <actionGroup ref="AddCustomOptionForSimpleProduct" stepKey="AddCustomOptionForSimpleProduct">
+            <argument name="dataProduct" value="pos_simple_product_with_custom_option"/>
+        </actionGroup>
+
+        <waitForElementVisible selector="{{CartSection.productFoundOnCartByName(pos_simple_product_with_custom_option.name)}}" time="120" stepKey="waitProductIsAddedToCartSuccessfully"/>
+    </test>
+
+    <test name="AddSimpleProductWithCustomOptionToCartForIncreaseQtyTest">
+        <annotations>
+            <features value="Add product to cart"/>
+            <stories value="Add simple product to cart"/>
+            <title value="Increase qty of simple product with custom option in cart."/>
+            <description value="Add simple product with custom option to cart, then qty of the same item in cart will increase."/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="ASP-04"/>
+            <group value="addSimpleProductWithOptionForIncreaseQty"/>
+            <group value="addSimpleProduct"/>
+            <group value="pwapos"/>
+        </annotations>
+        <before>
+            <createData stepKey="visibleProductOnPos" entity="pos_simple_product_with_custom_option" />
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart">
+        </actionGroup>
+
+        <actionGroup ref="SearchAndClickProduct" stepKey="SearchAndClickProduct">
+            <argument name="dataProduct" value="pos_simple_product_with_custom_option"/>
+        </actionGroup>
+
+        <waitForElementVisible selector="{{PosCheckoutPopupSimpleProductSection.customOptionInputBox}}" time="120" stepKey="waitProductPopupCustomOptionShow"/>
+
+        <actionGroup ref="AddCustomOptionForSimpleProduct" stepKey="AddCustomOptionForSimpleProduct">
+            <argument name="dataProduct" value="pos_simple_product_with_custom_option"/>
+        </actionGroup>
+
+        <waitForElementVisible selector="{{CartSection.productFoundOnCartByName(pos_simple_product_with_custom_option.name)}}" time="120" stepKey="waitProductIsAddedToCartSuccessfully"/>
+
+        <!-- Click to add product second time -->
+        <click stepKey="clickOnProductFoundInListAgain" selector="{{ProductListSection.firstProduct}}"/>
+
+        <waitForElementVisible selector="{{PosCheckoutPopupSimpleProductSection.customOptionInputBox}}" time="120" stepKey="waitProductPopupCustomOptionShowAgain"/>
+
+        <actionGroup ref="AddCustomOptionForSimpleProduct" stepKey="AddCustomOptionForSimpleProductSecondTime">
+            <argument name="dataProduct" value="pos_simple_product_with_custom_option"/>
+        </actionGroup>
+
+        <waitForElementVisible selector="{{CartSection.productFoundOnCartByName(pos_simple_product_with_custom_option.name)}}" time="120" stepKey="waitProductIsAddedToCartSuccessfullySecondTime"/>
+
+        <grabTextFrom selector="{{CartSection.productQtyInCart(pos_simple_product_with_custom_option.name)}}" stepKey="grabQtyOfItem"/>
+        <assertEquals message="Product's qty is correct." stepKey="compareQty">
+            <expectedResult type="float">2</expectedResult>
+            <actualResult type="variable">grabQtyOfItem</actualResult>
+        </assertEquals>
+    </test>
+</tests>

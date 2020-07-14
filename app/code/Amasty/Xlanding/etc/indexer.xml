@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Xlanding
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:amasty:module:Amasty_Xlanding:etc/indexer.xsd">
+    <indexer id="amasty_xlanding_page_product" view_id="amasty_xlanding_page_product" class="Amasty\Xlanding\Model\Indexer\PageProduct" shared_index="amasty_xlanding_product">
+        <title translate="true">Amasty: Landing Pages - Page - Product</title>
+        <description translate="true">Indexed page/product association</description>
+    </indexer>
+    <indexer id="amasty_xlanding_product_page" view_id="amasty_xlanding_product_page" class="Amasty\Xlanding\Model\Indexer\ProductPage" shared_index="amasty_xlanding_product">
+        <title translate="true">Amasty: Landing Pages - Product - Page</title>
+        <description translate="true">Indexed product/page association</description>
+        <dependencies>
+            <indexer id="catalog_product_attribute" />
+            <indexer id="cataloginventory_stock" />
+            <indexer id="catalog_product_price" />
+        </dependencies>
+    </indexer>
+    <indexer id="catalogsearch_fulltext">
+        <title translate="true">Catalog Search</title>
+        <description translate="true">Rebuild Catalog product fulltext search index</description>
+        <structure class="Magento\CatalogSearch\Model\Indexer\IndexStructure" />
+        <dependencies>
+            <indexer id="amasty_xlanding_product_page" />
+        </dependencies>
+    </indexer>
+</config>

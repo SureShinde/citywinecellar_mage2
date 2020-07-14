@@ -1,0 +1,98 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+?>
+<?php /** @var \Amasty\Blog\Block\Content\Post\Related $block */
+$collection = $block->getCollection() ?>
+
+<?php if ($collection && $collection->getSize()): ?>
+<div class="amblog-related-wrapper">
+    <div class="amblog-title"><?= $block->escapeHtml(__('Related Posts'));?></div>
+    <ul class="amblog-related-grid amblog-grid-list" data-amblog-js="related-slider">
+        <?php foreach ($collection as $post): ?>
+            <li class="list-item amblog-item">
+                <?php if ($post->getListThumbnailSrc()): ?>
+                    <div class="amblog-wrapper">
+                        <a href="<?= $block->escapeUrl($post->getUrl()); ?>"
+                           title="<?= $block->escapeHtml($post->getTitle()); ?>">
+                            <img src="<?= $block->escapeUrl($post->getListThumbnailSrc()); ?>"
+                                 class="amblog-image"
+                                 alt="<?= $block->escapeHtml($post->getThumbnailAlt()); ?>"/>
+                        </a>
+                    </div>
+                <?php endif; ?>
+                <div class="amblog-content">
+                    <h3 class="amblog-title">
+                        <a class="amblog-link"
+                           href="<?= $block->escapeUrl($post->getUrl()); ?>"
+                           title="<?= $block->escapeHtml($post->getTitle()); ?>"
+                        >
+                            <?= $block->escapeHtml($post->getTitle()); ?>
+                        </a>
+                    </h3>
+                    <div class="amblog-bottom">
+                        <div class="amblog-date">
+                            <?= $block->escapeHtml($block->renderDate($post->getPublishedAt())); ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="amblog-footer">
+                    <a class="amblog-read"
+                       href="<?= $block->escapeUrl($block->getReadMoreUrl($post)); ?>"
+                       title="<?= $block->escapeHtml(__('Read More')); ?>"
+                    >
+                        <?= $block->escapeHtml(__('Read More')); ?>
+                        <span class="amblog-arrow"></span>
+                    </a>
+                </div>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+</div>
+    <?php if ($collection && $collection->getSize() > 1): ?>
+        <script type="text/javascript">
+            require([
+                "jquery",
+                "Amasty_Base/vendor/slick/slick.min"
+            ], function ($) {
+                $(window).load(function() {
+                    $('[data-amblog-js="related-slider"]').slick(
+                        {
+                            dots: false,
+                            centerMode: false,
+                            infinite: true,
+                            slidesToShow: 3,
+                            slidesToScroll: 1,
+                            responsive: [
+                                {
+                                    breakpoint: 1224,
+                                    settings: {
+                                        slidesToShow: 2,
+                                        slidesToScroll: 1
+                                    }
+                                },
+                                {
+                                    breakpoint: 768,
+                                    settings: {
+                                        slidesToShow: 2,
+                                        slidesToScroll: 1
+                                    }
+                                },
+                                {
+                                    breakpoint: 425,
+                                    settings: {
+                                        slidesToShow: 1,
+                                        slidesToScroll: 1
+                                    }
+                                }
+                            ]
+                        }
+                    );
+                });
+            });
+        </script>
+    <?php endif; ?>
+<?php endif; ?>

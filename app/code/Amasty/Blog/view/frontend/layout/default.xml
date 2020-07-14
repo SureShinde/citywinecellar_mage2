@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Amasty_Base::vendor/slick/amslick.min.css"/>
+    </head>
+    <body>
+        <referenceBlock name="footer_links">
+            <block class="Amasty\Blog\Block\Link" ifconfig="amblog/display_settings/display_at_footer" name="amblog_footer_link">
+                <arguments>
+                    <argument name="label" xsi:type="string">Blog</argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+        <referenceBlock name="header.links">
+            <block class="Amasty\Blog\Block\Link" ifconfig="amblog/display_settings/display_at_toolbar" name="amblog_toolbar_link">
+                <arguments>
+                    <argument name="label" xsi:type="string">Blog</argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+        <referenceBlock name="top.links">
+            <block class="Amasty\Blog\Block\Link" ifconfig="amblog/display_settings/display_at_toolbar" name="amblog_toolbar_link_ultimo">
+                <arguments>
+                    <argument name="label" xsi:type="string">Blog</argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+    </body>
+</page>

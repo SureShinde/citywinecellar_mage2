@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Amasty_Blog::maintext"
+             title="Amasty Blog Pro"
+             module="Amasty_Blog"
+             sortOrder="110"
+             parent="Magento_Backend::content"
+             resource="Amasty_Blog::maintext"/>
+
+        <add id="Amasty_Blog::posts"
+             title="Posts"
+             module="Amasty_Blog"
+             sortOrder="110"
+             parent="Amasty_Blog::maintext"
+             action="amasty_blog/posts"
+             resource="Amasty_Blog::posts"/>
+
+        <add id="Amasty_Blog::categories"
+             title="Categories"
+             module="Amasty_Blog"
+             sortOrder="120"
+             parent="Amasty_Blog::maintext"
+             action="amasty_blog/categories"
+             resource="Amasty_Blog::categories"/>
+        <add id="Amasty_Blog::authors"
+             title="Authors"
+             module="Amasty_Blog"
+             sortOrder="130"
+             parent="Amasty_Blog::maintext"
+             action="amasty_blog/authors"
+             resource="Amasty_Blog::authors"/>
+        <add id="Amasty_Blog::tags"
+             title="Tags"
+             module="Amasty_Blog"
+             sortOrder="140"
+             parent="Amasty_Blog::maintext"
+             action="amasty_blog/tags"
+             resource="Amasty_Blog::tags"/>
+        <add id="Amasty_Blog::comments"
+             title="Comments"
+             module="Amasty_Blog"
+             sortOrder="150"
+             parent="Amasty_Blog::maintext"
+             action="amasty_blog/comments"
+             resource="Amasty_Blog::comments"/>
+        <add id="Amasty_Blog::cms_widget_instance"
+             title="Add Blog Blocks via Widget"
+             module="Amasty_Blog"
+             sortOrder="160"
+             parent="Amasty_Blog::maintext"
+             action="adminhtml/widget_instance"
+             resource="Magento_Widget::widget_instance"/>
+        <add id="Amasty_Blog::import"
+             title="Import"
+             module="Amasty_Blog"
+             sortOrder="170"
+             parent="Amasty_Blog::maintext"
+             action="amasty_blog/import"
+             resource="Amasty_Blog::import"/>
+    </menu>
+</config>

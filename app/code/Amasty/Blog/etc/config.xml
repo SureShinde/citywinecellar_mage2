@@ -1,0 +1,108 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <amblog>
+            <layout>
+                <mobile_list>{"layout":"two-columns-right","left_side":[],"right_side":["categories","search","tags","recent-comments","recent-posts"],"content":["list"]}</mobile_list>
+                <mobile_post>{"layout":"two-columns-right","left_side":[],"right_side":["categories","search","tags","recent-comments","recent-posts"],"content":["post"]}</mobile_post>
+                <desktop_list>{"layout":"two-columns-right","left_side":[],"right_side":["categories","search","tags","recent-comments","recent-posts"],"content":["list"]}</desktop_list>
+                <desktop_post>{"layout":"two-columns-right","left_side":[],"right_side":["categories","search","tags","recent-comments","recent-posts"],"content":["post"]}</desktop_post>
+            </layout>
+            <display_settings>
+                <display_at_footer>1</display_at_footer>
+                <display_at_toolbar>1</display_at_toolbar>
+                <display_at_category>0</display_at_category>
+                <label>Blog</label>
+            </display_settings>
+            <search_engine>
+                <route>blog</route>
+                <title>Blog</title>
+            </search_engine>
+            <redirect>
+                <url_postfix>.html</url_postfix>
+                <redirect_to_seo_formatted_url>1</redirect_to_seo_formatted_url>
+            </redirect>
+            <list>
+                <count_per_page>10</count_per_page>
+            </list>
+            <post>
+                <display_author>1</display_author>
+                <display_print>0</display_print>
+                <display_views>1</display_views>
+                <display_categories>1</display_categories>
+                <display_tags>1</display_tags>
+                <date_manner>passed</date_manner>
+                <image_width>400</image_width>
+                <image_height>270</image_height>
+                <helpful>0</helpful>
+            </post>
+            <tags>
+                <minimal_post_count>1</minimal_post_count>
+                <mt_enabled>1</mt_enabled>
+                <mt_height>300</mt_height>
+                <mt_textcolor>#111111</mt_textcolor>
+                <mt_textcolor2>#297aa3</mt_textcolor2>
+                <mt_hicolor>#111111</mt_hicolor>
+            </tags>
+            <comments>
+                <use_comments>1</use_comments>
+                <allow_guests>1</allow_guests>
+                <record_limit>5</record_limit>
+                <display_short>1</display_short>
+                <display_date>1</display_date>
+                <ask_email>1</ask_email>
+                <ask_name>1</ask_name>
+                <gdpr>0</gdpr>
+                <gdpr_text><![CDATA[I agree to the <a href="/privacy-policy" target="_blank">Privacy Policy</a>]]></gdpr_text>
+            </comments>
+            <recent_posts>
+                <record_limit>5</record_limit>
+                <display_image>1</display_image>
+                <image_width>60</image_width>
+                <image_height>60</image_height>
+                <short_limit>300</short_limit>
+            </recent_posts>
+            <social>
+                <enabled>1</enabled>
+                <networks>twitter,facebook,vkontakte,blogger,pinterest,tumblr,digg,delicious,stumbleupon,slashdot,reddit,linkedin</networks>
+            </social>
+            <accelerated_mobile_pages>
+                <logo>
+                    <image_width>150</image_width>
+                    <image_height>60</image_height>
+                </logo>
+                <design>
+                    <tag_color>#767676</tag_color>
+                    <link_color>#3399CC</link_color>
+                    <link_color_hover>#6fc2eb</link_color_hover>
+                    <button_background_color>#1979c3</button_background_color>
+                    <button_background_color_hover>#37a7fc</button_background_color_hover>
+                    <button_text_color>#FFFFFF</button_text_color>
+                    <button_text_color_hover>#FFFFFF</button_text_color_hover>
+                    <footer_background>#545252</footer_background>
+                    <footer_link>#FFFFFF</footer_link>
+                </design>
+            </accelerated_mobile_pages>
+        </amblog>
+
+        <crontab>
+            <default>
+                <jobs>
+                    <amblog_import>
+                        <schedule>
+                            <cron_expr>0 0 30 3 ? 2011</cron_expr>
+                        </schedule>
+                    </amblog_import>
+                </jobs>
+            </default>
+        </crontab>
+    </default>
+</config>

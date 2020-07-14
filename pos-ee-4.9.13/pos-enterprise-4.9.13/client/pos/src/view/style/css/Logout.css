@@ -1,0 +1,25 @@
+.loading-logout {
+    width: 30px;
+    height: 30px;
+    border: 2px solid transparent;
+    border-top-color: #1d63dc;
+    border-bottom-color: #1d63dc;
+    border-radius: 50%;
+    position: fixed;
+    -webkit-animation: loader-rotate 1s linear infinite;
+    animation: loader-rotate 1s linear infinite;
+    margin: -15px 0 0 -15px;
+    top: 50%;
+    left: 50%;
+    z-index: 9999;
+}
+
+.logout_modal {
+    background-color: rgba(0, 0, 0, 0.3);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 999
+}

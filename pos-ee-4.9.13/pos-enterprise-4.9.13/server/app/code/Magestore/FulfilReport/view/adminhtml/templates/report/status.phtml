@@ -1,0 +1,83 @@
+<?php
+/**
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */ /** @var Magestore\FulfilReport\Block\Adminhtml\Report\Dashboard $block */ ?>
+
+<?php
+$collection = $block->getOrderCollection();
+$newOrder = $block->getNewOrders();
+$holdOrder = $block->getHoldOrders();
+$cancelOrder = $block->getCancelOrders();
+$processingOrder = $block->getProcessingOrders();
+?>
+<script type="text/javascript">
+    require([
+        "jquery",
+        "Magestore_FulfilReport/js/chart/highcharts",
+        "Magestore_FulfilReport/js/chart/data",
+        "Magestore_FulfilReport/js/chart/exporting"
+    ], function ($) {
+        $('#container-order').highcharts({
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: '<?php echo __("Report Sales By Status"); ?>'
+            },
+            xAxis: {
+                type: 'category'
+            },
+            yAxis: {
+                title: {
+                    text: 'Number of orders'
+                }
+
+            },
+            legend: {
+                enabled: false
+            },
+            plotOptions: {
+                series: {
+                    borderWidth: 0,
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.y:.0f}'
+                    }
+                }
+            },
+
+            tooltip: {
+                headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+                pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.0f}</b> of total<br/>'
+            },
+
+            series: [{
+                name: 'Total',
+                colorByPoint: true,
+                data: [{
+                    name: 'New',
+                    y: <?php echo $newOrder ?>,
+                    drilldown: 'New'
+                }, {
+                    name: 'Hold',
+                    y: <?php echo $holdOrder ?>,
+                    drilldown: 'Hold'
+                }, {
+                    name: 'Cancel',
+                    y: <?php echo $cancelOrder ?>,
+                    drilldown: 'Cancel'
+                }, {
+                    name: 'Processing',
+                    y: <?php echo $processingOrder ?>,
+                    drilldown: 'Processing'
+                },]
+            }]
+        });
+    });
+
+
+</script>
+
+<div id="container-order" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
+

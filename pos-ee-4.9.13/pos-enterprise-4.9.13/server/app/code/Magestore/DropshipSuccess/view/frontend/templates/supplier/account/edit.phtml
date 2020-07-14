@@ -1,0 +1,158 @@
+<?php
+/**
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+/** @var \Magestore\DropshipSuccess\Block\Supplier\Form\Edit $block */
+/** @var \Magestore\SupplierSuccess\Model\Supplier $supplier */
+$supplier = $block->getSupplier();
+?>
+<form class="form form-edit-account" action="<?php /* @escapeNotVerified */ echo $block->getPostActionUrl() ?>" method="post" id="form-validate" enctype="multipart/form-data" data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>" autocomplete="off">
+    <fieldset class="fieldset info">
+        <?php echo $block->getBlockHtml('formkey')?>
+        <legend class="legend"><span><?php /* @escapeNotVerified */ echo __('Supplier Information') ?></span></legend><br>
+        <div class="field field-name required">
+            <label class="label" for="supplier_name">
+                <span><?php echo __('Supplier Name') ?></span>
+            </label>
+
+            <div class="control">
+                <input type="text" id="supplier_name" name="supplier_name" value="<?php echo $supplier->getSupplierName() ?>" title="<?php echo __('Supplier Name') ?>" class="input-text required-entry" data-validate="{required:true}" aria-required="true">
+            </div>
+        </div>
+
+        <div class="field field-contact required">
+            <label class="label" for="contact_name">
+                <span><?php echo __('Person To Contact') ?></span>
+            </label>
+
+            <div class="control">
+                <input type="text" id="contact_name" name="contact_name" value="<?php echo $supplier->getContactName() ?>" title="<?php echo __('Person To Contact') ?>" class="input-text required-entry" data-validate="{required:true}" aria-required="true">
+            </div>
+        </div>
+
+        <div class="field email required" data-container="email">
+            <label class="label" for="email">
+                <span><?php echo __('Email') ?></span>
+            </label>
+            <div class="control">
+                <input type="email" name="contact_email" id="contact_email" autocomplete="email" data-input="contact_email" value="<?php echo $supplier->getContactEmail() ?>" title="<?php echo __('Email') ?>" class="input-text" aria-required="true" data-validate="{required:true}">
+            </div>
+        </div>
+
+        <legend class="legend"><span><?php /* @escapeNotVerified */ echo __('Password Management') ?></span></legend><br>
+        <div class="field field-password">
+            <label class="label" for="password">
+                <span><?php echo __('New Password') ?></span>
+            </label>
+
+            <div class="control">
+                <input type="password" id="new_password" name="new_password" title="<?php echo __('New Password') ?>" class="input-text">
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset class="fieldset address">
+        <legend class="legend"><span><?php /* @escapeNotVerified */ echo __('Supplier Address') ?></span></legend><br>
+        <div class="field field-name">
+            <label class="label" for="telephone">
+                <span><?php echo __('Telephone') ?></span>
+            </label>
+
+            <div class="control">
+                <input type="text" id="telephone" name="telephone" value="<?php echo $supplier->getTelephone() ?>" title="<?php echo __('Telephone') ?>" class="input-text">
+            </div>
+        </div>
+
+        <div class="field field-name">
+            <label class="label" for="fax">
+                <span><?php echo __('Fax') ?></span>
+            </label>
+
+            <div class="control">
+                <input type="text" id="fax" name="fax" value="<?php echo $supplier->getFax() ?>" title="<?php echo __('Fax') ?>" class="input-text">
+            </div>
+        </div>
+
+        <div class="field field-name">
+            <label class="label" for="street">
+                <span><?php echo __('Street') ?></span>
+            </label>
+
+            <div class="control">
+                <input type="text" id="street" name="street" value="<?php echo $supplier->getStreet() ?>" title="<?php echo __('Street') ?>" class="input-text">
+            </div>
+        </div>
+
+        <div class="field field-name">
+            <label class="label" for="city">
+                <span><?php echo __('City') ?></span>
+            </label>
+
+            <div class="control">
+                <input type="text" id="city" name="city" value="<?php echo $supplier->getCity() ?>" title="<?php echo __('City') ?>" class="input-text">
+            </div>
+        </div>
+
+        <div class="field region required">
+            <label class="label" for="region_id"><span><?php /* @escapeNotVerified */ echo __('State/Province') ?></span></label>
+            <div class="control">
+                <select id="region_id" name="region_id" title="<?php /* @escapeNotVerified */ echo __('State/Province') ?>" class="validate-select" <?php echo(!$block->getConfig('general/region/display_all')) ? ' disabled="disabled"' : '';?>>
+                    <option value=""><?php /* @escapeNotVerified */ echo __('Please select a region, state or province.') ?></option>
+                </select>
+                <input type="text" id="region" name="region" value="<?php echo $block->escapeHtml($supplier->getRegion()) ?>"  title="<?php /* @escapeNotVerified */ echo __('State/Province') ?>" class="input-text <?php /* @escapeNotVerified */ echo $this->helper('Magento\Customer\Helper\Address')->getAttributeValidationClass('region') ?>"<?php echo(!$block->getConfig('general/region/display_all')) ? ' disabled="disabled"' : '';?>/>
+            </div>
+        </div>
+
+        <div class="field postcode">
+            <label class="label" for="postcode"><span><?php /* @escapeNotVerified */ echo __('Zip/Postal Code') ?></span></label>
+            <div class="control">
+                <input type="text" name="postcode" value="<?php echo $block->escapeHtml($supplier->getPostcode()) ?>" title="<?php /* @escapeNotVerified */ echo __('Zip/Postal Code') ?>" id="postcode" class="input-text">
+            </div>
+        </div>
+
+        <div class="field country required">
+            <label class="label" for="country"><span><?php /* @escapeNotVerified */ echo __('Country') ?></span></label>
+            <div class="control">
+                <?php echo $block->getCountryHtmlSelect() ?>
+            </div>
+        </div>
+
+        <div class="field website">
+            <label class="label" for="zip"><span><?php /* @escapeNotVerified */ echo __('Website') ?></span></label>
+            <div class="control">
+                <input type="text" name="website" value="<?php echo $block->escapeHtml($supplier->getWebsite()) ?>" title="<?php /* @escapeNotVerified */ echo __('Website') ?>" id="website" class="input-text">
+            </div>
+        </div>
+    </fieldset>
+
+    <div class="actions-toolbar">
+        <div class="primary">
+            <button type="submit" class="action save primary" data-action="save-address" title="<?php /* @escapeNotVerified */ echo __('Save Supplier') ?>">
+                <span><?php /* @escapeNotVerified */ echo __('Save Supplier') ?></span>
+            </button>
+        </div>
+    </div>
+</form>
+<script type="text/x-magento-init">
+    {
+        "#form-validate": {
+            "validation": {}
+        },
+        "#country": {
+            "regionUpdater": {
+                "optionalRegionAllowed": <?php /* @escapeNotVerified */ echo($block->getConfig('general/region/display_all') ? 'true' : 'false'); ?>,
+                "regionListId": "#region_id",
+                "regionInputId": "#region",
+                "postcodeId": "#zip",
+                "form": "#form-validate",
+                "regionJson": <?php /* @escapeNotVerified */ echo $this->helper('Magento\Directory\Helper\Data')->getRegionJson() ?>,
+                "defaultRegion": "<?php /* @escapeNotVerified */ echo $supplier->getRegionId() ?>",
+                "countriesWithOptionalZip": <?php /* @escapeNotVerified */ echo $this->helper('Magento\Directory\Helper\Data')->getCountriesWithOptionalZip(true) ?>
+            }
+        }
+    }
+</script>

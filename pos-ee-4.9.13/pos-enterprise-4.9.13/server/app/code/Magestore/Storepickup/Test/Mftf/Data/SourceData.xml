@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:DataGenerator/etc/dataProfileSchema.xsd">
+    <entity name="default_source" type="source">
+        <data key="code">default</data>
+        <data key="name">Default Source</data>
+        <data key="countryName">United State</data>
+        <data key="country">US</data>
+        <data key="region">California</data>
+        <data key="region_id">12</data>
+        <data key="city">Culver City</data>
+        <data key="street">10441 Jefferson Blvd, Suite 200</data>
+        <data key="postcode">90232</data>
+    </entity>
+    <entity name="source171" type="source">
+        <data key="code">source171</data>
+        <data key="name">Source 171</data>
+        <data key="countryName">United State</data>
+        <data key="country">US</data>
+        <data key="region">Alaska</data>
+        <data key="region_id">2</data>
+        <data key="city">Dillingham</data>
+        <data key="street">Seward St</data>
+        <data key="postcode">99576</data>
+    </entity>
+    <entity name="source171_invalid" type="source">
+        <data key="code">source 171</data>
+        <data key="name">Store 171</data>
+    </entity>
+    <entity name="source173" type="source">
+        <data key="code">source173</data>
+        <data key="name">Source 173</data>
+        <data key="countryName">United State</data>
+        <data key="country">US</data>
+        <data key="region">Alaska</data>
+        <data key="region_id">2</data>
+        <data key="city">Dillingham</data>
+        <data key="street">Seward St</data>
+        <data key="postcode">99576</data>
+    </entity>
+</entities>

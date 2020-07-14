@@ -1,0 +1,767 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="SwitchOfflineSearchSimpleProductBySkuGettingOneResultR3">
+        <annotations>
+            <features value="Offline mode: Search product"/>
+            <stories value="Offline mode: Search product"/>
+            <title value="Offline mode: Search simple product and Get one result (R3)"/>
+            <description value="Offline mode: Search simple product and Get one result (R3)"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="OFSPS-13"/>
+            <group value="Stable"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart">
+        </actionGroup>
+
+        <actionGroup ref="SearchProductOneResultActionGroup" stepKey="SearchProductOneResultActionGroup">
+            <argument name="dataProduct" value="stable_pos_simple_product.sku1result"/>
+        </actionGroup>
+    </test>
+    <test name="SwitchOfflineSearchSimpleProductBySkuGettingFourResultsR3">
+        <annotations>
+            <features value="Offline mode: Search product"/>
+            <stories value="Offline mode: Search product"/>
+            <title value="Offline mode: Search simple product and Get four results (R3)"/>
+            <description value="Offline mode: Search simple product and Get four results (R3)"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="OFSPS-14"/>
+            <group value="Stable"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart">
+        </actionGroup>
+
+        <actionGroup ref="SearchProduct4ResultsActionGroup" stepKey="SearchProduct4ResultsActionGroup">
+            <argument name="dataProduct" value="stable_pos_simple_product.sku4results"/>
+        </actionGroup>
+    </test>
+    <test name="SwitchOfflineSearchSimpleProductBySkuGetting21ResultsR3">
+        <annotations>
+            <features value="Offline mode: Search product"/>
+            <stories value="Offline mode: Search product"/>
+            <title value="Offline mode: Search simple product and Get 21 results (R3)"/>
+            <description value="Offline mode: Search simple product and Get 21 results (R3)"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="OFSPS-15"/>
+            <group value="Stable"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart">
+        </actionGroup>
+
+        <actionGroup ref="SearchProduct21ResultsActionGroup" stepKey="SearchProduct21ResultsActionGroup">
+            <argument name="dataProduct" value="stable_pos_simple_product.sku21results"/>
+        </actionGroup>
+    </test>
+    <test name="SwitchOfflineSearchSimpleProductByNameGettingOneResultR3">
+        <annotations>
+            <features value="Offline mode: Search product"/>
+            <stories value="Offline mode: Search product"/>
+            <title value="Offline mode: Search simple product and Get one result (R3)"/>
+            <description value="Offline mode: Search simple product and Get one result (R3)"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="OFSPS-16"/>
+            <group value="Stable"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart">
+        </actionGroup>
+
+        <actionGroup ref="SearchProductOneResultActionGroup" stepKey="SearchProductOneResultActionGroup">
+            <argument name="dataProduct" value="stable_pos_simple_product.name1result"/>
+        </actionGroup>
+    </test>
+    <test name="SwitchOfflineSearchSimpleProductByNameGettingFourResultsR3">
+        <annotations>
+            <features value="Offline mode: Search product"/>
+            <stories value="Offline mode: Search product"/>
+            <title value="Offline mode: Search simple product and Get four results (R3)"/>
+            <description value="Offline mode: Search simple product and Get four results (R3)"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="OFSPS-17"/>
+            <group value="Stable"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart">
+        </actionGroup>
+
+        <actionGroup ref="SearchProduct4ResultsActionGroup" stepKey="SearchProduct4ResultsActionGroup">
+            <argument name="dataProduct" value="stable_pos_simple_product.name4results"/>
+        </actionGroup>
+    </test>
+    <test name="SwitchOfflineSearchSimpleProductByNameGetting21ResultsR3">
+        <annotations>
+            <features value="Offline mode: Search product"/>
+            <stories value="Offline mode: Search product"/>
+            <title value="Offline mode: Search simple product and Get 21 results (R3)"/>
+            <description value="Offline mode: Search simple product and Get 21 results (R3)"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="OFSPS-18"/>
+            <group value="Stable"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart">
+        </actionGroup>
+
+        <actionGroup ref="SearchProduct21ResultsActionGroup" stepKey="SearchProduct21ResultsActionGroup">
+            <argument name="dataProduct" value="stable_pos_simple_product.name21results"/>
+        </actionGroup>
+    </test>
+    <test name="SwitchOfflineSearchConfigurableProductBySkuGettingOneResultR3">
+        <annotations>
+            <features value="Offline mode: Search product"/>
+            <stories value="Offline mode: Search product"/>
+            <title value="Offline mode: Search configurable product and Get one result (R3)"/>
+            <description value="Offline mode: Search configurable product and Get one result (R3)"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="OFSPC-13"/>
+            <group value="Stable"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart">
+        </actionGroup>
+
+        <actionGroup ref="SearchProductOneResultActionGroup" stepKey="SearchProductOneResultActionGroup">
+            <argument name="dataProduct" value="stable_pos_configurable_product.sku1result"/>
+        </actionGroup>
+    </test>
+    <test name="SwitchOfflineSearchConfigurableProductBySkuGettingFourResultsR3">
+        <annotations>
+            <features value="Offline mode: Search product"/>
+            <stories value="Offline mode: Search product"/>
+            <title value="Offline mode: Search configurable product and Get four results (R3)"/>
+            <description value="Offline mode: Search product and Get four results (R3)"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="OFSPC-14"/>
+            <group value="Stable"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart">
+        </actionGroup>
+
+        <actionGroup ref="SearchProduct4ResultsActionGroup" stepKey="SearchProduct4ResultsActionGroup">
+            <argument name="dataProduct" value="stable_pos_configurable_product.sku4results"/>
+        </actionGroup>
+    </test>
+    <test name="SwitchOfflineSearchConfigurableProductBySkuGetting21ResultsR3">
+        <annotations>
+            <features value="Offline mode: Search product"/>
+            <stories value="Offline mode: Search product"/>
+            <title value="Offline mode: Search configurable product and Get 21 results (R3)"/>
+            <description value="Offline mode: Search configurable product and Get 21 results (R3)"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="OFSPC-15"/>
+            <group value="Stable"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart">
+        </actionGroup>
+
+        <actionGroup ref="SearchProduct21ResultsActionGroup" stepKey="SearchProduct21ResultsActionGroup">
+            <argument name="dataProduct" value="stable_pos_configurable_product.sku21results"/>
+        </actionGroup>
+    </test>
+    <test name="SwitchOfflineSearchConfigurableProductByNameGettingOneResultR3">
+        <annotations>
+            <features value="Offline mode: Search product"/>
+            <stories value="Offline mode: Search product"/>
+            <title value="Offline mode: Search configurable product and Get one result (R3)"/>
+            <description value="Offline mode: Search configurable product and Get one result (R3)"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="OFSPC-16"/>
+            <group value="Stable"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart">
+        </actionGroup>
+
+        <actionGroup ref="SearchProductOneResultActionGroup" stepKey="SearchProductOneResultActionGroup">
+            <argument name="dataProduct" value="stable_pos_configurable_product.name1result"/>
+        </actionGroup>
+    </test>
+    <test name="SwitchOfflineSearchConfigurableProductByNameGettingFourResultsR3">
+        <annotations>
+            <features value="Offline mode: Search product"/>
+            <stories value="Offline mode: Search product"/>
+            <title value="Offline mode: Search configurable product and Get four results (R3)"/>
+            <description value="Offline mode: Search configurable product and Get four results (R3)"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="OFSPC-17"/>
+            <group value="Stable"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart">
+        </actionGroup>
+
+        <actionGroup ref="SearchProduct4ResultsActionGroup" stepKey="SearchProduct4ResultsActionGroup">
+            <argument name="dataProduct" value="stable_pos_configurable_product.name4results"/>
+        </actionGroup>
+    </test>
+    <test name="SwitchOfflineSearchConfigurableProductByNameGetting21ResultsR3">
+        <annotations>
+            <features value="Offline mode: Search product"/>
+            <stories value="Offline mode: Search product"/>
+            <title value="Offline mode: Search configurable product and Get 21 results (R3)"/>
+            <description value="Offline mode: Search configurable product and Get 21 results (R3)"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="OFSPC-18"/>
+            <group value="Stable"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart">
+        </actionGroup>
+
+        <actionGroup ref="SearchProduct21ResultsActionGroup" stepKey="SearchProduct21ResultsActionGroup">
+            <argument name="dataProduct" value="stable_pos_configurable_product.name21results"/>
+        </actionGroup>
+    </test>
+    <test name="SwitchOfflineSearchVirtualProductBySkuGettingOneResultR3">
+        <annotations>
+            <features value="Offline mode: Search product"/>
+            <stories value="Offline mode: Search product"/>
+            <title value="Offline mode: Search virtual product and Get one result (R3)"/>
+            <description value="Offline mode: Search virtual product and Get one result (R3)"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="OFSPV-13"/>
+            <group value="Stable"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart">
+        </actionGroup>
+
+        <actionGroup ref="SearchProductOneResultActionGroup" stepKey="SearchProductOneResultActionGroup">
+            <argument name="dataProduct" value="stable_pos_virtual_product.sku1result"/>
+        </actionGroup>
+    </test>
+    <test name="SwitchOfflineSearchVirtualProductBySkuGettingFourResultsR3">
+        <annotations>
+            <features value="Offline mode: Search product"/>
+            <stories value="Offline mode: Search product"/>
+            <title value="Offline mode: Search virtual product and Get four results (R3)"/>
+            <description value="Offline mode: Search virtual product and Get four results (R3)"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="OFSPV-14"/>
+            <group value="Stable"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart">
+        </actionGroup>
+
+        <actionGroup ref="SearchProduct4ResultsActionGroup" stepKey="SearchProduct4ResultsActionGroup">
+            <argument name="dataProduct" value="stable_pos_virtual_product.sku4results"/>
+        </actionGroup>
+    </test>
+    <test name="SwitchOfflineSearchVirtualProductBySkuGetting21ResultsR3">
+        <annotations>
+            <features value="Offline mode: Search product"/>
+            <stories value="Offline mode: Search product"/>
+            <title value="Offline mode: Search virtual product and Get 21 results (R3)"/>
+            <description value="Offline mode: Search virtual product and Get 21 results (R3)"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="OFSPV-15"/>
+            <group value="Stable"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart">
+        </actionGroup>
+
+        <actionGroup ref="SearchProduct21ResultsActionGroup" stepKey="SearchProduct21ResultsActionGroup">
+            <argument name="dataProduct" value="stable_pos_virtual_product.sku21results"/>
+        </actionGroup>
+    </test>
+    <test name="SwitchOfflineSearchVirtualProductByNameGettingOneResultR3">
+        <annotations>
+            <features value="Offline mode: Search product"/>
+            <stories value="Offline mode: Search product"/>
+            <title value="Offline mode: Search virtual product and Get one result (R3)"/>
+            <description value="Offline mode: Search virtual product and Get one result (R3)"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="OFSPV-16"/>
+            <group value="Stable"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart">
+        </actionGroup>
+
+        <actionGroup ref="SearchProductOneResultActionGroup" stepKey="SearchProductOneResultActionGroup">
+            <argument name="dataProduct" value="stable_pos_virtual_product.name1result"/>
+        </actionGroup>
+    </test>
+    <test name="SwitchOfflineSearchVirtualProductByNameGettingFourResultsR3">
+        <annotations>
+            <features value="Offline mode: Search product"/>
+            <stories value="Offline mode: Search product"/>
+            <title value="Offline mode: Search virtual product and Get four results (R3)"/>
+            <description value="Offline mode: Search virtual product and Get four results (R3)"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="OFSPV-17"/>
+            <group value="Stable"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart">
+        </actionGroup>
+
+        <actionGroup ref="SearchProduct4ResultsActionGroup" stepKey="SearchProduct4ResultsActionGroup">
+            <argument name="dataProduct" value="stable_pos_virtual_product.name4results"/>
+        </actionGroup>
+    </test>
+    <test name="SwitchOfflineSearchVirtualProductByNameGetting21ResultsR3">
+        <annotations>
+            <features value="Offline mode: Search product"/>
+            <stories value="Offline mode: Search product"/>
+            <title value="Offline mode: Search virtual product and Get 21 results (R3)"/>
+            <description value="Offline mode: Search virtual product and Get 21 results (R3)"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="OFSPV-18"/>
+            <group value="Stable"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart">
+        </actionGroup>
+
+        <actionGroup ref="SearchProduct21ResultsActionGroup" stepKey="SearchProduct21ResultsActionGroup">
+            <argument name="dataProduct" value="stable_pos_virtual_product.name21results"/>
+        </actionGroup>
+    </test>
+    <test name="SwitchOfflineSearchBundleProductBySkuGettingOneResultR3">
+        <annotations>
+            <features value="Offline mode: Search product"/>
+            <stories value="Offline mode: Search product"/>
+            <title value="Offline mode: Search bundle product and Get one result (R3)"/>
+            <description value="Offline mode: Search bundle product and Get one result (R3)"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="OFSPB-13"/>
+            <group value="Stable"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart">
+        </actionGroup>
+
+        <actionGroup ref="SearchProductOneResultActionGroup" stepKey="SearchProductOneResultActionGroup">
+            <argument name="dataProduct" value="stable_pos_bundle_product.sku1result"/>
+        </actionGroup>
+    </test>
+    <test name="SwitchOfflineSearchBundleProductBySkuGettingFourResultsR3">
+        <annotations>
+            <features value="Offline mode: Search product"/>
+            <stories value="Offline mode: Search product"/>
+            <title value="Offline mode: Search bundle product and Get four results (R3)"/>
+            <description value="Offline mode: Search bundle product and Get four results (R3)"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="OFSPB-14"/>
+            <group value="Stable"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart">
+        </actionGroup>
+
+        <actionGroup ref="SearchProduct4ResultsActionGroup" stepKey="SearchProduct4ResultsActionGroup">
+            <argument name="dataProduct" value="stable_pos_bundle_product.sku4results"/>
+        </actionGroup>
+    </test>
+    <test name="SwitchOfflineSearchBundleProductBySkuGetting21ResultsR3">
+        <annotations>
+            <features value="Offline mode: Search product"/>
+            <stories value="Offline mode: Search product"/>
+            <title value="Offline mode: Search bundle product and Get 21 results (R3)"/>
+            <description value="Offline mode: Search bundle product and Get 21 results (R3)"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="OFSPB-15"/>
+            <group value="Stable"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart">
+        </actionGroup>
+
+        <actionGroup ref="SearchProduct21ResultsActionGroup" stepKey="SearchProduct21ResultsActionGroup">
+            <argument name="dataProduct" value="stable_pos_bundle_product.sku21results"/>
+        </actionGroup>
+    </test>
+    <test name="SwitchOfflineSearchBundleProductByNameGettingOneResultR3">
+        <annotations>
+            <features value="Offline mode: Search product"/>
+            <stories value="Offline mode: Search product"/>
+            <title value="Offline mode: Search bundle product and Get one result (R3)"/>
+            <description value="Offline mode: Search bundle product and Get one result (R3)"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="OFSPB-16"/>
+            <group value="Stable"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart">
+        </actionGroup>
+
+        <actionGroup ref="SearchProductOneResultActionGroup" stepKey="SearchProductOneResultActionGroup">
+            <argument name="dataProduct" value="stable_pos_bundle_product.name1result"/>
+        </actionGroup>
+    </test>
+    <test name="SwitchOfflineSearchBundleProductByNameGettingFourResultsR3">
+        <annotations>
+            <features value="Offline mode: Search product"/>
+            <stories value="Offline mode: Search product"/>
+            <title value="Offline mode: Search bundle product and Get four results (R3)"/>
+            <description value="Offline mode: Search bundle product and Get four results (R3)"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="OFSPB-17"/>
+            <group value="Stable"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart">
+        </actionGroup>
+
+        <actionGroup ref="SearchProduct4ResultsActionGroup" stepKey="SearchProduct4ResultsActionGroup">
+            <argument name="dataProduct" value="stable_pos_bundle_product.name4results"/>
+        </actionGroup>
+    </test>
+    <test name="SwitchOfflineSearchBundleProductByNameGetting21ResultsR3">
+        <annotations>
+            <features value="Offline mode: Search product"/>
+            <stories value="Offline mode: Search product"/>
+            <title value="Offline mode: Search bundle product and Get 21 results (R3)"/>
+            <description value="Offline mode: Search bundle product and Get 21 results (R3)"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="OFSPB-18"/>
+            <group value="Stable"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart">
+        </actionGroup>
+
+        <actionGroup ref="SearchProduct21ResultsActionGroup" stepKey="SearchProduct21ResultsActionGroup">
+            <argument name="dataProduct" value="stable_pos_bundle_product.name21results"/>
+        </actionGroup>
+    </test>
+    <test name="SwitchOfflineSearchGroupedProductBySkuGettingOneResultR3">
+        <annotations>
+            <features value="Offline mode: Search product"/>
+            <stories value="Offline mode: Search product"/>
+            <title value="Offline mode: Search grouped product and Get one result (R3)"/>
+            <description value="Offline mode: Search grouped product and Get one result (R3)"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="OFSPG-13"/>
+            <group value="Stable"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart">
+        </actionGroup>
+
+        <actionGroup ref="SearchProductOneResultActionGroup" stepKey="SearchProductOneResultActionGroup">
+            <argument name="dataProduct" value="stable_pos_grouped_product.sku1result"/>
+        </actionGroup>
+    </test>
+    <test name="SwitchOfflineSearchGroupedProductBySkuGettingFourResultsR3">
+        <annotations>
+            <features value="Offline mode: Search product"/>
+            <stories value="Offline mode: Search product"/>
+            <title value="Offline mode: Search grouped product and Get four results (R3)"/>
+            <description value="Offline mode: Search grouped product and Get four results (R3)"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="OFSPG-14"/>
+            <group value="Stable"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart">
+        </actionGroup>
+
+        <actionGroup ref="SearchProduct4ResultsActionGroup" stepKey="SearchProduct4ResultsActionGroup">
+            <argument name="dataProduct" value="stable_pos_grouped_product.sku4results"/>
+        </actionGroup>
+    </test>
+    <test name="SwitchOfflineSearchGroupedProductBySkuGetting21ResultsR3">
+        <annotations>
+            <features value="Offline mode: Search product"/>
+            <stories value="Offline mode: Search product"/>
+            <title value="Offline mode: Search grouped product and Get 21 results (R3)"/>
+            <description value="Offline mode: Search grouped product and Get 21 results (R3)"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="OFSPG-15"/>
+            <group value="Stable"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart">
+        </actionGroup>
+
+        <actionGroup ref="SearchProduct21ResultsActionGroup" stepKey="SearchProduct21ResultsActionGroup">
+            <argument name="dataProduct" value="stable_pos_grouped_product.sku21results"/>
+        </actionGroup>
+    </test>
+    <test name="SwitchOfflineSearchGroupedProductByNameGettingOneResultR3">
+        <annotations>
+            <features value="Offline mode: Search product"/>
+            <stories value="Offline mode: Search product"/>
+            <title value="Offline mode: Search grouped product and Get one result (R3)"/>
+            <description value="Offline mode: Search grouped product and Get one result (R3)"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="OFSPG-16"/>
+            <group value="Stable"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart">
+        </actionGroup>
+
+        <actionGroup ref="SearchProductOneResultActionGroup" stepKey="SearchProductOneResultActionGroup">
+            <argument name="dataProduct" value="stable_pos_grouped_product.name1result"/>
+        </actionGroup>
+    </test>
+    <test name="SwitchOfflineSearchGroupedProductByNameGettingFourResultsR3">
+        <annotations>
+            <features value="Offline mode: Search product"/>
+            <stories value="Offline mode: Search product"/>
+            <title value="Offline mode: Search grouped product and Get four results (R3)"/>
+            <description value="Offline mode: Search grouped product and Get four results (R3)"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="OFSPG-17"/>
+            <group value="Stable"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart">
+        </actionGroup>
+
+        <actionGroup ref="SearchProduct4ResultsActionGroup" stepKey="SearchProduct4ResultsActionGroup">
+            <argument name="dataProduct" value="stable_pos_grouped_product.name4results"/>
+        </actionGroup>
+    </test>
+    <test name="SwitchOfflineSearchGroupedProductByNameGetting21ResultsR3">
+        <annotations>
+            <features value="Offline mode: Search product"/>
+            <stories value="Offline mode: Search product"/>
+            <title value="Offline mode: Search grouped product and Get 21 results (R3)"/>
+            <description value="Offline mode: Search grouped product and Get 21 results (R3)"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="OFSPG-18"/>
+            <group value="Stable"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart">
+        </actionGroup>
+
+        <actionGroup ref="SearchProduct21ResultsActionGroup" stepKey="SearchProduct21ResultsActionGroup">
+            <argument name="dataProduct" value="stable_pos_grouped_product.name21results"/>
+        </actionGroup>
+    </test>
+    <test name="SwitchOfflineSearchGiftcardProductBySkuGettingOneResultR3">
+        <annotations>
+            <features value="Offline mode: Search product"/>
+            <stories value="Offline mode: Search product"/>
+            <title value="Offline mode: Search giftcard product and Get one result (R3)"/>
+            <description value="Offline mode: Search giftcard product and Get one result (R3)"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="OFSPGC-13"/>
+            <group value="Stable"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart">
+        </actionGroup>
+
+        <actionGroup ref="SearchProductOneResultActionGroup" stepKey="SearchProductOneResultActionGroup">
+            <argument name="dataProduct" value="stable_pos_giftcard_product.sku1result"/>
+        </actionGroup>
+    </test>
+    <test name="SwitchOfflineSearchGiftcardProductBySkuGettingFourResultsR3">
+        <annotations>
+            <features value="Offline mode: Search product"/>
+            <stories value="Offline mode: Search product"/>
+            <title value="Offline mode: Search giftcard product and Get four results (R3)"/>
+            <description value="Offline mode: Search giftcard product and Get four results (R3)"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="OFSPGC-14"/>
+            <group value="Stable"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart">
+        </actionGroup>
+
+        <actionGroup ref="SearchProduct4ResultsActionGroup" stepKey="SearchProduct4ResultsActionGroup">
+            <argument name="dataProduct" value="stable_pos_giftcard_product.sku4results"/>
+        </actionGroup>
+    </test>
+    <test name="SwitchOfflineSearchGiftcardProductBySkuGetting21ResultsR3">
+        <annotations>
+            <features value="Offline mode: Search product"/>
+            <stories value="Offline mode: Search product"/>
+            <title value="Offline mode: Search giftcard product and Get 21 results (R3)"/>
+            <description value="Offline mode: Search giftcard product and Get 21 results (R3)"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="OFSPGC-15"/>
+            <group value="Stable"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart">
+        </actionGroup>
+
+        <actionGroup ref="SearchProduct21ResultsActionGroup" stepKey="SearchProduct21ResultsActionGroup">
+            <argument name="dataProduct" value="stable_pos_giftcard_product.sku21results"/>
+        </actionGroup>
+    </test>
+    <test name="SwitchOfflineSearchGiftcardProductByNameGettingOneResultR3">
+        <annotations>
+            <features value="Offline mode: Search product"/>
+            <stories value="Offline mode: Search product"/>
+            <title value="Offline mode: Search giftcard product and Get one result (R3)"/>
+            <description value="Offline mode: Search giftcard product and Get one result (R3)"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="OFSPGC-16"/>
+            <group value="Stable"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart">
+        </actionGroup>
+
+        <actionGroup ref="SearchProductOneResultActionGroup" stepKey="SearchProductOneResultActionGroup">
+            <argument name="dataProduct" value="stable_pos_giftcard_product.name1result"/>
+        </actionGroup>
+    </test>
+    <test name="SwitchOfflineSearchGiftcardProductByNameGettingFourResultsR3">
+        <annotations>
+            <features value="Offline mode: Search product"/>
+            <stories value="Offline mode: Search product"/>
+            <title value="Offline mode: Search giftcard product and Get four results (R3)"/>
+            <description value="Offline mode: Search giftcard product and Get four results (R3)"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="OFSPGC-17"/>
+            <group value="Stable"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart">
+        </actionGroup>
+
+        <actionGroup ref="SearchProduct4ResultsActionGroup" stepKey="SearchProduct4ResultsActionGroup">
+            <argument name="dataProduct" value="stable_pos_giftcard_product.name4results"/>
+        </actionGroup>
+    </test>
+    <test name="SwitchOfflineSearchGiftcardProductByNameGetting21ResultsR3">
+        <annotations>
+            <features value="Offline mode: Search product"/>
+            <stories value="Offline mode: Search product"/>
+            <title value="Offline mode: Search giftcard product and Get 21 results (R3)"/>
+            <description value="Offline mode: Search giftcard product and Get 21 results (R3)"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="OFSPGC-18"/>
+            <group value="Stable"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart">
+        </actionGroup>
+
+        <actionGroup ref="SearchProduct21ResultsActionGroup" stepKey="SearchProduct21ResultsActionGroup">
+            <argument name="dataProduct" value="stable_pos_giftcard_product.name21results"/>
+        </actionGroup>
+    </test>
+</tests>

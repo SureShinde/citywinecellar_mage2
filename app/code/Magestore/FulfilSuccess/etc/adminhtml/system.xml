@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <!--<tab id="magestore" translate="label" sortOrder="100">-->
+            <!--<label>magestore</label>-->
+        <!--</tab>-->
+        <section id="fulfilsuccess" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+            <class>separator-top</class>
+            <label>Fulfilment Configuration</label>
+            <tab>magestore</tab>
+            <resource>Magestore_FulfilSuccess::configuration</resource>
+            <!--
+            <group id="shipment" translate="label" sortOrder="1" type="text" showInDefault="1" showInWebsite="0">
+                <label>Shipment Configuration</label>
+                <field id="package_picture" translate="label comment" sortOrder="10" type="select" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Take Package Pictures</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+            -->
+            <group id="scanning" translate="label" sortOrder="4" type="text" showInDefault="1" showInWebsite="0">
+                <label>Barcode Attribute</label>
+                <field id="barcode" translate="label" sortOrder="4" type="select" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Product Attribute</label>
+                    <source_model>Magestore\FulfilSuccess\Model\Source\Adminhtml\Product\Barcodeattribute</source_model>
+                    <comment>Change this configuration if you already have a barcode attribute.</comment>
+                </field>
+            </group>
+
+            <group id="guide" translate="label" sortOrder="100" type="text" showInDefault="1" showInWebsite="0">
+                <label>Guide</label>
+                <field id="setup_guide" translate="label" sortOrder="1" type="text" showInDefault="1" showInWebsite="0">
+                    <label>Setup guide</label>
+                    <frontend_model>Magestore\FulfilSuccess\Block\Adminhtml\Config\Instruction</frontend_model>
+                </field>
+            </group>
+
+        </section>
+    </system>
+</config>

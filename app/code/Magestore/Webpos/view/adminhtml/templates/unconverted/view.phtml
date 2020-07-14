@@ -1,0 +1,254 @@
+<div class="page-main-actions">
+    <div class="page-actions">
+        <div class="page-actions-inner">
+            <div class="page-actions-buttons">
+                <button id="back" title="Back" type="button" class="action-default scalable back"
+                        onclick="setLocation('<?= /* @noEscape */ $block->getUrl('webposadmin/unconverted') ?>')">
+                    <span><?= /* @noEscape */ __('Back') ?></span>
+                </button>
+
+                <button id="order_verify" title="Mark as Verified" type="button"
+                        class="action-default scalable ship primary"
+                        onclick="setLocation('<?= /* @noEscape */ $block->getUrl('webposadmin/unconverted/convert', ['increment_id' => $block->getData('increment_id')]) ?>')"
+                        data-ui-id="sales-order-edit-process-order-verify-button">
+                    <span><?= /* @noEscape */ __('Convert To Order') ?></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="sales_order_view_tabs_order_info_content" class="ui-tabs-panel ui-widget-content ui-corner-bottom">
+    <section class="admin__page-section order-view-account-information">
+        <div class="admin__page-section-title">
+            <span class="title"><?= /* @noEscape */ __('Sales & Account Information') ?></span>
+        </div>
+        <div class="admin__page-section-content">
+            <div class="admin__page-section-item order-information">
+                <div class="admin__page-section-item-title">
+                    <span class="title"><?= /* @noEscape */ __('Sales # %1', $block->escapeHtml($block->getData('increment_id'))) ?></span>
+                </div>
+                <div class="admin__page-section-item-content">
+                    <table class="admin__table-secondary order-information-table">
+                        <tbody>
+                        <tr>
+                            <th><?= /* @noEscape */ __('Sales Date') ?></th>
+                            <td><?= /* @noEscape */ $block->formatDate($block->getData('created_at'), \IntlDateFormatter::MEDIUM, true) ?></td>
+                        </tr>
+                        <tr>
+                            <th><?= /* @noEscape */ __('Sales Status') ?></th>
+                            <td><?= /* @noEscape */ $block->getStatus($block->getData('status')) ?></td>
+                        </tr>
+                        <tr>
+                            <th><?= /* @noEscape */ __('Location') ?></th>
+                            <td><?= /* @noEscape */ $block->getLocationName($block->getData('pos_location_id')) ?></td>
+                        </tr>
+                        <tr>
+                            <th><?= /* @noEscape */ __('POS') ?></th>
+                            <td><?= /* @noEscape */ $block->getPosName($block->getData('pos_id')) ?></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="admin__page-section-item order-account-information">
+                <div class="admin__page-section-item-title">
+                    <span class="title"><?= /* @noEscape */ __('Account Information') ?></span>
+                    <div class="actions"></div>
+                </div>
+                <div class="admin__page-section-item-content">
+                    <table class="admin__table-secondary order-account-information-table">
+                        <tbody>
+                        <tr>
+                            <th><?= /* @noEscape */ __('Customer Name') ?></th>
+                            <td>
+                                <span><?= $block->escapeHtml($block->getData('customer_firstname')) . ' ' . $block->escapeHtml($block->getData('customer_lastname')) ?></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><?= /* @noEscape */ __('Email') ?></th>
+                            <td><?= $block->escapeHtml($block->getData('customer_email')) ?></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="admin__page-section order-addresses">
+        <div class="admin__page-section-title">
+            <span class="title"><?= /* @noEscape */ __('Address Information') ?></span>
+        </div>
+        <div class="admin__page-section-content">
+            <div class="admin__page-section-item order-billing-address">
+                <div class="admin__page-section-item-title">
+                    <span class="title"><?= /* @noEscape */ __('Billing Address') ?></span>
+                </div>
+                <address class="admin__page-section-item-content">
+                    <?= $block->escapeHtml($block->getAddressDescription('billing')) ?>
+                </address>
+            </div>
+            <div class="admin__page-section-item order-shipping-address">
+                <div class="admin__page-section-item-title">
+                    <span class="title"><?= /* @noEscape */ __('Shipping Address') ?></span>
+                </div>
+                <address class="admin__page-section-item-content">
+                    <?= $block->escapeHtml($block->getAddressDescription('shipping')) ?>
+                </address>
+            </div>
+        </div>
+    </section>
+    <section class="admin__page-section order-view-billing-shipping">
+        <div class="admin__page-section-title">
+            <span class="title"><?= /* @noEscape */ __('Payment & Shipping Method') ?></span>
+        </div>
+        <div class="admin__page-section-content">
+            <div class="admin__page-section-item order-payment-method">
+                <div class="admin__page-section-item-title">
+                    <span class="title"><?= /* @noEscape */ __('Payment Information') ?></span>
+                </div>
+                <div class="admin__page-section-item-content">
+                    <?php $payments = $block->getData('payments'); ?>
+                    <table class="data-table admin__table-secondary">
+                        <?php foreach ($payments as $payment) : ?>
+                            <tr>
+                                <th><?= $block->escapeHtml($payment['title']) ?></th>
+                                <td style='padding-left:10px;font-weight:bold;'>
+                                    <?= /* @noEscape */ $block->formatPrice($payment['amount_paid']) ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </table>
+                </div>
+            </div>
+            <div class="admin__page-section-item order-shipping-method">
+                <div class="admin__page-section-item-title">
+                    <span class="title"><?= /* @noEscape */ __('Shipping & Handling Information') ?></span>
+                </div>
+                <div class="admin__page-section-item-content">
+                    <strong><?= /* @noEscape */ $block->getData('shipping_description') ?></strong>
+                    <div><span class="price"><?= /* @noEscape */ $block->formatPrice($block->getData('shipping_amount')) ?></span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="admin__page-section">
+        <div class="admin__page-section-title">
+            <span class="title"><?= /* @noEscape */ __('Items Ordered') ?></span>
+        </div>
+        <div class="admin__table-wrapper">
+            <table class="data-table admin__table-primary edit-order-table">
+                <thead>
+                <tr class="headings">
+                    <th class="col-product"><span><?= /* @noEscape */ __('Product') ?></span></th>
+                    <th class="col-price"><span><?= /* @noEscape */ __('Price') ?></span></th>
+                    <th class="col-ordered-qty"><span><?= /* @noEscape */ __('Qty') ?></span></th>
+                    <th class="col-subtotal"><span><?= /* @noEscape */ __('Subtotal') ?></span></th>
+                    <th class="col-tax-amount"><span><?= /* @noEscape */ __('Tax Amount') ?></span></th>
+                    <th class="col-total last"><span><?= /* @noEscape */ __('Row Total') ?></span></th>
+                </tr>
+                </thead>
+                <tbody class="even">
+                <?php $items = $block->getData('items'); ?>
+                <?php foreach ($items as $item) : ?>
+                    <?php if (!$item['parent_item_id']) : ?>
+                    <tr>
+                        <td class="col-product">
+                            <div>
+                                <div class="product-title"><?= /* @noEscape */ $item['name'] ?></div>
+                                <div class="product-sku-block"><?= /* @noEscape */ $item['sku'] ?></div>
+                                <dl class="item-options">
+                                </dl>
+                            </div>
+                        </td>
+                        <td class="col-price">
+                            <div class="price-excl-tax">
+                                <span class="price"><?= /* @noEscape */ $block->formatPrice($item['price']) ?></span>
+                            </div>
+                        </td>
+                        <td class="col-ordered-qty">
+                            <div class="qty-table">
+                                <span><?= /* @noEscape */ $item['qty_ordered'] ?></span>
+                            </div>
+                        </td>
+                        <td class="col-subtotal">
+                            <div class="price-excl-tax">
+                                <span class="price"><?= /* @noEscape */ $block->formatPrice($item['row_total']) ?></span>
+                            </div>
+                        </td>
+                        <td class="col-tax-amount"><span
+                                    class="price"><?= /* @noEscape */ $block->formatPrice($item['tax_amount']) ?></span>
+                        </td>
+                        <td class="col-total last">
+                            <span class="price"><?= /* @noEscape */ $block->formatPrice($item['row_total_incl_tax']) ?></span>
+                        </td>
+                    </tr>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="admin__page-section">
+        <div class="admin__page-section-title">
+            <span class="title"><?= /* @noEscape */ __('Order Total') ?></span>
+        </div>
+        <div class="admin__page-section-content">
+            <div class="admin__page-section-item order-comments-history">
+                <div class="admin__page-section-item-title">
+                    <span class="title"><?= /* @noEscape */ __('Notes for this Order') ?></span>
+                </div>
+                <div id="order_history_block" class="edit-order-comments">
+                    <ul class="note-list">
+                        <li><?= /* @noEscape */ $block->getData('customer_note') ?></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="admin__page-section-item order-totals">
+                <div class="admin__page-section-item-title">
+                    <span class="title"><?= /* @noEscape */ __('Order Total') ?></span>
+                </div>
+                <table class="data-table admin__table-secondary order-subtotal-table">
+                    <tfoot>
+                    <tr class="col-0">
+                        <td class="label"><strong><?= /* @noEscape */ __('Grand Total') ?></strong></td>
+                        <td><strong><span
+                                        class="price"><?= /* @noEscape */ $block->formatPrice($block->getData('grand_total')) ?></span></strong>
+                        </td>
+                    </tr>
+                    <tr class="col-1">
+                        <td class="label"><strong><?= /* @noEscape */ __('Total Paid') ?></strong></td>
+                        <td><strong><span class="price"><?= /* @noEscape */ $block->formatPrice($block->getData('total_paid')) ?></span></strong>
+                        </td>
+                    </tr>
+                    <tr class="col-3">
+                        <td class="label"><strong><?= /* @noEscape */ __('Total Due') ?></strong></td>
+                        <td><strong><span class="price"><?= /* @noEscape */ $block->formatPrice($block->getData('total_due')) ?></span></strong>
+                        </td>
+                    </tr>
+                    </tfoot>
+                    <tbody>
+                    <tr class="col-0">
+                        <td class="label"><?= /* @noEscape */ __('Subtotal') ?></td>
+                        <td>
+                            <span><span class="price"><?= /* @noEscape */ $block->formatPrice($block->getData('subtotal')) ?></span></span>
+                        </td>
+                    </tr>
+                    <tr class="col-1">
+                        <td class="label"><?= /* @noEscape */ __('Shipping & Handling') ?></td>
+                        <td>
+                            <span><span class="price"><?= /* @noEscape */ $block->formatPrice($block->getData('shipping_amount')) ?></span></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="label">
+                            <div class="summary-collapse" tabindex="0"><?= /* @noEscape */ __('Tax') ?></div>
+                        </td>
+                        <td><span class="price"><?= /* @noEscape */ $block->formatPrice($block->getData('tax_amount')) ?></span></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>

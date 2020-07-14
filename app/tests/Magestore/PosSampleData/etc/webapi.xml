@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+
+<!--
+  ~ Copyright © 2018 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+
+
+    <route url="/V1/pwasampledata/forceSignOut" method="POST">
+        <service class="Magestore\PosSampleData\Api\PosRepositoryInterface" method="forceSignOut"/>
+        <resources>
+            <resource ref="Magestore_PosSampleData::pos" />
+        </resources>
+    </route>
+    <route url="/V1/pwasampledata/changeAdminConfig" method="POST">
+        <service class="Magestore\PosSampleData\Api\ConfigRepositoryInterface" method="changeConfig"/>
+        <resources>
+            <resource ref="Magestore_PosSampleData::pos" />
+        </resources>
+    </route>
+    <route url="/V1/pwasampledata/enableVisibleOnPos" method="POST">
+        <service class="Magestore\PosSampleData\Api\ProductRepositoryInterface" method="enableVisibleOnPos"/>
+        <resources>
+            <resource ref="Magestore_PosSampleData::pos" />
+        </resources>
+    </route>
+    <route url="/V1/pwasampledata/changeCurrencyRate" method="POST">
+        <service class="Magestore\PosSampleData\Api\CurrencyRepositoryInterface" method="changeRate"/>
+        <resources>
+            <resource ref="Magestore_PosSampleData::pos" />
+        </resources>
+    </route>
+
+</routes>

@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+
+    <!-- 1 result tests-->
+    <test name="SwitchOfflineSearchOrderByIncrementIdGetting1ResultR5">
+        <annotations>
+            <features value="Offline mode: Search order"/>
+            <stories value="Offline mode: Search order"/>
+            <title value="Offline mode: Search order by increment Id and Get 1 result (R5)"/>
+            <description value="Offline mode: Search order by increment Id and Get 1 result (R5)"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="Stable-Offline"/>
+            <group value="Stable-Offline-Order"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <amOnPage url="{{PosOrderHistoryPage.url}}" stepKey="navigateToPosOrderHistory"/>
+        </before>
+
+        <actionGroup ref="SearchOrderAndCountResultActionGroup" stepKey="searchOrder">
+            <argument name="keyword" value="pos_stable_order_1_result.keyword_increment_id"/>
+            <argument name="numberOrders" value="pos_stable_order_1_result.numberOrders"/>
+        </actionGroup>
+    </test>
+
+    <test name="SwitchOfflineSearchOrderByFirstNameGetting1ResultR5">
+        <annotations>
+            <features value="Offline mode: Search order"/>
+            <stories value="Offline mode: Search order"/>
+            <title value="Offline mode: Search order by first name and Get 1 result (R5)"/>
+            <description value="Offline mode: Search order by first name and Get 1 result (R5)"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="Stable-Offline"/>
+            <group value="Stable-Offline-Order"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <amOnPage url="{{PosOrderHistoryPage.url}}" stepKey="navigateToPosOrderHistory"/>
+        </before>
+
+        <actionGroup ref="SearchOrderAndCountResultActionGroup" stepKey="searchOrder">
+            <argument name="keyword" value="pos_stable_order_1_result.keyword_firstname"/>
+            <argument name="numberOrders" value="pos_stable_order_1_result.numberOrders"/>
+        </actionGroup>
+    </test>
+
+    <test name="SwitchOfflineSearchOrderByLastNameGetting1ResultR5">
+        <annotations>
+            <features value="Offline mode: Search order"/>
+            <stories value="Offline mode: Search order"/>
+            <title value="Offline mode: Search order by last name and Get 1 result (R5)"/>
+            <description value="Offline mode: Search order by last name and Get 1 result (R5)"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="Stable-Offline"/>
+            <group value="Stable-Offline-Order"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <amOnPage url="{{PosOrderHistoryPage.url}}" stepKey="navigateToPosOrderHistory"/>
+        </before>
+
+        <actionGroup ref="SearchOrderAndCountResultActionGroup" stepKey="searchOrder">
+            <argument name="keyword" value="pos_stable_order_1_result.keyword_lastname"/>
+            <argument name="numberOrders" value="pos_stable_order_1_result.numberOrders"/>
+        </actionGroup>
+    </test>
+
+    <test name="SwitchOfflineSearchOrderByEmailGetting1ResultR5">
+        <annotations>
+            <features value="Offline mode: Search order"/>
+            <stories value="Offline mode: Search order"/>
+            <title value="Offline mode: Search order by email and Get 1 result (R5)"/>
+            <description value="Offline mode: Search order by email and Get 1 result (R5)"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="Stable-Offline"/>
+            <group value="Stable-Offline-Order"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <amOnPage url="{{PosOrderHistoryPage.url}}" stepKey="navigateToPosOrderHistory"/>
+        </before>
+
+        <actionGroup ref="SearchOrderAndCountResultActionGroup" stepKey="searchOrder">
+            <argument name="keyword" value="pos_stable_order_1_result.keyword_email"/>
+            <argument name="numberOrders" value="pos_stable_order_1_result.numberOrders"/>
+        </actionGroup>
+    </test>
+
+    <test name="SwitchOfflineSearchOrderByTelephoneGetting1ResultR5">
+        <annotations>
+            <features value="Offline mode: Search order"/>
+            <stories value="Offline mode: Search order"/>
+            <title value="Offline mode: Search order by telephone and Get 1 result (R5)"/>
+            <description value="Offline mode: Search order by telephone and Get 1 result (R5)"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="Stable-Offline"/>
+            <group value="Stable-Offline-Order"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <amOnPage url="{{PosOrderHistoryPage.url}}" stepKey="navigateToPosOrderHistory"/>
+        </before>
+
+        <actionGroup ref="SearchOrderAndCountResultActionGroup" stepKey="searchOrder">
+            <argument name="keyword" value="pos_stable_order_1_result.keyword_telephone"/>
+            <argument name="numberOrders" value="pos_stable_order_1_result.numberOrders"/>
+        </actionGroup>
+    </test>
+
+    <test name="SwitchOfflineSearchOrderByProductNameGetting1ResultR5">
+        <annotations>
+            <features value="Offline mode: Search order"/>
+            <stories value="Offline mode: Search order"/>
+            <title value="Offline mode: Search order by product name and Get 1 result (R5)"/>
+            <description value="Offline mode: Search order by product name and Get 1 result (R5)"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="Stable-Offline"/>
+            <group value="Stable-Offline-Order"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <amOnPage url="{{PosOrderHistoryPage.url}}" stepKey="navigateToPosOrderHistory"/>
+        </before>
+
+        <actionGroup ref="SearchOrderAndCountResultActionGroup" stepKey="searchOrder">
+            <argument name="keyword" value="pos_stable_order_1_result.keyword_product_name"/>
+            <argument name="numberOrders" value="pos_stable_order_1_result.numberOrders"/>
+        </actionGroup>
+    </test>
+
+    <test name="SwitchOfflineSearchOrderByProductSkuGetting1ResultR5">
+        <annotations>
+            <features value="Offline mode: Search order"/>
+            <stories value="Offline mode: Search order"/>
+            <title value="Offline mode: Search order by product sku and Get 1 result (R5)"/>
+            <description value="Offline mode: Search order by product sku and Get 1 result (R5)"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="Stable-Offline"/>
+            <group value="Stable-Offline-Order"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <amOnPage url="{{PosOrderHistoryPage.url}}" stepKey="navigateToPosOrderHistory"/>
+        </before>
+
+        <actionGroup ref="SearchOrderAndCountResultActionGroup" stepKey="searchOrder">
+            <argument name="keyword" value="pos_stable_order_1_result.keyword_product_sku"/>
+            <argument name="numberOrders" value="pos_stable_order_1_result.numberOrders"/>
+        </actionGroup>
+    </test>
+    <!-- End: 1 result tests-->
+
+    <!-- 4 results tests-->
+    <test name="SwitchOfflineSearchOrderByIncrementIdGetting4ResultsR5">
+        <annotations>
+            <features value="Offline mode: Search order"/>
+            <stories value="Offline mode: Search order"/>
+            <title value="Offline mode: Search order by increment Id and Get 4 results (R5)"/>
+            <description value="Offline mode: Search order by increment Id and Get 4 results (R5)"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="Stable-Offline"/>
+            <group value="Stable-Offline-Order"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <amOnPage url="{{PosOrderHistoryPage.url}}" stepKey="navigateToPosOrderHistory"/>
+        </before>
+
+        <actionGroup ref="SearchOrderAndCountResultActionGroup" stepKey="searchOrder">
+            <argument name="keyword" value="pos_stable_order_4_results.keyword_increment_id"/>
+            <argument name="numberOrders" value="pos_stable_order_4_results.numberOrders"/>
+        </actionGroup>
+    </test>
+
+    <test name="SwitchOfflineSearchOrderByFirstNameGetting4ResultsR5">
+        <annotations>
+            <features value="Offline mode: Search order"/>
+            <stories value="Offline mode: Search order"/>
+            <title value="Offline mode: Search order by first name and Get 4 results (R5)"/>
+            <description value="Offline mode: Search order by first name and Get 4 results (R5)"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="Stable-Offline"/>
+            <group value="Stable-Offline-Order"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <amOnPage url="{{PosOrderHistoryPage.url}}" stepKey="navigateToPosOrderHistory"/>
+        </before>
+
+        <actionGroup ref="SearchOrderAndCountResultActionGroup" stepKey="searchOrder">
+            <argument name="keyword" value="pos_stable_order_4_results.keyword_firstname"/>
+            <argument name="numberOrders" value="pos_stable_order_4_results.numberOrders"/>
+        </actionGroup>
+    </test>
+
+    <test name="SwitchOfflineSearchOrderByLastNameGetting4ResultsR5">
+        <annotations>
+            <features value="Offline mode: Search order"/>
+            <stories value="Offline mode: Search order"/>
+            <title value="Offline mode: Search order by last name and Get 4 results (R5)"/>
+            <description value="Offline mode: Search order by last name and Get 4 results (R5)"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="Stable-Offline"/>
+            <group value="Stable-Offline-Order"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <amOnPage url="{{PosOrderHistoryPage.url}}" stepKey="navigateToPosOrderHistory"/>
+        </before>
+
+        <actionGroup ref="SearchOrderAndCountResultActionGroup" stepKey="searchOrder">
+            <argument name="keyword" value="pos_stable_order_4_results.keyword_lastname"/>
+            <argument name="numberOrders" value="pos_stable_order_4_results.numberOrders"/>
+        </actionGroup>
+    </test>
+
+    <test name="SwitchOfflineSearchOrderByEmailGetting4ResultsR5">
+        <annotations>
+            <features value="Offline mode: Search order"/>
+            <stories value="Offline mode: Search order"/>
+            <title value="Offline mode: Search order by email and Get 4 results (R5)"/>
+            <description value="Offline mode: Search order by email and Get 4 results (R5)"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="Stable-Offline"/>
+            <group value="Stable-Offline-Order"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <amOnPage url="{{PosOrderHistoryPage.url}}" stepKey="navigateToPosOrderHistory"/>
+        </before>
+
+        <actionGroup ref="SearchOrderAndCountResultActionGroup" stepKey="searchOrder">
+            <argument name="keyword" value="pos_stable_order_4_results.keyword_email"/>
+            <argument name="numberOrders" value="pos_stable_order_4_results.numberOrders"/>
+        </actionGroup>
+    </test>
+
+    <test name="SwitchOfflineSearchOrderByTelephoneGetting4ResultsR5">
+        <annotations>
+            <features value="Offline mode: Search order"/>
+            <stories value="Offline mode: Search order"/>
+            <title value="Offline mode: Search order by telephone and Get 4 results (R5)"/>
+            <description value="Offline mode: Search order by telephone and Get 4 results (R5)"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="Stable-Offline"/>
+            <group value="Stable-Offline-Order"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <amOnPage url="{{PosOrderHistoryPage.url}}" stepKey="navigateToPosOrderHistory"/>
+        </before>
+
+        <actionGroup ref="SearchOrderAndCountResultActionGroup" stepKey="searchOrder">
+            <argument name="keyword" value="pos_stable_order_4_results.keyword_telephone"/>
+            <argument name="numberOrders" value="pos_stable_order_4_results.numberOrders"/>
+        </actionGroup>
+    </test>
+
+    <test name="SwitchOfflineSearchOrderByProductNameGetting4ResultsR5">
+        <annotations>
+            <features value="Offline mode: Search order"/>
+            <stories value="Offline mode: Search order"/>
+            <title value="Offline mode: Search order by product name and Get 4 results (R5)"/>
+            <description value="Offline mode: Search order by product name and Get 4 results (R5)"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="Stable-Offline"/>
+            <group value="Stable-Offline-Order"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <amOnPage url="{{PosOrderHistoryPage.url}}" stepKey="navigateToPosOrderHistory"/>
+        </before>
+
+        <actionGroup ref="SearchOrderAndCountResultActionGroup" stepKey="searchOrder">
+            <argument name="keyword" value="pos_stable_order_4_results.keyword_product_name"/>
+            <argument name="numberOrders" value="pos_stable_order_4_results.numberOrders"/>
+        </actionGroup>
+    </test>
+
+    <test name="SwitchOfflineSearchOrderByProductSkuGetting4ResultsR5">
+        <annotations>
+            <features value="Offline mode: Search order"/>
+            <stories value="Offline mode: Search order"/>
+            <title value="Offline mode: Search order by product sku and Get 4 results (R5)"/>
+            <description value="Offline mode: Search order by product sku and Get 4 results (R5)"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="Stable-Offline"/>
+            <group value="Stable-Offline-Order"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <amOnPage url="{{PosOrderHistoryPage.url}}" stepKey="navigateToPosOrderHistory"/>
+        </before>
+
+        <actionGroup ref="SearchOrderAndCountResultActionGroup" stepKey="searchOrder">
+            <argument name="keyword" value="pos_stable_order_4_results.keyword_product_sku"/>
+            <argument name="numberOrders" value="pos_stable_order_4_results.numberOrders"/>
+        </actionGroup>
+    </test>
+    <!-- End: 4 results tests-->
+
+    <!-- 11 results tests-->
+    <test name="SwitchOfflineSearchOrderByIncrementIdGetting11ResultsR5">
+        <annotations>
+            <features value="Offline mode: Search order"/>
+            <stories value="Offline mode: Search order"/>
+            <title value="Offline mode: Search order by increment Id and Get 11 results (R5)"/>
+            <description value="Offline mode: Search order by increment Id and Get 11 results (R5)"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="Stable-Offline"/>
+            <group value="Stable-Offline-Order"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <amOnPage url="{{PosOrderHistoryPage.url}}" stepKey="navigateToPosOrderHistory"/>
+        </before>
+
+        <actionGroup ref="SearchOrderAndCountResultMultiPagesActionGroup" stepKey="searchOrder">
+            <argument name="keyword" value="pos_stable_order_11_results.keyword_increment_id"/>
+            <argument name="numberOrders" value="pos_stable_order_11_results.numberOrders"/>
+        </actionGroup>
+    </test>
+
+    <test name="SwitchOfflineSearchOrderByFirstNameGetting11ResultsR5">
+        <annotations>
+            <features value="Offline mode: Search order"/>
+            <stories value="Offline mode: Search order"/>
+            <title value="Offline mode: Search order by first name and Get 11 results (R5)"/>
+            <description value="Offline mode: Search order by first name and Get 11 results (R5)"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="Stable-Offline"/>
+            <group value="Stable-Offline-Order"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <amOnPage url="{{PosOrderHistoryPage.url}}" stepKey="navigateToPosOrderHistory"/>
+        </before>
+
+        <actionGroup ref="SearchOrderAndCountResultMultiPagesActionGroup" stepKey="searchOrder">
+            <argument name="keyword" value="pos_stable_order_11_results.keyword_firstname"/>
+            <argument name="numberOrders" value="pos_stable_order_11_results.numberOrders"/>
+        </actionGroup>
+    </test>
+
+    <test name="SwitchOfflineSearchOrderByLastNameGetting11ResultsR5">
+        <annotations>
+            <features value="Offline mode: Search order"/>
+            <stories value="Offline mode: Search order"/>
+            <title value="Offline mode: Search order by last name and Get 11 results (R5)"/>
+            <description value="Offline mode: Search order by last name and Get 11 results (R5)"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="Stable-Offline"/>
+            <group value="Stable-Offline-Order"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <amOnPage url="{{PosOrderHistoryPage.url}}" stepKey="navigateToPosOrderHistory"/>
+        </before>
+
+        <actionGroup ref="SearchOrderAndCountResultMultiPagesActionGroup" stepKey="searchOrder">
+            <argument name="keyword" value="pos_stable_order_11_results.keyword_lastname"/>
+            <argument name="numberOrders" value="pos_stable_order_11_results.numberOrders"/>
+        </actionGroup>
+    </test>
+
+    <test name="SwitchOfflineSearchOrderByEmailGetting11ResultsR5">
+        <annotations>
+            <features value="Offline mode: Search order"/>
+            <stories value="Offline mode: Search order"/>
+            <title value="Offline mode: Search order by email and Get 11 results (R5)"/>
+            <description value="Offline mode: Search order by email and Get 11 results (R5)"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="Stable-Offline"/>
+            <group value="Stable-Offline-Order"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <amOnPage url="{{PosOrderHistoryPage.url}}" stepKey="navigateToPosOrderHistory"/>
+        </before>
+
+        <actionGroup ref="SearchOrderAndCountResultMultiPagesActionGroup" stepKey="searchOrder">
+            <argument name="keyword" value="pos_stable_order_11_results.keyword_email"/>
+            <argument name="numberOrders" value="pos_stable_order_11_results.numberOrders"/>
+        </actionGroup>
+    </test>
+
+    <test name="SwitchOfflineSearchOrderByTelephoneGetting11ResultsR5">
+        <annotations>
+            <features value="Offline mode: Search order"/>
+            <stories value="Offline mode: Search order"/>
+            <title value="Offline mode: Search order by telephone and Get 11 results (R5)"/>
+            <description value="Offline mode: Search order by telephone and Get 11 results (R5)"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="Stable-Offline"/>
+            <group value="Stable-Offline-Order"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <amOnPage url="{{PosOrderHistoryPage.url}}" stepKey="navigateToPosOrderHistory"/>
+        </before>
+
+        <actionGroup ref="SearchOrderAndCountResultMultiPagesActionGroup" stepKey="searchOrder">
+            <argument name="keyword" value="pos_stable_order_11_results.keyword_telephone"/>
+            <argument name="numberOrders" value="pos_stable_order_11_results.numberOrders"/>
+        </actionGroup>
+    </test>
+
+    <test name="SwitchOfflineSearchOrderByProductNameGetting11ResultsR5">
+        <annotations>
+            <features value="Offline mode: Search order"/>
+            <stories value="Offline mode: Search order"/>
+            <title value="Offline mode: Search order by product name and Get 11 results (R5)"/>
+            <description value="Offline mode: Search order by product name and Get 11 results (R5)"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="Stable-Offline"/>
+            <group value="Stable-Offline-Order"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <amOnPage url="{{PosOrderHistoryPage.url}}" stepKey="navigateToPosOrderHistory"/>
+        </before>
+
+        <actionGroup ref="SearchOrderAndCountResultMultiPagesActionGroup" stepKey="searchOrder">
+            <argument name="keyword" value="pos_stable_order_11_results.keyword_product_name"/>
+            <argument name="numberOrders" value="pos_stable_order_11_results.numberOrders"/>
+        </actionGroup>
+    </test>
+
+    <test name="SwitchOfflineSearchOrderByProductSkuGetting11ResultsR5">
+        <annotations>
+            <features value="Offline mode: Search order"/>
+            <stories value="Offline mode: Search order"/>
+            <title value="Offline mode: Search order by product sku and Get 11 results (R5)"/>
+            <description value="Offline mode: Search order by product sku and Get 11 results (R5)"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="Stable-Offline"/>
+            <group value="Stable-Offline-Order"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <amOnPage url="{{PosOrderHistoryPage.url}}" stepKey="navigateToPosOrderHistory"/>
+        </before>
+
+        <actionGroup ref="SearchOrderAndCountResultMultiPagesActionGroup" stepKey="searchOrder">
+            <argument name="keyword" value="pos_stable_order_11_results.keyword_product_sku"/>
+            <argument name="numberOrders" value="pos_stable_order_11_results.numberOrders"/>
+        </actionGroup>
+    </test>
+    <!-- End: 11 results tests-->
+</tests>

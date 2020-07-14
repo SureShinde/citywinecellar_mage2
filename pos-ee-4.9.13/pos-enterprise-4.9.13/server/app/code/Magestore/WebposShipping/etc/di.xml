@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ Copyright © 2018 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Magestore\WebposShipping\Api\Order\ShippingServiceInterface" type="Magestore\WebposShipping\Model\Order\ShippingService"/>
+    <preference for="Magestore\WebposShipping\Api\Data\Order\Shipment\ItemToShipInterface" type="Magestore\WebposShipping\Model\Order\Shipment\ItemToShip"/>
+    <type name="Magestore\Webpos\Api\Checkout\CheckoutRepositoryInterface">
+        <plugin name="WebposShippingCheckoutRepositoryPlugin" type="Magestore\WebposShipping\Plugin\Model\Checkout\CheckoutRepository" sortOrder="1" />
+    </type>
+    <type name="Magestore\FulfilSuccess\Observer\Sales\SalesPlaceOrderAfter">
+        <plugin name="WebposShippingFulfilSuccessObserverSalesSalesPlaceOrderAfterPlugin" type="Magestore\WebposShipping\Plugin\FulfilSuccess\Observer\Sales\SalesPlaceOrderAfterPlugin" sortOrder="1" />
+    </type>
+</config>

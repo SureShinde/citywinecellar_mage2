@@ -1,0 +1,83 @@
+.image-stripeterminal_integration {
+    background-image: url("../images/stripe.svg") !important;
+}
+
+.settings-right .list-lv1 select.form-control {
+    text-align-last: right;
+    padding-right: 50px;
+    direction: rtl;
+}
+
+
+.settings-right .panel-group.accordion-stripeterminal_integration .panel-default .panel-heading .panel-title a {
+    background-position: top 25px right 19px;
+    background-repeat: no-repeat;
+    padding: 17px 20px 17px 20px;
+    background-image: url('../../../../../view/style/images/right.svg');
+}
+
+.settings-right  .panel-group.accordion-stripeterminal_integration .list-lv1 li:last-child {
+    border-bottom: 1px solid #e0e0e0;
+}
+
+body:not(.body-touch) .panel-group.accordion-stripeterminal_integration .panel .panel-collapse.collapse {
+    display: none !important;
+}
+
+body:not(.body-touch) .panel-group.accordion-stripeterminal_integration .panel .panel-collapse.collapse.in {
+    display: block !important;
+}
+
+body:not(.body-touch) .panel-group.accordion-stripeterminal_integration .panel {
+    margin-top: 0;
+    border: none;
+}
+
+body:not(.body-touch) .panel-group.accordion-stripeterminal_integration .panel + .panel {
+    margin-top: 0;
+}
+
+.panel-group.accordion-stripeterminal_integration .panel-default > .panel-heading {
+    background-color: #fff;
+}
+
+.panel-group.accordion-stripeterminal_integration .panel-default .panel-heading {
+    padding: 0;
+    border: none;
+}
+
+.panel-group.accordion-stripeterminal_integration .panel-default:nth-child(even) .panel-heading .panel-title {
+    border-top: 1px solid #ddd;
+}
+
+.panel-group.accordion-stripeterminal_integration .panel-default .panel-heading .panel-title a {
+    padding: 21px;
+    display: block;
+}
+
+.panel-group.accordion-stripeterminal_integration .bottom {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.panel-group.accordion-stripeterminal_integration .bottom button {
+    margin: 50px 15px 15px 15px;
+    min-width: 150px;
+}
+
+.panel-group.accordion-stripeterminal_integration .bottom button:hover {
+    background-color: #1d63dc;
+}
+
+.panel-group.accordion-stripeterminal_integration .description-line {
+    position: relative !important;
+    padding: 5px 0 5px 0 !important;
+}
+
+.panel-group.accordion-stripeterminal_integration .asterisk:after {
+    margin-left: 2px;
+    content:"*";
+    color:red;
+}

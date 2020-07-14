@@ -1,0 +1,99 @@
+Banners,Banners
+"Save and Continue Edit","Save and Continue Edit"
+Banner,Banner
+"Cart Conditions","Cart Conditions"
+"Apply the rule only if the following conditions are met (leave blank for all products).","Apply the rule only if the following conditions are met (leave blank for all products)."
+Conditions,Conditions
+"Banner Content","Banner Content"
+"Banner Position and Type","Banner Position and Type"
+Position,Position
+"Where to display this banner","Where to display this banner"
+"Please note that position of sidebars depends on the theme layout. </br> By default Sidebar Main is situated on the left side of category pages.","Please note that position of sidebars depends on the theme layout. </br> By default Sidebar Main is situated on the left side of category pages."
+"Product line number","Product line number"
+"Banner width (number of products)","Banner width (number of products)"
+Categories,Categories
+"Leave empty to show in all categories. Not applicable for `Above Cart` position.","Leave empty to show in all categories. Not applicable for `Above Cart` position."
+"Product SKUs","Product SKUs"
+"Comma separted list of product SKUs where this banner should be displayed. Leave field blank to display banner on all products","Comma separted list of product SKUs where this banner should be displayed. Leave field blank to display banner on all products"
+"Search keywords","Search keywords"
+"Provide search keywords one per line. Leave empty to show banner on all catalog search pages","Provide search keywords one per line. Leave empty to show banner on all catalog search pages"
+"Banner Type","Banner Type"
+"What kind of content banner will display","What kind of content banner will display"
+"Show Products","Show Products"
+"Choose Yes to show selected products below banner","Choose Yes to show selected products below banner"
+Image,Image
+Link,Link
+Title,Title
+"CMS Block","CMS Block"
+"Use CMS block","Use CMS block"
+"HTML Text","HTML Text"
+"Product attributes","Product attributes"
+"HTML text","HTML text"
+General,General
+Name,Name
+Status,Status
+Stores,Stores
+"Leave empty to show the banner in all stores","Leave empty to show the banner in all stores"
+"Customer Groups","Customer Groups"
+"Leave empty to show the banner for all groups","Leave empty to show the banner for all groups"
+"From Date","From Date"
+"To Date","To Date"
+Priority,Priority
+ID,ID
+SKU,SKU
+Price,Price
+Segments,Segments
+"No Position","No Position"
+"Banner(s) were successfully deleted","Banner(s) were successfully deleted"
+"We can't delete Banner(s) right now. Please review the log and try again. ","We can't delete Banner(s) right now. Please review the log and try again. "
+"Record does not exist.","Record does not exist."
+"Edit Banner `%1`","Edit Banner `%1`"
+"Add new Banner","Add new Banner"
+"Record(s) have been updated.","Record(s) have been updated."
+"We can't change status of rules(s) right now. Please review the log and try again. ","We can't change status of rules(s) right now. Please review the log and try again. "
+"Rules(s) were successfully deleted","Rules(s) were successfully deleted"
+"We can't delete rule(s) right now. Please review the log and try again. ","We can't delete rule(s) right now. Please review the log and try again. "
+"Promo Banners","Promo Banners"
+"Banner has been successfully saved","Banner has been successfully saved"
+"Above Cart","Above Cart"
+"Cart Page (Below Total)","Cart Page (Below Total)"
+"Sidebar Additional","Sidebar Additional"
+"Sidebar Main","Sidebar Main"
+"Product Page (Top)","Product Page (Top)"
+"Product Page (Bottom)","Product Page (Bottom)"
+"Product Page (Below Cart Button)","Product Page (Below Cart Button)"
+"Category Page (Top)","Category Page (Top)"
+"Category Page (Bottom)","Category Page (Bottom)"
+"Category Page (Below Add to Cart Button)","Category Page (Below Add to Cart Button)"
+"Catalog Search (Top)","Catalog Search (Top)"
+"On Top of Page","On Top of Page"
+"Home Page under Menu","Home Page under Menu"
+"Product Page (Sidebar Right)","Product Page (Sidebar Right)"
+"Among Category Products","Among Category Products"
+"Please choose a condition to add.","Please choose a condition to add."
+"Products subselection","Products subselection"
+"Conditions combination","Conditions combination"
+"Cart Attribute","Cart Attribute"
+Inactive,Inactive
+Active,Active
+"Show all, sorted by priority","Show all, sorted by priority"
+"Show only one with the highest priority","Show only one with the highest priority"
+"Add to Cart","Add to Cart"
+"In stock","In stock"
+"Out of stock","Out of stock"
+"General Settings","General Settings"
+"In case several banners are active for one position","In case several banners are active for one position"
+"Product collection container selector","Product collection container selector"
+"Product container selector","Product container selector"
+"Category page width (in products)","Category page width (in products)"
+"Used as a limit for 'Among Category Products' banner position","Used as a limit for 'Among Category Products' banner position"
+Products,Products
+"Add Banner","Add Banner"
+"Are you sure?","Are you sure?"
+Delete,Delete
+Activate,Activate
+Inactivate,Inactivate
+"Date Start","Date Start"
+"Date Expire","Date Expire"
+"Store Views","Store Views"
+Edit,Edit

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright © 2019 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  ~
+  -->
+
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">webpos_unconverted_listing.webpos_unconverted_listing_data_source</item>
+        </item>
+    </argument>
+    <settings>
+        <spinner>webpos_unconverted_columns</spinner>
+        <deps>
+            <dep>webpos_unconverted_listing.webpos_unconverted_listing_data_source</dep>
+        </deps>
+    </settings>
+    <dataSource name="webpos_unconverted_listing_data_source" component="Magento_Ui/js/grid/provider">
+        <settings>
+            <storageConfig>
+                <param name="indexField" xsi:type="string">id</param>
+            </storageConfig>
+            <updateUrl path="mui/index/render"/>
+        </settings>
+        <dataProvider class="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider" name="webpos_unconverted_listing_data_source">
+            <settings>
+                <requestFieldName>id</requestFieldName>
+                <primaryFieldName>id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+    <listingToolbar name="listing_top">
+        <settings>
+            <sticky>true</sticky>
+        </settings>
+        <bookmark name="bookmarks"/>
+        <columnsControls name="columns_controls"/>
+        <exportButton name="export_button"/>
+        <filters name="listing_filters"/>
+        <massaction name="listing_massaction" component="Magento_Ui/js/grid/tree-massactions">
+            <settings>
+                <indexField>id</indexField>
+                <selectProvider>webpos_unconverted_listing.webpos_unconverted_listing.webpos_unconverted_columns.ids</selectProvider>
+            </settings>
+            <action name="convert">
+                <settings>
+                    <confirm>
+                        <message translate="true">Are you sure you want to converted selected items?</message>
+                        <title translate="true">Converted items</title>
+                    </confirm>
+                    <url path="webposadmin/unconverted/massConvert"/>
+                    <type>convert</type>
+                    <label translate="true">Convert</label>
+                </settings>
+            </action>
+        </massaction>
+        <paging name="listing_paging"/>
+    </listingToolbar>
+    <columns name="webpos_unconverted_columns">
+        <settings>
+            <childDefaults>
+                <param name="fieldAction" xsi:type="array">
+                    <item name="provider" xsi:type="string">webpos_unconverted_listing.webpos_unconverted_listing.webpos_denomination_columns_editor</item>
+                    <item name="target" xsi:type="string">startEdit</item>
+                    <item name="params" xsi:type="array">
+                        <item name="0" xsi:type="string">${ $.$data.rowIndex }</item>
+                        <item name="1" xsi:type="boolean">true</item>
+                    </item>
+                </param>
+                <param name="storageConfig" xsi:type="array">
+                    <item name="provider" xsi:type="string">webpos_unconverted_listing.webpos_unconverted_listing.listing_top.bookmarks</item>
+                    <item name="root" xsi:type="string">columns.${ $.index }</item>
+                    <item name="namespace" xsi:type="string">current.${ $.storageConfig.root }</item>
+                </param>
+            </childDefaults>
+            <editorConfig>
+                <param name="clientConfig" xsi:type="array">
+                    <item name="saveUrl" xsi:type="url" path="webposadmin/denomination/inlineEdit"/>
+                    <item name="validateBeforeSave" xsi:type="boolean">false</item>
+                </param>
+                <param name="indexField" xsi:type="string">id</param>
+                <param name="enabled" xsi:type="boolean">true</param>
+                <param name="selectProvider" xsi:type="string">webpos_unconverted_listing.webpos_unconverted_listing.webpos_denomination_columns.ids</param>
+            </editorConfig>
+            <storageConfig>
+                <namespace>current</namespace>
+                <provider>webpos_unconverted_listing.webpos_unconverted_listing.listing_top.bookmarks</provider>
+            </storageConfig>
+        </settings>
+        <selectionsColumn name="ids" sortOrder="10">
+            <settings>
+                <indexField>id</indexField>
+                <resizeDefaultWidth>55</resizeDefaultWidth>
+                <resizeEnabled>false</resizeEnabled>
+            </settings>
+        </selectionsColumn>
+        <column name="id" sortOrder="20">
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">ID</label>
+                <sorting>asc</sorting>
+            </settings>
+        </column>
+        <column name="increment_id" sortOrder="30">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Increment ID</label>
+                <editor>
+                    <editorType>text</editorType>
+                </editor>
+            </settings>
+        </column>
+        <column name="store_id" class="Magento\Store\Ui\Component\Listing\Column\Store" sortOrder="35">
+            <settings>
+                <label translate="true">Store View</label>
+                <bodyTmpl>ui/grid/cells/html</bodyTmpl>
+                <sortable>false</sortable>
+            </settings>
+        </column>
+        <column name="location_id" component="Magento_Ui/js/grid/columns/select" sortOrder="40">
+            <settings>
+                <filter>select</filter>
+                <options class="Magestore\Webpos\Ui\Component\Listing\Column\Location"/>
+                <dataType>select</dataType>
+                <label translate="true">Location</label>
+            </settings>
+        </column>
+        <column name="pos_id" component="Magento_Ui/js/grid/columns/select" sortOrder="50">
+            <settings>
+                <filter>select</filter>
+                <options class="Magestore\Webpos\Ui\Component\Listing\Column\Pos"/>
+                <dataType>select</dataType>
+                <label translate="true">POS</label>
+            </settings>
+        </column>
+        <column name="pos_staff_id" component="Magento_Ui/js/grid/columns/select" sortOrder="60">
+            <settings>
+                <filter>select</filter>
+                <options class="Magestore\Webpos\Ui\Component\Listing\Column\Staff"/>
+                <dataType>select</dataType>
+                <label translate="true">Staff</label>
+            </settings>
+        </column>
+        <actionsColumn name="actions" sortOrder="100" class="Magestore\Webpos\Ui\Component\Listing\Column\UnconvertedOrderActions">
+            <settings>
+                <indexField>id</indexField>
+                <resizeDefaultWidth>100</resizeDefaultWidth>
+                <resizeEnabled>false</resizeEnabled>
+            </settings>
+        </actionsColumn>
+    </columns>
+</listing>

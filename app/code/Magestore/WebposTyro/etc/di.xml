@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ Copyright © 2018 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <type name="Magestore\Payment\Model\Payment\Type\TerminalPayments">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="tyro_integration" xsi:type="string">tyro_integration</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magestore\Payment\Model\Payment\Type\InternetTerminalPayments">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="tyro_integration" xsi:type="string">tyro_integration</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magestore\Payment\Model\Payment\Type\PreventCancelOrderRulePayments">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="tyro_integration" xsi:type="string">tyro_integration</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magestore\Payment\Model\Payment\RefundType\AcceptedPayments">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="tyro_integration" xsi:type="string">tyro_integration</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magestore\Payment\Model\Payment\RefundType\UseTransactionPayments">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="tyro_integration" xsi:type="string">tyro_integration</item>
+            </argument>
+        </arguments>
+    </type>
+    <!-- canceled Order-->
+    <type name="Magento\Sales\Model\Order">
+        <plugin name="webpostyro_order" type="Magestore\WebposTyro\Plugin\Sales\Model\OrderPlugin" sortOrder="999"/>
+    </type>
+</config>

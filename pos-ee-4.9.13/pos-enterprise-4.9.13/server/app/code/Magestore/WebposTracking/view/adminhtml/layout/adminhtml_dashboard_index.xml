@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2019 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content">
+            <uiComponent name="magestore_support_notification">
+                <visibilityCondition name="can_view_magestore_support_notification" className="Magestore\WebposTracking\Model\Condition\CanViewNotification"/>
+            </uiComponent>
+        </referenceContainer>
+    </body>
+</page>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="PosLogoutActionGroup">
+        <conditionalClick selector="{{MenuSection.backButton}}" dependentSelector="{{MenuSection.backButton}}" visible="true" stepKey="clickBackButton"/>
+        <waitForElementVisible selector="{{MenuSection.menuButton}}" time="120" stepKey="waitForMenuButtonVisible"/>
+        <conditionalClick selector="{{MenuSection.menuButton}}" dependentSelector="{{MenuSection.menuButton}}" visible="true" stepKey="clickMenuButton"/>
+        <waitForElementVisible selector="{{MenuSection.menuItem('item-logout')}}" time="120" stepKey="waitForMenuVisible"/>
+        <click selector="{{MenuSection.menuItem('item-logout')}}" stepKey="clickLogout" />
+        <waitForElementVisible selector="{{PopupLogoutSection.yesButton}}" time="120" stepKey="waitForLogoutPopupVisible"/>
+        <click selector="{{PopupLogoutSection.yesButton}}" stepKey="clickYes" />
+        <waitForElementNotVisible selector="{{PopupLogoutSection.yesButton}}" time="120" stepKey="waitForLogoutPopupNotVisible"/>
+        <waitForElementVisible selector="{{PosLoginFormSection.username}}" time="120" stepKey="waitForLogoutSuccess"/>
+    </actionGroup>
+</actionGroups>

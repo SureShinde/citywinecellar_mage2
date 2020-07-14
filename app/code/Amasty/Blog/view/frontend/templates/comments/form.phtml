@@ -1,0 +1,102 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+?>
+<?php
+/** @var $block \Amasty\Blog\Block\Comments\Form */
+if ($block->canPost()): ?>
+    <?php if ($block->canUserPost()): ?>
+        <form class="amblog-form-comment"
+              data-amblog-js="form"
+              id="amblog-form-<?= $block->escapeHtml($block->getPostId()); ?>">
+            <svg class="amblog-svg comment <?= $block->escapeHtml($block->getColorClass()); ?>">
+                <use xlink:href="<?= $block->escapeUrl($block->getViewFileUrl('Amasty_Blog::images/sprite.svg')); ?>#comment"></use>
+            </svg>
+            <fieldset class="amblog-fieldset">
+                <div class="amblog-customer">
+                    <?php if ($block->isAskName()): ?>
+                    <div class="amblog-wrapper">
+                        <input type="text"
+                               name="name"
+                               placeholder="<?= $block->escapeHtml(__('Your name')); ?>"
+                               id="name_field"
+                               class="required-entry amblog-input -name"
+                               value="<?= $block->escapeHtml($block->getCustomerName()) ?>" />
+                    </div>
+                    <?php endif; ?>
+                    <?php if ($block->isAskEmail()): ?>
+                    <div class="amblog-wrapper">
+                            <input type="text"
+                                   name="email"
+                                   id="email_field"
+                                   placeholder="<?= $block->escapeHtml(__("Your e-mail")); ?>"
+                                   class="required-entry validate-email amblog-input -email"
+                                   value="<?= $block->escapeHtml($block->getCustomerEmail()); ?>" />
+                    </div>
+                        <?php if ($block->isLoggedIn()): ?>
+                            <input type="hidden"
+                                   name="customer_id"
+                                   value="<?= $block->escapeHtml($block->getCustomerId()); ?>" />
+                        <?php endif; ?>
+                    <?php endif; ?>
+                </div>
+                <textarea name="message"
+                          class="required-entry amblog-input -textarea"
+                          id="message_field"
+                          rows="3"
+                          placeholder="<?= $block->escapeHtml($block->isReply()
+                              ? __('Text your reply...')
+                              : __('Text your comment...')); ?>"
+                          ></textarea>
+                <?php if ($block->isGdprEnabled()):
+                    $randId = random_int(0, 10000);
+                    ?>
+                    <div class="amblog-gdprtext">
+                        <input type="checkbox"
+                               name="gdpr_agree"
+                               data-amblog-js="gdpr-agree"
+                               class="required-entry amblog-input -gdpr"
+                               id="gdpr-agree<?= $block->escapeHtml($randId) ?>">
+                        <label class="amblog-label" for="gdpr-agree<?= $block->escapeHtml($randId); ?>">
+                            <?= /* @noEscape */ $block->getGdprText(); ?>
+                        </label>
+                    </div>
+                <?php endif; ?>
+                <input type="hidden" name="secure_code" value="<?= $block->escapeHtml($block->getSecureCode()); ?>" />
+                <input type="hidden" name="reply_to" value="<?= $block->escapeHtml($block->getReplyTo()); ?>" />
+                <input type="hidden" name="session_id" value="<?= $block->escapeHtml($block->getSessionId()); ?>" />
+                <button class="amblog-btn"
+                        id="amblog_submit_comment"
+                        type="submit"
+                        title="<?= $block->escapeHtml(__('Post comment')); ?>">
+                    <?= $block->escapeHtml(__('Post comment')); ?>
+                </button>
+            </fieldset>
+        </form>
+    <?php else: ?>
+        <div class="amblog-guest-comment">
+            <p>
+                <?= $block->escapeHtml(__('Please ')); ?>
+                <a class="amblog-ref"
+                   href="<?= $block->escapeUrl($block->getLoginUrl()); ?>"
+                   title="<?= $block->escapeHtml(__('login')); ?>">
+                    <?= $block->escapeHtml(__('login')); ?>
+                </a>
+                <?= $block->escapeHtml(($block->isReply()?__(' to reply.'):__(' to comment.'))); ?>
+            </p>
+            <p><?= $block->escapeHtml(__('Don\'t have an account?')); ?></p>
+            <p>
+                <a class="amblog-ref"
+                   href="<?= $block->escapeUrl($block->getRegisterUrl()); ?>"
+                   title="<?= $block->escapeHtml(__('Sign Up for free')); ?>">
+                    <?= $block->escapeHtml(__('Sign Up for free')); ?>
+                </a>.
+            </p>
+        </div>
+    <?php endif; ?>
+<?php else: ?>
+    <p><?= $block->escapeHtml(__('New comments for this post are not allowed')); ?></p>
+<?php endif; ?>

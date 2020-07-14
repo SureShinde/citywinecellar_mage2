@@ -1,0 +1,159 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2018 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- manage Staff -->
+    <!--<virtualType name="Magestore\Webpos\Ui\DataProvider\Staff\Form\Modifier\Pool" type="Magento\Ui\DataProvider\Modifier\Pool">-->
+        <!--<arguments>-->
+            <!--<argument name="modifiers" xsi:type="array">-->
+                <!--<item name="general" xsi:type="array">-->
+                    <!--<item name="class" xsi:type="string">Magestore\Webpos\Ui\DataProvider\Staff\Form\Modifier\General</item>-->
+                    <!--<item name="sortOrder" xsi:type="number">10</item>-->
+                <!--</item>-->
+            <!--</argument>-->
+        <!--</arguments>-->
+    <!--</virtualType>-->
+    <!--<type name="Magestore\Webpos\Ui\DataProvider\Staff\Form\Staff">-->
+        <!--<arguments>-->
+            <!--<argument name="pool" xsi:type="object">Magestore\Webpos\Ui\DataProvider\Staff\Form\Modifier\Pool</argument>-->
+        <!--</arguments>-->
+    <!--</type>-->
+
+    <!-- manage Pos -->
+    <virtualType name="Magestore\Webpos\Ui\DataProvider\Pos\Form\Modifier\Pool" type="Magento\Ui\DataProvider\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="general" xsi:type="array">
+                    <item name="class" xsi:type="string">Magestore\Webpos\Ui\DataProvider\Pos\Form\Modifier\General</item>
+                    <item name="sortOrder" xsi:type="number">10</item>
+                </item>
+                <item name="closed_session" xsi:type="array">
+                    <item name="class" xsi:type="string">Magestore\Webpos\Ui\DataProvider\Pos\Form\Modifier\ClosedSession</item>
+                    <item name="sortOrder" xsi:type="number">20</item>
+                </item>
+                <!--<item name="current_session_details" xsi:type="array">-->
+                    <!--<item name="class" xsi:type="string">Magestore\Webpos\Ui\DataProvider\Pos\Form\Modifier\CurrentSessionDetail</item>-->
+                    <!--<item name="sortOrder" xsi:type="number">30</item>-->
+                <!--</item>-->
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Magestore\Webpos\Ui\DataProvider\Pos\Form\Pos">
+        <arguments>
+            <argument name="pool" xsi:type="object">Magestore\Webpos\Ui\DataProvider\Pos\Form\Modifier\Pool</argument>
+        </arguments>
+    </type>
+    <virtualType name="Magestore\InventorySuccess\Ui\DataProvider\Warehouse\Form\Modifier\Pool" type="Magento\Ui\DataProvider\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="linked_pos" xsi:type="array">
+                    <item name="class" xsi:type="string">Magestore\Webpos\Ui\DataProvider\Location\Form\Modifier\LinkedPos</item>
+                    <item name="sortOrder" xsi:type="number">45</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Magestore\Webpos\Ui\DataProvider\Shift\Form\Modifier\Pool" type="Magento\Ui\DataProvider\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="session_details" xsi:type="array">
+                    <item name="class" xsi:type="string">Magestore\Webpos\Ui\DataProvider\Shift\Form\Modifier\SessionDetail</item>
+                    <item name="sortOrder" xsi:type="number">10</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Magestore\Webpos\Ui\DataProvider\Shift\Form\Shift">
+        <arguments>
+            <argument name="pool" xsi:type="object">Magestore\Webpos\Ui\DataProvider\Shift\Form\Modifier\Pool</argument>
+        </arguments>
+    </type>
+    <type name="Magestore\Webpos\Ui\DataProvider\Product\Form\Modifier\Stock">
+        <arguments>
+            <argument name="allowedProductTypes" xsi:type="object">Magestore\Webpos\Ui\BaseAllowedProductTypes</argument>
+            <argument name="modifiers" xsi:type="array">
+                <item name="qty" xsi:type="string">Magestore\Webpos\Ui\DataProvider\Product\Form\Modifier\Qty</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="Magestore\Webpos\Ui\BaseAllowedProductTypes" type="Magento\Catalog\Ui\AllowedProductTypes">
+        <arguments>
+            <argument name="productTypes" xsi:type="array">
+                <item name="customsale" xsi:type="string">customsale</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="webpos" xsi:type="array">
+                    <item name="class" xsi:type="string">Magestore\Webpos\Ui\DataProvider\Product\Form\Modifier\Stock</item>
+                    <item name="sortOrder" xsi:type="number">901</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Magestore\InventorySuccess\Controller\Adminhtml\Warehouse\Save">
+        <plugin name="webpos_handle_inventorysuccess_save_warehouse" type="Magestore\Webpos\Plugin\InventorySuccess\SaveWarehousePlugin" sortOrder="1" disabled="false"/>
+    </type>
+
+    <virtualType name="Magestore\Webpos\Ui\DataProvider\Location\Form\Modifier\Pool" type="Magento\Ui\DataProvider\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="stock_note" xsi:type="array">
+                    <item name="class" xsi:type="string">Magestore\Webpos\Ui\DataProvider\Location\Form\Modifier\StockNote</item>
+                    <item name="sortOrder" xsi:type="number">10</item>
+                </item>
+                <item name="inventory_location" xsi:type="array">
+                    <item name="class" xsi:type="string">Magestore\Webpos\Ui\DataProvider\Location\Form\Modifier\LocationInventory</item>
+                    <item name="sortOrder" xsi:type="number">20</item>
+                </item>
+                <item name="linked_pos" xsi:type="array">
+                    <item name="class" xsi:type="string">Magestore\Webpos\Ui\DataProvider\Location\Form\Modifier\LinkedPos</item>
+                    <item name="sortOrder" xsi:type="number">30</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Magestore\Webpos\Ui\DataProvider\Location\Form\Location">
+        <arguments>
+            <argument name="pool" xsi:type="object">Magestore\Webpos\Ui\DataProvider\Location\Form\Modifier\Pool</argument>
+        </arguments>
+    </type>
+
+    <virtualType name="Magento\Catalog\Ui\DataProvider\Product\ProductCollectionFactory" type="Magento\Catalog\Model\ResourceModel\Product\CollectionFactory">
+        <arguments>
+            <argument name="instanceName" xsi:type="string">Magento\Catalog\Ui\DataProvider\Product\ProductCollection</argument>
+        </arguments>
+    </virtualType>
+    <type name="Magestore\Webpos\Ui\DataProvider\Location\Inventory\LocationInventoryDataProvider">
+        <arguments>
+            <argument name="addFieldStrategies" xsi:type="array">
+                <item name="websites" xsi:type="object">Magento\Catalog\Ui\DataProvider\Product\AddWebsitesFieldToCollection</item>
+            </argument>
+            <argument name="addFilterStrategies" xsi:type="array">
+                <item name="store_id" xsi:type="object">Magento\Catalog\Ui\DataProvider\Product\AddStoreFieldToCollection</item>
+            </argument>
+            <!--<argument name="collectionFactory" xsi:type="object">Magento\Catalog\Ui\DataProvider\Product\ProductCollectionFactory</argument>-->
+        </arguments>
+    </type>
+
+    <type name="Magento\InventoryAdminUi\Ui\DataProvider\StockDataProvider">
+        <plugin name="webpos_stocks_assign_sources_button" type="Magestore\Webpos\Plugin\InventoryAdminUi\Ui\StockDataProvider\AssignSourcesButton" />
+    </type>
+    <type name="Magento\Catalog\Model\ResourceModel\Product\Collection">
+        <plugin name="custom_sale_plugin" type="Magestore\Webpos\Plugin\Catalog\Product\Collection" sortOrder="1" disabled="false"/>
+    </type>
+    <type name="Magento\Catalog\Model\Product\Type">
+        <plugin name="custom_sale_type_plugin" type="Magestore\Webpos\Plugin\Catalog\Product\Type" sortOrder="1" disabled="false"/>
+    </type>
+    <type name="Magento\Catalog\Model\ProductTypes\Config">
+        <plugin name="custom_sale_type_add_plugin" type="Magestore\Webpos\Plugin\Catalog\Product\ProductTypes\Config" sortOrder="1" disabled="false"/>
+    </type>
+    <type name="Magento\Eav\Model\ResourceModel\Entity\Attribute\Set\Collection">
+        <plugin name="custom_sale_attribute_set_plugin" type="Magestore\Webpos\Plugin\Catalog\Product\Attribute\Set\Collection" sortOrder="1" disabled="false"/>
+    </type>
+</config>

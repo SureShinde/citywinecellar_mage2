@@ -1,0 +1,159 @@
+all_order,all_order
+"All Orders","All Orders"
+awaitingpayment,awaitingpayment
+"Awaiting Payment","Awaiting Payment"
+back_order,back_order
+"Back Orders","Back Orders"
+canceled_order,canceled_order
+"Canceled Orders","Canceled Orders"
+completed_order,completed_order
+"Completed Orders","Completed Orders"
+hold_order,hold_order
+"Hold Orders","Hold Orders"
+prepare_ship,prepare_ship
+"Prepare Ship","Prepare Ship"
+verify_order,verify_order
+"Verify Orders","Verify Orders"
+"Products should be added to package(s)","Products should be added to package(s)"
+"The value you entered is not valid.","The value you entered is not valid."
+"Mark as Verified","Mark as Verified"
+Fulfill,Fulfill
+"Back to ship","Back to ship"
+"Back to Verify","Back to Verify"
+"Need to verify","Need to verify"
+Verified,Verified
+"Order Information","Order Information"
+Title,Title
+Color,Color
+"Add Tag","Add Tag"
+"Verify Order","Verify Order"
+cancel,cancel
+"Cancel Order","Cancel Order"
+hold,hold
+"Hold Order","Hold Order"
+verify,verify
+"Awaiting payment orders","Awaiting payment orders"
+"Back orders","Back orders"
+"Canceled orders","Canceled orders"
+"Completed orders","Completed orders"
+"Hold orders","Hold orders"
+"Order Success - Prepare Ship Orders","Order Success - Prepare Ship Orders"
+"Order Success - Verify Orders","Order Success - Verify Orders"
+"This order no longer exists.","This order no longer exists."
+"%1 Order(s) has been added to the tag","%1 Order(s) has been added to the tag"
+"No order has been added to the tag","No order has been added to the tag"
+"No tag has been selected","No tag has been selected"
+"%1 Order(s) has been moved to the batch","%1 Order(s) has been moved to the batch"
+"No order has been moved to the batch","No order has been moved to the batch"
+"You canceled the order.","You canceled the order."
+"You have not canceled the order.","You have not canceled the order."
+"You put the order on hold.","You put the order on hold."
+"You have not put the order on hold.","You have not put the order on hold."
+"Can not update batch for the order","Can not update batch for the order"
+"Can not update tag for the order","Can not update tag for the order"
+"The order has been verified.","The order has been verified."
+"Can not verify the order.","Can not verify the order."
+"The order has been moved to verify","The order has been moved to verify"
+"Can not move the order to verify","Can not move the order to verify"
+"The batch has been removed","The batch has been removed"
+"Can not remove the batch","Can not remove the batch"
+"Please correct the data sent.","Please correct the data sent."
+"Something went wrong while saving the order.","Something went wrong while saving the order."
+"%1 Order(s) has been moved to verify step","%1 Order(s) has been moved to verify step"
+"No order has been moved to verify step","No order has been moved to verify step"
+"%1 batch(s) has been canceled","%1 batch(s) has been canceled"
+"No batch has been canceled","No batch has been canceled"
+"%1 order(s) has been backed to ship","%1 order(s) has been backed to ship"
+"No order has been backed to ship","No order has been backed to ship"
+"%1 order(s) has been verified","%1 order(s) has been verified"
+"No order has been verified","No order has been verified"
+"The order has been backed to Prepare-Fulfill","The order has been backed to Prepare-Fulfill"
+"Can not back to Prepare-Fulfill the order","Can not back to Prepare-Fulfill the order"
+"%1 order(s) has been removed from the batch","%1 order(s) has been removed from the batch"
+"No order has been removed from the Batch","No order has been removed from the Batch"
+"%1 Order(s) has been removed tag","%1 Order(s) has been removed tag"
+"No order has been removed Tag","No order has been removed Tag"
+"The order has been verified","The order has been verified"
+"Can not verify the order","Can not verify the order"
+Orders,Orders
+"The request has been created","The request has been created"
+"Can not create the ship request","Can not create the ship request"
+"The Batch with id ""%1"" does not exist.","The Batch with id ""%1"" does not exist."
+"The order with id ""%1"" does not exist.","The order with id ""%1"" does not exist."
+"-- Select --","-- Select --"
+"Remove from Batch","Remove from Batch"
+"Add to New Batch","Add to New Batch"
+"No Batch","No Batch"
+"Need to Verify","Need to Verify"
+"Need to Ship","Need to Ship"
+"Back Order","Back Order"
+Hold,Hold
+Canceled,Canceled
+"Create Shipment","Create Shipment"
+"Request Pick Items","Request Pick Items"
+Dropship,Dropship
+"Remove All Tags","Remove All Tags"
+"Process Verify","Process Verify"
+"Process Verifying Order","Process Verifying Order"
+"Cancel Batch","Cancel Batch"
+"Print Invoices","Print Invoices"
+"Print Packing Slips","Print Packing Slips"
+"Print Credit Memos","Print Credit Memos"
+"Print Shipping Labels","Print Shipping Labels"
+"Print All","Print All"
+Ordered,Ordered
+Invoiced,Invoiced
+Shipped,Shipped
+Refunded,Refunded
+"Select All","Select All"
+"Product Name","Product Name"
+SKU,SKU
+"Qty Ordered","Qty Ordered"
+Qty,Qty
+Delete,Delete
+"Create Fulfillment Request","Create Fulfillment Request"
+Cancel,Cancel
+Save,Save
+"Add Fulfillment Request","Add Fulfillment Request"
+Request,Request
+"Add Selected Product(s) to Request","Add Selected Product(s) to Request"
+"Add Products to Request","Add Products to Request"
+"Shipping Channel","Shipping Channel"
+"Delete Package","Delete Package"
+Contents,Contents
+Explanation,Explanation
+Batch,Batch
+"Order & Account Information","Order & Account Information"
+"The order confirmation email was sent","The order confirmation email was sent"
+"The order confirmation email is not sent","The order confirmation email is not sent"
+"Order # %1","Order # %1"
+"Order Date","Order Date"
+"Order Status","Order Status"
+"Purchased From","Purchased From"
+"Link to the New Order","Link to the New Order"
+"Link to the Previous Order","Link to the Previous Order"
+"Placed from IP","Placed from IP"
+"%1 / %2 rate:","%1 / %2 rate:"
+"Account Information","Account Information"
+"Customer Name","Customer Name"
+Email,Email
+"Customer Group","Customer Group"
+"Address Information","Address Information"
+"Billing Address","Billing Address"
+"Shipping Address","Shipping Address"
+Tag,Tag
+Add,Add
+"Add after","Add after"
+"Add Note","Add Note"
+"Remove Batch","Remove Batch"
+"Are you sure to remove the batch?","Are you sure to remove the batch?"
+"Notes for this Order","Notes for this Order"
+"Order Success","Order Success"
+"Order Processing","Order Processing"
+"Process Ship","Process Ship"
+"Order Listing","Order Listing"
+"Completed Order","Completed Order"
+Setting,Setting
+"Order Configuration","Order Configuration"
+The batch with ID "%1" does not exist.,The batch with ID "%1" does not exist.
+The order with ID "%1" does not exist.,The order with ID "%1" does not exist.

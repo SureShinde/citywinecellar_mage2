@@ -1,0 +1,48 @@
+<?php
+/**
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+?>
+<?php
+/**
+ * @var \Magestore\FulfilSuccess\Block\Adminhtml\AbstractRequest\Detail\Items $block
+ */
+$_order = $block->getOrder() ?>
+
+<div class="admin__table-wrapper">
+    <table class="data-table admin__table-primary order-shipment-table">
+        <thead>
+        <tr class="headings">
+            <th class="col-product"><span><?php /* @escapeNotVerified */
+                    echo __('Product') ?></span></th>
+            <th class="col-image"><span><?php /* @escapeNotVerified */
+                    echo __('Image') ?></span></th>
+            <th class="col-barcode"><span><?php /* @escapeNotVerified */
+                    echo __('Barcode') ?></span></th>
+            <?php if (!$block->checkCarrierAvailable()): ?>
+                <th class="col-qty"><span><?php /* @escapeNotVerified */
+                        echo __('Qty') ?></span></th>
+            <?php endif ?>
+            <th class="col-picked-qty"><span><?php /* @escapeNotVerified */
+                    echo __('Qty To Pack') ?></span></th>
+        </tr>
+        </thead>
+        <?php $_items = $block->getItemsCollection(); ?>
+        <?php $i = 0;
+        foreach ($_items as $_item): ?>
+            <?php if ($_item->getParentItem()) {
+                continue;
+            } else {
+                $i++;
+            } ?>
+            <tbody class="<?php /* @noEscape */
+            echo $i % 2 ? 'even' : 'odd' ?>">
+            <?php echo $block->getItemHtml($_item) ?>
+            <?php echo $block->getItemExtraInfoHtml($_item) ?>
+            </tbody>
+        <?php endforeach; ?>
+    </table>
+</div>

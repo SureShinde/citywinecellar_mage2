@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!--
+  ~  Copyright © 2018 Magestore. All rights reserved.
+  ~  See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="core_abstract_save_after">
+        <observer name="purchaseOrder_item_transferred_save_after" instance="Magestore\ReportSuccess\Observer\PurchaseOrder\Item\TransferredSaveAfter" />
+    </event>
+</config>

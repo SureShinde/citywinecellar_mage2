@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Xlanding
+ */
+-->
+<!--
+/**
+ * Copyright © 2015 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Framework\App\RouterList">
+        <arguments>
+            <argument name="routerList" xsi:type="array">
+                <item name="amasty_xlanding" xsi:type="array">
+                    <item name="class" xsi:type="string">Amasty\Xlanding\Controller\Router</item>
+                    <item name="disable" xsi:type="boolean">false</item>
+                    <item name="sortOrder" xsi:type="string">60</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="\Magento\Catalog\Block\Category\View">
+        <plugin name="Amasty_Xlanding::catalogCategoryView"
+                type="Amasty\Xlanding\Plugin\Catalog\Block\Category\View" sortOrder="999"/>
+    </type>
+
+    <type name="Mirasvit\Seo\Helper\Data">
+        <plugin name="amasty_xlanding_mirasvit_seo_data" type="Amasty\Xlanding\Plugin\MirasvitSeo\HelperPlugin" />
+    </type>
+
+    <type name="Magento\Framework\Search\Request\Builder">
+        <plugin name="Amasty_Xlanding::SearchIndexBuilder"
+                type="Amasty\Xlanding\Plugin\Framework\Search\Request\Builder"/>
+    </type>
+
+    <type name="Magento\CatalogSearch\Model\ResourceModel\Fulltext\Collection">
+        <plugin name="Amasty_Xlanding::addLandingProductPositionToCollection"
+                type="Amasty\Xlanding\Plugin\Catalogsearch\Model\ResourceModel\Fulltext\Collection"/>
+    </type>
+
+    <type name="Amasty\Shopby\Model\ResourceModel\Fulltext\Collection">
+        <plugin name="Amasty_Xlanding::addLandingProductPositionToCollection"
+                type="Amasty\Xlanding\Plugin\Catalogsearch\Model\ResourceModel\Fulltext\Collection"/>
+    </type>
+
+    <type name="Amasty\ElasticSearch\Plugin\Framework\Search\Request\Builder">
+        <plugin name="Amasty_Xlanding::ElasticSearch" type="Amasty\Xlanding\Plugin\ElasticSearch\Plugin\Framework\Search\Request\Builder"/>
+    </type>
+
+    <type name="Magento\Catalog\Block\Product\ProductList\Toolbar">
+        <plugin name="Amasty_Xlanding::ProductListToolbar" type="Amasty\Xlanding\Plugin\ProductListToolbar"/>
+    </type>
+
+    <type name="Magento\CatalogSearch\Model\Search\IndexBuilder">
+        <plugin name="Amasty_Xlanding::ApplyCustomFiltersToBaseSearchSelect"
+                type="Amasty\Xlanding\Plugin\Catalogsearch\Model\Search\IndexBuilder"/>
+    </type>
+    <type name="Magento\CatalogSearch\Model\Adapter\Mysql\Filter\Preprocessor">
+        <plugin name="Amasty_Xlanding::PrepareWhereCauseForCustomFilter"
+                type="Amasty\Xlanding\Plugin\Catalogsearch\Model\Adapter\Mysql\Filter\Preprocessor"/>
+    </type>
+</config>

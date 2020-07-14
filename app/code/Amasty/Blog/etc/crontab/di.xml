@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Amasty\Blog\Model\Import\ImportProcess">
+        <arguments>
+            <argument name="imports" xsi:type="array">
+                <item name="wordpress" xsi:type="object">Amasty\Blog\Model\Import\WordPress</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

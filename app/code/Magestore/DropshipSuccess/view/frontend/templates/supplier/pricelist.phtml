@@ -1,0 +1,108 @@
+<?php
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+?>
+<?php /** @var \Magestore\DropshipSuccess\Block\Supplier\Pricelist $block */?>
+<?php $pricelist = $block->getPricelist(); ?>
+<style>
+    .order-products-toolbar div.limiter {float: right;}
+</style>
+<div id="import_price_list" class="import-product order-details-items">
+    <div class="os_panel">
+        <div class="header">
+            <label><?php echo __('Instruction');?></label>
+        </div>
+        <ul class="content">
+            <li class="item">
+                <span><?php echo __('Please choose a CSV file to upload pricelist to send store owner. You can download this sample CSV file');?></span>
+                <span data-role="data" data-key="form" data-type="text" class="value"></span>
+                <div class="clear"></div>
+            </li>
+            <li class="item">
+                <span><a href="<?php echo $block->getCsvSampleLink();?>"><?php echo __('Download'); ?></a></span>
+            </li>
+        </ul>
+    </div>
+    <div class="import-product">
+        <form id="import-pricelist-form" class="form" action="<?php /* @escapeNotVerified */ echo $block->getUploadLink() ?>" method="post" enctype="multipart/form-data" autocomplete="off">
+            <?php echo $block->getBlockHtml('formkey')?>
+            <fieldset class="fieldset info">
+                <div class="field field-name required">
+                    <label for="import_product" class="label">
+                        <span><?php /* @escapeNotVerified */ echo __('Please choose  a CSV file to import:') ?></span>
+                    </label>
+                    <div class="control">
+                        <input type="file" id="upload_pricelist_file" name="upload_pricelist_file" class="input-file required-entry required" />
+                        <br />
+                        <span>
+                            <?php echo __('(Your file will be sent to store owner to review and insert to the system!)') ?>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="field field-name required">
+                    <label for="title" class="label">
+                        <span><?php /* @escapeNotVerified */ echo __('Title') ?></span>
+                    </label>
+                    <div class="control">
+                        <input type="text" id="title" name="title" class="input-file required-entry required" />
+                    </div>
+                </div>
+            </fieldset>
+            <div class="actions-toolbar">
+                <div class="primary">
+                    <button type="submit" class="action save primary" data-action="save-address" title="<?php echo __('Upload Pricelist') ?>">
+                        <span><?php echo __('Upload') ?></span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="order-details-items">
+    <legend class="legend"><span><?php /* @escapeNotVerified */ echo __('Pricelist uploaded') ?></span></legend>
+    <?php if ($pricelist && count($pricelist)): ?>
+        <div class="table-wrapper orders-history">
+            <table class="data table table-order-items history" id="my-orders-table">
+                <caption class="table-caption"><?php /* @escapeNotVerified */ echo __('Supplier\'s Pricelist') ?></caption>
+                <thead>
+                    <tr>
+                        <th scope="col" class="col id"><?php /* @escapeNotVerified */ echo __('Created at') ?></th>
+                        <th scope="col" class="col shipping"><?php /* @escapeNotVerified */ echo __('Title') ?></th>
+                        <th scope="col" class="col total"><?php /* @escapeNotVerified */ echo __('Action') ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php /** @var \Magestore\DropshipSuccess\Model\Supplier\PricelistUpload $plist */?>
+                    <?php foreach ($pricelist as $plist): ?>
+                        <tr>
+                            <td data-th="<?php echo $block->escapeHtml(__('Created at')) ?>" class="col created_at"><?php /* @escapeNotVerified */ echo $block->formatDate($plist->getCreatedAt(),\IntlDateFormatter::MEDIUM, true, null) ?></td>
+                            <td data-th="<?php echo $block->escapeHtml(__('Title')) ?>" class="col title"><?php /* @escapeNotVerified */ echo $plist->getTitle() ?></td>
+                            <td data-th="<?php echo $block->escapeHtml(__('Action')) ?>" class="col action">
+                                <a href="<?php echo $block->getDownloadUrl($plist->getSupplierId(), $plist->getTitle(), $plist->getFileUpload()) ?>"><?php echo __('Download') ?></a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+        <?php if ($block->getPagerHtml()): ?>
+            <div class="order-products-toolbar toolbar bottom"><?php echo $block->getPagerHtml(); ?></div>
+        <?php endif ?>
+    <?php else: ?>
+        <div class="message info empty"><span><?php /* @escapeNotVerified */ echo __('You have no pricelist upload.'); ?></span></div>
+    <?php endif ?>
+</div>
+<script type="text/x-magento-init">
+    {
+        "#import-pricelist-form": {
+            "validation": {}
+        }
+    }
+</script>

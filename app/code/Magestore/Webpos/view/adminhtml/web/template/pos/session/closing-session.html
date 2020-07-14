@@ -1,0 +1,132 @@
+<div class="modal fade in popup-session" tabindex="-1" role="dialog"
+     data-bind="visible : is_show_closing_session ">
+
+    <!-- ko ifnot : isValidate -->
+    <div class="modal fade in popup-session" tabindex="-1" role="dialog" style="display: block;">
+        <div class="modal-dialog modal-fixheight" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="cancel" data-bind="i18n: 'Cancel',click : cancelPopup" />
+                    <h4 class="modal-title" data-bind="i18n : 'Set Closing Balance' " />
+                </div>
+
+                <div class="session-title">
+                    <div class="detail">
+                        <div class="pull-left">
+                            <b data-bind="i18n : 'Staff'"/>
+                            <span data-bind=" text : staff_name"/>
+                        </div>
+                        <div class="pull-right">
+                            <b data-bind="i18n : 'POS'"/>
+                            <span data-bind=" text : pos_name"/>
+                        </div>
+                    </div>
+                    <!-- ko if: denomination.length -->
+                    <div class="box"></div>
+                    <!-- /ko -->
+                </div>
+                <!-- ko if: denomination.length -->
+                <div class="session-content" data-scrollbar style="margin: 0;">
+                        <!--<ul data-bind="foreach: denomination">-->
+                            <!--<li>-->
+                                <!--Name at position <span data-bind="text: $index"> </span>:-->
+                                <!--<span data-bind="text: denomination_name"> </span>-->
+                                <!--<a href="#" data-bind="click: $parent.removePerson">Remove</a>-->
+                            <!--</li>-->
+                        <!--</ul>-->
+                        <ul>
+                            <li>
+                                <div class="title"><b>Coin/Bill Value</b></div>
+                                <div class="number"><b>Number of Coins/Bills</b></div>
+                                <div class="price"><b>Subtotal</b></div>
+                            </li>
+                            <!-- ko foreach: denomination -->
+                            <li>
+                                <div class="title" data-bind=" text : denomination_name"/>
+                                <div class="number">
+                                    <div class="product-field-qty">
+                                        <div class="box-field-qty" >
+                                            <span class="form-control qty" data-bind="text: location_ids?location_ids : 0" />
+                                            <a href="#" class="btn-number  qtyminus disabled" data-type="minus"
+                                               data-field="qty"
+                                               data-bind="click : $parent.minusQty.bind($parents[0])">-</a>
+                                            <a href="#" class="btn-number  qtyplus" data-type="plus"
+                                               data-field="qty"
+                                               data-bind="click : $parent.plusQty.bind($parents[0])">+</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="price" data-bind="text : location_ids ? denomination_total_format : 0" />
+                            </li>
+                            <!-- /ko -->
+
+                        </ul>
+
+                </div>
+                <div class="session-bottom">
+                    <div class="box">
+                        <span class="title">Closing Balance</span>
+                        <span class="price" data-bind="text : closingBlanceFormat"></span>
+                    </div>
+                </div>
+                <!-- /ko -->
+
+                <!-- ko ifnot: denomination.length -->
+                <div class="session-bottom">
+                    <div class="box">
+                        <span class="title">Closing Balance</span>
+                        <label for="closing-balance"></label>
+                        <input id="closing-balance" class="price" type="text"
+                               data-bind="textInput: valueFormatted, event:{change: valueChange}"
+                               onfocus="this.select()" />
+                    </div>
+                </div>
+                <!-- /ko -->
+
+                <div class="modal-footer ">
+                    <button class="action primary"
+                            data-bind="click : confirm">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /ko -->
+
+    <!-- ko if : isValidate -->
+        <div class="modal-dialog modal-fixheight" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="cancel" data-bind="i18n: 'Cancel',click : cancelPopup" />
+                    <h4 class="modal-title" data-bind="i18n : 'Close Session' " />
+                </div>
+                <div class="modal-body" data-scrollbar>
+                    <p class="color-gray">Theoretical balance is not the same as real balance. Please enter reason for loss/profit if you want to continue closing session.</p>
+                    <ul class="balance">
+                        <li>
+                            <span class="title" data-bind="i18n : 'Theoretical Closing Balance' " />
+                            <span class="value" data-bind="text : theoreticalAmount"/>
+                        </li>
+                        <li>
+                            <span class="title" data-bind="i18n : 'Real Closing Balance' "/>
+                            <span class="value" data-bind="text : realClosingAmount"/>
+                        </li>
+                        <li>
+                            <span class="title" data-bind="i18n : 'Shortage' " />
+                            <span class="value" data-bind="text : differentAmount"/>
+                        </li>
+                    </ul>
+
+                    <div class="form-textarea">
+                        <textarea class="form-control text-area" placeholder="Enter reason for loss/profit (required)"
+                                  data-bind="textInput: reason, event:{change: typetext}" />
+                    </div>
+                </div>
+                <div class="modal-footer ">
+                    <button class="action primary"
+                            data-bind=" enable :  ishowButton(), click : forceConfirm">Confirm</button>
+                </div>
+            </div>
+        </div>
+    <!-- /ko -->
+
+</div>

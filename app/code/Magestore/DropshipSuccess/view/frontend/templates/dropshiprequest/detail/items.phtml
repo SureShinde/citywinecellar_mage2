@@ -1,0 +1,78 @@
+<?php
+/**
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+?>
+
+<ul class="items order-links">
+    <li class="nav item current">
+        <strong><?php echo __('Items Ordered') ?></strong>
+    </li>
+    <?php if (in_array($block->getStatus(), [
+        \Magestore\DropshipSuccess\Api\Data\DropshipRequestInterface::STATUS_PARTIAL_SHIP,
+        \Magestore\DropshipSuccess\Api\Data\DropshipRequestInterface::STATUS_SHIPPED
+    ])): ?>
+        <li class="nav item">
+            <a href="<?php echo $block->getShipmentUrl() ?>"><?php echo __('Sales Shipments') ?></a>
+        </li>
+    <?php endif ?>
+</ul>
+
+<?php
+/**
+ * @var \Magestore\DropshipSuccess\Block\DropshipRequest\Detail\Items $block
+ */
+$_order = $block->getOrder() ?>
+
+<div class="table-wrapper order-items order-details-items">
+    <table class="data table table-order-items" id="my-orders-table" summary="<?php /* @escapeNotVerified */ echo __('Items Ordered') ?>">
+        <thead>
+        <tr class="headings">
+            <th class="col name"><span><?php /* @escapeNotVerified */
+                    echo __('Product') ?></span></th>
+            <th class="col sku"><span><?php /* @escapeNotVerified */
+                    echo __('SKU') ?></span></th>
+            <th class="col qty"><span><?php /* @escapeNotVerified */
+                    echo __('Qty') ?></span></th>
+            <?php if (!$block->isShippedRequest()): ?>
+                <th class="col-shipped-qty qty"><span><?php /* @escapeNotVerified */
+                        echo __('Shipped Qty') ?></span></th>
+            <?php endif ?>
+        </tr>
+        </thead>
+        <?php $_items = $block->getItemsCollection(); ?>
+        <?php $i = 0;
+        foreach ($_items as $_item): ?>
+            <?php if ($_item->getParentItem()) {
+                continue;
+            } else {
+                $i++;
+            } ?>
+            <tbody class="<?php /* @noEscape */
+            echo $i % 2 ? 'even' : 'odd' ?>">
+            <?php echo $block->getItemHtml($_item) ?>
+            <?php echo $block->getItemExtraInfoHtml($_item) ?>
+            </tbody>
+        <?php endforeach; ?>
+        <tbody>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>
+                    <div class="error-message" id="dropship-error-message">
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<style type="text/css">
+    .table > tbody > tr > td {
+        border: none !important;
+    }
+</style>

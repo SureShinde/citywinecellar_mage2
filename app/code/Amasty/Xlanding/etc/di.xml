@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Xlanding
+ */
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Amasty\Xlanding\Api\Data\PageInterface" type="Amasty\Xlanding\Model\Page" />
+    <preference for="Amasty\Xlanding\Api\PageRepositoryInterface" type="Amasty\Xlanding\Model\Repository\PageRepository" />
+
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+            <item name="amasty_xlanding_page_listing_data_source" xsi:type="string">Amasty\Xlanding\Model\ResourceModel\Page\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Amasty\Xlanding\Model\ResourceModel\Page\Grid\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">amasty_xlanding_page</argument>
+            <argument name="eventPrefix" xsi:type="string">amasty_xlanding_page_grid_collection</argument>
+            <argument name="eventObject" xsi:type="string">page_grid_collection</argument>
+            <argument name="resourceModel" xsi:type="string">Amasty\Xlanding\Model\ResourceModel\Page</argument>
+        </arguments>
+    </type>
+    <virtualType name="Amasty\Xlanding\Model\Rule\Condition\CombineFactory"
+                 type="Magento\CatalogRule\Model\Rule\Condition\CombineFactory">
+        <arguments>
+            <argument name="instanceName" xsi:type="string">Amasty\Xlanding\Model\Rule\Condition\Combine</argument>
+        </arguments>
+    </virtualType>
+    <type name="Amasty\Xlanding\Model\Rule">
+        <arguments>
+            <argument name="combineFactory" xsi:type="object">Amasty\Xlanding\Model\Rule\Condition\CombineFactory</argument>
+            <argument name="data" xsi:type="array">
+                <item name="amastySerializer" xsi:type="object">Amasty\Base\Model\Serializer</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <preference for="Magento\Sitemap\Model\Sitemap" type="Amasty\Xlanding\Model\Sitemap" />
+
+    <type name="Amasty\XmlSitemap\Model\Sitemap">
+        <plugin name="Amasty_Xlanding::add-pages-to-sitemap" type="Amasty\Xlanding\Plugin\XmlSitemap\Model\Sitemap" />
+    </type>
+
+    <type name="\Magento\Catalog\Model\ResourceModel\Product\Indexer\Price\DefaultPrice">
+        <plugin name="Amasty_Xlanding::onSaleIndexerFixer"
+                type="Amasty\Xlanding\Plugin\Catalog\Model\ResourceModel\Product\Indexer\Price\DefaultPrice"/>
+    </type>
+
+    <type name="\Magento\ConfigurableProduct\Model\ResourceModel\Product\Indexer\Price\Configurable">
+        <plugin name="Amasty_Xlanding::PriceRuleIndexerFixerConfigurable"
+                type="Amasty\Xlanding\Plugin\Catalog\Model\ResourceModel\Product\Indexer\Price\Configurable"/>
+        <plugin name="Amasty_Xlanding::PriceRuleIndexerFixerConfigurable.2.2.6"
+                type="Amasty\Xlanding\Plugin\Catalog\Model\ResourceModel\Product\Indexer\Price\Dimensional\Configurable"/>
+    </type>
+
+    <type name="\Magento\Catalog\Model\ResourceModel\Product\Indexer\Price\SimpleProductPrice">
+        <plugin name="Amasty_Xlanding::PriceRuleIndexerFixer.2.2.6"
+                type="Amasty\Xlanding\Plugin\Catalog\Model\ResourceModel\Product\Indexer\Price\Dimensional\Simple"/>
+    </type>
+
+    <type name="Magento\Catalog\Model\ResourceModel\Product\Indexer\Eav\Source" >
+        <plugin name="Amasty_Xlanding::extendedEavIndex"
+                type="Amasty\Xlanding\Plugin\Catalog\Model\ResourceModel\Product\Indexer\Eav\Source" />
+    </type>
+    <type name="Amasty\Xsearch\Block\Search\Landing">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="collectionFactory" xsi:type="object">Amasty\Xlanding\Model\ResourceModel\Page\CollectionFactory</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Elasticsearch\Model\Adapter\DataMapper\ProductDataMapper">
+        <plugin name="Amasty_Xlanding::AdditionalDataMapper"
+                type="Amasty\Xlanding\Plugin\ElasticSearch\Model\Adapter\AdditionalDataMapper" />
+    </type>
+    <type name="Magento\Elasticsearch\Model\Adapter\BatchDataMapper\ProductDataMapper">
+        <plugin name="Amasty_Xlanding::AdditionalBatchDataMapper"
+                type="Amasty\Xlanding\Plugin\ElasticSearch\Model\Adapter\AdditionalBatchDataMapper" />
+    </type>
+    <type name="Magento\Elasticsearch\Model\Adapter\FieldMapper\ProductFieldMapper">
+        <plugin name="Amasty_Xlanding::AdditionalFieldMapper"
+                type="Amasty\Xlanding\Plugin\ElasticSearch\Model\Adapter\AdditionalFieldMapper" />
+    </type>
+    <type name="Magento\Elasticsearch\Elasticsearch5\Model\Adapter\FieldMapper\ProductFieldMapperProxy">
+        <plugin name="Amasty_Xlanding::AdditionalFieldMapperElasticSearch5"
+                type="Amasty\Xlanding\Plugin\ElasticSearch\ElasticSearch5\Model\Adapter\FieldMapper\AdditionalFieldMapper" />
+    </type>
+    <type name="Amasty\ElasticSearch\Model\Indexer\Structure\EntityBuilder\Product">
+        <plugin name="Amasty_Xlanding::AdditionalFieldMapper"
+                type="Amasty\Xlanding\Plugin\ElasticSearch\Model\Adapter\AdditionalFieldMapper"/>
+    </type>
+    <type name="Amasty\ElasticSearch\Model\Search\GetRequestQuery\GetAggregations\FieldMapper">
+        <plugin name="Amasty_Xlanding::AdditionalFieldMapper"
+                type="Amasty\Xlanding\Plugin\ElasticSearch\Model\Adapter\AdditionalFieldMapper"/>
+    </type>
+    <type name="Amasty\ElasticSearch\Model\Indexer\Data\Product\ProductDataMapper">
+        <plugin name="Amasty_Xlanding::AdditionalBatchDataMapper"
+                type="Amasty\Xlanding\Plugin\ElasticSearch\Model\Adapter\AdditionalBatchDataMapper"/>
+    </type>
+    <type name="Amasty\ElasticSearch\Model\Search\GetRequestQuery\SortingProvider">
+        <plugin name="Amasty_Xlanding::AdditionalSortBuilder"
+                type="Amasty\Xlanding\Plugin\ElasticSearch\SearchAdapter\Query\Builder\SortPlugin"/>
+    </type>
+    <type name="Magento\Elasticsearch\SearchAdapter\Query\Builder\Sort">
+        <plugin name="Amasty_Xlanding::AdditionalSortBuilder"
+                type="Amasty\Xlanding\Plugin\ElasticSearch\SearchAdapter\Query\Builder\SortPlugin"/>
+    </type>
+
+    <!-- update category product index fo dymanic landings on save & on schedule -->
+    <type name="Magento\Catalog\Model\Indexer\Category\Product">
+        <plugin name="Amasty_Xlanding::categoryProductExtendedIndex"
+                type="Amasty\Xlanding\Plugin\Catalog\Model\Indexer\Category\Product" />
+    </type>
+    <type name="Magento\Catalog\Model\Indexer\Product\Category">
+        <plugin name="Amasty_Xlanding::productCategoryExtendedIndex"
+                type="Amasty\Xlanding\Plugin\Catalog\Model\Indexer\Product\Category"/>
+    </type>
+</config>

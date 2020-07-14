@@ -1,0 +1,41 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_PromoBanners
+ */
+?>
+<script>
+    require([
+        "jquery",
+        "Amasty_PromoBanners/js/edit"
+    ], function ($) {
+        $(window).load(function () {
+            var ampbForm = $('#edit_form');
+            ampbForm.ampromobannerAddAttribute();
+
+            $('[data-role=ampbanner_remove_attribute]').click(function () {
+                ampbForm.ampromobannerAddAttribute('landingRemove', this);
+                return false;
+            });
+        });
+
+        window.showOptions = function (sel) {
+            window.sel = sel;
+            $.ajax({
+                url: '<?php echo $block->getUrl('ampromobanners/banners/options') ?>',
+                data: {code: sel.value},
+                type: 'get',
+                dataType: 'html',
+                showLoader: true,
+                context: $('#edit_form')
+            }).done(function (data) {
+                var valueElement = $(sel.parentElement.parentElement.parentElement.next())[0].children[1].children[0];
+                if (!valueElement) {
+                    valueElement = $(sel.parentElement.parentElement.next())[0].children[1].children[0];
+                }
+                $(valueElement).replaceWith(data);
+            });
+        }
+    })
+</script>

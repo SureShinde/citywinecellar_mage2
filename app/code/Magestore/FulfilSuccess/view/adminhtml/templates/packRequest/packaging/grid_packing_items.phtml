@@ -1,0 +1,10 @@
+<?php
+/**
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/** @var \Magestore\FulfilSuccess\Block\Adminhtml\PackRequest\Packaging\GridPackagingItems $block */ ?>
+<?php foreach ($block->getItemsCollection() as $item): ?>
+    <input type="hidden" name="shipment[items][<?php echo $item->getItemId() ?>]" value="<?php echo intval($item->getRequestQty()) ?>">
+<?php endforeach; ?>

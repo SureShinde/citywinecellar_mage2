@@ -1,0 +1,156 @@
+"Save Page","Save Page"
+"Save and Continue Edit","Save and Continue Edit"
+"Delete Page","Delete Page"
+"Edit Page '%1'","Edit Page '%1'"
+"New Page","New Page"
+Conditions,Conditions
+"Page Layout","Page Layout"
+Layout,Layout
+"Columns Count","Columns Count"
+"Count of columns in products grid","Count of columns in products grid"
+"Include Navigation","Include Navigation"
+Yes,Yes
+No,No
+Heading,Heading
+"Supported formats: jpg,jpeg,gif,png","Supported formats: jpg,jpeg,gif,png"
+Image,Image
+"Image Alt","Image Alt"
+"Top Description","Top Description"
+"Bottom Description","Bottom Description"
+"Top Static Block","Top Static Block"
+"Choose Static Block to show Above Products List","Choose Static Block to show Above Products List"
+"Bottom Static Block","Bottom Static Block"
+"Choose Static Block to show Below Products List","Choose Static Block to show Below Products List"
+"Important. Leave ""Position"" to apply the Sort Order configured for the Landing Page in the Page Products tab","Important. Leave ""Position"" to apply the Sort Order configured for the Landing Page in the Page Products tab"
+"Layout Update XML","Layout Update XML"
+Design,Design
+"Page Information","Page Information"
+"Linked Dynamic Category","Linked Dynamic Category"
+"Dynamic Category Edit Page Link","Dynamic Category Edit Page Link"
+"Page Title","Page Title"
+"URL Key","URL Key"
+"Relative to Web Site Base URL","Relative to Web Site Base URL"
+"Store View","Store View"
+Link,Link
+Status,Status
+"Page Status","Page Status"
+"Select 'Dynamic Category' to use Landing Page conditions for category product display.<br/>The selected Landing Page becomes unavailable by direct link.","Select 'Dynamic Category' to use Landing Page conditions for category product display.<br/>The selected Landing Page becomes unavailable by direct link."
+Title,Title
+"Meta Title","Meta Title"
+Keywords,Keywords
+"Meta Keywords","Meta Keywords"
+Description,Description
+"Meta Description","Meta Description"
+"Meta Data","Meta Data"
+"Page Products","Page Products"
+"Edit Landing Page: %1","Edit Landing Page: %1"
+"Please update Amasty Base module. Re-upload it and replace all the files.","Please update Amasty Base module. Re-upload it and replace all the files."
+"In Stock","In Stock"
+"Out of Stock","Out of Stock"
+"The page has been deleted.","The page has been deleted."
+"We can't find a page to delete.","We can't find a page to delete."
+"The page has been duplicated.","The page has been duplicated."
+"We can't find a page to duplicate.","We can't find a page to duplicate."
+"Landing Page","Landing Page"
+"Manage Pages","Manage Pages"
+"This page no longer exists.","This page no longer exists."
+"Edit Landing Page","Edit Landing Page"
+"New Landing Page","New Landing Page"
+"Landing Pages","Landing Pages"
+CMS,CMS
+"Manage Landing Pages","Manage Landing Pages"
+Pages,Pages
+"A total of %1 record(s) have been deleted.","A total of %1 record(s) have been deleted."
+"A total of %1 record(s) have been disabled.","A total of %1 record(s) have been disabled."
+"A total of %1 record(s) have been enabled.","A total of %1 record(s) have been enabled."
+"You saved this page.","You saved this page."
+"Something went wrong while saving the page.","Something went wrong while saving the page."
+"Display mode is set to Enabled.","Display mode is set to Enabled."
+"Landing Pages has not been imported completely. See the following list of errors:<br /> %1","Landing Pages has not been imported completely. See the following list of errors:<br /> %1"
+"Record with ""%1"" identifier exists already. Delete it before update. Row #%2","Record with ""%1"" identifier exists already. Delete it before update. Row #%2"
+"We can't rebuild the index for an undefined entity.","We can't rebuild the index for an undefined entity."
+"Could not rebuild index for empty products array","Could not rebuild index for empty products array"
+"Landing Page - Product indexing failed. See details in exception log.","Landing Page - Product indexing failed. See details in exception log."
+"Landing Page - Product rule indexing failed. See details in exception log.","Landing Page - Product rule indexing failed. See details in exception log."
+Enabled,Enabled
+"Dynamic Category","Dynamic Category"
+Disabled,Disabled
+"Requested page does not exist","Requested page does not exist"
+"Rule for this page does not exist","Rule for this page does not exist"
+"%1 doesn't implement SortInterface","%1 doesn't implement SortInterface"
+"Name: Ascending","Name: Ascending"
+"Name: Descending","Name: Descending"
+"Newest products first","Newest products first"
+"Move out of stock to bottom","Move out of stock to bottom"
+"Price: Ascending","Price: Ascending"
+"Price: Descending","Price: Descending"
+None,None
+"Unable to save page with ID %1. Error: %2","Unable to save page with ID %1. Error: %2"
+"Unable to save new page. Error: %1","Unable to save new page. Error: %1"
+"page with specified ID ""%1"" not found.","page with specified ID ""%1"" not found."
+"Page with specified URL Key ""%1"" not found.","Page with specified URL Key ""%1"" not found."
+"Unable to remove page with ID %1. Error: %2","Unable to remove page with ID %1. Error: %2"
+"Unable to remove page. Error: %1","Unable to remove page. Error: %1"
+"Please choose a condition to add.","Please choose a condition to add."
+"Conditions Combination","Conditions Combination"
+"Custom Fields","Custom Fields"
+"Is New (by a period)","Is New (by a period)"
+"Is New (by 'is_new' attribute)","Is New (by 'is_new' attribute)"
+"Created (in days)","Created (in days)"
+"Is on Sale","Is on Sale"
+Qty,Qty
+"Min Price","Min Price"
+"Max Price","Max Price"
+"Final Price","Final Price"
+Rating,Rating
+"Product Attribute","Product Attribute"
+"Is New by 'is_new' attribute","Is New by 'is_new' attribute"
+"Is New","Is New"
+Price,Price
+"Attribute Set","Attribute Set"
+"Rating by 'rating_summary' attribute","Rating by 'rating_summary' attribute"
+"-- Please Select --","-- Please Select --"
+"Stores should be selected.","Stores should be selected."
+"Category %1 (ID#%2) is not in Dynamic mode anymore.","Category %1 (ID#%2) is not in Dynamic mode anymore."
+"Display mode of %1 category (ID#%2) is set to Dynamic.","Display mode of %1 category (ID#%2) is set to Dynamic."
+Dynamic,Dynamic
+Preview,Preview
+Delete,Delete
+"Delete ${ $.$data.title }","Delete ${ $.$data.title }"
+"Are you sure you wan't to delete a ${ $.$data.title } record?","Are you sure you wan't to delete a ${ $.$data.title } record?"
+Edit,Edit
+Duplicate,Duplicate
+"records found","records found"
+"per page","per page"
+"Previous page","Previous page"
+"of %1","of %1"
+"Next page","Next page"
+"Product image","Product image"
+"Enable Auto Sorting","Enable Auto Sorting"
+"Enable Manual Sorting","Enable Manual Sorting"
+Manual,Manual
+Auto,Auto
+"Move to top","Move to top"
+Information,Information
+Import,Import
+"Choose Target Store","Choose Target Store"
+"CSV File","CSV File"
+"Amasty: Landing Pages - Page - Product","Amasty: Landing Pages - Page - Product"
+"Indexed page/product association","Indexed page/product association"
+"Amasty: Landing Pages - Product - Page","Amasty: Landing Pages - Product - Page"
+"Indexed product/page association","Indexed product/page association"
+Sort,Sort
+"Sort order","Sort order"
+Store,Store
+"Add New Page","Add New Page"
+CSV,CSV
+"Delete items","Delete items"
+"Are you sure you wan't to delete selected items?","Are you sure you wan't to delete selected items?"
+Disable,Disable
+Enable,Enable
+ID,ID
+Created,Created
+Modified,Modified
+"The category products will be displayed based on Amasty Landing Page conditions. At the same time, the landing page is not accessible by a direct link (302 redirect to category page) or seen on the sitemap.","The category products will be displayed based on Amasty Landing Page conditions. At the same time, the landing page is not accessible by a direct link (302 redirect to category page) or seen on the sitemap."
+"Product Conditions","Product Conditions"
+"Please select the Landing Page product conditions to display the category products. The selected Landing Page becomes unavailable by direct link.","Please select the Landing Page product conditions to display the category products. The selected Landing Page becomes unavailable by direct link."

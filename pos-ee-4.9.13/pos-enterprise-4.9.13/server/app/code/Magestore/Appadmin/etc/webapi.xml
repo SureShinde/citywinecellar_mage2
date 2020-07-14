@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+
+<!--
+  ~ Copyright © 2018 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <!-- Role api -->
+    <route url="/V1/webpos/role/search" method="GET">
+        <service class="Magestore\Appadmin\Api\Staff\RoleRepositoryInterface" method="getList"/>
+        <resources>
+            <resource ref="Magestore_Webpos::webpos" />
+        </resources>
+    </route>
+    <route url="/V1/webpos/role" method="POST">
+        <service class="Magestore\Appadmin\Api\Staff\RoleRepositoryInterface" method="save"/>
+        <resources>
+            <resource ref="Magestore_Webpos::webpos" />
+        </resources>
+    </route>
+    <route url="/V1/webpos/role/:id" method="GET">
+        <service class="Magestore\Appadmin\Api\Staff\RoleRepositoryInterface" method="getById" />
+        <resources>
+            <resource ref="Magestore_Webpos::webpos" />
+        </resources>
+    </route>
+
+    <route url="/V1/webpos/role/:id" method="PUT">
+        <service class="Magestore\Appadmin\Api\Staff\RoleRepositoryInterface" method="save"/>
+        <resources>
+            <resource ref="Magestore_Webpos::webpos" />
+        </resources>
+    </route>
+
+    <route url="/V1/webpos/role/:id" method="DELETE">
+        <service class="Magestore\Appadmin\Api\Staff\RoleRepositoryInterface" method="deleteById"/>
+        <resources>
+            <resource ref="Magestore_Webpos::webpos" />
+        </resources>
+    </route>
+</routes>

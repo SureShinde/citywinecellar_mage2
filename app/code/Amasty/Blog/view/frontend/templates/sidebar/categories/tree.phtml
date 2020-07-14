@@ -1,0 +1,30 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+?>
+<?php
+/** @var \Amasty\Blog\Block\Sidebar\Category\TreeRenderer $block */
+$collection = $block->getCollection();
+?>
+<?php if (count($collection)): ?>
+    <?php foreach ($collection as $category): ?>
+        <?php $activeClass = $category->getIsActive() ? 'active' : ''; ?>
+        <li class="amblog-category <?= /* @noEscape */ $activeClass; ?> amblog-category-<?= (int)$category->getId(); ?>">
+            <a class="amblog-link"
+               title="<?= $block->escapeHtml($category->getName()); ?>"
+               href="<?= $block->escapeUrl($category->getUrl()); ?>">
+                <?= $block->escapeHtml($category->getName()); ?>
+                <span class="amblog-category-count">(<?= $block->escapeHtml($block->getPostsCount($category->getId())); ?>)</span>
+            </a>
+
+            <?php if ($category->hasActiveChildren()): ?>
+                <ul class="amblog-categories -level<?= $category->getLevel() + 1; ?>">
+                    <?= /* @noEscape */ $block->renderChildrenItems($category->getCategoryId()); ?>
+                </ul>
+            <?php endif; ?>
+        </li>
+    <?php endforeach; ?>
+<?php endif; ?>

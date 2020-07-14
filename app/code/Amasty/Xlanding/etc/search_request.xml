@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Xlanding
+ */
+-->
+<requests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:framework:Search/etc/search_request.xsd">
+    <request query="catalog_view_container" index="catalogsearch_fulltext">
+        <dimensions>
+            <dimension name="scope" value="default"/>
+        </dimensions>
+        <queries>
+            <query xsi:type="boolQuery" name="catalog_view_container" boost="1">
+                <queryReference clause="must" ref="entity_id"/>
+                <queryReference clause="must" ref="row_id"/>
+                <queryReference clause="must" ref="landing_page_id"/>
+            </query>
+            <query xsi:type="filteredQuery" name="entity_id">
+                <filterReference clause="must" ref="entity_id_filter"/>
+            </query>
+            <query xsi:type="filteredQuery" name="row_id">
+                <filterReference clause="must" ref="row_id_filter"/>
+            </query>
+            <query xsi:type="filteredQuery" name="landing_page_id">
+                <filterReference clause="must" ref="landing_page_id_filter"/>
+            </query>
+        </queries>
+        <filters>
+            <filter xsi:type="termFilter" name="entity_id_filter" field="entity_id" value="$entity_id$"/>
+            <filter xsi:type="termFilter" name="row_id_filter" field="entity_id" value="$entity_id$"/>
+            <filter xsi:type="termFilter" name="landing_page_id_filter" field="landing_page_id" value="$landing_page_id$"/>
+        </filters>
+        <aggregations>
+            <bucket name="entity_id_bucket" field="entity_id" xsi:type="termBucket">
+                <metrics>
+                    <metric type="count"/>
+                </metrics>
+            </bucket>
+            <bucket name="row_id_bucket" field="row_id" xsi:type="termBucket">
+                <metrics>
+                    <metric type="count"/>
+                </metrics>
+            </bucket>
+        </aggregations>
+        <from>0</from>
+        <size>10000</size>
+    </request>
+</requests>

@@ -1,0 +1,15 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+?>
+<?php
+/** @var \Magento\Wishlist\Block\Link $block **/
+?>
+<li class="link wishlist">
+    <a  <?= /* @noEscape */ $block->getLinkAttributes() ?>>
+        <?= $block->escapeHtml($block->getLabel()) ?>
+    </a>
+</li>

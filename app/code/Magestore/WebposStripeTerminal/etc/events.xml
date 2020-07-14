@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2018 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="webpos_get_payment_after">
+        <observer name="webposstripeterminal_get_payment_after" instance="Magestore\WebposStripeTerminal\Observer\GetPaymentAfter" />
+    </event>
+    <event name="creditmemo_webpos_payment_save_before">
+        <observer name="webposstripeterminal_creditmemo_webpos_payment_save_before" instance="Magestore\WebposStripeTerminal\Observer\CreditmemoWebposOrderPaymentSaveBefore" />
+    </event>
+</config>

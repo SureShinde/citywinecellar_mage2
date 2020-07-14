@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Magestore_BarcodeSuccess::barcode" title="Barcode Management" translate="title" module="Magestore_BarcodeSuccess" sortOrder="20" resource="Magestore_BarcodeSuccess::barcode" parent="Magento_Catalog::catalog"/>
+            <add id="Magestore_BarcodeSuccess::manage_barcode" title="Barcode Listing" translate="title" module="Magestore_BarcodeSuccess" parent="Magestore_BarcodeSuccess::barcode" sortOrder="10" resource="Magestore_BarcodeSuccess::manage_barcode" action="barcodesuccess/index/index"/>
+            <add id="Magestore_BarcodeSuccess::generate_barcode" title="Generate Barcodes" translate="title" module="Magestore_BarcodeSuccess" parent="Magestore_BarcodeSuccess::barcode" sortOrder="20" resource="Magestore_BarcodeSuccess::generate_barcode" action="barcodesuccess/index/generate"/>
+            <add id="Magestore_BarcodeSuccess::import_barcode" title="Import Barcodes" translate="title" module="Magestore_BarcodeSuccess" parent="Magestore_BarcodeSuccess::barcode" sortOrder="30" resource="Magestore_BarcodeSuccess::import_barcode" action="barcodesuccess/index/import"/>
+            <add id="Magestore_BarcodeSuccess::scan_barcode" title="Scan Barcode" translate="title" module="Magestore_BarcodeSuccess" parent="Magestore_BarcodeSuccess::barcode" sortOrder="40" resource="Magestore_BarcodeSuccess::scan_barcode" action="barcodesuccess/index/scan"/>
+            <add id="Magestore_BarcodeSuccess::print_barcode" title="Print Barcodes" translate="title" module="Magestore_BarcodeSuccess" parent="Magestore_BarcodeSuccess::barcode" sortOrder="50" resource="Magestore_BarcodeSuccess::print_barcode" action="barcodesuccess/index/printConfig"/>
+            <add id="Magestore_BarcodeSuccess::history" title="Barcode Generated History" translate="title" module="Magestore_BarcodeSuccess" parent="Magestore_BarcodeSuccess::barcode" sortOrder="60" resource="Magestore_BarcodeSuccess::history" action="barcodesuccess/history/index"/>
+            <add id="Magestore_BarcodeSuccess::barcode_template" title="Barcode Label Templates" translate="title" module="Magestore_BarcodeSuccess" parent="Magestore_BarcodeSuccess::barcode" sortOrder="70" resource="Magestore_BarcodeSuccess::barcode_template" action="barcodesuccess/template/index"/>
+            <add id="Magestore_BarcodeSuccess::settings" title="Barcode Settings" translate="title" module="Magestore_BarcodeSuccess" sortOrder="100" parent="Magestore_BarcodeSuccess::barcode" resource="Magestore_BarcodeSuccess::settings" action="adminhtml/system_config/edit/section/barcodesuccess"/>
+    </menu>
+</config>

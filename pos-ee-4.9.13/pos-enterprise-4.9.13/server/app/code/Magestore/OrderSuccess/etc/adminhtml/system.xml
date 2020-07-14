@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="magestore" translate="label" sortOrder="100">
+            <label>magestore</label>
+        </tab>
+        <section id="ordersuccess" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+            <class>separator-top</class>
+            <label>Order Configuration</label>
+            <tab>magestore</tab>
+            <resource>Magestore_OrderSuccess::configuration</resource>
+            <group id="order" translate="label" sortOrder="1" type="text" showInDefault="1" showInWebsite="0">
+                <label>Order Configuration</label>
+                <field id="verify" translate="label comment" sortOrder="0" type="select" showInDefault="1" showInWebsite="0"
+                       showInStore="0">
+                    <label>Enable Verify Order Step</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="keep_verify_batch" translate="label comment" sortOrder="10" type="select" showInDefault="1" showInWebsite="0"
+                       showInStore="0">
+                    <label>Keep Order Batch Number after verified</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            Yes: if one staff works on both of Verify Orders & Prepare Fulfill steps<br/>
+                            No: if one staff works on Verify Orders step or Prepare Fulfill step only
+                        ]]>
+                    </comment>
+                </field>
+                <field id="ship" translate="label comment" sortOrder="20" type="select" showInDefault="1" showInWebsite="0"
+                       showInStore="0">
+                    <label>Allow Using Magento Default Ship</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="tag" translate="label comment" sortOrder="30" type="select" showInDefault="1" showInWebsite="0"
+                       showInStore="0">
+                    <label>Order Tags</label>
+                    <frontend_model>Magestore\OrderSuccess\Block\Adminhtml\System\Config\Tag</frontend_model>
+                    <backend_model>Magestore\OrderSuccess\Model\System\Config\Tag</backend_model>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

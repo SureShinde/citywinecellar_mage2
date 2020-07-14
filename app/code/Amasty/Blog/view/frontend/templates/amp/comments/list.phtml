@@ -1,0 +1,21 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+?>
+<?php
+/** @var \Amasty\Blog\Block\Comments $block */
+
+$collection = $block->getCollection();
+?>
+
+<div class="amblog-comments-livestream">
+    <?php if ($collection && $collection->getSize()) : ?>
+        <div class="amblog-amp-title -comment"><?= $block->escapeHtml(__('Comments')); ?></div>
+        <?php foreach ($collection as $message) : ?>
+            <?= $block->getMessageHtml($message); ?>
+        <?php endforeach; ?>
+    <?php endif; ?>
+</div>

@@ -1,0 +1,15 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_PromoBanners
+ */
+?>
+<?php /** @var \Amasty\PromoBanners\Block\Loader $block */ ?>
+
+<script type="text/x-magento-init">
+<?= /* @noEscape */ $this->helper(\Magento\Framework\Json\Helper\Data::class)->jsonEncode([
+        '*' => ['Amasty_PromoBanners/js/loader' => $block->getParams()],
+    ]);
+?>
+</script>

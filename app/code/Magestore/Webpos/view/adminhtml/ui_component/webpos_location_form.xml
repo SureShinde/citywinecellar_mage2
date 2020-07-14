@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright © 2018 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">webpos_location_form.webpos_location_form_data_source</item>
+            <item name="deps" xsi:type="string">webpos_location_form.webpos_location_form_data_source</item>
+        </item>
+        <item name="label" xsi:type="string" translate="true">General Information</item>
+        <item name="reverseMetadataMerge" xsi:type="boolean">true</item>
+    </argument>
+    <settings>
+        <buttons>
+            <button name="save_and_continue"
+                    class="Magestore\Webpos\Block\Adminhtml\Location\Edit\Buttons\SaveAndContinue"/>
+            <button name="save" class="Magestore\Webpos\Block\Adminhtml\Location\Edit\Buttons\Save"/>
+            <button name="reset" class="Magestore\Webpos\Block\Adminhtml\Location\Edit\Buttons\Reset"/>
+            <button name="delete" class="Magestore\Webpos\Block\Adminhtml\Location\Edit\Buttons\Delete"/>
+            <button name="back" class="Magestore\Webpos\Block\Adminhtml\Location\Edit\Buttons\Back"/>
+        </buttons>
+        <layout>
+            <navContainerName>left</navContainerName>
+            <type>tabs</type>
+        </layout>
+        <deps>
+            <dep>webpos_location_form.webpos_location_form_data_source</dep>
+        </deps>
+    </settings>
+    <dataSource name="webpos_location_form_data_source">
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">Magestore\Webpos\Ui\DataProvider\Location\Form\Location</argument>
+            <argument name="name" xsi:type="string">webpos_location_form_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">location_id</argument>
+            <argument name="requestFieldName" xsi:type="string">id</argument>
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="submit_url" xsi:type="url" path="webposadmin/location_location/save"/>
+                </item>
+            </argument>
+        </argument>
+        <argument name="data" xsi:type="array">
+            <item name="js_config" xsi:type="array">
+                <item name="component" xsi:type="string">Magento_Ui/js/form/provider</item>
+            </item>
+        </argument>
+    </dataSource>
+    <!--General Information-->
+    <fieldset name="general_information">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="label" xsi:type="string" translate="true">General Information</item>
+            </item>
+        </argument>
+        <fieldset name="sub_general_information">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">General Information</item>
+                    <item name="collapsible" xsi:type="boolean">false</item>
+                </item>
+            </argument>
+            <field name="name">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="source" xsi:type="string">location</item>
+                        <item name="dataType" xsi:type="string">string</item>
+                        <item name="formElement" xsi:type="string">input</item>
+                        <item name="resizeDefaultWidth" xsi:type="string">60</item>
+                        <item name="label" xsi:type="string" translate="true">Location Name</item>
+                        <item name="validation" xsi:type="array">
+                            <item name="validate-no-html-tags" xsi:type="boolean">true</item>
+                            <item name="required-entry" xsi:type="boolean">true</item>
+                        </item>
+                    </item>
+                </argument>
+            </field>
+            <field name="email">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="source" xsi:type="string">location</item>
+                        <item name="dataType" xsi:type="string">string</item>
+                        <item name="formElement" xsi:type="string">input</item>
+                        <item name="label" xsi:type="string" translate="true">Contact Email</item>
+                        <item name="validation" xsi:type="array">
+                            <item name="validate-email" xsi:type="boolean">true</item>
+                        </item>
+                    </item>
+                </argument>
+            </field>
+            <field name="telephone">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="source" xsi:type="string">location</item>
+                        <item name="dataType" xsi:type="string">string</item>
+                        <item name="formElement" xsi:type="string">input</item>
+                        <item name="label" xsi:type="string" translate="true">Telephone</item>
+                        <item name="validation" xsi:type="array">
+                            <item name="validate-no-html-tags" xsi:type="boolean">true</item>
+                            <item name="validate-length" xsi:type="string">50</item>
+                        </item>
+                    </item>
+                </argument>
+            </field>
+            <field name="description">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="source" xsi:type="string">location</item>
+                        <item name="dataType" xsi:type="string">string</item>
+                        <item name="formElement" xsi:type="string">textarea</item>
+                        <item name="label" xsi:type="string" translate="true">Description</item>
+                        <item name="validation" xsi:type="array">
+                            <item name="validate-no-html-tags" xsi:type="boolean">true</item>
+                        </item>
+                    </item>
+                </argument>
+            </field>
+        </fieldset>
+
+        <fieldset name="stock_selection">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Stock Selection</item>
+                    <item name="collapsible" xsi:type="boolean">false</item>
+                </item>
+            </argument>
+            <field name="stock_id" class="Magestore\Webpos\Ui\Component\Location\Form\General\StockId">
+                <argument name="data" xsi:type="array">
+                    <item name="options" xsi:type="object">Magestore\Webpos\Model\Source\Adminhtml\Stock</item>
+                    <item name="config" xsi:type="array">
+                        <item name="dataType" xsi:type="string">text</item>
+                        <item name="formElement" xsi:type="string">select</item>
+                        <item name="source" xsi:type="string">location</item>
+                        <item name="label" xsi:type="string" translate="true">Stock</item>
+                        <item name="component" xsi:type="string">Magento_Ui/js/form/element/select</item>
+                        <item name="validation" xsi:type="array">
+                            <item name="required-entry" xsi:type="boolean">true</item>
+                        </item>
+                    </item>
+                </argument>
+            </field>
+        </fieldset>
+
+        <fieldset name="address_information">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Address</item>
+                    <item name="collapsible" xsi:type="boolean">false</item>
+                </item>
+            </argument>
+            <field name="street">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="source" xsi:type="string">location</item>
+                        <item name="dataType" xsi:type="string">string</item>
+                        <item name="formElement" xsi:type="string">input</item>
+                        <item name="label" xsi:type="string" translate="true">Street</item>
+                        <item name="validation" xsi:type="array">
+                            <item name="validate-no-html-tags" xsi:type="boolean">true</item>
+                            <item name="required-entry" xsi:type="boolean">true</item>
+                        </item>
+                    </item>
+                </argument>
+            </field>
+            <field name="city">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="source" xsi:type="string">location</item>
+                        <item name="dataType" xsi:type="string">string</item>
+                        <item name="formElement" xsi:type="string">input</item>
+                        <item name="label" xsi:type="string" translate="true">City</item>
+                        <item name="validation" xsi:type="array">
+                            <item name="validate-no-html-tags" xsi:type="boolean">true</item>
+                            <item name="required-entry" xsi:type="boolean">true</item>
+                        </item>
+                    </item>
+                </argument>
+            </field>
+            <field name="country_id">
+                <argument name="data" xsi:type="array">
+                    <item name="options" xsi:type="object">Magento\Directory\Model\Config\Source\Country</item>
+                    <item name="config" xsi:type="array">
+                        <item name="dataType" xsi:type="string">text</item>
+                        <item name="formElement" xsi:type="string">select</item>
+                        <item name="source" xsi:type="string">location</item>
+                        <item name="label" xsi:type="string" translate="true">Country</item>
+                        <item name="component" xsi:type="string">Magento_Ui/js/form/element/country</item>
+                        <item name="validation" xsi:type="array">
+                            <item name="required-entry" xsi:type="boolean">true</item>
+                        </item>
+                    </item>
+                </argument>
+            </field>
+            <field name="region">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="visible" xsi:type="boolean">false</item>
+                        <item name="dataType" xsi:type="string">text</item>
+                        <item name="formElement" xsi:type="string">input</item>
+                        <item name="source" xsi:type="string">location</item>
+                        <item name="label" xsi:type="string" translate="true">State or Province</item>
+                        <item name="validation" xsi:type="array">
+                            <item name="validate-no-html-tags" xsi:type="boolean">true</item>
+                            <item name="required-entry" xsi:type="boolean">true</item>
+                        </item>
+                    </item>
+                </argument>
+            </field>
+            <field name="region_id">
+                <argument name="data" xsi:type="array">
+                    <item name="options" xsi:type="object">Magento\Directory\Model\ResourceModel\Region\Collection
+                    </item>
+                    <item name="config" xsi:type="array">
+                        <item name="component" xsi:type="string">Magento_Ui/js/form/element/region</item>
+                        <item name="dataType" xsi:type="string">text</item>
+                        <item name="formElement" xsi:type="string">select</item>
+                        <item name="source" xsi:type="string">location</item>
+                        <item name="customEntry" xsi:type="string">region</item>
+                        <item name="label" xsi:type="string" translate="true">State or Province</item>
+                        <item name="validation" xsi:type="array">
+                            <item name="required-entry" xsi:type="boolean">true</item>
+                        </item>
+                        <item name="filterBy" xsi:type="array">
+                            <item name="target" xsi:type="string">${ $.provider }:${ $.parentScope }.country_id</item>
+                            <item name="field" xsi:type="string">country_id</item>
+                        </item>
+                    </item>
+                </argument>
+            </field>
+            <field name="postcode">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="dataType" xsi:type="string">text</item>
+                        <item name="formElement" xsi:type="string">input</item>
+                        <item name="source" xsi:type="string">location</item>
+                        <item name="label" xsi:type="string" translate="true">Zip/Postal Code</item>
+                        <item name="validation" xsi:type="array">
+                            <item name="validate-no-html-tags" xsi:type="boolean">true</item>
+                            <item name="required-entry" xsi:type="boolean">true</item>
+                        </item>
+                    </item>
+                </argument>
+            </field>
+        </fieldset>
+    </fieldset>
+    <fieldset name="custom_receipt" sortOrder="200">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="label" xsi:type="string" translate="true">POS Custom Receipt</item>
+                <item name="collapsible" xsi:type="boolean">false</item>
+            </item>
+        </argument>
+        <container name="container_receipt_header" component="Magento_Ui/js/form/components/group" sortOrder="100">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="formElement" xsi:type="string">container</item>
+                    <item name="label" xsi:type="string" translate="true">Receipt Header</item>
+                </item>
+            </argument>
+            <field name="receipt_header" formElement="textarea">
+                <settings>
+                    <label translate="true">Receipt Header</label>
+                    <dataType>text</dataType>
+                    <notice translate="true">HTML Code</notice>
+                </settings>
+            </field>
+            <field name="use_config_receipt_header" component="Magestore_Webpos/js/components/use-config-settings" formElement="checkbox">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="value" xsi:type="string">1</item>
+                        <item name="valueFromConfig" xsi:type="object">Magestore\Webpos\Model\Source\Adminhtml\Receipt\ReceiptConfiguration</item>
+                        <item name="keyInConfiguration" xsi:type="string">receipt_header</item>
+                    </item>
+                </argument>
+                <settings>
+                    <links>
+                        <link name="linkedValue">${ $.provider }:${ $.parentScope }.receipt_header</link>
+                    </links>
+                    <exports>
+                        <link name="checked">${$.parentName}.receipt_header:disabled</link>
+                    </exports>
+                </settings>
+                <formElements>
+                    <checkbox class="Magestore\Webpos\Ui\Component\Form\Element\UseConfigSettings">
+                        <settings>
+                            <description translate="true">Use Config Settings</description>
+                            <valueMap>
+                                <map name="false" xsi:type="string">0</map>
+                                <map name="true" xsi:type="string">1</map>
+                            </valueMap>
+                        </settings>
+                    </checkbox>
+                </formElements>
+            </field>
+        </container>
+        <container name="container_receipt_footer" component="Magento_Ui/js/form/components/group" sortOrder="200">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="formElement" xsi:type="string">container</item>
+                    <item name="label" xsi:type="string" translate="true">Receipt Footer</item>
+                </item>
+            </argument>
+            <field name="receipt_footer" formElement="textarea">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="value" xsi:type="object">Magestore\Webpos\Model\Source\Adminhtml\Receipt\ReceiptConfiguration</item>
+                    </item>
+                </argument>
+                <settings>
+                    <label translate="true">Receipt Footer</label>
+                    <dataType>text</dataType>
+                    <notice translate="true">HTML Code</notice>
+                </settings>
+            </field>
+            <field name="use_config_receipt_footer" component="Magestore_Webpos/js/components/use-config-settings" formElement="checkbox">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="value" xsi:type="string">1</item>
+                        <item name="valueFromConfig" xsi:type="object">Magestore\Webpos\Model\Source\Adminhtml\Receipt\ReceiptConfiguration</item>
+                        <item name="keyInConfiguration" xsi:type="string">receipt_footer</item>
+                    </item>
+                </argument>
+                <settings>
+                    <links>
+                        <link name="linkedValue">${ $.provider }:${ $.parentScope }.receipt_footer</link>
+                    </links>
+                    <exports>
+                        <link name="checked">${$.parentName}.receipt_footer:disabled</link>
+                    </exports>
+                </settings>
+                <formElements>
+                    <checkbox class="Magestore\Webpos\Ui\Component\Form\Element\UseConfigSettings">
+                        <settings>
+                            <description translate="true">Use Config Settings</description>
+                            <valueMap>
+                                <map name="false" xsi:type="string">0</map>
+                                <map name="true" xsi:type="string">1</map>
+                            </valueMap>
+                        </settings>
+                    </checkbox>
+                </formElements>
+            </field>
+        </container>
+    </fieldset>
+
+    <fieldset name="store_selection">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="label" xsi:type="string" translate="true">Linked Magento Store View</item>
+                <item name="collapsible" xsi:type="boolean">false</item>
+            </item>
+        </argument>
+        <field name="store_id">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">Magestore\Webpos\Ui\Component\Listing\Column\Store\Options</item>
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">store_id</item>
+                    <item name="dataType" xsi:type="string">integer</item>
+                    <item name="formElement" xsi:type="string">select</item>
+                    <item name="label" xsi:type="string" translate="true">Store View</item>
+                    <item name="component" xsi:type="string">Magento_Ui/js/form/element/select</item>
+                    <item name="additionalInfo" xsi:type="string">
+                        <![CDATA[Use this configration when you want to separate products, prices, customers, promotion,
+                        language, currency in your different locations/outlet and online website. You can do this by
+                        creating multiple websites on Magento. After that, link the POS location to the storeview of
+                        the website. Please follow the instruction below. <br/><br/>
+                        1. Setup Master Data for offline channel <br/>
+                        + Create Website, Store and Storeview which will be linked to your POS.<br/>
+                        + Add Product to the new Website.<br/><br/>
+                        2. Configure data for offline channel: by configuring data of the Store View (Website) linked to POS Location.<br/>
+                        + Language (per Store View)<br/>
+                        + Currency (per Store View)<br/>
+                        + Customer (per Website or Global)<br/>
+                        + Product Name (per Store View)<br/>
+                        + Product Price (per Website)<br/>
+                        + Promotion (per Website)<br/><br/>
+                        3. Link POS Location (offline channel) to specific Storeview: by selecting the Store View in the Dropdown above.<br/>
+                        <a href="https://blog.magestore.com/magestore-pos-setup-multiple-store-view" target="_blank">You can read the detailed guide here</a>
+                        ]]>
+                    </item>
+                </item>
+            </argument>
+        </field>
+    </fieldset>
+    <!--Linked POS-->
+    <!--<fieldset name="linked_pos">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="label" xsi:type="string" translate="true">Linked POS</item>
+                <item name="collapsible" xsi:type="boolean">false</item>
+                <item name="sortOrder" xsi:type="number">30</item>
+            </item>
+        </argument>
+        <container name="linked_pos_container">
+            <htmlContent name="html_content">
+                <argument name="block" xsi:type="object">Magestore\Webpos\Block\Adminhtml\LinkedPos</argument>
+            </htmlContent>
+        </container>
+    </fieldset>-->
+</form>

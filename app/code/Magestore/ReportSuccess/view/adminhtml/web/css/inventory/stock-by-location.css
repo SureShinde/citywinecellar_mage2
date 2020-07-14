@@ -1,0 +1,10 @@
+/*
+ *  Copyright © 2018 Magestore. All rights reserved.
+ *  See COPYING.txt for license details.
+ */
+
+.field_report_location {
+    width: 30%;
+    float:left;
+    margin-right: 20px;
+}

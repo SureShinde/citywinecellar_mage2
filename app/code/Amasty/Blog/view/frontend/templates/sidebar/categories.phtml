@@ -1,0 +1,34 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+?>
+<?php
+/** @var \Amasty\Blog\Block\Sidebar\Category $block */
+$treeHtml = $block->renderCategoriesTreeHtml();
+?>
+<?php if (!$block->isAlreadyWrapped()): ?>
+    <div class="amblog-element-block">
+<?php endif; ?>
+
+<?php if ($block->getDisplay() && $treeHtml): ?>
+<div data-amblog-js="accordion" class="amblog-widget-container -categories">
+    <div class="amblog-title" data-amblog-js="heading">
+        <?= $block->escapeHtml($block->getBlockHeader()); ?>
+    </div>
+    <div class="amblog-list" data-amblog-js="content">
+        <ul class="amblog-categories -level<?= $block->escapeHtml($block->getDefaultLevel()); ?>">
+            <?= /* @noEscape */ $treeHtml; ?>
+        </ul>
+    </div>
+</div>
+<?php else: ?>
+    <div class="amblog-empty"><?= $block->escapeHtml(__('Categories were not found')); ?></div>
+<?php endif; ?>
+
+<?php if (!$block->isAlreadyWrapped()): ?>
+    </div>
+<?php endif; ?>
+

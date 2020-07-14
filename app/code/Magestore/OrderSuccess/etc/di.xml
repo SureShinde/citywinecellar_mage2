@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Magestore\OrderSuccess\Api\Data\BatchInterface"
+                type="Magestore\OrderSuccess\Model\Batch" />
+
+    <preference for="Magestore\OrderSuccess\Api\OrderInterface"
+                type="Magestore\OrderSuccess\Model\Order" />
+
+    <preference for="Magestore\OrderSuccess\Api\Data\ShippingChanelInterface"
+                type="Magestore\OrderSuccess\Model\Source\Adminhtml\ShippingChanel" />
+
+    <preference for="Magestore\OrderSuccess\Api\Data\BatchSourceInterface"
+                type="Magestore\OrderSuccess\Model\Source\Adminhtml\Batch" />
+
+    <preference for="Magestore\OrderSuccess\Api\Data\BatchSearchResultsInterface"
+                type="Magento\Framework\Api\SearchResults" />
+
+    <preference for="Magestore\OrderSuccess\Api\Data\TagSourceInterface"
+                type="Magestore\OrderSuccess\Model\Source\Adminhtml\Tag" />
+
+    <preference for="Magestore\OrderSuccess\Api\BatchRepositoryInterface"
+                type="Magestore\OrderSuccess\Model\Repository\BatchRepository" />
+
+    <preference for="Magestore\OrderSuccess\Api\OrderRepositoryInterface"
+                type="Magestore\OrderSuccess\Model\Repository\OrderRepository" />
+
+    <preference for="Magestore\OrderSuccess\Api\OrderItemRepositoryInterface"
+                type="Magestore\OrderSuccess\Model\Repository\OrderItemRepository" />
+
+    <preference for="Magestore\OrderSuccess\Api\OrderPositionInterface"
+                type="Magestore\OrderSuccess\Model\Source\Adminhtml\OrderPosition" />
+    
+    <preference for="Magestore\OrderSuccess\Api\PermissionManagementInterface"
+                type="Magestore\OrderSuccess\Model\Permission\PermissionManagement" />    
+
+    <preference for="Magestore\OrderSuccess\Model\Db\QueryProcessorInterface"
+                type="Magestore\OrderSuccess\Model\Db\QueryProcessor" />
+
+    <type name="Magento\Sales\Model\Order\Item">
+        <plugin name="AfterGetSimpleQtyToShip" type="Magestore\OrderSuccess\Plugin\Item\AfterGetSimpleQtyToShip" sortOrder="1" disabled="false"/>
+    </type>
+
+    <type name="Magento\Sales\Block\Adminhtml\Order\View\History">
+        <plugin name="AfterGetSubmitUrl" type="Magestore\OrderSuccess\Plugin\Order\View\History\AfterGetSubmitUrl" sortOrder="1" disabled="false"/>
+    </type>
+
+    <type name="Magestore\OrderSuccess\Model\Source\Adminhtml\ShippingChanel">
+        <arguments>
+            <argument name="chanels" xsi:type="array">
+                <item name="back_order" xsi:type="array">
+                    <item name="code" xsi:type="string">back_order</item>                    
+                    <item name="title" xsi:type="string" translate="true" >Back Order</item>                    
+                    <item name="block" xsi:type="string">Magestore\OrderSuccess\Block\Adminhtml\Order\BackOrder\Grid</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="orderMetadata" type="Magento\Sales\Model\ResourceModel\Metadata">
+        <arguments>
+            <argument name="resourceClassName" xsi:type="string">Magento\Sales\Model\ResourceModel\Order</argument>
+            <argument name="modelClassName" xsi:type="string">Magento\Sales\Model\Order</argument>
+        </arguments>
+    </virtualType>
+    <type name="Magestore\OrderSuccess\Model\Repository\OrderRepository">
+        <arguments>
+            <argument name="metadata" xsi:type="object">orderMetadata</argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Sales\Model\Order">
+        <plugin name="AfterCanShip" type="Magestore\OrderSuccess\Plugin\Sales\Model\Order" sortOrder="1" disabled="false"/>
+    </type>
+</config>

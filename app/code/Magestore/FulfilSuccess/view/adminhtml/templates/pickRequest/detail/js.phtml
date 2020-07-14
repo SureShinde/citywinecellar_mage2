@@ -1,0 +1,23 @@
+<?php
+/**
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+?>
+<?php /** @var $block \Magestore\FulfilSuccess\Block\Adminhtml\PackRequest\Packaging */ ?>
+<script>
+require([
+    "Magestore_FulfilSuccess/js/pickrequest/detail/picking",
+], function(){
+       
+    var picking = new Picking(<?php /* @escapeNotVerified */ echo $block->getConfigDataJson() ?>);
+       
+});
+require([
+    "Magestore_FulfilSuccess/js/model/general/input-number"
+], function(InputNumber){
+    InputNumber.init('.os_fulfilsuccess_input_number_control');
+});
+</script>
+

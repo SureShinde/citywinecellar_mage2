@@ -1,0 +1,12 @@
+/*
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+.page-actions-buttons button.ordersuccess-current { 
+    background-color: #eb5202;
+    border-color: #eb5202;
+    color: #ffffff;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.25);
+    opacity: 0.7 !important;  
+}

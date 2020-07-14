@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="PosPaymentEnterCash">
+        <arguments>
+            <argument name="amount" defaultValue="1.00" type="string"/>
+        </arguments>
+        <waitForElementVisible selector="{{PosCheckoutPaymentSection.cash}}" time="120" stepKey="waitCashPaymentVisible"/>
+        <click selector="{{PosCheckoutPaymentSection.cash}}" stepKey="clickCash"/>
+        <click selector="{{PosCheckoutPaymentSection.amount}}" stepKey="clickCashAmount"/>
+        <pressKey selector="{{PosCheckoutPaymentSection.numpad}}" userInput="{{amount}}" stepKey="enterAmount"/>
+        <click selector="{{PosCheckoutPaymentSection.closeNumpad}}" stepKey="clickCloseNumpad"/>
+        <click selector="{{PosCheckoutPaymentSection.accept}}" stepKey="clickAccept"/>
+    </actionGroup>
+</actionGroups>

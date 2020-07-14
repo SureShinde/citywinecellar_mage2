@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:DataGenerator/etc/dataProfileSchema.xsd">
+    <entity name="pos_stable_order_1_result" type="order">
+        <data key="keyword_increment_id">increment_id_1order_</data>
+        <data key="keyword_firstname">firstname_1order_</data>
+        <data key="keyword_lastname">lastname_1order_</data>
+        <data key="keyword_email">email_1order_</data>
+        <data key="keyword_telephone">telephone_1order_</data>
+        <data key="keyword_payment_reference_number">1order_payment_reference_number</data>
+        <data key="keyword_product_name">product_name_1order_pos_simple_product</data>
+        <data key="keyword_product_sku">sku1product_pos_simple_product</data>
+        <data key="numberOrders">1</data>
+    </entity>
+    <entity name="pos_stable_order_4_results" type="order">
+        <data key="keyword_increment_id">increment_id_4orders_</data>
+        <data key="keyword_firstname">firstname_4orders_</data>
+        <data key="keyword_lastname">lastname_4orders_</data>
+        <data key="keyword_email">email_4orders_</data>
+        <data key="keyword_telephone">telephone_4orders_</data>
+        <data key="keyword_payment_reference_number">4orders_payment_reference_number</data>
+        <data key="keyword_product_name">product_name_4orders_pos_simple_product</data>
+        <data key="keyword_product_sku">sku4products_pos_simple_product</data>
+        <data key="numberOrders">4</data>
+    </entity>
+    <entity name="pos_stable_order_11_results" type="order">
+        <data key="keyword_increment_id">increment_id_11orders_</data>
+        <data key="keyword_firstname">firstname_11orders_</data>
+        <data key="keyword_lastname">lastname_11orders_</data>
+        <data key="keyword_email">email_11orders_</data>
+        <data key="keyword_telephone">telephone_11orders_</data>
+        <data key="keyword_payment_reference_number">11orders_payment_reference_number</data>
+        <data key="keyword_product_name">product_name_11orders_pos_simple_product</data>
+        <data key="keyword_product_sku">sku21products_pos_simple_product</data>
+        <data key="numberOrders">11</data>
+    </entity>
+
+    <entity name="pos_stable_order_partial_payment" type="order">
+        <data key="amountPaid">5.00</data>
+        <data key="status">processing</data>
+        <data key="grandTotal">$10.83</data>
+        <data key="displayRemainingAmount">$5.83</data>
+    </entity>
+</entities>
+

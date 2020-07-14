@@ -1,0 +1,71 @@
+export default {
+    END_POINT_PATH           : '/V1/webpos/stripeterminal',
+    CONFIG_PATH              : 'webpos/payment/stripeterminal',
+    CODE                     : 'stripeterminal_integration',
+    POPUP_CLASS_NAME         : "stripeterminal",
+    TITLE                    : "Stripe Verifone P400",
+    CONFIG_DEVICE_TYPE       : "POS_STRIPETERMINAL_CONFIG_DEVICE_TYPE",
+    CONFIG_DISCOVERY_TYPE    : "POS_STRIPETERMINAL_CONFIG_DISCOVERY_TYPE",
+    CONFIG_CONNECTED_READER  : "POS_STRIPETERMINAL_CONFIG_CONNECTED_READER",
+    STRIPE_LOCATION_ID       : "stripe_location_id",
+    DEVICE_TYPES: [
+        "Reader Simulator",
+        "Registered Reader",
+    ],
+    DEVICE_TYPE_SIMULATED: 'simulated',
+    DEVICE_TYPES_MAP: {
+        "simulated"  : "Reader Simulator",
+        "registered" : "Registered Reader",
+    },
+    DISCOVERY_TYPES: [
+        "Bluetooth Scan",
+        "Bluetooth Proximity",
+    ],
+
+    /** Constant transaction result from stripe terminal terminal response */
+    TRANSACTION_STATUS_PENDING                  : 'PENDING',
+    TRANSACTION_STATUS_APPROVED                 : 'APPROVED',
+    TRANSACTION_STATUS_DECLINED                 : 'DECLINED',
+    TRANSACTION_STATUS_REVERSED                 : 'REVERSED',
+    TRANSACTION_STATUS_CANCELLED                : 'CANCELLED',
+    TRANSACTION_STATUS_EXPIRED                  : 'EXPIRED',
+    ERROR_STATUS                                : 'ERROR_STATUS',
+
+    INTENT_STATUS_REQUIRES_PAYMENT_METHOD : 'requires_payment_method',
+    INTENT_STATUS_REQUIRES_CONFIRMATION   : 'requires_confirmation',
+    INTENT_STATUS_REQUIRES_SOURCE         : 'requires_source',
+    INTENT_STATUS_REQUIRES_ACTION         : 'requires_action',
+    INTENT_STATUS_PROCESSING              : 'processing',
+    INTENT_STATUS_REQUIRES_AUTHORIZATION  : 'requires_authorization',
+    INTENT_STATUS_REQUIRES_CAPTURE        : 'requires_capture',
+    INTENT_STATUS_CANCELED                : 'canceled',
+    INTENT_STATUS_SUCCEEDED               : 'succeeded',
+
+    TRANSACTION_STATUS_CREATED_PAYMENT_INTENT   : 'CREATED_PAYMENT_INTENT',
+    TRANSACTION_STATUS_COLLECTED_PAYMENT_METHOD : 'COLLECTED_PAYMENT_METHOD',
+    TRANSACTION_STATUS_CONFIRMED_PAYMENT_INTENT : 'CONFIRMED_PAYMENT_INTENT',
+    TRANSACTION_STATUS_CAPTURED_PAYMENT_INTENT  : 'CAPTURED_PAYMENT_INTENT',
+    /** Message */
+    MESSAGE_TRANSACTION_STATUS_EXPIRED         : 'The order has timed out. Please start the process again.',
+    MESSAGE_TRANSACTION_STATUS_DECLINED        : 'The transaction has been declined, please check available funds.',
+    MESSAGE_TRANSACTION_STATUS_CANCELLED       : 'The purchase has been cancelled.',
+
+    INVALID_PAYMENT_INTENT_EXCEPTION_MESSAGE   : 'PaymentIntent is invalid!',
+    FAILED_TO_CONNECT_READER_EXCEPTION_MESSAGE : 'Failed to connect reader',
+    FAILED_TO_READER_EXCEPTION_MESSAGE         : 'Failed to discover reader',
+    CAPTURE_FAILED_EXCEPTION_MESSAGE           : 'Capture failed',
+    CONFIRM_FAILED_EXCEPTION_MESSAGE           : 'Confirm failed',
+    COLLECT_FAILED_EXCEPTION_MESSAGE           : 'Collect payment method failed',
+    PAYMENT_FAILED_EXCEPTION_MESSAGE           : 'Payment failed',
+    NO_AVAILABLE_READERS_MESSAGE               : 'No available readers.',
+    ERROR_REGISTERING_EXCEPTION_MESSAGE        : 'Error registering reader!',
+    NO_CONNECTED_READER_EXCEPTION_MESSAGE      : 'No registered reader connected!',
+    CONNECTION_ERROR_MESSAGE                   : 'Something wen\'t wrong.',
+    UNKNOWN_EXCEPTION_MESSAGE                  : 'Connection failed. Please contact admin to check the configuration of API.',
+
+    NEW_READER_HAS_BEEN_REGISTERED_SUCCESSFULLY_MESSAGE : 'New terminal has been registered successfully!',
+    CANCELING_TRANSACTION_MESSAGE                       : 'Canceling Transaction\\n',
+
+    PROCESS_PAYMENT                   : '[STRIPETERMINAL] PROCESS_PAYMENT',
+    SETTING_PAYMENT_STRIPE_TERMINAL   : '[SETTING] SETTING_PAYMENT_STRIPE_TERMINAL',
+}

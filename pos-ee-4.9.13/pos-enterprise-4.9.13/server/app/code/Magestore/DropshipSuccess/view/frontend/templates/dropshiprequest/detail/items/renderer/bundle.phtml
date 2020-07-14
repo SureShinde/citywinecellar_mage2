@@ -1,0 +1,99 @@
+<?php
+/**
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+?>
+<?php
+/** @var  $block \Magestore\DropshipSuccess\Block\DropshipRequest\Detail\Items\DefaultRenderer */
+/** @var  $_item \Magestore\DropshipSuccess\Model\DropshipRequest\Item */
+$_item = $block->getItem() ?>
+
+
+<?php
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+?>
+
+<?php /** @var $block \Magestore\DropshipSuccess\Block\DropshipRequest\Detail\Items\BundleRenderer */ ?>
+
+<?php $parentItem = $block->getItem() ?>
+<?php $items = $block->getChildren($parentItem); ?>
+<?php $_count = count($items) ?>
+<?php $_index = 0 ?>
+
+<?php $_prevOptionId = '' ?>
+
+<?php if ($block->getOrderOptions() || $parentItem->getDescription()): ?>
+    <?php $_showlastRow = true ?>
+<?php else: ?>
+    <?php $_showlastRow = false ?>
+<?php endif; ?>
+
+<?php foreach ($items as $_item): ?>
+    <?php $block->setPriceDataObject($_item) ?>
+    <?php if ($_item->getOrderItem()->getParentItem()): ?>
+        <?php $attributes = $block->getSelectionAttributes($_item) ?>
+        <?php if ($_prevOptionId != $attributes['option_id']): ?>
+            <tr>
+                <td class="col-product"><div class="option-label"><?php /* @escapeNotVerified */ echo $attributes['option_label'] ?></div></td>
+                <td class="col-product">&nbsp;</td>
+                <td class="col-qty last">&nbsp;</td>
+            </tr>
+            <?php $_prevOptionId = $attributes['option_id'] ?>
+        <?php endif; ?>
+    <?php endif; ?>
+    <tr class="<?php echo(++$_index == $_count && !$_showlastRow) ? 'border' : '' ?> data-row">
+        <?php if (!$_item->getOrderItem()->getParentItem()): ?>
+            <td class="col-product">
+                <div class="product-title"><?php echo $block->escapeHtml($_item->getName()) ?></div>
+            </td>
+        <?php else: ?>
+            <td class="col-product"><div class="option-value"><?php echo $block->getValueHtml($_item)?></div></td>
+        <?php endif; ?>
+        <td class="col sku">
+            <div class="product-sku-block">
+                <?php echo implode('<br />', $this->helper('Magento\Catalog\Helper\Data')->splitSku($block->escapeHtml($_item->getSku()))); ?>
+            </div>
+        </td>
+        <td class="col qty">
+            <?php if ($block->isShipmentSeparately($_item)): ?>
+            <?php $parentOrderId = $_item->getOrderItemId(); ?>
+            <ul class="items-qty">
+                <?php if ($_item->getQtyRequested() > 0): ?>
+                    <li class="item">
+                        <span class="title"><?php /* @escapeNotVerified */ echo __('Requested'); ?></span>
+                        <span class="content"><?php /* @escapeNotVerified */ echo $_item->getQtyRequested()*1 ?></span>
+                    </li>
+                <?php endif; ?>
+                <?php if ($_item->getQtyShipped() > 0): ?>
+                    <li class="item">
+                        <span class="title"><?php /* @escapeNotVerified */ echo __('Shipped'); ?></span>
+                        <span class="content"><?php /* @escapeNotVerified */ echo $_item->getQtyShipped()*1 ?></span>
+                    </li>
+                <?php endif; ?>
+                <?php if ($block->isShippedRequest() && ($_item->getQtyRequested() - $_item->getQtyShipped()) > 0): ?>
+                    <li class="item">
+                        <span class="title"><?php /* @escapeNotVerified */ echo __('Canceled'); ?></span>
+                        <span class="content"><?php /* @escapeNotVerified */ echo ($_item->getQtyRequested() - $_item->getQtyShipped())*1 ?></span>
+                    </li>
+                <?php endif; ?>
+        </td>
+            <?php else: ?>
+                &nbsp;
+            <?php endif; ?>
+        </td>
+        <td class="col-shipped-qty last">
+            <?php if ($block->isShipmentSeparately($_item)): ?>
+                <?php echo $block->getShippedInput($_item) ?>
+                <input type="hidden" class="ship-item" value="<?php /* @escapeNotVerified */ echo $_item->getOrderItemId(); ?>">
+            <?php endif; ?>
+        </td>
+    </tr>
+<?php endforeach; ?>

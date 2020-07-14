@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+
+<!--
+  ~ Copyright © 2018 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <webpos>
+            <payment>
+                <cashforpos>
+                    <active>1</active>
+                    <model>Magestore\Payment\Model\Payment\Method\Cash</model>
+                    <title>Cash</title>
+                    <sort_order>1</sort_order>
+                    <use_reference_number>0</use_reference_number>
+                    <pay_later>0</pay_later>
+                    <is_suggest_money>1</is_suggest_money>
+                    <can_due>1</can_due>
+                </cashforpos>
+                <!--<codforpos>-->
+                    <!--<active>1</active>-->
+                    <!--<model>Magestore\Payment\Model\Payment\Method\Cod</model>-->
+                    <!--<title>Cash On Delivery</title>-->
+                    <!--<use_reference_number>1</use_reference_number>-->
+                    <!--<pay_later>1</pay_later>-->
+                    <!--<is_suggest_money>0</is_suggest_money>-->
+                    <!--<can_due>1</can_due>-->
+                <!--</codforpos>-->
+                <ccforpos>
+                    <active>1</active>
+                    <model>Magestore\Payment\Model\Payment\Method\CreditCard</model>
+                    <title>Credit Card</title>
+                    <sort_order>2</sort_order>
+                    <use_reference_number>1</use_reference_number>
+                    <pay_later>0</pay_later>
+                    <is_suggest_money>0</is_suggest_money>
+                    <can_due>0</can_due>
+                </ccforpos>
+            </payment>
+        </webpos>
+    </default>
+</config>

@@ -1,0 +1,299 @@
+Save,Save
+Delete,Delete
+"Save and Continue Edit","Save and Continue Edit"
+"Edit Denomination '%1'","Edit Denomination '%1'"
+"New Denomination","New Denomination"
+"Denomination Information","Denomination Information"
+"Denomination Name","Denomination Name"
+"Denomination Value","Denomination Value"
+"Sort Order","Sort Order"
+"Edit Denomination %1","Edit Denomination %1"
+"General Information","General Information"
+Back,Back
+Reset,Reset
+"Force Sign-out","Force Sign-out"
+"No POS available in this location.","No POS available in this location."
+ID,ID
+"POS Name","POS Name"
+"Operating Status","Operating Status"
+Action,Action
+Details,Details
+"There is no session in progress.","There is no session in progress."
+"Denomination was successfully deleted","Denomination was successfully deleted"
+"This denomination no longer exists.","This denomination no longer exists."
+Denomination,Denomination
+"Please correct the data sent.","Please correct the data sent."
+"A total of %1 record(s) were deleted.","A total of %1 record(s) were deleted."
+"You saved the denomination","You saved the denomination"
+"Add New Location","Add New Location"
+"Edit %1","Edit %1"
+Location,Location
+"The operations failed. Some locations are still working. You can't delete them!","The operations failed. Some locations are still working. You can't delete them!"
+"You saved the location.","You saved the location."
+"Items deleted successfully!","Items deleted successfully!"
+"This pos no longer exists.","This pos no longer exists."
+"Add New POS","Add New POS"
+"POS is still working in the session. Please close current session!","POS is still working in the session. Please close current session!"
+POS,POS
+"Manage Pos","Manage Pos"
+"You saved the POS.","You saved the POS."
+"Shift increment id is required","Shift increment id is required"
+"Staff id is required","Staff id is required"
+"Pos id is required","Pos id is required"
+"Please close your session before opening a new one","Please close your session before opening a new one"
+"This session no longer exists.","This session no longer exists."
+"Please choose one session first","Please choose one session first"
+Partial,Partial
+Full,Full
+"Cash ( For Web POS only)","Cash ( For Web POS only)"
+"Web POS - Cash On Delivery","Web POS - Cash On Delivery"
+"Web POS - Split Payments","Web POS - Split Payments"
+"Choose an Option...","Choose an Option..."
+"Product with SKU ""%1"" does not exist","Product with SKU ""%1"" does not exist"
+"Invalid product data: %1","Invalid product data: %1"
+"Database connection error","Database connection error"
+"Database deadlock found when trying to get lock","Database deadlock found when trying to get lock"
+"Database lock wait timeout exceeded","Database lock wait timeout exceeded"
+"Unable to save product","Unable to save product"
+"Invalid Coupon Code","Invalid Coupon Code"
+"Session with id ""%1"" does not exist.","Session with id ""%1"" does not exist."
+"Unable to save denomination","Unable to save denomination"
+"Please enter or select a gift code","Please enter or select a gift code"
+"Gift code ""%1"" limits the number of users","Gift code ""%1"" limits the number of users"
+"You can’t use this gift code ""%1"" since its conditions haven’t been met.","You can’t use this gift code ""%1"" since its conditions haven’t been met."
+"Gift Card ""%1"" is no longer available to use","Gift Card ""%1"" is no longer available to use"
+"Gift code ""%1"" does not exist","Gift code ""%1"" does not exist"
+"Please select a customer first.","Please select a customer first."
+"Customer does not exist","Customer does not exist"
+"Product does not exist!","Product does not exist!"
+"You did not select location","You did not select location"
+"Location with id ""%1"" does not exist.","Location with id ""%1"" does not exist."
+"Staff does not exist.","Staff does not exist."
+"Unable to save category deleted","Unable to save category deleted"
+"Unable to delete category deleted","Unable to delete category deleted"
+"Category with id ""%1"" does not exist.","Category with id ""%1"" does not exist."
+"Unable to save customer deleted","Unable to save customer deleted"
+"Unable to delete customer deleted","Unable to delete customer deleted"
+"Customer with id ""%1"" does not exist.","Customer with id ""%1"" does not exist."
+"Unable to save order deleted","Unable to save order deleted"
+"Unable to delete order deleted","Unable to delete order deleted"
+"Order with id ""%1"" does not exist.","Order with id ""%1"" does not exist."
+"Unable to delete product deleted","Unable to delete product deleted"
+"No linked stock found","No linked stock found"
+"Unable to save pos","Unable to save pos"
+"Pos with id ""%1"" does not exist.","Pos with id ""%1"" does not exist."
+"The operations failed. Some POS are still working. You can't delete them!","The operations failed. Some POS are still working. You can't delete them!"
+"Pos with id ","Pos with id "
+" does not exist."," does not exist."
+"The session does not exist.","The session does not exist."
+"There are some problem when save session!","There are some problem when save session!"
+"Invalid state change requested","Invalid state change requested"
+"The credit memo's total must be positive.","The credit memo's total must be positive."
+"We cannot register an existing credit memo.","We cannot register an existing credit memo."
+"Refund order #%1","Refund order #%1"
+Yes,Yes
+No,No
+"The invoice is not exist.","The invoice is not exist."
+"Unable to save the invoice.","Unable to save the invoice."
+"Order is not found.","Order is not found."
+"Id required","Id required"
+"Requested entity doesn't exist","Requested entity doesn't exist"
+"Can not send email","Can not send email"
+"Cannot add order comment","Cannot add order comment"
+"Cannot cancel order","Cannot cancel order"
+"Can't unhold order.","Can't unhold order."
+"Cannot delete order","Cannot delete order"
+"Cancel order #","Cancel order #"
+"Check out by credit for order #","Check out by credit for order #"
+Default,Default
+Blue,Blue
+Green,Green
+Orange,Orange
+Red,Red
+"Excluding FPT","Excluding FPT"
+"Including FPT","Including FPT"
+"All groups","All groups"
+"Please select a payment","Please select a payment"
+"All Allowed Payments","All Allowed Payments"
+"Specific Payments","Specific Payments"
+"All Allowed Shipping","All Allowed Shipping"
+"Specific Shipping","Specific Shipping"
+"Last 24 hours","Last 24 hours"
+"Last 7 days","Last 7 days"
+"Current month","Current month"
+YTD,YTD
+2YTD,2YTD
+Enabled,Enabled
+Disabled,Disabled
+"--Please Select--","--Please Select--"
+"1 min","1 min"
+"5 mins","5 mins"
+"10 mins","10 mins"
+"30 mins","30 mins"
+"60 mins","60 mins"
+Fixed,Fixed
+Percent,Percent
+"Could not save session.","Could not save session."
+"Your account is invalid. Please try again","Your account is invalid. Please try again"
+Success,Success
+"No POS available","No POS available"
+"Cannot Continue to Login !","Cannot Continue to Login !"
+"Logout Success!","Logout Success!"
+"Cannot logout!","Cannot logout!"
+"Can't retrieve access token, please get technical support.","Can't retrieve access token, please get technical support."
+"Stock is assigned to at least one POS Location could not be deleted.","Stock is assigned to at least one POS Location could not be deleted."
+"You cannot let a Stock linked to a POS Location with no assigned Source. Please choose a Source.","You cannot let a Stock linked to a POS Location with no assigned Source. Please choose a Source."
+"The Stock is already linked to a POS Location. You can assign only one Source to the Stock.","The Stock is already linked to a POS Location. You can assign only one Source to the Stock."
+"Notice that in order to assign this Stock to POS Location, one Stock can only be mapped to a Source.","Notice that in order to assign this Stock to POS Location, one Stock can only be mapped to a Source."
+"Not all of your products are available in the requested quantity.","Not all of your products are available in the requested quantity."
+Edit,Edit
+Detail,Detail
+N/A,N/A
+"Current Staff","Current Staff"
+"Type %1 is not an instance of %2","Type %1 is not an instance of %2"
+[GLOBAL],[GLOBAL]
+"Excl. Tax","Excl. Tax"
+Total,Total
+"Incl. Tax","Incl. Tax"
+"Order & Customer Information","Order & Customer Information"
+"The order confirmation email was sent","The order confirmation email was sent"
+"The order confirmation email is not sent","The order confirmation email is not sent"
+"Order # %1","Order # %1"
+"Order Date","Order Date"
+"Order Date (%1)","Order Date (%1)"
+"Order Status","Order Status"
+"Payment Status","Payment Status"
+"Delivery Date","Delivery Date"
+"Link to the New Order","Link to the New Order"
+"Link to the Previous Order","Link to the Previous Order"
+"Placed from IP","Placed from IP"
+"%1 / %2 rate:","%1 / %2 rate:"
+"Account Information","Account Information"
+"Edit Customer","Edit Customer"
+"Customer Name","Customer Name"
+Email,Email
+Phone,Phone
+"Customer Group","Customer Group"
+"Address Information","Address Information"
+"Billing Address","Billing Address"
+"Shipping Address","Shipping Address"
+"Location Name","Location Name"
+Address,Address
+View,View
+"No POS Location is associated to this Stock","No POS Location is associated to this Stock"
+"No manage stock","No manage stock"
+Cancel,Cancel
+"Cash Transactions","Cash Transactions"
+"Cash In","Cash In"
+"Cash Out","Cash Out"
+Refresh,Refresh
+Staff,Staff
+Opened,Opened
+Closed,Closed
+"Put Money In","Put Money In"
+"Take Money Out","Take Money Out"
+"Edit Closing Balance","Edit Closing Balance"
+"Opening Balance","Opening Balance"
+"Theoretical Closing Balance","Theoretical Closing Balance"
+"Real Closing Balance","Real Closing Balance"
+Difference,Difference
+Note,Note
+X-Report,X-Report
+"Close Session","Close Session"
+Validate,Validate
+Z-Report,Z-Report
+Admin,Admin
+Checkout,Checkout
+"Magestore Omnichannel","Magestore Omnichannel"
+"General Configuration","General Configuration"
+"POS Logo","POS Logo"
+"User Session Lifetime","User Session Lifetime"
+"Google API Key","Google API Key"
+Product,Product
+"Barcode Attribute","Barcode Attribute"
+"Show additional attributes on grid","Show additional attributes on grid"
+"Add out-of-stock product to cart","Add out-of-stock product to cart"
+"Need to confirm before deleting cart","Need to confirm before deleting cart"
+"Automatically send email after completing order","Automatically send email after completing order"
+"Use Custom Prefix for POS Order ID","Use Custom Prefix for POS Order ID"
+"Prefix for POS Order ID","Prefix for POS Order ID"
+"Default Guest Checkout","Default Guest Checkout"
+"Enable Guest Checkout","Enable Guest Checkout"
+"First Name","First Name"
+"Last Name","Last Name"
+"Shipping for POS","Shipping for POS"
+"Shipping Methods","Shipping Methods"
+"Enable Delivery Date","Enable Delivery Date"
+"Payment for POS","Payment for POS"
+"Tax Configuration","Tax Configuration"
+"Default Tax Class for Custom Sale","Default Tax Class for Custom Sale"
+"Price Display Settings","Price Display Settings"
+"Display product price in product list","Display product price in product list"
+"Display shipping price","Display shipping price"
+"Shopping Cart Display Settings","Shopping Cart Display Settings"
+"Display Prices","Display Prices"
+"Display Subtotal","Display Subtotal"
+"Display Shipping Amount","Display Shipping Amount"
+"Display Full Tax Summary","Display Full Tax Summary"
+"Display Zero Tax subtotal","Display Zero Tax subtotal"
+"Orders, Invoices, Credit Memos Display Settings","Orders, Invoices, Credit Memos Display Settings"
+"Fixed Product Taxes","Fixed Product Taxes"
+"Display Product Prices","Display Product Prices"
+"Include FPT in Subtotal","Include FPT in Subtotal"
+"Omni-channel Experience","Omni-channel Experience"
+"Buy at store, fulfill online","Buy at store, fulfill online"
+"Session Management","Session Management"
+"Manage Session","Manage Session"
+"Cash Control","Cash Control"
+"View session history since","View session history since"
+Synchronization,Synchronization
+"Product synchronization time","Product synchronization time"
+"Stock Item synchronization time","Stock Item synchronization time"
+"Customer synchronization time","Customer synchronization time"
+"Order synchronization time","Order synchronization time"
+"Session synchronization time","Session synchronization time"
+"Sync order history since","Sync order history since"
+"Custom receipt","Custom receipt"
+"Display reason for custom price","Display reason for custom price"
+About,About
+"Product Version","Product Version"
+"POS Enterprise","POS Enterprise"
+Modules,Modules
+Version,Version
+"WebPOS API","WebPOS API"
+"WebPOS API cache","WebPOS API cache"
+"WebPOS Search Product","WebPOS Search Product"
+"Reorganize EAV product structure to search on WebPOS","Reorganize EAV product structure to search on WebPOS"
+"Associated Pos Locations","Associated Pos Locations"
+"Fulfill Online","Fulfill Online"
+IDs,IDs
+"Closing Balance","Closing Balance"
+"Add Denomination","Add Denomination"
+"Delete items","Delete items"
+"Are you sure you want to delete selected items?","Are you sure you want to delete selected items?"
+Name,Name
+Value,Value
+Thumbnail,Thumbnail
+Type,Type
+"Attribute Set","Attribute Set"
+SKU,SKU
+Price,Price
+Visibility,Visibility
+Quantity,Quantity
+"Salable Quantity","Salable Quantity"
+Status,Status
+Websites,Websites
+"Contact Email","Contact Email"
+Telephone,Telephone
+Description,Description
+"Stock Selection","Stock Selection"
+Stock,Stock
+Street,Street
+City,City
+Country,Country
+"State or Province","State or Province"
+"Zip/Postal Code","Zip/Postal Code"
+"Add Location","Add Location"
+"Are you sure you want to do this?","Are you sure you want to do this?"
+"Add POS","Add POS"
+"Order were converted.","Order were converted."

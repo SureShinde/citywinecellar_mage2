@@ -1,0 +1,103 @@
+<tr id="row_webpos_payment_zippay_installation_guide">
+    <td class="label">
+        <label>
+            <span></span>
+        </label>
+    </td>
+    <td class="value zippay-installation-guide">
+        <h4 class="title"></h4>
+        <ul class="zippay-installation-test">
+            <li><?php echo __('Remember to <strong>Save Config</strong> before testing the API connection.');?></li>
+            <li><button type="button" id="webpos-zippay-integration-test-api"><?php echo __('Test API connection');?></button></li>
+            <li>
+                <div id="webpos-zippay-integration-test-response">
+                    <div class="loader hide"></div>
+                    <div class="success hide"><?php echo __('Success');?></div>
+                    <div class="error hide"><?php echo __('Error');?></div>
+                </div>
+            </li>
+        </ul>
+    </td>
+    <td class=""></td>
+</tr>
+<script>
+    require([
+        'jquery'
+    ], function ($) {
+        var testAPIUrl = '<?php echo $block->getTestApiUrl();?>';
+        $(document).ready(function(){
+            if ($('#webpos_payment_zippay_enable').val() !== '1') {
+                $('#row_webpos_payment_zippay_installation_guide').hide()
+            }
+
+            $('#webpos_payment_zippay_enable').change(function () {
+                $('#row_webpos_payment_zippay_installation_guide').toggle();
+            });
+
+
+            $('#webpos-zippay-integration-test-api').click(function(){
+                var apiUrl = $('#webpos_payment_zippay_api_url').val();
+                var apiKey = $('#webpos_payment_zippay_api_key').val();
+
+                $("#webpos-zippay-integration-test-response .loader").removeClass('hide');
+                $.ajax({
+                    method:'get',
+                    url: testAPIUrl + "?api_url=" + apiUrl + "&api_key=" + apiKey
+                }).complete(function( result, status) {
+                    $("#webpos-zippay-integration-test-response .loader").addClass('hide');
+                    if(status == 'success'){
+                        var response = JSON.parse(result.responseText);
+                        if(response && response.success){
+                            $("#webpos-zippay-integration-test-response .success").removeClass('hide');
+                            $("#webpos-zippay-integration-test-response .error").addClass('hide');
+                        }else{
+                            if(response && response.message){
+                                alert(response.message);
+                            }
+                            $("#webpos-zippay-integration-test-response .success").addClass('hide');
+                            $("#webpos-zippay-integration-test-response .error").removeClass('hide');
+                        }
+                    }else{
+                        alert('<?php echo __('Please check your network connection');?>');
+                    }
+                });
+            });
+        });
+    });
+</script>
+<style type="text/css">
+    .hide{
+        display: none;
+    }
+    .zippay-installation-guide h4.title{
+        padding-top:7px;
+        padding-left:0px;
+        margin-top:0px;
+        margin-left:0px;
+        font-size: 14px;
+        font-weight: 600;
+    }
+    .zippay-installation-guide ul li{
+        list-style: none;
+        margin: 5px 0px;
+    }
+    .zippay-installation-guide ol li{
+        list-style: inherit;
+    }
+    .zippay-installation-guide li .guide-content{
+        padding-left: 20px;
+    }
+    .loader {
+        border: 6px solid #f3f3f3; /* Light grey */
+        border-top: 6px solid #3498db; /* Blue */
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1.5s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+</style>

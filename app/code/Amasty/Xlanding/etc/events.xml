@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Xlanding
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="catalog_category_save_before">
+        <observer name="Amasty_Xlanding::category-before-save" instance="Amasty\Xlanding\Observer\CatalogCategorySaveBefore"/>
+    </event>
+    <event name="catalog_category_save_after">
+        <observer name="Amasty_Xlanding::category-after-save" instance="Amasty\Xlanding\Observer\CatalogCategorySaveAfter"/>
+    </event>
+    <event name="catalog_product_save_after">
+        <observer name="Amasty_Xlanding::product-after-save" instance="Amasty\Xlanding\Observer\CatalogProductSaveAfter"/>
+    </event>
+    <event name="amasty_xlanding_page_save_after">
+        <observer name="Amasty_Xlanding::page-before-after" instance="Amasty\Xlanding\Observer\PageSaveAfter"/>
+    </event>
+
+    <event name="catalog_category_delete_after">
+        <observer name="Amasty_Xlanding::category-before-save" instance="Amasty\Xlanding\Observer\CatalogCategoryDeleteAfter"/>
+    </event>
+    <event name="amasty_xlanding_page_delete_after">
+        <observer name="Amasty_Xlanding::page-before-after" instance="Amasty\Xlanding\Observer\PageDeleteAfter"/>
+    </event>
+</config>

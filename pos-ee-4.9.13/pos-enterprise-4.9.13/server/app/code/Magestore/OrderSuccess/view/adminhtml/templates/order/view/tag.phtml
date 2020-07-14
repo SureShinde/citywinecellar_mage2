@@ -1,0 +1,88 @@
+<?php
+/**
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+?>
+<tr class="tag_tr">
+    <th><?php /* @escapeNotVerified */ echo __('Tag') ?></th>
+    <td class="tag_td">
+        <select id="os_tag" class="admin__control-select tag_color" name="tag_color"
+                style="background-color: <?php echo $block->getTagOnly()?>">
+            <?php foreach ($block->getTagList() as $tag):?>
+                <?php $tagColor = ($tag['value'] != 'remove' && $tag['value'] != 'na') ? $tag['value'] : '#FFFFFF'?>
+                <option style="background-color: <?php echo $tagColor?>"
+                        value="<?php echo $tag['value']?>"
+                    <?php if($block->getTagOnly() == $tag['value']):?> selected <?php endif;?>
+                >
+                    <?php echo $tag['label']?>
+                </option>
+            <?php endforeach;?>
+        </select>
+        <div id="tag_loading" class="tag_loading"></div>
+        <div id="os_tag_list" class="os_tag_list">
+            <?php foreach ($block->getCurrentTags() as $tag):?>
+                <div style="background-color: <?php echo $tag?>;"
+                     class="admin__control-tag"
+                     title="<?php echo $block->getTagLabel($tag)?>">
+                </div>
+            <?php endforeach;?>
+        </div>
+    </td>
+</tr>
+
+<script>
+    require([
+        "jquery",
+        "uiRegistry",
+        "prototype"
+    ], function($, registry){
+        $('#os_tag').change(function() {
+           var value = $(this).val();
+           var tagColor = '#FFFFFF';
+            if(value != 'remove')
+                tagColor = value;
+            $('#os_tag').css('background-color', tagColor);
+            var url = "<?php echo $block->getUrl('ordersuccess/order_ajax/updatetag')?>";
+            var parameters = $H({
+                'order_id': '<?php echo $block->getOrderId()?>',
+                'tag': value
+            });
+            $('#tag_loading').css('display', 'block');
+            $('#os_tag_list').css('display', 'none');
+            new Ajax.Request(url, {
+                parameters: parameters,
+                loaderArea: false,
+                onSuccess: function(transport) {
+                var response = transport.responseText;
+                if (response.isJSON()) {
+                    response = response.evalJSON();
+                    var html = response.html;
+                    var error = response.error;
+                    var message = response.message;
+                    if (error == false) {
+                        $('#tag_loading').css('display', 'none');
+                        $('#os_tag_list').css('display', 'block');
+                        $('#os_tag_list').html(html);
+                        reloadTagParent();
+                    } else {
+                        $('#tag_loading').css('display', 'none');
+                        $('#os_tag_list').css('display', 'block');
+                        alert(message);
+                    }
+                }
+                }.bind(this)
+            });
+        });
+        function reloadTagParent() {
+            var gridName = 'os_needverify_listing.os_needverify_listing_data_source';
+            var params = [];
+            var target = registry.get(gridName);
+            if (target && typeof target === 'object') {
+                target.set('params.t ', Date.now());
+                }
+        };
+    });
+</script>

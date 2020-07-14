@@ -1,0 +1,99 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+?>
+<?php
+/** @var $block \Amasty\Blog\Block\Comments\Form  $block */
+
+$titleText = $block->isReply()
+    ? $block->escapeHtml(__('Leave a reply to %1', $block->getReplyToCustomerName()))
+    : $block->escapeHtml(__('Leave a comment'));
+$url = $block->getAmpFormUrl();
+?>
+
+<?php if ($block->canPost()) : ?>
+    <?php if ($block->canUserPost()) : ?>
+        <div class="amblog-amp-title -comment"><?= $block->escapeHtml($titleText); ?></div>
+
+        <?php if ($block->isCommentAdded()) : ?>
+            <p class="amblog-comment-inreview">
+                <i class="far fa-check-circle icon"></i> <?= $block->escapeHtml(__('Your message on review')); ?>
+            </p>
+        <?php endif; ?>
+        <form class="amblog-write-comment"
+              action="<?= $block->escapeUrl($url) ?>"
+              id="amblog-form-<?= $block->escapeHtml($block->getPostId()); ?>"
+              method="get"
+              target="_top">
+
+            <input type="hidden" name="secure_code" value="<?= $block->escapeHtml($block->getSecureCode()); ?>"/>
+            <input type="hidden" name="is_amp" value="1"/>
+            <input type="hidden" name="reply_to" value="<?= $block->escapeHtml($block->getReplyTo()); ?>"/>
+            <input type="hidden" name="session_id" value="<?= $block->escapeHtml($block->getSessionId()); ?>"/>
+
+            <?php if ($block->isAskName()) : ?>
+                <input type="text"
+                       name="name"
+                       placeholder="<?= $block->escapeHtml(__('John Doe')); ?>"
+                       id="name_field"
+                       title="<?= $block->escapeHtml(__('Name')); ?>"
+                       class="text amblog-amp-input"
+                       value="<?= $block->escapeHtml($block->getCustomerName()) ?>"/>
+            <?php endif; ?>
+
+            <?php if ($block->isAskEmail()) : ?>
+                <input type="email"
+                       name="email"
+                       id="email_field"
+                       placeholder="<?= $block->escapeHtml(__("john.doe@example.com")); ?>"
+                       class="text amblog-amp-input"
+                       title="<?= $block->escapeHtml(__('Email')) ?>"
+                       value="<?= $block->escapeHtml($block->getCustomerEmail()); ?>"/>
+                <?php if ($block->isLoggedIn()) : ?>
+                    <input type="hidden" name="customer_id" value="<?= $block->escapeHtml($block->getCustomerId()); ?>"/>
+                <?php endif; ?>
+            <?php endif; ?>
+
+            <?php $placeholder = $block->isReply() ? __('Leave your reply here...') : __('Leave your comment here...'); ?>
+            <textarea name="message"
+                      class="amblog-amp-input -textarea"
+                      id="message_field"
+                      placeholder="<?= $block->escapeHtml($placeholder); ?>">
+            </textarea>
+
+            <?php if ($block->isGdprEnabled()) :
+                $randId = random_int(0, 10000);
+                ?>
+                <div class="gdprText">
+                    <input type="checkbox" class="gdpr_agree" id="gdpr_agree<?= (int)$randId ?>" required>
+                    <label for="gdpr_agree<?= (int)$randId; ?>"><?= /* @noEscape */ $block->getGdprText(); ?></label>
+                </div>
+            <?php endif; ?>
+
+            <button class="amblog-amp-action" id="amblog_submit_comment" type="submit">
+                <?= $block->escapeHtml(__("Submit")); ?>
+            </button>
+        </form>
+
+    <?php else : ?>
+        <p>
+            <?= $block->escapeHtml(__("Please ")); ?>
+            <a href="<?= $block->escapeUrl($block->getLoginUrl()); ?>">
+                <?= $block->escapeHtml(__("login")); ?>
+            </a>
+            <?= $block->escapeHtml(($block->isReply() ? __(" to reply.") : __(" to comment."))); ?>
+        </p>
+        <p><?= $block->escapeHtml(__("Don't have an account?")); ?></p>
+        <p>
+            <a href="<?= $block->escapeUrl($block->getRegisterUrl()); ?>">
+                <?= $block->escapeHtml(__("Sign Up for free")); ?>
+            </a>.
+        </p>
+    <?php endif; ?>
+<?php else : ?>
+    <p><?= $block->escapeHtml(__('New comments for this post are not allowed')); ?></p>
+<?php endif; ?>
+

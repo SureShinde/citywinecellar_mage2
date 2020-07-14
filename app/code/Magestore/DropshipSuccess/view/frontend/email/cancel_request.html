@@ -1,0 +1,18 @@
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+<!--@subject {{trans "Dropship request was canceled"}} @-->
+<!--@vars {
+"var url":"Supplier Url"
+"var id":"Request ID"
+} @-->
+
+{{template config_path="design/email/header_template"}}
+
+<p class="greeting">{{trans 'Dropship request <a href="%supplier_url">#%request_id</a>  has been canceled' request_id=$id supplier_url=$url|raw}}</p>
+<p>
+    {{trans 'Please sign in to <a href="%supplier_url">Your Account</a> to get more information' supplier_url=$url|raw}}
+</p>
+
+{{template config_path="design/email/footer_template"}}

@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+
+<!--
+  ~ Copyright © 2018 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="webpos">
+            <group id="payment">
+                <group id="cashforpos" translate="label" sortOrder="2" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Cash</label>
+                    <field id="active" translate="label" sortOrder="5" type="select" showInDefault="1" showInWebsite="0" showInStore="0">
+                        <label>Enabled</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+                    <field id="title" translate="label" sortOrder="10" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+                        <label>Title</label>
+                        <depends>
+                            <field id="*/*/*/active">1</field>
+                        </depends>
+                    </field>
+                    <field id="sort_order" translate="label" sortOrder="15" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+                        <label>Sort Order</label>
+                        <depends>
+                            <field id="*/*/*/active">1</field>
+                        </depends>
+                    </field>
+                </group>
+                <!--<group id="codforpos" translate="label" sortOrder="3" type="text" showInDefault="1" showInWebsite="0" showInStore="0">-->
+                    <!--<label>Pay Later</label>-->
+                    <!--<field id="active" translate="label" sortOrder="1" type="select" showInDefault="1" showInWebsite="0" showInStore="0">-->
+                        <!--<label>Enabled</label>-->
+                        <!--<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>-->
+                    <!--</field>-->
+                    <!--<field id="title" translate="label" sortOrder="2" type="text" showInDefault="1" showInWebsite="0" showInStore="0">-->
+                        <!--<label>Title</label>-->
+                        <!--<depends>-->
+                            <!--<field id="*/*/*/active">1</field>-->
+                        <!--</depends>-->
+                    <!--</field>-->
+                    <!--<field id="use_reference_number" translate="label" sortOrder="3" type="select" showInDefault="1" showInWebsite="0" showInStore="0">-->
+                        <!--<label>Use Reference Number</label>-->
+                        <!--<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>-->
+                        <!--<depends>-->
+                            <!--<field id="*/*/*/active">1</field>-->
+                        <!--</depends>-->
+                    <!--</field>-->
+                    <!--<field id="pay_later" translate="label" sortOrder="5" type="select" showInDefault="1" showInWebsite="0" showInStore="0">-->
+                        <!--<label>Allow Paying Later</label>-->
+                        <!--<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>-->
+                        <!--<depends>-->
+                            <!--<field id="*/*/*/active">1</field>-->
+                        <!--</depends>-->
+                    <!--</field>-->
+                    <!--<field id="is_suggest_money" translate="label" sortOrder="6" type="select" showInDefault="1" showInWebsite="0" showInStore="0">-->
+                        <!--<label>Suggest money</label>-->
+                        <!--<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>-->
+                        <!--<depends>-->
+                            <!--<field id="*/*/*/active">1</field>-->
+                        <!--</depends>-->
+                    <!--</field>-->
+                    <!--<field id="can_due" translate="label" sortOrder="7" type="select" showInDefault="1" showInWebsite="0" showInStore="0">-->
+                        <!--<label>Can due</label>-->
+                        <!--<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>-->
+                        <!--<depends>-->
+                            <!--<field id="*/*/*/active">1</field>-->
+                        <!--</depends>-->
+                    <!--</field>-->
+                <!--</group>-->
+                <group id="ccforpos" translate="label" sortOrder="4" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Credit Card</label>
+                    <field id="active" translate="label" sortOrder="1" type="select" showInDefault="1" showInWebsite="0" showInStore="0">
+                        <label>Enabled</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+                    <field id="title" translate="label" sortOrder="5" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+                        <label>Title</label>
+                        <depends>
+                            <field id="*/*/*/active">1</field>
+                        </depends>
+                    </field>
+                    <field id="sort_order" translate="label" sortOrder="10" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+                        <label>Sort Order</label>
+                        <depends>
+                            <field id="*/*/*/active">1</field>
+                        </depends>
+                    </field>
+                </group>
+            </group>
+        </section>
+    </system>
+</config>

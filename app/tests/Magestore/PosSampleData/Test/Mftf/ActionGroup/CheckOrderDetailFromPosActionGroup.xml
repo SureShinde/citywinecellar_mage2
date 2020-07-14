@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright © 2019 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  ~
+  -->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="CheckOrderDetailFromPosActionGroup">
+        <arguments>
+            <argument name="orderId" defaultValue="" type="string"/>
+            <argument name="status" defaultValue="" type="string"/>
+        </arguments>
+        <amOnPage url="{{PosOrderHistoryPage.url}}" stepKey="navigateToPosOrderHistory"/>
+
+        <waitForElementVisible selector="{{OrderListSection.firstItem}}" time="30" stepKey="waitFirstOrderShow" />
+
+        <fillField selector="{{OrderListSection.inputSearch}}" userInput="{{orderId}}" stepKey="searchOrder" />
+        <wait time="3" stepKey="loadSearch"/>
+        <waitForElementVisible selector="{{OrderListSection.firstItem}}" time="30" stepKey="waitFirstOrderShowAfterSearch" />
+
+        <click selector="{{OrderListSection.firstItem}}" stepKey="clickOnFirstOrder"/>
+        <wait time="2" stepKey="loadOrder"/>
+        <waitForElementVisible selector="{{OrderDetailSection.orderId(orderId)}}" time="30" stepKey="waitShowOrderDetail" />
+        <see stepKey="seeOrderStatus" selector="{{OrderDetailSection.orderStatus}}" userInput="{{status}}" />
+    </actionGroup>
+</actionGroups>

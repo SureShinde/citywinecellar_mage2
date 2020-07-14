@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="AddProductAndCharge">
+        <arguments>
+            <argument name="dataProduct" defaultValue=""/>
+        </arguments>
+
+        <!-- Clear cart -->
+        <click selector="{{CartSection.clearCartButton}}" stepKey="clickClearCart"/>
+
+        <!-- Search and add product to cart -->
+        <fillField stepKey="fillProductSearchBox" selector="{{ProductListSection.searchBox}}" userInput="{{dataProduct.sku}}"/>
+        <wait time="3" stepKey="waitThreeSecond"/>
+        <waitForElementVisible  time="120" selector="{{ProductListSection.firstProduct}}"  stepKey="seeAtLeaseOneProductAfterSearch"/>
+        <click stepKey="clickOnProductFoundInList" selector="{{ProductListSection.firstProduct}}"/>
+
+        <waitForElementVisible selector="{{CartSection.productFoundOnCartByName(dataProduct.name)}}" time="120" stepKey="waitProductIsAddedToCartSuccessfully"/>
+
+        <click selector="{{CartSection.chargeButton}}" stepKey="clickChargeButton" />
+        <wait time="2" stepKey="waitAfterClickCharge"/>
+    </actionGroup>
+</actionGroups>

@@ -1,0 +1,23 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+?>
+<script>
+    require([
+        'jquery',
+    ], function($) {
+        require([
+            'Amasty_Blog/js/tag-it'
+        ], function() {
+            $( document ).ready(function() {
+                $("#posts_tags").tagit({
+                    availableTags: <?= \Zend_Json::encode($block->getTagsNamesArray())?>
+                });
+                $("#posts_tags").data("ui-tagit").tagInput.addClass("fancy");
+            });
+        });
+    });
+</script>

@@ -1,0 +1,62 @@
+<?php
+/**
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */ /** @var Magestore\FulfilReport\Block\Adminhtml\Report\Dashboard $block */ ?>
+
+<?php
+$carriers = $block->getOrderCollectionByCarrier();
+?>
+<script type="text/javascript">
+    require([
+        "jquery",
+        "Magestore_FulfilReport/js/chart/highcharts",
+        "Magestore_FulfilReport/js/chart/data",
+        "Magestore_FulfilReport/js/chart/exporting"
+    ], function ($) {
+        Highcharts.chart('container-carrier', {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: 0,
+                plotShadow: false
+            },
+            title: {
+                text: '<?php echo __('All<br>carriers<br>') ?><?php echo count($carriers) ?>',
+                align: 'center',
+                verticalAlign: 'middle',
+                y: 10
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            plotOptions: {
+                pie: {
+                    dataLabels: {
+                        enabled: true,
+                        distance: -50,
+                        style: {
+                            fontWeight: 'bold',
+                            color: 'white'
+                        }
+                    },
+                    startAngle: -180,
+                    endAngle: 180,
+                    center: ['50%', '55%']
+                }
+            },
+            series: [{
+                type: 'pie',
+                name: 'Percentage',
+                innerSize: '50%',
+                data: [
+                    <?php
+                    foreach ($carriers as $v => $k) {
+                        echo "['" . $v . "', " . $k . "],";
+                    }
+                    ?>
+                ]
+            }]
+        });
+    });
+
+</script>

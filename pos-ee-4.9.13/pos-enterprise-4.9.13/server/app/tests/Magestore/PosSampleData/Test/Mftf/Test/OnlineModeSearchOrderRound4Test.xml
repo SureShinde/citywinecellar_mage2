@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+
+    <!-- 1 result tests-->
+    <test name="OnlineModeSearchOrderByIncrementIdGetting1ResultR4">
+        <annotations>
+            <features value="Online mode: Search order"/>
+            <stories value="Online mode: Search order"/>
+            <title value="Online mode: Search order by increment Id and Get 1 result (R4)"/>
+            <description value="Online mode: Search order by increment Id and Get 1 result (R4)"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="Stable-Online"/>
+            <group value="Stable-Online-Order"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <amOnPage url="{{PosOrderHistoryPage.url}}" stepKey="navigateToPosOrderHistory"/>
+        </before>
+
+        <actionGroup ref="SearchOrderAndCountResultActionGroup" stepKey="searchOrder">
+            <argument name="keyword" value="pos_stable_order_1_result.keyword_increment_id"/>
+            <argument name="numberOrders" value="pos_stable_order_1_result.numberOrders"/>
+        </actionGroup>
+    </test>
+
+    <test name="OnlineModeSearchOrderByFirstNameGetting1ResultR4">
+        <annotations>
+            <features value="Online mode: Search order"/>
+            <stories value="Online mode: Search order"/>
+            <title value="Online mode: Search order by first name and Get 1 result (R4)"/>
+            <description value="Online mode: Search order by first name and Get 1 result (R4)"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="Stable-Online"/>
+            <group value="Stable-Online-Order"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <amOnPage url="{{PosOrderHistoryPage.url}}" stepKey="navigateToPosOrderHistory"/>
+        </before>
+
+        <actionGroup ref="SearchOrderAndCountResultActionGroup" stepKey="searchOrder">
+            <argument name="keyword" value="pos_stable_order_1_result.keyword_firstname"/>
+            <argument name="numberOrders" value="pos_stable_order_1_result.numberOrders"/>
+        </actionGroup>
+    </test>
+
+    <test name="OnlineModeSearchOrderByLastNameGetting1ResultR4">
+        <annotations>
+            <features value="Online mode: Search order"/>
+            <stories value="Online mode: Search order"/>
+            <title value="Online mode: Search order by last name and Get 1 result (R4)"/>
+            <description value="Online mode: Search order by last name and Get 1 result (R4)"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="Stable-Online"/>
+            <group value="Stable-Online-Order"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <amOnPage url="{{PosOrderHistoryPage.url}}" stepKey="navigateToPosOrderHistory"/>
+        </before>
+
+        <actionGroup ref="SearchOrderAndCountResultActionGroup" stepKey="searchOrder">
+            <argument name="keyword" value="pos_stable_order_1_result.keyword_lastname"/>
+            <argument name="numberOrders" value="pos_stable_order_1_result.numberOrders"/>
+        </actionGroup>
+    </test>
+
+    <test name="OnlineModeSearchOrderByEmailGetting1ResultR4">
+        <annotations>
+            <features value="Online mode: Search order"/>
+            <stories value="Online mode: Search order"/>
+            <title value="Online mode: Search order by email and Get 1 result (R4)"/>
+            <description value="Online mode: Search order by email and Get 1 result (R4)"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="Stable-Online"/>
+            <group value="Stable-Online-Order"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <amOnPage url="{{PosOrderHistoryPage.url}}" stepKey="navigateToPosOrderHistory"/>
+        </before>
+
+        <actionGroup ref="SearchOrderAndCountResultActionGroup" stepKey="searchOrder">
+            <argument name="keyword" value="pos_stable_order_1_result.keyword_email"/>
+            <argument name="numberOrders" value="pos_stable_order_1_result.numberOrders"/>
+        </actionGroup>
+    </test>
+
+    <test name="OnlineModeSearchOrderByTelephoneGetting1ResultR4">
+        <annotations>
+            <features value="Online mode: Search order"/>
+            <stories value="Online mode: Search order"/>
+            <title value="Online mode: Search order by telephone and Get 1 result (R4)"/>
+            <description value="Online mode: Search order by telephone and Get 1 result (R4)"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="Stable-Online"/>
+            <group value="Stable-Online-Order"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <amOnPage url="{{PosOrderHistoryPage.url}}" stepKey="navigateToPosOrderHistory"/>
+        </before>
+
+        <actionGroup ref="SearchOrderAndCountResultActionGroup" stepKey="searchOrder">
+            <argument name="keyword" value="pos_stable_order_1_result.keyword_telephone"/>
+            <argument name="numberOrders" value="pos_stable_order_1_result.numberOrders"/>
+        </actionGroup>
+    </test>
+
+    <test name="OnlineModeSearchOrderByPaymentGetting1ResultR4">
+        <annotations>
+            <features value="Online mode: Search order"/>
+            <stories value="Online mode: Search order"/>
+            <title value="Online mode: Search order by payment and Get 1 result (R4)"/>
+            <description value="Online mode: Search order by payment and Get 1 result (R4)"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="Stable-Online"/>
+            <group value="Stable-Online-Order"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <amOnPage url="{{PosOrderHistoryPage.url}}" stepKey="navigateToPosOrderHistory"/>
+        </before>
+
+        <actionGroup ref="SearchOrderAndCountResultActionGroup" stepKey="searchOrder">
+            <argument name="keyword" value="pos_stable_order_1_result.keyword_payment_reference_number"/>
+            <argument name="numberOrders" value="pos_stable_order_1_result.numberOrders"/>
+        </actionGroup>
+    </test>
+    <!-- End: 1 result tests-->
+
+    <!-- 4 results tests-->
+    <test name="OnlineModeSearchOrderByIncrementIdGetting4ResultsR4">
+        <annotations>
+            <features value="Online mode: Search order"/>
+            <stories value="Online mode: Search order"/>
+            <title value="Online mode: Search order by increment Id and Get 4 results (R4)"/>
+            <description value="Online mode: Search order by increment Id and Get 4 results (R4)"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="Stable-Online"/>
+            <group value="Stable-Online-Order"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <amOnPage url="{{PosOrderHistoryPage.url}}" stepKey="navigateToPosOrderHistory"/>
+        </before>
+
+        <actionGroup ref="SearchOrderAndCountResultActionGroup" stepKey="searchOrder">
+            <argument name="keyword" value="pos_stable_order_4_results.keyword_increment_id"/>
+            <argument name="numberOrders" value="pos_stable_order_4_results.numberOrders"/>
+        </actionGroup>
+    </test>
+
+    <test name="OnlineModeSearchOrderByFirstNameGetting4ResultsR4">
+        <annotations>
+            <features value="Online mode: Search order"/>
+            <stories value="Online mode: Search order"/>
+            <title value="Online mode: Search order by first name and Get 4 results (R4)"/>
+            <description value="Online mode: Search order by first name and Get 4 results (R4)"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="Stable-Online"/>
+            <group value="Stable-Online-Order"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <amOnPage url="{{PosOrderHistoryPage.url}}" stepKey="navigateToPosOrderHistory"/>
+        </before>
+
+        <actionGroup ref="SearchOrderAndCountResultActionGroup" stepKey="searchOrder">
+            <argument name="keyword" value="pos_stable_order_4_results.keyword_firstname"/>
+            <argument name="numberOrders" value="pos_stable_order_4_results.numberOrders"/>
+        </actionGroup>
+    </test>
+
+    <test name="OnlineModeSearchOrderByLastNameGetting4ResultsR4">
+        <annotations>
+            <features value="Online mode: Search order"/>
+            <stories value="Online mode: Search order"/>
+            <title value="Online mode: Search order by last name and Get 4 results (R4)"/>
+            <description value="Online mode: Search order by last name and Get 4 results (R4)"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="Stable-Online"/>
+            <group value="Stable-Online-Order"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <amOnPage url="{{PosOrderHistoryPage.url}}" stepKey="navigateToPosOrderHistory"/>
+        </before>
+
+        <actionGroup ref="SearchOrderAndCountResultActionGroup" stepKey="searchOrder">
+            <argument name="keyword" value="pos_stable_order_4_results.keyword_lastname"/>
+            <argument name="numberOrders" value="pos_stable_order_4_results.numberOrders"/>
+        </actionGroup>
+    </test>
+
+    <test name="OnlineModeSearchOrderByEmailGetting4ResultsR4">
+        <annotations>
+            <features value="Online mode: Search order"/>
+            <stories value="Online mode: Search order"/>
+            <title value="Online mode: Search order by email and Get 4 results (R4)"/>
+            <description value="Online mode: Search order by email and Get 4 results (R4)"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="Stable-Online"/>
+            <group value="Stable-Online-Order"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <amOnPage url="{{PosOrderHistoryPage.url}}" stepKey="navigateToPosOrderHistory"/>
+        </before>
+
+        <actionGroup ref="SearchOrderAndCountResultActionGroup" stepKey="searchOrder">
+            <argument name="keyword" value="pos_stable_order_4_results.keyword_email"/>
+            <argument name="numberOrders" value="pos_stable_order_4_results.numberOrders"/>
+        </actionGroup>
+    </test>
+
+    <test name="OnlineModeSearchOrderByTelephoneGetting4ResultsR4">
+        <annotations>
+            <features value="Online mode: Search order"/>
+            <stories value="Online mode: Search order"/>
+            <title value="Online mode: Search order by telephone and Get 4 results (R4)"/>
+            <description value="Online mode: Search order by telephone and Get 4 results (R4)"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="Stable-Online"/>
+            <group value="Stable-Online-Order"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <amOnPage url="{{PosOrderHistoryPage.url}}" stepKey="navigateToPosOrderHistory"/>
+        </before>
+
+        <actionGroup ref="SearchOrderAndCountResultActionGroup" stepKey="searchOrder">
+            <argument name="keyword" value="pos_stable_order_4_results.keyword_telephone"/>
+            <argument name="numberOrders" value="pos_stable_order_4_results.numberOrders"/>
+        </actionGroup>
+    </test>
+
+    <test name="OnlineModeSearchOrderByPaymentGetting4ResultsR4">
+        <annotations>
+            <features value="Online mode: Search order"/>
+            <stories value="Online mode: Search order"/>
+            <title value="Online mode: Search order by payment and Get 4 results (R4)"/>
+            <description value="Online mode: Search order by payment and Get 4 results (R4)"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="Stable-Online"/>
+            <group value="Stable-Online-Order"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <amOnPage url="{{PosOrderHistoryPage.url}}" stepKey="navigateToPosOrderHistory"/>
+        </before>
+
+        <actionGroup ref="SearchOrderAndCountResultActionGroup" stepKey="searchOrder">
+            <argument name="keyword" value="pos_stable_order_4_results.keyword_payment_reference_number"/>
+            <argument name="numberOrders" value="pos_stable_order_4_results.numberOrders"/>
+        </actionGroup>
+    </test>
+    <!-- End: 4 results tests-->
+
+    <!-- 11 results tests-->
+    <test name="OnlineModeSearchOrderByIncrementIdGetting11ResultsR4">
+        <annotations>
+            <features value="Online mode: Search order"/>
+            <stories value="Online mode: Search order"/>
+            <title value="Online mode: Search order by increment Id and Get 11 results (R4)"/>
+            <description value="Online mode: Search order by increment Id and Get 11 results (R4)"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="Stable-Online"/>
+            <group value="Stable-Online-Order"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <amOnPage url="{{PosOrderHistoryPage.url}}" stepKey="navigateToPosOrderHistory"/>
+        </before>
+
+        <actionGroup ref="SearchOrderAndCountResultMultiPagesActionGroup" stepKey="searchOrder">
+            <argument name="keyword" value="pos_stable_order_11_results.keyword_increment_id"/>
+            <argument name="numberOrders" value="pos_stable_order_11_results.numberOrders"/>
+        </actionGroup>
+    </test>
+
+    <test name="OnlineModeSearchOrderByFirstNameGetting11ResultsR4">
+        <annotations>
+            <features value="Online mode: Search order"/>
+            <stories value="Online mode: Search order"/>
+            <title value="Online mode: Search order by first name and Get 11 results (R4)"/>
+            <description value="Online mode: Search order by first name and Get 11 results (R4)"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="Stable-Online"/>
+            <group value="Stable-Online-Order"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <amOnPage url="{{PosOrderHistoryPage.url}}" stepKey="navigateToPosOrderHistory"/>
+        </before>
+
+        <actionGroup ref="SearchOrderAndCountResultMultiPagesActionGroup" stepKey="searchOrder">
+            <argument name="keyword" value="pos_stable_order_11_results.keyword_firstname"/>
+            <argument name="numberOrders" value="pos_stable_order_11_results.numberOrders"/>
+        </actionGroup>
+    </test>
+
+    <test name="OnlineModeSearchOrderByLastNameGetting11ResultsR4">
+        <annotations>
+            <features value="Online mode: Search order"/>
+            <stories value="Online mode: Search order"/>
+            <title value="Online mode: Search order by last name and Get 11 results (R4)"/>
+            <description value="Online mode: Search order by last name and Get 11 results (R4)"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="Stable-Online"/>
+            <group value="Stable-Online-Order"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <amOnPage url="{{PosOrderHistoryPage.url}}" stepKey="navigateToPosOrderHistory"/>
+        </before>
+
+        <actionGroup ref="SearchOrderAndCountResultMultiPagesActionGroup" stepKey="searchOrder">
+            <argument name="keyword" value="pos_stable_order_11_results.keyword_lastname"/>
+            <argument name="numberOrders" value="pos_stable_order_11_results.numberOrders"/>
+        </actionGroup>
+    </test>
+
+    <test name="OnlineModeSearchOrderByEmailGetting11ResultsR4">
+        <annotations>
+            <features value="Online mode: Search order"/>
+            <stories value="Online mode: Search order"/>
+            <title value="Online mode: Search order by email and Get 11 results (R4)"/>
+            <description value="Online mode: Search order by email and Get 11 results (R4)"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="Stable-Online"/>
+            <group value="Stable-Online-Order"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <amOnPage url="{{PosOrderHistoryPage.url}}" stepKey="navigateToPosOrderHistory"/>
+        </before>
+
+        <actionGroup ref="SearchOrderAndCountResultMultiPagesActionGroup" stepKey="searchOrder">
+            <argument name="keyword" value="pos_stable_order_11_results.keyword_email"/>
+            <argument name="numberOrders" value="pos_stable_order_11_results.numberOrders"/>
+        </actionGroup>
+    </test>
+
+    <test name="OnlineModeSearchOrderByTelephoneGetting11ResultsR4">
+        <annotations>
+            <features value="Online mode: Search order"/>
+            <stories value="Online mode: Search order"/>
+            <title value="Online mode: Search order by telephone and Get 11 results (R4)"/>
+            <description value="Online mode: Search order by telephone and Get 11 results (R4)"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="Stable-Online"/>
+            <group value="Stable-Online-Order"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <amOnPage url="{{PosOrderHistoryPage.url}}" stepKey="navigateToPosOrderHistory"/>
+        </before>
+
+        <actionGroup ref="SearchOrderAndCountResultMultiPagesActionGroup" stepKey="searchOrder">
+            <argument name="keyword" value="pos_stable_order_11_results.keyword_telephone"/>
+            <argument name="numberOrders" value="pos_stable_order_11_results.numberOrders"/>
+        </actionGroup>
+    </test>
+
+    <test name="OnlineModeSearchOrderByPaymentGetting11ResultsR4">
+        <annotations>
+            <features value="Online mode: Search order"/>
+            <stories value="Online mode: Search order"/>
+            <title value="Online mode: Search order by payment and Get 11 results (R4)"/>
+            <description value="Online mode: Search order by payment and Get 11 results (R4)"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="Stable-Online"/>
+            <group value="Stable-Online-Order"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <amOnPage url="{{PosOrderHistoryPage.url}}" stepKey="navigateToPosOrderHistory"/>
+        </before>
+
+        <actionGroup ref="SearchOrderAndCountResultMultiPagesActionGroup" stepKey="searchOrder">
+            <argument name="keyword" value="pos_stable_order_11_results.keyword_payment_reference_number"/>
+            <argument name="numberOrders" value="pos_stable_order_11_results.numberOrders"/>
+        </actionGroup>
+    </test>
+    <!-- End: 11 results tests-->
+</tests>

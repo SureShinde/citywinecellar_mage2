@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<body>
+<form action="<?php echo $block->getUrl('migratedata/migratedata_supplierproduct/migrate'); ?>" method="post"
+      enctype="multipart/form-data">
+    Select supplier product data to upload:
+    <input type="file" name="migrate_supplier_product" id="migrate_supplier_product">
+    <input type="hidden" name="form_key" value="<?php echo $block->getFormKey(); ?>"
+    <button type="submit">
+
+    </button>
+    <button id="start" title="Submit" type="submit" class="action- scalable save primary"
+            data-ui-id="start-button">
+        <span>Submit</span>
+    </button>
+</form>
+</body>
+</html>

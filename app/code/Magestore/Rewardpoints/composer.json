@@ -1,0 +1,14 @@
+{
+    "name": "magestore/rewardpoints-magento2",
+    "description": "N/A",
+    "type": "magento2-module",
+    "version": "1.2.2.1",
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Magestore\\RewardPoints\\": ""
+        }
+    }
+}

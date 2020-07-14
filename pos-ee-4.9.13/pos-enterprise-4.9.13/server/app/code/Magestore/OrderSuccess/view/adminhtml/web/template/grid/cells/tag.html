@@ -1,0 +1,11 @@
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+<div data-bind="foreach:$col.getLabel($row())">
+    <div style="width: 7px; height: 20px; float:left; margin-left:4px; border-radius: 3px; margin-top:2px;"
+         data-bind="style:{'background-color': value},
+                    attr:{title: label}"
+         class="admin__control-note">
+    </div>
+</div>

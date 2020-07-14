@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_PromoBanners
+ */
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="ampromobanners" translate="label" type="text" sortOrder="161802" showInDefault="1" showInWebsite="1" showInStore="1">
+            <class>separator-top</class>
+            <label>Promo Banners</label>
+            <tab>amasty</tab>
+            <resource>Amasty_PromoBanners::config</resource>
+            <group id="general" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>General Settings</label>
+                <field id="single_per_position" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>In case several banners are active for one position</label>
+                    <source_model>Amasty\PromoBanners\Model\Source\Options</source_model>
+                </field>
+                <field id="product_container" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Product collection container selector</label>
+                </field>
+                <field id="product_item" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Product container selector</label>
+                </field>
+                <field id="max_banner_width" translate="label comment" sortOrder="20" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Category page width (in products)</label>
+                    <comment>Used as a limit for 'Among Category Products' banner position</comment>
+                    <validate>validate-number validate-zero-or-greater</validate>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

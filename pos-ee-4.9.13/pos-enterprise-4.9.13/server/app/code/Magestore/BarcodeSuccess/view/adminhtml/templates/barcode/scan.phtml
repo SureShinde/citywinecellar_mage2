@@ -1,0 +1,117 @@
+<?php
+/**
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+/** @var $block \Magestore\BarcodeSuccess\Block\Barcode\Container\Scan */
+$widget = $block->getWidgetInitData();
+?>
+<div id="barcode-scan-container">
+    <div class="search-container">
+        <div class="search-field _active">
+            <label class="search-title"><?php echo __('Scan Barcode'); ?></label>
+            <label class="search-label" for="search"></label>
+            <input type="hidden" name="query" value="">
+            <div class="mage-suggest">
+                <div class="mage-suggest-inner">
+                    <input type="text" class="search-input" id="os_barcode_scan" autocomplete="off">
+                </div>
+            </div>
+            <button type="submit" class="search-action" title="Search"></button>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div id="detailContainer">
+        <?php
+        if ($block->hasPanels()):
+            $panels = $block->getPanels();
+            ?>
+            <?php foreach ($panels as $panel): ?>
+            <div class="os_panel">
+                <div class="header">
+                    <label><?php echo (isset($panel['label'])) ? __($panel['label']) : ''; ?></label>
+                    <div class="buttons">
+                        <?php
+                        if (isset($panel['buttons']) && count($panel['buttons']) > 0):
+                            usort($panel['buttons'], function($a, $b){
+                                $a["sortOrder"] = (isset($a["sortOrder"]))?$a["sortOrder"]:0;
+                                $b["sortOrder"] = (isset($b["sortOrder"]))?$b["sortOrder"]:0;
+                                return $a["sortOrder"] > $b["sortOrder"];
+                            });
+                            foreach ($panel['buttons'] as $button):
+                                if(isset($button['type']) && $button['type'] == 'button'){
+                                ?>
+                                <button data-role="action"
+                                        data-key="<?php echo (isset($button['action']['function'])) ? $button['action']['function'] : ''; ?>"
+                                        data-type="<?php echo (isset($button['action']['event'])) ? $button['action']['event'] : ''; ?>"
+                                        class="primary">
+                                    <?php echo (isset($button['label'])) ? __($button['label']) : ''; ?>
+                                </button>
+                                <?php
+                                }
+                                if(isset($button['type']) && $button['type'] == 'text'){
+                                ?>
+                                <input
+                                    class="admin__control-text"
+                                    onfocus="this.select()"
+                                    data-role="action"
+                                    data-key="<?php echo (isset($button['action']['function'])) ? $button['action']['function'] : ''; ?>"
+                                    data-type="<?php echo (isset($button['action']['event'])) ? $button['action']['event'] : ''; ?>"
+                                    placeholder="<?php echo (isset($button['label'])) ? __($button['label']) : ''; ?>"/>
+                                <?php
+                                }
+                                if(isset($button['type']) && $button['type'] == 'select'){
+                                ?>
+                                <select
+                                    class="admin__control-select"
+                                    data-role="action"
+                                    data-key="<?php echo (isset($button['action']['function'])) ? $button['action']['function'] : ''; ?>"
+                                    data-type="<?php echo (isset($button['action']['event'])) ? $button['action']['event'] : ''; ?>"
+                                    data-options="<?php echo (isset($button['options']))?$button['options']:"";?>">
+                                </select>
+                                <?php
+                                }
+                            endforeach;
+                        endif;
+                        ?>
+                    </div>
+                </div>
+                <ul class="content">
+                    <?php
+                    if (isset($panel['fields']) && count($panel['fields']) > 0):
+                        foreach ($panel['fields'] as $key => $data):
+                            ?>
+                            <li class="item">
+                                <label><?php echo (isset($data['label'])) ? __($data['label']) : ''; ?></label>
+                                <?php if (isset($data['render']) && $data['render'] == 'image') { ?>
+                                    <span class="value">
+                                        <img data-role="data" data-key="<?php echo $key; ?>" data-type="image"/>
+                                    </span>
+                                <?php } elseif (isset($data['render']) && $data['render'] == 'warehouses_stock') { ?>
+                                    <span data-role="data" data-key="<?php echo $key; ?>" data-type="warehouses_stock"
+                                          class="value"></span>
+                                <?php } else { ?>
+                                    <span data-role="data" data-key="<?php echo $key; ?>" data-type="text"
+                                          class="value"></span>
+                                <?php } ?>
+                                <div class="clear"></div>
+                            </li>
+                            <?php
+                        endforeach;
+                    endif;
+                    ?>
+                </ul>
+            </div>
+        <?php endforeach; ?>
+        <?php endif; ?>
+    </div>
+</div>
+<script type="text/x-magento-init">
+    {
+        "#barcode-scan-container": <?php echo $widget; ?>
+    }
+
+</script>

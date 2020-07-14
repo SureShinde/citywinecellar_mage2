@@ -1,0 +1,22 @@
+<?php
+/**
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/** @var \Magestore\FulfilSuccess\Block\Adminhtml\PackRequest\Detail\PackedPackages $block */ ?>
+<section class="admin__page-section">
+    <div class="admin__page-section-title">
+        <span class="title"><?php /* @escapeNotVerified */
+            echo __('Packages') ?></span>
+    </div>
+    <div class="admin__page-section-content">
+        <?php $i = 0; ?>
+        <?php foreach ($block->getPackages() as $package): ?>
+            <div class="package-<?php echo $i % 2 == 0 ? 'even' : 'odd' ?>">
+                <?php echo $block->getLayout()->createBlock('Magestore\FulfilSuccess\Block\Adminhtml\Package\PackageDetail', 'package_detail' . $package->getPackageId())->setData('package_id', $package->getPackageId())->toHtml(); ?>
+            </div>
+            <?php $i++; ?>
+        <?php endforeach; ?>
+    </div>
+</section>

@@ -1,0 +1,162 @@
+.amblog-left-wrapper {
+    width: 31%;
+    display: inline-block;
+    margin-right: 3%;
+}
+
+.modal-slide .admin__form-field .action-close {
+    padding: 0;
+}
+
+.modal-popup .admin__form-field .action-close:before, .modal-slide .admin__form-field .action-close:before {
+    font-size: inherit;
+}
+
+.amblog-content-wrapper {
+    width: 64%;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.amblog-left-wrapper .fieldset-wrapper {
+    border: 1px solid #e3e3e3;
+    padding: 0 40px;
+    background: #f8f8f8;
+    margin-bottom: 40px;
+}
+
+.amblog-options-wrapper,
+.amblog-meta-wrapper,
+.amblog-status-wrapper {
+    padding: 0 40px;
+}
+
+.amblog-left-wrapper .fieldset-wrapper-title,
+.amblog-content-wrapper .fieldset-wrapper-title {
+    padding: 30px 0 10px;
+}
+
+.amblog-left-wrapper .admin__fieldset > .admin__field > .admin__field-label,
+.amblog-content-wrapper .admin__fieldset > .admin__field > .admin__field-label {
+    float: inherit;
+    width: auto;
+    text-align: left;
+}
+
+.amblog-left-wrapper .admin__fieldset > .admin__field > .admin__field-control,
+.amblog-content-wrapper .admin__fieldset > .admin__field > .admin__field-control {
+    width: auto;
+    float: inherit;
+    padding-right: 5px;
+}
+
+.amblog-status-wrapper .admin__field {
+    display: inline-block;
+    margin: 0 30px 0 0;
+}
+
+.amblog-status-wrapper .admin__field:last-child .admin__control-text {
+    width: auto;
+}
+
+.amblog-status-wrapper .admin__fieldset > .admin__field > .admin__field-label,
+.amblog-status-wrapper .admin__fieldset > .admin__field > .admin__field-control {
+    margin-left: 0;
+}
+
+.amblog-options-wrapper .amblog-posted {
+    margin-right: 40px;
+}
+
+.amblog-options-wrapper .amblog-posted,
+.amblog-options-wrapper .amblog-comments {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.amblog-options-wrapper .amblog-posted .admin__control-multiselect{
+    min-height: 182px;
+}
+
+.amblog-options-wrapper .admin__action-multiselect-menu-inner {
+    margin: 0 1rem;
+}
+
+.amblog-options-wrapper .action-menu .admin__control-checkbox + .admin__action-multiselect-label:before {
+    margin-top: 2px;
+}
+
+.amblog-content-wrapper .fieldset-wrapper .admin__fieldset {
+    padding-top: 0;
+}
+
+.amblog-content-wrapper .admin__field-label {
+    text-align: left;
+}
+
+.amblog-content-wrapper .admin__field-control .admin__field:nth-child(2) {
+    padding-left: 70px;
+}
+
+.amblog-content-wrapper .admin__field-control .admin__field-group-show-label + .amblog-list-alt {
+    padding-left: 90px;
+}
+
+.amblog-content-wrapper .admin__field-control .admin__field-group-show-label + .amblog-list-alt .admin__field-label {
+    clip: inherit !important;
+    overflow: inherit !important;
+    width: auto !important;
+}
+
+.amblog-content-wrapper .admin__field .amblog-post-alt,
+.amblog-content-wrapper .admin__field .amblog-list-alt {
+    position: relative;
+    width: 250px;
+    box-sizing: content-box;
+}
+
+.amblog-content-wrapper .admin__field .amblog-post-alt .admin__field-label,
+.amblog-content-wrapper .admin__field .amblog-list-alt .admin__field-label {
+    top: -34px;
+    width: auto;
+    margin: 0;
+}
+
+[data-index="image_group"] > .admin__field-label,
+[data-index="post_thumbnail_file"] > .admin__field-label,
+[data-index="list_thumbnail_file"] > .admin__field-label,
+[data-index="post_thumbnail_file"] .file-uploader .admin__field-note,
+[data-index="list_thumbnail_file"] .file-uploader .admin__field-note {
+    display: none;
+}
+
+.amasty_blog-posts-edit .page-actions-buttons .preview-button {
+    position: absolute;
+    left: 133px;
+    background: #e3e3e3;
+    padding-left: 4rem;
+    padding-right: 4rem;
+}
+
+.amasty_blog-posts-edit .page-actions-buttons .preview-button:hover,
+.amasty_blog-posts-edit .page-actions-buttons .preview-button:active {
+    background: #dbdbdb;
+}
+
+.page-actions._fixed .page-actions-buttons .preview-button {
+    left: 15px;
+}
+
+.page-main-actions .page-actions._fixed .page-actions-inner:before {
+    margin-left: 190px;
+}
+
+.amasty_blog-posts-edit .ui-datepicker.ui-widget,
+.amasty-blog-posts-edit .ui-datepicker.ui-widget {
+    opacity: 1;
+}
+
+.amblog-create-new-action {
+    display: inline-block;
+    margin-top: 5px;
+}

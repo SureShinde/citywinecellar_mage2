@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
+    <section name="CustomerListSection">
+        <element name="customer_name" type="button" selector=".customer-drop .dropdown-toggle"/>
+        <element name="add_button" type="button" selector=".customer-drop"/>
+        <element name="remove" type="button" selector=".remove-user"/>
+        <element name="loader" type="button" selector=".list-customer .loader-product"/>
+        <element name="search_form" type="text" selector=".search-customer input"/>
+        <element name="create_button" type="button" selector=".dropdown-menu-customer li"/>
+        <element name="customer_item" type="text" selector=".list-customer li:nth-child(1)"/>
+        <element name="customer_name_display" type="text" selector=".customer-drop a"/>
+        <element name="customer_item_n" type="button" selector=".list-customer li:nth-child({{var}})" parameterized="true"/>
+    </section>
+</sections>

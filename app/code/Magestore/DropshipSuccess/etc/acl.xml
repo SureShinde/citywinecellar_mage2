@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="Magestore_OrderSuccess::all">                    
+                    <resource id="Magestore_DropshipSuccess::dropship"
+                          title="Dropship"
+                          sortOrder="90"
+                          translate="title">
+                        <resource id="Magestore_DropshipSuccess::dropship_request_listing"
+                                  title="View Dropship Request Listing"
+                                  sortOrder="10"
+                                  translate="title"/>
+                        <resource id="Magestore_DropshipSuccess::view_dropship_request"
+                                  title="View/Edit Dropship Request"
+                                  sortOrder="20"
+                                  translate="title"/>  
+                        <resource id="Magestore_DropshipSuccess::save_dropship_shipment"
+                                  title="Create Shipment for Dropship request"
+                                  sortOrder="30"
+                                  translate="title"/>         
+                        <resource id="Magestore_DropshipSuccess::back_dropship"
+                                  title="Back Dropship Request to Prepare Ship"
+                                  sortOrder="40"
+                                  translate="title"/>                                                                  
+                    </resource>
+                </resource>
+                <resource id="Magento_Backend::stores">
+                    <resource id="Magento_Backend::stores_settings">
+                        <resource id="Magento_Config::config">
+                            <resource id="Magestore_DropshipSuccess::dropship_configuration"
+                                      title="Dropship Configuration"
+                                      translate="title"/>
+                        </resource>
+                    </resource>
+                </resource>               
+            </resource>
+        </resources>
+    </acl>
+</config>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
+    <section name="AdminMessagesStorePickupSection">
+        <element name="success" type="text" selector="#messages div.message-success"/>
+        <element name="nthSuccess" type="text" selector=".message.message-success.success:nth-of-type({{n}})>div" parameterized="true"/>
+        <element name="error" type="text" selector="#messages div.message-error"/>
+        <element name="secondError" type="text" selector=".message.message-error.error:nth-of-type(2)>div"/>
+        <element name="nthError" type="text" selector=".message.message-error.error:nth-of-type({{n}})>div" parameterized="true"/>
+        <element name="notice" type="text" selector=".message.message-notice.notice"/>
+    </section>
+</sections>

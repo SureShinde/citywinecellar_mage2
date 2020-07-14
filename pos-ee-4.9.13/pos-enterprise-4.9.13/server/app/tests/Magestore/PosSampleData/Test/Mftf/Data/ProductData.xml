@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:DataGenerator/etc/dataProfileSchema.xsd">
+    <entity name="stable_pos_simple_product" type="product">
+        <data key="sku1result">sku1product_pos_simple_product_</data>
+        <data key="sku4results">sku4products_pos_simple_product_</data>
+        <data key="sku21results">sku21products_pos_simple_product_</data>
+        <data key="name1result">name1product_pos_simple_product_</data>
+        <data key="name4results">name4products_pos_simple_product_</data>
+        <data key="name21results">name21products_pos_simple_product_</data>
+    </entity>
+    <entity name="stable_pos_configurable_product" type="product">
+        <data key="sku1result">sku1product_pos_configurable_product_</data>
+        <data key="sku4results">sku4products_pos_configurable_product_</data>
+        <data key="sku21results">sku21products_pos_configurable_product_</data>
+        <data key="name1result">name1product_pos_configurable_product_</data>
+        <data key="name4results">name4products_pos_configurable_product_</data>
+        <data key="name21results">name21products_pos_configurable_product_</data>
+    </entity>
+    <entity name="stable_pos_virtual_product" type="product">
+        <data key="sku1result">sku1product_pos_virtual_product_</data>
+        <data key="sku4results">sku4products_pos_virtual_product_</data>
+        <data key="sku21results">sku21products_pos_virtual_product_</data>
+        <data key="name1result">name1product_pos_virtual_product_</data>
+        <data key="name4results">name4products_pos_virtual_product_</data>
+        <data key="name21results">name21products_pos_virtual_product_</data>
+    </entity>
+    <entity name="stable_pos_bundle_product" type="product">
+        <data key="sku1result">sku1product_pos_bundle_product_</data>
+        <data key="sku4results">sku4products_pos_bundle_product_</data>
+        <data key="sku21results">sku21products_pos_bundle_product_</data>
+        <data key="name1result">name1product_pos_bundle_product_</data>
+        <data key="name4results">name4products_pos_bundle_product_</data>
+        <data key="name21results">name21products_pos_bundle_product_</data>
+    </entity>
+    <entity name="stable_pos_grouped_product" type="product">
+        <data key="sku1result">sku1product_pos_grouped_product_</data>
+        <data key="sku4results">sku4products_pos_grouped_product_</data>
+        <data key="sku21results">sku21products_pos_grouped_product_</data>
+        <data key="name1result">name1product_pos_grouped_product_</data>
+        <data key="name4results">name4products_pos_grouped_product_</data>
+        <data key="name21results">name21products_pos_grouped_product_</data>
+    </entity>
+    <entity name="stable_pos_giftcard_product" type="product">
+        <data key="sku1result">sku1product_pos_giftcard_product_</data>
+        <data key="sku4results">sku4products_pos_giftcard_product_</data>
+        <data key="sku21results">sku21products_pos_giftcard_product_</data>
+        <data key="name1result">name1product_pos_giftcard_product_</data>
+        <data key="name4results">name4products_pos_giftcard_product_</data>
+        <data key="name21results">name21products_pos_giftcard_product_</data>
+    </entity>
+    <entity name="stable_order_simple_product" type="product">
+        <data key="sku">sku1product_pos_simple_product_</data>
+        <data key="name">pos_simple_product_</data>
+    </entity>
+    <entity name="stable_order_simple_product_for_discount" type="product">
+        <data key="sku">24-UG06</data>
+        <data key="name">Affirm Water Bottle</data>
+    </entity>
+    <entity name="stable_order_simple_product_with_custom_attribute" type="product">
+        <data key="sku">pos_simple_product_00000001</data>
+        <data key="name">pos_simple_product_00000001</data>
+    </entity>
+    <entity name="stable_order_configurable_product" type="product">
+        <data key="sku">sku1product_pos_configurable_product_</data>
+        <data key="name">pos_configurable_product_</data>
+    </entity>
+    <entity name="stable_order_virtual_product" type="product">
+        <data key="sku">sku1product_pos_virtual_product_</data>
+        <data key="name">pos_virtual_product_</data>
+    </entity>
+    <entity name="stable_order_grouped_product" type="product">
+        <data key="sku">sku1product_pos_grouped_product_</data>
+        <data key="name">pos_grouped_product_</data>
+    </entity>
+    <entity name="stable_order_bundle_product" type="product">
+        <data key="sku">sku1product_pos_bundle_product_</data>
+        <data key="name">pos_bundle_product_</data>
+    </entity>
+
+    <entity name="pos_virtual_product_00002370" type="product">
+        <data key="sku">pos_virtual_product_00002370</data>
+        <data key="name">pos_virtual_product_00002370</data>
+        <data key="qty">1</data>
+    </entity>
+
+    <!-- Out-of-stock product -->
+    <entity name="stable_out_of_stock_order_simple_product" type="product">
+        <data key="sku">pos_simple_product_out_of_stock</data>
+        <data key="name">pos_simple_product_</data>
+    </entity>
+    <entity name="stable_out_of_stock_order_virtual_product" type="product">
+        <data key="sku">pos_virtual_product_out_of_stock</data>
+        <data key="name">pos_virtual_product_</data>
+    </entity>
+    <entity name="stable_out_of_stock_order_configurable_product" type="product">
+        <data key="sku">pos_configurable_product_out_of_stock</data>
+        <data key="name">pos_configurable_product_</data>
+    </entity>
+    <entity name="stable_out_of_stock_order_bundle_product" type="product">
+        <data key="sku">24-WG080</data>
+        <data key="name">Sprite Yoga Companion Kit</data>
+    </entity>
+    <entity name="stable_out_of_stock_order_grouped_product" type="product">
+        <data key="sku">24-WG085_Group</data>
+        <data key="name">Sprite Yoga Strap 10 foot</data>
+    </entity>
+    <!-- End: Out-of-stock product -->
+</entities>
+

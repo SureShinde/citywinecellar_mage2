@@ -1,0 +1,51 @@
+<?php
+/**
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */ /** @var \Magestore\DropshipSuccess\Block\Supplier\ViewDropship $block */ ?>
+<?php $dropship = $block->getDropshipRequestById() ?>
+<?php $dropshipStatus = $block->getDropshipStatus() ?>
+<?php if ($dropship): ?>
+    <div class="page-title">
+        <h1><strong><?php echo __('DropShip #%1 - %2',$dropship->getId(), $dropshipStatus[$dropship->getStatus()]) ?></strong></h1>
+    </div>
+    <?php $_order = $block->getOrder(); ?>
+
+    <div class="block block-order-details-view order-details-items">
+        <div class="block-title">
+            <strong><?php /* @escapeNotVerified */ echo __('Sales Information') ?></strong>
+        </div>
+        <div class="block-content">
+            <?php if (!$_order->getIsVirtual()): ?>
+                <div class="box box-order-shipping-method" style="width: 33%">
+                    <strong class="box-title">
+                        <span><?php /* @escapeNotVerified */ echo __('Customer Information') ?></span>
+                    </strong>
+                    <div class="box-content">
+                        <?php /* @escapeNotVerified */ echo __('Customer Name: ') ?><?php echo $block->escapeHtml($_order->getCustomerName()) ?>
+                        <br />
+                        <?php /* @escapeNotVerified */ echo __('Email: ') ?><a href="mailto:<?php echo $block->escapeHtml($_order->getCustomerEmail()) ?>"><?php echo $block->escapeHtml($_order->getCustomerEmail()) ?></a>
+                    </div>
+                </div>
+
+                <div class="box box-order-shipping-address" style="width: 33%">
+                    <strong class="box-title"><span><?php /* @escapeNotVerified */ echo __('Shipping Address') ?></span></strong>
+                    <div class="box-content">
+                        <address><?php /* @escapeNotVerified */ echo $block->getFormattedAddress($_order->getShippingAddress()); ?></address>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <div class="box box-order-billing-address" style="width: 33%">
+                <strong class="box-title">
+                    <span><?php /* @escapeNotVerified */ echo __('Billing Address') ?></span>
+                </strong>
+                <div class="box-content">
+                    <address><?php /* @escapeNotVerified */ echo $block->getFormattedAddress($_order->getBillingAddress()); ?></address>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php else: ?>
+    <div class="message info empty"><span><?php /* @escapeNotVerified */ echo __('This Dropship no longer exists.'); ?></span></div>
+<?php endif; ?>

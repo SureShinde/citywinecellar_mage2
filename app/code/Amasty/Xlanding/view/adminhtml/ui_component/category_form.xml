@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Xlanding
+ */
+-->
+
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <fieldset name="general">
+        <field name="amlanding_is_dynamic">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">boolean</item>
+                    <item name="formElement" xsi:type="string">checkbox</item>
+                    <item name="component" xsi:type="string">Amasty_Xlanding/js/form/element/amlanding_is_dynamic</item>
+                    <item name="source" xsi:type="string">category</item>
+                    <item name="prefer" xsi:type="string">toggle</item>
+                    <item name="label" xsi:type="string" translate="true">Dynamic Category</item>
+                    <item name="valueMap" xsi:type="array">
+                        <item name="true" xsi:type="string">1</item>
+                        <item name="false" xsi:type="string">0</item>
+                    </item>
+                    <item name="sortOrder" xsi:type="number">997</item>
+
+                    <item name="tooltip" xsi:type="array">
+                        <!--<item name="link" xsi:type="string"><![CDATA[guide link]]></item>-->
+                        <item name="description" xsi:type="string" translate="true">The category products will be displayed based on Amasty Landing Page conditions. At the same time, the landing page is not accessible by a direct link (302 redirect to category page) or seen on the sitemap.</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+        <field name="amlanding_page_id">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">Amasty\Xlanding\Ui\Component\Listing\Column\Page\Options</item>
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">int</item>
+                    <item name="label" xsi:type="string" translate="true">Product Conditions</item>
+                    <item name="formElement" xsi:type="string">select</item>
+                    <item name="dataScope" xsi:type="string">amlanding_page_id</item>
+                    <item name="default" xsi:type="string">0</item>
+                    <item name="caption" xsi:type="string" translate="true">-- Please Select --</item>
+                    <item name="notice" translate="true" xsi:type="string">Please select the Landing Page product conditions to display the category products. The selected Landing Page becomes unavailable by direct link.</item>
+                    <item name="imports" xsi:type="array">
+                        <item name="visible" xsi:type="string">ns = ${ $.ns }, index = amlanding_is_dynamic :checked</item>
+                    </item>
+                    <item name="sortOrder" xsi:type="number">998</item>
+                </item>
+            </argument>
+        </field>
+
+        <container name="conditions_apply_to">
+            <htmlContent name="html_content">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="additionalClasses" xsi:type="string">admin__field landing-page-link</item>
+                        <item name="imports" xsi:type="array">
+                            <item name="visible" xsi:type="string">ns = ${ $.ns }, index = amlanding_is_dynamic :checked</item>
+                        </item>
+                    </item>
+                </argument>
+                <argument  name="block" xsi:type="object">Amasty\Xlanding\Block\Adminhtml\Page\Link</argument>
+            </htmlContent>
+        </container>
+    </fieldset>
+</form>

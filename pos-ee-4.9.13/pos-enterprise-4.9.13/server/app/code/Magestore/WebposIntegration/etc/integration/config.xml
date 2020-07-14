@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<integrations>
+    <integration name="Magestore POS">
+        <email>support@magestore.com</email>
+    </integration>
+</integrations>

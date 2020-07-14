@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:DataGenerator/etc/dataProfileSchema.xsd">
+    <entity name="expected_CPD_04" type="custom_price_discount">
+        <data key="price">Price: $22.50</data>
+        <data key="originalPrice">Origin Price: $45.00</data>
+        <data key="priceBackend">$22.50</data>
+        <data key="originalPriceBackend">$45.00</data>
+        <data key="customReason">CPD-04</data>
+        <data key="grandTotal">$73.07</data>
+    </entity>
+    <entity name="expected_CPD_08" type="custom_price_discount">
+        <data key="price">Price: $25.00</data>
+        <data key="originalPrice">Origin Price: $45.00</data>
+        <data key="priceBackend">$25.00</data>
+        <data key="originalPriceBackend">$45.00</data>
+        <data key="customReason">CPD-08</data>
+        <data key="grandTotal">$81.19</data>
+    </entity>
+    <entity name="expected_CPD_12" type="custom_price_discount">
+        <data key="price">Price: $20.00</data>
+        <data key="originalPrice">Origin Price: $45.00</data>
+        <data key="priceBackend">$20.00</data>
+        <data key="originalPriceBackend">$45.00</data>
+        <data key="customReason">CPD-12</data>
+        <data key="grandTotal">$64.95</data>
+    </entity>
+</entities>

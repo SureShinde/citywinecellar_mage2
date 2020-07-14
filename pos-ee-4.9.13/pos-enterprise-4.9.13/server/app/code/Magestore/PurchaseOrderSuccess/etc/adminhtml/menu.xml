@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Magestore_PurchaseOrderSuccess::purchase_order" title="Purchase Management" translate="title" module="Magestore_PurchaseOrderSuccess" sortOrder="22" resource="Magestore_PurchaseOrderSuccess::purchase_order"/>
+
+        <!--quotation management menu-->
+        <add id="Magestore_PurchaseOrderSuccess::manage_quotation" title="Quotation Management" translate="title" module="Magestore_PurchaseOrderSuccess" parent="Magestore_PurchaseOrderSuccess::purchase_order" sortOrder="10" resource="Magestore_PurchaseOrderSuccess::manage_quotation"/>
+            <add id="Magestore_PurchaseOrderSuccess::list_quotation" title="Quotations" translate="title" module="Magestore_PurchaseOrderSuccess" parent="Magestore_PurchaseOrderSuccess::manage_quotation" sortOrder="10" resource="Magestore_PurchaseOrderSuccess::list_quotation" action="purchaseordersuccess/quotation/index"/>
+            <add id="Magestore_PurchaseOrderSuccess::new_quotation" title="Create Quotation" translate="title" module="Magestore_PurchaseOrderSuccess" parent="Magestore_PurchaseOrderSuccess::manage_quotation" sortOrder="0" resource="Magestore_PurchaseOrderSuccess::new_quotation" action="purchaseordersuccess/quotation/new"/>
+        <!--end quotation management menu-->
+
+        <!--quotation management menu-->
+        <add id="Magestore_PurchaseOrderSuccess::manage_purchase_order" title="Purchase Order Management" translate="title" module="Magestore_PurchaseOrderSuccess" parent="Magestore_PurchaseOrderSuccess::purchase_order" sortOrder="0" resource="Magestore_PurchaseOrderSuccess::manage_purchase_order"/>
+            <add id="Magestore_PurchaseOrderSuccess::list_purchase_order" title="Purchase Orders" translate="title" module="Magestore_PurchaseOrderSuccess" parent="Magestore_PurchaseOrderSuccess::manage_purchase_order" sortOrder="10" resource="Magestore_PurchaseOrderSuccess::list_purchase_order" action="purchaseordersuccess/purchaseOrder/index"/>
+            <add id="Magestore_PurchaseOrderSuccess::new_purchase_order" title="Create Purchase Order" translate="title" module="Magestore_PurchaseOrderSuccess" parent="Magestore_PurchaseOrderSuccess::manage_purchase_order" sortOrder="0" resource="Magestore_PurchaseOrderSuccess::new_purchase_order" action="purchaseordersuccess/purchaseOrder/new"/>
+            <!--end quotation management menu-->
+
+        <!--return order management menu-->
+        <add id="Magestore_PurchaseOrderSuccess::manage_return_order" title="Return Request Management" translate="title" module="Magestore_PurchaseOrderSuccess" parent="Magestore_PurchaseOrderSuccess::purchase_order" sortOrder="15" resource="Magestore_PurchaseOrderSuccess::manage_return_order"/>
+            <add id="Magestore_PurchaseOrderSuccess::list_return_order" title="Return Requests" translate="title" module="Magestore_PurchaseOrderSuccess" parent="Magestore_PurchaseOrderSuccess::manage_return_order" sortOrder="10" resource="Magestore_PurchaseOrderSuccess::list_return_order" action="purchaseordersuccess/returnOrder/index"/>
+            <add id="Magestore_PurchaseOrderSuccess::new_return_order" title="Create Return Request" translate="title" module="Magestore_PurchaseOrderSuccess" parent="Magestore_PurchaseOrderSuccess::manage_return_order" sortOrder="0" resource="Magestore_PurchaseOrderSuccess::new_return_order" action="purchaseordersuccess/returnOrder/new"/>
+            <!--end quotation management menu-->
+        
+        <!-- Settings -->
+        <add id="Magestore_PurchaseOrderSuccess::settings" title="Settings" translate="title" module="Magestore_PurchaseOrderSuccess" sortOrder="100" parent="Magestore_PurchaseOrderSuccess::purchase_order" resource="Magestore_PurchaseOrderSuccess::settings"/>
+            <add id="Magestore_PurchaseOrderSuccess::po_settings" title="Purchase Management" translate="title" module="Magestore_PurchaseOrderSuccess" sortOrder="10" parent="Magestore_PurchaseOrderSuccess::settings" resource="Magestore_PurchaseOrderSuccess::configuration" action="adminhtml/system_config/edit/section/purchaseordersuccess"/>
+
+        <!-- update Supplier Menu -->
+        <update id="Magestore_SupplierSuccess::supplier" parent="Magestore_PurchaseOrderSuccess::purchase_order" sortOrder="30"/>
+        <update id="Magestore_SupplierSuccess::supplier_configuration" parent="Magestore_PurchaseOrderSuccess::settings" sortOrder="20"/>
+    </menu>
+</config>

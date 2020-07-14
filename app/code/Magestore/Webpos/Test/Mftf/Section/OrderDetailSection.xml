@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
+    <section name="OrderDetailSection">
+        <element name="orderId" type="text" selector="//div[contains(@class, 'wrapper-order-right')]/div[contains(text(), '{{val1}}')]" parameterized="true"/>
+
+        <!-- General -->
+        <element name="generalOrder" type="text" selector=".order-detail" />
+        <element name="orderStatus" type="text" selector="//div[contains(@class, 'order-detail')]/div[contains(@class, 'order-status')]/span[contains(@class, 'status')][1]" />
+        <element name="orderStatusComplete" type="text" selector="//div[contains(@class, 'order-detail')]/div[contains(@class, 'order-status')]/span[contains(@class, 'status') and contains(@class, 'complete')]" />
+        <element name="orderStatusProcessing" type="text" selector="//div[contains(@class, 'order-detail')]/div[contains(@class, 'order-status')]/span[contains(@class, 'status') and contains(@class, 'processing')]" />
+        <element name="orderStatusN" type="text" selector="//div[contains(@class, 'order-detail')]/div[contains(@class, 'order-status')]/span[contains(@class, 'status') and contains(@class, '{{value1}}')]"  parameterized="true"/>
+        <element name="paymentStatus" type="text" selector="//div[contains(@class, 'order-detail')]/div[contains(@class, 'order-status')]/span[contains(@class, 'status')][2]" />
+
+        <!-- Total -->
+        <element name="subTotal" type="text" selector="//div[contains(@class, 'order-total')]//span[contains(text(), 'Subtotal')]/../span[contains(@class, 'value')]" />
+        <element name="customDiscount" type="text" selector="//div[contains(@class, 'order-total')]//span[contains(text(), 'Custom discount')]/../span[contains(@class, 'value')]" />
+        <element name="shipping" type="text" selector="//div[contains(@class, 'order-total')]//span[contains(text(), 'Shipping')]/../span[contains(@class, 'value')]" />
+        <element name="fpt" type="text" selector="//div[contains(@class, 'order-total')]//span[contains(text(), 'FPT')]/../span[contains(@class, 'value')]" />
+        <element name="tax" type="text" selector="//div[contains(@class, 'order-total')]//span[contains(text(), 'Tax')]/../span[contains(@class, 'value')]" />
+        <element name="grandTotal" type="text" selector="//div[contains(@class, 'order-total')]//span[contains(text(), 'Grand Total')]/../span[contains(@class, 'value')]" />
+        <element name="totalPaid" type="text" selector="//div[contains(@class, 'order-total')]//span[contains(text(), 'Total Paid')]/../span[contains(@class, 'value')]" />
+        <element name="totalRefunded" type="text" selector="//div[contains(@class, 'order-total')]//span[contains(text(), 'Total Refunded')]/../span[contains(@class, 'value')]" />
+
+        <!-- Item -->
+        <element name="firstItemDetail" type="text" selector="//div[contains(@class, 'item-ordered')][1]/div[contains(@class, 'item-detail')]" />
+        <element name="firstItemTotal" type="text" selector="//div[contains(@class, 'item-ordered')][1]/div[contains(@class, 'item-order')]" />
+        <element name="firstItemPrice" type="text" selector=".item-ordered .item-order div:nth-child(3)" />
+        <element name="firstItemOriginalPrice" type="text" selector=".item-ordered .item-order div:nth-child(2)" />
+        <element name="firstItemCustomReason" type="text" selector=".item-ordered .item-detail .custom-reason span" />
+
+        <!-- Shipping and Payment method -->
+        <element name="paymentMethod" type="text" selector=".payment-method" />
+        <element name="shippingMethod" type="text" selector=".shipping-method" />
+
+        <!-- Shipping & Billing address -->
+        <element name="shippingAddress" type="text" selector="//ul[contains(@class, 'shipping-address')]//div[contains(text(), '{{val1}}')]" parameterized="true"/>
+        <element name="billingAddress" type="text" selector="//ul[contains(@class, 'billing-address')]//div[contains(text(), '{{val1}}')]" parameterized="true"/>
+
+        <!-- Actions -->
+        <element name="takePaymentButton" type="button" selector="//div[contains(@class, 'block-actions')]/ul/li/button[contains(text(), 'Take Payment')]"/>
+        <element name="refundButton" type="button" selector="//div[contains(@class, 'block-actions')]/ul/li/button[contains(text(), 'Refund')]"/>
+        <element name="cancelButton" type="button" selector="//div[contains(@class, 'block-actions')]/ul/li/button[contains(text(), 'Cancel')]"/>
+        <element name="printButton" type="button" selector="//div[contains(@class, 'block-actions')]/ul/li/button[contains(text(), 'Print')]"/>
+        <element name="emailButton" type="button" selector="//div[contains(@class, 'block-actions')]/ul/li/button[contains(text(), 'Email')]"/>
+        <element name="addNoteButton" type="button" selector="//div[contains(@class, 'block-actions')]/ul/li/button[contains(text(), 'Add Note')]"/>
+        <element name="reorderButton" type="button" selector="//div[contains(@class, 'block-actions')]/ul/li/button[contains(text(), 'Reorder')]"/>
+        <element name="takeShipmentButton" type="button" selector="//div[contains(@class, 'block-actions')]/ul/li/button[contains(text(), 'Take Shipment')]"/>
+
+        <!-- Button -->
+        <element name="actionButton" type="text" selector="//ul[contains(@class, 'actions')]//li/button[contains(text(), '{{val1}}')]" parameterized="true"/>
+    </section>
+</sections>

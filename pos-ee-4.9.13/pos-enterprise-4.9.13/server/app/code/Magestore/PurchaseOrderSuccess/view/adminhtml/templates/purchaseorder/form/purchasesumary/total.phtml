@@ -1,0 +1,89 @@
+<div id="purchase_sumary_total_block" class="import-product" 
+     data-modal-info="<?php /* @escapeNotVerified */ echo $block->getWidgetOptions();?>">
+    <?php $comment = $block->getCurrentPurchaseOrder()->getComment() ?>
+    <?php if($comment): ?>
+    <div class="admin__page-section-item order-comments-history">
+        <div id="order_history_block" class="edit-order-comments">
+            <div class="admin__page-section-item-title">
+                <span class="title"><?php echo __('Comments') ?></span>
+            </div>
+            <?php echo $block->getCurrentPurchaseOrder()->getComment() ?>
+        </div>
+    </div>
+    <?php endif; ?>
+
+    <div class="admin__page-section-item order-totals">
+        <div class="admin__page-section-item-title">
+            <span class="title"><?php echo __('Sales Totals') ?></span>
+        </div>
+        <table class="data-table admin__table-secondary order-subtotal-table">
+            <tfoot>
+            <tr class="col-0">
+                <td class="label">
+                    <strong><?php echo __('Grand Total (excl. Tax)') ?></strong>
+                </td>
+                <td>
+                    <strong><?php echo $block->getPriceFormat('grand_total_excl_tax'); ?></strong>
+                </td>
+            </tr>
+            <tr class="col-1">
+                <td class="label">
+                    <strong><?php echo __('Grand Total (incl. Tax)') ?></strong>
+                </td>
+                <td>
+                    <strong><?php echo $block->getPriceFormat('grand_total_incl_tax'); ?></strong>
+                </td>
+            </tr>
+            <?php $totalBilled = $block->getPrice('total_billed'); ?>
+            <?php $totalDue = $block->getPrice('total_due'); ?>
+            <?php if($totalBilled>0): ?>
+                <tr class="col-2">
+                    <td class="label">
+                        <strong><?php echo __('Total Bill') ?></strong>
+                    </td>
+                    <td>
+                        <strong><?php echo $block->getPriceFormat('total_billed') ?></strong>
+                    </td>
+                </tr>
+            <?php endif; ?>
+            <?php if($totalDue>0): ?>
+                <tr class="col-3">
+                    <td class="label">
+                        <strong><?php echo __('Total Due') ?></strong>
+                    </td>
+                    <td>
+                        <strong><?php echo $block->getPrice('total_due') ?></strong>
+                    </td>
+                </tr>
+            <?php endif; ?>
+            </tfoot>
+
+            <tbody>
+            <tr class="col-0">
+                <td class="label"><?php echo __('Subtotal') ?></td>
+                <td>
+                    <span><?php echo $block->getPriceFormat('subtotal'); ?></span>
+                </td>
+            </tr>
+            <tr class="col-1">
+                <td class="label"><?php echo __('Shipping Cost') ?></td>
+                <td>
+                    <span><?php echo $block->getPriceFormat('shipping_cost'); ?></span>
+                </td>
+            </tr>
+            <tr class="col-2">
+                <td class="label"><?php echo __('Discount') ?></td>
+                <td>
+                    <span><?php echo $block->getPriceFormat('total_discount'); ?></span>
+                </td>
+            </tr>
+            <tr class="col-3">
+                <td class="label"><?php echo __('Tax') ?></td>
+                <td>
+                    <span><?php echo $block->getPriceFormat('total_tax'); ?></span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

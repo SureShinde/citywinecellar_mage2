@@ -1,0 +1,24 @@
+<div class="parent-container">
+    <div class="total-container" id="qty_on_hand">
+        <div class="count"></div>
+        <div class="text">Total Qty On-hand</div>
+    </div>
+    <div class="total-container" id="available_qty">
+        <div class="count"></div>
+        <div class="text">Total Available Qty</div>
+    </div>
+    <div class="total-container" id="qty_to_ship">
+        <div class="count"></div>
+        <div class="text">Total Qty To Ship</div>
+    </div>
+    <div class="total-container" id="incoming_qty">
+        <div class="count"></div>
+        <div class="text">Total Incoming Qty</div>
+    </div>
+
+</div>
+
+<script>
+    window.priceFormat = <?php echo \Zend_Json::encode($block->getPriceFormat()); ?>;
+    window.isPurchaseOrderEnable = <?php echo $block->isPurchaseOrderEnable(); ?>;
+</script>

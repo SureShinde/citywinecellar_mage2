@@ -1,0 +1,43 @@
+<div id="purchase_email_header_block" class="purchase_email" 
+     data-modal-info="<?php /* @escapeNotVerified */ echo $block->getWidgetOptions();?>">
+    <div class="admin__page-section-item email-header">
+        <table class="data-table admin__table-secondary email-header-table" style="font-size: 13px">
+            <tr class="col-0">
+                <td class="label" style="width: 32%">
+                    <strong><?php echo __('Purchase From') ?></strong>
+                </td>
+                <td class="label" style="width: 32%">
+                    <?php if($block->getPurchaseOrderData('shipping_address')): ?>
+                    <strong><?php echo __('Delivery To') ?></strong>
+                    <?php endif; ?>
+                </td>
+                <td class="label" style="width: 32%">
+                    <strong><?php echo __('Purchase Sales') ?></strong>
+                </td>
+            </tr>
+            <tr class="col-1">
+                <td class="label" valign="top">
+                    <?php echo $block->getDataHtml('supplier_name') ?>
+                    <?php echo $block->getDataHtml('street') ?>
+                    <?php echo $groupAddress = $block->getCityRegionPostCode(); ?>
+                    <?php echo $block->getCountry() ?>
+                    <span><?php echo __('Telephone: ') ?></span>
+                    <span><?php echo $block->getSupplierData('telephone') ?></span><br/>
+                    <?php echo __('Email: ') ?></span>
+                    <?php echo $block->getDataHtml('contact_email') ?>
+                </td>
+                <td valign="top">
+                    <span><?php echo $block->getPurchaseOrderData('shipping_address') ?></span>
+                </td>
+                <td valign="top">
+                    <span><?php echo __('P.O#: ') ?></span>
+                    <span><?php echo $block->getPurchaseOrderCode() ?></span><br/>
+                    <span><?php echo __('Created At: ') ?></span>
+                    <span><?php echo $block->getPurchaseDate() ?></span><br/>
+                    <span><?php echo __('Status: ') ?></span>
+                    <span><?php echo $block->getPurchaseOrderStatus() ?></span><br/>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

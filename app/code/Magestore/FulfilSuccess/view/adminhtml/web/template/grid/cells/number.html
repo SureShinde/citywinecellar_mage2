@@ -1,0 +1,14 @@
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<button type="button" data-bind="click: decrease.bind($data,$row()), visible:hasControl">
+    <span>-</span>
+</button>
+<input class="admin__control-text"
+       type="text"
+       data-bind="event:{change:change,focus:focus,blur:blur},value:$col.getLabel($row()),attr:{placeholder:placeHolder},css:getCssClasses(),initRowData,afterRender:afterRender">
+<button type="button" data-bind="click: increase.bind($data,$row()), visible:hasControl">
+    <span>+</span>
+</button>

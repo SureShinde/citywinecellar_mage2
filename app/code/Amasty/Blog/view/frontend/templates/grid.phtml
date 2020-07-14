@@ -1,0 +1,69 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+?>
+<?php /** @var \Amasty\Blog\Block\Content\AbstractBlock $block */
+$collection = $block->getCollection() ?>
+
+<?php if ($collection && $collection->getSize()): ?>
+    <ul class="amblog-grid-list">
+        <?php foreach ($collection as $post): ?>
+            <li class="list-item amblog-item">
+                <?php if ($post->getListThumbnailSrc()): ?>
+                    <div class="amblog-wrapper">
+                        <a href="<?= $block->escapeUrl($post->getUrl()); ?>"
+                           title="<?= $block->escapeHtml($post->getTitle()); ?>">
+                            <img src="<?= $block->escapeUrl($post->getListThumbnailSrc()); ?>"
+                                 class="amblog-image"
+                                 alt="<?= $block->escapeHtml($post->getThumbnailAlt()); ?>"/>
+                        </a>
+                    </div>
+                <?php endif; ?>
+                <div class="amblog-tags">
+                    <?= $block->getTagsHtml($post); ?>
+                </div>
+                <div class="amblog-content">
+                    <h3 class="amblog-title">
+                        <a class="amblog-link"
+                           href="<?= $block->escapeUrl($post->getUrl()); ?>"
+                           title="<?= $block->escapeHtml($post->getTitle()); ?>"
+                        >
+                            <?= $block->escapeHtml($post->getTitle()); ?>
+                        </a>
+                    </h3>
+                    <div class="amblog-shot">
+                        <?= /* @noEscape */ $post->getShortContent(); ?>
+                    </div>
+                    <div class="amblog-bottom">
+                        <div class="amblog-date">
+                            <?= $block->escapeHtml($block->renderDate($post->getPublishedAt())); ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="amblog-footer">
+                    <div class="amblog-features">
+                        <?= $block->getCategoriesHtml($post); ?>
+                        <?= $block->getAuthorHtml($post); ?>
+                        <?= $block->getShortCommentsHtml($post); ?>
+                    </div>
+                    <a class="amblog-read"
+                       href="<?= $block->escapeUrl($block->getReadMoreUrl($post)); ?>"
+                       title="<?= $block->escapeHtml(__('Read More')); ?>"
+                    >
+                        <?= $block->escapeHtml(__('Read More')); ?>
+                        <span class="amblog-arrow"></span>
+                    </a>
+                </div>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+    <?= $block->getToolbarHtml(); ?>
+<?php else: ?>
+    <div class="message notice">
+        <div><?= $block->escapeHtml(__('There are no posts yet.')); ?></div>
+    </div>
+<?php endif; ?>
+

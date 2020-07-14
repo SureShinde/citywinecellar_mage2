@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
+    <section name="DiscountSection">
+        <element name="discountContainer" type="text" selector="#discount-container"/>
+        <element name="fixDiscountButton" type="button" selector="#discount-container-tab-fixed"/>
+        <element name="addDiscountFixField" type="input" selector="#discount-container-pane-fixed .discount-amount" />
+        <element name="applyDiscount" type="button" selector="#discount-container-pane-fixed .btn-coupon" />
+        <element name="couponPopover" type="button" selector="div#coupon_popover" />
+        <element name="couponCodeInput" type="input" selector="#coupon_popover .form-coupon input" />
+        <element name="couponCodeApplyButton" type="button" selector="#coupon_popover .form-coupon button.btn-coupon" />
+        <element name="checkingPromotion" type="text" selector="//div[contains(@class, 'cart-totals')]//li[contains(@class, 'totals-discount')]//span[contains(text(), 'Discount')]/../img[contains(@class, 'checking-promotion')]" />
+    </section>
+</sections>

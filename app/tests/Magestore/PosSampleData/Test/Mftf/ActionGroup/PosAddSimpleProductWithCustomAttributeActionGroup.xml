@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="PosAddSimpleProductWithCustomAttributeActionGroup">
+        <arguments>
+            <argument name="dataProduct" defaultValue="stable_order_simple_product_with_custom_attribute"/>
+        </arguments>
+        <fillField stepKey="fillSimpleProductSearchBox" selector="{{ProductListSection.searchBox}}" userInput="{{dataProduct.sku}}"/>
+        <wait time="2" stepKey="waitForSearchingSimpleProduct"/>
+        <waitForElementVisible time="30" selector="{{ProductListSection.firstProduct}}" stepKey="seeAtLeaseOneSimpleProductAfterSearch"/>
+        <click stepKey="clickOnSimpleProductFoundInList" selector="{{ProductListSection.firstProduct}}"/>
+        <waitForElementVisible time="30" stepKey="waitProductCustomOption" selector="{{PosCheckoutPopupSimpleProductSection.customOptionInputBox}}"/>
+        <fillField stepKey="fillProductCustomOption" selector="{{PosCheckoutPopupSimpleProductSection.customOptionInputBox}}" userInput="{{stable_order_simple_product_with_custom_attribute.sku}}"/>
+        <click stepKey="clickOnAddCartButton" selector="{{PosCheckoutPopupSimpleProductSection.buttonAddCart}}"/>
+        <waitForElementVisible selector="{{CartSection.productFoundOnCartByName(dataProduct.name)}}" time="30" stepKey="waitSimpleProductIsAddedToCartSuccessfully"/>
+    </actionGroup>
+</actionGroups>

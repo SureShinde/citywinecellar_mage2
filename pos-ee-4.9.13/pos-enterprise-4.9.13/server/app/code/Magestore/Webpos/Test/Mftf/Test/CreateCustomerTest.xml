@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="CreateCustomerNoAddressTest">
+        <annotations>
+            <features value="Customer"/>
+            <stories value="Create Customer"/>
+            <title value="Create New Customer - All Required Field - No address"/>
+            <description value="Create a new customer with all required field and no address"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="CWC-04"/>
+            <group value="createCustomer"/>
+            <group value="pwapos"/>
+            <group value="demo"/>
+        </annotations>
+        <before>
+            <createData entity="require_customer_config" stepKey="enableRequiredField"/>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <after>
+            <amOnPage url="admin/admin/auth/logout/" stepKey="amOnLogoutPage"/>
+            <createData entity="default_customer_config" stepKey="deleteEnableRequiredField"/>
+        </after>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+
+        <!--
+            1. Go to checkout page
+            2. Clear cart
+            3. Click on Guest button
+            4. Click on Create Customer button
+            5. On the New Customer form, fill info for all required fields
+            6. Click on Save button
+        -->
+
+        <actionGroup ref="CreateCustomerRequired" stepKey="CreateCustomerRequired">
+            <argument name="customer" value="new_customer_with_required"/>
+        </actionGroup>
+
+        <!-- Show the form: New Customer -->
+        <grabTextFrom selector="{{CustomerFormSection.title}}" stepKey="grabCreateCustomerTitle"/>
+        <assertEquals stepKey="assertCreateCustomerTitle" message="Assert show New Customer form">
+            <expectedResult type="string">New Customer</expectedResult>
+            <actualResult type="variable">grabCreateCustomerTitle</actualResult>
+        </assertEquals>
+
+        <wait time="3" stepKey="waitSaveButtonEnable"/>
+        <click selector="{{CustomerFormSection.saveCustomer}}" stepKey="saveCustomerForm"/>
+
+        <!--
+            + The New Customer form is auto closed
+            + On cart, display customer's name that is just created before
+        -->
+        <waitForElementNotVisible selector="{{CustomerFormSection.title}}" time="120" stepKey="waitForCustomerFormNotVisible"/>
+        <wait time="1" stepKey="waitForChangeCustomerName"/>
+        <grabTextFrom selector="{{CustomerListSection.customer_name}}" stepKey="grabCustomerNameOnCart"/>
+        <assertStringStartsWith stepKey="assertCustomerNameOnCart" message="On cart, display customer's name that is just created before">
+            <expectedResult type="string">{{new_customer_with_required.fullNameAtPos}}</expectedResult>
+            <actualResult type="variable">grabCustomerNameOnCart</actualResult>
+        </assertStringStartsWith>
+
+        <!--
+            + Check customer is created at frontend
+        -->
+        <wait time="15" stepKey="waitToSync"/>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart2" />
+
+        <conditionalClick selector="{{CustomerListSection.remove}}" dependentSelector="{{CustomerListSection.remove}}" visible="true" stepKey="clickRemove"/>
+        <click selector="{{CustomerListSection.add_button}}" stepKey="clickAddButton"/>
+        <fillField userInput="{{new_customer_with_required.email}}" selector="{{CustomerListSection.search_form}}" stepKey="fillSearchForm"/>
+        <wait time="2" stepKey="waitStartSearchCustomer" />
+        <waitForElementVisible selector="{{CustomerListSection.customer_item}}" time="60" stepKey="waitForCustomerVisible"/>
+
+        <!--
+            + Go to admin page
+            + Check customer is created.
+        -->
+
+        <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
+
+        <actionGroup ref="OpenEditCustomerFromAdminActionGroup" stepKey="OpenEditCustomerFromAdminActionGroup">
+            <argument name="customer" value="new_customer_with_required"/>
+        </actionGroup>
+
+        <grabValueFrom selector="{{AdminEditCustomerSection.prefix}}" stepKey="grabPrefix"/>
+        <assertStringStartsWith stepKey="assertPrefix" message="assertPrefix">
+            <expectedResult type="string">{{new_customer_with_required.prefixName}}</expectedResult>
+            <actualResult type="variable">grabPrefix</actualResult>
+        </assertStringStartsWith>
+
+        <grabValueFrom selector="{{AdminEditCustomerSection.firstName}}" stepKey="grabFirstName"/>
+        <assertStringStartsWith stepKey="assertFirstName" message="assertFirstName">
+            <expectedResult type="string">{{new_customer_with_required.firstName}}</expectedResult>
+            <actualResult type="variable">grabFirstName</actualResult>
+        </assertStringStartsWith>
+
+        <grabValueFrom selector="{{AdminEditCustomerSection.middleName}}" stepKey="grabMiddleName"/>
+        <assertStringStartsWith stepKey="assertMiddleName" message="assertMiddleName">
+            <expectedResult type="string">{{new_customer_with_required.middleName}}</expectedResult>
+            <actualResult type="variable">grabMiddleName</actualResult>
+        </assertStringStartsWith>
+
+        <grabValueFrom selector="{{AdminEditCustomerSection.lastName}}" stepKey="grabLastName"/>
+        <assertStringStartsWith stepKey="assertLastName" message="assertLastName">
+            <expectedResult type="string">{{new_customer_with_required.lastName}}</expectedResult>
+            <actualResult type="variable">grabLastName</actualResult>
+        </assertStringStartsWith>
+
+        <grabValueFrom selector="{{AdminEditCustomerSection.suffix}}" stepKey="grabSuffix"/>
+        <assertStringStartsWith stepKey="assertSuffix" message="assertSuffix">
+            <expectedResult type="string">{{new_customer_with_required.suffixName}}</expectedResult>
+            <actualResult type="variable">grabSuffix</actualResult>
+        </assertStringStartsWith>
+
+        <grabValueFrom selector="{{AdminEditCustomerSection.email}}" stepKey="grabEmail"/>
+        <assertStringStartsWith stepKey="assertEmail" message="assertEmail">
+            <expectedResult type="string">{{new_customer_with_required.email}}</expectedResult>
+            <actualResult type="variable">grabEmail</actualResult>
+        </assertStringStartsWith>
+
+        <grabValueFrom selector="{{AdminEditCustomerSection.dob}}" stepKey="grabDob"/>
+        <assertStringStartsWith stepKey="assertDob" message="assertDob">
+            <expectedResult type="string">{{new_customer_with_required.dob}}</expectedResult>
+            <actualResult type="variable">grabDob</actualResult>
+        </assertStringStartsWith>
+
+        <grabValueFrom selector="{{AdminEditCustomerSection.taxvat}}" stepKey="grabTaxvat"/>
+        <assertStringStartsWith stepKey="assertTaxvat" message="assertTaxvat">
+            <expectedResult type="string">{{new_customer_with_required.taxvat}}</expectedResult>
+            <actualResult type="variable">grabTaxvat</actualResult>
+        </assertStringStartsWith>
+
+        <grabValueFrom selector="{{AdminEditCustomerSection.gender}}" stepKey="grabGender"/>
+        <assertStringStartsWith stepKey="assertGender" message="assertGender">
+            <expectedResult type="string">{{new_customer_with_required.gender}}</expectedResult>
+            <actualResult type="variable">grabGender</actualResult>
+        </assertStringStartsWith>
+    </test>
+
+    <test name="CreateCustomerWithAddressTest">
+        <annotations>
+            <features value="Customer"/>
+            <stories value="Create Customer"/>
+            <title value="Create New Customer All Required Field With Address"/>
+            <description value="Create a new customer with all required field with address"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="CWC-05"/>
+            <group value="createCustomerWithAddress"/>
+            <group value="pwapos"/>
+            <group value="demo"/>
+        </annotations>
+        <before>
+            <createData entity="require_customer_config" stepKey="enableRequiredField"/>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <after>
+            <amOnPage url="admin/admin/auth/logout/" stepKey="amOnLogoutPage"/>
+            <createData entity="default_customer_config" stepKey="deleteEnableRequiredField"/>
+        </after>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+
+        <!--
+            1. Go to checkout page
+            2. Clear cart
+            3. Click on Guest button
+            4. Click on Create Customer button
+            5. On the New Customer form, fill info for all required fields
+            6. Click on Save button
+        -->
+
+        <actionGroup ref="CreateCustomerRequired" stepKey="CreateCustomerRequired">
+            <argument name="customer" value="new_customer_with_required"/>
+        </actionGroup>
+
+        <actionGroup ref="CreateAddressRequired" stepKey="CreateAddressRequired">
+            <argument name="address" value="required_new_address"/>
+        </actionGroup>
+        <!-- Show the form: New Customer -->
+        <grabTextFrom selector="{{CustomerFormSection.title}}" stepKey="grabCreateCustomerTitle"/>
+        <assertEquals stepKey="assertCreateCustomerTitle" message="Assert show New Customer form">
+            <expectedResult type="string">New Customer</expectedResult>
+            <actualResult type="variable">grabCreateCustomerTitle</actualResult>
+        </assertEquals>
+
+        <wait time="3" stepKey="waitSaveButtonEnable"/>
+        <click selector="{{CustomerFormSection.saveCustomer}}" stepKey="saveCustomerForm"/>
+
+        <!--
+            + The New Customer form is auto closed
+            + On cart, display customer's name that is just created before
+        -->
+        <waitForElementNotVisible selector="{{CustomerFormSection.title}}" time="120" stepKey="waitForCustomerFormNotVisible"/>
+        <wait time="1" stepKey="waitForChangeCustomerName"/>
+        <grabTextFrom selector="{{CustomerListSection.customer_name}}" stepKey="grabCustomerNameOnCart"/>
+        <assertStringStartsWith stepKey="assertCustomerNameOnCart" message="On cart, display customer's name that is just created before">
+            <expectedResult type="string">{{new_customer_with_required.fullNameAtPos}}</expectedResult>
+            <actualResult type="variable">grabCustomerNameOnCart</actualResult>
+        </assertStringStartsWith>
+
+        <!--
+            + Check customer is created at frontend
+        -->
+        <wait time="15" stepKey="waitToSync"/>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart2" />
+
+        <conditionalClick selector="{{CustomerListSection.remove}}" dependentSelector="{{CustomerListSection.remove}}" visible="true" stepKey="clickRemove"/>
+        <click selector="{{CustomerListSection.add_button}}" stepKey="clickAddButton"/>
+        <fillField userInput="{{new_customer_with_required.email}}" selector="{{CustomerListSection.search_form}}" stepKey="fillSearchForm"/>
+        <wait time="2" stepKey="waitStartSearchCustomer" />
+        <waitForElementVisible selector="{{CustomerListSection.customer_item}}" time="60" stepKey="waitForCustomerVisible"/>
+
+        <!--
+            + Go to admin page
+            + Check customer is created.
+        -->
+
+        <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
+
+        <actionGroup ref="OpenEditCustomerFromAdminActionGroup" stepKey="OpenEditCustomerFromAdminActionGroup">
+            <argument name="customer" value="new_customer_with_required"/>
+        </actionGroup>
+
+        <grabValueFrom selector="{{AdminEditCustomerSection.prefix}}" stepKey="grabPrefix"/>
+        <assertStringStartsWith stepKey="assertPrefix" message="assertPrefix">
+            <expectedResult type="string">{{new_customer_with_required.prefixName}}</expectedResult>
+            <actualResult type="variable">grabPrefix</actualResult>
+        </assertStringStartsWith>
+
+        <grabValueFrom selector="{{AdminEditCustomerSection.firstName}}" stepKey="grabFirstName"/>
+        <assertStringStartsWith stepKey="assertFirstName" message="assertFirstName">
+            <expectedResult type="string">{{new_customer_with_required.firstName}}</expectedResult>
+            <actualResult type="variable">grabFirstName</actualResult>
+        </assertStringStartsWith>
+
+        <grabValueFrom selector="{{AdminEditCustomerSection.middleName}}" stepKey="grabMiddleName"/>
+        <assertStringStartsWith stepKey="assertMiddleName" message="assertMiddleName">
+            <expectedResult type="string">{{new_customer_with_required.middleName}}</expectedResult>
+            <actualResult type="variable">grabMiddleName</actualResult>
+        </assertStringStartsWith>
+
+        <grabValueFrom selector="{{AdminEditCustomerSection.lastName}}" stepKey="grabLastName"/>
+        <assertStringStartsWith stepKey="assertLastName" message="assertLastName">
+            <expectedResult type="string">{{new_customer_with_required.lastName}}</expectedResult>
+            <actualResult type="variable">grabLastName</actualResult>
+        </assertStringStartsWith>
+
+        <grabValueFrom selector="{{AdminEditCustomerSection.suffix}}" stepKey="grabSuffix"/>
+        <assertStringStartsWith stepKey="assertSuffix" message="assertSuffix">
+            <expectedResult type="string">{{new_customer_with_required.suffixName}}</expectedResult>
+            <actualResult type="variable">grabSuffix</actualResult>
+        </assertStringStartsWith>
+
+        <grabValueFrom selector="{{AdminEditCustomerSection.email}}" stepKey="grabEmail"/>
+        <assertStringStartsWith stepKey="assertEmail" message="assertEmail">
+            <expectedResult type="string">{{new_customer_with_required.email}}</expectedResult>
+            <actualResult type="variable">grabEmail</actualResult>
+        </assertStringStartsWith>
+
+        <grabValueFrom selector="{{AdminEditCustomerSection.dob}}" stepKey="grabDob"/>
+        <assertStringStartsWith stepKey="assertDob" message="assertDob">
+            <expectedResult type="string">{{new_customer_with_required.dob}}</expectedResult>
+            <actualResult type="variable">grabDob</actualResult>
+        </assertStringStartsWith>
+
+        <grabValueFrom selector="{{AdminEditCustomerSection.taxvat}}" stepKey="grabTaxvat"/>
+        <assertStringStartsWith stepKey="assertTaxvat" message="assertTaxvat">
+            <expectedResult type="string">{{new_customer_with_required.taxvat}}</expectedResult>
+            <actualResult type="variable">grabTaxvat</actualResult>
+        </assertStringStartsWith>
+
+        <grabValueFrom selector="{{AdminEditCustomerSection.gender}}" stepKey="grabGender"/>
+        <assertStringStartsWith stepKey="assertGender" message="assertGender">
+            <expectedResult type="string">{{new_customer_with_required.gender}}</expectedResult>
+            <actualResult type="variable">grabGender</actualResult>
+        </assertStringStartsWith>
+
+        <click selector="{{AdminEditCustomerSection.account_information}}" stepKey="clickEditAccount"/>
+        <wait time="2" stepKey="wait2SecondForLoad" />
+        <click selector="{{AdminEditCustomerSection.address_information}}" stepKey="clickAddressTab"/>
+        <wait time="2" stepKey="wait2SecondForLoadAddress" />
+
+
+        <!--
+            + Check address is created.
+        -->
+
+        <see selector="{{AdminEditCustomerSection.address_first}}" userInput="{{new_customer_with_required.prefixName}}" stepKey="seePrefixName" />
+        <see selector="{{AdminEditCustomerSection.address_first}}" userInput="{{new_customer_with_required.firstName}}" stepKey="seeFirstName" />
+        <see selector="{{AdminEditCustomerSection.address_first}}" userInput="{{new_customer_with_required.middleName}}" stepKey="seeMiddle" />
+        <see selector="{{AdminEditCustomerSection.address_first}}" userInput="{{new_customer_with_required.lastName}}" stepKey="seeLastName" />
+        <see selector="{{AdminEditCustomerSection.address_first}}" userInput="{{new_customer_with_required.suffixName}}" stepKey="seeSuffixName" />
+        <see selector="{{AdminEditCustomerSection.address_first}}" userInput="{{required_new_address.company}}" stepKey="seeCompany" />
+        <see selector="{{AdminEditCustomerSection.address_first}}" userInput="{{required_new_address.country}}" stepKey="seeCountry" />
+        <see selector="{{AdminEditCustomerSection.address_first}}" userInput="{{required_new_address.region}}" stepKey="seeRegion" />
+        <see selector="{{AdminEditCustomerSection.address_first}}" userInput="{{required_new_address.street}}" stepKey="seeStreet" />
+        <see selector="{{AdminEditCustomerSection.address_first}}" userInput="{{required_new_address.city}}" stepKey="seeCity" />
+        <see selector="{{AdminEditCustomerSection.address_first}}" userInput="{{required_new_address.telephone}}" stepKey="seeTelephone" />
+        <see selector="{{AdminEditCustomerSection.address_first}}" userInput="{{required_new_address.fax}}" stepKey="seeFax" />
+        <see selector="{{AdminEditCustomerSection.address_first}}" userInput="{{required_new_address.postcode}}" stepKey="seePostCode" />
+        <see selector="{{AdminEditCustomerSection.address_first}}" userInput="{{required_new_address.vat_id}}" stepKey="seeTaxVat" />
+
+    </test>
+</tests>

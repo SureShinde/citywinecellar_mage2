@@ -1,0 +1,92 @@
+"Save and Apply","Save and Apply"
+Back,Back
+Delete,Delete
+"Start to Adjust Stock","Start to Adjust Stock"
+"Export Products","Export Products"
+Save,Save
+"Save & New","Save & New"
+"Save & Close","Save & Close"
+"Adjustment doesn't exist.","Adjustment doesn't exist."
+"Stock Adjustment %1 has been deleted.","Stock Adjustment %1 has been deleted."
+"Cannot delete this adjustment!","Cannot delete this adjustment!"
+"Adjust Qty","Adjust Qty"
+SKU,SKU
+"This adjustment no longer exists.","This adjustment no longer exists."
+"Edit Adjustment","Edit Adjustment"
+"Add a New Adjustment","Add a New Adjustment"
+"Edit Adjustment ""%1""","Edit Adjustment ""%1"""
+"Add New Adjustment","Add New Adjustment"
+AdjustStock,AdjustStock
+"Manage Adjustment","Manage Adjustment"
+No.,No.
+"Product Name","Product Name"
+Barcode,Barcode
+"Old Qty","Old Qty"
+"New Qty","New Qty"
+"Adjust Qty","Adjust Qty"
+"The stock adjustment has been successfully applied.","The stock adjustment has been successfully applied."
+"Data includes non-existent SKU(s)! Please try again","Data includes non-existent SKU(s)! Please try again"
+" to modify and try to import them again."," to modify and try to import them again."
+"here","here"
+"Invalid file upload attempt","Invalid file upload attempt"
+"Manage Stock Adjustment","Manage Stock Adjustment"
+"Inventory Success","Inventory Success"
+"Manage Adjust Stock","Manage Adjust Stock"
+"This code has been applied for another adjustment. Please use another code.","This code has been applied for another adjustment. Please use another code."
+"No product to adjust stock.","No product to adjust stock."
+"The adjustment has been saved.","The adjustment has been saved."
+"Cannot save adjustment!","Cannot save adjustment!"
+"Unable to find adjust stock to create","Unable to find adjust stock to create"
+"Invalid file upload attempt.","Invalid file upload attempt."
+QTY,QTY
+"Invalid file format.","Invalid file format."
+Pending,Pending
+Completed,Completed
+Canceled,Canceled
+Complete,Complete
+"No linked stock found","No linked stock found"
+"Required field is null","Required field is null"
+"Adjustment Code","Adjustment Code"
+Source,Source
+Status,Status
+"Created By","Created By"
+"Created At","Created At"
+"Adjusted By","Adjusted By"
+Reason,Reason
+"Scan barcode","Scan barcode"
+"Scan/enter barcode","Scan/enter barcode"
+ID,ID
+Name,Name
+Thumbnail,Thumbnail
+Adjust,Adjust
+Actions,Actions
+Cancel,Cancel
+Remove,Remove
+Instruction,Instruction
+Download,Download
+"Please choose  a CSV file to import:","Please choose  a CSV file to import:"
+"Invalid data","Invalid data"
+"There are %1 invalid rows. You must download","There are %1 invalid rows. You must download"
+"this file","this file"
+" to modify and try to import them again."," to modify and try to import them again."
+"Import products","Import products"
+"Upload & Edit","Upload & Edit"
+Import,Import
+"Stock adjustment will be applied immediately! Confirm Adjustment?","Stock adjustment will be applied immediately! Confirm Adjustment?"
+"Barcode #%s has been added to the list.","Barcode #%s has been added to the list."
+"No product found.","No product found."
+"Order Success","Order Success"
+"Inventory Management","Inventory Management"
+"Stock Control","Stock Control"
+"Adjust Stock","Adjust Stock"
+"Create a new Stock Adjusment","Create a new Stock Adjusment"
+"Stock Adjustment History","Stock Adjustment History"
+"Confirm Stock Adjusment","Confirm Stock Adjusment"
+"Delete Adjusment","Delete Adjusment"
+"Inventory Management Settings","Inventory Management Settings"
+"New Stock Adjustment","New Stock Adjustment"
+"Add Stock Adjustment","Add Stock Adjustment"
+CSV,CSV
+"Excel XML","Excel XML"
+"Created on","Created on"
+Action,Action

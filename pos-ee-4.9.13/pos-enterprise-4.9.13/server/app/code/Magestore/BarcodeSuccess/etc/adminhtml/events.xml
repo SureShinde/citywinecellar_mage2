@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="catalog_product_save_after">
+        <observer name="save_barcode" instance="Magestore\BarcodeSuccess\Observer\Catalog\Product\CatalogProductSaveAfter" />
+    </event>
+    <event name="controller_action_predispatch_adminhtml_system_config_edit">
+        <observer name="barcodesuccess_controller_action_predispatch_adminhtml_system_config_edit" instance="Magestore\BarcodeSuccess\Observer\Controller\Action\Predispatch\AdminhtmlSystemConfigEdit"/>
+    </event>
+    <event name="admin_system_config_changed_section_barcodesuccess">
+        <observer name="barcodesuccess_admin_system_config_changed_section_barcodesuccess" instance="Magestore\BarcodeSuccess\Observer\Admin\System\Config\ChangeSectionBarcode"/>
+    </event>
+</config>

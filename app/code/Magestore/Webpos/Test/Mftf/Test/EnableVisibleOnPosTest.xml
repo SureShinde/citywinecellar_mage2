@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="A0_EnableVisibleOnPosTest">
+        <annotations>
+            <features value="Enable Visible On Pos"/>
+            <stories value="Enable Visible On Pos"/>
+            <title value="Enable Visible On Pos"/>
+            <description value="Enable Visible On Pos"/>
+            <severity value="CRITICAL"/>
+            <group value="pwapos"/>
+        </annotations>
+        <before>
+            <createData stepKey="visibleProductOnPos1" entity="pos_simple_product_with_custom_option" />
+            <createData stepKey="visibleProductOnPos2" entity="pos_virtual_product" />
+            <createData stepKey="visibleProductOnPos3" entity="pos_virtual_product_with_custom_option" />
+        </before>
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="reloadPage"/>
+    </test>
+</tests>

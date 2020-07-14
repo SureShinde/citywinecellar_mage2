@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd" layout="1column">
+    <head>
+        <css src="css/styles-m.css"/>
+        <css src="css/styles-l.css" media="screen and (min-width: 768px)"/>
+        <css src="css/print.css" media="print"/>
+    </head>
+    <body>
+        <block class="Magestore\PurchaseOrderSuccess\Block\PurchaseOrder\Header"
+               name="print-header" cacheable="false"
+               template="Magestore_PurchaseOrderSuccess::purchaseorder/header.phtml"/>
+        <block class="Magestore\PurchaseOrderSuccess\Block\PurchaseOrder\Content"
+               name="print-items" cacheable="false"
+               template="Magestore_PurchaseOrderSuccess::purchaseorder/content.phtml"/>
+        <block class="Magestore\PurchaseOrderSuccess\Block\PurchaseOrder\Footer"
+               name="print-total" cacheable="false"
+               template="Magestore_PurchaseOrderSuccess::purchaseorder/footer.phtml"/>
+    </body>
+</page>

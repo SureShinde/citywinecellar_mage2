@@ -1,0 +1,36 @@
+<!--@subject A new comment was added @-->
+<!--@vars {
+"var need_approval":"Need to Approve",
+"var post_title":"Post title",
+"var post_link":"Post url",
+"var comment_name":"Comment name",
+"var comment_email":"Comment email",
+"var comment_message":"Comment message"
+} @-->
+
+{{template config_path="design/email/header_template"}}
+
+<table>
+    <tr class="email-intro">
+        <td align="top">
+            <h1 style="font-size:22px; font-weight:normal; line-height:22px; margin:0 0 11px 0;">{{trans "A new comment was added"}}</h1>
+            <p style="font-size:12px; line-height:16px; margin:0;">
+                {{trans "A new comment on the post"}} <a href="{{var post_link}}">"{{var post_title}}"</a> {{trans "was added"}}.
+                {{depend need_approval}}{{trans "It's waiting for your approval"}}.{{/depend}}
+            </p>
+            <ul style="font-size:12px; line-height:16px; margin:0;">
+                <li><strong>{{trans "Author"}}: </strong>{{var comment_name}}</li>
+                <li><strong>{{trans "E-mail"}}: </strong>{{var comment_email}}</li>
+                <li><strong>{{trans "Comment"}}: </strong>{{var comment_message}}</li>
+            </ul>
+            <br>
+            {{if link}}
+            <p>{{trans "Click "}} <a href="{{var link}}">{{trans "link"}}</a>{{trans " to see the comment"}}.</p>
+            {{/if}}
+
+            <p>{{trans "Best Regards"}},  {{var store.getFrontendName()}}</p>
+        </td>
+    </tr>
+</table>
+
+{{template config_path="design/email/footer_template"}}

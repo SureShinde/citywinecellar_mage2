@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="os_inventorytransfer_listing_data_source" xsi:type="string">Magestore\TransferStock\Model\ResourceModel\InventoryTransfer\Grid\Collection</item>
+                <item name="inventorytransfer_shortfall_data_source" xsi:type="string">Magestore\TransferStock\Model\ResourceModel\InventoryTransfer\Grid\ShortFall</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <preference for="Magestore\TransferStock\Api\Data\InventoryTransfer\InventoryTransferInterface" type="Magestore\TransferStock\Model\InventoryTransfer"/>
+    <preference for="Magestore\TransferStock\Api\Data\InventoryTransfer\InventoryTransferProductInterface" type="Magestore\TransferStock\Model\InventoryTransfer\InventoryTransferProduct"/>
+
+    <preference for="Magestore\TransferStock\Api\TransferManagementInterface" type="Magestore\TransferStock\Model\InventoryTransfer\TransferManagement"/>
+
+    <preference for="Magestore\TransferStock\Api\Data\InventoryTransfer\ReceiveInterface" type="Magestore\TransferStock\Model\InventoryTransfer\Receive"/>
+    <preference for="Magestore\TransferStock\Api\Data\InventoryTransfer\ReceiveProductInterface" type="Magestore\TransferStock\Model\InventoryTransfer\ReceiveProduct"/>
+
+    <preference for="Magestore\TransferStock\Api\MultiSourceInventory\SourceManagementInterface" type="Magestore\TransferStock\Model\MultiSourceInventory\SourceManagement"/>
+</config>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright © 2019 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  ~
+  -->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="SwitchOfflineCheckConditionTest1">
+        <annotations>
+            <features value="Wait for offline 1"/>
+            <stories value="Wait for offline 1"/>
+            <title value="Wait for offline 1"/>
+            <description value="Wait for offline 1"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="Stable-Offline"/>
+            <group value="Stable-Offline-Customer"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="SwitchOfflineModeActionGroup" stepKey="waitSwitchOfflineModeAction"/>
+    </test>
+    <test name="SwitchOfflineCheckConditionTest2">
+        <annotations>
+            <features value="Wait for offline 2"/>
+            <stories value="Wait for offline 2"/>
+            <title value="Wait for offline 2"/>
+            <description value="Wait for offline 2"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="Stable-Offline"/>
+            <group value="Stable-Offline-Customer"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="SwitchOfflineModeActionGroup" stepKey="waitSwitchOfflineModeAction"/>
+    </test>
+    <test name="SwitchOfflineCheckConditionTest3">
+        <annotations>
+            <features value="Wait for offline 3"/>
+            <stories value="Wait for offline 3"/>
+            <title value="Wait for offline 3"/>
+            <description value="Wait for offline 3"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="Stable-Offline"/>
+            <group value="Stable-Offline-Customer"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="SwitchOfflineModeActionGroup" stepKey="waitSwitchOfflineModeAction"/>
+    </test>
+    <test name="SwitchOfflineCheckConditionTest4">
+        <annotations>
+            <features value="Wait for offline 4"/>
+            <stories value="Wait for offline 4"/>
+            <title value="Wait for offline 4"/>
+            <description value="Wait for offline 4"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="Stable-Offline"/>
+            <group value="Stable-Offline-Customer"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="SwitchOfflineModeActionGroup" stepKey="waitSwitchOfflineModeAction"/>
+    </test>
+    <test name="SwitchOfflineCheckConditionTest5">
+        <annotations>
+            <features value="Wait for offline 5"/>
+            <stories value="Wait for offline 5"/>
+            <title value="Wait for offline 5"/>
+            <description value="Wait for offline 5"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="Stable-Offline"/>
+            <group value="Stable-Offline-Customer"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="SwitchOfflineModeActionGroup" stepKey="waitSwitchOfflineModeAction"/>
+    </test>
+    <test name="SwitchOfflineCheckConditionTest6">
+        <annotations>
+            <features value="Wait for offline 6"/>
+            <stories value="Wait for offline 6"/>
+            <title value="Wait for offline 6"/>
+            <description value="Wait for offline 6"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="Stable-Offline"/>
+            <group value="Stable-Offline-Customer"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="SwitchOfflineModeActionGroup" stepKey="waitSwitchOfflineModeAction"/>
+    </test>
+</tests>

@@ -1,0 +1,17 @@
+<?php foreach ($block->getModules() as $name => $version): ?>
+    <tr>
+        <td class="label">
+            <label>
+                <span data-config-scope="<?php echo __('[GLOBAL]'); ?>">
+                    <?php echo $name ?>
+                </span>
+            </label>
+        </td>
+        <td class="value">
+            <div class="control-value">
+                <?php echo $version ?>
+            </div>
+        </td>
+        <td class=""></td>
+    </tr>
+<?php endforeach; ?>

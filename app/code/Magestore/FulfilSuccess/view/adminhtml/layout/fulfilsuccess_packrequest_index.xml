@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="styles"/>
+    <update handle="fulfilsuccess_packrequest_default"/>
+    <body>
+        <referenceContainer name="content">
+            <uiComponent name="os_fulfilsuccess_packrequest_listing"/>
+            <uiComponent name="os_fulfilsuccess_recent_packed_listing"/>
+            <!--<block class="Magestore\FulfilSuccess\Block\Adminhtml\PackRequest\Packaging" name="pack_request"-->
+                   <!--template="Magestore_FulfilSuccess::packRequest/packaging/popup.phtml"/>-->
+            <block class="Magestore\FulfilSuccess\Block\Adminhtml\PackRequest\ViewModal" name="detail_holder" template="Magestore_FulfilSuccess::abstractRequest/detail_holder.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

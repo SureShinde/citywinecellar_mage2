@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+
+<!--
+  ~  Copyright © 2018 Magestore. All rights reserved.
+  ~  See COPYING.txt for license details.
+  -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="magestore" translate="label" sortOrder="400">
+            <label>Magestore Omnichannel</label>
+        </tab>
+        <section id="reportsuccess" translate="label" sortOrder="400" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Omni-channel Reports</label>
+            <class>separator-top</class>
+            <tab>magestore</tab>
+            <resource>Magestore_ReportSuccess::config_reports</resource>
+            <group id="general" translate="label comment" sortOrder="1" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General</label>
+                <field id="enable_barcode_in_report" translate="label" sortOrder="10" type="select" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Enable Custom Product Attribute</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Enable if you want to use another attribute as the ID number for products in the Omni-channel reports besides SKU (E.g. supplier barcode, product EAN code, etc.).</comment>
+                </field>
+                <field id="barcode" translate="label comment" sortOrder="20" type="select" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Custom Product Attribute</label>
+                    <depends>
+                        <field id="enable_barcode_in_report">1</field>
+                    </depends>
+                    <source_model>Magestore\ReportSuccess\Model\Source\Adminhtml\Product\BarcodeAttribute</source_model>
+                    <comment model="Magestore\ReportSuccess\Model\Adminhtml\Barcode\Comment" />
+                </field>
+            </group>
+            <group id="historical_stock_report" translate="label" sortOrder="1" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Historical Stock Report</label>
+                <field id="duration" translate="label comment" sortOrder="20" type="select" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Duration</label>
+                    <source_model>Magestore\ReportSuccess\Model\Config\Source\Duration</source_model>
+                    <comment>The system only saves your historical reports within this period. The longer the period, the more storage used.</comment>
+                </field>
+                <field id="schedule_time" translate="label" sortOrder="20" type="select" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Schedule Time</label>
+                    <source_model>Magestore\ReportSuccess\Model\Config\Source\ScheduleTime</source_model>
+                    <comment model="Magestore\ReportSuccess\Model\Adminhtml\ScheduleTime\Comment" />
+                </field>
+            </group>
+
+            <group id="include_costing_method" translate="label" sortOrder="1" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Inventory Costing Method</label>
+                <field id="include_discount" translate="label" sortOrder="10" type="select" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Include Discount in Landed Cost</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="include_tax" translate="label" sortOrder="10" type="select" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Include Tax in Landed Cost</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="include_shipping" translate="label" sortOrder="10" type="select" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Include Shipping Cost in Landed Cost</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>If Yes, PO Shipping Cost will be divided per line item, based on the ratio of the line item values to the PO subtotal value.</comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

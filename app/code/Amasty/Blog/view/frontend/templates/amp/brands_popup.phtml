@@ -1,0 +1,21 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+?>
+<?php
+/**
+ * @var \Amasty\ShopbyBrand\Block\BrandsPopup $block
+ */
+?>
+
+<section class="catalog-item level-top">
+    <h2 class="amblog-amp-title">
+        <a class="amblog-amp-item" href="<?= $block->escapeUrl($block->getAllBrandsUrl()) ?>">
+            <?= $block->escapeHtml($block->getLabel()) ?>
+        </a>
+    </h2>
+    <span></span>
+</section>

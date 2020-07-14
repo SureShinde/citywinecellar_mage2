@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Magestore_AdjustStock::inventory" title="Inventory Management" translate="title" module="Magestore_AdjustStock" sortOrder="20" resource="Magestore_AdjustStock::inventory"/>
+
+        <!--stock control menu-->
+        <add id="Magestore_AdjustStock::stockcontrol" title="Stock Control" translate="title" module="Magestore_AdjustStock" parent="Magestore_AdjustStock::inventory" sortOrder="60" resource="Magestore_AdjustStock::stockcontrol"/>
+        <add id="Magestore_AdjustStock::adjuststock_history" title="Inventory Adjustment" module="Magestore_AdjustStock" translate="title" sortOrder="30" parent="Magestore_AdjustStock::stockcontrol" resource="Magestore_AdjustStock::adjuststock_history" action="adjuststock/adjuststock/index"/>
+        <!--end stock control menu-->
+
+    </menu>
+</config>

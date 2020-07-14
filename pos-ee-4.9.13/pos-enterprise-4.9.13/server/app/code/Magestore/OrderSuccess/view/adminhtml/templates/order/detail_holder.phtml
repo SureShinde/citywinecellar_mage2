@@ -1,0 +1,35 @@
+<?php
+
+/**
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+?>
+<div id="<?php echo $block->getModalId() ?>"></div>
+
+<script>
+    require([
+        'jquery',
+        'Magestore_OrderSuccess/js/order/modal/action-builder',
+        'Magento_Ui/js/modal/modal',
+        "mage/mage",
+        "mage/validation",
+        "loadingPopup"
+    ], function ($, ActionBuilder) {
+        
+        var buttons = <?php echo $block->getButtons() ?>;
+        for (var i in buttons){
+            ActionBuilder.initAction(buttons[i]);
+        }
+        
+        $('#<?php echo $block->getModalId() ?>').modal(
+            {
+                type: 'slide',
+                modalClass: 'mage-new-video-dialog form-inline',
+                //title: $.mage.__('<?php echo $block->getTitle()?>'),
+                buttons: buttons
+            }
+        )
+    });
+
+</script>

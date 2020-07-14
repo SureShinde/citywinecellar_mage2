@@ -1,0 +1,108 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+?>
+<?php
+/** @var \Amasty\Blog\Block\Content\Post $block */
+$post = $block->getPost();
+$image = $post->getPostThumbnailSrc();
+?>
+<div class="amblog-post-container">
+    <?php if ($image) : ?>
+        <div class="amblog-wrapper">
+        <?php if ($block->hasThumbnailUrl()) : ?>
+            <a class="thumbnail-url"
+               title="<?= $block->escapeHtml($post->getTitle()); ?>"
+               href="<?= $block->escapeUrl($block->getThumbnailUrl()); ?>">
+        <?php endif; ?>
+                <img src="<?= $block->escapeUrl($image); ?>"
+                     class="amblog-image"
+                     alt="<?= $block->escapeHtml($post->getThumbnailAlt('post')); ?>" />
+        <?php if ($block->hasThumbnailUrl()) : ?>
+            </a>
+        <?php endif; ?>
+        </div>
+    <?php endif; ?>
+    <div class="amblog-tags">
+        <?= $block->getTagsHtml($post); ?>
+    </div>
+    <div class="amblog-features -post">
+        <?= $block->getCategoriesHtml($post); ?>
+        <?= $block->getAuthorHtml($post); ?>
+        <?= $block->getShortCommentsHtml($post); ?>
+        <?= $block->getAuthorPostsHtml($post); ?>
+    </div>
+    <div class="amblog-content">
+        <h2 class="amblog-title">
+            <?= $block->escapeHtml($post->getTitle()); ?>
+        </h2>
+        <?= /* @noEscape */ $post->getFullContent(); ?>
+        <div class="amblog-bottom">
+            <div>
+                <span class="amblog-date">
+                    <?= $block->escapeHtml($block->renderDate($post->getPublishedAt())); ?>
+                </span>
+            </div>
+            <?php if ($block->getShowPrintLink()) : ?>
+                <div class="amblog-item -print">
+                    <svg class="amblog-svg print <?= $block->escapeHtml($block->getColorClass()); ?>">
+                        <use xlink:href="<?= $block->escapeUrl($block->getViewFileUrl('Amasty_Blog::images/sprite.svg')); ?>#print"></use>
+                    </svg>
+                    <a class="amblog-ref"
+                       href="#"
+                       onclick="window.print(); return false;"
+                       title="<?= $block->escapeHtml(__('Print This Page')); ?>">
+                        <?= $block->escapeHtml(__('Print')); ?>
+                    </a>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+    <?php if ($block->getSettingHelper()->getSocialEnabled()) : ?>
+        <?= $block->getSocialHtml(); ?>
+    <?php endif; ?>
+    <?php if ($block->getSettingHelper()->getHelpfulEnabled()) : ?>
+        <?= $block->getHelpfulHtml(); ?>
+    <?php endif; ?>
+</div>
+
+<?= $block->getChildHtml('amblog.post.related');?>
+
+<?php if ($block->getUseCommentsGlobal() && $post->getCommentsEnabled()) : ?>
+    <div class="amblog-comments-wrapper">
+        <div class="amblog-title"><?= $block->escapeHtml(__('Comments')); ?></div>
+        <div class="amblog-comments-container" id="comments">
+            <?= $block->getChildHtml('amblog.comments.list') ?>
+        </div>
+
+        <div class="amblog-comments-action">
+            <?= $block->getChildHtml('amblog.comments.form'); ?>
+        </div>
+    </div>
+<?php endif; ?>
+<div class="amblog-overlay" data-amblog-js="overlay"></div>
+
+<script type="text/x-magento-init">
+{
+    "*": {
+         "amBlogAccord": {}
+    }
+}
+</script>
+<script type="text/x-magento-init">
+{
+    "*": {
+         "amBlogViewStatistic": {
+            "update_url" :
+            "<?= $block->escapeUrl($block->getUrl('amblog/index/view', ['post_id' => $block->getPost()->getPostId()])) ?>"
+         }
+    }
+}
+</script>
+<?php foreach ($block->getJsonMicroData() as $microData) :?>
+    <script type="application/ld+json"><?= /* @noEscape */$microData; ?></script>
+<?php endforeach;?>
+

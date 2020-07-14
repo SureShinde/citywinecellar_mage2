@@ -1,0 +1,275 @@
+<div id="block-printreceipt" data-bind="visible : is_show_report ">
+
+    <style>
+        @media screen {
+            .paper {
+                margin: 5px auto;
+                max-width: 500px;
+            }
+        }
+
+        @media print {
+            body {
+                color: #000;
+                background-color: #fff;
+            }
+        }
+
+        @page {
+            size: auto;
+            margin: 0mm 4mm;
+        }
+
+        @font-face {
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        .block-printreceipt {
+            max-width: 325px;
+            margin: 0 auto;
+            padding: 25px 5px;
+            background-color: #fff;
+            text-align: center;
+            color: #1d1d1d;
+            font-size: 11px;
+        }
+
+        .block-printreceipt p {
+            margin-bottom: 3px;
+            margin-top: 0;
+        }
+
+        .block-printreceipt hr {
+            border-color: #cccdcd;
+            border-width: 0;
+        }
+
+        .block-printreceipt table {
+            width: 100%;
+            text-align: left;
+            line-height: 20px;
+        }
+
+        .block-printreceipt table tr td,
+        .block-printreceipt table tr th {
+            vertical-align: text-top;
+            padding: 2px 3px;
+            border: none;
+            line-height: 16px;
+        }
+
+        .block-printreceipt table tr .t-qty,
+        .block-printreceipt table tr .t-price {
+            padding: 2px 6px;
+        }
+
+        .block-printreceipt .t-name {
+            width: 100%;
+        }
+
+        .block-printreceipt .t-qty,
+        .block-printreceipt .t-price,
+        .block-printreceipt .t-total {
+            white-space: nowrap;
+            width: 1%;
+        }
+
+        .block-printreceipt .t-bundle {
+            padding-left: 10px;
+        }
+
+        .block-printreceipt i {
+            font-size: 10px;
+        }
+
+        .block-printreceipt .title {
+            font-size: 25px;
+            display: block;
+            font-weight: bold;
+        }
+
+        .text-header {
+            font-weight: bold;
+        }
+
+        .block-printreceipt .text-right {
+            text-align: right;
+        }
+
+        .block-printreceipt .text-center {
+            text-align: center;
+        }
+
+        .block-printreceipt .text-left {
+            text-align: left;
+        }
+
+    </style>
+
+
+    <div class="block-printreceipt">
+        <!-- ko if : isClosed -->
+        <div class="title" data-bind="i18n : 'Z - REPORT'"/>
+        <!-- /ko -->
+        <!-- ko ifnot : isClosed -->
+        <div class="title" data-bind="i18n : 'X - REPORT'"/>
+        <!-- /ko -->
+        <p><!-- ko text : 'Session ID : ' --><!-- /ko --><!-- ko text : session_id --><!-- /ko --></p>
+        <br>
+        <br>
+        <table>
+            <tbody>
+            <tr>
+                <td data-bind="i18n : 'Location'"/>
+                <td class="text-right" data-bind="text : location"/>
+            </tr>
+            <tr>
+                <td data-bind="i18n : 'POS'"/>
+                <td class="text-right" data-bind="text : pos"/>
+            </tr>
+            <tr>
+                <td data-bind="i18n : 'Staff'"/>
+                <td class="text-right" data-bind="text : staff"/>
+            </tr>
+            <tr>
+                <td data-bind="i18n : 'Opened'"/>
+                <td class="text-right" data-bind="text : opened_at"/>
+            </tr>
+            <!-- ko if : isClosed -->
+            <tr>
+                <td data-bind="i18n : 'Closed'"/>
+                <td class="text-right" data-bind="text : closed_at"/>
+            </tr>
+            <!-- /ko -->
+            </tbody>
+        </table>
+        <br>
+        <br>
+        <table>
+            <tbody>
+            <!-- ko ifnot : isClosed -->
+            <tr>
+                <td colspan="2" class="text-center text-header" data-bind="i18n : 'NET AMOUNT'"/>
+            </tr>
+            <tr>
+                <td colspan="2" class="text-center text-header" data-bind="text : net_amount"/>
+            </tr>
+            <!-- /ko -->
+
+            <!-- ko if : isClosed -->
+            <tr>
+                <td class="text-center text-header" data-bind="i18n : 'NET AMOUNT'"/>
+                <td class="text-center text-header" data-bind="i18n : 'CASH DIFFERENCE'"/>
+            </tr>
+            <tr>
+                <td class="text-center text-header" data-bind="text : net_amount"/>
+                <td class="text-center text-header" data-bind="text : different_amount"/>
+            </tr>
+            <!-- /ko -->
+
+            </tbody>
+        </table>
+        <br>
+        <br>
+        <table>
+            <tbody>
+            <tr>
+                <td colspan="2" class="text-header" data-bind="i18n : '#Cash'"/>
+            </tr>
+            <tr>
+                <td data-bind="i18n : 'Opening Balance'"/>
+                <td class="text-right" data-bind="text : opening_amount"/>
+            </tr>
+
+            <!-- ko if : isClosed -->
+            <tr>
+                <td data-bind="i18n : 'Closing Balance'"/>
+                <td class="text-right" data-bind="text : closing_amount"/>
+            </tr>
+            <!-- /ko -->
+
+            <tr>
+                <!-- ko if : isClosed -->
+                <td data-bind="i18n : 'Theoretical Closing Amount'"/>
+                <!-- /ko -->
+                <!-- ko ifnot : isClosed -->
+                <td data-bind="i18n : 'Theoretical Cash Amount'"/>
+                <!-- /ko -->
+                <td class="text-right" data-bind="text : theoretical_closing_amount"/>
+            </tr>
+
+            <!-- ko if : isClosed -->
+            <tr>
+                <td data-bind="i18n : 'Cash Difference'"/>
+                <td class="text-right" data-bind="text : different_amount"/>
+            </tr>
+            <!-- /ko -->
+            </tbody>
+        </table>
+        <br>
+        <br>
+        <table>
+            <tbody>
+            <tr>
+                <td colspan="2"></td>
+            </tr>
+            <tr>
+                <td data-bind="i18n : 'Cash Sales'"/>
+                <td class="text-right" data-bind="text : cash_sales"/>
+            </tr>
+            <tr>
+                <td data-bind="i18n : 'Cash Refund'"/>
+                <td class="text-right" data-bind="text : cash_refund"/>
+            </tr>
+            <tr>
+                <td data-bind="i18n : 'Pay Ins'"/>
+                <td class="text-right" data-bind="text : cash_in"/>
+            </tr>
+            <tr>
+                <td data-bind="i18n : 'Payouts'"/>
+                <td class="text-right" data-bind="text : cash_out"/>
+            </tr>
+            </tbody>
+        </table>
+        <br>
+        <br>
+        <table>
+            <tbody>
+            <tr>
+                <td colspan="2" class="text-header" data-bind="i18n : '#Payment Method'"/>
+            </tr>
+            <!-- ko foreach: payments -->
+            <tr>
+                <td data-bind="text : title "/>
+                <td class="text-right" data-bind=" text : $parent.formatCurrency(amount_paid)"/>
+            </tr>
+            <!-- /ko -->
+            </tbody>
+        </table>
+        <br>
+        <br>
+        <table>
+            <tbody>
+            <tr>
+                <td colspan="2" class="text-header" data-bind="i18n : '#Sales'"/>
+            </tr>
+            <tr>
+                <td data-bind="i18n : 'Total Amount'"/>
+                <td class="text-right" data-bind="text : total_amount"/>
+            </tr>
+            <tr>
+                <td data-bind="i18n : 'Refund Amount'"/>
+                <td class="text-right" data-bind="text : refund_amount"/>
+            </tr>
+            <tr>
+                <td data-bind="i18n : 'Net Amount'"/>
+                <td class="text-right" data-bind="text : net_amount"/>
+            </tr>
+            </tbody>
+        </table>
+        <br>
+        <br>
+        <p class="text-right" style="font-size: 15px;text-align: center"><!-- ko text : 'Printed At : ' --><!-- /ko --><!-- ko text : print_at --><!-- /ko --></p>
+    </div>
+</div>

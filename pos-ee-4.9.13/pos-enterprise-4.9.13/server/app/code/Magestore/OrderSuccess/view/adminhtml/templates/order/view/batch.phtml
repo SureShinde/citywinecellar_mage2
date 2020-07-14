@@ -1,0 +1,74 @@
+<?php
+/**
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+?>
+<tr>
+    <th><?php /* @escapeNotVerified */ echo __('Batch') ?></th>
+    <td class="batch_td" style="padding-right:0;">
+        <select id="os_batch" class="admin__control-select os_batch" name="batch">
+            <?php foreach ($block->getBatchList() as $batch):?>
+                <option <?php if($block->getCurrentBatch() == $batch['value']):?>selected<?php endif?>
+                    value="<?php echo $batch['value']?>">
+                        <?php echo $batch['label']?>
+                </option>
+            <?php endforeach;?>
+        </select>
+        <div id="batch_loading" class="batch_loading"></div>
+        <div id="batch_success" class="batch_success"></div>
+    </td>
+</tr>
+<script>
+    require([
+        "jquery",
+        "uiRegistry",
+        "prototype"
+    ], function($, registry){
+        $('#os_batch').change(function() {
+            var value = $(this).val();
+            var url = "<?php echo $block->getUrl('ordersuccess/order_ajax/updatebatch')?>";
+            var parameters = $H({
+                'order_id': '<?php echo $block->getOrderId()?>',
+                'batch': value
+            });
+            $('#batch_loading').css('display', 'block');
+            $('#batch_success').css('display', 'none');
+            new Ajax.Request(url, {
+                parameters: parameters,
+                loaderArea: false,
+                onSuccess: function(transport) {
+                    var response = transport.responseText;
+                    if (response.isJSON()) {
+                        response = response.evalJSON();
+                        var error = response.error;
+                        var message = response.message;
+                        if(response.html != undefined){
+                            $('#os_batch').append(response.html);
+                        }
+                        if (error == false) {
+                            $('#batch_success').css('display', 'block');
+                            $('#batch_loading').css('display', 'none');
+                            reloadBatchParent();
+                        } else {
+                            $('#batch_success').css('display', 'none');
+                            $('#batch_loading').css('display', 'block');
+                            alert(message);
+                        }
+                    }
+                }.bind(this)
+            });
+        });
+
+        function reloadBatchParent() {
+            var gridName = 'os_needverify_listing.os_needverify_listing_data_source';
+            var params = [];
+            var target = registry.get(gridName);
+            if (target && typeof target === 'object') {
+                target.set('params.t ', Date.now());
+            }
+        };
+    });
+</script>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:DataGenerator/etc/dataProfileSchema.xsd">
+    <entity name="store171" type="store">
+        <data key="code">source171</data>
+        <data key="name">Store 171</data>
+        <data key="contact_name">Jackson Myers</data>
+        <data key="contact_email">jackson@gmail.com</data>
+        <data key="contact_phone">0123456789</data>
+    </entity>
+    <entity name="store172" type="store">
+        <data key="code">source172</data>
+        <data key="name">Store 172</data>
+        <data key="contact_name">Jackson Myers 2</data>
+        <data key="contact_email">jackson2@gmail.com</data>
+        <data key="contact_phone">0123456789</data>
+    </entity>
+    <entity name="store173" type="store">
+        <data key="code">source173</data>
+        <data key="name">Store 173</data>
+        <data key="contact_name">Jackson Myers 3</data>
+        <data key="contact_email">jackson3@gmail.com</data>
+        <data key="contact_phone">0123456789</data>
+    </entity>
+</entities>

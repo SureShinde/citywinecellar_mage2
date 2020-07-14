@@ -1,0 +1,26 @@
+/*
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+@font-face {
+    font-family: 'icomoon';
+    src:  url('../fonts/icomoon/fonts/icomoon.eot?rtgl9i');
+    src:  url('../fonts/icomoon/fonts/icomoon.eot?rtgl9i#iefix') format('embedded-opentype'),
+    url('../fonts/icomoon/fonts/icomoon.ttf?rtgl9i') format('truetype'),
+    url('../fonts/icomoon/fonts/icomoon.woff?rtgl9i') format('woff'),
+    url('../fonts/icomoon/fonts/icomoon.svg?rtgl9i#icomoon') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.admin__menu .item-posadmin.parent.level-0 > a:before {
+    font-family: 'icomoon' !important;
+    content: "\e93a";
+    font-size: 28px;
+    height: 28px;
+    width: 28px;
+    margin: 0 auto;
+    margin-bottom: 4px;
+    display: block;
+}

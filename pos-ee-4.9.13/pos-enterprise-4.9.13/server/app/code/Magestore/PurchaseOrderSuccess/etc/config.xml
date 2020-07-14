@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <purchaseordersuccess>
+            <product_config>
+                <products_from>1</products_from>
+            </product_config>
+            <tax_and_shipping>
+                <!--<shipping_price>0</shipping_price>-->
+                <!--<default_shipping_cost></default_shipping_cost>-->
+                <customer_tax>1</customer_tax>
+                <!--<default_tax>0</default_tax>-->
+            </tax_and_shipping>
+            <email_template>
+                <email_to_supplier>purchase_order_success_supplier_email</email_to_supplier>
+                <return_email_to_supplier>return_order_success_supplier_email</return_email_to_supplier>
+            </email_template>
+        </purchaseordersuccess>
+    </default>
+</config>

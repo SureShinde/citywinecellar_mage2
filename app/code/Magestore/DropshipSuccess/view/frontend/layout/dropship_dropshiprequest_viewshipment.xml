@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="supplier_account"/>
+    <body>
+        <referenceBlock name="catalog.compare.link" remove="true"/>
+        <referenceBlock name="page.main.title">
+            <action method="setPageTitle">
+                <argument translate="true" name="title" xsi:type="string">View Dropship Details</argument>
+            </action>
+        </referenceBlock>
+        <referenceBlock name="supplier_dropship">
+            <arguments>
+                <argument name="is_highlighted" xsi:type="boolean">true</argument>
+            </arguments>
+        </referenceBlock>
+        <referenceContainer name="content">
+            <block class="Magestore\DropshipSuccess\Block\DropshipRequest\DropshipRequestDetail"
+                   name="dropship_request_detail">
+                <block class="Magestore\DropshipSuccess\Block\Supplier\ViewDropship" name="supplier.dropship.details" cacheable="false" />
+
+                <block class="Magestore\DropshipSuccess\Block\DropshipRequest\Shipment\Items" name="dropship_items" template="Magestore_DropshipSuccess::dropshiprequest/shipment/items.phtml">
+                    <block class="Magento\Sales\Block\Order\Item\Renderer\DefaultRenderer" as="default" template="order/shipment/items/renderer/default.phtml"/>
+                    <block class="Magento\Bundle\Block\Sales\Order\Items\Renderer" as="bundle" template="sales/order/shipment/items/renderer.phtml"/>
+                </block>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

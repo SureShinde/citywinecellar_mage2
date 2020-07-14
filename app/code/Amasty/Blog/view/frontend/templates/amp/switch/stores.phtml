@@ -1,0 +1,44 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+?>
+<?php
+/** @var \Amasty\Blog\Block\Amp\Switcher $block */
+?>
+
+<?php if (count($block->getGroups())>1) : ?>
+    <amp-accordion animate class="switcher store switcher-store" id="switcher-store">
+        <section>
+            <h3 class="amp-switcher-title">
+                <?= $block->escapeHtml(__('Select Store ')) ?>
+                <i class="fas fa-angle-down icon"></i>
+            </h3>
+            <div class="switcher-options">
+                <?php foreach ($block->getGroups() as $_group) : ?>
+                    <?php if ($_group->getId() == $block->getCurrentGroupId()) : ?>
+                        <ul class="links"
+                             id="switcher-store-trigger">
+                            <li>
+                                <a href="#"><strong><?= $block->escapeHtml($_group->getName()) ?></strong></a>
+                            </li>
+                        </ul>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+                <ul class="links" data-target="dropdown">
+                    <?php foreach ($block->getGroups() as $group) : ?>
+                        <?php if (!($group->getId() == $block->getCurrentGroupId())) : ?>
+                            <li class="switcher-option">
+                                <a href="<?= $block->escapeUrl($block->getStoreUrlAmp($group->getDefaultStore())); ?>">
+                                    <?= $block->escapeHtml($group->getName()) ?>
+                                </a>
+                            </li>
+                        <?php endif; ?>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        </section>
+    </amp-accordion>
+<?php endif; ?>

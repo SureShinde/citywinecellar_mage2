@@ -1,0 +1,37 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+?>
+<?php
+/** @var \Amasty\Blog\Block\Sidebar\Recentpost $block */
+
+$collection = $block->getCollection();
+?>
+
+<?php if ($block->getDisplay() && $collection && $collection->getSize()): ?>
+    <div class="amblog-recentcomments sidebar-item">
+        <div class="amblog-amp-title">
+            <?= $block->escapeHtml($block->getBlockHeader()); ?>
+        </div>
+        <?php foreach ($collection as $comment): ?>
+            <div class="amblog-recent-comment item">
+                <a href="<?= $block->escapeUrl($comment->getUrl()); ?>">
+                    <?= $block->escapeHtml($comment->getPostTitle()); ?>
+                </a>
+                <?php if ($block->needShowDate()): ?>
+                    <div class="amblog-sidebar-date">
+                        <?= /* @noEscape */ $block->renderDate($comment->getCreatedAt()); ?>
+                    </div>
+                <?php endif; ?>
+                <?php if ($block->needShowThesis()): ?>
+                    <div class="amblog-comment-thesis">
+                        <?= /* @noEscape */ $block->getStrippedContent($comment->getMessage()); ?>
+                    </div>
+                <?php endif; ?>
+            </div>
+        <?php endforeach; ?>
+    </div>
+<?php endif; ?>

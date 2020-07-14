@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="PosAddConfigurableProductActionGroup">
+        <arguments>
+            <argument name="dataProduct" defaultValue="stable_order_configurable_product"/>
+        </arguments>
+        <fillField stepKey="fillConfigurableProductSearchBox" selector="{{ProductListSection.searchBox}}" userInput="{{dataProduct.sku}}"/>
+        <wait time="2" stepKey="waitForSearchingConfigurableProduct"/>
+        <waitForElementVisible time="30" selector="{{ProductListSection.firstProduct}}" stepKey="seeAtLeaseOneConfigurableProductAfterSearch"/>
+        <click stepKey="clickOnConfigurableProductFoundInList" selector="{{ProductListSection.firstProduct}}"/>
+        <waitForElementVisible selector="{{PosCheckoutPopupAddConfigurableProductSection.configProductPopup}}" time="30" stepKey="waitForConfigurablePopupVisible"/>
+        <waitForElementVisible selector="{{PosCheckoutPopupAddConfigurableProductSection.productOptionsAtribute}}" time="30" stepKey="waitForConfigurableOptionsVisible"/>
+        <click selector="{{ProductListSection.posConfigurationOption('One')}}" stepKey="selectConfigurableOptions"/>
+        <waitForElementNotVisible selector="{{PosCheckoutPopupAddConfigurableProductSection.loaderProduct}}" time="30" stepKey="waitForLoaderConfigurableProductNotVisible"/>
+        <wait time="1" stepKey="wait1secondBeforeAddConfigurableProduct"/>
+        <click selector="{{PosCheckoutPopupAddConfigurableProductSection.addToCartButton}}" stepKey="clickAddConfigurableProductToCart"/>
+        <waitForElementNotVisible selector="{{PosCheckoutPopupAddConfigurableProductSection.configProductPopup}}" time="30" stepKey="waitForConfigurablePopupIsClosed"/>
+        <waitForElementVisible selector="{{CartSection.productFoundOnCartByName(dataProduct.name)}}" time="30" stepKey="waitConfigurableProductIsAddedToCartSuccessfully"/>
+    </actionGroup>
+</actionGroups>

@@ -1,0 +1,102 @@
+
+<?php
+$printData = $this->getPrintData();
+?>
+
+<header class="page-header row">
+    <div class="page-header-hgroup">
+        <div class="page-actions-buttons">
+            <button title="<?php echo __('Close') ?>" type="button" class="action-default" onclick="window.close()">
+                <span class="ui-button-text"><span><?php echo __('Close') ?></span></span>
+            </button>            
+            <button  title="<?php echo __('Print') ?>" type="button" class="action-default scalable primary" onclick="printAction()">
+                <span><?php echo __('Print') ?></span>
+            </button>
+        </div>        
+        <div class="page-title-wrapper">
+            <h1 class="page-title"><?php echo __('Order Picked Items') ?> - <?php echo $this->getCurrentUser()?></h1>
+            <?php echo $this->getCurrentDateTime() ?>
+        </div>          
+    </div>
+</header>
+<main class="page-content">
+    <div class="page-columns">
+<?php if(count($printData)): ?>
+    <?php $orderCount = 1; ?>
+    <?php foreach($printData as $orderRow): ?>
+        <?php if($orderRow['order_id']): ?>
+        <div class="order-detail">
+        <div class="admin__page-section-title">
+            <span class="title">[<?php echo __('Pick #') . $orderRow['pick_request_id'] ?>]</span>           
+            <span class="title">[<?php echo __('Pack #') . $orderRow['pack_request_id'] ?>]</span>           
+            <span class="title"><?php echo ' '.__('Order #') . $orderRow['order_id'] ?></span>
+            <br/><br/>
+            <img class='barcode-img' name='barcode' src="data:image/png;base64,<?php echo $this->getPackBarcodeSource($orderRow['pack_request_id']); ?>"/>
+        </div>          
+        <table class="data-grid" id="lastOrdersGrid_table">        
+            <thead>
+                <tr>
+                    <th class="data-grid-th  no-link col-customer"><span><?php echo __('No')?> #</span></th>
+                    <th class="data-grid-th  no-link col-customer"><span><?php echo __('Item')?> #</span></th>
+                    <th class="data-grid-th  no-link col-items"><span><?php echo __('Name') ?></span></th>
+                    <th class="data-grid-th  no-link col-customer"><span><?php echo __('Barcode')?></span></th>
+                    <th class="data-grid-th  no-link col-total"><span><?php echo __('Picked Qty')?></span></th>
+                    <th class="data-grid-th  no-link col-check a-center last"></th>
+                </tr>
+            </thead> 
+            <tbody>                 
+        <?php endif; ?>
+        <?php $itemCount = 1; ?>
+        <?php foreach($orderRow['items'] as $itemRow): ?>
+                <tr class="_odd-row">
+                    <td class=" col-sku"><span><?php echo $itemCount++ ?></span></td>
+                    <td class=" col-sku"><span><?php echo $itemRow['sku']?></span></td>
+                    <td class=" col-name col-number"><span><?php echo $itemRow['name']?></span></td>
+                    <td class=" col-name col-number"><span><?php echo $itemRow['barcodes']?></span></td>
+                    <td class=" col-request-qty"><span><?php echo $itemRow['picked_qty'] * 1?></span></td>
+                    <td class=" col-check a-center last">
+                        <input type="checkbox" style="background-color: #fff; height: 20px; width: 20px;"/>
+                    </td>
+                </tr>
+        <?php endforeach; ?>
+            </tbody> 
+        </table>  
+        </div>  
+        <?php if($orderCount++ < count($printData)): ?>
+        <h2></h2>
+        <?php endif; ?>
+    <?php endforeach; ?>
+<?php endif; ?>    
+    </div>
+</main>
+
+<style type="text/css">
+    @media print {
+        .page-actions-buttons{
+            display:none !important;
+        }
+        
+        header{
+            display:none !important;
+        }
+
+        h2 { 
+          page-break-before: always;
+        }        
+    }
+    
+    div.checkbox{
+        width: 20px;
+        height: 20px;
+        border: solid 1px #ccc;
+    }
+    .data-grid ._even-row td {border-bottom: 0; border-top: 0.1rem dashed #d6d6d6;}
+    .data-grid ._odd-row td {border-top: 0.1rem dashed #d6d6d6;}
+</style>
+<script type="text/javascript">
+    printAction();
+    
+    function printAction(){
+        window.print();
+    }
+</script>

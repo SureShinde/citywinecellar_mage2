@@ -1,0 +1,54 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+?>
+<?php /** @var \Amasty\Blog\Block\Adminhtml\Posts\Edit\PreviewJsInit $block */?>
+
+<script>
+    require([
+        'jquery',
+        'uiRegistry'
+    ], function($, registry) {
+        $( document ).ready(function () {
+            $('#preview').on('click', function (e) {
+                e.preventDefault();
+                var form = registry.get('posts_form.posts_form');
+                form.validate();
+                if (!form.additionalInvalid && !form.source.get('params.invalid')) {
+                    $.ajax({
+                        url: '<?= $block->escapeUrl($block->getPreviewActionUrl()) ?>',
+                        data: form.source.get('data'),
+                        showLoader: true,
+                        success: function (resp) {
+                            if (resp.ajaxExpired) {
+                                window.location.href = resp.ajaxRedirect;
+                            }
+
+                            if (!resp.error && resp.url) {
+                                window.open(resp.url, '_blank');
+
+                                return true;
+                            }
+
+                            $('body').notification('clear');
+                            $.each(resp.messages, function (key, message) {
+                                $('body').notification('add', {
+                                    error: resp.error,
+                                    message: message,
+                                    insertMethod: function (msg) {
+                                        $('.page-main-actions').after(msg);
+                                    }
+                                });
+                            });
+
+                        },
+                    });
+                }
+                return false;
+            });
+        });
+    });
+</script>

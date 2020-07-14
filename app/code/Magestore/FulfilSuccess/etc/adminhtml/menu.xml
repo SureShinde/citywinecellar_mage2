@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <update id="Magestore_OrderSuccess::all" title="Fulfillment"/>
+            
+        <update id="Magestore_OrderSuccess::order_process" title="Order Fulfillment" translate="title" module="Magestore_FulfilSuccess" parent="Magestore_OrderSuccess::all" sortOrder="10" resource="Magestore_OrderSuccess::order_process"/>
+            <update id="Magestore_OrderSuccess::need_to_verify" title="Verify Orders"/>
+            <update id="Magestore_OrderSuccess::need_to_ship" title="Prepare Fulfil"/>
+            <add id="Magestore_FulfilSuccess::pick_request" title="Pick Items" translate="title" module="Magestore_FulfilSuccess" parent="Magestore_OrderSuccess::order_process" sortOrder="30" resource="Magestore_FulfilSuccess::pick_request" action="fulfilsuccess/pickRequest/index"/>
+                            
+            <add id="Magestore_FulfilSuccess::pack_request" title="Pack Items" translate="title" module="Magestore_FulfilSuccess" parent="Magestore_OrderSuccess::order_process" sortOrder="40" resource="Magestore_FulfilSuccess::pack_request" action="fulfilsuccess/packRequest/index"/>
+
+            <add id="Magestore_FulfilSuccess::package" title="Delivery Packages" translate="title" module="Magestore_FulfilSuccess" parent="Magestore_OrderSuccess::order_process" sortOrder="50" resource="Magestore_FulfilSuccess::ready_to_ship_package" action="fulfilsuccess/package/index"/>
+
+            <add id="Magestore_FulfilSuccess::configuration_menu" title="Fulfillment Configuration" translate="title" module="Magestore_FulfilSuccess" parent="Magestore_OrderSuccess::setting" sortOrder="20" resource="Magestore_FulfilSuccess::configuration_menu" action="adminhtml/system_config/edit/section/fulfilsuccess"/>
+    </menu>
+</config>

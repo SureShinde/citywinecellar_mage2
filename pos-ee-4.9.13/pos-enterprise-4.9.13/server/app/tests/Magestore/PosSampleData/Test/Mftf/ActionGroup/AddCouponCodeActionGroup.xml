@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright © 2019 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  ~
+  -->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="AddCouponCodeActionGroup">
+        <arguments>
+            <argument name="coupon" defaultValue="" type="string"/>
+        </arguments>
+        <click stepKey="clickOnDiscountTotal" selector="{{TotalSection.totalDiscount}}"/>
+        <waitForElementVisible selector="{{DiscountSection.discountContainer}}" time="30" stepKey="waitDiscountPopupVisible"/>
+        <fillField stepKey="fillCouponCode" selector="{{DiscountSection.couponCodeInput}}" userInput="{{coupon}}"/>
+        <click selector="{{DiscountSection.couponCodeApplyButton}}" stepKey="applyCouponCode" />
+        <waitForElementNotVisible selector="{{DiscountSection.couponPopover}}" time="30" stepKey="waitPopupCouponInvisible"/>
+        <waitForElementNotVisible selector="{{DiscountSection.checkingPromotion}}" time="30" stepKey="waitCheckingPromotionInvisible"/>
+    </actionGroup>
+</actionGroups>

@@ -1,0 +1,358 @@
+<?xml version="1.0"?>
+
+<!--
+  ~ Copyright © 2018 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="magestore" translate="label" sortOrder="400">
+            <label>Magestore Omnichannel</label>
+        </tab>
+        <section id="webpos" translate="label" sortOrder="300" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>POS</label>
+            <class>separator-top</class>
+            <tab>magestore</tab>
+            <resource>Magestore_Webpos::config_webpos</resource>
+            <group id="general" translate="label" sortOrder="10" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>General Configuration</label>
+                <field id="webpos_logo" translate="label" sortOrder="10" type="image" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>POS Logo</label>
+                    <backend_model>Magento\Config\Model\Config\Backend\Image\Pdf</backend_model>
+                    <upload_dir config="system/filesystem/media" scope_info="1">webpos/logo</upload_dir>
+                    <base_url type="media" scope_info="1">webpos/logo</base_url>
+                    <comment><![CDATA[Recommended size: 250x50 px <br />Supported file: jpeg, png]]></comment>
+                </field>
+                <!--<field id="webpos_color" translate="label" sortOrder="20" type="select" showInDefault="1" showInWebsite="0" showInStore="0">-->
+                    <!--<label>Web POS Color</label>-->
+                    <!--<source_model>Magestore\Webpos\Model\Source\Adminhtml\Color</source_model>-->
+                <!--</field>-->
+                <field id="session_timeout" translate="label" sortOrder="30" type="text" showInDefault="1"
+                       showInWebsite="0" showInStore="0">
+                    <label>User Session Lifetime</label>
+                    <comment>Second(s)</comment>
+                </field>
+                <!--<field id="enable_session" translate="label" sortOrder="40" type="select" showInDefault="1" showInWebsite="0" showInStore="0">-->
+                    <!--<label>Need to create session before working</label>-->
+                    <!--<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>-->
+                <!--</field>-->
+                <field id="google_api_key" translate="label" sortOrder="50" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Google API Key</label>
+                    <depends>
+                        <field id="suggest_address">1</field>
+                    </depends>
+                    <comment><![CDATA[ Click <a href="https://developers.google.com/maps/documentation/javascript/examples/places-autocomplete-addressform" target="_blank">here</a> to get API key ]]></comment>
+                </field>
+            </group>
+            <group id="product_search" translate="label" sortOrder="20" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Product</label>
+                <field id="barcode" translate="label" sortOrder="10" type="select" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Barcode Attribute</label>
+                    <backend_model>Magestore\Webpos\Model\Indexer\Product\System\Config\Barcode</backend_model>
+                    <source_model>Magestore\Webpos\Model\Source\Adminhtml\Product\Barcodeattribute</source_model>
+                    <comment>This is used to scan barcode. Select an attribute of product that has unique value.</comment>
+                </field>
+                <field id="additional_attributes_on_grid" translate="label" sortOrder="20" type="multiselect" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Show additional attributes on grid</label>
+                    <source_model>Magestore\Webpos\Model\Source\Adminhtml\Product\AdditionalAttributeOnGrid</source_model>
+                    <can_be_empty>1</can_be_empty>
+                </field>
+            </group>
+            <group id="checkout" translate="label" sortOrder="30" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Checkout</label>
+                <field id="add_out_of_stock_product" translate="label" sortOrder="10" type="select" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Add out-of-stock product to cart</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="need_confirm" translate="label" sortOrder="20" type="select" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Need to confirm before deleting cart</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="automatically_send_mail" translate="label" sortOrder="30" type="select" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Automatically send email after completing order</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="use_custom_prefix" translate="label" sortOrder="40" type="select" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Use Custom Prefix for POS Order ID</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="custom_prefix" translate="label" sortOrder="50" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Prefix for POS Order ID</label>
+                    <validate>required-entry validate-no-html-tags validate-length maximum-length-10</validate>
+                    <depends>
+                        <field id="use_custom_prefix">1</field>
+                    </depends>
+                    <comment><![CDATA[
+                        Example: <span id="value"></span>1-1525836503
+                        <br />- 1: ID of the POS from which orders are created
+                        <br />- 1525836503: the ID number defined by order created time in UNIX Epoch format
+                        <script>
+                            require(['jquery'], function($){
+                                $('#webpos_checkout_custom_prefix').parent().find('#value').text($('#webpos_checkout_custom_prefix').val());
+                                $('#webpos_checkout_custom_prefix').change(function(){
+                                    $('#webpos_checkout_custom_prefix').parent().find('#value').text($('#webpos_checkout_custom_prefix').val());
+                                });
+                            });
+                        </script> ]]>
+                    </comment>
+                </field>
+            </group>
+            <group id="guest_checkout" translate="label" sortOrder="40" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Default Guest Checkout</label>
+                <field id="guest_status" translate="label" sortOrder="10" type="select" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Enable Guest Checkout</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="first_name" translate="label" sortOrder="20" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>First Name</label>
+                    <validate>required-entry</validate>
+                    <depends>
+                        <field id="guest_status">1</field>
+                    </depends>
+                </field>
+                <field id="last_name" translate="label" sortOrder="30" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Last Name</label>
+                    <validate>required-entry</validate>
+                    <depends>
+                        <field id="guest_status">1</field>
+                    </depends>
+                </field>
+                <field id="email" translate="label" sortOrder="40" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Email</label>
+                    <validate>validate-email required-entry</validate>
+                    <depends>
+                        <field id="guest_status">1</field>
+                    </depends>
+                </field>
+            </group>
+            <group id="shipping" translate="label" sortOrder="50" type="text" showInDefault="1" showInWebsite="0">
+                <label>Shipping for POS</label>
+                <field id="method" translate="label" sortOrder="10" type="multiselect" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Shipping Methods</label>
+                    <source_model>Magestore\Webpos\Model\Source\Adminhtml\Shipping</source_model>
+                    <can_be_empty>1</can_be_empty>
+                </field>
+                <field id="default_shipping_title" translate="label" sortOrder="20" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Default Shipping Method Title</label>
+                    <validate>required-entry</validate>
+                </field>
+                <field id="enable_delivery_date" translate="label" sortOrder="30" type="select" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Enable Delivery Date</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+            <group id="payment" translate="label" sortOrder="60" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Payment for POS</label>
+            </group>
+            <group id="tax_configuration" translate="label" sortOrder="70" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Tax Configuration</label>
+                <field id="custom_sale_default_tax_class" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Default Tax Class for Custom Sale</label>
+                    <source_model>Magento\Tax\Model\TaxClass\Source\Product</source_model>
+                </field>
+                <group id="price_display" translate="label" sortOrder="20" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Price Display Settings</label>
+                    <field id="product_list" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                        <label>Display product price in product list</label>
+                        <source_model>Magento\Tax\Model\System\Config\Source\PriceType</source_model>
+                    </field>
+                    <field id="shipping" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                        <label>Display shipping price</label>
+                        <source_model>Magento\Tax\Model\System\Config\Source\PriceType</source_model>
+                    </field>
+                </group>
+                <group id="shopping_cart_display" translate="label" sortOrder="30" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Shopping Cart Display Settings</label>
+                    <field id="price" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                        <label>Display Prices</label>
+                        <source_model>Magento\Tax\Model\System\Config\Source\PriceType</source_model>
+                    </field>
+                    <field id="subtotal" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                        <label>Display Subtotal</label>
+                        <source_model>Magento\Tax\Model\System\Config\Source\PriceType</source_model>
+                    </field>
+                    <field id="shipping_amount" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                        <label>Display Shipping Amount</label>
+                        <source_model>Magento\Tax\Model\System\Config\Source\PriceType</source_model>
+                    </field>
+                    <field id="full_tax_summary" translate="label" sortOrder="40" type="select" showInDefault="1" showInWebsite="0" showInStore="0">
+                        <label>Display Full Tax Summary</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+                    <field id="zero_tax_subtotal" translate="label" sortOrder="50" type="select" showInDefault="1" showInWebsite="0" showInStore="0">
+                        <label>Display Zero Tax subtotal</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+                </group>
+                <group id="tax_display" translate="label" sortOrder="40" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Orders, Invoices, Credit Memos Display Settings</label>
+                    <field id="price" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                        <label>Display Prices</label>
+                        <source_model>Magento\Tax\Model\System\Config\Source\PriceType</source_model>
+                    </field>
+                    <field id="subtotal" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                        <label>Display Subtotal</label>
+                        <source_model>Magento\Tax\Model\System\Config\Source\PriceType</source_model>
+                    </field>
+                    <field id="shipping_amount" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                        <label>Display Shipping Amount</label>
+                        <source_model>Magento\Tax\Model\System\Config\Source\PriceType</source_model>
+                    </field>
+                    <!--<field id="full_tax_summary" translate="label" sortOrder="40" type="select" showInDefault="1" showInWebsite="0" showInStore="0">-->
+                        <!--<label>Display Full Tax Summary</label>-->
+                        <!--<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>-->
+                    <!--</field>-->
+                    <field id="zero_tax_subtotal" translate="label" sortOrder="50" type="select" showInDefault="1" showInWebsite="0" showInStore="0">
+                        <label>Display Zero Tax subtotal</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+                </group>
+                <group id="fpt" translate="label" sortOrder="50" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Fixed Product Taxes</label>
+                    <field id="product_price" translate="label" sortOrder="10" type="select" showInDefault="1" showInWebsite="0" showInStore="0">
+                        <label>Display Product Prices</label>
+                        <source_model>Magestore\Webpos\Model\Source\Adminhtml\Config\FptTaxType</source_model>
+                    </field>
+                    <field id="include_in_subtotal" translate="label" sortOrder="20" type="select" showInDefault="1" showInWebsite="0" showInStore="0">
+                        <label>Include FPT in Subtotal</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+                </group>
+            </group>
+            <group id="omnichannel_experience" translate="label" sortOrder="80" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Omni-channel Experience</label>
+                <field id="fulfill_online" translate="label" sortOrder="10" type="select" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Buy at store, fulfill online</label>
+                    <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
+                    <if_module_enabled>Magestore_FulfilSuccess</if_module_enabled>
+                </field>
+            </group>
+            <group id="session" translate="label" sortOrder="85" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Session Management</label>
+                <field id="enable" translate="label" sortOrder="10" type="select" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Manage Session</label>
+                    <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
+                </field>
+                <field id="enable_cash_control" translate="label" sortOrder="20" type="select" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Cash Control</label>
+                    <source_model>Magento\Config\Model\Config\Source\Enabledisable</source_model>
+                    <comment><![CDATA[Cash Control enables you to check the amount of the cash box at the beginning and the end of a session]]></comment>
+                </field>
+                <field id="session_since" translate="label" sortOrder="50" type="select" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>View session history since</label>
+                    <source_model>Magestore\Webpos\Model\Source\Adminhtml\Since</source_model>
+                </field>
+            </group>
+            <group id="order_converter" translate="label" sortOrder="86" type="text" showInDefault="1" showInWebsite="1" showInStore="0">
+                <label>Order Converter</label>
+                <field id="running_time" translate="label" type="time" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Running time</label>
+                    <frontend_model>Magestore\Webpos\Block\Adminhtml\System\Config\CollectionTimeLabel</frontend_model>
+                    <backend_model>Magestore\Webpos\Model\Config\Backend\CollectionTime</backend_model>
+                </field>
+            </group>
+            <group id="offline" translate="label" sortOrder="90" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Synchronization</label>
+                <field id="product_time" translate="label" sortOrder="10" type="select" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Product synchronization time</label>
+                    <source_model>Magestore\Webpos\Model\Source\Adminhtml\Sync</source_model>
+                </field>
+                <field id="stock_item_time" translate="label" sortOrder="20" type="select" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Stock Item synchronization time</label>
+                    <source_model>Magestore\Webpos\Model\Source\Adminhtml\Sync</source_model>
+                </field>
+                <field id="customer_time" translate="label" sortOrder="30" type="select" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Customer synchronization time</label>
+                    <source_model>Magestore\Webpos\Model\Source\Adminhtml\Sync</source_model>
+                </field>
+                <field id="order_time" translate="label" sortOrder="40" type="select" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Order synchronization time</label>
+                    <source_model>Magestore\Webpos\Model\Source\Adminhtml\Sync</source_model>
+                </field>
+                <field id="session_time" translate="label" sortOrder="40" type="select" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Session synchronization time</label>
+                    <source_model>Magestore\Webpos\Model\Source\Adminhtml\Sync</source_model>
+                </field>
+                <field id="order_since" translate="label" sortOrder="50" type="select" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Sync order history since</label>
+                    <source_model>Magestore\Webpos\Model\Source\Adminhtml\Since</source_model>
+                </field>
+            </group>
+
+            <!--<group id="security" translate="label" sortOrder="100" type="text" showInDefault="1" showInWebsite="0" showInStore="0">-->
+                <!--<label>Security</label>-->
+                <!--<field id="sharing_acount" translate="label" sortOrder="10" type="select" showInDefault="1" showInWebsite="0" showInStore="0">-->
+                    <!--<label>Pos Account Sharing</label>-->
+                    <!--<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>-->
+                    <!--<comment><![CDATA[ If set to Yes, you can login from multiple devices in same account.-->
+                                       <!--Default setting No to improves security.-->
+                         <!--]]>-->
+                    <!--</comment>-->
+                <!--</field>-->
+            <!--</group>-->
+            <group id="custom_receipt" translate="label" sortOrder="120" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Custom receipt</label>
+                <field id="display_reason" translate="label" sortOrder="10" type="select" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Display reason for custom price</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="receipt_logo" translate="label" sortOrder="20" type="image" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Receipt Logo</label>
+                    <backend_model>Magento\Config\Model\Config\Backend\Image\Pdf</backend_model>
+                    <upload_dir config="system/filesystem/media" scope_info="1">webpos/receipt_logo</upload_dir>
+                    <base_url type="media" scope_info="1">webpos/receipt_logo</base_url>
+                    <comment><![CDATA[Recommended size: 250x50 px <br />Supported file: jpeg, png]]></comment>
+                </field>
+                <field id="receipt_header" translate="label comment" sortOrder="30" type="textarea" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Receipt Header</label>
+                    <comment>HTML Code</comment>
+                </field>
+                <field id="receipt_footer" translate="label comment" sortOrder="40" type="textarea" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Receipt Footer</label>
+                    <comment>HTML Code</comment>
+                </field>
+            </group>
+
+            <group id="performance" translate="label" sortOrder="130" type="text" showInDefault="1" showInWebsite="1" showInStore="0">
+                <label>Performance</label>
+                <field id="pos_default_mode" translate="label" sortOrder="10" type="select" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>POS Default Mode for PC</label>
+                    <source_model>Magestore\Webpos\Model\Source\Adminhtml\Performance\Mode</source_model>
+                </field>
+                <field id="pos_tablet_default_mode" translate="label" sortOrder="20" type="select" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>POS Default Mode for iPad/Tablet</label>
+                    <source_model>Magestore\Webpos\Model\Source\Adminhtml\Performance\Mode</source_model>
+                </field>
+            </group>
+
+        </section>
+        <!--<section id="payment" translate="label" sortOrder="300" type="text" showInDefault="1" showInWebsite="0" showInStore="0">-->
+            <!--<group id="multipaymentforpos" translate="label" sortOrder="1" type="text" showInDefault="1" showInWebsite="0" showInStore="0">-->
+                <!--<label>POS - Multiple Payments</label>-->
+                <!--<field id="active" translate="label" sortOrder="1" type="select" showInDefault="1" showInWebsite="0" showInStore="0">-->
+                    <!--<label>Enabled</label>-->
+                    <!--<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>-->
+                <!--</field>-->
+            <!--</group>-->
+        <!--</section>-->
+        <section id="about" translate="label" sortOrder="1000" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>About</label>
+            <class>separator-top</class>
+            <tab>magestore</tab>
+            <resource>Magestore_Webpos::config_webpos</resource>
+            <group id="product" translate="label" sortOrder="10" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Product Version</label>
+                <field id="version" translate="label" sortOrder="10" type="label" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>POS Enterprise</label>
+                </field>
+            </group>
+            <group id="modules" translate="label" sortOrder="20" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Modules</label>
+                <field id="version" translate="label" sortOrder="10" type="label" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Version</label>
+                    <frontend_model>Magestore\Webpos\Block\Adminhtml\Config\Version</frontend_model>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

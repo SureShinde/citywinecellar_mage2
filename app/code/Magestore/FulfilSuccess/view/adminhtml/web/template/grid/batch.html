@@ -1,0 +1,30 @@
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<ul class="admin__current-filters-list"
+    data-bind="foreach: optionsArray">
+    <li class="data-grid-filters-action-wrap"
+        style="padding-bottom: 10px; padding-left: 0; padding-right:2rem; margin: 0;"
+        data-bind="if: label">
+        <button
+                style="padding-bottom:2px;"
+                data-action="grid-filter-expand"
+                type="button"
+                data-bind="text: label,
+                           click: $parent.filterBatch(value)"
+        />
+        <span data-bind="if: removeUrl">
+            <button class="action-remove"
+                    type="button"
+                    data-action="grid-filter-remove-chip"
+                    data-bind="click: $parent.removeBatch.bind('', value, removeUrl),
+                                attr:{'title': $parent.getRemoveTitle()}"
+                    style="right:11px; top:-7px; cursor:pointer;"
+            >
+                <span data-bind="i18n: 'Remove Batch'"></span>
+            </button>
+        </span>
+    </li>
+</ul>

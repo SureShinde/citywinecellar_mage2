@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="admin-1column"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="css/styles-m.css"/>
+        <css src="css/styles-l.css" media="screen and (min-width: 768px)"/>
+        <css src="css/print.css" media="print"/>
+    </head>
+    <body>
+        <block class="Magestore\PurchaseOrderSuccess\Block\Adminhtml\Email\EmailToSupplier\Header" name="print-header" cacheable="false"/>
+        <block class="Magestore\PurchaseOrderSuccess\Block\Adminhtml\Email\EmailToSupplier\Items" name="print-items" cacheable="false"/>
+        <block class="Magestore\PurchaseOrderSuccess\Block\Adminhtml\Email\EmailToSupplier\Total" name="print-total" cacheable="false"/>
+    </body>
+</page>

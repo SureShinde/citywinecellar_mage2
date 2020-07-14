@@ -1,0 +1,72 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+?>
+<?php
+/** @var \Amasty\Blog\Block\Content\Post $block */
+
+$post = $block->getPost();
+?>
+
+<div class="amblog-container">
+    <?php if ($post->getPostThumbnailSrc()) : ?>
+        <div class="amp-img-container">
+            <?php if ($block->hasThumbnailUrl()) : ?>
+                <a class="thumbnail-url"
+                   title="<?= $block->escapeHtml($post->getTitle()); ?>"
+                   href="<?= $block->escapeUrl($block->getThumbnailUrl()); ?>">
+            <?php endif; ?>
+                    <amp-img alt="<?= $block->escapeHtml($post->getThumbnailAlt('post')); ?>"
+                             src="<?= $block->escapeUrl($post->getPostImageSrc()); ?>"
+                             layout="fill">
+                    </amp-img>
+            <?php if ($block->hasThumbnailUrl()) : ?>
+                </a>
+            <?php endif; ?>
+        </div>
+    <?php endif; ?>
+
+    <div class="am-header">
+        <?= $block->getAmpHeaderHtml($post); ?>
+    </div>
+
+    <div class="am-content">
+        <?= /* @noEscape */ $post->getAmpPostContent(); ?>
+    </div>
+
+    <div class="am-details fix-me">
+        <div class="amblog-post-tags">
+            <div class="amblog-categories">
+                <?= $block->getCategoriesHtml($post, true); ?>
+            </div>
+            <div class="amblog-tags">
+                <?= $block->getTagsHtml($post, true); ?>
+            </div>
+            <div class="amblog-author-posts">
+                <?= $block->getAuthorPostsHtml($post, true); ?>
+            </div>
+        </div>
+    </div>
+
+    <?= $block->getChildHtml('amblog.post.related');?>
+
+    <?php if ($post->getCommentsEnabled() || $block->getSettingHelper()->getSocialEnabled()) : ?>
+        <div class="customer-action-bar">
+            <?php if ($block->getSettingHelper()->getSocialEnabled()) : ?>
+                <?= $block->getSocialHtml(); ?>
+            <?php endif; ?>
+            <?php if ($post->getCommentsEnabled()) : ?>
+                <?= $block->getChildHtml('amblog.comments.form'); ?>
+            <?php endif; ?>
+        </div>
+    <?php endif; ?>
+
+    <?php if ($post->getCommentsEnabled()) : ?>
+        <div class="amblog-comments-container" id="comments">
+            <?= $block->getChildHtml('amblog.comments.list'); ?>
+        </div>
+    <?php endif; ?>
+</div>

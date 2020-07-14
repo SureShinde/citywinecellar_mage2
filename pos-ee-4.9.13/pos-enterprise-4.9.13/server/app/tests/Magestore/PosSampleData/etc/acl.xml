@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<!--
+  ~ Copyright © 2018 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="Magestore_PosSampleData::pos_sample_data" title="POS Sample Data">
+                    <resource id="Magestore_PosSampleData::pos" title="POS">
+
+                    </resource>
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>

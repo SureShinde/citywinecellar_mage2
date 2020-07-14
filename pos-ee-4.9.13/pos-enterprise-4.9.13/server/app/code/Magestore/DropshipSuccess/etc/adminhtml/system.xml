@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="magestore" translate="label" sortOrder="100">
+            <label>magestore</label>
+        </tab>
+        <section id="dropshipsuccess" translate="label" type="text" sortOrder="300" showInDefault="1" showInWebsite="0" showInStore="0">
+            <class>separator-top</class>
+            <label>Dropship</label>
+            <tab>magestore</tab>
+            <resource>Magestore_DropshipSuccess::dropship_configuration</resource>
+            <group id="general" translate="label" type="text" sortOrder="0" showInDefault="1"
+                   showInWebsite="0" showInStore="0">
+                <label>General</label>
+                <field id="submit_request_to_supplier" translate="label comment" type="select" sortOrder="0"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Email notice dropship request for supplier</label>
+                    <source_model>Magestore\DropshipSuccess\Model\System\Templates\SubmitRequest</source_model>
+                </field>
+                <field id="cancel_request_to_supplier" translate="label comment" type="select" sortOrder="5"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Email cancel dropship request for supplier</label>
+                    <source_model>Magestore\DropshipSuccess\Model\System\Templates\CancelRequest</source_model>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

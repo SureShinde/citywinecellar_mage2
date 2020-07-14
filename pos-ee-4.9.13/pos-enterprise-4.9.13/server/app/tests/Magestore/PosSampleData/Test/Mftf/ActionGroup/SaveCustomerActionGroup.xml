@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright © 2019 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  ~
+  -->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="SaveCustomerActionGroup">
+        <arguments>
+            <argument name="dataCustomer" defaultValue="default_customer"/>
+        </arguments>
+        <!-- Show the form: New Customer -->
+        <grabTextFrom selector="{{CustomerFormSection.title}}" stepKey="grabCreateCustomerTitle"/>
+        <assertEquals stepKey="assertCreateCustomerTitle" message="Assert show New Customer form">
+            <expectedResult type="string">New Customer</expectedResult>
+            <actualResult type="variable">grabCreateCustomerTitle</actualResult>
+        </assertEquals>
+
+        <wait time="6" stepKey="waitSaveButtonEnable"/>
+        <click selector="{{CustomerFormSection.saveCustomer}}" stepKey="saveCustomerForm"/>
+
+        <!--
+            + The New Customer form is auto closed
+            + On cart, display customer's name that is just created before
+        -->
+        <waitForElementNotVisible selector="{{CustomerFormSection.title}}" time="3" stepKey="waitForCustomerFormNotVisible"/>
+        <wait time="1" stepKey="waitForChangeCustomerName"/>
+        <grabTextFrom selector="{{CustomerListSection.customer_name}}" stepKey="grabCustomerNameOnCart"/>
+        <assertStringStartsWith stepKey="assertCustomerNameOnCart" message="On cart, display customer's name that is just created before">
+            <expectedResult type="string">{{dataCustomer.fullName}}</expectedResult>
+            <actualResult type="variable">grabCustomerNameOnCart</actualResult>
+        </assertStringStartsWith>
+    </actionGroup>
+</actionGroups>

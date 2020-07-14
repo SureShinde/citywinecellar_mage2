@@ -1,0 +1,51 @@
+<?php
+/**
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */ /** @var Magestore\FulfilReport\Block\Adminhtml\Report\Pick $block */ ?>
+
+<?php
+$pickRequestsPerDay = $block->getPickRequestCollectionPerDay();
+$dayRange = "'" . implode("','", array_keys($pickRequestsPerDay)) . "'";
+$pickRequestRange = implode(", ", $pickRequestsPerDay);
+?>
+<script type="text/javascript">
+    require([
+        "jquery",
+        "jquery/ui",
+        "Magestore_FulfilReport/js/chart/highcharts",
+        "Magestore_FulfilReport/js/chart/data",
+        "Magestore_FulfilReport/js/chart/exporting"
+    ], function ($) {
+        // Create the chart
+        Highcharts.chart('container-pick', {
+            chart: {
+                type: 'line'
+            },
+            title: {
+                text: 'Report pick requests by day'
+            },
+            xAxis: {
+                categories:  [<?php echo $dayRange ?>]
+            },
+            yAxis: {
+                title: {
+                    text: 'Number Of Pick Requests'
+                }
+            },
+            plotOptions: {
+                line: {
+                    dataLabels: {
+                        enabled: true
+                    },
+                    enableMouseTracking: false
+                }
+            },
+            series: [{
+                name: 'Number Of Pick Requests',
+                data: [<?php echo $pickRequestRange ?> ]
+            }]
+        });
+    });
+</script>
+

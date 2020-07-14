@@ -1,0 +1,14 @@
+<!--
+  ~  Copyright © 2018 Magestore. All rights reserved.
+  ~  See COPYING.txt for license details.
+  -->
+
+<button type="button"
+        css="
+            'action-advanced': $data.displayAsLink,
+            'action-secondary': !$data.displayAsLink
+        "
+        attr="'data-index': index, 'data-url': dialogUrl, id: elementId+'_button'"
+        data-bind="click: showReport">
+    <span attr="id: elementId+'_bttext'">Show Report</span>
+</button>

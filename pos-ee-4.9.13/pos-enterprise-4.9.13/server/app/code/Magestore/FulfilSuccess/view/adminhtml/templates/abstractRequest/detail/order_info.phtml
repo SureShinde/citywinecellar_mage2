@@ -1,0 +1,135 @@
+<?php
+/**
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/* Order Information */ ?>
+<?php /** @var \Magestore\FulfilSuccess\Block\Adminhtml\AbstractRequest\Detail\OrderInfo $block */ ?>
+<?php $_order = $block->getOrder() ?>
+
+<?php
+$orderAdminDate = $block->formatDate(
+    $block->getOrderAdminDate($_order->getCreatedAt()),
+    \IntlDateFormatter::MEDIUM,
+    true
+);
+$orderStoreDate = $block->formatDate(
+    $_order->getCreatedAt(),
+    \IntlDateFormatter::MEDIUM,
+    true,
+    $block->getTimezoneForStore($_order->getStore())
+);
+?>
+
+<?php if ($_order->getEmailSent()):
+    $_email = __('The order confirmation email was sent');
+else:
+    $_email = __('The order confirmation email is not sent');
+endif; ?>
+<div class="admin__page-section-item-title">
+                <span class="title">
+                    <?php /* @escapeNotVerified */ echo $block->getTitle() ?>
+                    <?php if ($block->getNoUseOrderLink()): ?>
+                        <?php /* @escapeNotVerified */
+                        echo __('Order # %1', $_order->getRealOrderId()) ?>
+                    <?php else: ?>
+                        <a href="<?php /* @escapeNotVerified */
+                        echo $block->getViewUrl($_order->getId()) ?>"><?php /* @escapeNotVerified */
+                            echo __('Sales # %1', $_order->getRealOrderId()) ?></a>
+                    <?php endif; ?>
+                </span>
+</div>
+<div class="admin__page-section-item-content">
+    <table class="admin__table-secondary order-information-table">
+        <?php if($requestAge = $block->getRequestAge()): ?>
+        <tr>
+            <th><?php /* @escapeNotVerified */
+                echo __('Request Age') ?></th>
+            <td><?php /* @escapeNotVerified */
+                echo $requestAge ?></td>
+        </tr>        
+        <?php endif; ?>
+        <tr>
+            <th><?php /* @escapeNotVerified */
+                echo __('Sales Date') ?></th>
+            <td><?php /* @escapeNotVerified */
+                echo $orderAdminDate ?></td>
+        </tr>
+        <?php if ($orderAdminDate != $orderStoreDate): ?>
+            <tr>
+                <th><?php /* @escapeNotVerified */
+                    echo __(
+                        'Order Date (%1)',
+                        $block->getTimezoneForStore($_order->getStore())
+                    ) ?></th>
+                <td><?php /* @escapeNotVerified */
+                    echo $orderStoreDate ?></td>
+            </tr>
+        <?php endif; ?>
+        <!--
+        <tr>
+            <th><?php /* @escapeNotVerified */
+                echo __('Sales Status') ?></th>
+            <td><span id="order_status"><?php /* @escapeNotVerified */
+                    echo $_order->getStatusLabel() ?></span></td>
+        </tr>
+        -->
+        <?php echo $block->getChildHtml(); ?>
+        <?php if ($block->isSingleStoreMode() == false): ?>
+            <tr>
+                <th><?php /* @escapeNotVerified */
+                    echo __('Purchased From') ?></th>
+                <td><?php /* @escapeNotVerified */
+                    echo $block->getOrderStoreName() ?></td>
+            </tr>
+        <?php endif; ?>
+        <?php if ($_order->getRelationChildId()): ?>
+            <tr>
+                <th><?php /* @escapeNotVerified */
+                    echo __('Link to the New Sales') ?></th>
+                <td><a href="<?php /* @escapeNotVerified */
+                    echo $block->getViewUrl($_order->getRelationChildId()) ?>">
+                        <?php /* @escapeNotVerified */
+                        echo $_order->getRelationChildRealId() ?>
+                    </a></td>
+            </tr>
+        <?php endif; ?>
+        <?php if ($_order->getRelationParentId()): ?>
+            <tr>
+                <th><?php /* @escapeNotVerified */
+                    echo __('Link to the Previous Sales') ?></th>
+                <td><a href="<?php /* @escapeNotVerified */
+                    echo $block->getViewUrl($_order->getRelationParentId()) ?>">
+                        <?php /* @escapeNotVerified */
+                        echo $_order->getRelationParentRealId() ?>
+                    </a></td>
+            </tr>
+        <?php endif; ?>
+        <?php if ($_order->getRemoteIp() && $block->shouldDisplayCustomerIp()): ?>
+            <tr>
+                <th><?php /* @escapeNotVerified */
+                    echo __('Placed from IP') ?></th>
+                <td><?php /* @escapeNotVerified */
+                    echo $_order->getRemoteIp();
+                    echo ($_order->getXForwardedFor()) ? ' (' . $block->escapeHtml($_order->getXForwardedFor()) . ')' : ''; ?></td>
+            </tr>
+        <?php endif; ?>
+        <?php if ($_order->getGlobalCurrencyCode() != $_order->getBaseCurrencyCode()): ?>
+            <tr>
+                <th><?php /* @escapeNotVerified */
+                    echo __('%1 / %2 rate:', $_order->getGlobalCurrencyCode(), $_order->getBaseCurrencyCode()) ?></th>
+                <td><?php /* @escapeNotVerified */
+                    echo $_order->getBaseToGlobalRate() ?></td>
+            </tr>
+        <?php endif; ?>
+        <?php if ($_order->getBaseCurrencyCode() != $_order->getOrderCurrencyCode()): ?>
+            <tr>
+                <th><?php /* @escapeNotVerified */
+                    echo __('%1 / %2 rate:', $_order->getOrderCurrencyCode(), $_order->getBaseCurrencyCode()) ?></th>
+                <th><?php /* @escapeNotVerified */
+                    echo $_order->getBaseToOrderRate() ?></th>
+            </tr>
+        <?php endif; ?>
+    </table>
+</div>

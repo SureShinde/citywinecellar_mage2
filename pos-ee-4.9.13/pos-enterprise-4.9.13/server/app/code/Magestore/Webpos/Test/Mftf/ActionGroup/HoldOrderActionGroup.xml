@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="HoldOrder">
+        <arguments>
+            <argument name="dataProduct" defaultValue="pos_simple_product_test_order"/>
+            <argument name="dataCustomer" defaultValue="default_customer"/>
+        </arguments>
+
+        <!-- Clear cart -->
+        <click selector="{{CartSection.clearCartButton}}" stepKey="clickClearCart"/>
+
+        <!-- Search and add product to cart -->
+        <fillField stepKey="fillProductSearchBox" selector="{{ProductListSection.searchBox}}" userInput="{{dataProduct.sku}}"/>
+        <wait time="3" stepKey="waitOneSecond"/>
+        <waitForElementVisible  time="120" selector="{{ProductListSection.firstProduct}}"  stepKey="seeAtLeaseOneProductAfterSearch"/>
+        <click stepKey="clickOnProductFoundInList" selector="{{ProductListSection.firstProduct}}"/>
+
+        <waitForElementVisible selector="{{CartSection.productFoundOnCartByName(dataProduct.name)}}" time="120" stepKey="waitProductIsAddedToCartSuccessfully"/>
+
+        <!--<click selector="{{CartSection.productFoundOnCartByName(dataProduct.name)}}" stepKey="clickToIncreaseItemQty" />-->
+        <!--<pressKey selector="{{CustomSaleSection.numpad}}" parameterArray="[\Facebook\WebDriver\WebDriverKeys::BACKSPACE]"  stepKey="clearAmountQty"/>-->
+        <!--<pressKey selector="{{CartSection.numpad}}" userInput="{{dataProduct.quantity}}" stepKey="enterQtyItem"/>-->
+        <!--<click selector="{{CartSection.closeNumpad}}" stepKey="clickCloseNumpad"/>-->
+
+        <!-- search and add customer to cart -->
+        <conditionalClick selector="{{CustomerListSection.remove}}" dependentSelector="{{CustomerListSection.remove}}" visible="true" stepKey="clickRemove"/>
+        <click selector="{{CustomerListSection.add_button}}" stepKey="clickAddCustomerButton"/>
+        <fillField userInput="{{dataCustomer.searchKey}}" selector="{{CustomerListSection.search_form}}" stepKey="fillSearchFormCustomer"/>
+        <wait time="2" stepKey="waitStartSearchCustomer" />
+        <waitForElementVisible selector=".list-customer li" time="120" stepKey="waitForCustomerVisible"/>
+        <click selector=".list-customer li" stepKey="clickAddCustomer"/>
+        <waitForText userInput="{{dataCustomer.fullName}}" selector=".customer-drop a" time="120" stepKey="waitForAddCustomer"/>
+
+        <click selector="{{CartSection.holdButton}}" stepKey="clickHoldButton" />
+
+        <waitForElementVisible selector="{{ProductListSection.toastSuccessMessage}}" time="120" stepKey="seeToastSuccessShow"/>
+    </actionGroup>
+</actionGroups>

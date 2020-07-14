@@ -1,0 +1,41 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+?>
+<?php
+/** @var \Amasty\Blog\Block\Comments\Message $block */
+
+$commentClass = $block->isMyComment() ? 'my-comment' : '';
+?>
+
+<div class="amblog-comment" id="am-blog-comment-<?= $block->escapeHtml($block->getMessageId()); ?>">
+    <?php if ($block->isReply()) : ?>
+        <div class="is-reply"></div>
+    <?php endif; ?>
+
+    <div class="am-comment-content <?= $block->escapeHtml($commentClass) ?>">
+        <div class="am-comment-header">
+            <span class="am-comment-author">
+                <strong><?= $block->escapeHtml($block->getAuthor()); ?></strong>
+            </span>
+            <span class="am-comment-date">
+                <?= /* @noEscape */ $block->getDate(); ?>
+            </span>
+            <?php if ($block->getNeedApproveMessage()) : ?>
+                <span class="am-comment-willapprove">
+                    <?= $block->escapeHtml(__("This comment will become public after administrator approval.")); ?>
+                </span>
+            <?php endif; ?>
+        </div>
+        <div class="am-comment-content">
+            <?= /* @noEscape */ $block->getContent(); ?>
+        </div>
+    </div>
+</div>
+<div class="am-replies">
+    <?= $block->getRepliesHtml(); ?>
+    <div class="am-comment-form" id="am-comment-form-<?= $block->escapeHtml($block->getMessageId()); ?>"></div>
+</div>

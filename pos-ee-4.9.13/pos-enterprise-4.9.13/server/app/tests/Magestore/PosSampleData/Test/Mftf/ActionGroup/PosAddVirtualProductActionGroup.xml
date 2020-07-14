@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="PosAddVirtualProductActionGroup">
+        <arguments>
+            <argument name="dataProduct" defaultValue="stable_order_virtual_product"/>
+        </arguments>
+        <fillField stepKey="fillVirtualProductSearchBox" selector="{{ProductListSection.searchBox}}" userInput="{{dataProduct.sku}}"/>
+        <wait time="2" stepKey="waitForSearchingVirtualProduct"/>
+        <waitForElementVisible time="30" selector="{{ProductListSection.firstProduct}}" stepKey="seeAtLeaseOneVirtualProductAfterSearch"/>
+        <click stepKey="clickOnVirtualProductFoundInList" selector="{{ProductListSection.firstProduct}}"/>
+        <waitForElementVisible selector="{{CartSection.productFoundOnCartByName(dataProduct.name)}}" time="30" stepKey="waitVirtualProductIsAddedToCartSuccessfully"/>
+    </actionGroup>
+</actionGroups>

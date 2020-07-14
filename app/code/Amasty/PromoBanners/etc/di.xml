@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_PromoBanners
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Amasty\PromoBanners\Setup\UpgradeSchema">
+        <arguments>
+            <argument name="upgradeTo101" xsi:type="object">Amasty\PromoBanners\Setup\Operation\UpgradeTo101\Proxy</argument>
+            <argument name="upgradeTo110" xsi:type="object">Amasty\PromoBanners\Setup\Operation\UpgradeTo110\Proxy</argument>
+        </arguments>
+    </type>
+</config>

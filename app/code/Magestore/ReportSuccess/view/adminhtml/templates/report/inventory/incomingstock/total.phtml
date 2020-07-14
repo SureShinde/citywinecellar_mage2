@@ -1,0 +1,19 @@
+<div class="parent-container">
+    <div class="total-container" id="incoming_stock">
+        <div class="count"></div>
+        <div class="text">Incoming Stock</div>
+    </div>
+    <div class="total-container" id="overdue_incoming_stock">
+        <div class="count"></div>
+        <div class="text">Overdue Incoming Stock</div>
+    </div>
+    <div class="total-container" id="total_cost">
+        <div class="count"></div>
+        <div class="text">Total Cost of Incoming Stock</div>
+    </div>
+
+</div>
+
+<script>
+    window.priceFormat = <?php echo \Zend_Json::encode($block->getPriceFormat()); ?>;
+</script>

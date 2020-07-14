@@ -1,0 +1,88 @@
+<?php
+/**
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+?>
+<?php /** @var $block \Magestore\FulfilSuccess\Block\Adminhtml\PackRequest\Packaging */ ?>
+<?php
+$shippingMethod = $block->getShipment()->getOrder()->getShippingMethod();
+$sizeSource = $block->getSourceSizeModel()->toOptionArray();
+$girthEnabled = $block->isDisplayGirthValue() && $block->isGirthAllowed() ? 1 : 0;
+$printShippingLabelsUrl = $this->getUrl("adminhtml/order_shipment/printLabel");
+?>
+<script>
+    require([
+        "jquery",
+        "prototype",
+        "Magestore_FulfilSuccess/js/packrequest/packaging",
+        "Magento_Ui/js/modal/modal"
+    ], function(jQuery){
+        packaging = new Packaging(<?php /* @escapeNotVerified */ echo $block->getConfigDataJson() ?>);
+        packaging.changeContainerType($$('select[name=package_container]')[0]);
+        packaging.checkSizeAndGirthParameter(
+            $$('select[name=package_container]')[0],
+            <?php /* @escapeNotVerified */ echo $girthEnabled; ?>
+        );
+        packaging.setConfirmPackagingCallback(function(){
+            if($('pack_request_form') != undefined) {
+                packaging.setParamsCreateLabelRequest($('pack_request_form').serialize(true));
+            }
+            packaging.sendCreateLabelRequest();
+        });
+        packaging.setLabelCreatedCallback(function (response) {
+            window.location.assign('<?php echo $printShippingLabelsUrl ?>shipment_id/' + response.shipment_id);
+            jQuery('#packaging_window').modal('closeModal');
+            // Close view detail modal when pack request is completed
+            if (response.close_view_detail) {
+                jQuery('#pack_request_detail_holder').modal('closeModal');
+            }
+            this.reloadDetailPopup();
+            this.reloadPackRequestListing();
+            this.reloadRecentListing();
+        });
+        packaging.setCancelCallback(function() {
+            if ($('create_shipping_label')) {
+                packaging.cleanPackages();
+            }
+        });
+        packaging.setItemQtyCallback(function(itemId){
+            var item = $$('[name="shipment[items]['+itemId+']"]')[0];
+            if (item && !isNaN(item.value)) {
+                return item.value;
+            }
+        });
+        jQuery('#packaging_window').modal({
+            type: 'slide',
+            title: '<?php /* @escapeNotVerified */ echo __('Create Packages') ?>',
+            buttons: [{
+                text: '<?php /* @escapeNotVerified */ echo __('Cancel') ?>',
+                'class': 'action-secondary',
+                click: function () {
+                    packaging.cancelPackaging();
+                    this.closeModal();
+                }
+            }, {
+                text: '<?php /* @escapeNotVerified */ echo __('Save') ?>',
+                'attr': {'disabled':'disabled', 'data-action':'save-packages'},
+                'class': 'action-primary _disabled',
+                click: function () {
+                    packaging.confirmPackaging();
+                }
+            }, {
+                text: '<?php /* @escapeNotVerified */ echo __('Add Package') ?>',
+                'attr': {'data-action':'add-packages'},
+                'class': 'action-secondary',
+                click: function () {
+                    packaging.newPackage();
+                }
+            }]
+        });
+        <?php if($block->isAutoLoad()):?>
+            packaging.showWindow('callback');
+        <?php endif;?>
+    });
+</script>
+<?php include ($block->getTemplateFile('packRequest/packaging/popup_content.phtml')) ?>

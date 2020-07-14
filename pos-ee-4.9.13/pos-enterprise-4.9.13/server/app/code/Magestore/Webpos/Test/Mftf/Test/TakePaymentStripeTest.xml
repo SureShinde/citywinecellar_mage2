@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="TakePaymentStripeTest">
+        <annotations>
+            <testCaseId value="TPM-09"/>
+            <features value="Take Payment"/>
+            <stories value="Take full payment with Stripe"/>
+            <title value="Able to take full payment with payment method: Stripe"/>
+            <description value="Able to take full payment with payment method: Stripe"/>
+            <severity value="CRITICAL"/>
+            <!-- <group value="pwapos"/>
+            <group value="takePayment"/>
+            <group value="takePaymentStripe"/>
+            <group value="takePaymentStripeFull"/> -->
+        </annotations>
+
+        <before>
+            <createData stepKey="setDefaultWebposConfig" entity="default_webpos_config" />
+
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <actionGroup ref="AddProductAndCharge" stepKey="AddProductAndCharge">
+                <argument name="dataProduct" value="pos_simple_product_2" />
+            </actionGroup>
+
+            <waitForElementVisible selector="{{PosCheckoutPaymentSection.cash}}" time="120" stepKey="waitCashPaymentVisible"/>
+
+            <actionGroup ref="PosPaymentEnterCash" stepKey="enterCash">
+                <argument name="amount" value="{{stripe_take_payment_full_pos_simple_product_2.prePaidAmount}}"/>
+            </actionGroup>
+
+            <!--Partial button and confirm order-->
+            <waitForElementVisible selector="{{PosCheckoutPaymentSection.addPayment}}" time="120" stepKey="addPaymentCheck"/>
+            <click selector="{{PosCheckoutPaymentSection.partial}}" stepKey="clickPartial"/>
+
+            <waitForElementVisible selector="{{PosCheckoutPaymentSection.popupCompleteOrder}}" time="120" stepKey="popupCompleteWait"/>
+            <!--End of partial button and confirm order-->
+            <actionGroup ref="DisablePrintPopup" stepKey="DisablePrintPopup"/>
+            <wait time="1" stepKey="waitBeforeClickComplete1"/>
+            <click selector="{{PosCheckoutPaymentSection.confirmOrderBtn}}" stepKey="completeOrder"/>
+            <waitForElementNotVisible selector="{{PosCheckoutPaymentSection.popupCompleteOrder}}" time="120" stepKey="popupCompleteWaitNotVisible"/>
+            <waitForElementVisible selector="{{ProductListSection.toastSuccessMessage}}" time="120" stepKey="seeToastSuccessShow"/>
+            <seeElement selector="{{ProductListSection.contentSuccessMessage('Order #', 'has been created successfully!')}}" stepKey="checkSuccessMessage"/>
+        </before>
+
+        <actionGroup ref="GetOrderIdFromToast" stepKey="GetOrderIdFromToast"/>
+        <actionGroup ref="GoToFirstOrderDetailFrontend" stepKey="GoToFirstOrderDetailFrontend">
+            <argument name="orderId" value="{$orderIdGetOrderIdFromToast}"/>
+        </actionGroup>
+
+        <click selector="{{OrderDetailSection.takePaymentButton}}" stepKey="clickTakePayment"/>
+
+        <waitForElementVisible selector="{{PaymentSection.stripeButton}}" time="120" stepKey="waitStripePaymentVisible"/>
+        <click selector="{{PaymentSection.stripeButton}}" stepKey="clickStripe"/>
+        <waitForElementVisible selector="{{PosCheckoutPaymentSection.amount}}" time="120" stepKey="waitForEditPaymentPageVisible"/>
+
+        <actionGroup ref="FillCreditCard" stepKey="findCreditCardNumber">
+            <argument name="credit_card" value="default_credit_card"/>
+        </actionGroup>
+
+        <waitForElementVisible selector="{{CheckoutSection.CompleteOrder}}" time="120" stepKey="waitCompleteOrderPageVisible"/>
+
+        <seeElement selector="{{CheckoutSection.stripeItem}}" stepKey="findStripeOnPaymentList" />
+
+        <!-- Check: Display Remaining amount = $0.00 -->
+        <grabTextFrom selector="{{PosCheckoutPaymentSection.totalLabel}}" stepKey="grabTotalPaymentLabel"/>
+        <grabTextFrom selector="{{PosCheckoutPaymentSection.totalValue}}" stepKey="grabTotalPaymentValue"/>
+        <assertEquals message="Remaining total label is correct." stepKey="compareRemainingTotalLabel">
+            <expectedResult type="string">Remaining</expectedResult>
+            <actualResult type="variable">grabTotalPaymentLabel</actualResult>
+        </assertEquals>
+        <assertEquals message="Remaining total value is correct." stepKey="compareRemainingTotalValue">
+            <expectedResult type="string">{{stripe_take_payment_full_pos_simple_product_2.remaining}}</expectedResult>
+            <actualResult type="variable">grabTotalPaymentValue</actualResult>
+        </assertEquals>
+        <!-- End Check: Display Remaining amount = $0.00 -->
+
+        <!-- Check: Show the button that named as Complete Payment -->
+        <grabTextFrom selector="{{CheckoutSection.CompleteOrder}}" stepKey="grabCompleteButtonLabel"/>
+        <assertEquals message="Complete button label is correct." stepKey="compareCompleteButtonLabel">
+            <expectedResult type="string">Complete Payment</expectedResult>
+            <actualResult type="variable">grabCompleteButtonLabel</actualResult>
+        </assertEquals>
+        <!-- End Check: Show the button that named as Complete Payment -->
+        <click selector="{{CheckoutSection.CompleteOrder}}" stepKey="completePayment"/>
+
+        <waitForElementVisible selector="{{CheckoutSection.stripeLoader}}" time="120" stepKey="waitStripeLoaderVisible"/>
+        <waitForElementNotVisible selector="{{CheckoutSection.stripeLoader}}" time="120" stepKey="waitStripeLoaderNotVisible"/>
+
+        <waitForElementNotVisible selector="{{CheckoutSection.CompleteOrder}}" time="120" stepKey="waitCompletePaymentPageNotVisible"/>
+        <!--Check success massage-->
+        <waitForElementVisible selector="{{ToastSection.message}}" time="120" stepKey="waitForSuccessMessage"/>
+        <grabTextFrom selector="{{ToastSection.message}}" stepKey="grabMessageText"/>
+        <assertContains message="Check message is correct." stepKey="checkMassageIsCorrect1">
+            <expectedResult type="string">{{stripe_take_payment_full_pos_simple_product_2.message}}</expectedResult>
+            <actualResult type="variable">grabMessageText</actualResult>
+        </assertContains>
+        <!--End: Check success massage-->
+
+        <wait time="1" stepKey="wait1"/>
+        <!--Check payment status-->
+        <grabTextFrom selector="{{OrderDetailSection.paymentStatus}}" stepKey="grabPaymentStatus"/>
+        <assertEquals message="Assert payment status is correct" stepKey="assertPaymentStatus">
+            <expectedResult type="string">{{stripe_take_payment_full_pos_simple_product_2.paymentStatus}}</expectedResult>
+            <actualResult type="variable">grabPaymentStatus</actualResult>
+        </assertEquals>
+        <!--End: Check payment status-->
+        <!--Check Total Paid-->
+        <grabTextFrom selector="{{OrderDetailSection.grandTotal}}" stepKey="grabGrandTotal"/>
+        <grabTextFrom selector="{{OrderDetailSection.totalPaid}}" stepKey="grabTotalPaid"/>
+        <assertEquals message="Assert Grand Total = Total Paid" stepKey="assertTotalPaid">
+            <expectedResult type="variable">grabGrandTotal</expectedResult>
+            <actualResult type="variable">grabTotalPaid</actualResult>
+        </assertEquals>
+        <!--End: Check Total Paid-->
+    </test>
+
+    <test name="TakePaymentStripePartialTest">
+        <annotations>
+            <testCaseId value="TPM-10"/>
+            <features value="Take Payment"/>
+            <stories value="Take partial payment with Stripe"/>
+            <title value="Able to take partial payment with payment method: Stripe"/>
+            <description value="Able to take partial payment with payment method: Stripe"/>
+            <severity value="CRITICAL"/>
+            <!-- <group value="pwapos"/> -->
+            <!-- <group value="takePayment"/> -->
+            <!-- <group value="takePaymentStripe"/> -->
+            <!-- <group value="takePaymentStripePartial"/> -->
+        </annotations>
+
+        <before>
+            <createData stepKey="setDefaultWebposConfig" entity="default_webpos_config" />
+
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <actionGroup ref="AddProductAndCharge" stepKey="AddProductAndCharge">
+                <argument name="dataProduct" value="pos_simple_product_2" />
+            </actionGroup>
+
+            <waitForElementVisible selector="{{PosCheckoutPaymentSection.cash}}" time="120" stepKey="waitCashPaymentVisible"/>
+
+            <actionGroup ref="PosPaymentEnterCash" stepKey="enterCash">
+                <argument name="amount" value="{{stripe_take_payment_partial_pos_simple_product_2.prePaidAmount}}"/>
+            </actionGroup>
+
+            <!--Partial button and confirm order-->
+            <waitForElementVisible selector="{{PosCheckoutPaymentSection.addPayment}}" time="120" stepKey="addPaymentCheck"/>
+            <click selector="{{PosCheckoutPaymentSection.partial}}" stepKey="clickPartial"/>
+
+            <waitForElementVisible selector="{{PosCheckoutPaymentSection.popupCompleteOrder}}" time="120" stepKey="popupCompleteWait"/>
+            <!--End of partial button and confirm order-->
+            <actionGroup ref="DisablePrintPopup" stepKey="DisablePrintPopup"/>
+            <wait time="1" stepKey="waitBeforeClickComplete1"/>
+            <click selector="{{PosCheckoutPaymentSection.confirmOrderBtn}}" stepKey="completeOrder"/>
+            <waitForElementNotVisible selector="{{PosCheckoutPaymentSection.popupCompleteOrder}}" time="120" stepKey="popupCompleteWaitNotVisible"/>
+            <waitForElementVisible selector="{{ProductListSection.toastSuccessMessage}}" time="120" stepKey="seeToastSuccessShow"/>
+            <seeElement selector="{{ProductListSection.contentSuccessMessage('Order #', 'has been created successfully!')}}" stepKey="checkSuccessMessage"/>
+        </before>
+
+        <actionGroup ref="GetOrderIdFromToast" stepKey="GetOrderIdFromToast"/>
+        <actionGroup ref="GoToFirstOrderDetailFrontend" stepKey="GoToFirstOrderDetailFrontend">
+            <argument name="orderId" value="{$orderIdGetOrderIdFromToast}"/>
+        </actionGroup>
+
+        <click selector="{{OrderDetailSection.takePaymentButton}}" stepKey="clickTakePayment"/>
+
+        <waitForElementVisible selector="{{PaymentSection.stripeButton}}" time="120" stepKey="waitStripePaymentVisible"/>
+        <click selector="{{PaymentSection.stripeButton}}" stepKey="clickStripe"/>
+        <waitForElementVisible selector="{{PosCheckoutPaymentSection.amount}}" time="120" stepKey="waitForEditPaymentPageVisible"/>
+
+        <actionGroup ref="PaymentEnterAmountAndFillCreditCard" stepKey="EnterAmountAndFillCreditCard">
+            <argument name="amount" value="{{stripe_take_payment_partial_pos_simple_product_2.partialAmount}}" />
+            <argument name="credit_card" value="default_credit_card" />
+        </actionGroup>
+
+        <waitForElementVisible selector="{{CheckoutSection.CompleteOrder}}" time="120" stepKey="waitCompletePaymentPageVisible"/>
+        <seeElement selector="{{CheckoutSection.stripeItem}}" stepKey="findStripeOnPaymentList" />
+
+        <!-- Check: Display Remaining amount -->
+        <grabTextFrom selector="{{PosCheckoutPaymentSection.totalLabel}}" stepKey="grabTotalPaymentLabel"/>
+        <grabTextFrom selector="{{PosCheckoutPaymentSection.totalValue}}" stepKey="grabTotalPaymentValue"/>
+        <assertEquals message="Remaining total label is correct." stepKey="compareRemainingTotalLabel">
+            <expectedResult type="string">Remaining</expectedResult>
+            <actualResult type="variable">grabTotalPaymentLabel</actualResult>
+        </assertEquals>
+        <assertEquals message="Remaining total value is correct." stepKey="compareRemainingTotalValue">
+            <expectedResult type="string">{{stripe_take_payment_partial_pos_simple_product_2.remaining}}</expectedResult>
+            <actualResult type="variable">grabTotalPaymentValue</actualResult>
+        </assertEquals>
+        <!-- End Check: Display Remaining amount -->
+        <!-- Check: Show the button that named as Complete Payment -->
+        <grabTextFrom selector="{{CheckoutSection.CompleteOrder}}" stepKey="grabCompleteButtonLabel"/>
+        <assertEquals message="Complete button label is correct." stepKey="compareCompleteButtonLabel">
+            <expectedResult type="string">Mark as Partial</expectedResult>
+            <actualResult type="variable">grabCompleteButtonLabel</actualResult>
+        </assertEquals>
+        <!-- End Check: Show the button that named as Complete Payment -->
+
+        <click selector="{{CheckoutSection.CompleteOrder}}" stepKey="clickMarkAsPartial"/>
+
+        <waitForElementVisible selector="{{CheckoutSection.popupConfirmPartial}}" time="120" stepKey="waitPopupConfirmedPartial"/>
+        <waitForElementVisible selector="{{CheckoutSection.popupConfirmPartialButtonComplete}}" time="120" stepKey="waitButtonCompleteButtonVisible"/>
+        <wait time="1" stepKey="waitBeforeClickComplete"/>
+        <click selector="{{CheckoutSection.popupConfirmPartialButtonComplete}}" stepKey="clickToCompleteButton"/>
+
+        <waitForElementVisible selector="{{CheckoutSection.stripeLoader}}" time="120" stepKey="waitStripeLoaderVisible"/>
+        <waitForElementNotVisible selector="{{CheckoutSection.stripeLoader}}" time="120" stepKey="waitStripeLoaderNotVisible"/>
+
+        <waitForElementNotVisible selector="{{CheckoutSection.popupConfirmPartial}}" time="120" stepKey="waitPopupConfirmedPartialClose"/>
+
+        <waitForElementNotVisible selector="{{CheckoutSection.CompleteOrder}}" time="120" stepKey="waitCompletePaymentPageNotVisible"/>
+        <!--Check success massage-->
+        <waitForElementVisible selector="{{ToastSection.message}}" time="120" stepKey="waitForSuccessMessage"/>
+        <grabTextFrom selector="{{ToastSection.message}}" stepKey="grabMessageText"/>
+        <assertContains message="Check message is correct." stepKey="checkMassageIsCorrect1">
+            <expectedResult type="string">{{stripe_take_payment_partial_pos_simple_product_2.message}}</expectedResult>
+            <actualResult type="variable">grabMessageText</actualResult>
+        </assertContains>
+        <!--End: Check success massage-->
+
+        <wait time="1" stepKey="wait1"/>
+        <!--Check payment status-->
+        <grabTextFrom selector="{{OrderDetailSection.paymentStatus}}" stepKey="grabPaymentStatus"/>
+        <assertEquals message="Assert payment status is correct" stepKey="assertPaymentStatus">
+            <expectedResult type="string">{{stripe_take_payment_partial_pos_simple_product_2.paymentStatus}}</expectedResult>
+            <actualResult type="variable">grabPaymentStatus</actualResult>
+        </assertEquals>
+        <!--End: Check payment status-->
+        <!--Check Total Paid-->
+        <grabTextFrom selector="{{OrderDetailSection.totalPaid}}" stepKey="grabTotalPaid"/>
+        <assertEquals message="Assert Grand Total = Total Paid" stepKey="assertTotalPaid">
+            <expectedResult type="string">{{stripe_take_payment_partial_pos_simple_product_2.totalPaid}}</expectedResult>
+            <actualResult type="variable">grabTotalPaid</actualResult>
+        </assertEquals>
+        <!--End: Check Total Paid-->
+    </test>
+</tests>

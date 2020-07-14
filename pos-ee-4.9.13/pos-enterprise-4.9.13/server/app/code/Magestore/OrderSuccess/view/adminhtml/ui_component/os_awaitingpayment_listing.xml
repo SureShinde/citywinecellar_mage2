@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+                <item name="provider" xsi:type="string">os_awaitingpayment_listing.os_awaitingpayment_listing_data_source</item>
+            <item name="deps" xsi:type="string">os_awaitingpayment_listing.os_awaitingpayment_listing_data_source</item>
+        </item>
+        <item name="spinner" xsi:type="string">awaitingpayment_template_columns</item>
+        <item name="buttons" xsi:type="array">
+            <item name="add" xsi:type="array">
+                <item name="name" xsi:type="string">add</item>
+                <item name="label" xsi:type="string" translate="true">Create New Order</item>
+                <item name="class" xsi:type="string">primary</item>
+                <item name="url" xsi:type="string">sales/order_create/start</item>
+                <item name="sort_order" xsi:type="string">100</item>
+            </item>
+            <item name="all_order" xsi:type="string">Magestore\OrderSuccess\Block\Adminhtml\Order\Button\AllOrderButton</item>
+            <item name="awaitingpayment_order" xsi:type="string">Magestore\OrderSuccess\Block\Adminhtml\Order\Button\AwaitingPaymentButton</item>
+            <item name="back_order" xsi:type="string">Magestore\OrderSuccess\Block\Adminhtml\Order\Button\BackOrderButton</item>
+            <item name="hold_order" xsi:type="string">Magestore\OrderSuccess\Block\Adminhtml\Order\Button\HoldOrderButton</item>
+            <item name="completed_order" xsi:type="string">Magestore\OrderSuccess\Block\Adminhtml\Order\Button\CompletedOrderButton</item>
+            <item name="canceled_order" xsi:type="string">Magestore\OrderSuccess\Block\Adminhtml\Order\Button\CanceledOrderButton</item>
+        </item>
+    </argument>
+    <dataSource name="os_awaitingpayment_listing_data_source">
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">Magestore\OrderSuccess\Ui\DataProvider\AwaitingPaymentDataProvider</argument>
+            <argument name="name" xsi:type="string">os_awaitingpayment_listing_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">entity_id</argument>
+            <argument name="requestFieldName" xsi:type="string">id</argument>
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="component" xsi:type="string">Magento_Ui/js/grid/provider</item>
+                    <item name="update_url" xsi:type="url" path="mui/index/render"/>
+                    <item name="referer_url" xsi:type="url" path="ordersuccess/awaitingpayment/index"/>
+                    <item name="storageConfig" xsi:type="array">
+                        <item name="indexField" xsi:type="string">entity_id</item>
+                    </item>
+                </item>
+            </argument>
+        </argument>
+    </dataSource>
+    <container name="listing_top">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="template" xsi:type="string">ui/grid/toolbar</item>
+                <item name="sticky" xsi:type="boolean">false</item>
+            </item>
+        </argument>
+        <bookmark name="bookmarks"/>
+        <columnsControls name="columns_controls"/>
+        <paging name="listing_paging"/>
+        <filters name="listing_filters" class="Magestore\OrderSuccess\Ui\Component\Filters">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="component" xsi:type="string">Magestore_OrderSuccess/js/grid/filters/filters</item>
+                </item>
+            </argument>
+        </filters>
+        <exportButton name="export_button">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="selectProvider" xsi:type="string">os_awaitingpayment_listing.os_awaitingpayment_listing.awaitingpayment_template_columns.ids</item>
+                </item>
+            </argument>
+        </exportButton>
+        <massaction name="listing_massaction">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="component" xsi:type="string">Magestore_OrderSuccess/js/grid/massactions/popup</item>
+                    <item name="submenuTemplate" xsi:type="string">Magestore_OrderSuccess/grid/submenu</item>
+                </item>
+            </argument>
+            <action name="back_verify">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="type" xsi:type="string">verify</item>
+                        <item name="label" xsi:type="string" translate="true">Back to Verified</item>
+                        <item name="url" xsi:type="url" path="ordersuccess/order/massbackverify/order_position/awaitingpayment"/>
+                    </item>
+                </argument>
+            </action>
+            <!--
+            <action name="dropship">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="type" xsi:type="string">dropship</item>
+                        <item name="label" xsi:type="string" translate="true">Dropship</item>
+                        <item name="url" xsi:type="url" path="ordersuccess/order/dropship/order_position/awaitingpayment"/>
+                    </item>
+                </argument>
+            </action>
+            -->
+            <action name="hold_order">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="type" xsi:type="string">hold_order</item>
+                        <item name="label" xsi:type="string" translate="true">Hold</item>
+                        <item name="url" xsi:type="url" path="sales/order/masshold"/>
+                    </item>
+                </argument>
+            </action>
+            <action name="cancel">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="type" xsi:type="string">cancel</item>
+                        <item name="label" xsi:type="string" translate="true">Cancel</item>
+                        <item name="url" xsi:type="url" path="sales/order/massCancel"/>
+                    </item>
+                </argument>
+            </action>
+            <action name="set-tag" class="Magestore\OrderSuccess\Ui\Component\Listing\MassActions\DynamicAction">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="type" xsi:type="string">set-tag</item>
+                        <item name="label" xsi:type="string" translate="true">Set Tag</item>
+                        <item name="order_position" xsi:type="string">needship</item>
+                        <item name="action_resource" xsi:type="object">Magestore\OrderSuccess\Ui\DataProvider\Tag\SetTagActions</item>
+                    </item>
+                </argument>
+            </action>
+            <action name="add-batch" class="Magestore\OrderSuccess\Ui\Component\Listing\MassActions\DynamicAction">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="type" xsi:type="string">add-batch</item>
+                        <item name="label" xsi:type="string" translate="true">Move to Batch</item>
+                        <item name="order_position" xsi:type="string">needship</item>
+                        <item name="action_resource" xsi:type="object">Magestore\OrderSuccess\Ui\DataProvider\Batch\AddBatchActions</item>
+                    </item>
+                </argument>
+            </action>
+            <action name="print" class="Magestore\OrderSuccess\Ui\Component\Listing\MassActions\DynamicAction">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="type" xsi:type="string">print</item>
+                        <item name="label" xsi:type="string" translate="true">Print</item>
+                        <item name="order_position" xsi:type="string">awaitingpayment</item>
+                        <item name="action_resource" xsi:type="object">Magestore\OrderSuccess\Ui\DataProvider\PrintActions</item>
+                    </item>
+                </argument>
+            </action>
+        </massaction>
+    </container>
+    <columns name="awaitingpayment_template_columns">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="editorConfig" xsi:type="array">
+                    <item name="selectProvider" xsi:type="string">os_awaitingpayment_listing.os_awaitingpayment_listing.awaitingpayment_template_columns.ids</item>
+                    <item name="enabled" xsi:type="boolean">true</item>
+                    <item name="indexField" xsi:type="string">entity_id</item>
+                    <item name="clientConfig" xsi:type="array">
+                        <item name="saveUrl" xsi:type="url" path="ordersuccess/order/inlineEdit"/>
+                        <item name="validateBeforeSave" xsi:type="boolean">false</item>
+                    </item>
+                    <item name="templates" xsi:type="array">
+                        <item name="record" xsi:type="array">
+                            <item name="component" xsi:type="string">Magestore_OrderSuccess/js/grid/editing/record</item>
+                        </item>
+                    </item>
+                </item>
+                <item name="storageConfig" xsi:type="array">
+                    <item name="provider" xsi:type="string">os_awaitingpayment_listing.os_awaitingpayment_listing.listing_top.bookmarks</item>
+                    <item name="namespace" xsi:type="string">current</item>
+                </item>
+                <item name="childDefaults" xsi:type="array">
+                    <item name="fieldAction" xsi:type="array">
+                        <item name="provider" xsi:type="string">os_awaitingpayment_listing.os_awaitingpayment_listing.awaitingpayment_template_columns_editor</item>
+                        <item name="target" xsi:type="string">startEdit</item>
+                        <item name="params" xsi:type="array">
+                            <item name="0" xsi:type="string">${ $.$data.rowIndex }</item>
+                            <item name="1" xsi:type="boolean">true</item>
+                        </item>
+                    </item>
+                </item>
+            </item>
+        </argument>
+        <selectionsColumn name="ids">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="resizeEnabled" xsi:type="boolean">false</item>
+                    <item name="resizeDefaultWidth" xsi:type="string">55</item>
+                    <item name="indexField" xsi:type="string">entity_id</item>
+                    <item name="sortOrder" xsi:type="number">1</item>
+                </item>
+            </argument>
+        </selectionsColumn>
+        <column name="increment_id">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">ID</item>
+                    <item name="sortOrder" xsi:type="number">10</item>
+                </item>
+            </argument>
+        </column>
+        <column name="age">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">false</item>
+                    <item name="component" xsi:type="string">Magestore_OrderSuccess/js/grid/columns/age</item>
+                    <item name="sorting" xsi:type="string">ASC</item>
+                    <item name="label" xsi:type="string" translate="true">Age</item>
+                    <item name="sortOrder" xsi:type="number">20</item>
+                </item>
+            </argument>
+        </column>
+        <column name="store_id" class="Magento\Store\Ui\Component\Listing\Column\Store">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="bodyTmpl" xsi:type="string">ui/grid/cells/html</item>
+                    <item name="sortable" xsi:type="boolean">false</item>
+                    <item name="label" xsi:type="string" translate="true">Purchase Point</item>
+                </item>
+            </argument>
+        </column>
+        <column name="created_at" class="Magento\Ui\Component\Listing\Columns\Date">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">dateRange</item>
+                    <item name="component" xsi:type="string">Magento_Ui/js/grid/columns/date</item>
+                    <item name="dataType" xsi:type="string">date</item>
+                    <item name="dateFormat" xsi:type="string" translate="true">MM/dd/YYYY</item>
+                    <item name="label" xsi:type="string" translate="true">Created on</item>
+                    <item name="sortOrder" xsi:type="number">30</item>
+                </item>
+            </argument>
+        </column>
+        <column name="shipping_name">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Recepient</item>
+                    <item name="sortOrder" xsi:type="number">40</item>
+                </item>
+            </argument>
+        </column>
+        <column name="grand_total" class="Magento\Sales\Ui\Component\Listing\Column\PurchasedPrice">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">textRange</item>
+                    <item name="label" xsi:type="string" translate="true">Total</item>
+                    <item name="sortOrder" xsi:type="number">50</item>
+                </item>
+            </argument>
+        </column>
+        <column name="status">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">Magento\Sales\Ui\Component\Listing\Column\Status\Options</item>
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">select</item>
+                    <item name="component" xsi:type="string">Magento_Ui/js/grid/columns/select</item>
+                    <item name="dataType" xsi:type="string">select</item>
+                    <item name="label" xsi:type="string" translate="true">Status</item>
+                    <item name="sortOrder" xsi:type="number">60</item>
+                </item>
+            </argument>
+        </column>
+        <column name="batch_id" class="Magestore\OrderSuccess\Ui\Component\Listing\Columns\FilterAction">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">Magestore\OrderSuccess\Model\Source\Adminhtml\Batch</item>
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">filterBatch</item>
+                    <item name="sortable" xsi:type="boolean">true</item>
+                    <item name="indexField" xsi:type="string">batch_id</item>
+                    <item name="label" xsi:type="string" translate="true">Batch#</item>
+                    <item name="component" xsi:type="string">Magestore_OrderSuccess/js/grid/columns/filter-action</item>
+                    <item name="dataType" xsi:type="string">select</item>
+                    <!--<item name="editor" xsi:type="string">batch</item>-->
+                    <item name="sortOrder" xsi:type="number">70</item>
+                </item>
+            </argument>
+        </column>
+        <column name="note" class="Magestore\OrderSuccess\Ui\Component\Listing\Columns\Note">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">false</item>
+                    <item name="label" xsi:type="string" translate="true">Note</item>
+                    <item name="resizeEnabled" xsi:type="boolean">false</item>
+                    <item name="resizeDefaultWidth" xsi:type="string">50</item>
+                    <item name="editor" xsi:type="string">note</item>
+                    <item name="component" xsi:type="string">Magestore_OrderSuccess/js/grid/columns/note</item>
+                    <item name="sortable" xsi:type="boolean">false</item>
+                    <item name="altField" xsi:type="string">note</item>
+                    <item name="has_preview" xsi:type="string">1</item>
+                    <item name="sortOrder" xsi:type="number">80</item>
+                </item>
+            </argument>
+        </column>
+        <column name="tag_color">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">Magestore\OrderSuccess\Model\Source\Adminhtml\Tag</item>
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">filterTag</item>
+                    <item name="component" xsi:type="string">Magestore_OrderSuccess/js/grid/columns/tag</item>
+                    <item name="bodyTmpl" xsi:type="string">Magestore_OrderSuccess/grid/cells/tag</item>
+                    <item name="dataType" xsi:type="string">select</item>
+                    <item name="editor" xsi:type="string">tag</item>
+                    <item name="sortable" xsi:type="boolean">false</item>
+                    <item name="label" xsi:type="string" translate="true">Tag</item>
+                    <item name="resizeDefaultWidth" xsi:type="string">80</item>
+                    <item name="sortOrder" xsi:type="number">90</item>
+                </item>
+            </argument>
+        </column>
+        <actionsColumn name="actions" class="Magestore\OrderSuccess\Ui\Component\Listing\Columns\AwaitingPayment\Actions">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="draggable" xsi:type="boolean">false</item>
+                    <item name="indexField" xsi:type="string">entity_id</item>
+                    <item name="viewUrlPath" xsi:type="string">sales/order/view</item>
+                    <item name="urlEntityParamName" xsi:type="string">order_id</item>
+                    <item name="label" xsi:type="string" translate="true">Action</item>
+                    <item name="filterable" xsi:type="boolean">false</item>
+                    <item name="sortOrder" xsi:type="number">150</item>
+                </item>
+            </argument>
+        </actionsColumn>
+    </columns>
+</listing>

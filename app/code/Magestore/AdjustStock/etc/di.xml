@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <preference for="Magestore\AdjustStock\Api\Data\AdjustStock\AdjustStockInterface" type="Magestore\AdjustStock\Model\AdjustStock"/>
+
+    <preference for="Magestore\AdjustStock\Api\Data\AdjustStock\ProductInterface" type="Magestore\AdjustStock\Model\AdjustStock\Product"/>
+
+    <preference for="Magestore\AdjustStock\Api\Db\QueryProcessorInterface" type="Magestore\AdjustStock\Model\Db\QueryProcessor"/>
+
+    <preference for="Magestore\AdjustStock\Api\AdjustStock\AdjustStockManagementInterface" type="Magestore\AdjustStock\Model\AdjustStock\AdjustStockManagement"/>
+
+    <preference for="Magestore\AdjustStock\Api\IncrementIdManagementInterface" type="Magestore\AdjustStock\Model\IncrementId\IncrementIdManagement"/>
+
+    <preference for="Magestore\AdjustStock\Api\MultiSourceInventory\SourceManagementInterface" type="Magestore\AdjustStock\Model\MultiSourceInventory\SourceManagement"/>
+
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="os_adjuststock_listing_data_source" xsi:type="string">Magestore\AdjustStock\Model\ResourceModel\AdjustStock\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <preference for="Magestore\AdjustStock\Api\MultiSourceInventory\StockManagementInterface" type="Magestore\AdjustStock\Model\MultiSourceInventory\StockManagement" />
+
+</config>

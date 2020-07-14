@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ Copyright © 2018 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- end rewrite api controller -->
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="webpos_role_listing_data_source" xsi:type="string">Magestore\Appadmin\Model\ResourceModel\Staff\Role\Grid\Collection</item>
+                <item name="appadmin_staff_listing_data_source" xsi:type="string">Magestore\Appadmin\Model\ResourceModel\Staff\Staff\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- Role -->
+    <type name="Magestore\Appadmin\Model\ResourceModel\Staff\Role\Grid\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">webpos_authorization_role</argument>
+            <argument name="resourceModel" xsi:type="string">Magestore\Appadmin\Model\ResourceModel\Staff\Role</argument>
+        </arguments>
+    </type>
+
+    <preference for="Magestore\Appadmin\Api\Data\Staff\RoleInterface" type="Magestore\Appadmin\Model\Staff\Role"/>
+    <preference for="Magestore\Appadmin\Api\Data\Staff\RoleSearchResultsInterface" type="Magestore\Appadmin\Model\ResourceModel\Staff\Role\Collection"/>
+    <preference for="Magestore\Appadmin\Api\Staff\RoleRepositoryInterface" type="Magestore\Appadmin\Model\Staff\RoleRepository" />
+    <preference for="Magestore\Appadmin\Api\Staff\RoleManagementInterface" type="Magestore\Appadmin\Model\Staff\RoleManagement" />
+    <preference for="Magestore\Appadmin\Api\Staff\RuleRepositoryInterface" type="Magestore\Appadmin\Model\Staff\RuleRepository" />
+
+    <type name="Magestore\Appadmin\Model\Staff\Acl\Builder">
+        <arguments>
+            <argument name="roleLoader" xsi:type="object">Magestore\Appadmin\Model\Staff\Acl\Loader\Role</argument>
+        </arguments>
+    </type>
+
+    <!-- Staff -->
+    <type name="Magestore\Appadmin\Model\ResourceModel\Staff\Staff\Grid\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">webpos_staff</argument>
+            <argument name="resourceModel" xsi:type="string">Magestore\Appadmin\Model\ResourceModel\Staff\Staff</argument>
+        </arguments>
+    </type>
+    <preference for="Magestore\Appadmin\Api\Data\Staff\StaffInterface" type="Magestore\Appadmin\Model\Staff\Staff"/>
+    <preference for="Magestore\Appadmin\Api\Data\Staff\StaffSearchResultsInterface" type="Magestore\Appadmin\Model\ResourceModel\Staff\Staff\Collection"/>
+    <preference for="Magestore\Appadmin\Api\Staff\StaffRepositoryInterface" type="Magestore\Appadmin\Model\Staff\StaffRepository" />
+    <type name="Magestore\Appadmin\Model\Staff\Acl\RootResource">
+        <arguments>
+            <argument name="identifier" xsi:type="string">Magestore_Appadmin::all</argument>
+        </arguments>
+    </type>
+
+    <type name="Magestore\Appadmin\Model\Staff\Acl\AclResource\Provider">
+        <arguments>
+            <argument name="configReader" xsi:type="object">Magestore\Appadmin\Model\Staff\Acl\AclResource\Config\Reader\Filesystem</argument>
+        </arguments>
+    </type>
+
+    <type name="Magestore\Appadmin\Model\Staff\Acl\AclResource\Config\Reader\Filesystem">
+        <arguments>
+            <argument name="converter" xsi:type="object">Magento\Framework\Acl\AclResource\Config\Converter\Dom</argument>
+        </arguments>
+    </type>
+
+    <type name="Magestore\Appadmin\Model\Staff\Acl\Builder">
+        <arguments>
+            <argument name="resourceLoader" xsi:type="object">Magento\Framework\Acl\Loader\ResourceLoader</argument>
+            <argument name="ruleLoader" xsi:type="object">Magestore\Appadmin\Model\Staff\Acl\Loader\Rule</argument>
+        </arguments>
+    </type>
+
+    <preference for="Magestore\Appadmin\Model\Staff\Acl\AclResource\ProviderInterface" type="Magestore\Appadmin\Model\Staff\Acl\AclResource\Provider"/>
+    <!-- Event service -->
+    <preference for="Magestore\Appadmin\Api\Event\DispatchServiceInterface" type="Magestore\Appadmin\Model\Event\DispatchService"/>
+    <!-- End - Event service -->
+</config>

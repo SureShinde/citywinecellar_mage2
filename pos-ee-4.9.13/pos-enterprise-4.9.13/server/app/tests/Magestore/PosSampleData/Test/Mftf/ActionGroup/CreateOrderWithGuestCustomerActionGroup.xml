@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="CreateOrderWithGuestCustomer">
+        <!-- Disable print popup and complete order -->
+        <executeJS function="
+             document.getElementById('triggerPrintButton').remove();
+        " stepKey="executeJS"/>
+
+        <!-- Clear cart -->
+        <waitForElementVisible selector="{{CartSection.clearCartButton}}" time="30" stepKey="waitClearCart" />
+        <click selector="{{CartSection.clearCartButton}}" stepKey="clickClearCart"/>
+
+        <!-- Add simple product -->
+        <fillField stepKey="fillSimpleProductSearchBox" selector="{{ProductListSection.searchBox}}" userInput="{{stable_order_simple_product.sku}}"/>
+        <wait time="2" stepKey="waitForSearchingSimpleProduct"/>
+        <waitForElementVisible time="30" selector="{{ProductListSection.firstProduct}}" stepKey="seeAtLeaseOneSimpleProductAfterSearch"/>
+        <click stepKey="clickOnSimpleProductFoundInList" selector="{{ProductListSection.firstProduct}}"/>
+        <waitForElementVisible selector="{{CartSection.productFoundOnCartByName(stable_order_simple_product.name)}}" time="30" stepKey="waitSimpleProductIsAddedToCartSuccessfully"/>
+        <!-- End: Add simple product -->
+
+        <!-- Add configurable product -->
+        <fillField stepKey="fillConfigurableProductSearchBox" selector="{{ProductListSection.searchBox}}" userInput="{{stable_order_configurable_product.sku}}"/>
+        <wait time="2" stepKey="waitForSearchingConfigurableProduct"/>
+        <waitForElementVisible time="30" selector="{{ProductListSection.firstProduct}}" stepKey="seeAtLeaseOneConfigurableProductAfterSearch"/>
+        <click stepKey="clickOnConfigurableProductFoundInList" selector="{{ProductListSection.firstProduct}}"/>
+        <waitForElementVisible selector="{{PosCheckoutPopupAddConfigurableProductSection.configProductPopup}}" time="30" stepKey="waitForConfigurablePopupVisible"/>
+        <waitForElementVisible selector="{{PosCheckoutPopupAddConfigurableProductSection.productOptionsAtribute}}" time="30" stepKey="waitForConfigurableOptionsVisible"/>
+        <click selector="{{ProductListSection.posConfigurationOption('One')}}" stepKey="selectConfigurableOptions"/>
+        <waitForElementNotVisible selector="{{PosCheckoutPopupAddConfigurableProductSection.loaderProduct}}" time="30" stepKey="waitForLoaderConfigurableProductNotVisible"/>
+        <wait time="1" stepKey="wait1secondBeforeAddConfigurableProduct"/>
+        <click selector="{{PosCheckoutPopupAddConfigurableProductSection.addToCartButton}}" stepKey="clickAddConfigurableProductToCart"/>
+        <waitForElementNotVisible selector="{{PosCheckoutPopupAddConfigurableProductSection.configProductPopup}}" time="30" stepKey="waitForConfigurablePopupIsClosed"/>
+        <waitForElementVisible selector="{{CartSection.productFoundOnCartByName(stable_order_configurable_product.name)}}" time="30" stepKey="waitConfigurableProductIsAddedToCartSuccessfully"/>
+        <!-- End: Add configurable product -->
+
+        <!-- Add virtual product -->
+        <fillField stepKey="fillVirtualProductSearchBox" selector="{{ProductListSection.searchBox}}" userInput="{{stable_order_virtual_product.sku}}"/>
+        <wait time="2" stepKey="waitForSearchingVirtualProduct"/>
+        <waitForElementVisible time="30" selector="{{ProductListSection.firstProduct}}" stepKey="seeAtLeaseOneVirtualProductAfterSearch"/>
+        <click stepKey="clickOnVirtualProductFoundInList" selector="{{ProductListSection.firstProduct}}"/>
+        <waitForElementVisible selector="{{CartSection.productFoundOnCartByName(stable_order_virtual_product.name)}}" time="30" stepKey="waitVirtualProductIsAddedToCartSuccessfully"/>
+        <!-- End: Add virtual product -->
+
+        <!-- Add grouped product -->
+        <fillField stepKey="fillGroupedProductSearchBox" selector="{{ProductListSection.searchBox}}" userInput="{{stable_order_grouped_product.sku}}"/>
+        <wait time="2" stepKey="waitForSearchingGroupedProduct"/>
+        <waitForElementVisible time="30" selector="{{ProductListSection.firstProduct}}" stepKey="seeAtLeaseOneGroupedProductAfterSearch"/>
+        <click stepKey="clickOnGroupedProductFoundInList" selector="{{ProductListSection.firstProduct}}"/>
+        <waitForElementVisible selector="{{PosGroupedProductPopup.product1plus}}" time="30" stepKey="waitGroupedProductPopup"/>
+        <click selector="{{PosGroupedProductPopup.addToCart}}" stepKey="addGroupedProductToCart"/>
+        <waitForElementVisible selector="{{CartSection.productFoundOnCartByName(stable_order_grouped_product.name)}}" time="30" stepKey="waitGroupedProductIsAddedToCartSuccessfully"/>
+        <!-- End: Add grouped product -->
+
+        <!-- Add bundle product -->
+        <fillField stepKey="fillBundleProductSearchBox" selector="{{ProductListSection.searchBox}}" userInput="{{stable_order_bundle_product.sku}}"/>
+        <wait time="2" stepKey="waitForSearchingBundleProduct"/>
+        <waitForElementVisible time="30" selector="{{ProductListSection.firstProduct}}" stepKey="seeAtLeaseOneBundleProductAfterSearch"/>
+        <click stepKey="clickOnBundleProductFoundInList" selector="{{ProductListSection.firstProduct}}"/>
+        <waitForElementVisible selector="{{PosCheckoutPopupBundleProductSection.popupBundleBlock}}" time="30" stepKey="waitPopupBundleVisible"/>
+        <waitForElementNotVisible selector="{{PosCheckoutPopupBundleProductSection.loaderOption}}" time="30" stepKey="waitForLoadBundleOption"/>
+        <wait time="3" stepKey="waitForBundleOptionsVisible"/>
+        <click selector="{{PosCheckoutPopupBundleProductSection.addToCart}}" stepKey="clickAddBundleProductButton"/>
+        <waitForElementVisible selector="{{CartSection.productFoundOnCartByName(stable_order_bundle_product.name)}}" time="30" stepKey="waitBundleProductIsAddedToCartSuccessfully"/>
+        <!-- End: Add bundle product -->
+
+        <!-- Go to payment page -->
+        <click selector="{{CartSection.chargeButton}}" stepKey="clickChargeButton" />
+        <!-- End: Go to payment page -->
+
+        <!-- Add payment -->
+        <waitForElementVisible selector="{{PosCheckoutPaymentSection.cash}}" time="30" stepKey="waitCashPaymentVisible"/>
+        <click selector="{{PosCheckoutPaymentSection.cash}}" stepKey="clickCash"/>
+        <click selector="{{PosCheckoutPaymentSection.accept}}" stepKey="clickAccept"/>
+        <!-- End: Add payment -->
+
+        <!-- Complete order -->
+        <click selector="{{PosCheckoutPaymentSection.complete}}" stepKey="clickToCompleteButton" />
+        <waitForElementVisible selector="{{ProductListSection.toastSuccessMessage}}" time="30" stepKey="seeToastSuccessShow"/>
+        <seeElement selector="{{ProductListSection.contentSuccessMessage('Order #', 'has been created successfully!')}}" stepKey="checkSuccessMessage"/>
+        <!-- End: Complete order -->
+
+        <!-- Check order on POS -->
+        <wait time="2" stepKey="waitBeforeCheckOrder" />
+        <executeJS function="
+            message = document.querySelector('.wrapper-messages div:nth-child(1)').innerText;
+            orderId = (/\#([0-9a-zA-Z\-]*)/).exec(message)[1];
+            g = document.querySelector('#test-order-id');
+            if (g) {g.remove();}
+            g = document.createElement('div');
+            g.setAttribute('id', 'test-order-id');
+            g.setAttribute('style', 'z-index:-9999;');
+            g.innerHTML = orderId;
+            document.querySelector('body').append(g);
+        " stepKey="executeJS1"/>
+        <grabTextFrom selector="#test-order-id" stepKey="orderId"/>
+        <click selector="{{MenuSection.menuButton}}" stepKey="clickMenuButton" />
+        <wait time="2" stepKey="loadMenu"/>
+        <waitForElementVisible selector="{{MenuSection.menuItem('item-order')}}" time="30" stepKey="waitMenuOrderShow" />
+        <wait time="1" stepKey="waitBeforeClickOrderMenu"/>
+        <click selector="{{MenuSection.menuItem('item-order')}}" stepKey="goToOrderHistoryPage" />
+        <waitForElementVisible selector="{{OrderListSection.firstItem}}" time="30" stepKey="waitFirstOrderShow" />
+        <fillField selector="{{OrderListSection.inputSearch}}" userInput="{$orderId}" stepKey="searchOrder" />
+        <wait time="2" stepKey="loadSearch"/>
+        <waitForElementVisible selector="{{OrderListSection.firstItem}}" time="30" stepKey="waitFirstOrderShowAfterSearch" />
+        <click selector="{{OrderListSection.firstItem}}" stepKey="clickOnFirstOrder"/>
+        <wait time="2" stepKey="loadOrder"/>
+        <waitForElementVisible selector="{{OrderDetailSection.orderId({$orderId})}}" time="30" stepKey="waitShowOrderDetail" />
+        <seeElement selector="{{OrderDetailSection.orderStatusComplete}}" stepKey="checkFrontendOrderStatus" />
+        <!-- End: Check order on POS -->
+
+        <!-- Check order on Magento backend -->
+        <amOnPage url="{{AdminLoginPage.url}}" stepKey="amOnAdminLoginPage"/>
+        <fillField selector="{{AdminLoginFormSection.username}}" userInput="{{_ENV.MAGENTO_ADMIN_USERNAME}}" stepKey="fillUsername"/>
+        <fillField selector="{{AdminLoginFormSection.password}}" userInput="{{_ENV.MAGENTO_ADMIN_PASSWORD}}" stepKey="fillPassword"/>
+        <click selector="{{AdminLoginFormSection.signIn}}" stepKey="clickOnSignIn"/>
+        <closeAdminNotification stepKey="closeAdminNotification"/>
+        <seeInCurrentUrl url="{{AdminLoginPage.url}}" stepKey="seeAdminLoginUrl"/>
+        <amOnPage stepKey="goToOrderListPage" url="{{AdminOrdersPage.url}}"/>
+        <waitForPageLoad stepKey="waitOrderListLoaded"/>
+        <waitForLoadingMaskToDisappear stepKey="waitForLoadingMaskToDisappearOnAdminOrdersPage"/>
+        <waitForElementVisible selector="{{AdminOrdersGridSection.search}}" time="180" stepKey="waitForElementSearchVisibleOnAdminSalesOrderPage" after="waitForLoadingMaskToDisappearOnAdminOrdersPage"/>
+        <fillField selector="{{AdminOrdersGridSection.search}}" userInput="{$orderId}" stepKey="fillOrderNum"/>
+        <click selector="{{AdminOrdersGridSection.submitSearch}}" stepKey="submitSearchOrderNum"/>
+        <waitForLoadingMaskToDisappear stepKey="waitForLoadingMaskToDisappearOnSearch"/>
+        <seeElement selector="{{AdminOrdersGridSection.orderIdAndStatus({$orderId}, 'Complete')}}" stepKey="checkBackendOrderIdAndStatus" />
+        <!-- End: Check order on Magento backend -->
+    </actionGroup>
+</actionGroups>

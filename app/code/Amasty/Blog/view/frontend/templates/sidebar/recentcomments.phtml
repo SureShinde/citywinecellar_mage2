@@ -1,0 +1,54 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+?>
+<?php
+/** @var  \Amasty\Blog\Block\Sidebar\Recentcomments $block */
+$collection = $block->getCommentsCollection();
+?>
+<?php if (!$block->isAlreadyWrapped()): ?>
+    <div class="amblog-element-block">
+<?php endif; ?>
+
+<?php if ($block->getDisplay() && $collection && $collection->getSize()): ?>
+    <div data-amblog-js="accordion" class="amblog-widget-container -comments">
+        <div class="amblog-title" data-amblog-js="heading">
+            <?= $block->escapeHtml($block->getBlockHeader()); ?>
+        </div>
+        <ul class="amblog-list" data-amblog-js="content">
+        <?php foreach ($collection as $comment): ?>
+            <li class="amblog-item -comment amblog-recent-comment-<?= $block->escapeHtml((int)$comment->getId()); ?>">
+                <a class="amblog-headline" href="<?= $block->escapeUrl($comment->getUrl()); ?>">
+                    <?= $block->escapeHtml($comment->getPostTitle()); ?>
+                </a>
+                <?php if ($block->needShowDate()): ?>
+                <div class="amblog-date -comment">
+                    <?= $block->escapeHtml($block->renderDate($comment->getCreatedAt())); ?>
+                </div>
+                <?php endif; ?>
+                <?php if ($block->needShowThesis()): ?>
+                <div class="amblog-comment">
+                    <?= $block->escapeHtml($block->getStrippedContent($comment->getMessage())); ?>
+                </div>
+                <?php endif; ?>
+                <div class="amblog-author">
+                    <svg class="amblog-svg user <?= $block->escapeHtml($block->getColorClass()); ?>">
+                        <use xlink:href="<?= $block->escapeUrl($block->getViewFileUrl('Amasty_Blog::images/sprite.svg')); ?>#user"></use>
+                    </svg>
+                    <?= $block->escapeHtml($comment->getName() ?: __('Guest')); ?>
+                </div>
+            </li>
+        <?php endforeach; ?>
+        </ul>
+    </div>
+<?php else: ?>
+    <div class="amblog-empty"><?= $block->escapeHtml(__('Comments were not found')); ?></div>
+<?php endif; ?>
+
+<?php if (!$block->isAlreadyWrapped()): ?>
+    </div>
+<?php endif; ?>
+

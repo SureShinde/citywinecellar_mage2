@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
+    <template id="magestore_submit_request_to_supplier"
+              label="Dropship Submit request"
+              file="submit_request.html"
+              type="html"
+              module="Magestore_DropshipSuccess"
+              area="frontend"/>
+    <template id="magestore_cancel_request_to_supplier"
+              label="Dropship Cancel request"
+              file="cancel_request.html"
+              type="html"
+              module="Magestore_DropshipSuccess"
+              area="frontend"/>
+    <template id="magestore_dropshipsuccess_dropship_shipment_to_admin"
+              label="Dropship Shipment Sent to Admin"
+              file="confirm_shipped_to_admin.html"
+              type="html"
+              module="Magestore_DropshipSuccess"
+              area="frontend"/>
+    <template id="magestore_dropshipsuccess_dropship_cancel_to_admin"
+              label="Dropship Cancel Sent to Admin"
+              file="cancel_dropship_to_admin.html"
+              type="html"
+              module="Magestore_DropshipSuccess"
+              area="frontend"/>
+    <template id="magestore_dropshipsuccess_dropship_forgot_password_to_supplier"
+              label="Dropship Forgot Password to Supplier"
+              file="password_reset_confirmation.html"
+              type="html"
+              module="Magestore_DropshipSuccess"
+              area="frontend"/>
+    <template id="magestore_dropshipsuccess_dropship_send_pricelist_to_admin"
+              label="Dropship Send Pricelist to Admin"
+              file="send_pricelist_to_admin.html"
+              type="html"
+              module="Magestore_DropshipSuccess"
+              area="frontend"/>
+</config>

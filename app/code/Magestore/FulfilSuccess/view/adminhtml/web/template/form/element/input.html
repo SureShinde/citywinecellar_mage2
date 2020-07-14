@@ -1,0 +1,10 @@
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<div class="admin__field-control">
+    <div class="message message-warning" style="display: none" data-bind="fadeVisible:showWarning,text:warningMessage"></div>
+    <div class="message message-success" style="display: none" data-bind="fadeVisible:showSuccess,text:successMessage"></div>
+    <input class="admin__control-text qty-to-print" onfocus="this.select()" type="text" data-bind="event:{change:change},value:data,attr:{placeholder:placeHolder}">
+</div>

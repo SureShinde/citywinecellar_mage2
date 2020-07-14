@@ -1,0 +1,54 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+?>
+<?php
+/** @var $block \Amasty\Blog\Block\Comments\Message */
+$myCommentClass = $block->isMyComment() ? 'my-comment' : '';
+?>
+<div class="amblog-comment" id="am-blog-comment-<?= $block->escapeHtml($block->getMessageId()); ?>">
+    <?php if ($block->isReply()) : ?>
+    <?php endif; ?>
+    <div class="amblog-comment-content <?= $block->escapeHtml($myCommentClass); ?>">
+        <div class="amblog-header">
+            <div class="amblog-author">
+                <svg class="amblog-svg user <?= $block->escapeHtml($block->getColorClass()); ?>">
+                    <use xlink:href="<?= $block->escapeUrl($block->getViewFileUrl('Amasty_Blog::images/sprite.svg')); ?>#user"></use>
+                </svg>
+                <?= $block->escapeHtml($block->getAuthor()); ?>
+            </div>
+            <div class="amblog-date">
+                <?= $block->escapeHtml($block->getDate()); ?>
+            </div>
+        </div>
+        <?php if ($block->getNeedApproveMessage()) : ?>
+            <div class="amblog-thesis">
+                <?= $block->escapeHtml($block->getContent()); ?>
+            </div>
+            <div class="amblog-willapprove">
+                <?= $block->escapeHtml(__("This comment will become public after administrator approval.")); ?>
+            </div>
+        <?php endif; ?>
+        <?php if (!$block->getNeedApproveMessage()) : ?>
+            <div class="amblog-thesis">
+                <?= $block->escapeHtml($block->getContent()); ?>
+            </div>
+            <div class="amblog-reply">
+                <a data-id="<?= $block->escapeHtml($block->getMessageId()); ?>"
+                   class="amblog-ref"
+                   title="<?= $block->escapeHtml(__("Reply")); ?>"
+                   data-amblog-js="reply-to"
+                   href="#am-comment-form-<?= $block->escapeHtml($block->getMessageId()); ?>" >
+                    <?= $block->escapeHtml(__("Reply")); ?>
+                </a>
+            </div>
+        <?php endif; ?>
+    </div>
+    <div class="amblog-replies">
+        <div class="amblog-comment-reply" id="am-comment-form-<?= $block->escapeHtml($block->getMessageId()); ?>" style="display: none;"></div>
+        <?= $block->getRepliesHtml(); ?>
+    </div>
+</div>

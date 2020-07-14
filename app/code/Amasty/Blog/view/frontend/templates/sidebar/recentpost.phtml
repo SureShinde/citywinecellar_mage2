@@ -1,0 +1,65 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+?>
+<?php
+/** @var \Amasty\Blog\Block\Sidebar\Recentpost $block */
+$collection = $block->getCollection();
+?>
+<?php if (!$block->isAlreadyWrapped()): ?>
+    <div class="amblog-element-block">
+<?php endif; ?>
+
+<?php if ($block->getDisplay() && count($collection)): ?>
+    <div data-amblog-js="accordion" class="amblog-widget-container -post">
+        <div class="amblog-title" data-amblog-js="heading">
+            <?= $block->escapeHtml($block->getBlockHeader()); ?>
+        </div>
+        <ul class="amblog-list" data-amblog-js="content">
+            <?php foreach ($collection as $post): ?>
+                <?php $activeClass = $post->getIsActive() ? 'active' : ''; ?>
+                <li class="amblog-item
+                           amblog-recent-post
+                           <?= /* @noEscape */ $activeClass; ?>
+                           amblog-recent-post-<?= (int)$post->getId(); ?>"
+                >
+                    <?php if ($block->hasThumbnail($post) && $block->showImages() && ($src = $block->getThumbnailSrc($post))): ?>
+                        <div class="amblog-recent-post-image-wrapper">
+                            <a class="thumbnail"
+                               href="<?= $block->escapeUrl($post->getUrl()); ?>"
+                               title="<?= $block->escapeHtml($post->getTitle()); ?>">
+                                <img class="img"
+                                     src="<?= $block->escapeUrl($src); ?>"
+                                     alt="<?= $block->escapeHtml($post->getThumbnailAlt()); ?>">
+                            </a>
+                        </div>
+                    <?php endif; ?>
+                    <div class="amblog-recent-post-content-wrapper">
+                        <a class="amblog-headline" href="<?= $block->escapeUrl($post->getUrl()); ?>">
+                            <?= $block->escapeHtml($post->getTitle()); ?>
+                        </a>
+                        <?php if ($block->needShowThesis()): ?>
+                            <div class="amblog-thesis">
+                                <?= $block->escapeHtml($block->getStrippedContent($post->getShortContent())); ?>
+                            </div>
+                        <?php endif; ?>
+                        <?php if ($block->needShowDate()): ?>
+                            <div class="amblog-date -post">
+                                <?= $block->escapeHtml($block->renderDate($post->getCreatedAt())); ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+<?php else: ?>
+    <div class="amblog-empty"><?= $block->escapeHtml(__('Posts were not found')); ?></div>
+<?php endif; ?>
+
+<?php if (!$block->isAlreadyWrapped()): ?>
+    </div>
+<?php endif; ?>

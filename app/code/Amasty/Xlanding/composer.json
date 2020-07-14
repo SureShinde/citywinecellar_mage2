@@ -1,0 +1,25 @@
+{
+    "name": "amasty/xlanding",
+    "description": "Landing Pages by Amasty",
+    "require": {
+        "php": "7.0.2|7.0.4|~7.0.6|^7.1.0",
+        "amasty/cron-schedule-list": ">=1.0.5",
+        "amasty/base": ">=1.10.0"
+    },
+    "suggest": {
+        "amasty/xlanding-graphql": "Install amasty landing graphql module to activate GraphQl and Landing Pages integration."
+    },
+    "type": "magento2-module",
+    "version": "1.7.0",
+    "license": [
+        "Commercial"
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Amasty\\Xlanding\\": ""
+        }
+    }
+}

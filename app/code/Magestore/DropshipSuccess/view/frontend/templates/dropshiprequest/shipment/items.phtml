@@ -1,0 +1,79 @@
+<?php
+/**
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+?>
+<?php /** @var  $block \Magestore\DropshipSuccess\Block\DropshipRequest\Shipment\Items */ ?>
+<ul class="items order-links">
+    <li class="nav item current">
+        <a href="<?php echo $block->getOrderItemUrl() ?>"><?php echo __('Items Ordered') ?></a>
+    </li>
+    <?php if (in_array($block->getStatus(), [
+        \Magestore\DropshipSuccess\Api\Data\DropshipRequestInterface::STATUS_PARTIAL_SHIP,
+        \Magestore\DropshipSuccess\Api\Data\DropshipRequestInterface::STATUS_SHIPPED
+    ])): ?>
+        <li class="nav item current">
+            <strong><?php echo __('Sales Shipments') ?></strong>
+        </li>
+    <?php endif ?>
+</ul>
+
+<div class="order-details-items shipments">
+    <?php foreach ($block->getShipmentsCollection() as $_shipment): ?>
+    <div class="order-title">
+        <strong><?php /* @escapeNotVerified */ echo __('Shipment #') ?><?php /* @escapeNotVerified */ echo $_shipment->getIncrementId(); ?></strong>
+        <a href="<?php /* @escapeNotVerified */ echo $block->getPrintShipmentUrl($_shipment) ?>"
+           onclick="this.target='_blank'"
+           class="action print">
+            <span><?php /* @escapeNotVerified */ echo __('Print Shipment') ?></span>
+        </a>
+    </div>
+    <?php $tracks = $_shipment->getTracksCollection(); ?>
+    <?php  if ($tracks->count()): ?>
+        <dl class="order-tracking" id="my-tracking-table-<?php /* @escapeNotVerified */ echo $_shipment->getId(); ?>">
+            <dt class="tracking-title">
+                <?php /* @escapeNotVerified */ echo __('Tracking Number(s):') ?>
+            </dt>
+            <dd class="tracking-content">
+                <?php
+                $i = 1;
+                $_size = $tracks->count();
+                foreach ($tracks as $track): ?>
+                    <?php if ($track->isCustom()): ?><?php echo $block->escapeHtml($track->getNumber()) ?><?php else: ?><a
+                        href="#"
+                        data-mage-init='{"popupWindow": {"windowURL":"<?php /* @escapeNotVerified */ echo $this->helper('Magento\Shipping\Helper\Data')->getTrackingPopupUrlBySalesModel($track) ?>","windowName":"trackorder","width":800,"height":600,"left":0,"top":0,"resizable":1,"scrollbars":1}}'
+                        class="action track"><span><?php echo $block->escapeHtml($track->getNumber()) ?></span>
+                        </a><?php endif; ?><?php if ($i != $_size): ?>, <?php endif; ?>
+                    <?php $i++;
+                endforeach; ?>
+            </dd>
+        </dl>
+    <?php  endif; ?>
+    <div class="table-wrapper order-items-shipment">
+        <table class="data table table-order-items shipment" id="my-shipment-table-<?php /* @escapeNotVerified */ echo $_shipment->getId(); ?>">
+            <caption class="table-caption"><?php /* @escapeNotVerified */ echo __('Items Shipped') ?></caption>
+            <thead>
+                <tr>
+                    <th class="col name"><?php /* @escapeNotVerified */ echo __('Product Name') ?></th>
+                    <th class="col sku"><?php /* @escapeNotVerified */ echo __('SKU') ?></th>
+                    <th class="col qty"><?php /* @escapeNotVerified */ echo __('Qty Shipped') ?></th>
+                </tr>
+            </thead>
+            <?php $_items = $_shipment->getAllItems(); ?>
+            <?php $_count = count($_items) ?>
+            <?php foreach ($_items as $_item): ?>
+            <?php if ($_item->getOrderItem()->getParentItem()) {
+        continue;
+    } ?>
+            <tbody>
+                <?php echo $block->getItemHtml($_item) ?>
+            </tbody>
+            <?php endforeach; ?>
+        </table>
+    </div>
+    <?php endforeach; ?>
+</div>

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2018 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Magestore\SupplierSuccess\Block\Adminhtml\Supplier\Edit\Tab\Product"
+                type="Magestore\MigrateData\Rewrite\SupplierSuccess\Block\Adminhtml\Supplier\Edit\Tab\Product"/>
+    <preference for="Magestore\SupplierSuccess\Ui\DataProvider\Supplier\DataForm\Modifier\Address"
+            type="Magestore\MigrateData\Rewrite\SupplierSuccess\Ui\DataProvider\Supplier\DataForm\Modifier\Address"/>
+    <preference for="Magestore\SupplierSuccess\Ui\DataProvider\Product\Form\Modifier\Supplier"
+            type="Magestore\MigrateData\Rewrite\SupplierSuccess\Ui\DataProvider\Product\Form\Modifier\Supplier"/>
+    <preference for="Magestore\SupplierSuccess\Controller\Adminhtml\Supplier\Product\Save"
+            type="Magestore\MigrateData\Rewrite\SupplierSuccess\Controller\Adminhtml\Supplier\Product\Save"/>
+</config>

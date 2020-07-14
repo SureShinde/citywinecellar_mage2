@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Magestore\BarcodeSuccess\Api\Db\QueryProcessorInterface" type="Magestore\BarcodeSuccess\Model\Db\QueryProcessor" />
+    <preference for="Magestore\BarcodeSuccess\Api\InstallManagementInterface" type="Magestore\BarcodeSuccess\Model\InstallManagement" />
+    <preference for="Magestore\BarcodeSuccess\Api\Data\BarcodeInterface" type="Magestore\BarcodeSuccess\Model\Barcode" />
+    <preference for="Magestore\BarcodeSuccess\Api\Data\HistoryInterface" type="Magestore\BarcodeSuccess\Model\History" />
+    <preference for="Magestore\BarcodeSuccess\Api\Data\BarcodeTemplateInterface" type="Magestore\BarcodeSuccess\Model\Template" />
+    <preference for="Magestore\BarcodeSuccess\Model\Locator\LocatorInterface" type="Magestore\BarcodeSuccess\Model\Locator\Locator" />
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="os_history_barcode_listing_data_source" xsi:type="string">Magestore\BarcodeSuccess\Model\ResourceModel\Barcode\Grid\Collection</item>
+                <item name="os_barcode_listing_data_source" xsi:type="string">Magestore\BarcodeSuccess\Model\ResourceModel\Barcode\Grid\Collection</item>
+                <item name="os_barcode_print_listing_data_source" xsi:type="string">Magestore\BarcodeSuccess\Model\ResourceModel\Barcode\Grid\Collection</item>
+                <item name="os_product_detail_barcode_listing_data_source" xsi:type="string">Magestore\BarcodeSuccess\Model\ResourceModel\Barcode\Grid\Collection</item>
+                <item name="os_barcode_template_listing_data_source" xsi:type="string">Magestore\BarcodeSuccess\Model\ResourceModel\Template\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

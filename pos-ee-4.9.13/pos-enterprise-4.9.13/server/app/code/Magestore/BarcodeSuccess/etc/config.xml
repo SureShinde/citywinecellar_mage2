@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <barcodesuccess>
+            <general>
+                <one_barcode_per_sku>1</one_barcode_per_sku>
+                <barcode_pattern>[N.9]</barcode_pattern>
+                <default_barcode_template>0</default_barcode_template>
+            </general>
+        </barcodesuccess>
+    </default>
+</config>

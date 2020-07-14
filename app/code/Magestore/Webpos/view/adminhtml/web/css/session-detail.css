@@ -1,0 +1,91 @@
+.admin__field-complex.session-id {
+    margin: 1rem 0 1rem;
+}
+.session-content {
+    margin: 10px 0;
+}
+.session-detail-content .session-content-balance:before,
+.session-detail-content .session-content-balance:after
+{
+    content: "";
+    display: table;
+}
+.session-detail-content .session-content-balance:after{
+    clear: both;
+}
+.session-detail-content .session-content-balance > div{
+    width: calc( (100%) * 0.5 - 30px );
+}
+.session-detail-content .session-content-balance > div.section-left{
+    float: left;
+}
+.session-detail-content .session-content-balance > div.section-right{
+    float: right;
+}
+.session-detail-content .session-content-balance > div > table{
+     width: 100%;
+}
+.session-detail-content .session-content-balance > div > table td{
+    padding: 3px 0;
+}
+.session-detail-content .session-content-balance-action button,
+.session-detail-content .session-content-footer button {
+    margin: 0 5px;
+    min-width: 125px;
+}
+.session-detail-content .session-content-header table .label,
+.session-detail-content .session-content-balance table .label {
+    font-weight: 600;
+    padding: 0 20px 0 5px;
+}
+.session-detail-content .session-content-balance-action,
+.session-detail-content .session-content-footer {
+    text-align: center;
+}
+#cash-transaction-popover .modal-inner-wrap {
+    width: 60%;
+}
+#cash-transaction-popover .cash-transactions {
+    width: 100%;
+    max-height: 53vh;
+    overflow: auto;
+}
+#cash-transaction-popover .cash-transaction-type .section-left,
+#cash-transaction-popover .cash-transaction-type .section-right{
+    width: 50%;
+    text-align: center;
+    height: 40px;
+    line-height: 40px;
+    margin-bottom: 10px;
+}
+#cash-transaction-popover .cash-transaction-type .section-left {
+    float: left;
+}
+#cash-transaction-popover .cash-transaction-type .section-right {
+    float: right;
+}
+#cash-transaction-popover .cash-transaction-type .cash-button {
+    border: 1px solid #d7d7d7;
+    border-radius: 5px;
+    background: #fff;
+    color: #1a80ff;
+}
+#cash-transaction-popover .cash-transaction-type .cash-button.active {
+    background: #1a80ff;
+    color: #fff;
+}
+#cash-transaction-popover .cash-transactions .subitem {
+    padding: 12px 40px 12px 38px;
+    border-top: 1px solid #d7d7d7;
+}
+#cash-transaction-popover .cash-transactions .subitem .pull-right {
+    float: right !important;
+}
+#cash-transaction-popover .cash-transactions .subitem .title {
+    clear: both;
+    display: block;
+}
+.cash-activity {
+    color: blue;
+    cursor: pointer;
+}

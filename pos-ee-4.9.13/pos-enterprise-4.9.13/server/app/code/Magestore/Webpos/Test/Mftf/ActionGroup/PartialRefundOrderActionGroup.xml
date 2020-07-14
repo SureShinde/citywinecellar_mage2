@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="PartialRefundOrder">
+        <arguments>
+            <argument name="orderId" defaultValue="" type="string"/>
+        </arguments>
+        <click selector="{{MenuSection.menuButton}}" stepKey="clickMenuButton" />
+        <waitForElementVisible selector="{{MenuSection.menuItem('item-order')}}" time="120" stepKey="waitMenuOrderShow" />
+        <click selector="{{MenuSection.menuItem('item-order')}}" stepKey="goToOrderHistoryPage" />
+
+        <waitForElementVisible selector="{{OrderListSection.firstItem}}" time="120" stepKey="waitFirstOrderShow" />
+
+        <fillField selector="{{OrderListSection.inputSearch}}" userInput="{{orderId}}" stepKey="searchOrder" />
+        <wait time="1" stepKey="loadSearch"/>
+        <waitForElementVisible selector="{{OrderListSection.firstItem}}" time="120" stepKey="waitFirstOrderShowAfterSearch" />
+
+        <click selector="{{OrderListSection.firstItem}}" stepKey="clickOnFirstOrder"/>
+        <wait time="2" stepKey="waitBeforeRefund" />
+
+        <click selector="{{OrderDetailSection.actionButton('Refund')}}" stepKey="clickOnRefundActionButton" />
+        <waitForElementVisible selector="{{RefundSection.popupLabel('Refund Items')}}" time="120" stepKey="waitRefundPopupIsShowed" />
+        <waitForElementVisible selector="{{RefundSection.firstItemOnRefundList}}" time="120" stepKey="waitFirstItemOnRefundPopupIsShowed" />
+        <wait time="1" stepKey="waitBeforeStartRefund" />
+        <seeElement stepKey="checkOrderIdOnRefundPopup" selector="{{RefundSection.popupLabel(orderId)}}" />
+        <click selector="{{RefundSection.increaseQtyRefundButton}}" stepKey="clickOnIncreaseRefundQtyActionButton" />
+        <see stepKey="checkRefundQtyBeforeNextStep" selector="{{RefundSection.qtyRefundBox}}" userInput="{{multi_currency_refund_order.qtyRefund}}" />
+        <click selector="{{RefundSection.buttonBottom('Next')}}" stepKey="clickOnNextActionButton" />
+
+        <!-- Adjustment step -->
+        <seeElement stepKey="checkStepLabelOnAdjustmentsPopup" selector="{{RefundSection.popupLabel('Refund Adjustments')}}" />
+        <see stepKey="checkAdjustmentsSymbol" selector="{{RefundSection.refundAdjustmentsSymbol('Adjustment Refund')}}" userInput="{{multi_currency_refund_order.symbol}}" />
+        <see stepKey="checkRefundTotalSubtotal" selector="{{RefundSection.refundTotalValue('Subtotal')}}" userInput="{{multi_currency_refund_order.subtotal}}" />
+        <see stepKey="checkRefundTotalShippingFee" selector="{{RefundSection.refundTotalValue('Refund Shipping')}}" userInput="{{multi_currency_refund_order.shipping}}" />
+        <see stepKey="checkRefundTotalAdjustmentsRefund" selector="{{RefundSection.refundTotalValue('Adjustment Refund')}}" userInput="{{multi_currency_refund_order.adjustmentsRefund}}" />
+        <see stepKey="checkRefundTotalAdjustmentsFee" selector="{{RefundSection.refundTotalValue('Adjustment Fee')}}" userInput="{{multi_currency_refund_order.adjustmentsFee}}" />
+        <see stepKey="checkRefundTotalDiscount" selector="{{RefundSection.refundTotalValue('Custom discount')}}" userInput="{{multi_currency_refund_order.discount}}" />
+        <see stepKey="checkRefundTotalTax" selector="{{RefundSection.refundTotalValue('Tax')}}" userInput="{{multi_currency_refund_order.tax}}" />
+        <see stepKey="checkRefundTotalGrandTotal" selector="{{RefundSection.refundTotalValue('Grand Total')}}" userInput="{{multi_currency_refund_order.grandTotal}}" />
+        <click selector="{{RefundSection.buttonBottom('Next')}}" stepKey="clickOnNextActionButtonToCompleteRefund" />
+
+        <!-- Payment step -->
+        <seeElement stepKey="checkStepLabelOnPaymentPopup" selector="{{RefundSection.popupLabel('Refund Payment Method')}}" />
+        <see stepKey="checkRemainingValueBeforeAddPayment" selector="{{RefundSection.remainingTotalValue}}" userInput="{{multi_currency_refund_order.grandTotal}}" />
+        <seeElement stepKey="seeFirstCashPayment" selector="{{RefundSection.firstCashPayment}}" />
+        <click selector="{{RefundSection.firstCashPaymentAmount}}" stepKey="clickOnPaymentAmount" />
+        <pressKey selector="{{RefundSection.numpad}}" userInput="{{multi_currency_refund_order.cashValue}}" stepKey="enterValue"/>
+        <!--<click selector="{{RefundSection.closeNumpad}}" stepKey="clickCloseNumpad"/>-->
+        <executeJS function="
+            closeNumpadPopup = function() {
+                let ele = document.querySelector('{{RefundSection.closeNumpad}}');
+                window.scrollTo(20, 20);
+                ele.click();
+            };
+            closeNumpadPopup();
+        " stepKey="executeJSToCancelNumpad"/>
+        <wait time="5" stepKey="waitBeforeCompletePayment" />
+        <see stepKey="checkRemainingValueAfterAddPayment" selector="{{RefundSection.remainingTotalValue}}" userInput="{{multi_currency_refund_order.remaining}}" />
+        <click selector="{{RefundSection.buttonBottom('Refund')}}" stepKey="clickOnRefundActionButtonToCompleteRefund" />
+
+        <!-- Popup message -->
+        <wait time="1" stepKey="waitBeforeCheckPopupMessage" />
+        <seeElement stepKey="checkMessage" selector="{{RefundSection.popupMessage(multi_currency_refund_order.remaining)}}" />
+        <click selector="{{RefundSection.popupButton('Yes')}}" stepKey="finishPopupMessageRefund" />
+        <wait time="1" stepKey="waitBeforeFinishRefund" />
+        <click selector="{{RefundSection.popupButton('Yes')}}" stepKey="finishRefund" />
+
+        <!-- Refund success -->
+        <seeElement stepKey="checkStepLabelOnFinishPopup" selector="{{RefundSection.popupLabel('Refund Success')}}" />
+        <wait time="3" stepKey="beforeClickReturnToOrder" />
+        <click selector="{{RefundSection.buttonBottom('Return to Order')}}" stepKey="clickButtonToReturnToOrder" />
+
+        <!-- Back to checkout page -->
+        <click selector="{{MenuSection.menuButton}}" stepKey="clickMenuButtonCheckout" />
+        <waitForElementVisible selector="{{MenuSection.menuItem('item-checkout')}}" time="120" stepKey="waitMenuOrderShowCheckout" />
+        <click selector="{{MenuSection.menuItem('item-checkout')}}" stepKey="goToPageCheckout" />
+        <wait time="2" stepKey="waitBeforeFinishActionGroup" />
+    </actionGroup>
+</actionGroups>

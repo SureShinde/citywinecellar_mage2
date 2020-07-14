@@ -1,0 +1,52 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+?>
+<?php /** @var \Amasty\Blog\Block\Featured $block */ ?>
+<?php $collection = $block->getCollection() ?>
+
+<?php if ($collection->getSize()): ?>
+    <div class="block widget block-post-list amblog-post-list">
+        <div class="block-title">
+            <strong><?= $block->escapeHtml(__('Featured Posts')) ?></strong>
+        </div>
+        <div class="block-content">
+            <div class="post-slider">
+                <ol class="post-items" data-amblog-js="post-slider">
+                    <?php $iterator = 1; ?>
+                    <?php foreach ($collection as $post): ?>
+                        <?= /* @noEscape */
+                        ($iterator++ == 1) ? '<li class="post-item">' : '</li><li class="post-item">' ?>
+                        <div class="post-item-info">
+                            <a href="<?= $block->escapeUrl($post->getUrl()) ?>" class="post-item-photo">
+                                <img src="<?= /* @noEscape */ $post->getListThumbnailSrc() ?>"
+                                     alt="<?= $block->escapeHtml($post->getTitle()) ?>">
+                            </a>
+                            <div class="post-item-details">
+                                <strong class="post-item-name">
+                                    <a title="<?= $block->escapeHtml($post->getTitle()) ?>"
+                                       href="<?= $block->escapeUrl($post->getUrl()) ?>"
+                                       class="post-item-link">
+                                        <?= $block->escapeHtml($post->getTitle()) ?>
+                                    </a>
+                                </strong>
+                            </div>
+                        </div>
+                        <?= ($iterator == $collection->getSize() + 1) ? '</li>' : '' ?>
+                    <?php endforeach ?>
+                </ol>
+            </div>
+        </div>
+    </div>
+    <script type="text/x-magento-init">
+        {
+            "[data-amblog-js='post-slider']": {
+                "amastyPostSlider": {}
+            }
+        }
+
+    </script>
+<?php endif; ?>

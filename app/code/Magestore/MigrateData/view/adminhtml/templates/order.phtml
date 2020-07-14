@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <form action="<?php echo $block->getUrl('migratedata/migratedata_order/migrate'); ?>" method="post" enctype="multipart/form-data">
+        Select order data file to upload:
+        <input type="file" name="migrate_order" id="migrate_order">
+        <input type="hidden" name="form_key" value="<?php echo $block->getFormKey(); ?>"
+        <button type="submit">
+        
+        </button>
+        <button id="start" title="Submit" type="submit" class="action- scalable save primary" data-ui-id="start-button">
+            <span>Submit</span>
+        </button>
+    </form>
+</body>
+</html>

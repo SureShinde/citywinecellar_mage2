@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="Magestore_OrderSuccess::all" title="Order Success" sortOrder="1" translate="title">
+                    <resource id="Magestore_PurchaseOrderSuccess::purchase_order" title="Purchase Order" sortOrder="50" translate="title">
+                        <resource id="Magestore_PurchaseOrderSuccess::manage_return_order" title="Manage Return Request" sortOrder="5" translate="title">
+                            <resource id="Magestore_PurchaseOrderSuccess::list_return_order" title="List of Return Request" sortOrder="0" translate="title"/>
+                            <resource id="Magestore_PurchaseOrderSuccess::new_return_order" title="New Return Request" sortOrder="10" translate="title"/>
+                            <resource id="Magestore_PurchaseOrderSuccess::view_return_order" title="View Return Request" sortOrder="20" translate="title"/>
+                            <resource id="Magestore_PurchaseOrderSuccess::save_return_order" title="Save Return Request" sortOrder="30" translate="title"/>
+                            <resource id="Magestore_PurchaseOrderSuccess::send_return_order_request" title="Send Return Request" sortOrder="40" translate="title"/>
+                            <resource id="Magestore_PurchaseOrderSuccess::print_return_order" title="Print Return Request" sortOrder="50" translate="title"/>
+                            <resource id="Magestore_PurchaseOrderSuccess::cancel_return_order" title="Cancel Return Request" sortOrder="60" translate="title"/>
+                            <resource id="Magestore_PurchaseOrderSuccess::delete_return_order" title="Delete Return Request" sortOrder="65" translate="title"/>
+                            <resource id="Magestore_PurchaseOrderSuccess::confirm_return_order" title="Confirm Return Request" sortOrder="70" translate="title"/>
+                            <resource id="Magestore_PurchaseOrderSuccess::complete_return_order" title="Complete Return Request" sortOrder="80" translate="title"/>
+                            <resource id="Magestore_PurchaseOrderSuccess::transferred_return_order" title="Transfer Return Request Products" sortOrder="90" translate="title"/>
+                        </resource>
+                        <resource id="Magestore_PurchaseOrderSuccess::manage_quotation" title="Manage Quotation" sortOrder="10" translate="title">
+                            <resource id="Magestore_PurchaseOrderSuccess::list_quotation" title="List of Quotations" sortOrder="0" translate="title"/>
+                            <resource id="Magestore_PurchaseOrderSuccess::new_quotation" title="New Quotation" sortOrder="10" translate="title"/>
+                            <resource id="Magestore_PurchaseOrderSuccess::view_quotation" title="View Quotation" sortOrder="20" translate="title"/>
+                            <!--<resource id="Magestore_PurchaseOrderSuccess::save_quotation" title="Save Quotation" sortOrder="30" translate="title"/>-->
+                            <resource id="Magestore_PurchaseOrderSuccess::convert_quotation" title="Convert Quotation To Purchase Order" sortOrder="40" translate="title"/>
+                            <resource id="Magestore_PurchaseOrderSuccess::confirm_quotation" title="Confirm Quotation" sortOrder="50" translate="title"/>
+                            <resource id="Magestore_PurchaseOrderSuccess::revert_quotation" title="Revert Quotation" sortOrder="55" translate="title"/>
+                            <resource id="Magestore_PurchaseOrderSuccess::delete_quotation" title="Delete Quotation" sortOrder="60" translate="title"/>
+                            <resource id="Magestore_PurchaseOrderSuccess::cancel_quotation" title="Cancel Quotation" sortOrder="65" translate="title"/>
+                        </resource>
+                        <resource id="Magestore_PurchaseOrderSuccess::manage_purchase_order" title="Manage Purchase Order" sortOrder="20" translate="title">
+                            <resource id="Magestore_PurchaseOrderSuccess::list_purchase_order" title="List of Purchase Order" sortOrder="0" translate="title"/>
+                            <resource id="Magestore_PurchaseOrderSuccess::new_purchase_order" title="New Purchase Order" sortOrder="10" translate="title"/>
+                            <resource id="Magestore_PurchaseOrderSuccess::view_purchase_order" title="View Purchase Order" sortOrder="20" translate="title"/>
+                            <resource id="Magestore_PurchaseOrderSuccess::save_purchase_order" title="Save Purchase Order" sortOrder="30" translate="title"/>
+                            <resource id="Magestore_PurchaseOrderSuccess::send_purchase_order_request" title="Send Purchase Order Request" sortOrder="40" translate="title"/>
+                            <resource id="Magestore_PurchaseOrderSuccess::print_purchase_order" title="Print Purchase Order" sortOrder="50" translate="title"/>
+                            <resource id="Magestore_PurchaseOrderSuccess::cancel_purchase_order" title="Cancel Purchase Order" sortOrder="60" translate="title"/>
+                            <resource id="Magestore_PurchaseOrderSuccess::delete_purchase_order" title="Delete Purchase Order" sortOrder="65" translate="title"/>
+                            <resource id="Magestore_PurchaseOrderSuccess::confirm_purchase_order" title="Confirm Purchase Order" sortOrder="70" translate="title"/>
+                            <resource id="Magestore_PurchaseOrderSuccess::complete_purchase_order" title="Complete Purchase Order" sortOrder="80" translate="title"/>
+                            <resource id="Magestore_PurchaseOrderSuccess::received_purchase_order" title="Receive Purchase Order Products" sortOrder="90" translate="title"/>
+                            <resource id="Magestore_PurchaseOrderSuccess::returned_purchase_order" title="Return Purchase Order Products" sortOrder="100" translate="title"/>
+                            <resource id="Magestore_PurchaseOrderSuccess::transferred_purchase_order" title="Transfer Purchase Order Products" sortOrder="110" translate="title"/>
+                            <resource id="Magestore_PurchaseOrderSuccess::manage_invoice_purchase_order" title="Manage Purchase Order Invoice" sortOrder="120" translate="title">
+                                <resource id="Magestore_PurchaseOrderSuccess::invoice_purchase_order" title="Create Purchase Order Invoice" sortOrder="10" translate="title"/>
+                                <resource id="Magestore_PurchaseOrderSuccess::invoice_purchase_order_view" title="View Purchase Order Invoice" sortOrder="20" translate="title"/>
+                                <resource id="Magestore_PurchaseOrderSuccess::invoice_purchase_order_payment" title="Register Payment Purchase Order Invoice" sortOrder="30" translate="title"/>
+                                <resource id="Magestore_PurchaseOrderSuccess::invoice_purchase_order_refund" title="Refund Purchase Order Invoice" sortOrder="40" translate="title"/>
+                            </resource>
+                            <resource id="Magestore_PurchaseOrderSuccess::settings" title="Settings" sortOrder="130" translate="title"/>
+                        </resource>
+                    </resource>
+                </resource>
+                <resource id="Magento_Backend::stores">
+                    <resource id="Magento_Backend::stores_settings">
+                        <resource id="Magento_Config::config">
+                            <resource id="Magestore_PurchaseOrderSuccess::configuration" title="Purchase Order Settings" translate="title" />
+                        </resource>
+                    </resource>
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>

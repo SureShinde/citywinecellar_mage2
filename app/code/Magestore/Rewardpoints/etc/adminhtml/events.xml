@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../../lib/internal/Magento/Framework/Event/etc/events.xsd">
+    <!-- Edit customer's balance point -->
+    <event name="adminhtml_customer_save_after">
+        <observer name="rewardpoints_customer_save_after" instance="Magestore\Rewardpoints\Observer\Backend\CustomerSaveAfterObserver" />
+    </event>
+</config>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">os_purchase_order_invoice_form.os_purchase_order_invoice_form_data_source
+            </item>
+            <item name="deps" xsi:type="string">os_purchase_order_invoice_form.os_purchase_order_invoice_form_data_source</item>
+            <item name="namespace" xsi:type="string">os_purchase_order_invoice_form</item>
+        </item>
+        <item name="buttons" xsi:type="array">
+        </item>
+        <item name="template" xsi:type="string">templates/form/collapsible</item>
+        <item name="childrenFromMeta" xsi:type="boolean">true</item>
+    </argument>
+    <dataSource name="os_purchase_order_invoice_form_data_source">
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">Magestore\PurchaseOrderSuccess\Ui\DataProvider\PurchaseOrder\Invoice\Form\Invoice</argument>
+            <argument name="name" xsi:type="string">os_purchase_order_invoice_form_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">purchase_order_id</argument>
+            <argument name="requestFieldName" xsi:type="string">purchase_id</argument>
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="submit_url" xsi:type="url" path="purchaseordersuccess/purchaseOrder_invoice/save"/>
+                </item>
+            </argument>
+        </argument>
+        <argument name="data" xsi:type="array">
+            <item name="js_config" xsi:type="array">
+                <item name="component" xsi:type="string">Magestore_PurchaseOrderSuccess/js/form/provider</item>
+            </item>
+        </argument>
+    </dataSource>
+</form>

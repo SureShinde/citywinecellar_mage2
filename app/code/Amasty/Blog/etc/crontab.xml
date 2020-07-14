@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="default">
+        <job name="amblog_scheduled_post" instance="Amasty\Blog\Cron\Scheduled" method="execute">
+            <schedule>*/2 * * * *</schedule>
+        </job>
+
+        <job name="amblog_import" instance="Amasty\Blog\Model\Import\ImportProcess" method="processImport">
+            <config_path>crontab/default/jobs/amblog_import/schedule/cron_expr</config_path>
+        </job>
+    </group>
+</config>

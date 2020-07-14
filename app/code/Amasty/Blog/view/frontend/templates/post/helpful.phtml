@@ -1,0 +1,33 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+?>
+<?php
+/** @var \Amasty\Blog\Block\Content\Post\Helpful $block */
+$postId = (int) $block->getPost()->getId();
+?>
+<div class="amblog-helpful-wrap" data-helpful-js="post-helpful-<?= /* @noEscape */ $postId ?>">
+    <span class="amblog-helpful">
+        <?= $block->escapeHtml(__('Did you like this post?')) ?>
+    </span>
+    <div class="amblog-options">
+        <div class="amblog-plus">
+            <span class="amblog-icon"></span>
+            <span class="amblog-count">0</span>
+        </div>
+        <div class="amblog-minus">
+            <span class="amblog-icon"></span>
+            <span class="amblog-count">0</span>
+        </div>
+    </div>
+</div>
+<script type="text/x-magento-init">
+    {
+        "[data-helpful-js=\"post-helpful-<?= /* @noEscape */ $postId ?>\"]": {
+            "Amasty_Blog/js/amPostVote": <?= /* @noEscape */ $block->getJsonConfig() ?>
+        }
+    }
+</script>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="CompletePartialOrderActionGroup">
+        <arguments>
+            <argument name="displayRemainingAmount" defaultValue="$5.83" type="string"/>
+        </arguments>
+
+        <!-- Check: Display Remaining amount -->
+        <grabTextFrom selector="{{PosCheckoutPaymentSection.totalLabel}}" stepKey="grabTotalPaymentLabel"/>
+        <grabTextFrom selector="{{PosCheckoutPaymentSection.totalValue}}" stepKey="grabTotalPaymentValue"/>
+        <assertEquals message="Remaining total label is correct." stepKey="compareRemainingTotalLabel">
+            <expectedResult type="string">Remaining</expectedResult>
+            <actualResult type="variable">grabTotalPaymentLabel</actualResult>
+        </assertEquals>
+        <assertEquals message="Remaining total value is correct." stepKey="compareRemainingTotalValue">
+            <expectedResult type="string">{{displayRemainingAmount}}</expectedResult>
+            <actualResult type="variable">grabTotalPaymentValue</actualResult>
+        </assertEquals>
+        <!-- End Check: Display Remaining amount -->
+        <!-- Check: Show the button that named as Complete Order -->
+        <grabTextFrom selector="{{CheckoutSection.CompleteOrder}}" stepKey="grabCompleteButtonLabel"/>
+        <assertEquals message="Complete button label is correct." stepKey="compareCompleteButtonLabel">
+            <expectedResult type="string">Mark as Partial</expectedResult>
+            <actualResult type="variable">grabCompleteButtonLabel</actualResult>
+        </assertEquals>
+        <!-- End Check: Show the button that named as Complete Order -->
+
+        <!--Partial button and confirm order-->
+        <waitForElementVisible selector="{{PosCheckoutPaymentSection.addPayment}}" time="120" stepKey="addPaymentCheck"/>
+        <seeElement selector="{{PosCheckoutPaymentSection.addPayment}}" stepKey="addPaymentSee" />
+        <click selector="{{PosCheckoutPaymentSection.partial}}" stepKey="clickPartial"/>
+
+        <waitForElementVisible selector="{{CheckoutSection.popupConfirmPartial}}" time="120" stepKey="waitPopupConfirmedPartial"/>
+        <waitForElementVisible selector="{{CheckoutSection.popupConfirmPartialButtonComplete}}" time="120" stepKey="waitButtonCompleteButtonVisible"/>
+        <wait time="1" stepKey="waitBeforeClickCompleteButton"/>
+        <click selector="{{CheckoutSection.popupConfirmPartialButtonComplete}}" stepKey="clickToCompleteButton"/>
+        <!--End of partial button and confirm order-->
+
+        <waitForElementNotVisible selector="{{PosCheckoutPaymentSection.popupCompleteOrder}}" time="120" stepKey="popupCompleteWaitNotVisible"/>
+
+        <waitForElementVisible selector="{{ProductListSection.toastSuccessMessage}}" time="120" stepKey="seeToastSuccessShow"/>
+        <seeElement selector="{{ProductListSection.contentSuccessMessage('Order #', 'has been created successfully!')}}" stepKey="checkSuccessMessage"/>
+    </actionGroup>
+</actionGroups>

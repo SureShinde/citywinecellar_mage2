@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="CheckOrderCreateShipmentStorePickUp">
+        <annotations>
+            <features value="Create Shipment"/>
+            <stories value="Create Shipment"/>
+            <title value="Display exactly the information in order detail on POS after placing order with no selecting shipping method and active create shipping button"/>
+            <description value="Display exactly the information in order detail on POS after placing order with no selecting shipping method and active create shipping button"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="POCS-03"/>
+            <group value="CheckOrderCreateShipmentStorePickUp"/>
+            <group value="CreateShipmentTest"/>
+            <group value="pwapos"/>
+        </annotations>
+
+        <before>
+            <createData entity="EnableFlatRateShippingMethod" stepKey="enableShippingMethod"/>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <actionGroup ref="CreateNewOrderNoSelectShipment" stepKey="CreateNewOrderNoSelectShipment">
+                <argument name="dataProduct" value="pos_simple_product_test_order" />
+                <argument name="dataCustomer" value="default_customer" />
+                <argument name="discountAmount" value="8.00"/>
+            </actionGroup>
+        </before>
+
+        <after>
+            <amOnPage url="admin/admin/auth/logout/" stepKey="amOnLogoutPage"/>
+            <wait time="10" stepKey="wait10SecondsBeforeFinish" />
+        </after>
+
+        <actionGroup ref="GetOrderIdFromToast" stepKey="GetOrderIdFromToast"/>
+
+        <!-- ************************************************* FRONTEND ************************************************** -->
+        <!-- Check order detail on frontend -->
+        <actionGroup ref="GoToFirstOrderDetailFrontend" stepKey="GoToFirstOrderDetailFrontend">
+            <argument name="orderId" value="{$orderIdGetOrderIdFromToast}"/>
+        </actionGroup>
+
+        <!-- General information -->
+        <see stepKey="generalCustomerNamePos" selector="{{OrderDetailSection.generalOrder}}" userInput="{{default_customer_info.fullname}}" />
+
+        <!-- Total -->
+        <see stepKey="totalSubtotalPos" selector="{{OrderDetailSection.subTotal}}" userInput="{{default_order_total_no_shipping_fee.subTotal}}" />
+        <see stepKey="totalCustomDiscountPos" selector="{{OrderDetailSection.customDiscount}}" userInput="{{default_order_total_no_shipping_fee.customDiscount}}" />
+        <see stepKey="totalShippingPos" selector="{{OrderDetailSection.shipping}}" userInput="{{default_order_total_no_shipping_fee.shippingFee}}" />
+        <see stepKey="totalTaxPos" selector="{{OrderDetailSection.tax}}" userInput="{{default_order_total_no_shipping_fee.tax}}" />
+        <see stepKey="totalFptPos" selector="{{OrderDetailSection.fpt}}" userInput="{{default_order_total_no_shipping_fee.fpt}}" />
+        <see stepKey="totalGrandTotalPos" selector="{{OrderDetailSection.grandTotal}}" userInput="{{default_order_total_no_shipping_fee.grandTotal}}" />
+        <see stepKey="totalTotalPaidPos" selector="{{OrderDetailSection.totalPaid}}" userInput="{{default_order_total_no_shipping_fee.totalPaid}}" />
+
+        <!-- Order item -->
+        <see stepKey="itemNamePos" selector="{{OrderDetailSection.firstItemDetail}}" userInput="{{pos_simple_product_test_order.name}}" />
+        <see stepKey="itemSkuPos" selector="{{OrderDetailSection.firstItemDetail}}" userInput="{{pos_simple_product_test_order.sku}}" />
+        <see stepKey="itemTotalRowPos" selector="{{OrderDetailSection.firstItemTotal}}" userInput="{{default_order_total_no_shipping_fee.itemRowTotal}}" />
+
+        <!-- Shipping & Payment method -->
+        <see stepKey="paymentMethodPos" selector="{{OrderDetailSection.paymentMethod}}" userInput="Cash" />
+        <see stepKey="shippingMethodPos" selector="{{OrderDetailSection.shippingMethod}}" userInput="Pickup-at-store" />
+
+        <!-- Shipping & Billing address -->
+        <seeElementInDOM stepKey="billingNamePos" selector="{{OrderDetailSection.billingAddress(default_customer_info.fullname)}}" />
+        <seeElementInDOM stepKey="billingCountryPos" selector="{{OrderDetailSection.billingAddress(default_customer_address_info.country_id)}}" />
+        <seeElementInDOM stepKey="billingRegionPos" selector="{{OrderDetailSection.billingAddress(default_customer_address_region_info.region)}}" />
+        <seeElementInDOM stepKey="billingCityPos" selector="{{OrderDetailSection.billingAddress(default_customer_address_info.city)}}" />
+        <seeElementInDOM stepKey="billingStreetPos" selector="{{OrderDetailSection.billingAddress(default_customer_address_info.street[0])}}" />
+        <seeElementInDOM stepKey="billingPostcodePos" selector="{{OrderDetailSection.billingAddress(default_customer_address_info.postcode)}}" />
+        <seeElementInDOM stepKey="shippingNamePos" selector="{{OrderDetailSection.shippingAddress(default_customer_info.fullname)}}" />
+        <seeElementInDOM stepKey="shippingCountryPos" selector="{{OrderDetailSection.shippingAddress(default_customer_address_info.country_id)}}" />
+        <seeElementInDOM stepKey="shippingRegionPos" selector="{{OrderDetailSection.shippingAddress(default_customer_info.fullname)}}" />
+        <seeElementInDOM stepKey="shippingCityPos" selector="{{OrderDetailSection.shippingAddress(default_customer_address_region_info.region)}}" />
+        <seeElementInDOM stepKey="shippingStreetPos" selector="{{OrderDetailSection.shippingAddress(default_customer_address_info.street[0])}}" />
+        <seeElementInDOM stepKey="shippingPostcodePos" selector="{{OrderDetailSection.shippingAddress(default_customer_address_info.postcode)}}" />
+
+        <wait time="5" stepKey="wait5SecondBeforeGoToBackend" />
+
+        <!-- ************************************************* BACKEND *************************************************** -->
+        <!-- Check order detail on backend -->
+        <actionGroup ref="GoToFirstOrderDetailBackend" stepKey="GoToFirstOrderDetailBackend" >
+            <argument name="orderId" value="{$orderIdGetOrderIdFromToast}"/>
+        </actionGroup>
+
+        <!-- General information -->
+        <see stepKey="seeOrderStatus" selector="{{AdminOrderDetailsInformationSection.orderStatus}}" userInput="Complete" />
+        <!-- Customer information -->
+        <see stepKey="seeTitleCustomer" selector="{{AdminOrderDetailsInformationSection.accountInformation}}" userInput="Customer" />
+        <see stepKey="seeCustomerEmail" selector="{{AdminOrderDetailsInformationSection.accountInformation}}" userInput="{{default_customer_info.email}}" />
+        <see stepKey="seeCustomerName" selector="{{AdminOrderDetailsInformationSection.accountInformation}}" userInput="{{default_customer_info.fullname}}" />
+        <see stepKey="seeCustomerGroup" selector="{{AdminOrderDetailsInformationSection.accountInformation}}" userInput="{{default_customer_info.group}}" />
+        <see stepKey="seeCustomerPhone" selector="{{AdminOrderDetailsInformationSection.accountInformation}}" userInput="{{default_customer_address_info.telephone}}" />
+        <!-- Address information -->
+        <see stepKey="billingName" selector="{{AdminOrderDetailsInformationSection.billingAddress}}" userInput="{{default_customer_info.fullname}}" />
+        <see stepKey="billingCountry" selector="{{AdminOrderDetailsInformationSection.billingAddress}}" userInput="{{default_customer_address_info.country}}" />
+        <see stepKey="billingRegion" selector="{{AdminOrderDetailsInformationSection.billingAddress}}" userInput="{{default_customer_address_region_info.region}}" />
+        <see stepKey="billingCity" selector="{{AdminOrderDetailsInformationSection.billingAddress}}" userInput="{{default_customer_address_info.city}}" />
+        <see stepKey="billingStreet" selector="{{AdminOrderDetailsInformationSection.billingAddress}}" userInput="{{default_customer_address_info.street[0]}}" />
+        <see stepKey="billingPostcode" selector="{{AdminOrderDetailsInformationSection.billingAddress}}" userInput="{{default_customer_address_info.postcode}}" />
+        <see stepKey="shippingName" selector="{{AdminOrderDetailsInformationSection.shippingAddress}}" userInput="{{default_customer_info.fullname}}" />
+        <see stepKey="shippingCountry" selector="{{AdminOrderDetailsInformationSection.shippingAddress}}" userInput="{{default_customer_address_info.country}}" />
+        <see stepKey="shippingRegion" selector="{{AdminOrderDetailsInformationSection.shippingAddress}}" userInput="{{default_customer_address_region_info.region}}" />
+        <see stepKey="shippingCity" selector="{{AdminOrderDetailsInformationSection.shippingAddress}}" userInput="{{default_customer_address_info.city}}" />
+        <see stepKey="shippingStreet" selector="{{AdminOrderDetailsInformationSection.shippingAddress}}" userInput="{{default_customer_address_info.street[0]}}" />
+        <see stepKey="shippingPostcode" selector="{{AdminOrderDetailsInformationSection.shippingAddress}}" userInput="{{default_customer_address_info.postcode}}" />
+        <!-- Shipping & Payment method -->
+        <see stepKey="paymentMethod" selector="{{BackendOrderTotalSection.paymentMethod}}" userInput="Cash" />
+        <see stepKey="shippingMethod" selector="{{BackendOrderTotalSection.shippingMethod}}" userInput="Pickup-at-store" />
+        <!-- Item information -->
+        <see stepKey="itemName" selector="{{AdminOrderDetailsInformationSection.itemsOrdered}}" userInput="{{pos_simple_product_test_order.name}}" />
+        <see stepKey="itemSku" selector="{{AdminOrderDetailsInformationSection.itemsOrdered}}" userInput="{{pos_simple_product_test_order.sku}}" />
+        <see stepKey="itemStatus" selector="{{AdminOrderDetailsInformationSection.itemsOrdered}}" userInput="Invoiced" />
+        <see stepKey="itemRowTotal" selector="{{AdminOrderDetailsInformationSection.itemsOrdered}}" userInput="{{default_order_total_no_shipping_fee.itemRowTotal}}" />
+        <!-- Total -->
+        <see stepKey="totalSubtotal" selector="{{BackendOrderTotalSection.subTotal}}" userInput="{{default_order_total_no_shipping_fee.subTotal}}" />
+        <see stepKey="totalShippingFee" selector="{{BackendOrderTotalSection.shippingFee}}" userInput="{{default_order_total_no_shipping_fee.shippingFee}}" />
+        <see stepKey="totalCustomDiscount" selector="{{BackendOrderTotalSection.customDiscount}}" userInput="{{default_order_total_no_shipping_fee.customDiscount}}" />
+        <see stepKey="totalTax" selector="{{BackendOrderTotalSection.tax}}" userInput="{{default_order_total_no_shipping_fee.tax}}" />
+        <see stepKey="totalGrandTotal" selector="{{BackendOrderTotalSection.grandTotal}}" userInput="{{default_order_total_no_shipping_fee.grandTotal}}" />
+        <see stepKey="totalTotalPaid" selector="{{BackendOrderTotalSection.totalPaid}}" userInput="{{default_order_total_no_shipping_fee.totalPaid}}" />
+        <see stepKey="totalTotalRefund" selector="{{BackendOrderTotalSection.totalRefund}}" userInput="{{default_order_total_no_shipping_fee.totalRefund}}" />
+        <see stepKey="totalTotalDue" selector="{{BackendOrderTotalSection.totalDue}}" userInput="{{default_order_total_no_shipping_fee.totalDue}}" />
+    </test>
+</tests>

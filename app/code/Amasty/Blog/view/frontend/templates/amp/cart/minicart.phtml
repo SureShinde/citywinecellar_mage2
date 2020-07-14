@@ -1,0 +1,16 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+?>
+<?php
+/** @var $block \Magento\Checkout\Block\Cart\Sidebar */
+?>
+
+<div class="amblog-amp-minicart">
+    <a class="amblog-amp-link" href="<?= $block->escapeUrl($block->getShoppingCartUrl()); ?>">
+        <i class="fas fa-shopping-cart amblog-amp-icon"></i>
+    </a>
+</div>

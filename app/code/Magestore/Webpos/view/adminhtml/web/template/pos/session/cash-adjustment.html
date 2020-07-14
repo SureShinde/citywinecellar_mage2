@@ -1,0 +1,28 @@
+<div class="modal fade in popup-session" tabindex="-1" role="dialog"
+     data-bind="visible : is_show_cash_adjustment ">
+
+    <div class="modal-dialog modal-fixheight" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="cancel" data-bind="i18n: 'Cancel',click : cancelPopup" />
+                <h4 class="modal-title" data-bind="text : adjustmentTitle" />
+            </div>
+            <div class="modal-body" data-scrollbar>
+                <p class="color-gray text-center" data-bind="text :adjustmentNotice" />
+                <div class="opening-balance" data-container="body" data-toggle="popover" data-placement="right"
+                     data-content="">
+                    <span class="title">Amount</span>
+                    <input  id="webpos-cash-adjustment-input-amount" type="text"
+                           data-bind="textInput: valueFormatted, event:{change: valueChange}"  onfocus="this.select()">
+                </div>
+                <div class="form-textarea _sm" >
+                    <textarea class="form-control text-area" placeholder="Reason (required)"
+                              data-bind="textInput: reason, event:{change: typetext}" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="action primary" data-bind="text: buttonLable, enable :  ishowButton(), click : submitData" />
+            </div>
+        </div>
+    </div>
+</div>

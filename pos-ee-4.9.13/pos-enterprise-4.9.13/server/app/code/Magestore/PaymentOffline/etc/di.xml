@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ Copyright © 2018 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magestore\Payment\Block\Payment\Method\MultiPayment">
+        <plugin name="add_pay_later" type="Magestore\PaymentOffline\Plugin\Block\Payment\Method\MultiPayment" sortOrder="1" />
+    </type>
+
+    <type name="Magestore\Webpos\Model\Config\ConfigRepository">
+        <plugin name="add_offline_payment_to_refund" type="Magestore\PaymentOffline\Plugin\Model\Config\ConfigRepository" sortOrder="1" />
+    </type>
+
+</config>

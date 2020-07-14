@@ -1,0 +1,21 @@
+Location,Location
+"Location Id","Location Id"
+"Zippay application api url and api key are required","Zippay application api url and api key are required"
+"Connection failed. Please contact admin to check the configuration of API.","Connection failed. Please contact admin to check the configuration of API."
+Production,Production
+Sandbox,Sandbox
+"Zippay integration is disabled","Zippay integration is disabled"
+Add,Add
+"Add after","Add after"
+Delete,Delete
+"Remember to <strong>Save Config</strong> before testing the API connection.","Remember to <strong>Save Config</strong> before testing the API connection."
+"Test API connection","Test API connection"
+Success,Success
+Error,Error
+"Please check your network connection","Please check your network connection"
+Zippay,Zippay
+Enabled,Enabled
+Title,Title
+Mode,Mode
+"API Key","API Key"
+"Sort Order","Sort Order"

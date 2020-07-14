@@ -1,0 +1,472 @@
+<?php
+/**
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+/** @var \Magestore\FulfilReport\Block\Adminhtml\Report\Dashboard $block */ ?>
+
+<section class="admin__page-section dashboard-section">
+    <div class="change-time-range-section">
+        <select class="time-range-select" id="time-range">
+            <option value="today"><?php echo __('Today') ?></option>
+            <option value="yesterday"><?php echo __('Yesterday') ?></option>
+            <option value="last7days"><?php echo __('Last 7 days') ?></option>
+            <option value="last30days"><?php echo __('Last 30 days') ?></option>
+            <option value="customrange"><?php echo __('Custom Range') ?></option>
+        </select>
+        <div class="custom-timer" id="custom_timer_status">
+            <input class="form-control fulfil-date-picker" id="date-from"/>
+            <input class="form-control fulfil-date-picker" id="date-to"/>
+            <input class="time-range-submit" type="button" id="submit-range" value="<?php echo __('OK') ?>"/>
+        </div>
+    </div>
+    <div class="chart-container" id="container-order"></div>
+</section>
+
+<section class="admin__page-section dashboard-section">
+    <div class="change-time-range-section">
+        <select class="time-range-select" id="time-range-perday">
+            <option value="last7days"><?php echo __('Last 7 days') ?></option>
+            <option value="last14days"><?php echo __('Last 14 days') ?></option>
+            <option value="last30days"><?php echo __('Last 30 days') ?></option>
+            <option value="customrangeweek"><?php echo __('Custom Range') ?></option>
+        </select>
+        <div class="custom-timer" id="custom_timer_perday">
+            <input class="form-control fulfil-date-picker" id="date-from-week"/>
+            <input class="form-control fulfil-date-picker" id="date-to-week"/>
+            <input class="time-range-submit" type="button" id="submit-range-week" value="<?php echo __('OK') ?>"/>
+        </div>
+    </div>
+    <div class="chart-container" id="container-perday"></div>
+</section>
+
+<section class="admin__page-section dashboard-section">
+    <div class="change-time-range-section">
+        <select class="time-range-select" id="time-range-carrier">
+            <option value="today"><?php echo __('Today') ?></option>
+            <option value="yesterday"><?php echo __('Yesterday') ?></option>
+            <option value="last7days"><?php echo __('Last 7 days') ?></option>
+            <option value="last30days"><?php echo __('Last 30 days') ?></option>
+            <option value="customrangecarrier"><?php echo __('Custom Range') ?></option>
+        </select>
+        <div class="custom-timer" id="custom_timer_carrier">
+            <input class="form-control fulfil-date-picker" id="date-from-carrier"/>
+            <input class="form-control fulfil-date-picker" id="date-to-carrier"/>
+            <input class="time-range-submit" type="button" id="submit-range-carrier" value="<?php echo __('OK') ?>"/>
+        </div>
+    </div>
+    <div class="chart-container" id="container-carrier"></div>
+</section>
+
+<section class="admin__page-section dashboard-section">
+    <div class="change-time-range-section">
+        <select class="time-range-select" id="time-range-verify">
+            <option value="last7days"><?php echo __('Last 7 days') ?></option>
+            <option value="last14days"><?php echo __('Last 14 days') ?></option>
+            <option value="last30days"><?php echo __('Last 30 days') ?></option>
+            <option value="customrangeverify"><?php echo __('Custom Range') ?></option>
+        </select>
+        <div class="custom-timer" id="custom_timer_verify">
+            <input class="form-control fulfil-date-picker" id="date-from-verify"/>
+            <input class="form-control fulfil-date-picker" id="date-to-verify"/>
+            <input class="time-range-submit" type="button" id="submit-range-verify" value="<?php echo __('OK') ?>"/>
+        </div>
+    </div>
+    <div class="chart-container" id="container-verify"></div>
+</section>
+
+<section class="admin__page-section dashboard-section">
+    <div class="change-time-range-section">
+        <select class="time-range-select" id="time-range-pick">
+            <option value="last7days"><?php echo __('Last 7 days') ?></option>
+            <option value="last14days"><?php echo __('Last 14 days') ?></option>
+            <option value="last30days"><?php echo __('Last 30 days') ?></option>
+            <option value="customrangepick"><?php echo __('Custom Range') ?></option>
+        </select>
+        <div class="custom-timer" id="custom_timer_pick">
+            <input class="form-control fulfil-date-picker" id="date-from-pick"/>
+            <input class="form-control fulfil-date-picker" id="date-to-pick"/>
+            <input class="time-range-submit" type="button" id="submit-range-pick" value="<?php echo __('OK') ?>"/>
+        </div>
+    </div>
+    <div class="chart-container" id="container-pick"></div>
+</section>
+
+<section class="admin__page-section dashboard-section">
+    <div class="change-time-range-section">
+        <select class="time-range-select" id="time-range-pack">
+            <option value="last7days"><?php echo __('Last 7 days') ?></option>
+            <option value="last14days"><?php echo __('Last 14 days') ?></option>
+            <option value="last30days"><?php echo __('Last 30 days') ?></option>
+            <option value="customrangepack"><?php echo __('Custom Range') ?></option>
+        </select>
+        <div class="custom-timer" id="custom_timer_pack">
+            <input class="form-control fulfil-date-picker" id="date-from-pack"/>
+            <input class="form-control fulfil-date-picker" id="date-to-pack"/>
+            <input class="time-range-submit" type="button" id="submit-range-pack" value="<?php echo __('OK') ?>"/>
+        </div>
+    </div>
+    <div class="chart-container" id="container-pack"></div>
+</section>
+
+<script type="text/javascript">
+    require([
+        "jquery",
+        "jquery/ui",
+        "Magestore_FulfilReport/js/chart/highcharts",
+        "Magestore_FulfilReport/js/chart/data",
+        "Magestore_FulfilReport/js/chart/exporting",
+        "Magestore_FulfilReport/js/alert"
+    ], function ($, Ui, Highcharts, Data, Export, Alert) {
+        $(".fulfil-date-picker").datepicker();
+        $(document).ready(function () {
+            $.ajax({
+                showLoader: true,
+                url: '<?php echo $block->getOrderPerDayUrl()?>',
+                type: "GET",
+                success: function (data, textStatus, jqXHR) {
+                    $('#container-perday').html(data);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+
+                }
+            });
+            $.ajax({
+                showLoader: true,
+                url: '<?php echo $block->getShipmentCarrierUrl()?>',
+                type: "GET",
+                success: function (data, textStatus, jqXHR) {
+                    $('#container-carrier').html(data);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+
+                }
+            });
+            $.ajax({
+                showLoader: true,
+                url: '<?php echo $block->getOrderStatusUrl()?>',
+                type: "GET",
+                success: function (data, textStatus, jqXHR) {
+                    $('#container-order').html(data);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+
+                }
+            });
+            $.ajax({
+                showLoader: true,
+                url: '<?php echo $block->getVerifyRequestUrl()?>',
+                type: "GET",
+                success: function (data, textStatus, jqXHR) {
+                    $('#container-verify').html(data);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+
+                }
+            });
+            $.ajax({
+                showLoader: true,
+                url: '<?php echo $block->getPickRequestUrl()?>',
+                type: "GET",
+                success: function (data, textStatus, jqXHR) {
+                    $('#container-pick').html(data);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+
+                }
+            });
+            $.ajax({
+                showLoader: true,
+                url: '<?php echo $block->getPackRequestUrl()?>',
+                type: "GET",
+                success: function (data, textStatus, jqXHR) {
+                    $('#container-pack').html(data);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+
+                }
+            });
+        });
+
+        $('#time-range').change(function () {
+            var timeChange = $('#time-range').val();
+            var data = {
+                time: timeChange
+            };
+            if (timeChange == 'customrange') {
+                $('#custom_timer_status').show();
+            } else {
+                $('#custom_timer_status').hide();
+            }
+            if (timeChange != 'customrange') {
+                statusOrderChart(data)
+            }
+        });
+
+        $('#submit-range').click(function () {
+            var dateFrom = $('#date-from').val();
+            var dateTo = $('#date-to').val();
+            var data = {
+                datefrom: dateFrom,
+                dateto: dateTo
+            };
+            if (checkDate(dateFrom, dateTo))
+                statusOrderChart(data)
+        });
+
+        $('#time-range-perday').change(function () {
+            var timeChange = $('#time-range-perday').val();
+            if (timeChange == 'customrangeweek') {
+                $('#custom_timer_perday').show();
+            } else {
+                $('#custom_timer_perday').hide();
+            }
+            var data = {
+                type: 'perday',
+                time: timeChange
+            };
+            if (timeChange != 'customrangeweek') {
+                perDayOrderChart(data)
+            }
+        });
+
+        $('#submit-range-week').click(function () {
+            var dateFrom = $('#date-from-week').val();
+            var dateTo = $('#date-to-week').val();
+            var data = {
+                type: 'customweek',
+                datefrom: dateFrom,
+                dateto: dateTo
+            };
+            if (checkDate(dateFrom, dateTo))
+                perDayOrderChart(data)
+
+        });
+
+        $('#time-range-carrier').change(function () {
+            var timeChange = $('#time-range-carrier').val();
+            if (timeChange == 'customrangecarrier') {
+                $('#custom_timer_carrier').show();
+            } else {
+                $('#custom_timer_carrier').hide();
+            }
+            var data = {
+                type: 'carrier',
+                time: timeChange
+            };
+            if (timeChange != 'customrangecarrier') {
+                carrierOrderChart(data);
+            }
+        });
+
+        $('#submit-range-carrier').click(function () {
+            var dateFrom = $('#date-from-carrier').val();
+            var dateTo = $('#date-to-carrier').val();
+            var data = {
+                type: 'customcarrier',
+                datefrom: dateFrom,
+                dateto: dateTo
+            };
+            if (checkDate(dateFrom, dateTo))
+                carrierOrderChart(data);
+        });
+
+        $('#time-range-verify').change(function () {
+            var timeChange = $('#time-range-verify').val();
+            if (timeChange == 'customrangeverify') {
+                $('#custom_timer_verify').show();
+            } else {
+                $('#custom_timer_verify').hide();
+            }
+            var data = {
+                type: 'perday',
+                time: timeChange
+            };
+            if (timeChange != 'customrangeverify') {
+                perDayVerifyRequestChart(data)
+            }
+        });
+
+        $('#submit-range-verify').click(function () {
+            var dateFrom = $('#date-from-verify').val();
+            var dateTo = $('#date-to-verify').val();
+            var data = {
+                type: 'customweek',
+                datefrom: dateFrom,
+                dateto: dateTo
+            };
+            if (checkDate(dateFrom, dateTo))
+                perDayVerifyRequestChart(data)
+
+        });
+
+        $('#time-range-pick').change(function () {
+            var timeChange = $('#time-range-pick').val();
+            if (timeChange == 'customrangepick') {
+                $('#custom_timer_pick').show();
+            } else {
+                $('#custom_timer_pick').hide();
+            }
+            var data = {
+                type: 'perday',
+                time: timeChange
+            };
+            if (timeChange != 'customrangepick') {
+                perDayPickRequestChart(data)
+            }
+        });
+
+        $('#submit-range-pick').click(function () {
+            var dateFrom = $('#date-from-pick').val();
+            var dateTo = $('#date-to-pick').val();
+            var data = {
+                type: 'customweek',
+                datefrom: dateFrom,
+                dateto: dateTo
+            };
+            if (checkDate(dateFrom, dateTo))
+                perDayPickRequestChart(data)
+
+        });
+
+        $('#time-range-pack').change(function () {
+            var timeChange = $('#time-range-pack').val();
+            if (timeChange == 'customrangepack') {
+                $('#custom_timer_pack').show();
+            } else {
+                $('#custom_timer_pack').hide();
+            }
+            var data = {
+                type: 'perday',
+                time: timeChange
+            };
+            if (timeChange != 'customrangepack') {
+                perDayPackRequestChart(data)
+            }
+        });
+
+        $('#submit-range-pack').click(function () {
+            var dateFrom = $('#date-from-pack').val();
+            var dateTo = $('#date-to-pack').val();
+            var data = {
+                type: 'customweek',
+                datefrom: dateFrom,
+                dateto: dateTo
+            };
+            if (checkDate(dateFrom, dateTo))
+                perDayPackRequestChart(data)
+
+        });
+
+        function carrierOrderChart(data) {
+            $.ajax({
+                showLoader: true,
+                url: '<?php echo $block->getShipmentCarrierUrl()?>',
+                type: "POST",
+                data: data,
+                success: function (data, textStatus, jqXHR) {
+                    $('#container-carrier').html(data);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+
+                }
+            });
+        }
+
+        function perDayOrderChart(data) {
+            $.ajax({
+                showLoader: true,
+                url: '<?php echo $block->getOrderPerDayUrl()?>',
+                type: "POST",
+                data: data,
+                success: function (data, textStatus, jqXHR) {
+                    $('#container-perday').html(data);
+
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+
+                }
+            });
+        }
+
+        function statusOrderChart(data) {
+            $.ajax({
+                showLoader: true,
+                url: '<?php echo $block->getOrderStatusUrl()?>',
+                type: "POST",
+                data: data,
+                success: function (data, textStatus, jqXHR) {
+                    $('#container-order').html(data);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+
+                }
+            });
+        }
+
+        function checkDate(dateFrom, dateTo) {
+            if (!dateFrom || !dateTo) {
+                Alert('Error', 'Please Choose From Date and To Date!');
+                return false;
+            }
+            var from = new Date(dateFrom);
+            var to = new Date(dateTo);
+            if (from.getTime() > to.getTime()) {
+                Alert('Error', 'Invalid Date!');
+                return false
+            }
+            return true;
+        }
+
+        function perDayVerifyRequestChart(data) {
+            $.ajax({
+                showLoader: true,
+                url: '<?php echo $block->getVerifyRequestUrl()?>',
+                type: "POST",
+                data: data,
+                success: function (data, textStatus, jqXHR) {
+                    $('#container-verify').html(data);
+
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+
+                }
+            });
+        }
+
+        function perDayPickRequestChart(data) {
+            $.ajax({
+                showLoader: true,
+                url: '<?php echo $block->getPickRequestUrl()?>',
+                type: "POST",
+                data: data,
+                success: function (data, textStatus, jqXHR) {
+                    $('#container-pick').html(data);
+
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+
+                }
+            });
+        }
+
+        function perDayPackRequestChart(data) {
+            $.ajax({
+                showLoader: true,
+                url: '<?php echo $block->getPackRequestUrl()?>',
+                type: "POST",
+                data: data,
+                success: function (data, textStatus, jqXHR) {
+                    $('#container-pack').html(data);
+
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+
+                }
+            });
+        }
+    });
+
+</script>
+
+

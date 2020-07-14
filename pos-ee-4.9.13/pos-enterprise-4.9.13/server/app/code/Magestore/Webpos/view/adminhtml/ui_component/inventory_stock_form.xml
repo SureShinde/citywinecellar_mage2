@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <fieldset name="sales_channels">
+        <field name="associated_pos_locations" class="Magestore\Webpos\Ui\Component\InventoryAdminUi\Stock\Form\SaleChannels\AssociatedPosLocations">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">Magestore\Webpos\Model\InventoryAdminUi\Stock\SaleChannels\AssociatedPosLocations</item>
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">string</item>
+                    <item name="formElement" xsi:type="string">select</item>
+                    <item name="label" xsi:type="string" translate="true">Associated Pos Locations</item>
+                    <item name="component" xsi:type="string">Magestore_Webpos/js/form/element/location-grid</item>
+                    <item name="notice" xsi:type="string">
+                        This shows the POS location(s) that this Stock is associated to.
+                    </item>
+                </item>
+            </argument>
+        </field>
+    </fieldset>
+</form>

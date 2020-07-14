@@ -1,0 +1,88 @@
+
+<?php
+$printData = $this->getPrintData();
+?>
+
+<header class="page-header row">
+    <div class="page-header-hgroup">
+        <div class="page-actions-buttons">
+            <button title="<?php echo __('Close') ?>" type="button" class="action-default" onclick="window.close()">
+                <span class="ui-button-text"><span><?php echo __('Close') ?></span></span>
+            </button>            
+            <button  title="<?php echo __('Print') ?>" type="button" class="action-default scalable primary" onclick="printAction()">
+                <span><?php echo __('Print') ?></span>
+            </button>
+        </div>        
+        <div class="page-title-wrapper">
+            <h1 class="page-title"><?php echo __('Picking List') ?> - <?php echo $this->getCurrentUser()?></h1>
+            <?php echo $this->getCurrentDateTime() ?>
+        </div>          
+    </div>
+</header>
+<main class="page-content">
+    <div class="page-columns">
+<?php if(count($printData)): ?>
+        <table class="data-grid" id="lastOrdersGrid_table">        
+        <thead>
+            <tr>
+                <th class="data-grid-th  no-link col-customer"><span><?php echo __('Item')?> #</span></th>
+                <th class="data-grid-th  no-link col-customer"><span><?php echo __('Barcode')?> </span></th>
+                <th class="data-grid-th  no-link col-items"><span><?php echo __('Name') ?></span></th>
+                <th class="data-grid-th  no-link col-total"><span><?php echo __('Request Qty')?></span></th>
+<!--                <th class="data-grid-th  no-link col-total"><span>--><?php //echo __('Shelf Location')?><!--</span></th>-->
+                <th class="data-grid-th  no-link col-check a-center last"><span><?php echo __('Picked')?></span></th>
+            </tr>
+        </thead> 
+        <tbody>
+<?php foreach($printData as $orderRow): ?>
+        <?php if($orderRow['order_id']): ?>
+        <tr class="_even-row">
+            <td class="col-order last" colspan="6">
+                [<strong><?php echo __('Pick #') ?><?php echo $orderRow['pick_request_id']?></strong>]
+                <strong><?php echo __('Sales #') ?><?php echo $orderRow['order_id']?></strong>
+                <br/>
+                <img class='barcode-img' name='barcode' src="data:image/png;base64,<?php echo $this->getPickBarcodeSource($orderRow['pick_request_id']); ?>"/>
+            </td>
+        </tr>            
+        <?php endif; ?>
+    <?php foreach($orderRow['items'] as $itemRow): ?>
+        <tr class="_odd-row">
+            <td class=" col-sku"><span><?php echo $itemRow['sku']?></span></td>
+            <td class=" col-sku"><span><?php echo $itemRow['barcodes']?></span></td>
+            <td class=" col-name col-number"><span><?php echo $itemRow['name'] ?></span></td>
+            <td class=" col-request-qty"><span><?php echo $itemRow['qty'] * 1 ?></span></td>
+<!--            <td class=" col-shelf-location"><span>--><?php //echo $itemRow['shelf_location']?><!--</span></td>-->
+            <td class=" col-check a-center last">
+                <input type="checkbox" style="background-color: #fff; height: 20px; width: 20px;"/>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+<?php endforeach; ?>
+        </tbody> 
+    </table>  
+<?php endif; ?>    
+    </div>
+</main>
+
+<style type="text/css">
+    @media print {
+        .page-actions-buttons{
+            display:none !important;
+        }
+    }
+    
+    div.checkbox{
+        width: 20px;
+        height: 20px;
+        border: solid 1px #ccc;
+    }
+    .data-grid ._even-row td{border-bottom: 0; border-top: 0.1rem dashed #d6d6d6;}
+    .data-grid ._odd-row td {border-top: 0.1rem dashed #d6d6d6;}
+</style>
+<script type="text/javascript">
+    printAction();
+    
+    function printAction(){
+        window.print();
+    }
+</script>

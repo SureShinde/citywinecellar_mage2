@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <preference for="Magestore\DropshipSuccess\Api\Data\DropshipRequestSearchResultsInterface"
+                type="Magento\Framework\Api\SearchResults" />
+    <preference for="Magestore\DropshipSuccess\Api\Data\DropshipRequestInterface"
+                type="Magestore\DropshipSuccess\Model\DropshipRequest" />
+    <preference for="Magestore\DropshipSuccess\Api\DropshipRequestRepositoryInterface"
+                type="Magestore\DropshipSuccess\Model\Repository\DropshipRequestRepository" />
+    <preference for="Magestore\DropshipSuccess\Api\Data\DropshipRequestItemInterface"
+                type="Magestore\DropshipSuccess\Model\DropshipRequest\Item" />
+    <preference for="Magestore\DropshipSuccess\Api\DropshipRequestItemRepositoryInterface"
+                type="Magestore\DropshipSuccess\Model\Repository\DropshipRequestItemRepository" />
+
+    <preference for="Magestore\DropshipSuccess\Api\Data\DropshipShipmentInterface"
+                type="Magestore\DropshipSuccess\Model\DropshipRequest\DropshipShipment" />
+    <preference for="Magestore\DropshipSuccess\Api\DropshipShipmentRepositoryInterface"
+                type="Magestore\DropshipSuccess\Model\Repository\DropshipShipmentRepository" />
+
+    <preference for="Magestore\DropshipSuccess\Api\Data\DropshipShipmentItemInterface"
+                type="Magestore\DropshipSuccess\Model\DropshipRequest\DropshipShipment\Item" />
+    <preference for="Magestore\DropshipSuccess\Api\DropshipShipmentItemRepositoryInterface"
+                type="Magestore\DropshipSuccess\Model\Repository\DropshipShipmentItemRepository" />
+
+    <preference for="Magestore\DropshipSuccess\Model\Locator\LocatorInterface"
+                type="Magestore\DropshipSuccess\Model\Locator\RegistryLocator" />
+
+    <preference for="Magestore\DropshipSuccess\Api\OrderItemRepositoryInterface"
+                type="Magestore\DropshipSuccess\Model\Repository\OrderItemRepository" />
+
+    <preference for="Magestore\DropshipSuccess\Api\Data\DropshipSupplierShipmentInterface"
+                type="Magestore\DropshipSuccess\Model\Supplier\Shipment" />
+    <preference for="Magestore\DropshipSuccess\Api\DropshipSupplierShipmentRepositoryInterface"
+                type="Magestore\DropshipSuccess\Model\Repository\DropshipSupplierShipmentRepository" />
+
+    <preference for="Magestore\DropshipSuccess\Api\Data\SupplierPricelistUploadInterface"
+                type="Magestore\DropshipSuccess\Model\Supplier\PricelistUpload" />
+    <preference for="Magestore\DropshipSuccess\Api\SupplierPricelistUploadRepositoryInterface"
+                type="Magestore\DropshipSuccess\Model\Repository\SupplierPricelistUploadRepository" />
+    <!-- Add Dropship chanel to Prepare Fulfil Process of OrderSuccess -->
+    <type name="Magestore\OrderSuccess\Model\Source\Adminhtml\ShippingChanel">
+        <arguments>
+            <argument name="chanels" xsi:type="array">
+                <item name="dropship" xsi:type="array">
+                    <item name="code" xsi:type="string">dropship</item>
+                    <item name="title" xsi:type="string" translate="true">Request Dropship</item>
+                    <item name="block" xsi:type="string">Magestore\DropshipSuccess\Block\Adminhtml\DropshipRequest\ShipProcess\Grid</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="os_dropship_request_shipment_grid_data_source" xsi:type="string">Magestore\DropshipSuccess\Model\ResourceModel\DropshipRequest\DropshipShipment\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- update reservation -->
+    <type name="Magento\InventorySales\Model\PlaceReservationsForSalesEvent">
+        <plugin name="dropship_canceled_order" type="Magestore\DropshipSuccess\Plugin\InventorySales\Model\PlaceReservationsForSalesEvent" sortOrder="10" />
+    </type>
+
+    <type name="Magento\InventorySourceDeductionApi\Model\SourceDeductionService">
+        <plugin name="dropship_source_deduction_for_location" type="Magestore\DropshipSuccess\Plugin\InventorySourceDeductionApi\Model\SourceDeductionService" sortOrder="10"/>
+    </type>
+
+    <preference for="Magestore\DropshipSuccess\Api\MultiSourceInventory\StockManagementInterface" type="Magestore\DropshipSuccess\Model\MultiSourceInventory\StockManagement" />
+
+</config>

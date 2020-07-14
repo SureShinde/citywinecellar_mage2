@@ -1,0 +1,32 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+?>
+<?php
+/** @var \Amasty\Blog\Block\Sidebar\Search $block */
+
+$url = str_replace(['https:', 'http:'], '', $block->getSearchUrl());
+?>
+
+<div class="amblog-search-wrap">
+    <form id="mp_blog_content_search"
+          action="<?= $block->escapeUrl($url) ?>"
+          method="GET"
+          target="_top">
+        <input type="text"
+               placeholder="<?= $block->escapeHtml($block->getBlockHeader()); ?>"
+               title="<?= $block->escapeHtml($block->getBlockHeader()); ?>"
+               id="search-blog"
+               name="query"
+               value="<?= $block->escapeHtml($block->getQuery()); ?>"
+               maxlength="100"
+               class="amblog-amp-input"/>
+
+        <button class="amblog-amp-action" title="<?= $block->escapeHtml(__("Search")); ?>" type="submit">
+            <?= $block->escapeHtml(__("Search")); ?>
+        </button>
+    </form>
+</div>

@@ -1,0 +1,108 @@
+Back,Back
+Save,Save
+ID,ID
+Name,Name
+SKU,SKU
+"Supplier SKU","Supplier SKU"
+Cost,Cost
+Tax,Tax
+Delete,Delete
+Action,Action
+"Please choose a CSV file to import products for the supplier. You can download this sample CSV file","Please choose a CSV file to import products for the supplier. You can download this sample CSV file"
+"Import products","Import products"
+"Please choose a CSV file to import pricelists for the supplier. You can download this sample CSV file","Please choose a CSV file to import pricelists for the supplier. You can download this sample CSV file"
+"Products in this supplier have been updated.","Products in this supplier have been updated."
+"This supplier no longer exists.","This supplier no longer exists."
+"Supplier Success","Supplier Success"
+"Manage Suppliers","Manage Suppliers"
+"New Supplier","New Supplier"
+"Edit Supplier","Edit Supplier"
+"Products have been imported.","Products have been imported."
+"Invalid file upload attempt","Invalid file upload attempt"
+"%1 record(s) have been deleted.","%1 record(s) have been deleted."
+"%1 record(s) have been disabled.","%1 record(s) have been disabled."
+"%1 record(s) have been enabled.","%1 record(s) have been enabled."
+"The pricelist has been imported.","The pricelist has been imported."
+"Manage Pricelist","Manage Pricelist"
+"Please correct the data sent.","Please correct the data sent."
+"Please select a supplier to create pricelist","Please select a supplier to create pricelist"
+"Please select product(s) to create pricelist","Please select product(s) to create pricelist"
+"The pricelist are created","The pricelist are created"
+"Please recheck your data","Please recheck your data"
+"Products in this supplier have been deleted.","Products in this supplier have been deleted."
+"Deleted a product in this supplier.","Deleted a product in this supplier."
+"New products in this supplier have been added.","New products in this supplier have been added."
+"The supplier information has been saved.","The supplier information has been saved."
+"Something went wrong while saving the supplier information.","Something went wrong while saving the supplier information."
+"Supplier Pricelist with id ""%1"" does not exist.","Supplier Pricelist with id ""%1"" does not exist."
+"Supplier with id ""%1"" does not exist.","Supplier with id ""%1"" does not exist."
+"Invalid file upload attempt.","Invalid file upload attempt."
+Enable,Enable
+Disable,Disable
+View,View
+"Supplier Address","Supplier Address"
+Telephone,Telephone
+Fax,Fax
+Street,Street
+City,City
+Country,Country
+Region,Region
+"Zip/Postal Code","Zip/Postal Code"
+Website,Website
+"Supplier Information","Supplier Information"
+"Supplier Code","Supplier Code"
+"Supplier Name","Supplier Name"
+"Contact Person","Contact Person"
+Email,Email
+Description,Description
+Status,Status
+"Password Management (use to login Drop Shipping Management)","Password Management (use to login Drop Shipping Management)"
+"New Password","New Password"
+"Auto-generated password","Auto-generated password"
+"Send new password to the supplier","Send new password to the supplier"
+Products,Products
+"Delete Product","Delete Product"
+Import,Import
+"Update Product","Update Product"
+"Add Product","Add Product"
+"Import Product","Import Product"
+"Add products to supplier","Add products to supplier"
+"Add selected product(s)","Add selected product(s)"
+"Select product(s) to add to this supplier","Select product(s) to add to this supplier"
+"Delete products from the supplier","Delete products from the supplier"
+"Delete selected product(s)","Delete selected product(s)"
+"Select product(s) to delete","Select product(s) to delete"
+"Import products to the supplier","Import products to the supplier"
+"Select product(s) to import","Select product(s) to import"
+"Add Pricelist to supplier","Add Pricelist to supplier"
+"Select a supplier","Select a supplier"
+Supplier,Supplier
+"Select Products","Select Products"
+Cancel,Cancel
+"Select Product","Select Product"
+Remove,Remove
+"Minimal Qty","Minimal Qty"
+"Start date","Start date"
+"End date","End date"
+Actions,Actions
+"Product ID","Product ID"
+"Product SKU","Product SKU"
+"Product Name","Product Name"
+"Receive Qty","Receive Qty"
+Instruction,Instruction
+Download,Download
+"Please choose  a CSV file to import:","Please choose  a CSV file to import:"
+"Invalid data","Invalid data"
+"There are %1 invalid rows. You must download","There are %1 invalid rows. You must download"
+"this file","this file"
+" to modify and try to import them again."," to modify and try to import them again."
+Error,Error
+"Please select at least one item.","Please select at least one item."
+"Order Success","Order Success"
+"Supplier Management","Supplier Management"
+"Supplier Listing","Supplier Listing"
+"Supplier Editing","Supplier Editing"
+"Pricelist","Pricelist"
+"Editing Pricelist","Editing Pricelist"
+Supplier,Supplier
+"Manage Pricelist","Manage Pricelist"

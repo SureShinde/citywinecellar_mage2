@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="PosAddBundleProductActionGroup">
+        <arguments>
+            <argument name="dataProduct" defaultValue="stable_order_bundle_product"/>
+        </arguments>
+        <fillField stepKey="fillBundleProductSearchBox" selector="{{ProductListSection.searchBox}}" userInput="{{dataProduct.sku}}"/>
+        <wait time="2" stepKey="waitForSearchingBundleProduct"/>
+        <waitForElementVisible time="30" selector="{{ProductListSection.firstProduct}}" stepKey="seeAtLeaseOneBundleProductAfterSearch"/>
+        <click stepKey="clickOnBundleProductFoundInList" selector="{{ProductListSection.firstProduct}}"/>
+        <waitForElementVisible selector="{{PosCheckoutPopupBundleProductSection.popupBundleBlock}}" time="30" stepKey="waitPopupBundleVisible"/>
+        <waitForElementNotVisible selector="{{PosCheckoutPopupBundleProductSection.loaderOption}}" time="30" stepKey="waitForLoadBundleOption"/>
+        <wait time="2" stepKey="waitForBundleOptionsVisible"/>
+        <click selector="{{PosCheckoutPopupBundleProductSection.product1}}" stepKey="chooseOptionProduct1"/>
+<!--        <click selector="{{PosCheckoutPopupBundleProductSection.product2}}" stepKey="chooseOptionProduct2"/>-->
+        <wait time="1" stepKey="waitBeforeAddBundleProduct"/>
+        <click selector="{{PosCheckoutPopupBundleProductSection.addToCart}}" stepKey="clickAddBundleProductButton"/>
+        <waitForElementVisible selector="{{CartSection.productFoundOnCartByName(dataProduct.name)}}" time="30" stepKey="waitBundleProductIsAddedToCartSuccessfully"/>
+    </actionGroup>
+</actionGroups>

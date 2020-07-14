@@ -1,0 +1,51 @@
+<?php
+/**
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */ /** @var Magestore\FulfilReport\Block\Adminhtml\Report\Pack $block */ ?>
+
+<?php
+$packRequestsPerDay = $block->getPackRequestCollectionPerDay();
+$dayRange = "'" . implode("','", array_keys($packRequestsPerDay)) . "'";
+$packRequestRange = implode(", ", $packRequestsPerDay);
+?>
+<script type="text/javascript">
+    require([
+        "jquery",
+        "jquery/ui",
+        "Magestore_FulfilReport/js/chart/highcharts",
+        "Magestore_FulfilReport/js/chart/data",
+        "Magestore_FulfilReport/js/chart/exporting"
+    ], function ($) {
+        // Create the chart
+        Highcharts.chart('container-pack', {
+            chart: {
+                type: 'line'
+            },
+            title: {
+                text: 'Report pack requests by day'
+            },
+            xAxis: {
+                categories:  [<?php echo $dayRange ?>]
+            },
+            yAxis: {
+                title: {
+                    text: 'Number Of Pack Requests'
+                }
+            },
+            plotOptions: {
+                line: {
+                    dataLabels: {
+                        enabled: true
+                    },
+                    enableMouseTracking: false
+                }
+            },
+            series: [{
+                name: 'Number Of Pack Requests',
+                data: [<?php echo $packRequestRange ?> ]
+            }]
+        });
+    });
+</script>
+

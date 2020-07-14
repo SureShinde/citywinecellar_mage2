@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
+    <section name="PurchaseOrderDetailSection">
+        <!-- Form general -->
+        <element name="supplierIdField" type="text" selector="//div[contains(@class, 'main-col')]//select[contains(@name, 'supplier_id')]"/>
+        <element name="prepareProductButton" type="button" selector="//div[contains(@class, 'page-main-actions')]//button[contains(@id, 'start')]"/>
+        <element name="buttonConfirmPurchaseOrder" type="button" selector="//div[contains(@class, 'page-actions-buttons')]//button[contains(@id, 'confirm')]"/>
+        <element name="buttonTransferItemPurchaseOrder" type="button" selector="//div[contains(@class, 'page-actions-buttons')]//button[contains(@id, 'transfer')]"/>
+
+        <!-- Prepare product -->
+        <element name="allProductsButton" type="button" selector="//div[contains(@data-index,'purchase_sumary')]//button[contains(@data-index, 'all_supplier_product_button')]"/>
+        <element name="qtyOrderedInputOnDynamicGrid" type="button" selector="//div[contains(@id, 'purchaseorder_list_item')]//table//td[contains(text(), '{{val1}}')]/../td[contains(@class, 'col-qty_orderred')]//input[contains(@name, 'qty_orderred')][last()]" parameterized="true"/>
+        <!-- All product modal -->
+        <element name="allProductListFilterButton" type="button" selector="//div[contains(@data-bind,'os_purchase_order_all_supplier_product.os_purchase_order_all_supplier_product')]//button[contains(@class, 'action-default')]"/>
+        <element name="filterFieldProductSku" type="text" selector="//div[contains(@data-bind,'os_purchase_order_all_supplier_product.os_purchase_order_all_supplier_product')]//input[contains(@name, 'product_sku')]"/>
+        <element name="buttonApplyFilterAllProductGrid" type="button" selector="//div[contains(@data-bind,'os_purchase_order_all_supplier_product.os_purchase_order_all_supplier_product')]//button[contains(@class, 'action-secondary')]"/>
+        <element name="inputChooseAllProductOnPrepareProductList" type="text" selector="//div[contains(@data-bind,'os_purchase_order_all_supplier_product.os_purchase_order_all_supplier_product')]//th[contains(@class, 'data-grid-multicheck-cell')]//input"/>
+        <element name="buttonAllProductToPurchaseOrder" type="button" selector="//aside[contains(@class,'os_purchase_order_form_os_purchase_order_form_purchase_sumary_all_supplier_product_modal')]//header[contains(@class, 'modal-header')]//button[contains(@class, 'action-primary')]"/>
+
+        <!-- Section received item -->
+        <element name="receivedItemSection" type="text" selector="//div[contains(@data-index, 'received_product')]//strong"/>
+        <element name="receivedAllItemButton" type="button" selector="//div[contains(@data-index, 'received_product')]//button[contains(@data-index,'received_all_product')]"/>
+
+        <!-- Transfer product modal -->
+        <element name="fieldSourceOnTransferItemModal" type="text" selector="//div[contains(@data-bind,'os_purchase_order_transferred_product_form.os_purchase_order_transferred_product_form')]//select[contains(@name, 'warehouse_id')]"/>
+        <element name="buttonSelectProductTransferProduct" type="button" selector="//div[contains(@data-bind,'os_purchase_order_transferred_product_form.os_purchase_order_transferred_product_form')]//button[contains(@data-index, 'select_product_button')]"/>
+        <element name="selectProductToTransfer" type="text" selector="//aside[contains(@class,'os_purchase_order_transferred_product_form_os_purchase_order_transferred_product_form_product_list_transferred_product_select_modal')]//table/tbody//td/div[contains(text(), '{{val1}}')]/../../td[contains(@class,'data-grid-checkbox-cell')]//input" parameterized="true"/>
+        <element name="saveTransferProductButton" type="button" selector="//aside[contains(@class,'os_purchase_order_transferred_product_form_os_purchase_order_transferred_product_form_product_list_transferred_product_select_modal')]//div[contains(@class,'page-actions-buttons')]//button[contains(@class,'action-primary')]"/>
+        <element name="fieldTransferQty" type="text" selector="//div[contains(@data-bind,'os_purchase_order_transferred_product_form.os_purchase_order_transferred_product_form')]//table//td[contains(@data-index, 'transferred_qty')]/../td[contains(@data-index, 'product_sku')]//span[contains(text(), '{{val1}}')]/../../../../../td[contains(@data-index, 'transferred_qty')]//input[contains(@name,'transferred_qty')]" parameterized="true"/>
+        <element name="saveTransferButton" type="button" selector="//aside[contains(@class,'os_purchase_order_form_os_purchase_order_form_transferred_product_modal')]//div[contains(@class,'page-actions-buttons')]//button[contains(@class,'action-primary')]"/>
+    </section>
+</sections>

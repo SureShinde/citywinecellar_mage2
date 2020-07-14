@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="admin-2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="left">
+            <referenceBlock name="sales_order_tabs">
+                <block class="Magestore\DropshipSuccess\Block\Adminhtml\Sales\Order\View\Tab\Dropship" name="dropship.grid.container"/>
+                <action method="addTab">
+                    <argument name="name" xsi:type="string">dropship</argument>
+                    <argument name="block" xsi:type="string">dropship.grid.container</argument>
+                </action>
+            </referenceBlock>
+        </referenceContainer>
+        <referenceBlock name="dropship.grid.container">
+            <uiComponent name="os_dropship_sales_order_view_dropship_grid"/>
+        </referenceBlock>
+        <!--<referenceBlock name="sales_order_creditmemo.grid.container">-->
+            <!--<uiComponent name="sales_order_view_creditmemo_grid"/>-->
+        <!--</referenceBlock>-->
+        <!--<referenceBlock name="sales_order_shipment.grid.container">-->
+            <!--<uiComponent name="sales_order_view_shipment_grid"/>-->
+        <!--</referenceBlock>-->
+    </body>
+</page>

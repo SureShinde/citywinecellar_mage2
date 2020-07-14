@@ -1,0 +1,430 @@
+"This category has children categories. Are you sure you want to delete this?","This category has children categories. Are you sure you want to delete this?"
+Delete,Delete
+"Are you sure you want to delete this?","Are you sure you want to delete this?"
+Import,Import
+Preview,Preview
+"Save and Continue Edit","Save and Continue Edit"
+Save,Save
+"One Column","One Column"
+"Two Columns and Left Sidebar","Two Columns and Left Sidebar"
+"Two Columns and Right Sidebar","Two Columns and Right Sidebar"
+"Three Columns","Three Columns"
+"Are you sure?","Are you sure?"
+"Use Website","Use Website"
+"Use Default","Use Default"
+List,List
+Grid,Grid
+Post,Post
+"Select one and press Apply","Select one and press Apply"
+label,label
+"Please update Amasty Base module. Re-upload it and replace all the files.","Please update Amasty Base module. Re-upload it and replace all the files."
+"Enable blogpagebuilder module to activate PageBuilder and Blog Pro integration. Please, run the following command in the SSH: composer require amasty/blog-page-builder","Enable blogpagebuilder module to activate PageBuilder and Blog Pro integration. Please, run the following command in the SSH: composer require amasty/blog-page-builder"
+"View All %1","View All %1"
+Guest,Guest
+"%1 at %2","%1 at %2"
+Home,Home
+"Default Blog Title","Default Blog Title"
+"More from '%1'","More from '%1'"
+"Unknown post id.","Unknown post id."
+"Search results for '%1'","Search results for '%1'"
+"There are following posts founded for the search request '%1'","There are following posts founded for the search request '%1'"
+"Posts tagged '%1'","Posts tagged '%1'"
+Categories,Categories
+"Recent Comments","Recent Comments"
+"Recent Posts","Recent Posts"
+"Search The Blog","Search The Blog"
+"We can't change item right now. Please review the log and try again.","We can't change item right now. Please review the log and try again."
+"A total of %1 record(s) have been changed.","A total of %1 record(s) have been changed."
+"No records have been changed.","No records have been changed."
+"You deleted an author.","You deleted an author."
+"We can't find an author to delete.","We can't find an author to delete."
+"Edit Author `%1`","Edit Author `%1`"
+"Add New Author","Add New Author"
+"Amasty Blog Authors","Amasty Blog Authors"
+Authors,Authors
+"We can't delete item right now. Please review the log and try again.","We can't delete item right now. Please review the log and try again."
+"A total of %1 record(s) have been deleted.","A total of %1 record(s) have been deleted."
+"No records have been deleted.","No records have been deleted."
+"You saved the item.","You saved the item."
+"Something went wrong while saving the item data. Please review the error log.","Something went wrong while saving the item data. Please review the error log."
+"You have deleted the category.","You have deleted the category."
+"We can't find a category to delete.","We can't find a category to delete."
+"Edit Category `%1`","Edit Category `%1`"
+"Add New Category","Add New Category"
+"Amasty Blog Categories","Amasty Blog Categories"
+"You have exceeded the category tree depth which is limited by %1.","You have exceeded the category tree depth which is limited by %1."
+"You deleted comment.","You deleted comment."
+"We can't find a comment to delete.","We can't find a comment to delete."
+"Edit Comment `%1`","Edit Comment `%1`"
+"Reply to Comment `%1`","Reply to Comment `%1`"
+"Amasty Blog Comments","Amasty Blog Comments"
+Comments,Comments
+"The import process was started successfully in accordance to the saved configuration","The import process was started successfully in accordance to the saved configuration"
+"Invalid table prefix","Invalid table prefix"
+"Invalid database credentials","Invalid database credentials"
+"Import depends on cron, thus pressing the import button creates a cron task which will be fulfilled within some period of time","Import depends on cron, thus pressing the import button creates a cron task which will be fulfilled within some period of time"
+"You deleted post.","You deleted post."
+"We can't find a post to delete.","We can't find a post to delete."
+"Please select a post to duplicate.","Please select a post to duplicate."
+"Copy of ","Copy of "
+"The post has been duplicated.","The post has been duplicated."
+"Edit Post `%1`","Edit Post `%1`"
+"Add New Post","Add New Post"
+"Amasty Blog Posts","Amasty Blog Posts"
+Posts,Posts
+"An error occurred while execution","An error occurred while execution"
+"Empty Data for the post for preview","Empty Data for the post for preview"
+"You deleted tag.","You deleted tag."
+"We can't find a tag to delete.","We can't find a tag to delete."
+"Edit Tag `%1`","Edit Tag `%1`"
+"Add New Tag","Add New Tag"
+"Amasty Blog Tags","Amasty Blog Tags"
+Tags,Tags
+"Sorry. There is a problem with your Vote Request.","Sorry. There is a problem with your Vote Request."
+Success.,Success.
+"Form key is not valid. Please try to reload the page.","Form key is not valid. Please try to reload the page."
+"The message for reply wasn`t found","The message for reply wasn`t found"
+"Can not create comment.","Can not create comment."
+"Your session was expired. Please refresh this page and try again.","Your session was expired. Please refresh this page and try again."
+"Post is not found.","Post is not found."
+"Can not send email notification.","Can not send email notification."
+"We can't load comments right now. Please reload the page.","We can't load comments right now. Please reload the page."
+Today,Today
+Yesterday,Yesterday
+"%1 days ago","%1 days ago"
+"%1 day ago","%1 day ago"
+"%1 month ago","%1 month ago"
+"%1 months ago","%1 months ago"
+"%1 year ago","%1 year ago"
+"%1 years ago","%1 years ago"
+Blog,Blog
+"URL route and URL key are not allow /","URL route and URL key are not allow /"
+"%1 (Default)","%1 (Default)"
+Classic,Classic
+Red,Red
+Green,Green
+Blue,Blue
+Grey,Grey
+Purple,Purple
+Twitter,Twitter
+Facebook,Facebook
+VKontakte,VKontakte
+Odnoklassniki,Odnoklassniki
+Blogger,Blogger
+Pinterest,Pinterest
+Tumblr,Tumblr
+Digg,Digg
+Del.icio.us,Del.icio.us
+StumbleUpon,StumbleUpon
+Slashdot,Slashdot
+Reddit,Reddit
+LinkedIn,LinkedIn
+"No Postfix","No Postfix"
+.html,.html
+"Something went wrong while saving the file(s).","Something went wrong while saving the file(s)."
+"Amasty Import error: ","Amasty Import error: "
+"Amasty Import error with Posts: ","Amasty Import error with Posts: "
+"Amasty Import error with Tags: ","Amasty Import error with Tags: "
+"Amasty Import error with Categories: ","Amasty Import error with Categories: "
+"Amasty Import error with Authors: ","Amasty Import error with Authors: "
+"Amasty Import error with Comments: ","Amasty Import error with Comments: "
+"Unable to save author with ID %1. Error: %2","Unable to save author with ID %1. Error: %2"
+"Unable to save new author. Error: %1","Unable to save new author. Error: %1"
+"Unable to remove author with ID %1. Error: %2","Unable to remove author with ID %1. Error: %2"
+"Unable to remove author. Error: %1","Unable to remove author. Error: %1"
+"Unable to save categories with ID %1. Error: %2","Unable to save categories with ID %1. Error: %2"
+"Unable to save new categories. Error: %1","Unable to save new categories. Error: %1"
+"Categories with specified ID ""%1"" not found.","Categories with specified ID ""%1"" not found."
+"Unable to remove categories with ID %1. Error: %2","Unable to remove categories with ID %1. Error: %2"
+"Unable to remove categories. Error: %1","Unable to remove categories. Error: %1"
+"Unable to save comment with ID %1. Error: %2","Unable to save comment with ID %1. Error: %2"
+"Unable to save new comment. Error: %1","Unable to save new comment. Error: %1"
+"Comment with specified ID ""%1"" not found.","Comment with specified ID ""%1"" not found."
+"Unable to remove comment with ID %1. Error: %2","Unable to remove comment with ID %1. Error: %2"
+"Unable to remove comment. Error: %1","Unable to remove comment. Error: %1"
+"Unable to save posts with ID %1. Error: %2","Unable to save posts with ID %1. Error: %2"
+"Unable to save new posts. Error: %1","Unable to save new posts. Error: %1"
+"Posts with specified ID ""%1"" not found.","Posts with specified ID ""%1"" not found."
+"Unable to remove posts with ID %1. Error: %2","Unable to remove posts with ID %1. Error: %2"
+"Unable to remove posts. Error: %1","Unable to remove posts. Error: %1"
+"Unable to save tag with ID %1. Error: %2","Unable to save tag with ID %1. Error: %2"
+"Unable to save new tag. Error: %1","Unable to save new tag. Error: %1"
+"Tag with specified ID ""%1"" not found.","Tag with specified ID ""%1"" not found."
+"Unable to remove tag with ID %1. Error: %2","Unable to remove tag with ID %1. Error: %2"
+"Unable to remove tag. Error: %1","Unable to remove tag. Error: %1"
+"Unable to save view with ID %1. Error: %2","Unable to save view with ID %1. Error: %2"
+"Unable to save new view. Error: %1","Unable to save new view. Error: %1"
+"View with specified ID ""%1"" not found.","View with specified ID ""%1"" not found."
+"Unable to remove view with ID %1. Error: %2","Unable to remove view with ID %1. Error: %2"
+"Unable to remove view. Error: %1","Unable to remove view. Error: %1"
+"Unable to save vote with ID %1. Error: %2","Unable to save vote with ID %1. Error: %2"
+"Unable to save new vote. Error: %1","Unable to save new vote. Error: %1"
+"Vote with specified ID ""%1"" not found.","Vote with specified ID ""%1"" not found."
+"Unable to remove vote with ID %1. Error: %2","Unable to remove vote with ID %1. Error: %2"
+"Unable to remove vote. Error: %1","Unable to remove vote. Error: %1"
+"Category '%1' can be disabled only. Some category has same Url Key for the same Store View.","Category '%1' can be disabled only. Some category has same Url Key for the same Store View."
+"Category with the same url key already exists.","Category with the same url key already exists."
+"Post '%1' can be disabled only. Some post has same Url Key for the same Store View.","Post '%1' can be disabled only. Some post has same Url Key for the same Store View."
+"A post with the same url key already exists.","A post with the same url key already exists."
+Disabled,Disabled
+Enabled,Enabled
+Pending,Pending
+Approved,Approved
+Rejected,Rejected
+Hidden,Hidden
+Published,Published
+Scheduled,Scheduled
+"Root Category","Root Category"
+Select...,Select...
+Edit,Edit
+Approve,Approve
+Reject,Reject
+Reply,Reply
+"Delete ${ $.$data.name }","Delete ${ $.$data.name }"
+"Are you sure you wan't to delete a ${ $.$data.name } record?","Are you sure you wan't to delete a ${ $.$data.name } record?"
+Duplicate,Duplicate
+"Duplicate ""${ $.$data.title }""","Duplicate ""${ $.$data.title }"""
+"Are you sure you want to duplicate a ""${ $.$data.title }"" record?","Are you sure you want to duplicate a ""${ $.$data.title }"" record?"
+Views:,Views:
+Like:,Like:
+Dislike:,Dislike:
+"Drop here","Drop here"
+"Remove Block","Remove Block"
+"Add Block to Column","Add Block to Column"
+Apply,Apply
+"Leave a reply to %1","Leave a reply to %1"
+"Leave a comment","Leave a comment"
+"Your message on review","Your message on review"
+"John Doe","John Doe"
+Name,Name
+john.doe@example.com,john.doe@example.com
+Email,Email
+"Leave your reply here...","Leave your reply here..."
+"Leave your comment here...","Leave your comment here..."
+Submit,Submit
+"Please ","Please "
+login,login
+" to reply."," to reply."
+" to comment."," to comment."
+"Don't have an account?","Don't have an account?"
+"Sign Up for free","Sign Up for free"
+"New comments for this post are not allowed","New comments for this post are not allowed"
+"This comment will become public after administrator approval.","This comment will become public after administrator approval."
+"Search entire store here...","Search entire store here..."
+Search,Search
+"Read More","Read More"
+"There are no posts yet.","There are no posts yet."
+"Welcome, %1!","Welcome, %1!"
+"Blog's Menu","Blog's Menu"
+"Read More...","Read More..."
+"More from this author ","More from this author "
+"Posted in: ","Posted in: "
+"Newer Entries","Newer Entries"
+"Older Entries","Older Entries"
+"By ","By "
+"%1 comment","%1 comment"
+"%1 comments","%1 comments"
+"No comments","No comments"
+"Related Posts","Related Posts"
+Language,Language
+"Select Store ","Select Store "
+"Your name","Your name"
+"Your e-mail","Your e-mail"
+"Text your reply...","Text your reply..."
+"Text your comment...","Text your comment..."
+"Post comment","Post comment"
+"Featured Posts","Featured Posts"
+"Swipe to the right","Swipe to the right"
+"Swipe to the left","Swipe to the left"
+"%1 of %2","%1 of %2"
+"Print This Page","Print This Page"
+Print,Print
+"Did you like this post?","Did you like this post?"
+"Categories were not found","Categories were not found"
+"Comments were not found","Comments were not found"
+"Posts were not found","Posts were not found"
+"Find some...","Find some..."
+"Unfortunately, your browser doesn't support HTML5 canvas.","Unfortunately, your browser doesn't support HTML5 canvas."
+"%1 Topics","%1 Topics"
+"Tags were not found","Tags were not found"
+"A new comment was added","A new comment was added"
+"A new comment on the post","A new comment on the post"
+"was added","was added"
+Author,Author
+E-mail,E-mail
+Comment,Comment
+"Best Regards","Best Regards"
+"Blog Pro","Blog Pro"
+Information,Information
+"Display Settings","Display Settings"
+Title,Title
+"Display Blog on the Footer","Display Blog on the Footer"
+"Display Blog on the Toolbar","Display Blog on the Toolbar"
+"Display Blog on the Categories Menu","Display Blog on the Categories Menu"
+"Search Engine Optimization","Search Engine Optimization"
+"Breadcrumb Label","Breadcrumb Label"
+Route,Route
+"Title Prefix","Title Prefix"
+"Blog Meta Title Suffix","Blog Meta Title Suffix"
+"Blog Meta Title","Blog Meta Title"
+"Blog Meta Keywords","Blog Meta Keywords"
+"Blog Meta Description","Blog Meta Description"
+"Organization Name","Organization Name"
+"URLs and Redirects","URLs and Redirects"
+"URL Postfix","URL Postfix"
+"Redirect to SEO formatted URL","Redirect to SEO formatted URL"
+Layout,Layout
+"Mobile List","Mobile List"
+"Mobile Post","Mobile Post"
+"Desktop List","Desktop List"
+"Desktop Post","Desktop Post"
+"Number of Posts per Page","Number of Posts per Page"
+"Display Author Name","Display Author Name"
+"Display Print Link","Display Print Link"
+"Display Categories","Display Categories"
+"Limit of Categories in Block","Limit of Categories in Block"
+"Display Tags","Display Tags"
+"Date Format","Date Format"
+"Width of image on Blog page","Width of image on Blog page"
+"Height of image on Blog page","Height of image on Blog page"
+"Enable 'Like' Control","Enable 'Like' Control"
+"Use Comments","Use Comments"
+"Automatic Approving","Automatic Approving"
+"Allow Guest Comments","Allow Guest Comments"
+"Quantity of Recent Comments in Block","Quantity of Recent Comments in Block"
+"Display Short Content for Recent Comments","Display Short Content for Recent Comments"
+"Display Date for Recent Comments","Display Date for Recent Comments"
+"Ask Email for Comment","Ask Email for Comment"
+"Ask Name for Comment","Ask Name for Comment"
+"Enable GDPR consent","Enable GDPR consent"
+"GDPR Consent Text","GDPR Consent Text"
+"Notification of Added Comment","Notification of Added Comment"
+Receiver,Receiver
+"This will be used in the ""To"" field. Several emails should be written on a separate line.","This will be used in the ""To"" field. Several emails should be written on a separate line."
+Sender,Sender
+"This will be used as ""From""","This will be used as ""From"""
+"Notification Template","Notification Template"
+"This email template will be used to send a notification of a new submitted comment.","This email template will be used to send a notification of a new submitted comment."
+"Recent Posts Block","Recent Posts Block"
+"Recent Posts Quantity in Block","Recent Posts Quantity in Block"
+"Display Short Content","Display Short Content"
+"Short Content Limit","Short Content Limit"
+"Display Date","Display Date"
+"Display Image","Display Image"
+"Image Width (px)","Image Width (px)"
+"Image Height (px)","Image Height (px)"
+"Minimal Posts Number per Tag","Minimal Posts Number per Tag"
+"Use 3D Cloud to Display Tags","Use 3D Cloud to Display Tags"
+"3D Cloud: Height","3D Cloud: Height"
+"3D Cloud: Color Scheme","3D Cloud: Color Scheme"
+"Choose any color scheme and press Apply to fill color fields automatically","Choose any color scheme and press Apply to fill color fields automatically"
+"3D Cloud: Text Color","3D Cloud: Text Color"
+"3D Cloud: Tag Color for Less Used Tags","3D Cloud: Tag Color for Less Used Tags"
+"3D Cloud: Tag Highlight Color","3D Cloud: Tag Highlight Color"
+"Social Buttons","Social Buttons"
+Networks,Networks
+"Look and Feel","Look and Feel"
+Include,Include
+"Accelerated Mobile Pages","Accelerated Mobile Pages"
+"Enable AMP","Enable AMP"
+Logo,Logo
+Image,Image
+"Allowed file types: jpeg, gif, png. Maximum file size: 2MB","Allowed file types: jpeg, gif, png. Maximum file size: 2MB"
+Width,Width
+height,height
+Design,Design
+"Tag Color","Tag Color"
+"Link Color","Link Color"
+"Link Color (On Hover)","Link Color (On Hover)"
+"Button Background Color","Button Background Color"
+"Button Background Color (On Hover)","Button Background Color (On Hover)"
+"Button Text Color","Button Text Color"
+"Button Text Color (On Hover)","Button Text Color (On Hover)"
+"Footer Background Color","Footer Background Color"
+"Footer Link Color","Footer Link Color"
+"Amasty Blog Recent Posts","Amasty Blog Recent Posts"
+"Blog Recent Posts","Blog Recent Posts"
+"Header Text","Header Text"
+"Posts Limit","Posts Limit"
+"Show Post Images in the Widget View","Show Post Images in the Widget View"
+"Show Date for Recent Posts","Show Date for Recent Posts"
+"Show Short Content for Recent Posts","Show Short Content for Recent Posts"
+"Post Categories for the Widget","Post Categories for the Widget"
+"Post Tags for the Widget","Post Tags for the Widget"
+"Blog Categories","Blog Categories"
+"Categories Limit","Categories Limit"
+"Amasty Blog Recent Comments","Amasty Blog Recent Comments"
+"Blog Recent Comments","Blog Recent Comments"
+"Comments Limit","Comments Limit"
+"Show Date for Recent Comments","Show Date for Recent Comments"
+"Blog Tags","Blog Tags"
+"Amasty Blog Featured Posts","Amasty Blog Featured Posts"
+"Blog Featured Posts","Blog Featured Posts"
+ID,ID
+"Url Key","Url Key"
+Tag,Tag
+Back,Back
+General,General
+"Facebook Profile","Facebook Profile"
+"Twitter Profile","Twitter Profile"
+"Meta Data","Meta Data"
+"Meta Title","Meta Title"
+"Meta Tags","Meta Tags"
+"Meta Description","Meta Description"
+"Posts of Author","Posts of Author"
+"Add Author","Add Author"
+Category,Category
+Status,Status
+"Parent Category","Parent Category"
+"Posts from Category","Posts from Category"
+"New Category","New Category"
+Activate,Activate
+Inactivate,Inactivate
+"Sort Order","Sort Order"
+"Created At","Created At"
+"Updated At","Updated At"
+E-Mail,E-Mail
+"Posted From","Posted From"
+"All Store Views","All Store Views"
+"Store View","Store View"
+"Are you sure you want to approve?","Are you sure you want to approve?"
+"Wordpress Import","Wordpress Import"
+"Database Name","Database Name"
+"Database User Name","Database User Name"
+"Database Password","Database Password"
+"Database Host","Database Host"
+"Table Prefix","Table Prefix"
+"Allow Update Content on Existing URL-key","Allow Update Content on Existing URL-key"
+"Image Path Hint","Image Path Hint"
+" "," "
+"Publish Status","Publish Status"
+"Published Date","Published Date"
+Options,Options
+"We couldn't find any records","We couldn't find any records"
+"Allow comments","Allow comments"
+"Mark as Featured","Mark as Featured"
+"Post without List Image won't be displayed","Post without List Image won't be displayed"
+Content,Content
+"
+                                The image will be resized to size from blog config
+                            ","
+                                The image will be resized to size from blog config
+                            "
+"Post Image Alt","Post Image Alt"
+"A title of post will be used if this field is empty","A title of post will be used if this field is empty"
+"List Image Alt","List Image Alt"
+"Image Link","Image Link"
+"Add Related Posts","Add Related Posts"
+Cancel,Cancel
+"Add Selected Posts","Add Selected Posts"
+Remove,Remove
+Thumbnail,Thumbnail
+Actions,Actions
+"Add Post","Add Post"
+"Published At","Published At"
+"Tagged Posts","Tagged Posts"
+"Add Tag","Add Tag"
+"Used In Posts","Used In Posts"
+Menu,Menu
+Account,Account
+Settings,Settings

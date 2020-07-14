@@ -1,0 +1,39 @@
+<?php
+/**
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+// @codingStandardsIgnoreFile
+
+?>
+<?php /** @var $block \Magestore\DropshipSuccess\Block\Adminhtml\DropshipRequest\Edit\Tab\Info\SupplierInformation */ ?>
+<?php /** @var $supplier \Magestore\SupplierSuccess\Model\Supplier */ ?>
+<?php $supplier = $block->getSupplier() ?>
+
+<section class="admin__page-section order-view-account-information">
+    <div class="admin__page-section-content">
+        <div class="admin__page-section-item order-information">
+            <?php /* Account Information */?>
+            <div class="admin__page-section-item-title">
+                <span class="title"><?php /* @escapeNotVerified */ echo __('Supplier Information') ?></span>
+            </div>
+            <div class="admin__page-section-item-content">
+                <?php if ($supplier){ ?>
+                    <a href="<?php echo $block->getUrl('suppliersuccess/supplier/edit', ['id' => $supplier->getId()]); ?>">
+                        <?php echo $supplier->getSupplierName() .' ('. $supplier->getSupplierCode() .')' ?>
+                    </a>
+                <?php } else {
+                    echo __('Need to do case none supplier');
+                } ?>
+            </div>
+        </div>
+        <div class="admin__page-section-item order-account-information">
+            <div class="admin__page-section-item-title">
+                <span class="title"><?php /* @escapeNotVerified */ echo __('Status') ?></span>
+            </div>
+            <div class="admin__page-section-item-content">
+                <?php echo $block->getDropshipRequestStatus();?>
+            </div>
+        </div>
+    </div>
+</section>

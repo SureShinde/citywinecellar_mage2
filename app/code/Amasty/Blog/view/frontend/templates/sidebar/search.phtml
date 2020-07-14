@@ -1,0 +1,35 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+?>
+<?php if ($block->getDisplay()) : ?>
+    <div class="amblog-search" data-amblog-js="accordion">
+        <div class="amblog-title" data-amblog-js="heading">
+            <?= $block->escapeHtml($block->getBlockHeader()); ?>
+        </div>
+        <div class="amblog-item -search amblog-form-search" data-amblog-js="content">
+            <form class="amblog-form-container"
+                  action="<?= $block->escapeUrl($block->getSearchUrl()); ?>"
+                  method="get">
+                <div class="input-box amblog-field">
+                    <input type="text"
+                           placeholder="<?= $block->escapeHtml(__("Find some...")); ?>"
+                           class="input-text required-entry amblog-input"
+                           id="search-blog"
+                           name="query"
+                           value="<?= $block->escapeHtml($block->getQuery()); ?>"
+                           maxlength="100"
+                    >
+                </div>
+                <button class="amblog-btn"
+                        title="<?= $block->escapeHtml(__("Search")); ?>"
+                        type="submit">
+                        <?= $block->escapeHtml(__("Search")); ?>
+                </button>
+            </form>
+        </div>
+    </div>
+<?php endif; ?>

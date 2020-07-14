@@ -1,0 +1,38 @@
+/*
+ *  Copyright © 2018 Magestore. All rights reserved.
+ *  See COPYING.txt for license details.
+ */
+
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.parent-container {
+    width: 80%;
+    margin: 0 auto 20px auto;
+    text-align: center;
+    display: -webkit-flex;
+    display: flex;
+    flex: 1 1 0;
+    -webkit-flex-direction: row;
+    flex-direction: row;
+    -webkit-justify-content: center;
+    justify-content: center;
+}
+
+.parent-container .total-container {
+    width: 25%;
+    padding: 30px 10px;
+    border: solid 1px #5B7FA0;
+    box-sizing: border-box;
+    color: #5B7FA0;
+}
+
+.parent-container .count {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    display: block;
+}

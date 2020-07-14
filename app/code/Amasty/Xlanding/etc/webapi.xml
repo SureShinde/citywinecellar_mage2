@@ -1,0 +1,32 @@
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <route url="/V1/amasty_xlanding/page" method="POST">
+        <service class="Amasty\Xlanding\Api\PageRepositoryInterface" method="save"/>
+        <resources>
+            <resource ref="Amasty_Xlanding::page" />
+        </resources>
+    </route>
+    <route url="/V1/amasty_xlanding/page/:id" method="PUT">
+        <service class="Amasty\Xlanding\Api\PageRepositoryInterface" method="save"/>
+        <resources>
+            <resource ref="Amasty_Xlanding::page" />
+        </resources>
+    </route>
+    <route url="/V1/amasty_xlanding/page/:id" method="DELETE">
+        <service class="Amasty\Xlanding\Api\PageRepositoryInterface" method="deleteById"/>
+        <resources>
+            <resource ref="Amasty_Xlanding::page" />
+        </resources>
+    </route>
+    <route url="/V1/amasty_xlanding/page" method="GET">
+        <service class="Amasty\Xlanding\Api\PageRepositoryInterface" method="getById"/>
+        <resources>
+            <resource ref="Amasty_Xlanding::page" />
+        </resources>
+    </route>
+    <route url="/V1/amasty_xlanding/page/all" method="GET">
+        <service class="Amasty\Xlanding\Api\PageRepositoryInterface" method="getList" />
+        <resources>
+            <resource ref="Amasty_Xlanding::page" />
+        </resources>
+    </route>
+</routes>

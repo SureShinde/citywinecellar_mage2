@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="magestore" translate="label" sortOrder="100">
+            <label>magestore</label>
+        </tab>
+        <section id="purchaseordersuccess" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <class>separator-top</class>
+            <label>Purchase Order Configuration</label>
+            <tab>magestore</tab>
+            <resource>Magestore_PurchaseOrderSuccess::configuration</resource>
+            <group id="product_config" translate="label" sortOrder="5" type="text" showInDefault="1">
+                <label>Product Config</label>
+                <field id="products_from" translate="label comment" sortOrder="10" type="select" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Get products from</label>
+                    <source_model>Magestore\PurchaseOrderSuccess\Model\System\Config\ProductSource</source_model>
+                </field>
+            </group>
+            <group id="shipping_method" translate="label" sortOrder="10" type="text" showInDefault="1">
+                <label>Shipping Method</label>
+                <field id="shipping_method" translate="label comment" sortOrder="10" type="select" showInDefault="1" showInStore="0">
+                    <label>Shipping method</label>
+                    <frontend_model>Magestore\PurchaseOrderSuccess\Block\Adminhtml\Form\Field\ShippingMethod</frontend_model>
+                    <backend_model>Magestore\PurchaseOrderSuccess\Model\System\Config\Backend\Serialized</backend_model>
+                </field>
+            </group>
+            <group id="payment_method" translate="label" sortOrder="20" type="text" showInDefault="1">
+                <label>Payment Method</label>
+                <field id="payment_method" translate="label comment" sortOrder="10" type="select" showInDefault="1" showInStore="0">
+                    <label>Payment method</label>
+                    <frontend_model>Magestore\PurchaseOrderSuccess\Block\Adminhtml\Form\Field\PaymentMethod</frontend_model>
+                    <backend_model>Magestore\PurchaseOrderSuccess\Model\System\Config\Backend\Serialized</backend_model>
+                </field>
+            </group>
+            <group id="payment_term" translate="label" sortOrder="30" type="text" showInDefault="1">
+                <label>Payment Term</label>
+                <field id="payment_term" translate="label comment" sortOrder="10" type="select" showInDefault="1">
+                    <label>Payment term</label>
+                    <frontend_model>Magestore\PurchaseOrderSuccess\Block\Adminhtml\Form\Field\PaymentTerm</frontend_model>
+                    <backend_model>Magestore\PurchaseOrderSuccess\Model\System\Config\Backend\Serialized</backend_model>
+                </field>
+            </group>
+            <group id="tax_and_shipping" translate="label" sortOrder="40" type="text" showInDefault="1">
+                <label><![CDATA[Tax & Shipping]]></label>
+                <!--<field id="shipping_price" translate="label comment" sortOrder="10" type="select" showInDefault="1" canRestore="1">-->
+                    <!--<label>Shipping Price</label>-->
+                    <!--<backend_model>Magento\Tax\Model\Config\Price\IncludePrice</backend_model>-->
+                    <!--<source_model>Magento\Tax\Model\System\Config\Source\PriceType</source_model>-->
+                <!--</field>-->
+                <!--<field id="default_shipping_cost" translate="label comment" sortOrder="20" type="text" showInDefault="1" canRestore="1">-->
+                    <!--<label>Default Shipping Cost</label>-->
+                    <!--<validate>validate-number validate-zero-or-greater</validate>-->
+                    <!--<comment>Leaving field blank to do not use default shipping method</comment>-->
+                <!--</field>-->
+                <field id="customer_tax" translate="label comment" sortOrder="30" type="select" showInDefault="1" canRestore="1">
+                    <label>Apply Customer Tax</label>
+                    <source_model>Magento\Tax\Model\System\Config\Source\Apply</source_model>
+                    <backend_model>Magento\Tax\Model\Config\Notification</backend_model>
+                </field>
+                <!--<field id="default_tax" translate="label comment" sortOrder="40" type="text" showInDefault="1" canRestore="1">-->
+                    <!--<label>Default Tax (%)</label>-->
+                    <!--<validate>validate-number validate-zero-or-greater</validate>-->
+                    <!--<comment>Default tax for purchase order item</comment>-->
+                <!--</field>-->
+            </group>
+        </section>
+    </system>
+</config>

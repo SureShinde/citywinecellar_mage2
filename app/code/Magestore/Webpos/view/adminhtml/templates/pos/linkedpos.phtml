@@ -1,0 +1,28 @@
+<?php
+/** @var \Magestore\Webpos\Block\Adminhtml\LinkedPos $block */
+    $url = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Framework\UrlInterface');
+    $currentUrl = $url->getCurrentUrl();
+    $action = 'edit';
+?>
+<div class="add-pos" style="float: right;
+    margin-right: 15px;">
+    <?php
+        if (strlen(strstr($currentUrl, $action)) > 0) {
+    ?>
+        <button id="addpos" title="Add POS" type="button"
+                class="action- scalable save primary"
+                onclick="location.href = '<?php echo $block->getUrl('webposadmin/pos/new', ['default_location' => $block->getLocationId()]); ?>';"
+                data-ui-id="save-button" style="height: 45px;">
+            <span>Add POS</span>
+        </button>
+    <?php
+        }
+    ?>
+</div>
+
+<?= $block->getGridHtml() ?>
+
+<!-- @todo remove when "UI components" will support such initialization -->
+<script>
+    require('mage/apply/main').apply();
+</script>

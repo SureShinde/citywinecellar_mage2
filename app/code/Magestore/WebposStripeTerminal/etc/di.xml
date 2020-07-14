@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ Copyright © 2018 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Magestore\WebposStripeTerminal\Api\StripeTerminalServiceInterface" type="Magestore\WebposStripeTerminal\Model\StripeTerminalService"/>
+
+    <preference for="Magestore\WebposStripeTerminal\Api\Data\ConnectionTokenResponseInterface" type="Magestore\WebposStripeTerminal\Model\Data\ConnectionTokenResponse"/>
+    <preference for="Magestore\WebposStripeTerminal\Api\Data\CreatePaymentIntentRequestInterface" type="Magestore\WebposStripeTerminal\Model\Data\CreatePaymentIntentRequest"/>
+    <preference for="Magestore\WebposStripeTerminal\Api\Data\CreatePaymentIntentResponseInterface" type="Magestore\WebposStripeTerminal\Model\Data\CreatePaymentIntentResponse"/>
+    <preference for="Magestore\WebposStripeTerminal\Api\Data\CapturePaymentIntentRequestInterface" type="Magestore\WebposStripeTerminal\Model\Data\CapturePaymentIntentRequest"/>
+    <preference for="Magestore\WebposStripeTerminal\Api\Data\CapturePaymentIntentResponseInterface" type="Magestore\WebposStripeTerminal\Model\Data\CapturePaymentIntentResponse"/>
+    <preference for="Magestore\WebposStripeTerminal\Api\Data\RegisterReaderRequestInterface" type="Magestore\WebposStripeTerminal\Model\Data\RegisterReaderRequest"/>
+    <preference for="Magestore\WebposStripeTerminal\Api\Data\RefundPaymentIntentRequestInterface" type="Magestore\WebposStripeTerminal\Model\Data\RefundPaymentIntentRequest"/>
+    <preference for="Magestore\WebposStripeTerminal\Api\Data\RefundPaymentIntentResponseInterface" type="Magestore\WebposStripeTerminal\Model\Data\RefundPaymentIntentResponse"/>
+    <preference for="Magestore\WebposStripeTerminal\Api\Data\RegisterReaderResponseInterface" type="Magestore\WebposStripeTerminal\Model\Data\RegisterReaderResponse"/>
+    <preference for="Magestore\WebposStripeTerminal\Api\Data\SaveConnectedReaderRequestInterface" type="Magestore\WebposStripeTerminal\Model\Data\SaveConnectedReaderRequest"/>
+    <preference for="Magestore\WebposStripeTerminal\Api\Data\SaveConnectedReaderResponseInterface" type="Magestore\WebposStripeTerminal\Model\Data\SaveConnectedReaderResponse"/>
+
+    <preference for="Magestore\WebposStripeTerminal\Api\Data\ConnectedReaderInterface" type="Magestore\WebposStripeTerminal\Model\ConnectedReader\ConnectedReader" />
+    <preference for="Magestore\WebposStripeTerminal\Api\ConnectedReaderRepositoryInterface" type="Magestore\WebposStripeTerminal\Model\ConnectedReader\ConnectedReaderRepository" />
+    <preference for="Magestore\WebposStripeTerminal\Api\Data\ConnectedReaderSearchResultsInterface" type="Magestore\WebposStripeTerminal\Model\ResourceModel\ConnectedReader\Collection" />
+
+    <!-- Config -->
+    <type name="Magestore\Webpos\Model\Config\Config">
+        <plugin name="webpos_stripeterminal_config" type="Magestore\WebposStripeTerminal\Plugin\Data\Config" />
+    </type>
+
+    <!-- Plugin Stripe Payment - prevent conflict -->
+    <type name="StripeIntegration\Payments\Observer\OrderObserver">
+        <plugin name="webpos_stripeterminal_stripeintegration_order_observer" type="Magestore\WebposStripeTerminal\Plugin\StripeIntegration\Payments\Observer\OrderObserver" />
+    </type>
+    <type name="Cryozonic\StripePayments\Observer\OrderObserver">
+        <plugin name="webpos_stripeterminal_cryozonic_order_observer" type="Magestore\WebposStripeTerminal\Plugin\StripeIntegration\Payments\Observer\OrderObserver" />
+    </type>
+
+    <type name="Magestore\Payment\Model\Payment\Type\TerminalPayments">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="stripeterminal_integration" xsi:type="string">stripeterminal_integration</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magestore\Payment\Model\Payment\Type\InternetTerminalPayments">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="stripeterminal_integration" xsi:type="string">stripeterminal_integration</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magestore\Payment\Model\Payment\Type\PreventCancelOrderRulePayments">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="stripeterminal_integration" xsi:type="string">stripeterminal_integration</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magestore\Payment\Model\Payment\RefundType\AcceptedPayments">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="stripeterminal_integration" xsi:type="string">stripeterminal_integration</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magestore\Payment\Model\Payment\RefundType\UseTransactionPayments">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="stripeterminal_integration" xsi:type="string">stripeterminal_integration</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

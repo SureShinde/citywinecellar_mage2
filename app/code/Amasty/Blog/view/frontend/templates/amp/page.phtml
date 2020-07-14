@@ -1,0 +1,20 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+?>
+<!doctype html>
+<html ⚡>
+<head>
+    <?= $block->getChildHtml('head') ?>
+</head>
+<body id="page-top">
+    <?= $block->getChildHtml('global_notices') ?>
+    <?= $block->getChildHtml('header') ?>
+    <?= $block->getChildHtml('content') ?>
+    <?= $block->getChildHtml('footer') ?>
+    <?= $block->getChildHtml('amp_body_end') ?>
+</body>
+</html>

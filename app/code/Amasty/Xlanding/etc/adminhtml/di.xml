@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Xlanding
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Catalog\Block\Adminhtml\Category\Tree">
+        <plugin name="Amasty_Xlanding::productCategoryExtendedTree"
+                type="Amasty\Xlanding\Plugin\Catalog\Block\Adminhtml\Category\Tree"/>
+    </type>
+    <type name="Magento\Catalog\Model\ResourceModel\Eav\Attribute">
+        <plugin name="Amasty_Xlanding::fixAttributeConditions"
+                type="Amasty\Xlanding\Plugin\Catalog\Model\ResourceModel\Eav\Attribute"/>
+    </type>
+
+    <!-- provide landing pages collection for megamenu custom item -->
+    <type name="Amasty\MegaMenu\Model\OptionSource\LandingPage">
+        <plugin name="Amasty_Xlanding::addOptions"
+                type="Amasty\Xlanding\Plugin\MegaMenu\Model\OptionSource\LandingPagePlugin"/>
+    </type>
+
+    <type name="Amasty\Xlanding\Model\Export\ConvertToCsv">
+        <arguments>
+            <argument name="metadataProvider" xsi:type="object">Amasty\Xlanding\Model\Export\MetadataProvider</argument>
+        </arguments>
+    </type>
+</config>

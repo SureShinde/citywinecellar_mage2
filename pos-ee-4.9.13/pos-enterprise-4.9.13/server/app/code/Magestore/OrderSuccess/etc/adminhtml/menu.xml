@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Magestore_OrderSuccess::all"
+             title="Order Management"
+             translate="title"
+             module="Magestore_OrderSuccess"
+             sortOrder="15"
+             resource="Magestore_OrderSuccess::all"/>
+
+            <!--order management menu-->
+            <add id="Magestore_OrderSuccess::order_process"
+                 title="Order Processing"
+                 translate="title"
+                 module="Magestore_OrderSuccess"
+                 parent="Magestore_OrderSuccess::all"
+                 sortOrder="10" resource="Magestore_OrderSuccess::order_process"/>
+                <add id="Magestore_OrderSuccess::need_to_verify"
+                     title="Verify Orders"
+                     translate="title"
+                     module="Magestore_OrderSuccess"
+                     dependsOnConfig="ordersuccess/order/verify"
+                     parent="Magestore_OrderSuccess::order_process"
+                     sortOrder="10"
+                     resource="Magestore_OrderSuccess::need_to_verify"
+                     action="ordersuccess/needverify/index"/>
+                <add id="Magestore_OrderSuccess::need_to_ship"
+                     title="Prepare Ship"
+                     translate="title"
+                     module="Magestore_OrderSuccess"
+                     parent="Magestore_OrderSuccess::order_process"
+                     sortOrder="20"
+                     resource="Magestore_OrderSuccess::need_to_ship"
+                     action="ordersuccess/needship/index"/>
+
+            <add id="Magestore_OrderSuccess::order_listing"
+                 title="Order Listing"
+                 translate="title"
+                 module="Magestore_OrderSuccess"
+                 parent="Magestore_OrderSuccess::all"
+                 sortOrder="20" resource="Magestore_OrderSuccess::order_listing"/>
+                <add id="Magestore_OrderSuccess::allorder"
+                     title="All Orders"
+                     translate="title"
+                     module="Magestore_OrderSuccess"
+                     parent="Magestore_OrderSuccess::order_listing"
+                     sortOrder="25"
+                     resource="Magestore_OrderSuccess::allorder"
+                     action="ordersuccess/allorder/index"/>
+                <add id="Magestore_OrderSuccess::awaiting_payment"
+                     title="Awaiting Payment"
+                     translate="title"
+                     module="Magestore_OrderSuccess"
+                     parent="Magestore_OrderSuccess::order_listing"
+                     sortOrder="30"
+                     resource="Magestore_OrderSuccess::awaiting_payment"
+                     action="ordersuccess/awaitingpayment/index"/>
+                <add id="Magestore_OrderSuccess::backorder"
+                     title="Back Orders"
+                     translate="title"
+                     module="Magestore_OrderSuccess"
+                     parent="Magestore_OrderSuccess::order_listing"
+                     sortOrder="40"
+                     resource="Magestore_OrderSuccess::backorder"
+                     action="ordersuccess/backorder/index"/>
+                <add id="Magestore_OrderSuccess::hold"
+                     title="On Hold Orders"
+                     translate="title"
+                     module="Magestore_OrderSuccess"
+                     parent="Magestore_OrderSuccess::order_listing"
+                     sortOrder="50"
+                     resource="Magestore_OrderSuccess::hold"
+                     action="ordersuccess/hold/index"/>
+
+                <add id="Magestore_OrderSuccess::completed"
+                     title="Completed Orders"
+                     translate="title"
+                     module="Magestore_OrderSuccess"
+                     parent="Magestore_OrderSuccess::order_listing"
+                     sortOrder="60"
+                     resource="Magestore_OrderSuccess::completed"
+                     action="ordersuccess/completed/index"/>
+                <add id="Magestore_OrderSuccess::canceled"
+                     title="Canceled Orders"
+                     translate="title"
+                     module="Magestore_OrderSuccess"
+                     parent="Magestore_OrderSuccess::order_listing"
+                     sortOrder="70"
+                     resource="Magestore_OrderSuccess::canceled"
+                     action="ordersuccess/canceled/index"/>
+            <!--end order management menu-->
+
+            <!--setting menu-->
+            <add id="Magestore_OrderSuccess::setting"
+                 title="Settings"
+                 translate="title"
+                 module="Magestore_OrderSuccess"
+                 parent="Magestore_OrderSuccess::all"
+                 sortOrder="100" resource="Magestore_OrderSuccess::setting"/>
+
+                <add id="Magestore_OrderSuccess::configuration_menu"
+                     title="Order Configuration"
+                     translate="title"
+                     module="Magestore_OrderSuccess"
+                     parent="Magestore_OrderSuccess::setting"
+                     sortOrder="10"
+                     resource="Magestore_OrderSuccess::configuration_menu"
+                     action="adminhtml/system_config/edit/section/ordersuccess"/>
+            <!--end setting menu-->
+
+
+    </menu>
+</config>

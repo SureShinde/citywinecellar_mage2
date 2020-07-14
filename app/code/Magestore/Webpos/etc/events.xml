@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2018 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="magestore_webpos_force_sign_out">
+        <observer name="magestore_webpos_force_sign_out" instance="Magestore\Webpos\Observer\Pos\ForceSignOut" />
+    </event>
+    <event name="magestore_webpos_force_change_pos">
+        <observer name="magestore_webpos_force_change_pos" instance="Magestore\Webpos\Observer\Pos\ForceChangePos" />
+    </event>
+
+    <!-- Index data when product update -->
+    <event name="catalog_product_save_commit_after">
+        <observer name="webpos_search_reindex" instance="Magestore\Webpos\Model\Indexer\Product\Observer" />
+    </event>
+    <event name="catalog_product_delete_commit_after">
+        <observer name="webpos_search_reindex" instance="Magestore\Webpos\Model\Indexer\Product\Observer" />
+    </event>
+    <!-- /Index data when product update -->
+
+    <event name="customer_delete_after">
+        <observer name="customer_deleted_log" instance="Magestore\Webpos\Observer\Customer\CustomerDeleted" />
+    </event>
+    <event name="catalog_category_delete_after">
+        <observer name="category_deleted_log" instance="Magestore\Webpos\Observer\Category\CategoryDeleted" />
+    </event>
+    <event name="catalog_product_delete_after">
+        <observer name="product_deleted_log" instance="Magestore\Webpos\Observer\Product\ProductDeleted" />
+    </event>
+    <event name="sales_order_delete_after">
+        <observer name="order_deleted_log" instance="Magestore\Webpos\Observer\Order\OrderDeleted" />
+    </event>
+    <event name="catalog_category_move_after">
+        <observer name="category_move_after" instance="Magestore\Webpos\Observer\Category\CategoryMoveAfter" />
+    </event>
+    <event name="catalog_product_save_after">
+        <observer name="product_save_after" instance="Magestore\Webpos\Observer\Product\ProductSaveAfter" />
+    </event>
+    <event name="catalog_product_attribute_update_before">
+        <observer name="catalog_product_attribute_update_before" instance="Magestore\Webpos\Observer\Product\ProductAttributeUpdate" />
+    </event>
+
+    <!-- integration with Magestore_InventorySuccess -->
+    <event name="inventorysuccess_new_order_warehouse">
+        <observer name="webpos_inventorysuccess_new_order_warehouse" instance="Magestore\Webpos\Observer\InventorySuccess\NewOrderWarehouse" />
+    </event>
+    <event name="inventorysuccess_create_shipment_warehouse">
+        <observer name="webpos_inventorysuccess_create_shipment_warehouse" instance="Magestore\Webpos\Observer\InventorySuccess\CreateShipmentWarehouse" />
+    </event>
+    <event name="inventorysuccess_create_creditmemo_warehouse">
+        <observer name="webpos_inventorysuccess_create_creditmemo_warehouse" instance="Magestore\Webpos\Observer\InventorySuccess\CreateCreditmemoWarehouse" />
+    </event>
+    <event name="inventorysuccess_get_default_scope_id">
+        <observer name="webpos_inventorysuccess_get_default_scope_id" instance="Magestore\Webpos\Observer\InventorySuccess\GetDefaultScopeId" />
+    </event>
+    <event name="inventorysuccess_get_current_warehouse_by_store">
+        <observer name="webpos_inventorysuccess_get_current_warehouse_by_store" instance="Magestore\Webpos\Observer\InventorySuccess\GetCurrentWarehouseByStore" />
+    </event>
+    <!-- End of integration with Magestore_InventorySuccess -->
+
+    <event name="sales_order_invoice_pay">
+        <observer name="magestore_webpos_sales_order_invoice_pay" instance="Magestore\Webpos\Observer\Order\Invoice\Pay" />
+    </event>
+
+
+    <event name="model_save_before">
+        <observer name="webpos_cataloginventory_stock_item_update" instance="Magestore\Webpos\Observer\CatalogInventory\StockItemSaveBeforeObserver" />
+    </event>
+    <event name="fulfilsuccess_get_resource_picking_item_after_place_order">
+        <observer name="webpos_fulfilsuccess_get_resource_picking_item_after_place_order" instance="Magestore\Webpos\Observer\FulfilSuccess\Sales\GetResourcePickingItemAfterPlaceOrder"/>
+    </event>
+    <event name="fulfilsuccess_get_stock_id_from_order_to_prepare_fulfil">
+        <observer name="webpos_fulfilsuccess_get_stock_id_from_order_to_prepare_fulfil" instance="Magestore\Webpos\Observer\FulfilSuccess\Model\MultiSourceInventory\GetStockIdFromOrderToPrepareFulfil"/>
+    </event>
+</config>

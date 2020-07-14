@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+
+<!--
+  ~ Copyright © 2018 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <!--<section id="webpos">-->
+            <!--<group id="payment">-->
+                <!--<group id="paynl" translate="label" sortOrder="100" type="text" showInDefault="1" showInWebsite="0">-->
+                    <!--<label>Paynl Instore</label>-->
+                    <!--<field id="enable" translate="label" sortOrder="1" type="select" showInDefault="1" showInWebsite="0" showInStore="0">-->
+                        <!--<label>Enable</label>-->
+                        <!--<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>-->
+                    <!--</field>-->
+                    <!--<field id="title" translate="label" sortOrder="5" type="text" showInDefault="1" showInWebsite="0">-->
+                        <!--<label>Title</label>-->
+                        <!--<validate>required-entry</validate>-->
+                        <!--<depends>-->
+                            <!--<field id="*/*/*/enable">1</field>-->
+                        <!--</depends>-->
+                    <!--</field>-->
+                    <!--<field id="client_id" translate="label" sortOrder="10" type="text" showInDefault="1" showInWebsite="0" showInStore="0">-->
+                        <!--<label>API-token</label>-->
+                        <!--<validate>required-entry</validate>-->
+                        <!--<depends>-->
+                            <!--<field id="*/*/*/enable">1</field>-->
+                        <!--</depends>-->
+                    <!--</field>-->
+                    <!--<field id="client_secret" translate="label" sortOrder="15" type="text" showInDefault="1" showInWebsite="0" showInStore="0">-->
+                        <!--<label>ServiceId</label>-->
+                        <!--<validate>required-entry</validate>-->
+                        <!--<depends>-->
+                            <!--<field id="*/*/*/enable">1</field>-->
+                        <!--</depends>-->
+                    <!--</field>-->
+                    <!--<field id="is_sandbox" translate="label" sortOrder="20" type="select" showInDefault="1" showInWebsite="0" showInStore="0">-->
+                        <!--<label>Sandbox Mode</label>-->
+                        <!--<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>-->
+                        <!--<depends>-->
+                            <!--<field id="*/*/*/enable">1</field>-->
+                        <!--</depends>-->
+                    <!--</field>-->
+                    <!--<group id="guides" translate="label" sortOrder="100" type="text" showInDefault="1" showInWebsite="0">-->
+                        <!--<label>Guide</label>-->
+                        <!--<field id="setup_guide" translate="label" sortOrder="6" type="text" showInDefault="1" showInWebsite="0" showInStore="0">-->
+                            <!--<label>Setup guide</label>-->
+                            <!--<frontend_model>Magestore\WebposPaynl\Block\Adminhtml\Config\Instruction</frontend_model>-->
+                        <!--</field>-->
+                    <!--</group>-->
+                <!--</group>-->
+            <!--</group>-->
+        <!--</section>-->
+    </system>
+</config>

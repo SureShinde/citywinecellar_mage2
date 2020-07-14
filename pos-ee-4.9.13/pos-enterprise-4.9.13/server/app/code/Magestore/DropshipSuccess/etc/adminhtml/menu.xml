@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <!--dropship menu-->
+        <update id="Magestore_DropshipSuccess::separate"
+                title="   "
+                translate="title"
+                module="Magestore_DropshipSuccess"
+                sortOrder="60"
+                parent="Magestore_OrderSuccess::all"
+                resource="Magestore_DropshipSuccess::separate"/>
+        <update id="Magestore_DropshipSuccess::separate2"
+                title="   "
+                translate="title"
+                module="Magestore_DropshipSuccess"
+                sortOrder="62"
+                parent="Magestore_OrderSuccess::all"
+                resource="Magestore_DropshipSuccess::separate2"/>
+        <update id="Magestore_DropshipSuccess::separate3"
+                title="   "
+                translate="title"
+                module="Magestore_DropshipSuccess"
+                sortOrder="63"
+                parent="Magestore_OrderSuccess::all"
+                resource="Magestore_DropshipSuccess::separate4"/>
+        <update id="Magestore_DropshipSuccess::separate4"
+                title="   "
+                translate="title"
+                module="Magestore_DropshipSuccess"
+                sortOrder="64"
+                parent="Magestore_OrderSuccess::all"
+                resource="Magestore_DropshipSuccess::separate4"/>
+        <add id="Magestore_DropshipSuccess::dropship"
+                title="Dropship"
+                translate="title"
+                module="Magestore_DropshipSuccess"
+                sortOrder="70"
+                parent="Magestore_OrderSuccess::all"
+                resource="Magestore_DropshipSuccess::dropship"/>
+
+        <add id="Magestore_DropshipSuccess::dropship_request_listing"
+             title="Dropship Request"
+             translate="title"
+             module="Magestore_DropshipSuccess"
+             sortOrder="0"
+             parent="Magestore_DropshipSuccess::dropship"
+             resource="Magestore_DropshipSuccess::dropship_request_listing"
+             action="dropshipsuccess/dropshiprequest/index"/>
+        <!--end dropship menu-->
+
+        <!-- update Supplier Menu -->
+        <update id="Magestore_SupplierSuccess::supplier" 
+                parent="Magestore_OrderSuccess::all"
+                sortOrder="80"/>        
+        
+        <!--dropship configuration-->
+        <add id="Magestore_DropshipSuccess::configuration_menu"
+             title="Dropship Configuration"
+             translate="title"
+             module="Magestore_OrderSuccess"
+             parent="Magestore_OrderSuccess::setting"
+             sortOrder="30"
+             resource="Magestore_DropshipSuccess::dropship_configuration"
+             action="adminhtml/system_config/edit/section/dropshipsuccess"/>
+        <!--end dropship menu-->
+    </menu>
+</config>

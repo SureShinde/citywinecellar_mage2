@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
+    <template id="purchase_order_success_supplier_email" label="Purchase Order Email To Supplier" file="purchaseorder/email_supplier.html" type="html" module="Magestore_PurchaseOrderSuccess" area="frontend"/>
+    <template id="return_order_success_supplier_email" label="Return Request Email To Supplier" file="returnorder/email_supplier.html" type="html" module="Magestore_PurchaseOrderSuccess" area="frontend"/>
+ </config>

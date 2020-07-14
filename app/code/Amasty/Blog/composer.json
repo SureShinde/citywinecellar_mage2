@@ -1,0 +1,26 @@
+{
+    "name": "amasty/blog",
+    "description": "Amasty Blog Pro",
+    "require": {
+        "php": "7.0.2|7.0.4|~7.0.6|^7.1.0",
+        "amasty/base": ">=1.10.0",
+        "amasty/cron-schedule-list": ">=1.0.5"
+    },
+    "suggest": {
+        "amasty/blog-page-builder": "Install blog-page-builder module to activate PageBuilder and Blog Pro integration.",
+        "amasty/blog-graphql": "Install blog-graphql module to activate Graphql and Blog Pro integration."
+    },
+    "type": "magento2-module",
+    "version": "2.5.2",
+    "license": [
+        "Commercial"
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Amasty\\Blog\\": ""
+        }
+    }
+}

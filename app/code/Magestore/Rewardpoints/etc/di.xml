@@ -1,0 +1,127 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magestore\Rewardpoints\Model\ResourceModel\Rate\Earning\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">rewardpoints_rate</argument>
+            <argument name="resourceModel" xsi:type="string">Magestore\Rewardpoints\Model\ResourceModel\Rate</argument>
+        </arguments>
+    </type>
+    <type name="Magestore\Rewardpoints\Model\ResourceModel\Rate\Spending\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">rewardpoints_rate</argument>
+            <argument name="resourceModel" xsi:type="string">Magestore\Rewardpoints\Model\ResourceModel\Rate</argument>
+        </arguments>
+    </type>
+    <type name="Magestore\Rewardpoints\Model\ResourceModel\Rewardcustomer\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">customer_grid_flat</argument>
+            <argument name="resourceModel" xsi:type="string">Magento\Customer\Model\ResourceModel\Customer</argument>
+        </arguments>
+    </type>
+    <type name="Magestore\Rewardpoints\Model\ResourceModel\Transaction\Grid\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">rewardpoints_transaction</argument>
+            <argument name="resourceModel" xsi:type="string">Magestore\Rewardpoints\Model\ResourceModel\Transaction</argument>
+        </arguments>
+    </type>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="rewardpoints_spendingrates_listing_data_source" xsi:type="string">Magestore\Rewardpoints\Model\ResourceModel\Rate\Spending\Collection</item>
+                <item name="rewardpoints_earningrates_listing_data_source" xsi:type="string">Magestore\Rewardpoints\Model\ResourceModel\Rate\Earning\Collection</item>
+                <item name="rewardpoint_balance_customer_listing_data_source" xsi:type="string">Magestore\Rewardpoints\Model\ResourceModel\Rewardcustomer\Collection</item>
+                <item name="rewardpoints_transaction_listing_data_source" xsi:type="string">Magestore\Rewardpoints\Model\ResourceModel\Transaction\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Quote\Model\Quote\Item\ToOrderItem">
+        <plugin name="rewardpoint_discount_to_item" type="Magestore\Rewardpoints\Model\Plugin\Quote\RewardpointsToOrderItem"/>
+    </type>
+    <type name="Magento\Sales\Block\Adminhtml\Order\Create\Items\Grid">
+        <plugin name="rewardpoint_discount_to_subtotal" type="Magestore\Rewardpoints\Model\Plugin\Quote\RewardpointsToSubtotal"/>
+    </type>
+    <!--API-->
+    <preference for="Magestore\Rewardpoints\Api\CustomerRepositoryInterface" type="Magestore\Rewardpoints\Model\Customer\CustomerRepository" />
+    <preference for="Magestore\Rewardpoints\Api\Data\Customer\CustomerInterface" type="Magestore\Rewardpoints\Model\Customer" />
+    <preference for="Magestore\Rewardpoints\Api\Data\Customer\CustomerSearchResultsInterface" type="Magento\Framework\Api\SearchResults" />
+    <preference for="Magestore\Rewardpoints\Api\TransactionRepositoryInterface" type="Magestore\Rewardpoints\Model\Transaction\TransactionRepository" />
+    <preference for="Magestore\Rewardpoints\Api\Data\Transaction\TransactionInterface" type="Magestore\Rewardpoints\Model\Transaction" />
+    <preference for="Magestore\Rewardpoints\Api\Data\Transaction\TransactionSearchResultsInterface" type="Magento\Framework\Api\SearchResults" />
+    <preference for="Magestore\Rewardpoints\Api\Data\Integration\Webpos\RateInterface" type="Magestore\Rewardpoints\Model\Integration\Data\Webpos\Rate"/>
+    <!-- Rewrite -->
+    <preference for="Temando\Shipping\Observer\SaveCheckoutFieldsObserver" type="Magestore\Rewardpoints\Model\Shipping\Observer\SaveCheckoutFieldsObserver" />
+
+
+    <!-- Decrease discount value to show in total -->
+    <type name="Magento\SalesRule\Model\Quote\Discount">
+        <plugin name="rewardpoint_salesrules_discount_fetch_after" type="Magestore\Rewardpoints\Model\Plugin\SalesRule\Quote\Discount" sortOrder="10"/>
+    </type>
+    <!-- Decrease discount value is showed when get cart totals-->
+    <type name="Magento\Quote\Model\Cart\CartTotalRepository">
+        <plugin name="rewardpoint_get_cat_totals_after" type="Magestore\Rewardpoints\Model\Plugin\Quote\Cart\CartTotalRepository" sortOrder="10"/>
+    </type>
+    <type name="Magento\Sales\Model\ResourceModel\Order\Handler\State">
+        <plugin name="rewardpoint_around_order_handler_state" type="Magestore\Rewardpoints\Model\Plugin\Order\Handler\State" sortOrder="10"/>
+    </type>
+    <!--fix bugg magento issue 12655 cannot checkout at front end-->
+    <type name="Magento\Framework\Api\DataObjectHelper">
+        <plugin name="magestore_fix_bug_magento_checkout_cart_issue_12655_plugin"
+                type="Magestore\Rewardpoints\Plugin\Framework\Api\DataObjectHelper"
+                sortOrder="100"
+                disabled="false"/>
+    </type>
+    <type name="Magestore\Webpos\Api\Config\ConfigRepositoryInterface">
+        <plugin name="add_reward_rate" type="Magestore\Rewardpoints\Plugin\Config\ConfigRepository" sortOrder="10"/>
+    </type>
+    <type name="Magestore\Webpos\Api\Data\Checkout\OrderInterface">
+        <plugin name="get_extension_attribute" type="Magestore\Rewardpoints\Plugin\Checkout\Order" sortOrder="10"/>
+    </type>
+    <type name="Magestore\Webpos\Model\Customer\CustomerRepository">
+        <plugin name="add_customer_reward_balance" type="Magestore\Rewardpoints\Plugin\Customer\CustomerRepository" sortOrder="10"/>
+    </type>
+    <type name="Magestore\Webpos\Model\Integration\LoyaltyRepository">
+        <plugin name="add_customer_reward_balance_to_loyalty" type="Magestore\Rewardpoints\Plugin\Integration\LoyaltyRepository" sortOrder="10"/>
+    </type>
+    <type name="Magestore\Webpos\Api\Checkout\CheckoutRepositoryInterface">
+        <plugin name="populate_extension_data" type="Magestore\Rewardpoints\Plugin\Checkout\CheckoutRepository" sortOrder="10"/>
+    </type>
+    <type name="Magestore\Webpos\Model\Checkout\PosOrderRepository">
+        <plugin name="reward_points_pos_order_repository" type="Magestore\Rewardpoints\Plugin\Checkout\PosOrderRepository" sortOrder="10"/>
+    </type>
+    <!-- plugin extension attribute creditmemo data -->
+    <type name="Magestore\Webpos\Api\Data\Sales\Order\CreditmemoInterface">
+        <plugin name="creditmemo_data_add_extension_attribute" type="Magestore\Rewardpoints\Plugin\Sales\Data\Creditmemo" sortOrder="10"/>
+    </type>
+
+    <type name="Magestore\Webpos\Api\Data\Checkout\Order\ItemInterface">
+        <plugin name="get_extension_attribute_item" type="Magestore\Rewardpoints\Plugin\Checkout\Order\Item" sortOrder="10"/>
+    </type>
+
+    <type name="Magestore\Rewardpoints\Ui\Component\MassAction\EarningRates\Status\Options">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="urlPath" xsi:type="string">rewardpoints/earningrates/massStatus</item>
+                <item name="paramName" xsi:type="string">status</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magestore\Rewardpoints\Ui\Component\MassAction\SpendingRates\Status\Options">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="urlPath" xsi:type="string">rewardpoints/spendingrates/massStatus</item>
+                <item name="paramName" xsi:type="string">status</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magestore\Rewardpoints\Ui\Component\MassAction\Transaction\Status\Options">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="urlPath" xsi:type="string">rewardpoints/transaction/massStatus</item>
+                <item name="paramName" xsi:type="string">status</item>
+            </argument>
+        </arguments>
+    </type>
+</config>
+

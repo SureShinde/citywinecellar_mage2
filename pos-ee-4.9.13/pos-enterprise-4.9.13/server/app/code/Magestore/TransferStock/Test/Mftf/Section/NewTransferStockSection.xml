@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../../../../../vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Page/etc/SectionObject.xsd">
+    <section name="NewTransferStockSection">
+        <element name="selectSourceWarehouse" type="input" selector="select[name='source_warehouse_code']"/>
+        <element name="selectDesWarehouse" type="input" selector="select[name='des_warehouse_code']"/>
+        <element name="inputReason" type="input" selector="textarea[name='reason']"/>
+        <element name="prepareButton" type="button" selector="//button[@id='start']"/>
+    </section>
+</sections>

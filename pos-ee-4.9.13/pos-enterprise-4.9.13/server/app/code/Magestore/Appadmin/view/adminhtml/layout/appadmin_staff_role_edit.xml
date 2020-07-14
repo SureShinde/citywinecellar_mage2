@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright © 2018 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="admin-2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="editor"/>
+    <head>
+        <css src="Magestore_Appadmin::css/grid.css"/>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="Magestore\Appadmin\Block\Adminhtml\Staff\Role\Edit" name="appadmin_staff_role_edit"/>
+        </referenceContainer>
+        <referenceContainer name="left">
+            <block class="Magestore\Appadmin\Block\Adminhtml\Staff\Role\Edit\Tabs" name="appadmin_role_edit_tabs">
+            </block>
+        </referenceContainer>
+    </body>
+</page>

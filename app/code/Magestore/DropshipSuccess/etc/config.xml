@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <dropshipsuccess>
+            <general>
+                <submit_request_to_supplier>magestore_submit_request_to_supplier</submit_request_to_supplier>
+                <cancel_request_to_supplier>magestore_cancel_request_to_supplier</cancel_request_to_supplier>
+                <confirm_shipment_to_admin>magestore_dropshipsuccess_dropship_shipment_to_admin</confirm_shipment_to_admin>
+                <cancel_dropship_to_admin>magestore_dropshipsuccess_dropship_cancel_to_admin</cancel_dropship_to_admin>
+                <forgot_password_to_supplier>magestore_dropshipsuccess_dropship_forgot_password_to_supplier</forgot_password_to_supplier>
+                <send_pricelist_to_admin>magestore_dropshipsuccess_dropship_send_pricelist_to_admin</send_pricelist_to_admin>
+            </general>
+        </dropshipsuccess>
+    </default>
+</config>

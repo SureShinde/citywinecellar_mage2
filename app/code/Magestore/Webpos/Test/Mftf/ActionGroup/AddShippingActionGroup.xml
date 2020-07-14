@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="AddShippingActionGroup">
+        <arguments>
+            <argument name="shippingMethod" defaultValue="Free Shipping - Free" type="string"/>
+        </arguments>
+
+        <waitForElementVisible selector="{{PosCheckoutCartTotalsSection.shipping}}" stepKey="checkShippingVisible"/>
+        <click selector="{{PosCheckoutCartTotalsSection.shipping}}" stepKey="clickAddShippingButton"/>
+        <waitForElementVisible selector="{{PosCheckoutPopupAddShippingSection.shippingPopup}}" time="120" stepKey="waitForAddShippingPopupVisible"/>
+        <waitForElementVisible selector="{{PosCheckoutPopupAddShippingSection.shippingMethodItem(shippingMethod)}}" time="120" stepKey="waitForAddShippingMethodVisible"/>
+        <wait time="1" stepKey="waitBeforeSelectShippingMethod"/>
+        <click selector="{{PosCheckoutPopupAddShippingSection.shippingMethodItem(shippingMethod)}}" stepKey="selectShippingMethod"/>
+        <wait time="1" stepKey="waitOneSecond"/>
+        <grabTextFrom selector="{{PosCheckoutPopupAddShippingSection.shippingMethodValue(shippingMethod)}}" stepKey="grabShippingMethodValue"/>
+        <click selector="{{PosCheckoutPopupAddShippingSection.saveButton}}" stepKey="saveShippingMethod"/>
+        <waitForElementNotVisible selector="{{PosCheckoutPopupAddShippingSection.shippingPopup}}" stepKey="waitForAddShippingPopupNotVisible"/>
+        <wait time="2" stepKey="waitShippingMethodAddSuccess" />
+    </actionGroup>
+</actionGroups>

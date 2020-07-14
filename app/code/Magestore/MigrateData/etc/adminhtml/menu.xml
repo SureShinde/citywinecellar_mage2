@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Magestore_MigrateData::migrate_data" title="Magestore Migrate Data" translate="title"
+             module="Magestore_MigrateData" sortOrder="22" resource="Magestore_MigrateData::migrate_data"/>
+
+        <add id="Magestore_MigrateData::migrate_supplier" title="Migrate Supplier" translate="title"
+             module="Magestore_MigrateData" parent="Magestore_MigrateData::migrate_data" sortOrder="10"
+             resource="Magestore_MigrateData::migrate_supplier" action="migratedata/migratedata_supplier/view"/>
+
+        <add id="Magestore_MigrateData::migrate_supplier_product" title="Migrate Supplier Product" translate="title"
+             module="Magestore_MigrateData" parent="Magestore_MigrateData::migrate_data" sortOrder="10"
+             resource="Magestore_MigrateData::migrate_supplier_product"
+             action="migratedata/migratedata_supplierproduct/view"/>
+
+        <add id="Magestore_MigrateData::migrate_order" title="Migrate Order" translate="title"
+             module="Magestore_MigrateData" parent="Magestore_MigrateData::migrate_data" sortOrder="20"
+             resource="Magestore_MigrateData::migrate_order"
+             action="migratedata/migratedata_order/view"/>
+
+        <add id="Magestore_MigrateData::migrate_order_ms" title="Migrate Order From MS" translate="title"
+             module="Magestore_MigrateData" parent="Magestore_MigrateData::migrate_data" sortOrder="20"
+             resource="Magestore_MigrateData::migrate_order_ms"
+             />
+            <add id="Magestore_MigrateData::migrate_order_ms_customer" title="Migrate Customer MS" translate="title"
+                 module="Magestore_MigrateData" parent="Magestore_MigrateData::migrate_order_ms" sortOrder="10"
+                 resource="Magestore_MigrateData::migrate_order_ms_customer"
+                 action="migratedata/migratedata_order_ms_customer/view"/>
+            <add id="Magestore_MigrateData::migrate_order_ms_product" title="Migrate Product MS" translate="title"
+                 module="Magestore_MigrateData" parent="Magestore_MigrateData::migrate_order_ms" sortOrder="11"
+                 resource="Magestore_MigrateData::migrate_order_ms_customer"
+                 action="migratedata/migratedata_order_ms_product/view"/>
+            <add id="Magestore_MigrateData::migrate_order_ms_order" title="Migrate Order MS" translate="title"
+                 module="Magestore_MigrateData" parent="Magestore_MigrateData::migrate_order_ms" sortOrder="20"
+                 resource="Magestore_MigrateData::migrate_order_ms_order"
+                 action="migratedata/migratedata_order_ms_order/view"/>
+            <add id="Magestore_MigrateData::migrate_order_ms_order_item" title="Migrate Order Item MS" translate="title"
+                 module="Magestore_MigrateData" parent="Magestore_MigrateData::migrate_order_ms" sortOrder="30"
+                 resource="Magestore_MigrateData::migrate_order_ms_order_item"
+                 action="migratedata/migratedata_order_ms_order_item/view"/>
+    </menu>
+</config>

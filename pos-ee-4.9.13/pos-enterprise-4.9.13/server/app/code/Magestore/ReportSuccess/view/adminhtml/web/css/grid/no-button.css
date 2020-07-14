@@ -1,0 +1,21 @@
+/*
+ *  Copyright © 2018 Magestore. All rights reserved.
+ *  See COPYING.txt for license details.
+ */
+
+/* Fix for grid without button */
+.page-main-actions {
+    display: none;
+}
+
+.page-main-actions._hidden {
+    display: block;
+}
+
+.page-actions-buttons {
+    height: 45px;
+}
+
+.page-actions-buttons button {
+    display: none !important;
+}

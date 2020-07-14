@@ -1,0 +1,89 @@
+<?php
+/**
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+?>
+<?php
+/**
+ * @var \Magestore\DropshipSuccess\Block\Adminhtml\DropshipRequest\Edit\Tab\Info\Items $block
+ */
+?>
+<div class="button-list" style="float:right">
+    <button onclick="cancelDropship()">
+        <?php echo __('Back to Prepare Fulfill') ?>
+    </button>
+    <button onclick="dropshipForm.submit()"><?php echo __('Create Shipment') ?></button>
+</div>
+<div class="admin__page-section-title">
+    <span class="title"><?php echo __('Create dropship shipment'); ?></span>
+</div>
+
+<div class="admin__table-wrapper">
+    <form class="dropship-request-form" id="dropship-request-form"
+          action="<?php echo $block->getSaveUrl(); ?>" method="post">
+        <input name="form_key" type="hidden" value="<?php echo $block->escapeHtml($block->getFormKey()) ?>" />
+        <input name="order_id" type="hidden" value="<?php echo $block->getOrder()->getId() ?>" />
+        <input name="dropship_request_id" type="hidden" value="<?php echo $block->getDropshipRequest()->getId() ?>" />
+
+        <table class="data-table admin__table-primary edit-order-table">
+            <thead>
+                <tr class="headings">
+                    <?php $i = 0;
+                    $columns = $block->getColumns();
+                    $lastItemNumber = count($columns) ?>
+                    <?php foreach ($columns as $columnName => $columnTitle):?>
+                        <?php $i++; ?>
+                        <th class="col-<?php /* @noEscape */ echo $columnName ?><?php /* @noEscape */ echo ($i === $lastItemNumber ? ' last' : '')?>"><span><?php /* @noEscape */ echo $columnTitle ?></span></th>
+                    <?php endforeach; ?>
+                </tr>
+            </thead>
+            <?php $_items = $block->getItemsCollection();?>
+            <?php $i = 0; foreach ($_items as $_item):?>
+                <?php if ($_item->getParentItem()) {
+                    continue;
+                } else {
+                    $i++;
+                }?>
+                <tbody class="<?php /* @noEscape */ echo $i%2 ? 'even' : 'odd' ?>">
+                <?php echo $block->getItemHtml($_item) ?>
+    <!--            --><?php ////echo $block->getItemExtraInfoHtml($_item) ?>
+                </tbody>
+            <?php endforeach; ?>
+        </table>
+    </form>
+</div>
+<script type="text/javascript">
+    function checkMaxQtyDropship(item, maxQty){
+        if(item.value > maxQty)
+            item.value = maxQty;
+        if(item.value < 0 || !parseInt(item.value))
+            item.value = 0;
+    };
+    require([
+        "jquery",
+        "mage/loader",
+        "mage/adminhtml/form"
+    ], function(jQuery){
+        window.dropshipForm = jQuery('#dropship-request-form').mage('form').mage('validation', {
+            submitHandler: function(form)
+            {
+                jQuery('body').loader('show');
+                $$('.requires').each(function(element) {
+                    var scopeElement = adminSystemConfig.getScopeElement(element);
+                    if (!scopeElement || !scopeElement.checked) {
+                        Element.extend(element).disabled = false;
+                    }
+                });
+                jQuery(form).trigger('afterValidate');
+                form.submit();
+            }
+        });
+        window.cancelDropship = function () {
+            jQuery('body').loader('show');
+            window.location = '<?php echo $block->getBackUrl() ?>';
+        }
+    })
+</script>

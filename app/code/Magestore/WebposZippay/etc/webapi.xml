@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+
+<!--
+  ~ Copyright © 2018 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <route url="/V1/webpos/zippay/purchaserequests" method="POST">
+        <service class="Magestore\WebposZippay\Api\ZippayServiceInterface" method="purchaserRequests"/>
+        <resources>
+            <resource ref="Magestore_Webpos::manage_pos" />
+        </resources>
+    </route>
+    <route url="/V1/webpos/zippay/purchaserequests/refund" method="POST">
+        <service class="Magestore\WebposZippay\Api\ZippayServiceInterface" method="purchaserRequestsRefund"/>
+        <resources>
+            <resource ref="Magestore_Webpos::manage_pos" />
+        </resources>
+    </route>
+    <route url="/V1/webpos/zippay/purchaserequests/void" method="POST">
+        <service class="Magestore\WebposZippay\Api\ZippayServiceInterface" method="cancelPurchaserRequests"/>
+        <resources>
+            <resource ref="Magestore_Webpos::manage_pos" />
+        </resources>
+    </route>
+    <route url="/V1/webpos/zippay/purchaserequests/refund/void" method="POST">
+        <service class="Magestore\WebposZippay\Api\ZippayServiceInterface" method="cancelRefundRequests"/>
+        <resources>
+            <resource ref="Magestore_Webpos::manage_pos" />
+        </resources>
+    </route>
+    <route url="/V1/webpos/zippay/purchaserequests/:id" method="GET">
+        <service class="Magestore\WebposZippay\Api\ZippayServiceInterface" method="fetchTransaction"/>
+        <resources>
+            <resource ref="Magestore_Webpos::manage_pos" />
+        </resources>
+    </route>
+</routes>

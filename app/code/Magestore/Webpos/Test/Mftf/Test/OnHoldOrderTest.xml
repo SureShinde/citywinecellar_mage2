@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="OnHoldOrderTest">
+        <annotations>
+            <features value="Hold Order"/>
+            <stories value="Hold Order"/>
+            <title value="Checkout on-hold order"/>
+            <description value="Checkout an on-hold order"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="OHO-01"/>
+            <group value="OnHoldOrder"/>
+            <group value="pwapos"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="HoldOrder" stepKey="HoldOrder">
+            <argument name="dataProduct" value="pos_simple_product" />
+            <argument name="dataCustomer" value="default_customer" />
+        </actionGroup>
+
+        <actionGroup ref="GetOrderIdFromToast" stepKey="GetOrderIdFromToast"/>
+        <dontSee selector="{{CartSection.productFoundOnCartByName(pos_simple_product.name)}}" stepKey="waitProductIsClearedFromCartSuccessfully"/>
+        <dontSee selector=".customer-drop a" userInput="{{default_customer.fullName}}" stepKey="waitForCustomerIsRemoved"/>
+
+        <click selector="{{MenuSection.menuButton}}" stepKey="clickMenuButton" />
+        <waitForElementVisible selector="{{MenuSection.menuItem('item-orderhold ')}}" time="60" stepKey="waitMenuHoldOrderShow" />
+        <wait time="2" stepKey="wait2SecondsBeforeGoToHoldOrderPage" />
+        <click selector="{{MenuSection.menuItem('item-orderhold')}}" stepKey="goToHoldOrderHistoryPage" />
+        <wait time="2" stepKey="wait2SecondsBeforeCheckHoldOrder" />
+
+        <fillField stepKey="fillHoldOrderSearchBox" selector="{{OnHoldOrderSection.searchBox}}" userInput="{$orderIdGetOrderIdFromToast}"/>
+        <waitForElementVisible selector="{{OnHoldOrderSection.firstOnHoldOrder}}" time="60" stepKey="waitFirstOnHoldOrderShowed" />
+
+        <click selector="{{OnHoldOrderSection.firstOnHoldOrder}}" stepKey="clickOnFirstOrder"/>
+        <waitForElementVisible selector="{{OnHoldOrderSection.customerName(default_customer.fullName)}}" time="30" stepKey="waitShowFullName" />
+        <waitForElementVisible selector="{{OnHoldOrderSection.firstItemName(pos_simple_product.name)}}" time="30" stepKey="waitShowProduct" />
+        <wait time="2" stepKey="waitForSee"/>
+
+        <waitForElementVisible selector="{{OnHoldOrderSection.checkoutButton}}" time="60" stepKey="waitButtonCheckoutIsVisible" />
+        <click selector="{{OnHoldOrderSection.checkoutButton}}" stepKey="clickCheckoutOnHoldOrder" />
+        <wait time="2" stepKey="wait2SecondsBeforeCheckoutHoldOrder" />
+
+        <waitForElementVisible selector="{{CartSection.productFoundOnCartByName(pos_simple_product.name)}}" time="120" stepKey="waitProductIsAddedToCartSuccessfully"/>
+        <waitForText userInput="{{default_customer.fullName}}" selector=".customer-drop a" time="120" stepKey="waitForAddCustomer"/>
+    </test>
+</tests>

@@ -1,0 +1,158 @@
+<?php
+/**
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/** @var \Magestore\FulfilSuccess\Block\Adminhtml\Package\PackageDetail $block */
+?>
+<?php
+$package = $block->getPackage();
+?>
+<div id="packed_window">
+    <section class="admin__page-section">
+        <div class="admin__page-section-title">
+            <span class="title"><?php /* @escapeNotVerified */ echo __('Package') . ' ' . $package->getPackageId() ?></span>
+        </div>
+        <div class="admin__page-section-content">
+            <div class="row row-gutter">
+                <div class="col-m-4">
+                    <table class="admin__table-secondary">
+                        <tbody>
+                        <tr>
+                            <th><?php /* @escapeNotVerified */ echo __('Type') ?></th>
+                            <td><?php /* @escapeNotVerified */ echo $block->getContainerTypeByCode($package->getContainer()) ?></td>
+                        </tr>
+                        <tr>
+                            <?php if ($block->displayCustomsValue()): ?>
+                                <th><?php /* @escapeNotVerified */ echo __('Custom Value') ?></th>
+                                <td><?php /* @escapeNotVerified */ echo $block->displayCustomsPrice($package->getCustomValue()) ?></td>
+                            <?php else: ?>
+                                <th><?php /* @escapeNotVerified */ echo __('Total Weight') ?></th>
+                                <td><?php /* @escapeNotVerified */ echo floatval($package->getWeight()) . ' ' . $this->helper('Magento\Shipping\Helper\Carrier')->getMeasureWeightName($package->getWeightUnits()) ?></td>
+                            <?php endif; ?>
+                        </tr>
+                        <?php if ($package->getSize()): ?>
+                            <tr>
+                                <th><?php /* @escapeNotVerified */ echo __('Size') ?></th>
+                                <td><?php /* @escapeNotVerified */ echo ucfirst(strtolower($package->getSize())) ?></td>
+                            </tr>
+                        <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-m-4">
+                    <table class="admin__table-secondary">
+                        <tbody>
+                        <tr>
+                            <th><?php /* @escapeNotVerified */ echo __('Length') ?></th>
+                            <td>
+                                <?php if ($package->getLength() != null && floatval($package->getLength()) != 0): ?>
+                                    <?php /* @escapeNotVerified */ echo $package->getLength() . ' ' . $this->helper('Magento\Shipping\Helper\Carrier')->getMeasureDimensionName($package->getDimensionUnits()) ?>
+                                <?php else: ?>
+                                    --
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><?php /* @escapeNotVerified */ echo __('Width') ?></th>
+                            <td>
+                                <?php if ($package->getWidth() != null && floatval($package->getWidth()) != 0): ?>
+                                    <?php /* @escapeNotVerified */ echo $package->getWidth() . ' ' . $this->helper('Magento\Shipping\Helper\Carrier')->getMeasureDimensionName($package->getDimensionUnits()) ?>
+                                <?php else: ?>
+                                    --
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><?php /* @escapeNotVerified */ echo __('Height') ?></th>
+                            <td>
+                                <?php if ($package->getHeight() != null && floatval($package->getHeight()) != 0): ?>
+                                    <?php /* @escapeNotVerified */ echo $package->getHeight() . ' ' . $this->helper('Magento\Shipping\Helper\Carrier')->getMeasureDimensionName($package->getDimensionUnits()) ?>
+                                <?php else: ?>
+                                    --
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-m-4">
+                    <table class="admin__table-secondary">
+                        <tbody>
+                        <?php if ($package->getDeliveryConfirmation() != null): ?>
+                            <tr>
+                                <th><?php /* @escapeNotVerified */ echo __('Signature Confirmation') ?></th>
+                                <td><?php /* @escapeNotVerified */ echo $block->getDeliveryConfirmationTypeByCode($package->getDeliveryConfirmation()) ?></td>
+                            </tr>
+                        <?php endif; ?>
+                        <?php if ($package->getContentType() != null): ?>
+                            <tr>
+                                <th><?php /* @escapeNotVerified */ echo __('Contents') ?></th>
+                                <?php if ($package->getContentType() == 'OTHER'): ?>
+                                    <td><?php echo $block->escapeHtml($package->getContentTypeOther()) ?></td>
+                                <?php else: ?>
+                                    <td><?php /* @escapeNotVerified */ echo $block->getContentTypeByCode($package->getContentType()) ?></td>
+                                <?php endif; ?>
+                            </tr>
+                        <?php endif; ?>
+                        <?php if ($package->getGirth()): ?>
+                            <tr>
+                                <th><?php /* @escapeNotVerified */ echo __('Girth') ?></th>
+                                <td><?php /* @escapeNotVerified */ echo $package->getGirth() . ' ' . $this->helper('Magento\Shipping\Helper\Carrier')->getMeasureDimensionName($package->getGirthDimensionUnits()) ?></td>
+                            </tr>
+                        <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="admin__page-section-item-title">
+            <span class="title"><?php /* @escapeNotVerified */ echo __('Items in the Package') ?></span>
+        </div>
+        <div class="admin__table-wrapper">
+            <table class="data-table admin__table-primary">
+                <thead>
+                <tr class="headings">
+                    <th class="col-product"><span><?php /* @escapeNotVerified */ echo __('Product') ?></span></th>
+                    <th class="col-weight"><span><?php /* @escapeNotVerified */ echo __('Weight') ?></span></th>
+                    <?php if ($block->displayCustomsValue()): ?>
+                        <th class="col-custom"><span><?php /* @escapeNotVerified */ echo __('Custom Value') ?></span></th>
+                    <?php endif; ?>
+                    <th class="col-qty"><span><?php /* @escapeNotVerified */ echo __('Qty Ordered') ?></span></th>
+                    <th class="col-qty"><span><?php /* @escapeNotVerified */ echo __('Qty Packed') ?></span></th>
+                </tr>
+                </thead>
+                <tbody id="">
+                <?php foreach ($package->getItems() as $packageItem) : ?>
+                    <?php /** @var \Magestore\FulfilSuccess\Api\Data\PackageItemInterface $packageItem */ ?>
+                    <tr title="#" id="">
+                        <td class="col-product">
+                            <?php /* @escapeNotVerified */ echo $packageItem->getName(); ?>
+                        </td>
+                        <td class="col-weight">
+                            <?php /* @escapeNotVerified */ echo $packageItem->getWeight(); ?>
+                        </td>
+                        <?php if ($block->displayCustomsValue()): ?>
+                            <td class="col-custom"><?php /* @escapeNotVerified */ echo $block->displayCustomsPrice($packageItem->getCustomsValue()) ?></td>
+                        <?php endif; ?>
+                        <td class="col-qty">
+                            <?php /* @escapeNotVerified */ echo $block->getQtyOrderedItem($packageItem->getOrderItemId()); ?>
+                        </td>
+                        <td class="col-qty">
+                            <?php /* @escapeNotVerified */ echo $packageItem->getQty()*1; ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+<hr>
+<script type="text/javascript">
+    function openPopup(url) {
+        window.open(url,'','height=600, width=800, top=50, left=50, scrollable=yes, menubar=yes, resizable=yes');
+        return false;
+    }
+</script>

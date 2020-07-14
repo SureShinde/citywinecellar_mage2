@@ -1,0 +1,174 @@
+Information,Information
+"Dropship Request Information","Dropship Request Information"
+Shipments,Shipments
+"Dropship Shipments","Dropship Shipments"
+"We can\'t get the order instance right now.","We can\'t get the order instance right now."
+"Dropship Request Edit","Dropship Request Edit"
+"Supplier To Dropship","Supplier To Dropship"
+Dropship,Dropship
+"Custom Value","Custom Value"
+"Welcome %1(%2)","Welcome %1(%2)"
+"Welcome to Dropship Management!","Welcome to Dropship Management!"
+"This order no longer exists.","This order no longer exists."
+"This dropship request no longer exists.","This dropship request no longer exists."
+"Dropship Success","Dropship Success"
+"Manage Dropship","Manage Dropship"
+"Dropship Request","Dropship Request"
+"Exception occurred when loading order","Exception occurred when loading order"
+"Dropship Request #%1 for Sales #%2","Dropship Request #%1 for Sales #%2"
+"Cannot cancel the dropship request.","Cannot cancel the dropship request."
+"The dropship request has been canceled","The dropship request has been canceled"
+"We can\'t save the dropship shipment right now.","We can\'t save the dropship shipment right now."
+"Cannot save dropship shipment.","Cannot save dropship shipment."
+"The shipment has been created.","The shipment has been created."
+"Please select qty for product(s) to create shipment!","Please select qty for product(s) to create shipment!"
+"You created shipment!","You created shipment!"
+"Cannot create shipment! Please try again!","Cannot create shipment! Please try again!"
+"View dropship details","View dropship details"
+"View shipment","View shipment"
+"Reset Password","Reset Password"
+"Your password reset link has expired.","Your password reset link has expired."
+"You cannot reset password!","You cannot reset password!"
+"New Password and Confirm New Password didn't match.","New Password and Confirm New Password didn't match."
+"Please enter a new password.","Please enter a new password."
+"You updated your password.","You updated your password."
+"Something went wrong while saving the new password.","Something went wrong while saving the new password."
+"Supplier Information","Supplier Information"
+"Forgot Your Password","Forgot Your Password"
+"Please correct the email address.","Please correct the email address."
+"Invalid email","Invalid email"
+"We\'re unable to send the password reset email.","We\'re unable to send the password reset email."
+"Please enter your email.","Please enter your email."
+"Supplier Dropship Management","Supplier Dropship Management"
+"Supplier Login","Supplier Login"
+"You have successfully logged in!","You have successfully logged in!"
+"Invalid username or password.","Invalid username or password."
+"Username and password are required.","Username and password are required."
+"You have successfully logged out!","You have successfully logged out!"
+"Supplier Product","Supplier Product"
+Pending,Pending
+"Partial Ship","Partial Ship"
+Completed,Completed
+Canceled,Canceled
+"Dropship request item with id ""%1"" does not exist.","Dropship request item with id ""%1"" does not exist."
+"Dropship request with id ""%1"" does not exist.","Dropship request with id ""%1"" does not exist."
+"Dropship shipment with id ""%1"" does not exist.","Dropship shipment with id ""%1"" does not exist."
+"Non supplier","Non supplier"
+"Cancel request notice to supplier (Default)","Cancel request notice to supplier (Default)"
+None,None
+"Submit request notice to supplier (Default)","Submit request notice to supplier (Default)"
+Edit,Edit
+"Test 1","Test 1"
+"Michael test 1","Michael test 1"
+"Add test 1","Add test 1"
+"Select Attribute 1","Select Attribute 1"
+"Create New Attribute test 1","Create New Attribute test 1"
+"Add Attribute","Add Attribute"
+"Add Test 2","Add Test 2"
+"Select Attribute","Select Attribute"
+"Create New Attribute test 2","Create New Attribute test 2"
+"Add Selected","Add Selected"
+"Create New Attribute test 3","Create New Attribute test 3"
+Remove,Remove
+ID,ID
+SKU,SKU
+Name,Name
+"Create New Attribute test 2121","Create New Attribute test 2121"
+"Old Qty","Old Qty"
+"Change Qty","Change Qty"
+"Adjust Qty","Adjust Qty"
+Actions,Actions
+"Related Products, Up-Sells, and Cross-Sells","Related Products, Up-Sells, and Cross-Sells"
+"Add Related Products","Add Related Products"
+"Related Products","Related Products"
+"Add Up-Sell Products","Add Up-Sell Products"
+"Up-Sell Products","Up-Sell Products"
+"Add Cross-Sell Products","Add Cross-Sell Products"
+"Cross-Sell Products","Cross-Sell Products"
+Cancel,Cancel
+"Add Selected Products","Add Selected Products"
+Thumbnail,Thumbnail
+Status,Status
+"Attribute Set","Attribute Set"
+Price,Price
+"Sales Information","Sales Information"
+Ordered,Ordered
+Dropship,Dropship
+Requested,Requested
+Shipped,Shipped
+"Need to Ship","Need to Ship"
+"Back to Prepare Fulfill","Back to Prepare Fulfill"
+"Create Shipment","Create Shipment"
+"Create Dropship Shipment","Create Dropship Shipment"
+"Customer Information","Customer Information"
+"Customer Name","Customer Name"
+Email,Email
+"Shipping Address","Shipping Address"
+"Need to do case none supplier","Need to do case none supplier"
+"Select All","Select All"
+"Product Name","Product Name"
+"Qty Need to Ship","Qty Need to Ship"
+"Qty To Request","Qty To Request"
+"No supplier available","No supplier available"
+Delete,Delete
+"Create shipment","Create shipment"
+"Cancel Dropship","Cancel Dropship"
+Qty,Qty
+"Items Ordered","Items Ordered"
+"Sales Shipments","Sales Shipments"
+Product,Product
+"Shipped Qty","Shipped Qty"
+Carrier,Carrier
+Title,Title
+Number,Number
+"Are you sure to cancel this dropship request?","Are you sure to cancel this dropship request?"
+"Shipment #","Shipment #"
+"Print Shipment","Print Shipment"
+"Tracking Number(s):","Tracking Number(s):"
+"Items Shipped","Items Shipped"
+"Qty Shipped","Qty Shipped"
+"* Required Fields","* Required Fields"
+"Supplier Name","Supplier Name"
+"Person To Contact","Person To Contact"
+"Password Management","Password Management"
+"New Password","New Password"
+"Supplier Address","Supplier Address"
+Telephone,Telephone
+Fax,Fax
+Street,Street
+City,City
+State/Province,State/Province
+"Please select a region, state or province.","Please select a region, state or province."
+"Zip/Postal Code","Zip/Postal Code"
+Country,Country
+Website,Website
+"Save Supplier","Save Supplier"
+"My Account","My Account"
+Dropships,Dropships
+"Dropship #","Dropship #"
+"Request Date","Request Date"
+"Ship To","Ship To"
+"Total Items Requested","Total Items Requested"
+View,View
+"You have no dropships.","You have no dropships."
+"Please enter your email address below to receive a password reset link.","Please enter your email address below to receive a password reset link."
+"Reset My Password","Reset My Password"
+"Go back","Go back"
+Password,Password
+"Sign In","Sign In"
+"Forgot Your Password?","Forgot Your Password?"
+"Password Strength","Password Strength"
+"No Password","No Password"
+"Confirm New Password","Confirm New Password"
+"Set a New Password","Set a New Password"
+"Supplier\'s Products","Supplier\'s Products"
+"Product Sku","Product Sku"
+"Product Supplier Sku","Product Supplier Sku"
+Cost,Cost
+"Tax (%)","Tax (%)"
+"You have no products.","You have no products."
+"DropShip #%1 - %2","DropShip #%1 - %2"
+"Customer Name: ","Customer Name: "
+"Email: ","Email: "
+"Billing Address","Billing Address"
+"This Dropship no longer exists.","This Dropship no longer exists."

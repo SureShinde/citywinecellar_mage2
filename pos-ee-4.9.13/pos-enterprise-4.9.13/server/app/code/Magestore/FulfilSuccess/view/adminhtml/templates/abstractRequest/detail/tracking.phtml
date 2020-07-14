@@ -1,0 +1,63 @@
+<?php
+/**
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+?>
+<?php /** @var $block Magento\Shipping\Block\Adminhtml\Order\Tracking\View */ ?>
+<div class="admin__control-table-wrapper">
+    <table class="data-table admin__control-table" id="shipment_tracking_info">
+        <thead>
+            <tr class="headings">
+                <th class="col-carrier"><?php /* @escapeNotVerified */ echo __('Carrier') ?></th>
+                <th class="col-title"><?php /* @escapeNotVerified */ echo __('Title') ?></th>
+                <th class="col-number"><?php /* @escapeNotVerified */ echo __('Number') ?></th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <td class="col-carrier">
+                    <select name="tracking_carrier"
+                            class="select admin__control-select"
+                            onchange="selectCarrier(this)">
+                        <?php foreach ($block->getCarriers() as $_code => $_name): ?>
+                        <option value="<?php /* @escapeNotVerified */ echo $_code ?>"><?php echo $block->escapeHtml($_name) ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </td>
+                <td class="col-title">
+                    <input class="input-text admin__control-text"
+                           type="text"
+                           id="tracking_title"
+                           name="tracking_title"
+                           value="" />
+                </td>
+                <td class="col-number">
+                    <input class="input-text admin__control-text"
+                           type="text"
+                           id="tracking_number"
+                           name="tracking_number"
+                           value="" />
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+<script>
+require(['prototype'], function(){
+
+//<![CDATA[
+function selectCarrier(elem) {
+    var option = elem.options[elem.selectedIndex];
+    $('tracking_title').value = option.value && option.value != 'custom' ? option.text : '';
+}
+
+window.selectCarrier = selectCarrier;
+//]]>
+
+});
+</script>

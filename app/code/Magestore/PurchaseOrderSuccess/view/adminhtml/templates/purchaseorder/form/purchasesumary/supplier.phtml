@@ -1,0 +1,40 @@
+
+<div id="purchase_sumary_supplier" class="admin__page-section-content">
+    <div class="admin__page-section-item order-information">
+        <div class="admin__page-section-item-content">
+            <table class="admin__table-secondary order-information-table">
+                <tbody>
+                    <tr>
+                        <th><?php echo __('Created At') ?></th>
+                        <td><?php echo $block->getPurchaseDate() ?></td>
+                    </tr>
+                    <tr>
+                        <th><?php echo __('Purchase from') ?></th>
+                        <td><?php echo $block->getSupplierInformation() ?></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>   
+    <div class="admin__page-section-item order-information" style="float: right">
+        <div class="admin__page-section-item-content">
+            <table class="admin__table-secondary order-information-table">
+                <tbody>
+                    <tr>
+                        <th><?php echo __('Payment Term') ?></th>
+                        <td><?php echo $block->getPOPaymentTerm() ?></td>
+                    </tr>
+                    <tr>
+                        <th><?php echo __('Shipping Method') ?></th>
+                        <td><?php echo $block->getPOShippingMethod() ?></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>     
+</div>
+<style>
+    .purchaseordersuccess-purchaseorder-view .admin__fieldset-wrapper-content .admin__fieldset{
+        padding-top: 0px;
+    }
+</style>

@@ -1,0 +1,6 @@
+#row_not_instaled_toolkit .value {
+    color: #f70606;
+}
+#row_instaled_toolkit .value {
+    color: #00f70d;
+}

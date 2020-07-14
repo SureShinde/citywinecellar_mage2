@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="SearchProduct21ResultsActionGroup">
+        <arguments>
+            <argument name="dataProduct" defaultValue=""/>
+        </arguments>
+        <fillField stepKey="fillProductSearchBox" selector="{{ProductListSection.searchBox}}" userInput="{{dataProduct}}"/>
+        <wait time="2" stepKey="waitForSearch"/>
+        <waitForElementVisible  time="30" selector="{{ProductListSection.firstProduct}}"  stepKey="seeAtLeaseOneProductAfterSearch"/>
+
+        <pressKey selector=".wrapper-content .catalog-list" parameterArray="[\Facebook\WebDriver\WebDriverKeys::PAGE_DOWN]"  stepKey="scrollPageDown"/>
+        <wait time="2" stepKey="waitForScroll"/>
+        <waitForElementVisible  time="30" selector="{{ProductListSection.productN('17')}}"  stepKey="seePageTwo"/>
+
+        <seeElementInDOM selector="{{ProductListSection.productN('21')}}" stepKey="seeTwentyFirstProduct"/>
+        <dontSeeElementInDOM selector="{{ProductListSection.productN('22')}}" stepKey="dontSeeTwentySecondProduct"/>
+    </actionGroup>
+</actionGroups>

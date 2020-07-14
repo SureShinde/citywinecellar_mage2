@@ -1,0 +1,28 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Xlanding
+ */
+?>
+<?php
+?>
+<?php $options = $block->getSelectOptions() ?>
+<div class="admin__field">
+    <?php if ($block->getData('label')): ?>
+        <label for="<?= /* @escapeNotVerified */ $block->getData('name') ?>" class="admin__field-label"><span><?= /* @escapeNotVerified */ $block->getData('label') ?></span></label>
+    <?php endif; ?>
+    <select data-form-part="category_form" name="<?= /* @escapeNotVerified */ $block->getData('name') ?>" class="admin__control-select <?= /* @escapeNotVerified */ $block->getData('class') ?>">
+        <?php foreach($options as $key => $value): ?>
+            <?php if(is_array($value)): ?>
+                <optgroup label="<?= $block->escapeHtml($key) ?>">
+                    <?php foreach($value as $optionValue => $optionLabel): ?>
+                        <option value="<?= $block->escapeHtml($optionValue) ?>" <?= ($block->getSelectValue() == $optionValue) ? 'selected="selected"' : '' ?>><?= $block->escapeHtml($optionLabel) ?></option>
+                    <?php endforeach; ?>
+                </optgroup>
+            <?php else: ?>
+                <option value="<?= $block->escapeHtml($key) ?>" <?= ($block->getSelectValue() == $key) ? 'selected="selected"' : '' ?>><?= $block->escapeHtml($value) ?></option>
+            <?php endif; ?>
+        <?php endforeach; ?>
+    </select>
+</div>

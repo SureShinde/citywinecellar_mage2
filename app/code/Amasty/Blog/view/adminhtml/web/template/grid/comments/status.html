@@ -1,0 +1,9 @@
+<!-- ko if: $row().status == 1 -->
+<span class="amblog-hidden"><span translate="'Pending'"></span></span>
+<!-- /ko -->
+<!-- ko if: $row().status == 2 -->
+<span class="amblog-published"><span translate="'Approved'"></span></span>
+<!-- /ko -->
+<!-- ko if: $row().status == 3 -->
+<span class="amblog-disabled"><span translate="'Rejected'"></span></span>
+<!-- /ko -->

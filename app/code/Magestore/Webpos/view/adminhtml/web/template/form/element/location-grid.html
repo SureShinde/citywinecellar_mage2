@@ -1,0 +1,37 @@
+<!-- ko if: options.length > 0 -->
+<div class="admin__data-grid-wrap" data-role="grid-wrapper">
+    <table class="data-grid data-grid-draggable" data-role="grid">
+        <thead>
+        <tr>
+            <th class="data-grid-th _sortable _draggable">
+                <span class="data-grid-cell-content" data-bind="i18n: 'Location Name'"></span>
+            </th>
+            <th class="data-grid-th _sortable _draggable">
+                <span class="data-grid-cell-content" data-bind="i18n: 'Address'"></span>
+            </th>
+            <th class="data-grid-th">
+                <span class="data-grid-cell-content" data-bind="i18n: 'Action'"></span>
+            </th>
+        </tr>
+        </thead>
+        <tbody data-bind="foreach: { data: options, as: '$row' }">
+        <tr class="data-row" data-bind="css: {'_odd-row': $index % 2}" data-repeat-index="0">
+            <td>
+                <div class="data-grid-cell-content" data-bind="text: $row.name"></div>
+            </td>
+            <td>
+                <div class="data-grid-cell-content" data-bind="text: $row.address"></div>
+            </td>
+            <td class="data-grid-actions-cell">
+                <a class="action-menu-item"
+                   data-bind="attr: {href: $row.href}, i18n: 'View'"
+                   data-repeat-index="0" target="_blank"></a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<!-- /ko -->
+<!-- ko ifnot: options.length > 0 -->
+<span class="admin__field-label" data-bind="i18n: 'No POS Location is associated to this Stock'"></span>
+<!-- /ko -->

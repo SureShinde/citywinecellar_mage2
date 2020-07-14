@@ -1,0 +1,26 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+?>
+<?php /** @var \Amasty\Blog\Block\Adminhtml\Posts\Edit\View $block */ ?>
+
+<div class="ampost_views">
+    <label>
+        <span class="amblog_views_label"><?= $block->escapeHtml(__('Views:')) ?></span> <?= $block->escapeHtml($block->getViews()) ?>
+    </label>
+</div>
+
+<div class="ampost_likes">
+    <label>
+        <span class="amblog_likes_label"><?= $block->escapeHtml(__('Like:')) ?></span> <?= $block->escapeHtml($block->getLikes()) ?>
+    </label>
+</div>
+
+<div class="ampost_dislikes">
+    <label>
+        <span class="amblog_dislikes_label"><?= $block->escapeHtml(__('Dislike:')) ?></span> <?= $block->escapeHtml($block->getDisLikes()) ?>
+    </label>
+</div>

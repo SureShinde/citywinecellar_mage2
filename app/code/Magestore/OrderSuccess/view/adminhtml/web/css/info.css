@@ -1,0 +1,37 @@
+/*
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+.os_tag_list div{
+    width: 7px;
+    height: 20px;
+    float: right;
+    margin-right: 4px;
+    border-radius: 3px;
+    margin-top: 4px;
+}
+
+.tag_td{
+    padding-right:0 !important;
+}
+.tag_td .tag_color, .batch_td .os_batch{
+    width:65%; float:right;
+}
+
+.batch_td .batch_success {
+    background-image: url(../images/apply.gif);
+    width: 16px;
+    height: 16px;
+    float: right;
+    margin: 6px;
+    display: none;
+}
+
+.tag_td .tag_loading, .batch_td .batch_loading {
+    background-image: url(../images/loading.gif);
+    width: 16px;
+    height: 16px;
+    float: right;
+    margin: 6px;
+    display: none;
+}

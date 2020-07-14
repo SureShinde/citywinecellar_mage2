@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+<!--    <preference for="Magento\Ui\Controller\Adminhtml\Export\GridToCsv" type="Magestore\PurchaseOrderSuccess\Ui\Controller\GridToCsv"/>-->
+
+<!--    <preference for="Magento\Ui\Controller\Adminhtml\Export\GridToXml" type="Magestore\PurchaseOrderSuccess\Ui\Controller\GridToXml"/>-->
+
+    <preference for="Magestore\PurchaseOrderSuccess\Api\Data\ReturnOrderInterface" type="Magestore\PurchaseOrderSuccess\Model\ReturnOrder"/>
+    <preference for="Magestore\PurchaseOrderSuccess\Api\Data\ReturnOrderItemInterface" type="Magestore\PurchaseOrderSuccess\Model\ReturnOrder\Item"/>
+    <preference for="Magestore\PurchaseOrderSuccess\Api\Data\PurchaseOrderInterface" type="Magestore\PurchaseOrderSuccess\Model\PurchaseOrder"/>
+    <preference for="Magestore\PurchaseOrderSuccess\Api\Data\PurchaseOrderItemInterface" type="Magestore\PurchaseOrderSuccess\Model\PurchaseOrder\Item"/>
+    <preference for="Magestore\PurchaseOrderSuccess\Api\Data\PurchaseOrderItemReceivedInterface" type="Magestore\PurchaseOrderSuccess\Model\PurchaseOrder\Item\Received"/>
+    <preference for="Magestore\PurchaseOrderSuccess\Api\Data\PurchaseOrderItemTransferredInterface" type="Magestore\PurchaseOrderSuccess\Model\PurchaseOrder\Item\Transferred"/>
+    <preference for="Magestore\PurchaseOrderSuccess\Api\Data\PurchaseOrderItemReturnedInterface" type="Magestore\PurchaseOrderSuccess\Model\PurchaseOrder\Item\Returned"/>
+    <preference for="Magestore\PurchaseOrderSuccess\Api\Data\InvoiceInterface" type="Magestore\PurchaseOrderSuccess\Model\PurchaseOrder\Invoice"/>
+    <preference for="Magestore\PurchaseOrderSuccess\Api\Data\InvoiceItemInterface" type="Magestore\PurchaseOrderSuccess\Model\PurchaseOrder\Invoice\Item"/>
+    <preference for="Magestore\PurchaseOrderSuccess\Api\Data\PaymentInterface" type="Magestore\PurchaseOrderSuccess\Model\PurchaseOrder\Invoice\Payment"/>
+    <preference for="Magestore\PurchaseOrderSuccess\Api\Data\RefundInterface" type="Magestore\PurchaseOrderSuccess\Model\PurchaseOrder\Invoice\Refund"/>
+    <preference for="Magestore\PurchaseOrderSuccess\Api\Data\HistoryInterface" type="Magestore\PurchaseOrderSuccess\Model\PurchaseOrder\History"/>
+    <preference for="Magestore\PurchaseOrderSuccess\Api\Data\ReturnOrderItemTransferredInterface" type="Magestore\PurchaseOrderSuccess\Model\ReturnOrder\Item\Transferred"/>
+
+    <preference for="Magestore\PurchaseOrderSuccess\Api\Data\PurchaseOrderSearchResultsInterface" type="Magestore\PurchaseOrderSuccess\Model\ResourceModel\PurchaseOrder\Collection"/>
+    <preference for="Magestore\PurchaseOrderSuccess\Api\Data\PurchaseOrderItemSearchResultsInterface" type="Magestore\PurchaseOrderSuccess\Model\ResourceModel\PurchaseOrder\Item\Collection"/>
+    <preference for="Magestore\PurchaseOrderSuccess\Api\Data\PurchaseOrderItemReceivedSearchResultsInterface" type="Magestore\PurchaseOrderSuccess\Model\ResourceModel\PurchaseOrder\Item\Received\Collection"/>
+    <preference for="Magestore\PurchaseOrderSuccess\Api\Data\PurchaseOrderItemTransferredSearchResultsInterface" type="Magestore\PurchaseOrderSuccess\Model\ResourceModel\PurchaseOrder\Item\Transferred\Collection"/>
+    <preference for="Magestore\PurchaseOrderSuccess\Api\Data\PurchaseOrderItemReturnedSearchResultsInterface" type="Magestore\PurchaseOrderSuccess\Model\ResourceModel\PurchaseOrder\Item\Returned\Collection"/>
+    <preference for="Magestore\PurchaseOrderSuccess\Api\Data\InvoiceSearchResultsInterface" type="Magestore\PurchaseOrderSuccess\Model\ResourceModel\PurchaseOrder\Invoice\Collection"/>
+    <preference for="Magestore\PurchaseOrderSuccess\Api\Data\InvoiceItemSearchResultsInterface" type="Magestore\PurchaseOrderSuccess\Model\ResourceModel\PurchaseOrder\Invoice\Item\Collection"/>
+    <preference for="Magestore\PurchaseOrderSuccess\Api\Data\PaymentSearchResultsInterface" type="Magestore\PurchaseOrderSuccess\Model\ResourceModel\PurchaseOrder\Invoice\Payment\Collection"/>
+    <preference for="Magestore\PurchaseOrderSuccess\Api\Data\RefundSearchResultsInterface" type="Magestore\PurchaseOrderSuccess\Model\ResourceModel\PurchaseOrder\Invoice\Refund\Collection"/>
+    <preference for="Magestore\PurchaseOrderSuccess\Api\Data\HistorySearchResultsInterface" type="Magestore\PurchaseOrderSuccess\Model\ResourceModel\PurchaseOrder\History\Collection"/>
+    <preference for="Magestore\PurchaseOrderSuccess\Api\Data\ReturnOrderSearchResultsInterface" type="Magestore\PurchaseOrderSuccess\Model\ResourceModel\ReturnOrder\Collection"/>
+    <preference for="Magestore\PurchaseOrderSuccess\Api\Data\ReturnOrderItemSearchResultsInterface" type="Magestore\PurchaseOrderSuccess\Model\ResourceModel\ReturnOrder\Item\Collection"/>
+    <preference for="Magestore\PurchaseOrderSuccess\Api\Data\ReturnOrderItemTransferredSearchResultsInterface" type="Magestore\PurchaseOrderSuccess\Model\ResourceModel\ReturnOrder\Item\Transferred\Collection"/>
+
+    <preference for="Magestore\PurchaseOrderSuccess\Api\PurchaseOrderRepositoryInterface" type="Magestore\PurchaseOrderSuccess\Model\Repository\PurchaseOrderRepository"/>
+    <preference for="Magestore\PurchaseOrderSuccess\Api\PurchaseOrderItemRepositoryInterface" type="Magestore\PurchaseOrderSuccess\Model\Repository\PurchaseOrder\ItemRepository"/>
+    <preference for="Magestore\PurchaseOrderSuccess\Api\PurchaseOrderItemReceivedRepositoryInterface" type="Magestore\PurchaseOrderSuccess\Model\Repository\PurchaseOrder\Item\ReceivedRepository"/>
+    <preference for="Magestore\PurchaseOrderSuccess\Api\PurchaseOrderItemTransferredRepositoryInterface" type="Magestore\PurchaseOrderSuccess\Model\Repository\PurchaseOrder\Item\TransferredRepository"/>
+    <preference for="Magestore\PurchaseOrderSuccess\Api\PurchaseOrderItemReturnedRepositoryInterface" type="Magestore\PurchaseOrderSuccess\Model\Repository\PurchaseOrder\Item\ReturnedRepository"/>
+    <preference for="Magestore\PurchaseOrderSuccess\Api\InvoiceRepositoryInterface" type="Magestore\PurchaseOrderSuccess\Model\Repository\PurchaseOrder\InvoiceRepository"/>
+    <preference for="Magestore\PurchaseOrderSuccess\Api\InvoiceItemRepositoryInterface" type="Magestore\PurchaseOrderSuccess\Model\Repository\PurchaseOrder\Invoice\ItemRepository"/>
+    <preference for="Magestore\PurchaseOrderSuccess\Api\PaymentRepositoryInterface" type="Magestore\PurchaseOrderSuccess\Model\Repository\PurchaseOrder\Invoice\PaymentRepository"/>
+    <preference for="Magestore\PurchaseOrderSuccess\Api\RefundRepositoryInterface" type="Magestore\PurchaseOrderSuccess\Model\Repository\PurchaseOrder\Invoice\RefundRepository"/>
+    <preference for="Magestore\PurchaseOrderSuccess\Api\HistoryRepositoryInterface" type="Magestore\PurchaseOrderSuccess\Model\Repository\PurchaseOrder\HistoryRepository"/>
+    <preference for="Magestore\PurchaseOrderSuccess\Api\ReturnOrderRepositoryInterface" type="Magestore\PurchaseOrderSuccess\Model\Repository\ReturnOrderRepository"/>
+    <preference for="Magestore\PurchaseOrderSuccess\Api\ReturnOrderItemRepositoryInterface" type="Magestore\PurchaseOrderSuccess\Model\Repository\ReturnOrder\ItemRepository"/>
+    <preference for="Magestore\PurchaseOrderSuccess\Api\ReturnOrderItemTransferredRepositoryInterface" type="Magestore\PurchaseOrderSuccess\Model\Repository\ReturnOrder\Item\TransferredRepository"/>
+
+    <preference for="Magestore\PurchaseOrderSuccess\Model\Db\QueryProcessorInterface" type="Magestore\PurchaseOrderSuccess\Model\Db\QueryProcessor"/>
+
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="os_quotation_listing_data_source" xsi:type="string">Magestore\PurchaseOrderSuccess\Model\ResourceModel\PurchaseOrder\Grid\Quotation</item>
+                <item name="os_purchase_order_listing_data_source" xsi:type="string">Magestore\PurchaseOrderSuccess\Model\ResourceModel\PurchaseOrder\Grid\PurchaseOrder</item>
+                <item name="os_return_order_listing_data_source" xsi:type="string">Magestore\PurchaseOrderSuccess\Model\ResourceModel\ReturnOrder\Grid\ReturnOrder</item>
+                <item name="os_purchase_order_item_listing_data_source" xsi:type="string">Magestore\PurchaseOrderSuccess\Model\ResourceModel\PurchaseOrder\Item\Grid\Collection</item>
+                <item name="os_return_order_item_listing_data_source" xsi:type="string">Magestore\PurchaseOrderSuccess\Model\ResourceModel\ReturnOrder\Item\Grid\Collection</item>
+                <item name="os_purchase_order_received_product_listing_data_source" xsi:type="string">Magestore\PurchaseOrderSuccess\Model\ResourceModel\PurchaseOrder\Item\Received\Grid\Collection</item>
+                <item name="os_purchase_order_received_product_select_listing_data_source" xsi:type="string">Magestore\PurchaseOrderSuccess\Model\ResourceModel\PurchaseOrder\Item\Received\Select\Grid\Collection</item>
+                <item name="os_purchase_order_transferred_product_listing_data_source" xsi:type="string">Magestore\PurchaseOrderSuccess\Model\ResourceModel\PurchaseOrder\Item\Transferred\Grid\Collection</item>
+                <item name="os_return_order_transferred_product_listing_data_source" xsi:type="string">Magestore\PurchaseOrderSuccess\Model\ResourceModel\ReturnOrder\Item\Transferred\Grid\Collection</item>
+                <item name="os_purchase_order_transferred_product_select_listing_data_source" xsi:type="string">Magestore\PurchaseOrderSuccess\Model\ResourceModel\PurchaseOrder\Item\Transferred\Select\Grid\Collection</item>
+                <item name="os_return_order_transferred_product_select_listing_data_source" xsi:type="string">Magestore\PurchaseOrderSuccess\Model\ResourceModel\ReturnOrder\Item\Transferred\Select\Grid\Collection</item>
+                <item name="os_purchase_order_returned_product_listing_data_source" xsi:type="string">Magestore\PurchaseOrderSuccess\Model\ResourceModel\PurchaseOrder\Item\Returned\Grid\Collection</item>
+                <item name="os_purchase_order_returned_product_select_listing_data_source" xsi:type="string">Magestore\PurchaseOrderSuccess\Model\ResourceModel\PurchaseOrder\Item\Returned\Select\Grid\Collection</item>
+                <item name="os_purchase_order_shortfall_product_listing_data_source" xsi:type="string">Magestore\PurchaseOrderSuccess\Model\ResourceModel\PurchaseOrder\Item\Shortfall\Grid\Collection</item>
+                <item name="os_purchase_order_invoice_listing_data_source" xsi:type="string">Magestore\PurchaseOrderSuccess\Model\ResourceModel\PurchaseOrder\Invoice\Grid\Collection</item>
+                <item name="os_purchase_order_invoice_select_listing_data_source" xsi:type="string">Magestore\PurchaseOrderSuccess\Model\ResourceModel\PurchaseOrder\Invoice\Item\Select\Grid\Collection</item>
+                <item name="os_purchase_order_invoice_item_listing_data_source" xsi:type="string">Magestore\PurchaseOrderSuccess\Model\ResourceModel\PurchaseOrder\Invoice\Item\Grid\Collection</item>
+                <item name="os_purchase_order_invoice_payment_listing_data_source" xsi:type="string">Magestore\PurchaseOrderSuccess\Model\ResourceModel\PurchaseOrder\Invoice\Payment\Grid\Collection</item>
+                <item name="os_purchase_order_invoice_refund_listing_data_source" xsi:type="string">Magestore\PurchaseOrderSuccess\Model\ResourceModel\PurchaseOrder\Invoice\Refund\Grid\Collection</item>
+                <item name="os_supplier_purchase_order_listing_data_source" xsi:type="string">Magestore\PurchaseOrderSuccess\Model\ResourceModel\PurchaseOrder\Grid\PurchaseOrder</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Framework\Stdlib\DateTime\Filter\Date">
+        <plugin name="updateFilterDateTime" type="Magestore\PurchaseOrderSuccess\Plugin\Framework\Stdlib\DateTime\Filter\Date" sortOrder="1" />
+    </type>
+
+    <preference for="Magestore\PurchaseOrderSuccess\Api\MultiSourceInventory\StockManagementInterface" type="Magestore\PurchaseOrderSuccess\Model\MultiSourceInventory\StockManagement" />
+    <preference for="Magestore\PurchaseOrderSuccess\Api\MultiSourceInventory\SourceManagementInterface" type="Magestore\PurchaseOrderSuccess\Model\MultiSourceInventory\SourceManagement" />
+</config>

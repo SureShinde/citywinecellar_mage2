@@ -1,0 +1,90 @@
+Back,Back
+"Mark as Closed","Mark as Closed"
+Receive,Receive
+"Receive All","Receive All"
+"Prepare Product List","Prepare Product List"
+Send,Send
+Save,Save
+Completed,Completed
+New,New
+Receiving,Receiving
+Sent,Sent
+"Qty to Send","Qty to Send"
+SKU,SKU
+"This inventory transfer no longer exists.","This inventory transfer no longer exists."
+"Sending ""%1""","Sending ""%1"""
+"New Stock Sending","New Stock Sending"
+message,message
+"Invalid file upload attempt","Invalid file upload attempt"
+"Inventory Transfer","Inventory Transfer"
+"Could not found transfer with ID %1","Could not found transfer with ID %1"
+"The transfer %1 has been closed.","The transfer %1 has been closed."
+"This receiving no longer exists.","This receiving no longer exists."
+"View Receiving #%1","View Receiving #%1"
+"Receiving was created successfully!","Receiving was created successfully!"
+"Cannot receive all product in this inventory transfer.","Cannot receive all product in this inventory transfer."
+"Could not find inventory transfer request with ID: %1","Could not find inventory transfer request with ID: %1"
+"General information was saved successfully.","General information was saved successfully."
+"Cannot receive products in this inventory transfer.","Cannot receive products in this inventory transfer."
+"Invalid file upload attempt.","Invalid file upload attempt."
+"Inventory transfer with ID %1 is not found.","Inventory transfer with ID %1 is not found."
+"Invalid file format.","Invalid file format."
+Open,Open
+Closed,Closed
+"Could not find transfer inventory request with ID %1","Could not find transfer inventory request with ID %1"
+"The transfer inventory request has already closed.","The transfer inventory request has already closed."
+"Please select item(s) before sending.","Please select item(s) before sending."
+"The stock has been sent successfully.","The stock has been sent successfully."
+"-- Please Select --","-- Please Select --"
+Reason,Reason
+Instruction,Instruction
+Download,Download
+"Please choose a CSV file to import:","Please choose a CSV file to import:"
+"Invalid data","Invalid data"
+"The file contains invalid data. You can download the error list ","The file contains invalid data. You can download the error list "
+here,here
+" to modify and try to upload them again."," to modify and try to upload them again."
+"Upload Product List","Upload Product List"
+Cancel,Cancel
+Upload,Upload
+"From Source and To Source must be different","From Source and To Source must be different"
+"Barcode #%s has been added to the list.","Barcode #%s has been added to the list."
+"No product found.","No product found."
+"Order Success","Order Success"
+"Inventory Management","Inventory Management"
+"Stock Control","Stock Control"
+"Transfer Stock","Transfer Stock"
+ID,ID
+Name,Name
+Type,Type
+Thumbnail,Thumbnail
+"Qty Sent","Qty Sent"
+"Qty Received","Qty Received"
+"Qty Not Received","Qty Not Received"
+"Transfer Summary","Transfer Summary"
+"Product List","Product List"
+"Add Products","Add Products"
+"Add Selected Products","Add Selected Products"
+"Scan barcode","Scan barcode"
+"Scan/enter barcode","Scan/enter barcode"
+Remove,Remove
+Barcode,Barcode
+"Qty in Sending Source","Qty in Sending Source"
+Action,Action
+"General Information","General Information"
+"Available Qty","Available Qty"
+"Qty to Receive","Qty to Receive"
+"Receiving History","Receiving History"
+"Shortfall List","Shortfall List"
+From,From
+To,To
+CSV,CSV
+"Excel XML","Excel XML"
+"Transfer Code","Transfer Code"
+"From Source","From Source"
+"To Source","To Source"
+"Created On","Created On"
+"Created By","Created By"
+Status,Status
+Stage,Stage
+"Received Qty","Received Qty"

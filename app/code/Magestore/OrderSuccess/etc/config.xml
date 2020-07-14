@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <ordersuccess>
+            <order>
+                <verify>1</verify>
+                <keep_verify_batch>1</keep_verify_batch>
+                <ship>1</ship>
+                <tag>a:4:{s:18:"_1475140388109_109";a:2:{s:5:"title";s:10:"Processing";s:5:"color";s:6:"FFD240";}s:18:"_1475140402269_269";a:2:{s:5:"title";s:7:"Pending";s:5:"color";s:6:"C27DFF";}s:18:"_1475140414589_589";a:2:{s:5:"title";s:14:"Start Shipment";s:5:"color";s:6:"00A679";}s:18:"_1475140436309_309";a:2:{s:5:"title";s:5:"Issue";s:5:"color";s:6:"FF0000";}}</tag>
+            </order>
+        </ordersuccess>
+    </default>
+</config>

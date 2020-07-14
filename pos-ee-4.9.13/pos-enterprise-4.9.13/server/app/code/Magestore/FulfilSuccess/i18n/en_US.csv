@@ -1,0 +1,212 @@
+"Please correct the parent block for this block.","Please correct the parent block for this block."
+"Request Qty: ","Request Qty: "
+"Packed Qty: ","Packed Qty: "
+"Qty moved to Pick / Prepare-Fulfil","Qty moved to Pick / Prepare-Fulfil"
+"Custom Value","Custom Value"
+"Pack Request Information","Pack Request Information"
+package,package
+"Step %1. Delivery Packages","Step %1. Delivery Packages"
+"Package Information","Package Information"
+pack_item,pack_item
+"Step %1. Pack Items","Step %1. Pack Items"
+"Products should be added to package(s)","Products should be added to package(s)"
+"The value that you entered is not valid.","The value that you entered is not valid."
+"We can\'t get the order instance right now.","We can\'t get the order instance right now."
+"[Pack #%1]","[Pack #%1]"
+Pack,Pack
+"Move Items to Prepare Fulfil","Move Items to Prepare Fulfil"
+"Move Items to Need-To-Pick","Move Items to Need-To-Pick"
+"Print Packed Items","Print Packed Items"
+pick_item,pick_item
+"Step %1. Pick Items","Step %1. Pick Items"
+"Items to pick","Items to pick"
+"Scan item barcode here","Scan item barcode here"
+"[Pick #%1]","[Pick #%1]"
+"Mark as Picked","Mark as Picked"
+"Mark All Items Picked","Mark All Items Picked"
+"Print Picked Items","Print Picked Items"
+Back,Back
+"Warehouse To Pick","Warehouse To Pick"
+"Pick Request Information","Pick Request Information"
+"Fulfillment - Delivery Packages","Fulfillment - Delivery Packages"
+"There are no shipping labels related to selected shipments.","There are no shipping labels related to selected shipments."
+"Can not print package PDF","Can not print package PDF"
+"Fulfillment Success","Fulfillment Success"
+Packages,Packages
+"This order no longer exists.","This order no longer exists."
+"Fulfillment - Packing Requests","Fulfillment - Packing Requests"
+"The remaining items in the packing request have been moved to Prepare-Fulfil.","The remaining items in the packing request have been moved to Prepare-Fulfil."
+"We can\'t find the packing request to move.","We can\'t find the packing request to move."
+"The remaining items in packing request have been moved to pick.","The remaining items in packing request have been moved to pick."
+"The shipment has been created.","The shipment has been created."
+"You created the shipping label.","You created the shipping label."
+"An error occurred while creating shipping label.","An error occurred while creating shipping label."
+"We can\'t save the dropship shipment right now.","We can\'t save the dropship shipment right now."
+"Please enter qty to pack.","Please enter qty to pack."
+"Please specify a carrier.","Please specify a carrier."
+"Please enter a tracking number.","Please enter a tracking number."
+"Packing has been created!","Packing has been created!"
+"We can\'t create packing","We can\'t create packing"
+"Can not create packing. Please try again!","Can not create packing. Please try again!"
+"The packing has been created.","The packing has been created."
+"Packing Requests","Packing Requests"
+"%1 Picking Request(s) has been added to the batch","%1 Picking Request(s) has been added to the batch"
+"There is no picking request added to the batch","There is no picking request added to the batch"
+"The batch has been removed","The batch has been removed"
+"Can not remove the batch","Can not remove the batch"
+"Fulfillment - Picking Items","Fulfillment - Picking Items"
+"The picking request for this order has been picked previously, can not pick it again","The picking request for this order has been picked previously, can not pick it again"
+"The picking request does not exist","The picking request does not exist"
+"Invalid Data","Invalid Data"
+"The Request #%1 of Order #%2 has been marked as Picked, then moved to packing process.","The Request #%1 of Order #%2 has been marked as Picked, then moved to packing process."
+"Find no picking request to move","Find no picking request to move"
+"Order Picked Items","Order Picked Items"
+"Picking Items","Picking Items"
+"Remaining items in the picking request have been moved to Prepare-Fulfil.","Remaining items in the picking request have been moved to Prepare-Fulfil."
+"The request #%1 has been picked previously, can not pick it again","The request #%1 has been picked previously, can not pick it again"
+"The pick request #%1 does not exist","The pick request #%1 does not exist"
+"The Pick Request #%1 of Order #%2 has been canceled. You should return all picked items to the Warehouse.","The Pick Request #%1 of Order #%2 has been canceled. You should return all picked items to the Warehouse."
+"The Pick Request #%1 of Order #%2 has been picked successfully.","The Pick Request #%1 of Order #%2 has been picked successfully."
+"The Pick Request #%1 does not exist.","The Pick Request #%1 does not exist."
+"Barcode can not be empty","Barcode can not be empty"
+"Picking List","Picking List"
+"The batch does not exist","The batch does not exist"
+"%1 Picking Request(s) has been removed from the batch","%1 Picking Request(s) has been removed from the batch"
+"No Picking Request has been removed from the batch","No Picking Request has been removed from the batch"
+"No batch is selected","No batch is selected"
+"Fulfillment - Scan Picked Items","Fulfillment - Scan Picked Items"
+Shipments,Shipments
+Pending,Pending
+"Partially Packed","Partially Packed"
+Completed,Completed
+Canceled,Canceled
+"Select Warehouse","Select Warehouse"
+"No Batch","No Batch"
+"The Package with id ""%1"" does not exist.","The Package with id ""%1"" does not exist."
+"The Pack Request with id ""%1"" does not exist.","The Pack Request with id ""%1"" does not exist."
+"The Batch with id ""%1"" does not exist.","The Batch with id ""%1"" does not exist."
+"The Pick Request Item with id ""%1"" does not exist.","The Pick Request Item with id ""%1"" does not exist."
+"The picking request Item does not exist.","The picking request Item does not exist."
+"The Pick Request with id ""%1"" does not exist.","The Pick Request with id ""%1"" does not exist."
+"-- Select Attribute --","-- Select Attribute --"
+"Step 1. Verify Orders","Step 1. Verify Orders"
+"Step %1. Prepare Fulfil","Step %1. Prepare Fulfil"
+"Fulfillment - Prepare Fulfil","Fulfillment - Prepare Fulfil"
+"Fulfillment - Verify Orders","Fulfillment - Verify Orders"
+"There is no items picked to move to packing step.","There is no items picked to move to packing step."
+"There is no item picked!","There is no item picked!"
+"View Details","View Details"
+"Add to a new batch","Add to a new batch"
+"Account Information","Account Information"
+"Customer Name","Customer Name"
+Email,Email
+"Customer Group","Customer Group"
+"SCAN PRODUCT BARCODE","SCAN PRODUCT BARCODE"
+"Billing Address","Billing Address"
+Product,Product
+Image,Image
+Barcode,Barcode
+Qty,Qty
+"Qty To Pack","Qty To Pack"
+"The order confirmation email was sent","The order confirmation email was sent"
+"The order confirmation email is not sent","The order confirmation email is not sent"
+"Order # %1","Order # %1"
+"Request Age","Request Age"
+"Order Date","Order Date"
+"Order Status","Order Status"
+"Purchased From","Purchased From"
+"Link to the New Order","Link to the New Order"
+"Link to the Previous Order","Link to the Previous Order"
+"Placed from IP","Placed from IP"
+"%1 / %2 rate:","%1 / %2 rate:"
+"Shipping Information","Shipping Information"
+"Total Shipping Charges","Total Shipping Charges"
+"Incl. Tax","Incl. Tax"
+"Shipping Address","Shipping Address"
+Carrier,Carrier
+Title,Title
+Number,Number
+"Items Picked","Items Picked"
+"Order Total","Order Total"
+"Notes for this Order","Notes for this Order"
+"Create Shipping Label","Create Shipping Label"
+Package,Package
+Type,Type
+"Custom Value","Custom Value"
+"Total Weight","Total Weight"
+Size,Size
+Length,Length
+Width,Width
+Height,Height
+"Signature Confirmation","Signature Confirmation"
+Contents,Contents
+Girth,Girth
+"Items in the Package","Items in the Package"
+Weight,Weight
+"Qty Ordered","Qty Ordered"
+"Qty Packed","Qty Packed"
+"This pack has been canceled. You should return all packed items to the warehouse.","This pack has been canceled. You should return all packed items to the warehouse."
+SKU,SKU
+"Packed Qty","Packed Qty"
+"Select All","Select All"
+"Product Name","Product Name"
+Delete,Delete
+"Create Packages","Create Packages"
+Cancel,Cancel
+Save,Save
+"Add Package","Add Package"
+"Add Selected Product(s) to Package","Add Selected Product(s) to Package"
+"Add Products to Package","Add Products to Package"
+"USPS domestic shipments don\'t use package types.","USPS domestic shipments don\'t use package types."
+in,in
+cm,cm
+lb,lb
+kg,kg
+"Delete Package","Delete Package"
+Explanation,Explanation
+"Are you sure to move remaining items above back to Prepare Fulfil?","Are you sure to move remaining items above back to Prepare Fulfil?"
+"This pick has been canceled. You should return all picked items to the warehouse.","This pick has been canceled. You should return all picked items to the warehouse."
+"Qty To Pick","Qty To Pick"
+"Picked Qty","Picked Qty"
+Close,Close
+Print,Print
+"Pick #","Pick #"
+"Pack #","Pack #"
+"Order #","Order #"
+No,No
+Item,Item
+Name,Name
+"Request Qty","Request Qty"
+"Shelf Location","Shelf Location"
+Picked,Picked
+"Qty Need to Ship","Qty Need to Ship"
+"SCAN PACK BARCODE HERE","SCAN PACK BARCODE HERE"
+Error,Error
+"The barcode is invalid","The barcode is invalid"
+"No pack found.","No pack found."
+"SCAN ORDER NUMBER HERE","SCAN ORDER NUMBER HERE"
+"Please scan the order first","Please scan the order first"
+Attention!,Attention!
+"There are some items in the current request not picked. If you scan the next picking request, these items will be moved to Prepare Fulfillment step. Do you still want to do this?","There are some items in the current request not picked. If you scan the next picking request, these items will be moved to Prepare Fulfillment step. Do you still want to do this?"
+"There are some items in the current request not picked. If you mark this request as picked, these items will be moved to Prepare Fulfillment step. Are you sure you want to do this?","There are some items in the current request not picked. If you mark this request as picked, these items will be moved to Prepare Fulfillment step. Are you sure you want to do this?"
+"Your browser has blocked the automatic popup, please change your browser settings","Your browser has blocked the automatic popup, please change your browser settings"
+"Remove Batch","Remove Batch"
+"Are you sure to remove the batch?","Are you sure to remove the batch?"
+"This item does not exist on this order","This item does not exist on this order"
+"Data not found","Data not found"
+"Order Success","Order Success"
+"Order Fulfillment","Order Fulfillment"
+"Pick Items","Pick Items"
+"Pack Items","Pack Items"
+"Move To Pick","Move To Pick"
+"Move To Need To Ship","Move To Need To Ship"
+"Ready-To-Ship Packages","Ready-To-Ship Packages"
+"Order Fulfillment Settings","Order Fulfillment Settings"
+"Verify Orders","Verify Orders"
+"Prepare Fulfil","Prepare Fulfil"
+"Delivery Packages","Delivery Packages"
+"Fulfilment Configuration","Fulfilment Configuration"
+The package with ID "%1" does not exist.,The package with ID "%1" does not exist.
+The batch with ID "%1" does not exist.,The batch with ID "%1" does not exist.
+The picking request item with ID "%1" does not exist.,The picking request item with ID "%1" does not exist.
+The picking request with id "%1" does not exist.,The picking request with id "%1" does not exist.

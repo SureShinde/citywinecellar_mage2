@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="admin-2columns-left"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="styles"/>
+    <head>
+        <css src="Magestore_OrderSuccess::css/info.css"/>
+    </head>
+    <referenceContainer name="content">
+        <block class="Magestore\OrderSuccess\Block\Adminhtml\Order\ShipProcess" name="shipment_packaging"
+               template="Magestore_OrderSuccess::order/shipprocess/popup.phtml"/>
+    </referenceContainer>
+
+    <referenceContainer name="sales_order_edit">
+        <block class="Magestore\OrderSuccess\Block\Adminhtml\Order\View" name="sales_order_edit_process"/>
+    </referenceContainer>
+
+    <referenceBlock name="order_info">
+        <action method="setTemplate">
+            <argument name="template" xsi:type="string">Magestore_OrderSuccess::order/view/info.phtml</argument>
+        </action>
+        <block class="Magestore\OrderSuccess\Block\Adminhtml\Order\View\Tag" name="order_info_tag"
+               template="Magestore_OrderSuccess::order/view/tag.phtml"/>
+        <block class="Magestore\OrderSuccess\Block\Adminhtml\Order\View\Batch" name="order_info_batch"
+               template="Magestore_OrderSuccess::order/view/batch.phtml"/>
+    </referenceBlock>
+    <referenceBlock name="column_qty">
+        <action method="setTemplate">
+            <argument name="template" xsi:type="string">Magestore_OrderSuccess::items/column/qty.phtml</argument>
+        </action>
+    </referenceBlock>
+    <referenceBlock name="order_items.bundle">
+        <action method="setTemplate">
+            <argument name="template" xsi:type="string">Magestore_OrderSuccess::sales/order/view/items/renderer.phtml</argument>
+        </action>
+    </referenceBlock>
+</page>

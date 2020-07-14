@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright © 2019 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  ~
+  -->
+
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:DataGenerator/etc/dataProfileSchema.xsd">
+    <entity name="stability_customer_00000002" type="customer">
+        <data key="email">00000002@trueplus.vn</data>
+        <data key="firstname">First_00000002</data>
+        <data key="lastname">Last_00000002</data>
+        <data key="fullname">First_00000002 Last_00000002</data>
+        <data key="phone">Phone_00000002</data>
+    </entity>
+
+    <entity name="stability_customer_00000003" type="customer">
+        <data key="email">00000003@trueplus.vn</data>
+        <data key="firstname">First_00000003</data>
+        <data key="lastname">Last_00000003</data>
+        <data key="fullname">First_00000003 Last_00000003</data>
+        <data key="phone">Phone_00000003</data>
+    </entity>
+
+    <entity name="stability_customer_00000004" type="customer">
+        <data key="email">00000004@trueplus.vn</data>
+        <data key="firstname">First_00000004</data>
+        <data key="lastname">Last_00000004</data>
+        <data key="fullname">First_00000004 Last_00000004</data>
+        <data key="phone">Phone_00000004</data>
+    </entity>
+
+    <entity name="stability_customer_00000005" type="customer">
+        <data key="email">00000005@trueplus.vn</data>
+        <data key="firstname">First_00000005</data>
+        <data key="lastname">Last_00000005</data>
+        <data key="fullname">First_00000005 Last_00000005</data>
+        <data key="phone">Phone_00000005</data>
+    </entity>
+
+    <entity name="stability_customer_00000006" type="customer">
+        <data key="email">00000006@trueplus.vn</data>
+        <data key="firstname">First_00000006</data>
+        <data key="lastname">Last_00000006</data>
+        <data key="fullname">First_00000006 Last_00000006</data>
+        <data key="phone">Phone_00000006</data>
+    </entity>
+
+    <entity name="stability_customer_00000007" type="customer">
+        <data key="email">00000007@trueplus.vn</data>
+        <data key="firstname">First_00000007</data>
+        <data key="lastname">Last_00000007</data>
+        <data key="fullname">First_00000007 Last_00000007</data>
+        <data key="phone">Phone_00000007</data>
+    </entity>
+
+    <entity name="stability_customer_00000008" type="customer">
+        <data key="email">00000008@trueplus.vn</data>
+        <data key="firstname">First_00000008</data>
+        <data key="lastname">Last_00000008</data>
+        <data key="fullname">First_00000008 Last_00000008</data>
+        <data key="phone">Phone_00000008</data>
+    </entity>
+
+    <entity name="stability_customer_00000009" type="customer">
+        <data key="email">00000009@trueplus.vn</data>
+        <data key="firstname">First_00000009</data>
+        <data key="lastname">Last_00000009</data>
+        <data key="fullname">First_00000009 Last_00000009</data>
+        <data key="phone">Phone_00000009</data>
+    </entity>
+
+    <entity name="stability_customer_00000010" type="customer">
+        <data key="email">00000010@trueplus.vn</data>
+        <data key="firstname">First_00000010</data>
+        <data key="lastname">Last_00000010</data>
+        <data key="fullname">First_00000010 Last_00000010</data>
+        <data key="phone">Phone_00000010</data>
+    </entity>
+
+    <entity name="stability_customer_00000011" type="customer">
+        <data key="email">00000011@trueplus.vn</data>
+        <data key="firstname">First_00000011</data>
+        <data key="lastname">Last_00000011</data>
+        <data key="fullname">First_00000011 Last_00000011</data>
+        <data key="phone">Phone_00000011</data>
+    </entity>
+
+    <entity name="stability_customer_00000012" type="customer">
+        <data key="email">00000012@trueplus.vn</data>
+        <data key="firstname">First_00000012</data>
+        <data key="lastname">Last_00000012</data>
+        <data key="fullname">First_00000012 Last_00000012</data>
+        <data key="phone">Phone_00000012</data>
+    </entity>
+
+    <entity name="stability_customer_00000013" type="customer">
+        <data key="email">00000013@trueplus.vn</data>
+        <data key="firstname">First_00000013</data>
+        <data key="lastname">Last_00000013</data>
+        <data key="fullname">First_00000013 Last_00000013</data>
+        <data key="phone">Phone_00000013</data>
+    </entity>
+
+    <entity name="stability_customer_00000014" type="customer">
+        <data key="email">00000014@trueplus.vn</data>
+        <data key="firstname">First_00000014</data>
+        <data key="lastname">Last_00000014</data>
+        <data key="fullname">First_00000014 Last_00000014</data>
+        <data key="phone">Phone_00000014</data>
+    </entity>
+
+    <entity name="stability_customer_00000015" type="customer">
+        <data key="email">00000015@trueplus.vn</data>
+        <data key="firstname">First_00000015</data>
+        <data key="lastname">Last_00000015</data>
+        <data key="fullname">First_00000015 Last_00000015</data>
+        <data key="phone">Phone_00000015</data>
+    </entity>
+
+    <entity name="stability_customer_00000016" type="customer">
+        <data key="email">00000016@trueplus.vn</data>
+        <data key="firstname">First_00000016</data>
+        <data key="lastname">Last_00000016</data>
+        <data key="fullname">First_00000016 Last_00000016</data>
+        <data key="phone">Phone_00000016</data>
+    </entity>
+
+    <entity name="stability_customer_00000017" type="customer">
+        <data key="email">00000017@trueplus.vn</data>
+        <data key="firstname">First_00000017</data>
+        <data key="lastname">Last_00000017</data>
+        <data key="fullname">First_00000017 Last_00000017</data>
+        <data key="phone">Phone_00000017</data>
+    </entity>
+
+    <entity name="four_result" type="customer">
+        <data key="keyword_mail">four_result@trueplus.vn</data>
+        <data key="keyword_first">_four_result</data>
+        <data key="keyword_last">four_result_Last</data>
+        <data key="keyword_full">four_result four_result</data>
+        <data key="keyword_phone">Phone_four_result</data>
+    </entity>
+
+    <entity name="eleven_result" type="customer">
+        <data key="keyword_mail">eleven_result@trueplus.vn</data>
+        <data key="keyword_first">_eleven_result</data>
+        <data key="keyword_last">eleven_result_Last</data>
+        <data key="keyword_full">eleven_result eleven_result</data>
+        <data key="keyword_phone">Phone_eleven_result</data>
+    </entity>
+</entities>

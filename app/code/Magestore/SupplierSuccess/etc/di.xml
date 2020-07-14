@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Magestore\SupplierSuccess\Api\SupplierRepositoryInterface" type="Magestore\SupplierSuccess\Model\Repository\SupplierRepository" />
+
+    <preference for="Magestore\SupplierSuccess\Api\Data\SupplierInterface" type="Magestore\SupplierSuccess\Model\Supplier" />
+
+    <preference for="Magestore\SupplierSuccess\Model\Locator\LocatorInterface" type="Magestore\SupplierSuccess\Model\Locator\RegistryLocator" />
+
+    <preference for="Magestore\SupplierSuccess\Api\SupplierProductRepositoryInterface" type="Magestore\SupplierSuccess\Model\Repository\SupplierProductRepository" />
+
+    <preference for="Magestore\SupplierSuccess\Api\SupplierPricingListRepositoryInterface" type="Magestore\SupplierSuccess\Model\Repository\SupplierPricingListRepository" />
+
+    <preference for="Magestore\SupplierSuccess\Model\Db\QueryProcessorInterface" type="Magestore\SupplierSuccess\Model\Db\QueryProcessor" />
+    
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="supplierCommand" xsi:type="object">Magestore\SupplierSuccess\Console\Command\SupplierCommand</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

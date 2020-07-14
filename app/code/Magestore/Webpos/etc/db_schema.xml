@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="webpos_order" resource="default" engine="innodb" comment="Magestore POS Order">
+        <column xsi:type="int" name="id" padding="11" unsigned="false" nullable="false" identity="true" comment="Id"/>
+        <column xsi:type="smallint" name="status" nullable="false" padding="4" comment="Status"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false" on_update="false" comment="Created At" default="CURRENT_TIMESTAMP"/>
+        <column xsi:type="text" name="additional_data" nullable="false" comment="Additional data"/>
+        <column xsi:type="varchar" name="increment_id" nullable="false" length="32" comment="Increment Id" default=""/>
+        <column xsi:type="varchar" name="session_id" nullable="false" length="32" comment="Session Id" default=""/>
+        <column xsi:type="int" name="store_id" padding="11" unsigned="false" nullable="true" comment="Store ID"/>
+        <column xsi:type="int" name="location_id" padding="11" unsigned="false" nullable="true" comment="Location ID"/>
+        <column xsi:type="int" name="pos_id" padding="11" unsigned="false" nullable="true" comment="POS ID"/>
+        <column xsi:type="int" name="pos_staff_id" padding="11" unsigned="false" nullable="true" comment="POS Staff ID"/>
+        <column xsi:type="timestamp" name="order_created_time" on_update="false" nullable="false" comment="Order Created At"/>
+        <column xsi:type="longtext" name="params" nullable="false" comment="Params"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+    </table>
+
+    <table name="webpos_action_log" resource="default" engine="innodb" comment="Magestore POS Action Log">
+        <column xsi:type="int" name="id" padding="11" unsigned="false" nullable="false" identity="true" comment="Id"/>
+        <column xsi:type="varchar" name="action_type" nullable="false" length="64" comment="Action Type" default=""/>
+        <column xsi:type="int" name="location_id" padding="11" unsigned="false" nullable="true" comment="Location ID"/>
+        <column xsi:type="int" name="pos_id" padding="11" unsigned="false" nullable="true" comment="POS ID"/>
+        <column xsi:type="int" name="pos_staff_id" padding="11" unsigned="false" nullable="true" comment="POS Staff ID"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false" on_update="false" comment="Created At" default="CURRENT_TIMESTAMP"/>
+        <column xsi:type="smallint" name="status" nullable="false" padding="4" comment="Status"/>
+        <column xsi:type="varchar" name="order_increment_id" nullable="false" length="32" comment="Order Increment Id" default=""/>
+        <column xsi:type="varchar" name="request_increment_id" nullable="false" length="32" comment="Request Increment Id" default=""/>
+        <column xsi:type="longtext" name="params" nullable="false" comment="Params"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+    </table>
+
+    <table name="webpos_order_payment_error" resource="default" engine="innodb" comment="Magestore POS Order Payment Error">
+        <column xsi:type="int" name="id" padding="11" unsigned="false" nullable="false" identity="true" comment="Id"/>
+        <column xsi:type="int" name="order_id" padding="11" unsigned="false" nullable="true" comment="Order ID"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false" on_update="false" comment="Created At" default="CURRENT_TIMESTAMP"/>
+        <column xsi:type="longtext" name="params" nullable="false" comment="Params"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+    </table>
+</schema>

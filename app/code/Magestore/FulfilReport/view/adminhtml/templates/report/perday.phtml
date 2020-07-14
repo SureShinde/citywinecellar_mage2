@@ -1,0 +1,51 @@
+<?php
+/**
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */ /** @var Magestore\FulfilReport\Block\Adminhtml\Report\Dashboard $block */ ?>
+
+<?php
+$orderPerDay = $block->getOrderCollectionPerDay();
+$dayRange = "'" . implode("','", array_keys($orderPerDay)) . "'";
+$orderRange = implode(", ", $orderPerDay);
+?>
+<script type="text/javascript">
+    require([
+        "jquery",
+        "jquery/ui",
+        "Magestore_FulfilReport/js/chart/highcharts",
+        "Magestore_FulfilReport/js/chart/data",
+        "Magestore_FulfilReport/js/chart/exporting"
+    ], function ($) {
+        // Create the chart
+        Highcharts.chart('container-perday', {
+            chart: {
+                type: 'line'
+            },
+            title: {
+                text: 'Report order by day'
+            },
+            xAxis: {
+                categories:  [<?php echo $dayRange ?>]
+            },
+            yAxis: {
+                title: {
+                    text: 'Number of orders'
+                }
+            },
+            plotOptions: {
+                line: {
+                    dataLabels: {
+                        enabled: true
+                    },
+                    enableMouseTracking: false
+                }
+            },
+            series: [{
+                name: 'Number of Orders',
+                data: [<?php echo $orderRange ?> ]
+            }]
+        });
+    });
+</script>
+

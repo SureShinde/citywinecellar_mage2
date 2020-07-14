@@ -1,0 +1,33 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+?>
+<?php
+
+/** @var \Amasty\Blog\Block\Content\Post\Details $block */
+
+$post = $block->getPost();
+?>
+
+<?php if ($post->getCommentsEnabled()) : ?>
+    <div class="amblog-wrap" data-amblog-js="short_comments">
+        <svg class="amblog-svg comment <?= $block->escapeHtml($block->getColorClass()); ?>">
+            <use xlink:href="<?= $block->escapeUrl($block->getViewFileUrl('Amasty_Blog::images/sprite.svg')); ?>#comment"></use>
+        </svg>
+        <div class="comments amblog-item -comments">
+            <?php $commentCount = $block->getCommentsCount(); ?>
+            <a class="amblog-ref" href="<?= $block->escapeUrl($block->getCommentsUrl()); ?>">
+                <?php if ($commentCount == 1) : ?>
+                    <?= $block->escapeHtml(__("%1 comment", $commentCount)); ?>
+                <?php elseif ($commentCount > 1) : ?>
+                    <?= $block->escapeHtml(__("%1 comments", $commentCount)); ?>
+                <?php else : ?>
+                    <?= $block->escapeHtml(__("No comments")); ?>
+                <?php endif; ?>
+            </a>
+        </div>
+    </div>
+<?php endif; ?>

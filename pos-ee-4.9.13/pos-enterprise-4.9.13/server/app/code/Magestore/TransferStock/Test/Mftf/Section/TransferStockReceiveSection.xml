@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../../../../../vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Page/etc/SectionObject.xsd">
+    <section name="TransferStockReceiveSection">
+        <element name="receiveButton" type="button" selector="//button[@id='receive']"/>
+        <element name="receiveAllButton" type="button" selector="//button[@id='receive-all']"/>
+        <element name="confirmPopupOK" type="button" selector="//div[@class='modal-inner-wrap']//button[contains(@class, 'action-primary action-accept')]"/>
+
+        <!-- create receive modal -->
+        <element name="createReceiveModal" type="text" selector="//aside[contains(@class, 'os_inventorytransfer_edit_form_areas_transfer_summary_transfer_summary_receive_modal ')]"/>
+        <element name="createReceiveButton" type="button" selector="//aside[contains(@class, 'os_inventorytransfer_edit_form_areas_transfer_summary_transfer_summary_receive_modal ')]//div[@class = 'page-actions-buttons']/button[@class='action-primary']"/>
+        <element name="addProductToReceiveButton" type="button" selector="//aside[contains(@class, 'os_inventorytransfer_edit_form_areas_transfer_summary_transfer_summary_receive_modal ')]//button[@data-index='receive_add_products_button']"/>
+
+        <!-- add product to receive modal -->
+        <element name="createReceiveAddProductModal" type="text" selector="//aside[contains(@class, 'os_inventorytransfer_edit_form_areas_transfer_summary_transfer_summary_receive_modal_receive_product_list_receive_modal_button_receive_add_product_modal ')]"/>
+        <element name="addSelectedProductsToReceivebutton" type="button" selector="//aside[contains(@class, 'os_inventorytransfer_edit_form_areas_transfer_summary_transfer_summary_receive_modal_receive_product_list_receive_modal_button_receive_add_product_modal ')]//div[@class = 'page-actions-buttons']/button[@class='action-primary']"/>
+        <element name="checkboxButton" type="input" selector="//aside[contains(@class, 'os_inventorytransfer_edit_form_areas_transfer_summary_transfer_summary_receive_modal_receive_product_list_receive_modal_button_receive_add_product_modal ')]//div[@class='data-grid-cell-content' and text()='{{var1}}']/../..//input[@data-action='select-row']" parameterized="true"/>
+        <element name="qtyToReceiveInputBox" type="input" selector="//input[@name='transfer_summary[receive_modal][receive_product_list][receive_product_dynamic_grid][links][product_list][0][qty_to_receive]']"/>
+        <element name="receiveSuccessfullyMessage" type="text" selector="//div[@data-ui-id='messages-message-success' and text()='Receiving was created successfully!']"/>
+    </section>
+</sections>

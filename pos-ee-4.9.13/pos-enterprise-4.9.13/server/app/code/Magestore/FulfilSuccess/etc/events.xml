@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    
+    <!-- Integration OrderSuccess -->
+    <event name="ordersuccess_process_shipment">
+        <observer name="fulfillsuccess_ordersuccess_process_shipment" instance="Magestore\FulfilSuccess\Observer\OrderSuccess\ProcessShipment"/>
+    </event>
+    <event name="ordersuccess_order_button_prepare_data">
+        <observer name="fulfillsuccess_ordersuccess_order_button_prepare_data" instance="Magestore\FulfilSuccess\Observer\OrderSuccess\PrepareButton"/>
+    </event>   
+    <event name="ordersuccess_verify_order_page_title">
+        <observer name="fulfillsuccess_ordersuccess_verify_order_page_title" instance="Magestore\FulfilSuccess\Observer\OrderSuccess\VerifyOrderPageTitle"/>
+    </event>     
+    <event name="ordersuccess_prepare_ship_order_page_title">
+        <observer name="fulfillsuccess_ordersuccess_prepare_ship_order_page_title" instance="Magestore\FulfilSuccess\Observer\OrderSuccess\PrepareShipPageTitle"/>
+    </event>
+    <!-- End Integration OrderSuccess -->    
+    
+    <!-- Sales Sales events -->
+    <event name="order_cancel_after">
+        <observer name="fulfillsuccess_order_cancel_after" instance="Magestore\FulfilSuccess\Observer\Sales\OrderCancelAfter"/>
+    </event>    
+    <event name="sales_order_creditmemo_save_after">
+        <observer name="fulfilsuccess_sales_order_creditmemo_save_after" instance="Magestore\FulfilSuccess\Observer\Sales\CreditmemoSaveAfter"/>
+    </event>      
+    <!-- End of Sales Sales events -->
+
+    <!-- Update qty to warehouse after create package -->
+    <event name="inventorysuccess_create_shipment_warehouse">
+        <observer name="fulfillsuccess_ordersuccess_update_qty_warehouse" instance="Magestore\FulfilSuccess\Observer\Package\UpdateQtyToWarehouse"/>
+    </event>
+    <!-- End update qty to warehouse after create package -->
+
+    <!-- Disable subtract qty to ship in ordered warehouse -->
+    <event name="subtract_qty_to_ship_in_ordered_warehouse_before">
+        <observer name="fulfillsuccess_inventorysuccess_subtract_qty_to_ship_in_order_warehouse_before" instance="Magestore\FulfilSuccess\Observer\InventorySuccess\SubtractQtyToShipInOrderedWarehouse"/>
+    </event>
+    <!-- End Disable subtract qty to ship in ordered warehouse -->
+
+    <!-- Move order item to picking split -->
+    <event name="sales_order_place_after">
+        <observer name="fulfillsuccess_sales_order_place_after" instance="Magestore\FulfilSuccess\Observer\Sales\SalesPlaceOrderAfter"/>
+    </event>
+    <!-- End Move order item to picking split -->
+</config>

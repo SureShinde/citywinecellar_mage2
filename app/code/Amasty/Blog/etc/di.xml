@@ -1,0 +1,154 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Amasty\Blog\Api\Data\ViewInterface" type="Amasty\Blog\Model\View" />
+    <preference for="Amasty\Blog\Api\ViewRepositoryInterface" type="Amasty\Blog\Model\Repository\ViewRepository" />
+    <preference for="Amasty\Blog\Api\Data\TagInterface" type="Amasty\Blog\Model\Tag" />
+    <preference for="Amasty\Blog\Api\Data\AuthorInterface" type="Amasty\Blog\Model\Author" />
+    <preference for="Amasty\Blog\Api\TagRepositoryInterface" type="Amasty\Blog\Model\Repository\TagRepository" />
+    <preference for="Amasty\Blog\Api\AuthorRepositoryInterface" type="Amasty\Blog\Model\Repository\AuthorRepository" />
+    <preference for="Amasty\Blog\Api\Data\PostInterface" type="Amasty\Blog\Model\Posts" />
+    <preference for="Amasty\Blog\Api\PostRepositoryInterface" type="Amasty\Blog\Model\Repository\PostRepository" />
+    <preference for="Amasty\Blog\Api\Data\CategoryInterface" type="Amasty\Blog\Model\Categories" />
+    <preference for="Amasty\Blog\Api\CategoryRepositoryInterface" type="Amasty\Blog\Model\Repository\CategoriesRepository" />
+    <preference for="Amasty\Blog\Api\Data\CommentInterface" type="Amasty\Blog\Model\Comments" />
+    <preference for="Amasty\Blog\Api\CommentRepositoryInterface" type="Amasty\Blog\Model\Repository\CommentRepository" />
+    <preference for="Amasty\Blog\Api\VoteRepositoryInterface" type="Amasty\Blog\Model\Repository\VoteRepository" />
+    <type name="Amasty\Blog\Model\Config\Backend\Route">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="urlHelper" xsi:type="object">Amasty\Blog\Helper\Url</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Amasty\XmlSitemap\Model\Sitemap">
+        <plugin name="Amasty_Blog::add-pages-to-sitemap" type="Amasty\Blog\Plugin\XmlSitemap\Model\Sitemap" />
+    </type>
+    <type name="Amasty\Blog\Model\Sitemap">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="date_time" xsi:type="object">Magento\Framework\Stdlib\DateTime\DateTime</item>
+                <item name="url_resolver" xsi:type="object">Amasty\Blog\Model\UrlResolver</item>
+                <item name="post_repository" xsi:type="object">Amasty\Blog\Api\PostRepositoryInterface</item>
+                <item name="category_repository" xsi:type="object">Amasty\Blog\Api\CategoryRepositoryInterface</item>
+                <item name="tag_repository" xsi:type="object">Amasty\Blog\Api\TagRepositoryInterface</item>
+                <item name="store_manager" xsi:type="object">Magento\Store\Model\StoreManagerInterface</item>
+                <item name="settings_helper" xsi:type="object">Amasty\Blog\Helper\Settings</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Amasty\Blog\Model\Posts">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="url_helper" xsi:type="object">Amasty\Blog\Helper\Url</item>
+                <item name="image_helper" xsi:type="object">Amasty\Blog\Helper\Image</item>
+                <item name="setting_helper" xsi:type="object">Amasty\Blog\Helper\Settings</item>
+                <item name="filter_provider" xsi:type="object">Magento\Cms\Model\Template\FilterProvider</item>
+                <item name="view_repository" xsi:type="object">Amasty\Blog\Api\ViewRepositoryInterface</item>
+                <item name="author_repository" xsi:type="object">Amasty\Blog\Api\AuthorRepositoryInterface</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Amasty\Blog\Model\Comments">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="url_resolver" xsi:type="object">Amasty\Blog\Model\UrlResolver</item>
+                <item name="post_repository" xsi:type="object">Amasty\Blog\Api\PostRepositoryInterface</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Amasty\Blog\Model\AbstractModel">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="category_repository" xsi:type="object">Amasty\Blog\Api\CategoryRepositoryInterface</item>
+                <item name="categories_collection_factory" xsi:type="object">Amasty\Blog\Model\ResourceModel\Categories\CollectionFactory</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="tagged_posts_listing_data_source" xsi:type="string">Amasty\Blog\Model\ResourceModel\Posts\Collection\Grid</item>
+                <item name="category_posts_listing_data_source" xsi:type="string">Amasty\Blog\Model\ResourceModel\Posts\Collection\Grid</item>
+                <item name="author_posts_listing_data_source" xsi:type="string">Amasty\Blog\Model\ResourceModel\Posts\Collection\Grid</item>
+                <item name="comments_listing_data_source" xsi:type="string">Amasty\Blog\Model\ResourceModel\Comments\Collection\Grid</item>
+                <item name="authors_listing_data_source" xsi:type="string">Amasty\Blog\Model\ResourceModel\Author\Collection\Grid</item>
+                <item name="tags_listing_data_source" xsi:type="string">Amasty\Blog\Model\ResourceModel\Tag\Collection\Grid</item>
+                <item name="categories_listing_data_source" xsi:type="string">Amasty\Blog\Model\ResourceModel\Categories\Collection\Grid</item>
+                <item name="posts_listing_data_source" xsi:type="string">Amasty\Blog\Model\ResourceModel\Posts\Collection\Grid</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="Amasty\Blog\Model\ImageUpload" type="Magento\Catalog\Model\ImageUploader">
+        <arguments>
+            <argument name="baseTmpPath" xsi:type="const">Amasty\Blog\Model\ImageProcessor::BLOG_MEDIA_TMP_PATH</argument>
+            <argument name="basePath" xsi:type="const">Amasty\Blog\Model\ImageProcessor::BLOG_MEDIA_PATH</argument>
+            <argument name="allowedExtensions" xsi:type="array">
+                <item name="jpg" xsi:type="string">jpg</item>
+                <item name="jpeg" xsi:type="string">jpeg</item>
+                <item name="gif" xsi:type="string">gif</item>
+                <item name="png" xsi:type="string">png</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Amasty\Blog\Model\Blog\Config\Reader" type="Magento\Framework\Config\Reader\Filesystem">
+        <arguments>
+            <argument name="converter" xsi:type="object">Amasty\Blog\Model\Blog\Config\Converter</argument>
+            <argument name="schemaLocator" xsi:type="object">Amasty\Blog\Model\Blog\Config\SchemaLocator</argument>
+            <argument name="fileName" xsi:type="string">blog.xml</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Amasty\Blog\Model\Blog\Config" type="Magento\Framework\Config\Data">
+        <arguments>
+            <argument name="reader" xsi:type="object">Amasty\Blog\Model\Blog\Config\Reader</argument>
+            <argument name="cacheId" xsi:type="string">amblog_blog</argument>
+        </arguments>
+    </virtualType>
+    <type name="Amasty\Blog\Helper\Config">
+        <arguments>
+            <argument name="blogConfig" xsi:type="object">Amasty\Blog\Model\Blog\Config</argument>
+        </arguments>
+    </type>
+    <type name="Amasty\Blog\Controller\Adminhtml\Uploader\PostImage">
+        <arguments>
+            <argument name="imageUploader" xsi:type="object">Amasty\Blog\Model\ImageUpload</argument>
+        </arguments>
+    </type>
+    <type name="Amasty\Blog\Model\ImageProcessor">
+        <arguments>
+            <argument name="imageUploader" xsi:type="object">Amasty\Blog\Model\ImageUpload</argument>
+        </arguments>
+    </type>
+    <type name="Amasty\Xsearch\Block\Search\Blog">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="collectionFactory" xsi:type="object">Magento\Framework\Data\CollectionFactory</item>
+                <item name="categoriesCollectionFactory" xsi:type="object">Amasty\Blog\Model\ResourceModel\Categories\CollectionFactory</item>
+                <item name="tagsCollectionFactory" xsi:type="object">Amasty\Blog\Model\ResourceModel\Tag\CollectionFactory</item>
+                <item name="postsCollectionFactory" xsi:type="object">Amasty\Blog\Model\ResourceModel\Posts\CollectionFactory</item>
+                <item name="dataObjectFactory" xsi:type="object">Magento\Framework\DataObjectFactory</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <virtualType name="Amasty\Blog\Model\Preview\Storage" type="Magento\Framework\Session\Storage">
+        <arguments>
+            <argument name="namespace" xsi:type="string">amlog_preview_session</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Amasty\Blog\Model\Preview\PreviewSession">
+        <arguments>
+            <argument name="storage" xsi:type="object">Amasty\Blog\Model\Preview\Storage</argument>
+        </arguments>
+    </type>
+</config>

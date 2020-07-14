@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_PromoBanners
+ */
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <ampromobanners>
+            <general>
+                <product_container>.products-grid .product-items:not(.amasty-banner-items)</product_container>
+                <product_item>.products-grid .product-items:not(.amasty-banner-items) .product-item</product_item>
+                <max_banner_width>4</max_banner_width>
+            </general>
+        </ampromobanners>
+    </default>
+</config>

@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="default">
+        <job name="webpos_order_converter" instance="Magestore\Webpos\Cron\WebposOrderConverter" method="execute">
+            <config_path>crontab/default/jobs/webpos_order_converter/schedule/cron_expr</config_path>
+        </job>
+    </group>
+</config>

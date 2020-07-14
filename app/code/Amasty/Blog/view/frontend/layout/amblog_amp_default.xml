@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <container name="root">
+            <block class="Amasty\Blog\Block\Amp\Page" name="blog.page" template="Amasty_Blog::amp/page.phtml">
+                <block class="Magento\Theme\Block\Html\Notices" name="global_notices" template="Magento_Theme::html/notices.phtml"/>
+                <block class="Amasty\Blog\Block\Amp\Head" name="head" template="Amasty_Blog::amp/head.phtml">
+                    <block class="Amasty\Blog\Block\Html\Header\Logo" name="styles" template="Amasty_Blog::amp/styles.phtml">
+                        <arguments>
+                            <argument name="settings_helper" xsi:type="object">Amasty\Blog\Helper\Settings</argument>
+                        </arguments>
+                    </block>
+                </block>
+                <container name="content">
+                    <referenceBlock name="Amasty_HidePrice_Form" remove="true"/>
+                    <referenceBlock name="amfinder_notif" remove="true"/>
+                    <block class="Magento\Theme\Block\Html\Title" name="page.main.title" template="Magento_Theme::html/title.phtml" />
+                    <container name="header.container" as="header_container" label="Page Header Container" htmlTag="header" htmlClass="page-header" before="main.content">
+                        <block class="Magento\Framework\View\Element\Template" name="scroll_to_top" template="Amasty_Blog::amp/html/scrolltotop.phtml" after="-"/>
+                    </container>
+                    <referenceBlock name="pageCache" remove="true" />
+                    <referenceBlock name="authentication-popup" remove="true" />
+                    <referenceBlock name="customer.data.invalidation.rules" remove="true" />
+                    <referenceBlock name="customer.section.config" remove="true" />
+                    <referenceBlock name="customer.customer.data" remove="true" />
+                    <referenceBlock name="banner.data" remove="true" />
+                    <referenceContainer name="compare-link-wrapper" remove="true"/>
+                    <referenceBlock name="breadcrumbs" remove="true" />
+
+                    <referenceBlock name="top.links">
+                        <referenceBlock name="wish-list-link" remove="true"/>
+                        <block class="Amasty\Blog\Block\Amp\Link" name="multiple-wish-list-link" after="my-account-link">
+                            <arguments>
+                                <argument name="sortOrder" xsi:type="number">60</argument>
+                            </arguments>
+                        </block>
+                        <block class="Amasty\Blog\Block\Amp\Header" name="header" as="header" before="-">
+                            <arguments>
+                                <argument name="show_part" xsi:type="string">welcome</argument>
+                            </arguments>
+                        </block>
+                    </referenceBlock>
+                    <referenceContainer name="header-wrapper">
+                        <block class="Amasty\Blog\Block\Html\Header\Logo" name="logo" template="Amasty_Blog::amp/html/header/logo.phtml">
+                            <arguments>
+                                <argument name="settings_helper" xsi:type="object">Amasty\Blog\Helper\Settings</argument>
+                            </arguments>
+                        </block>
+                        <block class="Magento\Checkout\Block\Cart\Sidebar" name="minicart" as="minicart" after="logo" template="Amasty_Blog::amp/cart/minicart.phtml" />
+                        <block class="Magento\Framework\View\Element\Template" name="top.search" as="topSearch" template="Amasty_Blog::amp/form.mini.phtml" />
+                    </referenceContainer>
+                    <container name="page.top">
+                        <block class="Magento\Framework\View\Element\Template" name="navigation.sections" before="-" template="Amasty_Blog::amp/html/sections.phtml">
+                            <arguments>
+                                <argument name="group_name" xsi:type="string">navigation-sections</argument>
+                                <argument name="group_css" xsi:type="string">nav-sections</argument>
+                            </arguments>
+                            <block class="Magento\Framework\View\Element\Template" name="store.menu" group="navigation-sections" template="Magento_Theme::html/container.phtml">
+                                <arguments>
+                                    <argument name="title" translate="true" xsi:type="string">Menu</argument>
+                                </arguments>
+                                <block class="Amasty\Blog\Block\Amp\Topmenu" name="catalog.topnav" template="Amasty_Blog::amp/html/topmenu.phtml" ttl="3600" before="-"/>
+                            </block>
+                            <block class="Magento\Framework\View\Element\Template" name="store.links" group="navigation-sections" template="Magento_Theme::html/container.phtml">
+                                <arguments>
+                                    <argument name="title" translate="true" xsi:type="string">Account</argument>
+                                </arguments>
+                            </block>
+                            <block class="Magento\Framework\View\Element\Template" name="store.settings" group="navigation-sections" template="Magento_Theme::html/container.phtml">
+                                <arguments>
+                                    <argument name="title" translate="true" xsi:type="string">Settings</argument>
+                                </arguments>
+                                <block class="Amasty\Blog\Block\Amp\Switcher" name="store.settings.language" template="Amasty_Blog::amp/switch/languages.phtml">
+                                    <arguments>
+                                        <argument name="id_modifier" xsi:type="string">nav</argument>
+                                    </arguments>
+                                </block>
+                                <block class="Magento\Directory\Block\Currency" name="store.settings.currency" template="Magento_Directory::currency.phtml">
+                                    <arguments>
+                                        <argument name="id_modifier" xsi:type="string">nav</argument>
+                                    </arguments>
+                                </block>
+                            </block>
+                        </block>
+                        <container name="top.container" as="topContainer" label="After Page Header Top" htmlTag="div" htmlClass="top-container"/>
+                    </container>
+                    <block class="Amasty\Blog\Block\Layout" name="layout-sidebar" as="layout-sidebar" template="Amasty_Blog::amp/layout-sidebar.phtml">
+                        <block class="Amasty\Blog\Block\Layout\Container" name="layout.sidebar" as="layout_sidebar">
+                            <action method="setType">
+                                <argument name="type" xsi:type="string">sidebar</argument>
+                                <argument name="isAmp" xsi:type="boolean">true</argument>
+                            </action>
+                        </block>
+                    </block>
+                    <block class="Amasty\Blog\Block\Layout" name="layout" as="layout" template="Amasty_Blog::amp/layout.phtml">
+                        <block class="Amasty\Blog\Block\Layout\Container" name="layout.content" as="layout_content">
+                            <action method="setType">
+                                <argument name="type" xsi:type="string">content</argument>
+                                <argument name="isAmp" xsi:type="boolean">true</argument>
+                            </action>
+                        </block>
+                    </block>
+                </container>
+                <container name="footer" htmlTag="div" htmlClass="amblog-amp-footer footer content">
+                    <block class="Magento\Newsletter\Block\Subscribe" name="form.subscribe" as="subscribe" before="-" template="Amasty_Blog::amp/footer/subscribe.phtml"/>
+                    <block class="Amasty\Blog\Block\Amp\Switcher" name="store_switcher" as="store_switcher" template="Amasty_Blog::amp/switch/stores.phtml"/>
+                    <referenceBlock name="form.subscribe" remove="true" />
+                    <container  name="footer.links.container"  htmlTag="div" htmlClass="footer-links-container" />
+                    <block class="Magento\Theme\Block\Html\Footer" name="amp-copyright"
+                           template="Magento_Theme::html/copyright.phtml"/>
+                </container>
+            </block>
+        </container>
+        <move element="header.panel" destination="store.links" after="-"/>
+        <move element="layout-sidebar" destination="content" before="page.main.title"/>
+        <referenceBlock name="skip_to_content" remove="true" />
+        <referenceContainer name="header.panel"  htmlTag="div" htmlClass="panel header amblog-amp-navigation"/>
+        <move element="cms_footer_links_container" destination="footer.links.container" before="-"/>
+        <move element="footer_links" destination="footer.links.container"/>
+        <move element="store_switcher" destination="footer.links.container" after="-"/>
+        <referenceBlock name="header.links">
+            <block class="Magento\Customer\Block\Account\Customer" name="customer" template="Amasty_Blog::amp/account/customer.phtml" before="-"/>
+        </referenceBlock>
+        <referenceBlock name="weltpixel_gtm_footer" remove="true" />
+    </body>
+</page>

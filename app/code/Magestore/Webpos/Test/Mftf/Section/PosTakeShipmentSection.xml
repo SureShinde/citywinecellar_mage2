@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
+    <section name="PosTakeShipmentSection">
+
+        <element name="selectMaxQtyToShipButton" type="text" selector=".wrapper-shipment-order .label-checkbox" />
+        <element name="popup" type="text" selector=".popup-messages" />
+
+        <!-- Actions -->
+        <element name="shipmentButton" type="button" selector="//div[contains(@class, 'block-bottom')]/div/button[contains(text(), 'Ship')]"/>
+        <element name="confirmYesButton" type="button" selector="//div[contains(@class, 'popup-messages')][1]//a[contains(text(), 'Yes')]"/>
+        <element name="cancelYesButton" type="button" selector="//div[contains(@class, 'popup-messages')][2]//a[contains(text(), 'Yes')]"/>
+    </section>
+</sections>

@@ -1,0 +1,66 @@
+pipeline {
+    agent {
+        docker {
+            image 'magestore/compose'
+            args '-u root:root -v /var/run/docker.sock:/var/run/docker.sock -v $JENKINS_DATA:$JENKINS_DATA -e JENKINS_DATA=$JENKINS_DATA'
+        }
+    }
+    environment {
+        CI = 'true'
+    }
+
+    stages {
+        stage('PullCode') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: '${GIT_CREDENTIAL}', passwordVariable: 'GIT_PASS', usernameVariable: 'GIT_USERNAME')]) {
+                    sh './.jenkins/pull.sh'
+                }
+            }
+        }
+        stage('React Coding Standard Test') {
+            steps {
+                sh './.jenkins/react-coding-standard-test.sh'
+            }
+        }
+        stage('Magento Coding Standard Test') {
+            steps {
+                sh './.jenkins/magento-coding-standard-test.sh'
+            }
+        }
+        stage('UnitTest') {
+            steps {
+                sh './.jenkins/client-test.sh'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh './.jenkins/build.sh'
+            }
+        }
+        stage('Di Compile') {
+            steps {
+                sh './.jenkins/magento-di-compile.sh'
+            }
+        }
+        stage('APITest') {
+           steps {
+               sh './.jenkins/api-test.sh'
+           }
+        }
+        stage('UATest') {
+            steps {
+                sh './.jenkins/test.sh'
+            }
+        }
+        stage('Deliver') {
+            steps {
+                sh './.jenkins/deliver.sh'
+            }
+        }
+    }
+    post {
+        always {
+            sh './.jenkins/finish.sh'
+        }
+    }
+}

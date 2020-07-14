@@ -1,0 +1,44 @@
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<!--@subject {{var store.getFrontendName()}}: Cancel Dropship Request # {{var dropshiprequest.id}}@-->
+<!--@vars
+{"store url=\"\"":"Store Url",
+"var logo_url":"Email Logo Image Url",
+"var logo_alt":"Email Logo Image Alt",
+"htmlescape var receipient_name":"Admin",
+"var dropshiprequest.id":"Dropship Request Id",
+"var store.getFrontendName()":"Store Name"}
+@-->
+{{template config_path="design/email/header_template"}}
+<table>
+    <tr>
+        <td>
+            <table>
+                 <tr>
+                    <td valign="top">
+                        <p class="greeting">{{trans "Dear store owner,"}}</p>
+                        <p>
+                            {{trans 'Thank you for placing drop-shipping order from ' }} {{var supplier.getSupplierName()}}
+                        </p>
+                        <p>
+                            Regarding to your request for item(s) in the dropship request ID #{{var dropshiprequest.getId()}}, we regret to inform you that we are unable to fulfill the order and would like to cancel it at this time.
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>{{trans 'We hope to have other opportunities to do business with you in the near future.' }}</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p style="font-size:12px; margin:0;">{{trans 'Thank you, ' }}<strong>{{var supplier.getSupplierName()}}</strong></p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>

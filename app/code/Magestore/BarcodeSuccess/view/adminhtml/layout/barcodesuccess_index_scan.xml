@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<!--
+Copyright © 2016 Magestore. All rights reserved.
+See COPYING.txt for license details.
+-->
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="styles"/>
+    <head>
+        <css src="Magestore_BarcodeSuccess::css/barcode.css"/>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="Magestore\BarcodeSuccess\Block\Barcode\Container\Scan" name="barcode.scan.container" template="Magestore_BarcodeSuccess::barcode/scan.phtml">
+                <arguments>
+                    <argument name="widget" xsi:type="array">
+                        <item name="scan_barcode" xsi:type="array">
+                            <item name="code" xsi:type="string">osBarcodeScan</item>
+                            <item name="config" xsi:type="array">
+                                <item name="urls" xsi:type="array">
+                                    <item name="get_barcode_data_url" xsi:type="string">barcodesuccess/index/getdata</item>
+                                    <item name="print_barcode_url" xsi:type="string">barcodesuccess/index/printBarcode</item>
+                                    <item name="get_template_options_url" xsi:type="string">barcodesuccess/index/getTemplateOption</item>
+                                </item>
+                            </item>
+                        </item>
+                    </argument>
+                    <argument name="os_panels" xsi:type="array">
+                        <item name="barcode_infomation" xsi:type="array">
+                            <item name="label" xsi:type="string" translate="true">Barcode Information</item>
+                            <item name="buttons" xsi:type="array">
+                                <item name="print" xsi:type="array">
+                                    <item name="sortOrder" xsi:type="string">3</item>
+                                    <item name="type" xsi:type="string">button</item>
+                                    <item name="label" xsi:type="string" translate="true">Print Barcode</item>
+                                    <item name="action" xsi:type="array">
+                                        <item name="event" xsi:type="string">click</item>
+                                        <item name="function" xsi:type="string">print</item>
+                                    </item>
+                                </item>
+                                <item name="qty" xsi:type="array">
+                                    <item name="sortOrder" xsi:type="string">2</item>
+                                    <item name="type" xsi:type="string">text</item>
+                                    <item name="label" xsi:type="string" translate="true">Qty to print</item>
+                                    <item name="action" xsi:type="array">
+                                        <item name="event" xsi:type="string">change</item>
+                                        <item name="function" xsi:type="string">setQty</item>
+                                    </item>
+                                </item>
+                                <item name="template" xsi:type="array">
+                                    <item name="sortOrder" xsi:type="string">1</item>
+                                    <item name="type" xsi:type="string">select</item>
+                                    <item name="options" xsi:type="string">get_template_options_url</item>
+                                    <item name="action" xsi:type="array">
+                                        <item name="event" xsi:type="string">change</item>
+                                        <item name="function" xsi:type="string">setTemplate</item>
+                                    </item>
+                                </item>
+                            </item>
+                            <item name="fields" xsi:type="array">
+                                <item name="barcode" xsi:type="array">
+                                    <item name="label" xsi:type="string" translate="true">Barcode</item>
+                                </item>
+                                <item name="product_sku" xsi:type="array">
+                                    <item name="label" xsi:type="string" translate="true">Product SKU</item>
+                                </item>
+                                <item name="supplier_code" xsi:type="array">
+                                    <item name="label" xsi:type="string" translate="true">Supplier Code</item>
+                                </item>
+                                <item name="created_at" xsi:type="array">
+                                    <item name="label" xsi:type="string" translate="true">Created At</item>
+                                </item>
+                                <item name="purchased_time" xsi:type="array">
+                                    <item name="label" xsi:type="string" translate="true">Purchased Time</item>
+                                </item>
+                            </item>
+                        </item>
+                        <item name="product_infomation" xsi:type="array">
+                            <item name="label" xsi:type="string" translate="true">Product Information</item>
+                            <item name="buttons" xsi:type="array">
+                                <item name="print" xsi:type="array">
+                                    <item name="sortOrder" xsi:type="string">1</item>
+                                    <item name="type" xsi:type="string">button</item>
+                                    <item name="label" xsi:type="string" translate="true">More Detail</item>
+                                    <item name="action" xsi:type="array">
+                                        <item name="event" xsi:type="string">click</item>
+                                        <item name="function" xsi:type="string">showDetail</item>
+                                    </item>
+                                </item>
+                            </item>
+                            <item name="fields" xsi:type="array">
+                                <item name="product_image" xsi:type="array">
+                                    <item name="label" xsi:type="string" translate="true">Image</item>
+                                    <item name="render" xsi:type="string">image</item>
+                                </item>
+                                <item name="product_name" xsi:type="array">
+                                    <item name="label" xsi:type="string" translate="true">Name</item>
+                                </item>
+                                <item name="product_sku" xsi:type="array">
+                                    <item name="label" xsi:type="string" translate="true">SKU</item>
+                                </item>
+                                <item name="product_price" xsi:type="array">
+                                    <item name="label" xsi:type="string" translate="true">Price</item>
+                                </item>
+                                <item name="product_stock" xsi:type="array">
+                                    <item name="label" xsi:type="string" translate="true">Stock Availability</item>
+                                </item>
+                                <item name="product_status" xsi:type="array">
+                                    <item name="label" xsi:type="string" translate="true">Status</item>
+                                </item>
+                            </item>
+                        </item>
+                    </argument>
+                </arguments>
+            </block>>
+        </referenceContainer>
+    </body>
+</page>

@@ -1,0 +1,69 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+?>
+
+<?php
+/** @var $block \Magestore\Appadmin\Block\Adminhtml\Staff\Role\Edit\Tab\Permission */
+?>
+
+<?= $block->getChildHtml() ?>
+
+<fieldset class="fieldset form-inline entry-edit">
+    <legend class="legend">
+        <span><?= /* @escapeNotVerified */
+            __('Roles Resources') ?></span>
+    </legend>
+    <br/>
+
+    <div class="field">
+        <label class="label" for="all"><span><?= /* @escapeNotVerified */
+                __('Resource Access') ?></span></label>
+
+        <div class="control">
+            <select id="all" name="all" onchange="jQuery('[data-role=tree-resources-container]').toggle()"
+                    class="select">
+                <option value="0" <?= ($block->isEverythingAllowed() ? '' : 'selected="selected"') ?>><?= /* @escapeNotVerified */
+                    __('Custom') ?></option>
+                <option value="1" <?= ($block->isEverythingAllowed() ? 'selected="selected"' : '') ?>><?= /* @escapeNotVerified */
+                    __('All') ?></option>
+            </select>
+        </div>
+    </div>
+
+    <div class="field<?php if ($block->isEverythingAllowed()): ?> no-display<?php endif ?>"
+         data-role="tree-resources-container">
+        <label class="label"><span><?= /* @escapeNotVerified */
+                __('Resources') ?></span></label>
+
+        <div class="control">
+            <div class="tree x-tree" data-role="resource-tree"></div>
+        </div>
+    </div>
+</fieldset>
+
+<script>
+    require(["jquery", "Magento_User/js/roles-tree"], function ($) {
+        $.widget('mage.rolesTree', $.mage.rolesTree, {
+            _checkNode: function (event) {
+            },
+            _checkNodes: function () {
+                this._super();
+                var labelResource = <?= /* @escapeNotVerified */ $block->getLabelResources() ?>;
+                $.each(labelResource, function (index, value) {
+                    $('[data-id="' + value + '"]').find('.jstree-checkbox').first().hide();
+                });
+            }
+        });
+
+        $('[data-role="resource-tree"]').rolesTree({
+            'treeInitData': <?= /* @escapeNotVerified */ $block->getResourcesTreeJson() ?>,
+            'treeInitSelectedData': <?= /* @escapeNotVerified */ $block->getSelectedResourcesJson() ?>
+        });
+    });
+</script>

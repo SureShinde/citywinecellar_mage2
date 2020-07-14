@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_PromoBanners
+ */
+-->
+<layout xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/layout_generic.xsd">
+    <container name="root" label="Root">
+        <block class="Amasty\PromoBanners\Block\Adminhtml\Banners\Edit\Tab\Products\Grid" name="ampromobanners.allowed_products.grid" as="grid" />
+        <block class="Magento\Backend\Block\Widget\Grid\Serializer" name="ampromobanners_grid_serializer">
+            <arguments>
+                <argument name="grid_block" xsi:type="string">ampromobanners.allowed_products.grid</argument>
+                <argument name="callback" xsi:type="string">getAllowedRuleProducts</argument>
+                <argument name="input_element_name" xsi:type="string">allowed_products</argument>
+                <argument name="reload_param_name" xsi:type="string">ampromobanners_allowed</argument>
+            </arguments>
+        </block>
+    </container>
+</layout>

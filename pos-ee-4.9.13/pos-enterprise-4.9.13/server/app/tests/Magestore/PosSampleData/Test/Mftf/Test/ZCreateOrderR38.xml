@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright © 2019 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  ~
+  -->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <test name="ZR38Type1CreateOrderWithMagentoDiscount">
+        <annotations>
+            <features value="Create Order"/>
+            <stories value="Create Order"/>
+            <title value="Create Order With Magento Discount R38"/>
+            <description value="Create Order With Magento Discount R38"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="CreateOrder"/>
+            <group value="CreateOrderType1"/>
+        </annotations>
+
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <after>
+            <amOnPage url="admin/admin/auth/logout/" stepKey="amOnLogoutPage"/>
+        </after>
+
+        <actionGroup ref="DisablePrintPopup" stepKey="DisablePrintPopup"/>
+        <actionGroup ref="ClearCart" stepKey="ClearCart"/>
+
+        <actionGroup ref="PosAddSimpleProductActionGroup" stepKey="PosAddSimpleProductActionGroup">
+            <argument name="dataProduct" value="stable_order_simple_product_for_discount" />
+        </actionGroup>
+        <actionGroup ref="PosAddConfigurableProductActionGroup" stepKey="PosAddConfigurableProductActionGroup">
+            <argument name="dataProduct" value="stable_order_configurable_product" />
+        </actionGroup>
+        <actionGroup ref="PosAddVirtualProductActionGroup" stepKey="PosAddVirtualProductActionGroup">
+            <argument name="dataProduct" value="stable_order_virtual_product" />
+        </actionGroup>
+        <actionGroup ref="PosAddGroupedProductActionGroup" stepKey="PosAddGroupedProductActionGroup">
+            <argument name="dataProduct" value="stable_order_grouped_product" />
+        </actionGroup>
+        <!-- Add bundle product - Product issue when applying coupon -->
+<!--        <actionGroup ref="PosAddBundleProductActionGroup" stepKey="PosAddBundleProductActionGroup">-->
+<!--            <argument name="dataProduct" value="stable_order_bundle_product" />-->
+<!--        </actionGroup>-->
+
+        <actionGroup ref="SearchCustomerAndAdd" stepKey="SearchCustomerAndAdd">
+            <argument name="customer" value="default_customer" />
+        </actionGroup>
+
+        <click selector="{{CartSection.chargeButton}}" stepKey="clickChargeButton" />
+
+        <actionGroup ref="AddCouponCodeActionGroup" stepKey="AddCouponCodeActionGroup">
+            <argument name="coupon" value="H20" />
+        </actionGroup>
+        <actionGroup ref="AddCashPaymentMethodActionGroup" stepKey="AddCashPaymentMethodActionGroup"/>
+        <actionGroup ref="ClickAndCompleteOrderActionGroup" stepKey="ClickAndCompleteOrderActionGroup"/>
+        <actionGroup ref="GetOrderIdFromToast" stepKey="GetOrderIdFromToast"/>
+
+        <actionGroup ref="CheckOrderDetailFromPosActionGroup" stepKey="CheckOrderDetailFromPosActionGroup">
+            <argument name="orderId" value="{$orderIdGetOrderIdFromToast}" />
+            <argument name="status" value="complete" />
+        </actionGroup>
+
+        <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
+
+        <actionGroup ref="CheckOrderDetailFromBackendActionGroup" stepKey="CheckOrderDetailFromBackendActionGroup">
+            <argument name="orderId" value="{$orderIdGetOrderIdFromToast}" />
+            <argument name="status" value="Complete" />
+        </actionGroup>
+    </test>
+
+    <test name="ZR38Type2CreateOrderWithGuestCustomer">
+        <annotations>
+            <features value="Create Order"/>
+            <stories value="Create Order"/>
+            <title value="Create Order With Guest Customer R38"/>
+            <description value="Create Order With Guest Customer R38"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="CreateOrder"/>
+            <group value="CreateOrderType2"/>
+        </annotations>
+
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <after>
+            <amOnPage url="admin/admin/auth/logout/" stepKey="amOnLogoutPage"/>
+        </after>
+
+        <actionGroup ref="DisablePrintPopup" stepKey="DisablePrintPopup"/>
+        <actionGroup ref="ClearCart" stepKey="ClearCart"/>
+
+        <actionGroup ref="PosAddSimpleProductActionGroup" stepKey="PosAddSimpleProductActionGroup">
+            <argument name="dataProduct" value="stable_order_simple_product" />
+        </actionGroup>
+        <actionGroup ref="PosAddConfigurableProductActionGroup" stepKey="PosAddConfigurableProductActionGroup">
+            <argument name="dataProduct" value="stable_order_configurable_product" />
+        </actionGroup>
+        <actionGroup ref="PosAddVirtualProductActionGroup" stepKey="PosAddVirtualProductActionGroup">
+            <argument name="dataProduct" value="stable_order_virtual_product" />
+        </actionGroup>
+        <actionGroup ref="PosAddGroupedProductActionGroup" stepKey="PosAddGroupedProductActionGroup">
+            <argument name="dataProduct" value="stable_order_grouped_product" />
+        </actionGroup>
+        <actionGroup ref="PosAddBundleProductActionGroup" stepKey="PosAddBundleProductActionGroup">
+            <argument name="dataProduct" value="stable_order_bundle_product" />
+        </actionGroup>
+
+        <click selector="{{CartSection.chargeButton}}" stepKey="clickChargeButton" />
+
+        <actionGroup ref="AddCashPaymentMethodActionGroup" stepKey="AddCashPaymentMethodActionGroup"/>
+        <actionGroup ref="ClickAndCompleteOrderActionGroup" stepKey="ClickAndCompleteOrderActionGroup"/>
+        <actionGroup ref="GetOrderIdFromToast" stepKey="GetOrderIdFromToast"/>
+
+        <actionGroup ref="CheckOrderDetailFromPosActionGroup" stepKey="CheckOrderDetailFromPosActionGroup">
+            <argument name="orderId" value="{$orderIdGetOrderIdFromToast}" />
+            <argument name="status" value="complete" />
+        </actionGroup>
+
+        <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
+
+        <actionGroup ref="CheckOrderDetailFromBackendActionGroup" stepKey="CheckOrderDetailFromBackendActionGroup">
+            <argument name="orderId" value="{$orderIdGetOrderIdFromToast}" />
+            <argument name="status" value="Complete" />
+        </actionGroup>
+    </test>
+
+    <test name="ZR38Type3CreateOrderWithCustomAttribute">
+        <annotations>
+            <features value="Create Order"/>
+            <stories value="Create Order"/>
+            <title value="Create Order With Custom Attribute R38"/>
+            <description value="Create Order With Custom Attribute R38"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="CreateOrder"/>
+            <group value="CreateOrderType3"/>
+        </annotations>
+
+        <before>
+            <createData entity="EnableFlatRateShippingMethod" stepKey="enableShippingMethod"/>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <after>
+            <amOnPage url="admin/admin/auth/logout/" stepKey="amOnLogoutPage"/>
+        </after>
+
+        <actionGroup ref="DisablePrintPopup" stepKey="DisablePrintPopup"/>
+        <actionGroup ref="ClearCart" stepKey="ClearCart"/>
+
+        <actionGroup ref="PosAddSimpleProductWithCustomAttributeActionGroup" stepKey="PosAddSimpleProductWithCustomAttributeActionGroup">
+            <argument name="dataProduct" value="stable_order_simple_product_with_custom_attribute" />
+        </actionGroup>
+        <actionGroup ref="PosAddConfigurableProductActionGroup" stepKey="PosAddConfigurableProductActionGroup">
+            <argument name="dataProduct" value="stable_order_configurable_product" />
+        </actionGroup>
+        <actionGroup ref="PosAddVirtualProductActionGroup" stepKey="PosAddVirtualProductActionGroup">
+            <argument name="dataProduct" value="stable_order_virtual_product" />
+        </actionGroup>
+        <actionGroup ref="PosAddGroupedProductActionGroup" stepKey="PosAddGroupedProductActionGroup">
+            <argument name="dataProduct" value="stable_order_grouped_product" />
+        </actionGroup>
+        <actionGroup ref="PosAddBundleProductActionGroup" stepKey="PosAddBundleProductActionGroup">
+            <argument name="dataProduct" value="stable_order_bundle_product" />
+        </actionGroup>
+
+        <actionGroup ref="SearchCustomerAndAdd" stepKey="SearchCustomerAndAdd">
+            <argument name="customer" value="default_customer" />
+        </actionGroup>
+
+        <click selector="{{CartSection.chargeButton}}" stepKey="clickChargeButton" />
+
+        <actionGroup ref="AddShippingActionGroup" stepKey="AddShippingActionGroup">
+            <argument name="shippingMethod" value="Flat Rate - Fixed" />
+        </actionGroup>
+
+        <actionGroup ref="AddCashPaymentMethodActionGroup" stepKey="AddCashPaymentMethodActionGroup"/>
+        <actionGroup ref="ClickAndCompleteOrderActionGroup" stepKey="ClickAndCompleteOrderActionGroup"/>
+        <actionGroup ref="GetOrderIdFromToast" stepKey="GetOrderIdFromToast"/>
+
+        <actionGroup ref="CheckOrderDetailFromPosActionGroup" stepKey="CheckOrderDetailFromPosActionGroup">
+            <argument name="orderId" value="{$orderIdGetOrderIdFromToast}" />
+            <argument name="status" value="processing" />
+        </actionGroup>
+
+        <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
+
+        <actionGroup ref="CheckOrderDetailFromBackendActionGroup" stepKey="CheckOrderDetailFromBackendActionGroup">
+            <argument name="orderId" value="{$orderIdGetOrderIdFromToast}" />
+            <argument name="status" value="Processing" />
+        </actionGroup>
+    </test>
+
+    <test name="ZR38Type4CreateOrderWithOutOfStockProduct">
+        <annotations>
+            <features value="Create Order"/>
+            <stories value="Create Order"/>
+            <title value="Create Order With Out Of Stock Product R38"/>
+            <description value="Create Order With Out Of Stock Product R38"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="CreateOrder"/>
+            <group value="CreateOrderType4"/>
+        </annotations>
+
+        <before>
+            <createData entity="EnableAddOutOfStock" stepKey="EnableAddOutOfStockProduct"/>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <after>
+            <createData entity="DisableAddOutOfStock" stepKey="DisableAddOutOfStockProduct"/>
+            <amOnPage url="admin/admin/auth/logout/" stepKey="amOnLogoutPage"/>
+        </after>
+
+        <actionGroup ref="DisablePrintPopup" stepKey="DisablePrintPopup"/>
+        <actionGroup ref="ClearCart" stepKey="ClearCart"/>
+
+        <actionGroup ref="PosAddSimpleProductActionGroup" stepKey="PosAddSimpleProductActionGroup">
+            <argument name="dataProduct" value="stable_out_of_stock_order_simple_product" />
+        </actionGroup>
+        <actionGroup ref="PosAddConfigurableProductActionGroup" stepKey="PosAddConfigurableProductActionGroup">
+            <argument name="dataProduct" value="stable_out_of_stock_order_configurable_product" />
+        </actionGroup>
+        <actionGroup ref="PosAddVirtualProductActionGroup" stepKey="PosAddVirtualProductActionGroup">
+            <argument name="dataProduct" value="stable_out_of_stock_order_virtual_product" />
+        </actionGroup>
+        <actionGroup ref="PosAddGroupedProductActionGroup" stepKey="PosAddGroupedProductActionGroup">
+            <argument name="dataProduct" value="stable_out_of_stock_order_grouped_product" />
+        </actionGroup>
+        <actionGroup ref="PosAddBundleProductActionGroup" stepKey="PosAddBundleProductActionGroup">
+            <argument name="dataProduct" value="stable_out_of_stock_order_bundle_product" />
+        </actionGroup>
+
+        <click selector="{{CartSection.chargeButton}}" stepKey="clickChargeButton" />
+
+        <actionGroup ref="AddCashPaymentMethodActionGroup" stepKey="AddCashPaymentMethodActionGroup"/>
+        <actionGroup ref="ClickAndCompleteOrderActionGroup" stepKey="ClickAndCompleteOrderActionGroup"/>
+        <actionGroup ref="GetOrderIdFromToast" stepKey="GetOrderIdFromToast"/>
+
+        <actionGroup ref="CheckOrderDetailFromPosActionGroup" stepKey="CheckOrderDetailFromPosActionGroup">
+            <argument name="orderId" value="{$orderIdGetOrderIdFromToast}" />
+            <argument name="status" value="complete" />
+        </actionGroup>
+
+        <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
+
+        <actionGroup ref="CheckOrderDetailFromBackendActionGroup" stepKey="CheckOrderDetailFromBackendActionGroup">
+            <argument name="orderId" value="{$orderIdGetOrderIdFromToast}" />
+            <argument name="status" value="Complete" />
+        </actionGroup>
+    </test>
+
+    <test name="ZR38Type5CreateOrderWithVirtualProduct">
+        <annotations>
+            <features value="Create Order"/>
+            <stories value="Create Order"/>
+            <title value="Create Order With Virtual Product R38"/>
+            <description value="Create Order With Virtual Product R38"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="CreateOrder"/>
+            <group value="CreateOrderType5"/>
+        </annotations>
+
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <actionGroup ref="CreateOrderWithVirtualQuoteActionGroup" stepKey="CreateNewOrder">
+                <argument name="dataProduct" value="pos_virtual_product_00002370" />
+                <argument name="dataCustomer" value="default_customer" />
+                <argument name="discountAmount" value="8.00"/>
+            </actionGroup>
+        </before>
+
+        <after>
+            <actionGroup ref="logout" stepKey="logout"/>
+        </after>
+
+        <actionGroup ref="GetOrderIdFromToast" stepKey="GetOrderIdFromToast"/>
+
+        <actionGroup ref="CheckOrderDetailFromPosActionGroup" stepKey="CheckOrderDetailFromPosActionGroup">
+            <argument name="orderId" value="{$orderIdGetOrderIdFromToast}"/>
+            <argument name="status" value="complete"/>
+            <argument name="grandTotal" value="$2.17"/>
+            <argument name="customer" value="{{default_customer.fullName}}"/>
+        </actionGroup>
+
+        <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
+
+        <actionGroup ref="CheckOrderDetailFromBackendActionGroup" stepKey="CheckOrderDetailFromBackendActionGroup">
+            <argument name="orderId" value="{$orderIdGetOrderIdFromToast}"/>
+            <argument name="status" value="complete"/>
+            <argument name="grandTotal" value="$2.17"/>
+            <argument name="customer" value="{{default_customer.fullName}}"/>
+        </actionGroup>
+    </test>
+
+    <test name="ZR38Type6CreateOrderWithPartialPayment">
+        <annotations>
+            <features value="Create Order"/>
+            <stories value="Create Order"/>
+            <title value="Create Order With Partial Payment R38"/>
+            <description value="Create Order With Partial Payment R38"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="CreateOrder"/>
+            <group value="CreateOrderType6"/>
+        </annotations>
+
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <actionGroup ref="DisablePrintPopup" stepKey="DisablePrintPopup"/>
+        </before>
+
+        <after>
+            <amOnPage url="admin/admin/auth/logout/" stepKey="amOnLogoutPage"/>
+        </after>
+
+        <actionGroup ref="AddProductAndCharge" stepKey="AddProductAndCharge">
+            <argument name="dataProduct" value="stable_order_simple_product" />
+        </actionGroup>
+
+        <actionGroup ref="PosPaymentEnterCash" stepKey="enterCash">
+            <argument name="amount" value="{{pos_stable_order_partial_payment.amountPaid}}"/>
+        </actionGroup>
+
+        <actionGroup ref="CompletePartialOrderActionGroup" stepKey="completePartialOrder">
+            <argument name="displayRemainingAmount" value="{{pos_stable_order_partial_payment.displayRemainingAmount}}"/>
+        </actionGroup>
+
+        <actionGroup ref="GetOrderIdFromToast" stepKey="GetOrderIdFromToast"/>
+
+        <actionGroup ref="CheckOrderDetailFromPosActionGroup" stepKey="CheckOrderDetailFromPosActionGroup">
+            <argument name="orderId" value="{$orderIdGetOrderIdFromToast}"/>
+            <argument name="status" value="{{pos_stable_order_partial_payment.status}}"/>
+            <argument name="grandTotal" value="{{pos_stable_order_partial_payment.grandTotal}}"/>
+        </actionGroup>
+
+        <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
+
+        <actionGroup ref="CheckOrderDetailFromBackendActionGroup" stepKey="CheckOrderDetailFromBackendActionGroup">
+            <argument name="orderId" value="{$orderIdGetOrderIdFromToast}"/>
+            <argument name="status" value="{{pos_stable_order_partial_payment.status}}"/>
+            <argument name="grandTotal" value="{{pos_stable_order_partial_payment.grandTotal}}"/>
+        </actionGroup>
+    </test>
+
+    <test name="ZR38Type7CreateOrderWithNewCustomer">
+        <annotations>
+            <features value="Create Order"/>
+            <stories value="Create Order"/>
+            <title value="Create Order With New Customer R38"/>
+            <description value="Create Order With New Customer R38"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="CreateOrder"/>
+            <group value="CreateOrderType7"/>
+        </annotations>
+
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <after>
+            <actionGroup ref="logout" stepKey="logout"/>
+        </after>
+
+        <actionGroup ref="CreateCustomer" stepKey="CreateCustomer">
+            <argument name="customer" value="new_customer"/>
+        </actionGroup>
+
+        <actionGroup ref="SaveCustomerActionGroup" stepKey="SaveCustomer">
+            <argument name="dataCustomer" value="new_customer"/>
+        </actionGroup>
+
+        <actionGroup ref="CreateOrderWithVirtualQuoteActionGroup" stepKey="CreateNewOrder">
+            <argument name="dataProduct" value="pos_virtual_product_00002370" />
+            <argument name="dataCustomer" value="new_customer" />
+            <argument name="discountAmount" value="8.00"/>
+        </actionGroup>
+
+        <actionGroup ref="GetOrderIdFromToast" stepKey="GetOrderIdFromToast"/>
+
+        <actionGroup ref="CheckOrderDetailFromPosActionGroup" stepKey="CheckOrderDetailFromPosActionGroup">
+            <argument name="orderId" value="{$orderIdGetOrderIdFromToast}"/>
+            <argument name="status" value="complete"/>
+        </actionGroup>
+
+        <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
+
+        <actionGroup ref="CheckOrderDetailFromBackendActionGroup" stepKey="CheckOrderDetailFromBackendActionGroup">
+            <argument name="orderId" value="{$orderIdGetOrderIdFromToast}"/>
+            <argument name="status" value="Complete"/>
+            <argument name="grandTotal" value="$2.17"/>
+            <argument name="customer" value="{{new_customer.fullName}}"/>
+        </actionGroup>
+    </test>
+</tests>

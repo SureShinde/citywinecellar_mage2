@@ -1,0 +1,127 @@
+<?php
+/**
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+?>
+<div class="grid">
+    <?php $randomId = rand(); ?>
+    <div class="admin__table-wrapper">
+        <table class="data-grid">
+            <thead>
+                <tr>
+                    <th class="data-grid-checkbox-cell">
+                        <label class="data-grid-checkbox-cell-inner">
+                            <input type="checkbox"
+                                   id="select-items-<?php /* @noEscape */ echo $randomId; ?>"
+                                   onchange="packaging.checkAllItems(this);"
+                                   class="checkbox admin__control-checkbox"
+                                   title="<?php /* @escapeNotVerified */ echo __('Select All') ?>">
+                            <label for="select-items-<?php /* @noEscape */ echo $randomId; ?>"></label>
+                        </label>
+                    </th>
+                    <th class="data-grid-th"><?php /* @escapeNotVerified */ echo __('Product Name') ?></th>
+                    <th class="data-grid-th"><?php /* @escapeNotVerified */ echo __('SKU') ?></th>
+                    <th class="data-grid-th"><?php /* @escapeNotVerified */ echo __('Qty Need to Ship') ?></th>
+                    <th class="data-grid-th"><?php /* @escapeNotVerified */ echo __('Qty To Request') ?></th>
+                    <th class="data-grid-th"><?php /* @escapeNotVerified */ echo $block->getResourceTitle() ?></th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php $i=0; ?>
+            <?php foreach ($block->getCollection() as $item): ?>
+                <?php
+                    $_order = $block->getOrder();
+                    $_orderItem = $_order->getItemById($item->getOrderItemId());
+                ?>
+                <?php if ($item->getIsVirtual()
+                    || ($_orderItem->isShipSeparately() && !($_orderItem->getParentItemId() || $_orderItem->getParentItem()))
+                    || (!$_orderItem->isShipSeparately() && ($_orderItem->getParentItemId() || $_orderItem->getParentItem()))): ?>
+                    <?php continue; ?>
+                <?php endif; ?>
+                <tr class="data-grid-controls-row data-row <?php echo ($i++ % 2 != 0) ? '_odd-row' : ''; ?>">
+                    <td class="data-grid-checkbox-cell">
+                        <?php $id = $item->getId() ? $item->getId() : $item->getOrderItemId(); ?>
+                        <label class="data-grid-checkbox-cell-inner">
+                            <input type="checkbox"
+                                   name=""
+                                   id="select-item-<?php /* @noEscape */ echo $randomId . '-' . $id; ?>"
+                                   value="<?php /* @escapeNotVerified */ echo $id; ?>"
+                                   class="checkbox admin__control-checkbox"
+                                   <?php if(count($block->getAvailableSuppliers($_orderItem)) <= 0):?>
+                                       disabled
+                                   <?php endif;?>
+                            >
+                            <label for="select-item-<?php /* @noEscape */ echo $randomId . '-' . $id; ?>"></label>
+                        </label>
+                    </td>
+                    <td>
+                        <?php /* @escapeNotVerified */ echo $item->getName(); ?>
+                    </td>
+                    <td>
+                        <?php /* @escapeNotVerified */ echo $item->getSku(); ?>
+                    </td>
+                    <td>
+                        <?php /* @escapeNotVerified */ echo $item->getOrderItem()->getQtyToShip()*1; ?>
+                    </td>
+                    <td>
+                        <input type="hidden" name="price" value="<?php /* @escapeNotVerified */ echo $item->getPrice(); ?>">
+                        <input type="hidden" class="max-dropship-request-qty" value="<?php /* @escapeNotVerified */ echo $item->getQty()*1; ?>" />
+                        <input type="number"
+                               min="0"
+                               name="qty"
+                               value="<?php /* @escapeNotVerified */ echo $item->getQty()*1; ?>"
+                               class="input-text admin__control-text dropshiprequest-qty qty<?php if ($item->getOrderItem()->getIsQtyDecimal()): ?> qty-decimal<?php endif ?>"
+                               <?php if(count($block->getAvailableSuppliers($_orderItem)) <= 0):?>
+                                   disabled
+                               <?php endif;?>
+                        >&nbsp;
+                    </td>
+
+                    <td data-role="item-resource">
+                        <input type="hidden" class="dropshiprequest-product" value="<?php /* @escapeNotVerified */ echo $block->getSimpleProductId($_orderItem); ?>">
+                        <input type="hidden" class="dropshiprequest-item" value="<?php /* @escapeNotVerified */ echo $block->getSimpleItemId($_orderItem); ?>">
+                        <?php if(count($block->getAvailableSuppliers($_orderItem)) > 0):?>
+                            <select name="resource" class="admin__control-select dropshiprequest-supplier"
+                                <?php if($block->checkSelectedItem($item)): ?> style="display:none" <?php endif?> >
+                                <?php foreach ($block->getAvailableSuppliers($_orderItem) as $supplierId => $supplierData):?>
+                                    <option value="<?php echo $supplierId ?>">
+                                        <?php echo $supplierData['supplier']['supplier_name'].
+                                            ' ('. $supplierData['supplier']['supplier_code'].')'?>
+                                    </option>
+                                <?php endforeach;?>
+                            </select>
+                        <?php else:?>
+                            <div name="resource" class="dropshiprequest-supplier">
+                                <?php echo __('No supplier available')?>
+                            </div>
+                        <?php endif;?>
+                        <button type="button" class="action-delete" data-action="package-delete-item" onclick="packaging.deleteItem(this);" style="display:none;">
+                            <span><?php /* @escapeNotVerified */ echo __('Delete') ?></span>
+                        </button>
+                    </td>
+                </tr>
+                <?php echo $block->renderChildItems($_orderItem) ?>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    var availabelSuppliers = <?php echo $block->getAvailableSuppliersJson()?>;
+    require([
+        "Magestore_DropshipSuccess/js/dropshiprequest/dropshiprequest",
+    ], function(){
+        var dropshipRequest = new DropshipRequest({
+            dropshipRequestQtyClass : 'dropshiprequest-qty',
+            dropshipRequestSupplierClass : 'dropshiprequest-supplier',
+            dropshipRequestProductClass : 'dropshiprequest-product',
+            dropshipRequestItemClass : 'dropshiprequest-item',
+            availabelSuppliers : availabelSuppliers
+        });
+
+    });
+</script>

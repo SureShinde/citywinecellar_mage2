@@ -1,0 +1,55 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+?>
+<?php ?>
+<amp-position-observer on="enter:hideAnim.start; exit:showAnim.start"
+                       layout="nodisplay">
+</amp-position-observer>
+
+<button id="scrollToTopButton"
+        on="tap:ampblog-top.scrollTo(duration=200)"
+        class="scroll-totop">
+    <i class="fas fa-angle-up"></i>
+</button>
+
+<amp-animation id="showAnim"
+               layout="nodisplay">
+    <script type="application/json">
+        {
+            "duration": "200ms",
+            "fill": "both",
+            "iterations": "1",
+            "direction": "alternate",
+            "animations": [{
+                "selector": "#scrollToTopButton",
+                "keyframes": [{
+                    "opacity": "1",
+                    "visibility": "visible"
+                }]
+            }]
+        }
+    </script>
+</amp-animation>
+
+<amp-animation id="hideAnim"
+               layout="nodisplay">
+    <script type="application/json">
+        {
+            "duration": "200ms",
+            "fill": "both",
+            "iterations": "1",
+            "direction": "alternate",
+            "animations": [{
+                "selector": "#scrollToTopButton",
+                "keyframes": [{
+                    "opacity": "0",
+                    "visibility": "hidden"
+                }]
+            }]
+        }
+    </script>
+</amp-animation>

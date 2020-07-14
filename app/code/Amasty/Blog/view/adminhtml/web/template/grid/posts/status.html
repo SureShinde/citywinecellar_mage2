@@ -1,0 +1,12 @@
+<!-- ko if: $row().status == 0 -->
+<span class="amblog-disabled"><span translate="'Disabled'"></span></span>
+<!-- /ko -->
+<!-- ko if: $row().status == 1 -->
+<span class="amblog-hidden"><span translate="'Hidden'"></span></span>
+<!-- /ko -->
+<!-- ko if: $row().status == 2 -->
+<span class="amblog-published"><span translate="'Published'"></span></span>
+<!-- /ko -->
+<!-- ko if: $row().status == 3 -->
+<span class="amblog-scheduled"><span translate="'Scheduled'"></span></span>
+<!-- /ko -->

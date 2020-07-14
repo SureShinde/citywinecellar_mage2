@@ -1,0 +1,41 @@
+<!--@subject {{var store.getFrontendName()}}: Pricelist from supplier {{var supplier.supplierName}}@-->
+<!--@vars
+{"store url=\"\"":"Store Url",
+"var logo_url":"Email Logo Image Url",
+"var logo_alt":"Email Logo Image Alt",
+"htmlescape var receipient_name":"Admin",
+"var store.getFrontendName()":"Store Name"}
+@-->
+{{template config_path="design/email/header_template"}}
+<table>
+    <tr>
+        <td>
+            <table>
+                 <tr>
+                    <td valign="top">
+                        <p class="greeting">{{trans "Dear store owner,"}}</p>
+                        <p>
+                            {{trans 'We are from ' }} {{var supplier.getSupplierName()}}!
+                        </p>
+                        <p>
+                            {{trans 'We are providing some products for your store. Now we have some things new in pricing model so I would like to send you this list to review.}}
+                        </p>
+                        <p>
+                            {{trans 'Please click <a href="%pricelist_url">here</a> to download new pricelist' pricelist_url=$url|raw}}
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>{{trans 'We hope to have other opportunities to do business with you in the near future.' }}</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p style="font-size:12px; margin:0;">{{trans 'Thank you, ' }}<strong>{{var supplier.getSupplierName()}}</strong></p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>

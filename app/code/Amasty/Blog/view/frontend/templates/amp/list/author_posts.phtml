@@ -1,0 +1,13 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+?>
+<?php $post = $block->getPost(); ?>
+<span class="amblog-item -author-posts">
+    <a class="amblog-ref" href="<?= $block->escapeUrl($post->getAuthor()->getUrl()); ?>">
+        <?= $block->escapeHtml(__("More from this author ")); ?>
+    </a>
+</span>

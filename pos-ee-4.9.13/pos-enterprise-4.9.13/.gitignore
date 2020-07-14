@@ -1,0 +1,25 @@
+# dependencies
+/client/pos/node_modules
+/client/pos/build
+/client/pos/build/*
+
+# testing
+/client/pos/coverage
+
+
+# misc
+/client/pos/.DS_Store
+/client/pos/.env.local
+/client/pos/.env.development.local
+/client/pos/.env.test.local
+/client/pos/.env.production.local
+
+/client/pos/npm-debug.log*
+/client/pos/yarn-debug.log*
+/client/pos/yarn-error.log*
+
+.idea/
+magento/
+
+/client/pos/package-lock.json
+**/.DS_Store

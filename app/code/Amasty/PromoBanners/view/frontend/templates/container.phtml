@@ -1,0 +1,18 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_PromoBanners
+ */
+?>
+<?php /* @var $block \Amasty\PromoBanners\Block\Container */ ?>
+
+<div
+    <?php if (!$block->isVisible() || $block->getPosition() == '15'): ?>
+        style="display: none"
+    <?php endif ?>
+        class="ambanners ambanner-<?= $block->getPosition() ?>"
+        data-position="<?= $block->getPosition() ?>"
+        data-bannerid="<?= $block->getBannerId() ?>"
+        data-role="amasty-banner-container"
+></div>

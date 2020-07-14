@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="GoToFirstOrderDetailBackend">
+        <arguments>
+            <argument name="orderId" defaultValue="" type="string"/>
+        </arguments>
+        <!--<openNewTab stepKey="openNewTabForTestBackend" />-->
+        <amOnPage url="{{AdminLoginPage.url}}" stepKey="amOnAdminLoginPage"/>
+        <fillField selector="{{AdminLoginFormSection.username}}" userInput="{{_ENV.MAGENTO_ADMIN_USERNAME}}" stepKey="fillUsername"/>
+        <fillField selector="{{AdminLoginFormSection.password}}" userInput="{{_ENV.MAGENTO_ADMIN_PASSWORD}}" stepKey="fillPassword"/>
+        <click selector="{{AdminLoginFormSection.signIn}}" stepKey="clickOnSignIn"/>
+        <closeAdminNotification stepKey="closeAdminNotification"/>
+        <seeInCurrentUrl url="{{AdminLoginPage.url}}" stepKey="seeAdminLoginUrl"/>
+
+        <amOnPage stepKey="goToOrderListPage" url="{{AdminOrdersPage.url}}"/>
+        <waitForPageLoad stepKey="waitOrderListLoaded"/>
+
+        <waitForLoadingMaskToDisappear stepKey="waitForLoadingMaskToDisappearOnAdminOrdersPage"/>
+        <waitForElementVisible selector="{{AdminOrdersGridSection.search}}" time="180" stepKey="waitForElementSearchVisibleOnAdminSalesOrderPage" after="waitForLoadingMaskToDisappearOnAdminOrdersPage"/>
+        <fillField selector="{{AdminOrdersGridSection.search}}" userInput="{{orderId}}" stepKey="fillOrderNum"/>
+        <click selector="{{AdminOrdersGridSection.submitSearch}}" stepKey="submitSearchOrderNum"/>
+        <waitForLoadingMaskToDisappear stepKey="waitForLoadingMaskToDisappearOnSearch"/>
+
+        <click stepKey="clickViewFirstOrder" selector="{{AdminOrdersGridSection.firstRow}}" />
+
+        <seeInCurrentUrl url="{{AdminOrderDetailsPage.url}}" stepKey="seeOrderDetailUrl"/>
+        <waitForPageLoad stepKey="waitOrderDetailLoaded"/>
+    </actionGroup>
+</actionGroups>

@@ -1,0 +1,17 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+?>
+<?php $tags = $block->getTags(); ?>
+<?php if ($tags && count($tags)): ?>
+    <?php foreach ($tags as $tag): ?>
+        <a class="amblog-tag"
+           href="<?= $block->escapeUrl($tag->getUrl()); ?>"
+           title="<?= $block->escapeHtml($tag->getName()); ?>">
+            <?= $block->escapeHtml($tag->getName()); ?>
+        </a>
+    <?php endforeach; ?>
+<?php endif; ?>

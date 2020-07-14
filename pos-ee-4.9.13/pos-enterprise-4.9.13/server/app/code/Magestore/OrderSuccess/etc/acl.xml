@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="Magestore_OrderSuccess::all"
+                          title="Order Success"
+                          sortOrder="1"
+                          translate="title">
+                    <resource id="Magestore_OrderSuccess::order_process"
+                              title="Order Processing"
+                              sortOrder="10"
+                              translate="title">
+                        <resource id="Magestore_OrderSuccess::need_to_verify"
+                                  title="Verify Orders Listing"
+                                  sortOrder="10"
+                                  translate="title">
+                            <resource id="Magestore_OrderSuccess::verify_order"
+                                      title="Verify Order"
+                                      sortOrder="10"
+                                      translate="title"/>    
+                            <resource id="Magestore_OrderSuccess::verify_order_all_batch"
+                                      title="View all Batchs"
+                                      sortOrder="20"
+                                      translate="title"/>                                
+                        </resource>                   
+                        <resource id="Magestore_OrderSuccess::need_to_ship"
+                                  title="Prepare Ship Listing"
+                                  sortOrder="20"
+                                  translate="title">
+                            <resource id="Magestore_OrderSuccess::prepare_ship"
+                                      title="Prepare Ship"
+                                      sortOrder="10"
+                                      translate="title"/>         
+                            <resource id="Magestore_OrderSuccess::prepare_ship_all_batch"
+                                      title="View all Batchs"
+                                      sortOrder="20"
+                                      translate="title"/>                                                        
+                        </resource>                              
+                        
+                    </resource>  
+                    <resource id="Magestore_OrderSuccess::order_listing"
+                              title="Order Listing"
+                              sortOrder="20"
+                              translate="title">
+                        <resource id="Magestore_OrderSuccess::allorder"
+                                  title="All Orders"
+                                  sortOrder="10"
+                                  translate="title"/>
+                        <resource id="Magestore_OrderSuccess::awaiting_payment"
+                                  title="Awaiting Payment"
+                                  sortOrder="20"
+                                  translate="title"/>       
+                        <resource id="Magestore_OrderSuccess::backorder"
+                                  title="Back Orders"
+                                  sortOrder="30"
+                                  translate="title"/>       
+                        <resource id="Magestore_OrderSuccess::hold"
+                                  title="On Hold Orders"
+                                  sortOrder="40"
+                                  translate="title"/>       
+                        <resource id="Magestore_OrderSuccess::completed"
+                                  title="Completed Order"
+                                  sortOrder="50"
+                                  translate="title"/>       
+                        <resource id="Magestore_OrderSuccess::canceled"
+                                  title="Canceled Orders"
+                                  sortOrder="60"
+                                  translate="title"/>                                                    
+                    </resource>        
+                    <resource id="Magestore_OrderSuccess::setting"
+                              title="Settings"
+                              sortOrder="30"
+                              translate="title">
+                        <resource id="Magestore_OrderSuccess::configuration_menu"
+                                  title="Order Configuration"
+                                  sortOrder="10"
+                                  translate="title"/>                          
+                    </resource>                                    
+                </resource>
+
+                <resource id="Magento_Backend::stores">
+                    <resource id="Magento_Backend::stores_settings">
+                        <resource id="Magento_Config::config">
+                            <resource id="Magestore_OrderSuccess::configuration"
+                                      title="Order Configuration"
+                                      translate="title"/>
+                        </resource>
+                    </resource>
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>

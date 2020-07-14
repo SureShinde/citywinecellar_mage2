@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="editor"/>
+    <head>
+        <css src="Amasty_Blog::css/edit.css"/>
+        <css src="Amasty_Blog::css/jquery.tagit.css"/>
+        <css src="Amasty_Blog::css/tagit.ui-zendesk.css"/>
+        <link src="Amasty_Blog::variables.js"/>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <uiComponent name="posts_form"/>
+        </referenceContainer>
+
+        <referenceContainer name="js">
+            <block class="Amasty\Blog\Block\Adminhtml\Posts\Edit\PreviewJsInit" name="amblog.preview.js" template="Amasty_Blog::posts/edit/preview_js_init.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

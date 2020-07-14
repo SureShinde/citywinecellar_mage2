@@ -1,0 +1,12 @@
+<div class="actions-toolbar">
+    <div class="primary" style="float: right">
+        <button type="button" onclick="submitCreateDropShipShipment()" class="action save primary" data-action="save-address" title="<?php echo __('Create shipment') ?>">
+            <span><?php echo __('Create shipment') ?></span>
+        </button>
+    </div>
+    <div class="secondary">
+        <button type="button" onclick="cancelDropshipRequest('<?php echo $block->getCancelUrl() ?>');" class="action save" data-action="save-address" title="<?php echo __('Cancel Dropship') ?>">
+            <span><?php echo __('Cancel Dropship') ?></span>
+        </button>
+    </div>
+</div>

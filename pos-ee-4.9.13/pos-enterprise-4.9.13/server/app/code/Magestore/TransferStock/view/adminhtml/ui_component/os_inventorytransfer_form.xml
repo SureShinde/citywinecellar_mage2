@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">os_inventorytransfer_form.os_inventorytransfer_form_data_source
+            </item>
+            <item name="deps" xsi:type="string">os_inventorytransfer_form.os_inventorytransfer_form_data_source</item>
+            <item name="namespace" xsi:type="string">os_inventorytransfer_form</item>
+        </item>
+        <item name="buttons" xsi:type="array">
+            <item name="start" xsi:type="string">Magestore\TransferStock\Block\Adminhtml\InventoryTransfer\Edit\Button\Save</item>
+        </item>
+        <item name="template" xsi:type="string">templates/form/collapsible</item>
+        <item name="childrenFromMeta" xsi:type="boolean">true</item>
+    </argument>
+    <dataSource name="os_inventorytransfer_form_data_source">
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">Magestore\TransferStock\Ui\DataProvider\InventoryTransfer\Form\InventoryTransfer</argument>
+            <argument name="name" xsi:type="string">os_inventorytransfer_form_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">inventorytransfer_id</argument>
+            <argument name="requestFieldName" xsi:type="string">id</argument>
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="submit_url" xsi:type="url" path="*/inventoryTransfer/save"/>
+                </item>
+            </argument>
+        </argument>
+        <argument name="data" xsi:type="array">
+            <item name="js_config" xsi:type="array">
+                <item name="component" xsi:type="string">Magento_Ui/js/form/provider</item>
+            </item>
+        </argument>
+    </dataSource>
+    <!--General Information-->
+    <fieldset name="general_information">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="label" xsi:type="string" translate="true">General Information</item>
+                <item name="collapsible" xsi:type="boolean">true</item>
+                <item name="opened" xsi:type="boolean">true</item>
+                <item name="dataScope" xsi:type="string">data</item>
+            </item>
+        </argument>
+        <field name="source_warehouse_code">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">Magestore\TransferStock\Model\Source\Adminhtml\Source</item>
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="formElement" xsi:type="string">select</item>
+                    <item name="source" xsi:type="string">inventorytransfer</item>
+                    <item name="label" xsi:type="string" translate="true">From</item>
+                    <item name="component" xsi:type="string">Magestore_TransferStock/js/form/element/source</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+        <field name="des_warehouse_code">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">Magestore\TransferStock\Model\Source\Adminhtml\Source</item>
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="formElement" xsi:type="string">select</item>
+                    <item name="source" xsi:type="string">inventorytransfer</item>
+                    <item name="label" xsi:type="string" translate="true">To</item>
+                    <item name="component" xsi:type="string">Magestore_TransferStock/js/form/element/des</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+        <field name="reason">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="source" xsi:type="string">inventorytransfer</item>
+                    <item name="formElement" xsi:type="string">textarea</item>
+                    <item name="label" xsi:type="string" translate="true">Reason</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="validate-no-html-tags" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+    </fieldset>
+</form>

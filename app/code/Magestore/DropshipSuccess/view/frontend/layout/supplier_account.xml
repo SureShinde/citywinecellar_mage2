@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd" label="Dropship Management" design_abstraction="custom">
+    <body>
+        <attribute name="class" value="account"/>
+        <referenceBlock  name="my-account-link" remove="true"/>
+        <referenceBlock name="top.links" remove="true"/>
+        <referenceContainer name="page.top" remove="true"/>
+        <referenceContainer name="header.container">
+            <container name="header.panel.wrapper" ></container>
+            <container name="header-wrapper" ></container>
+            <block class="Magestore\DropshipSuccess\Block\Supplier\Layout\Welcome" name="dropship-welcome" as="dropship-welcome" template="Magestore_DropshipSuccess::supplier/layout/welcome.phtml" />
+            <container name="header-wrapper-dropship" label="Page Header" as="header-wrapper-dropship" htmlTag="div" htmlClass="header content">
+                <block class="Magento\Theme\Block\Html\Header\Logo" name="logo">
+                    <arguments>
+                        <argument name="logo_img_width" xsi:type="number">189</argument>
+                        <argument name="logo_img_height" xsi:type="number">64</argument>
+                    </arguments>
+                </block>
+            </container>
+        </referenceContainer>
+        <referenceContainer name="sidebar.main">
+            <block class="Magento\Framework\View\Element\Html\Links" name="dropship_supplier_navigation" before="-" template="Magestore_DropshipSuccess::supplier/account/navigation.phtml">
+                <block class="Magento\Framework\View\Element\Html\Link\Current" name="supplier_dropship">
+                    <arguments>
+                        <argument name="label" xsi:type="string" translate="true">Dropship</argument>
+                        <argument name="path" xsi:type="string">dropship/supplier</argument>
+                    </arguments>
+                </block>
+                <block class="Magento\Framework\View\Element\Html\Link\Current" name="supplier_information">
+                    <arguments>
+                        <argument name="label" xsi:type="string" translate="true">Supplier Information</argument>
+                        <argument name="path" xsi:type="string">dropship/supplier/edit</argument>
+                    </arguments>
+                </block>
+                <block class="Magento\Framework\View\Element\Html\Link\Current" name="supplier_products">
+                    <arguments>
+                        <argument name="label" xsi:type="string" translate="true">Products</argument>
+                        <argument name="path" xsi:type="string">dropship/supplier/product</argument>
+                    </arguments>
+                </block>
+                <block class="Magento\Framework\View\Element\Html\Link\Current" name="supplier_pricing_list">
+                    <arguments>
+                        <argument name="label" xsi:type="string" translate="true">Pricelist</argument>
+                        <argument name="path" xsi:type="string">dropship/supplier/pricelist</argument>
+                    </arguments>
+                </block>
+                <block class="Magento\Framework\View\Element\Html\Link\Current" name="supplier_logout">
+                    <arguments>
+                        <argument name="label" xsi:type="string" translate="true">Logout</argument>
+                        <argument name="path" xsi:type="string">dropship/supplier/logout</argument>
+                    </arguments>
+                </block>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

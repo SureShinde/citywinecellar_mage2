@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">os_fulfilsuccess_package_listing.package_listing_data_source</item>
+            <item name="deps" xsi:type="string">os_fulfilsuccess_package_listing.package_listing_data_source</item>
+        </item>
+        <item name="spinner" xsi:type="string">shipment_listing_columns</item>
+        <item name="buttons" xsi:type="array">
+            <item name="pick_item" xsi:type="string">Magestore\FulfilSuccess\Block\Adminhtml\PickRequest\Button\PickItemButton</item>
+            <item name="pack_item" xsi:type="string">Magestore\FulfilSuccess\Block\Adminhtml\PackRequest\Button\PackItemButton</item>
+            <item name="package" xsi:type="string">Magestore\FulfilSuccess\Block\Adminhtml\Package\Button\PackageButton</item>
+        </item>
+    </argument>
+    <dataSource name="package_listing_data_source">
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider</argument>
+            <argument name="name" xsi:type="string">package_listing_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">package_id</argument>
+            <argument name="requestFieldName" xsi:type="string">id</argument>
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="component" xsi:type="string">Magento_Ui/js/grid/provider</item>
+                    <item name="referer_url" xsi:type="url" path="fulfilsuccess/package/index"/>
+                    <item name="update_url" xsi:type="url" path="mui/index/render"/>
+                </item>
+            </argument>
+        </argument>
+    </dataSource>
+    <container name="warehouse">
+        <field name="warehouse_select" class="Magestore\FulfilSuccess\Ui\DataProvider\Package\SelectWarehouse">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">Magestore\FulfilSuccess\Model\Package\Warehouse\Options</item>
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="formElement" xsi:type="string">select</item>
+                    <item name="component" xsi:type="string">Magestore_FulfilSuccess/js/fulfilrequest/warehouse</item>
+                    <item name="dataScope" xsi:type="string">warehouse_select</item>
+                    <item name="template" xsi:type="string">Magestore_FulfilSuccess/fulfilrequest/warehouse</item>
+                </item>
+            </argument>
+        </field>
+    </container>   
+    <container name="scan_package_form">
+        <insertForm name="os_fulfilsuccess_scan_package_form">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="autoRender" xsi:type="boolean">true</item>
+                    <item name="ns" xsi:type="string">os_fulfilsuccess_scan_package_form</item>
+                    <item name="component" xsi:type="string">Magestore_FulfilSuccess/js/components/form/insert-form</item>
+                    <item name="cssclass" xsi:type="string">os_fulfilsuccess_package_scan_form</item>
+                </item>
+            </argument>
+        </insertForm>
+    </container>
+    <container name="separator">
+        <field name="separator">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="template" xsi:type="string">Magestore_FulfilSuccess/form/separator</item>
+                </item>
+            </argument>
+        </field>
+    </container> 
+    <listingToolbar name="listing_top">
+        <filters name="listing_filters">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="component" xsi:type="string">Magestore_FulfilSuccess/js/grid/filters/filters</item>
+                    <item name="displayArea" xsi:type="string">dataGridFilters</item>
+                    <item name="dataScope" xsi:type="string">filters</item>
+                    <item name="storageConfig" xsi:type="array">
+                        <item name="provider" xsi:type="string">ns = ${ $.ns }, index = bookmarks</item>
+                        <item name="namespace" xsi:type="string">current.filters</item>
+                    </item>
+                </item>
+                <item name="observers" xsi:type="array">
+                    <item name="column" xsi:type="string">column</item>
+                </item>
+            </argument>
+            <filterSelect name="store_id">
+                <argument name="optionsProvider" xsi:type="configurableObject">
+                    <argument name="class" xsi:type="string">Magento\Store\Ui\Component\Listing\Column\Store\Options</argument>
+                </argument>
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="provider" xsi:type="string">${ $.parentName }</item>
+                        <item name="imports" xsi:type="array">
+                            <item name="visible" xsi:type="string">ns = ${ $.ns }, componentType = column, index = ${ $.index }:visible</item>
+                        </item>
+                        <item name="caption" xsi:type="string" translate="true">All Store Views</item>
+                        <item name="dataScope" xsi:type="string">store_id</item>
+                        <item name="label" xsi:type="string" translate="true">Purchased From</item>
+                    </item>
+                </argument>
+            </filterSelect>
+        </filters>
+        <massaction name="listing_massaction">
+            <action name="pdfshipments_order">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="type" xsi:type="string">pdfshipments_order</item>
+                        <item name="label" xsi:type="string" translate="true">Print Packing Slips</item>
+                        <item name="url" xsi:type="url" path="fulfilsuccess/package/pdfshipments"/>
+                    </item>
+                </argument>
+            </action>
+            <action name="print_shipping_label">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="type" xsi:type="string">print_shipping_label</item>
+                        <item name="label" xsi:type="string" translate="true">Print Shipping Labels</item>
+                        <item name="url" xsi:type="url" path="fulfilsuccess/package/massPrintShippingLabel"/>
+                    </item>
+                </argument>
+            </action>
+        </massaction>
+        <paging name="listing_paging"/>
+        <bookmark name="bookmarks"/>
+        <columnsControls name="columns_controls"/>
+        <exportButton name="export_button"/>
+    </listingToolbar>
+    <columns name="shipment_listing_columns">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="childDefaults" xsi:type="array">
+                    <item name="fieldAction" xsi:type="array">
+                        <item name="provider" xsi:type="string">os_fulfilsuccess_package_listing.os_fulfilsuccess_package_listing.shipment_listing_columns.actions</item>
+                        <item name="target" xsi:type="string">applyAction</item>
+                        <item name="params" xsi:type="array">
+                            <item name="0" xsi:type="string">view</item>
+                            <item name="1" xsi:type="string">${ $.$data.rowIndex }</item>
+                        </item>
+                    </item>
+                </item>
+            </item>
+        </argument>
+        <selectionsColumn name="ids">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="indexField" xsi:type="string">package_id</item>
+                    <item name="preserveSelectionsOnFilter" xsi:type="boolean">true</item>
+                </item>
+            </argument>
+        </selectionsColumn>
+        <column name="package_id">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">text</item>
+                    <item name="sorting" xsi:type="string">asc</item>
+                    <item name="label" xsi:type="string" translate="true">Package #</item>
+                </item>
+            </argument>
+        </column>
+        <column name="order_increment_id" class="Magestore\FulfilSuccess\Ui\Component\Listing\Columns\PickRequest\Renderer\OrderIncrementId">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="indexField" xsi:type="string">order_id</item>
+                    <item name="filter" xsi:type="string">text</item>
+                    <item name="component" xsi:type="string">Magento_Ui/js/grid/columns/actions</item>
+                    <item name="draggable" xsi:type="boolean">true</item>
+                    <item name="label" xsi:type="string" translate="true">Order #</item>
+                    <item name="sortOrder" xsi:type="number">20</item>
+                    <item name="fieldClass" xsi:type="array">
+                        <item name="data-grid-actions-cell" xsi:type="boolean">false</item>
+                    </item>
+                </item>
+            </argument>
+        </column>
+        <column name="shipping_name">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Ship-to Name</item>
+                </item>
+            </argument>
+        </column>
+        <column name="created_at" class="Magento\Ui\Component\Listing\Columns\Date">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">dateRange</item>
+                    <item name="component" xsi:type="string">Magento_Ui/js/grid/columns/date</item>
+                    <item name="dataType" xsi:type="string">date</item>
+                    <item name="label" xsi:type="string" translate="true">Ship Date</item>
+                </item>
+            </argument>
+        </column>
+        <column name="total_qty">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">textRange</item>
+                    <item name="label" xsi:type="string" translate="true">Total Quantity</item>
+                </item>
+            </argument>
+        </column>
+        <column name="shipping_address" class="Magento\Sales\Ui\Component\Listing\Column\Address">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">text</item>
+                    <item name="bodyTmpl" xsi:type="string">ui/grid/cells/html</item>
+                    <item name="label" xsi:type="string" translate="true">Shipping Address</item>
+                </item>
+            </argument>
+        </column>
+        <column name="shipping_information" class="Magestore\FulfilSuccess\Ui\Component\Listing\Columns\ShippingInformation">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Shipping Information</item>
+                </item>
+            </argument>
+        </column>
+        <actionsColumn name="actions" class="Magestore\FulfilSuccess\Ui\Component\Listing\Columns\Package\Actions">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="component" xsi:type="string">Magestore_FulfilSuccess/js/package/grid/columns/track</item>
+                    <item name="draggable" xsi:type="boolean">false</item>
+                    <item name="indexField" xsi:type="string">track_id</item>
+                    <item name="urlEntityParamName" xsi:type="string">track_id</item>
+                    <item name="label" xsi:type="string" translate="true">Tracking Number</item>
+                    <item name="filter" xsi:type="string">text</item>
+                    <item name="sortOrder" xsi:type="number">150</item>
+                </item>
+            </argument>
+        </actionsColumn>
+        <actionsColumn name="show_package" class="Magestore\FulfilSuccess\Ui\Component\Listing\Columns\Package\Detail">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="draggable" xsi:type="boolean">false</item>
+                    <item name="component" xsi:type="string">Magestore_FulfilSuccess/js/package/grid/columns/detail</item>
+                    <item name="indexField" xsi:type="string">package_id</item>
+                    <item name="sortable" xsi:type="boolean">false</item>
+                    <item name="label" xsi:type="string" translate="true">Action</item>
+                    <item name="sortOrder" xsi:type="number">200</item>
+                </item>
+            </argument>
+        </actionsColumn>
+    </columns>
+</listing>

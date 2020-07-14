@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AddStripePayment">
+        <annotations>
+            <features value="Payment"/>
+            <stories value="Stripe Payment"/>
+            <title value="Pay fully with Stripe"/>
+            <description value="Pay fully with Stripe"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="SPM-09"/>
+            <!-- <group value="addFullyStripe"/>
+            <group value="pwapos"/> -->
+        </annotations>
+
+        <before>
+            <createData stepKey="setDefaultWebposConfig" entity="default_webpos_config" />
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <actionGroup ref="AddProductAndCharge" stepKey="AddProductAndCharge">
+                <argument name="dataProduct" value="pos_simple_product_2" />
+            </actionGroup>
+            <waitForElementVisible selector="{{PosCheckoutCartTotalsSection.cartTotalsBlock}}" time="120" stepKey="waitForCartTotalsVisible"/>
+        </before>
+
+        <click selector="{{PaymentSection.stripeButton}}" stepKey="clickStripeButton"/>
+
+        <waitForElementVisible selector="{{PaymentSection.swipeArea}}" time="60" stepKey="waitToSwipe"/>
+
+        <grabTextFrom selector="{{CheckoutSection.grandTotal}}" stepKey="grabAmount"/>
+        <assertEquals stepKey="assertFullPaymentValue" message="Assert Full Payment Value">
+            <expectedResult type="string">{{stripe_full_pos_simple_product_2.fullPayment}}</expectedResult>
+            <actualResult type="variable">grabAmount</actualResult>
+        </assertEquals>
+
+        <actionGroup ref="FillCreditCard" stepKey="FillCreditCard">
+            <argument name="credit_card" value="default_credit_card"/>
+        </actionGroup>
+
+        <grabTextFrom selector="{{CheckoutSection.paymentTotal}}" stepKey="grabRemaining"/>
+        <assertEquals stepKey="assertRemaining" message="Assert Remaining">
+            <expectedResult type="string">{{stripe_full_pos_simple_product_2.remaining}}</expectedResult>
+            <actualResult type="variable">grabRemaining</actualResult>
+        </assertEquals>
+
+        <grabTextFrom selector="{{CheckoutSection.CompleteOrder}}" stepKey="grabTextButton"/>
+        <assertEquals stepKey="assertPartial" message="Text is Complete Order">
+            <expectedResult type="string">Complete Order</expectedResult>
+            <actualResult type="variable">grabTextButton</actualResult>
+        </assertEquals>
+
+        <actionGroup ref="DisablePrintPopup" stepKey="DisablePrintPopup"/>
+        <actionGroup ref="Checkout" stepKey="PlaceOrder" />
+
+        <!--Check place order success massage-->
+        <waitForElementVisible selector="{{ToastSection.message}}" time="60" stepKey="waitForSuccessMessage"/>
+        <grabTextFrom selector="{{ToastSection.message}}" stepKey="grabMessageText"/>
+        <assertContains message="Check message is correct." stepKey="checkMassageIsCorrect1">
+            <expectedResult type="string">Order #</expectedResult>
+            <actualResult type="variable">grabMessageText</actualResult>
+        </assertContains>
+        <assertContains message="Check message is correct." stepKey="checkMassageIsCorrect2">
+            <expectedResult type="string">has been created successfully!</expectedResult>
+            <actualResult type="variable">grabMessageText</actualResult>
+        </assertContains>
+        <!--End: Check place order success massage-->
+
+    </test>
+
+    <test name="AddPartialStripePayment">
+        <annotations>
+            <features value="Payment"/>
+            <stories value="Stripe Payment"/>
+            <title value="Pay partial with Stripe"/>
+            <description value="Pay partial with Stripe"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="SPM-10"/>
+            <!-- <group value="addPartialStripe"/>
+            <group value="pwapos"/> -->
+        </annotations>
+
+        <before>
+            <createData stepKey="setDefaultWebposConfig" entity="default_webpos_config" />
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <actionGroup ref="AddProductAndCharge" stepKey="AddProductAndCharge">
+                <argument name="dataProduct" value="pos_simple_product_2" />
+            </actionGroup>
+            <waitForElementVisible selector="{{PosCheckoutCartTotalsSection.cartTotalsBlock}}" time="120" stepKey="waitForCartTotalsVisible"/>
+            <waitForElementVisible selector="{{PaymentSection.stripeButton}}" time="120" stepKey="waitForStripeVisible"/>
+        </before>
+
+        <click selector="{{PaymentSection.stripeButton}}" stepKey="clickStripeButton"/>
+        <waitForElementVisible selector="{{PaymentSection.swipeArea}}" time="60" stepKey="waitToSwipe"/>
+
+        <grabTextFrom selector="{{CheckoutSection.grandTotal}}" stepKey="grabAmount"/>
+        <assertEquals stepKey="assertFullPaymentValue" message="Assert Full Payment Value">
+            <expectedResult type="string">{{stripe_partial_pos_simple_product_2.fullPayment}}</expectedResult>
+            <actualResult type="variable">grabAmount</actualResult>
+        </assertEquals>
+
+        <click selector="{{PosCheckoutPaymentSection.amount}}" stepKey="clickStripeAmount"/>
+        <pressKey selector="{{PosCheckoutPaymentSection.numpad}}" userInput="{{stripe_partial_pos_simple_product_2.partialAmount}}" stepKey="enterAmount"/>
+        <click selector="{{PosCheckoutPaymentSection.closeNumpad}}" stepKey="clickCloseNumpad"/>
+        <actionGroup ref="FillCreditCard" stepKey="FillCreditCard">
+            <argument name="credit_card" value="default_credit_card"/>
+        </actionGroup>
+
+        <grabTextFrom selector="{{CheckoutSection.paymentTotal}}" stepKey="grabRemaining"/>
+        <assertEquals stepKey="assertRemaining" message="Assert Remaining">
+            <expectedResult type="string">{{stripe_partial_pos_simple_product_2.remaining}}</expectedResult>
+            <actualResult type="variable">grabRemaining</actualResult>
+        </assertEquals>
+
+        <grabTextFrom selector="{{CheckoutSection.CompleteOrder}}" stepKey="grabTextButton"/>
+        <assertEquals stepKey="assertPartial" message="Text is Mark as Partial">
+            <expectedResult type="string">Mark as Partial</expectedResult>
+            <actualResult type="variable">grabTextButton</actualResult>
+        </assertEquals>
+
+        <actionGroup ref="DisablePrintPopup" stepKey="DisablePrintPopup"/>
+        <actionGroup ref="Checkout" stepKey="PlaceOrder" />
+
+        <waitForElementVisible selector="{{CheckoutSection.popupConfirmPartial}}" time="120" stepKey="waitPopupConfirmedPartial"/>
+        <waitForElementVisible selector="{{CheckoutSection.popupConfirmPartialButtonComplete}}" time="120" stepKey="waitButtonCompleteButtonVisible"/>
+        <wait time="1" stepKey="waitBeforeClickComplete"/>
+        <click selector="{{CheckoutSection.popupConfirmPartialButtonComplete}}" stepKey="clickToCompleteButton"/>
+
+        <!--Check place order success massage-->
+        <waitForElementVisible selector="{{ToastSection.message}}" time="60" stepKey="waitForSuccessMessage"/>
+        <grabTextFrom selector="{{ToastSection.message}}" stepKey="grabMessageText"/>
+
+        <assertContains message="Check message is correct." stepKey="checkMassageIsCorrect1">
+            <expectedResult type="string">Order #</expectedResult>
+            <actualResult type="variable">grabMessageText</actualResult>
+        </assertContains>
+        <assertContains message="Check message is correct." stepKey="checkMassageIsCorrect2">
+            <expectedResult type="string">has been created successfully!</expectedResult>
+            <actualResult type="variable">grabMessageText</actualResult>
+        </assertContains>
+        <!--End: Check place order success massage-->
+    </test>
+</tests>

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_PromoBanners
+ */
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Amasty_PromoBanners::ampromobanners" title="Banners" module="Amasty_PromoBanners"
+             sortOrder="100" parent="Magento_CatalogRule::promo" action="ampromobanners/banners/index"
+             resource="Amasty_PromoBanners::ampromobanners"/>
+    </menu>
+</config>

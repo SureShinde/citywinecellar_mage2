@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="amblog_amp_default"/>
+
+    <body>
+        <referenceBlock name="blog.page">
+            <referenceContainer name="layout.content">
+                <block class="Amasty\Blog\Block\Content\Post" name="post" template="Amasty_Blog::amp/post.phtml">
+                    <block class="Amasty\Blog\Block\Social"
+                           name="amblog_social"
+                           as="amblog_social"
+                           template="Amasty_Blog::amp/social.phtml"/>
+
+                    <block class="Amasty\Blog\Block\Content\Post\Related"
+                           name="amblog.post.related"
+                           template="Amasty_Blog::amp/post/related.phtml"/>
+
+                    <block class="Amasty\Blog\Block\Comments\Form"
+                           name="amblog.comments.form"
+                           template="Amasty_Blog::amp/comments/form.phtml"/>
+
+                    <block class="Amasty\Blog\Block\Comments"
+                           name="amblog.comments.list"
+                           as="amblog.comments.list"
+                           template="Amasty_Blog::amp/comments/list.phtml">
+                        <block class="Amasty\Blog\Block\Comments\Message"
+                               name="amblog_comments_message"
+                               template="Amasty_Blog::amp/comments/list/message.phtml"/>
+                    </block>
+                </block>
+            </referenceContainer>
+        </referenceBlock>
+    </body>
+</page>

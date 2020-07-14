@@ -1,0 +1,39 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+?>
+<?php
+/** @var $block \Amasty\Blog\Block\Comments */
+$collection = $block->getCollection();
+?>
+
+<div data-amblog-js="livestream">
+    <div data-amblog-js="comments_wrapper">
+        <?php if ($collection && $collection->getSize()) : ?>
+            <?php foreach ($collection as $message) : ?>
+                <?= $block->getMessageHtml($message); ?>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </div>
+    <div class="amblog-comment-reply" id="amblog-comment-form"></div>
+</div>
+
+<script>
+    require([
+        'jquery',
+        'Amasty_Blog/js/amblog/comments',
+        'domReady!'
+    ], function ($) {
+        $('[data-amblog-js="livestream"]').amblogComments({
+            form_selector: '.amblog-comment-reply',
+            form_url: '<?= $block->escapeUrl($block->getFormUrl()) ?>',
+            update_url: '<?= $block->escapeUrl($block->getUpdateUrl()) ?>',
+            post_url: '<?= $block->escapeUrl($block->getPostUrl()) ?>',
+            post_id: '<?= $block->escapeHtml($block->getPostId()); ?>',
+            session_id: '<?= $block->escapeHtml($block->getSessionId()); ?>'
+        });
+    });
+</script>

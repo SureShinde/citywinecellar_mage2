@@ -1,0 +1,40 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+?>
+<?php
+/** @var \Amasty\Blog\Block\Layout $block */
+
+$ampSidebarSide = $block->hasMobileLeftColumn() ? 'left' : 'right';
+?>
+
+<amp-sidebar id="sidebar"
+             layout="nodisplay"
+             side="<?= /* @noEscape */ $ampSidebarSide; ?>"
+             class="amblog-amp-sidebar">
+    <div class="amp-close-image"
+         on="tap:sidebar.close"
+         role="button"
+         tabindex="0">&#10799;</div>
+    <div class="amblog-sidebar-content amblog-amp-navigation">
+        <?php if ($block->hasMobileLeftColumn()) : ?>
+            <?php foreach ($block->getMobileBlocks('left_side') as $alias) : ?>
+                <?= $block->getSidebarBlockHtml($alias); ?>
+            <?php endforeach; ?>
+        <?php endif; ?>
+
+        <?php if ($block->hasMobileRightColumn()) : ?>
+            <?php foreach ($block->getMobileBlocks('right_side') as $alias) : ?>
+                <?= $block->getSidebarBlockHtml($alias); ?>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </div>
+</amp-sidebar>
+
+<div class="amp-blog-nav" on="tap:sidebar.toggle" role="button" tabindex="0">
+    <?=  $block->escapeHtml(__("Blog's Menu")); ?>
+    <i class="fas fa-chevron-right arrow"></i>
+</div>

@@ -1,0 +1,95 @@
+
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">os_fulfilsuccess_picked_listing.picked_listing_data_source</item>
+            <item name="deps" xsi:type="string">os_fulfilsuccess_picked_listing.picked_listing_data_source</item>
+        </item>
+        <item name="spinner" xsi:type="string">picked_listing_columns</item>
+    </argument>
+    <dataSource name="picked_listing_data_source">
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">Magestore\FulfilSuccess\Ui\DataProvider\PickRequest\PickedItems</argument>
+            <argument name="name" xsi:type="string">picked_listing_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">item_id</argument>
+            <argument name="requestFieldName" xsi:type="string">id</argument>
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="component" xsi:type="string">Magento_Ui/js/grid/provider</item>
+                    <item name="update_url" xsi:type="url" path="mui/index/render"/>
+                    <item name="storageConfig" xsi:type="array">
+                        <item name="indexField" xsi:type="string">id</item>
+                    </item>
+                </item>
+            </argument>
+        </argument>
+    </dataSource>
+    <container name="listing_top">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="template" xsi:type="string">ui/grid/toolbar</item>
+                <item name="sticky" xsi:type="boolean">false</item>
+            </item>
+        </argument>
+        <paging name="listing_paging"/>
+    </container>
+    <columns name="picked_listing_columns">
+        <column name="item_id">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">text</item>
+                    <item name="visible" xsi:type="boolean">false</item>
+                    <item name="label" xsi:type="string" translate="true">ID</item>
+                </item>
+            </argument>
+        </column>
+        <column name="item_name">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">PRODUCT</item>
+                </item>
+            </argument>
+        </column>
+        <column name="item_barcode">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">BARCODE</item>
+                    <item name="fieldClass" xsi:type="string">column-width-30</item>
+                </item>
+            </argument>
+        </column>
+        <column name="item_sku">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">SKU</item>
+                </item>
+            </argument>
+        </column>
+        <column name="request_qty">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">QTY TO PICK</item>
+                </item>
+            </argument>
+        </column>
+        <column name="picked_qty">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">false</item>
+                    <item name="label" xsi:type="string" translate="true">QTY PICKED</item>
+                    <item name="component" xsi:type="string">Magestore_FulfilSuccess/js/components/grid/columns/picked-qty</item>
+                    <item name="additionalClasses" xsi:type="string">text-center width-small</item>
+                </item>
+            </argument>
+        </column>
+    </columns>
+</listing>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="GrandTotalWithoutTaxTest">
+        <annotations>
+            <features value="Grand Total"/>
+            <stories value="Display Grand Total"/>
+            <title value="Display exactly the amount of Grand Total when the order has not tax, discount and shipping amount."/>
+            <description value="Display exactly the amount of Grand Total when the order has tax, discount and shipping amount."/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="CGT-04"/>
+            <group value="grandTotalWithoutTaxTest"/>
+            <group value="pwapos"/>
+        </annotations>
+        <before>
+        </before>
+        <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage">
+            <argument name="staff" value="staff_with_one_location_one_pos"/>
+        </actionGroup>
+
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" time="120" stepKey="waitCatalogVisible"/>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart">
+        </actionGroup>
+
+        <actionGroup ref="CustomSaleAddToCart" stepKey="CustomSaleAddToCart">
+            <argument name="custom_sale" value="custom_sale" />
+        </actionGroup>
+
+        <click selector="{{CartSection.chargeButton}}" stepKey="clickChargeButton" />
+
+        <waitForElementVisible selector="{{PosCheckoutPaymentSection.wrapperPayment}}" stepKey="waitWrapperPaymentVisible" />
+
+        <!-- Check grand total -->
+        <grabTextFrom selector="{{TotalSection.grandTotal}}" stepKey="grabGrandTotal"/>
+        <assertEquals message="Grand total is correct." stepKey="compareGrandTotal">
+            <expectedResult type="string">$32.00</expectedResult>
+            <actualResult type="variable">grabGrandTotal</actualResult>
+        </assertEquals>
+        <!-- Subtotal total -->
+        <grabTextFrom selector="{{TotalSection.subTotal}}" stepKey="grabSubtotal"/>
+        <assertEquals message="Subtotal is correct." stepKey="compareSubtotal">
+            <expectedResult type="string">$32.00</expectedResult>
+            <actualResult type="variable">grabSubtotal</actualResult>
+        </assertEquals>
+
+        <seeElement selector="{{TotalSection.shippingAdd}}" stepKey="seeAddShippingButton" />
+        <seeElement selector="{{TotalSection.totalDiscount}}" stepKey="seeTotalDiscount" />
+    </test>
+</tests>

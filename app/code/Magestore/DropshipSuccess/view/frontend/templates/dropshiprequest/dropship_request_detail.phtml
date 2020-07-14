@@ -1,0 +1,56 @@
+<?php
+/**
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/** @var \Magestore\DropshipSuccess\Block\DropshipRequest\DropshipRequestDetail $block */
+?>
+
+<form id="dropship_request_form" method="post" action="<?php /* @escapeNotVerified */ echo $block->getSubmitUrl() ?>">
+    <?php echo $block->getLayout()->getMessagesBlock()->getGroupedHtml() ?>
+    <input type="hidden" id="dropship_request_id" name="dropship_request_id" value="<?php echo $block->getDropshipRequestId(); ?>"/>
+    <input type="hidden" id="supplier_id" name="supplier_id" value="<?php echo $block->getSupplierId(); ?>"/>
+    <input type="hidden" id="order_id" name="order_id" value="<?php echo $block->getOrderId(); ?>"/>
+    <section class="admin__page-section">
+        <?php echo $block->getCustomerInfo() ?>
+        <?php echo $block->getBeforeItemsHtml() ?>
+        <?php echo $block->getTrackingHtml() ?>
+        <?php echo $block->getItemsHtml() ?>
+        <?php echo $block->getButtonHtml() ?>
+    </section>
+    <script type="text/javascript">
+        /** validate number */
+        function validateNumber(item, max) {
+            if (item.value < 0) {
+                item.value = 0
+            }
+            if (parseFloat(item.value) > parseFloat(max)) {
+                item.value = max
+            }
+        }
+
+        /** cancel dropship request */
+        require([
+            "jquery",
+            "mage/loader",
+            "mage/adminhtml/form"
+        ], function(jQuery){
+            /** cancel dropship request */
+            window.cancelDropshipRequest = function(url) {
+                var r = confirm("<?php echo __('Are you sure to cancel this dropship request?') ?>");
+                if (r == true) {
+                    jQuery('body').loader('show');
+                    url = url + (url.match(new RegExp('\\?')) ? '&isAjax=true' : '?isAjax=true');
+                    location.href = url;
+                } else {
+                    return false;
+                }
+            };
+            window.submitCreateDropShipShipment = function() {
+                jQuery('body').loader('show');
+                jQuery('#dropship_request_form').submit();
+            }
+        });
+    </script>
+</form>

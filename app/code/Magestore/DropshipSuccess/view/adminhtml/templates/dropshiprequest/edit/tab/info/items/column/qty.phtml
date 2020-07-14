@@ -1,0 +1,46 @@
+<?php
+/**
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+if ($_item = $block->getItem()): ?>
+<table class="qty-table">
+    <tr>
+        <th><?php /* @escapeNotVerified */ echo __('Ordered') ?></th>
+        <td><?php /* @escapeNotVerified */ echo $_item->getQtyOrdered()*1 ?></td>
+    </tr>
+    
+    <?php $qtyRequested = $_item->getQtyRequested();?>
+    <?php if ((float) $qtyRequested): ?>
+        <tr>
+            <th><?php /* @escapeNotVerified */ echo __('Requested') ?></th>
+            <td><?php /* @escapeNotVerified */ echo $qtyRequested*1 ?></td>
+        </tr>
+    <?php endif; ?>
+
+    <?php $qtyShipped = $_item->getQtyShipped(); ?>
+    <?php if ((float) $qtyShipped): ?>
+        <tr>
+            <th><?php /* @escapeNotVerified */ echo __('Shipped') ?></th>
+            <td><?php /* @escapeNotVerified */ echo $qtyShipped*1 ?></td>
+        </tr>
+    <?php endif; ?>
+    
+    <?php $qtyNeedToShip = $qtyRequested - $qtyShipped - $_item->getQtyCanceled(); ?>
+    <?php if ((float) $qtyNeedToShip): ?>
+        <tr>
+            <th><?php /* @escapeNotVerified */ echo __('Need to Ship') ?></th>
+            <td><?php /* @escapeNotVerified */ echo $qtyNeedToShip*1 ?></td>
+        </tr>
+    <?php endif; ?>
+
+    <?php if ((float) $_item->getQtyCanceled()): ?>
+        <tr>
+            <th><?php /* @escapeNotVerified */ echo __('Canceled') ?></th>
+            <td><?php /* @escapeNotVerified */ echo $_item->getQtyCanceled()*1 ?></td>
+        </tr>
+    <?php endif; ?>
+
+</table>
+<?php endif; ?>

@@ -1,0 +1,18 @@
+<?php
+/**
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/* Account Information */ ?>
+<?php /** @var \Magestore\FulfilSuccess\Block\Adminhtml\AbstractRequest\Detail\Account $block */ ?>
+<?php $_order = $block->getOrder() ?>
+<?php /* Billing Address */ ?>
+<div class="admin__page-section-item-title">
+        <span class="title"><?php /* @escapeNotVerified */
+            echo __('Billing Address') ?></span>
+    <div class="actions"><?php /* @escapeNotVerified */
+        echo $block->getAddressEditLink($_order->getBillingAddress()); ?></div>
+</div>
+<address class="admin__page-section-item-content"><?php /* @escapeNotVerified */
+    echo $block->getFormattedAddress($_order->getBillingAddress()); ?></address>

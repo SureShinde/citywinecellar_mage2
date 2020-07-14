@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
+    <section name="CartSection">
+        <element name="minicart" type="button" selector="ul.minicart"/>
+        <element name="clearCartButton" type="button" selector=".wrapper-action-left .btn-delete"/>
+        <element name="productFoundOnCartByName" type="text" selector="//ul[@class='minicart']//div[@class='item-detail']/span[contains(text(), '{{var1}}')]" parameterized="true"/>
+        <!-- check qty of item which found by name in cart -->
+        <element name="productQtyInCart" type="text" selector="//ul[@class='minicart']//div[@class='item-detail']/span[contains(text(), '{{val1}}')]/../../div[@class='item-image']//div[@class='qty']" parameterized="true"/>
+        <element name="items" type="button" selector="ul.minicart li.item"/>
+        <element name="itemPrice" type="button" selector="ul.minicart li.item .item-info .item-price"/>
+        <element name="price" type="text" selector=".minicart-content .item-info .item-price .price"/>
+        <element name="originalPrice" type="text" selector=".minicart-content .item-info .item-price .original"/>
+        <element name="qty" type="button" selector="ul.minicart li.item .qty"/>
+
+        <!--Cart Footer-->
+        <element name="chargeButton" type="button" selector=".wrapper-content-customer .actions .btn-total"/>
+        <element name="holdButton" type="button" selector=".wrapper-content-customer .actions .btn-hold"/>
+        <!--End of Cart Footer-->
+
+        <!-- Num pad -->
+        <element name="numpad" type="input" selector="body"/>
+        <element name="closeNumpad" type="button" selector="body div.popover-key-pad ul li:last-child a span"/>
+    </section>
+</sections>

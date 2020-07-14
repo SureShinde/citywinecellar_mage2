@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <virtualType name="Magestore\DropshipSuccess\Ui\DataProvider\Dropship\Form\Modifier\Pool" type="Magento\Ui\DataProvider\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="general" xsi:type="array">
+                    <item name="class" xsi:type="string">Magestore\DropshipSuccess\Ui\DataProvider\Dropship\DataForm\Modifier\General</item>
+                    <item name="sortOrder" xsi:type="number">20</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Magestore\DropshipSuccess\Ui\DataProvider\Dropship\DataForm\DropshipDataProvider">
+        <arguments>
+            <argument name="pool" xsi:type="object">Magestore\DropshipSuccess\Ui\DataProvider\Dropship\Form\Modifier\Pool</argument>
+        </arguments>
+    </type>
+
+    <!-- dropship request form -->
+    <virtualType name="Magestore\DropshipSuccess\Ui\DataProvider\DropshipRequest\DataForm\Modifier\Pool" type="Magento\Ui\DataProvider\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="order_information" xsi:type="array">
+                    <item name="class" xsi:type="string">Magestore\DropshipSuccess\Ui\DataProvider\DropshipRequest\DataForm\Modifier\OrderInformation</item>
+                    <item name="sortOrder" xsi:type="number">10</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Magestore\DropshipSuccess\Ui\DataProvider\DropshipRequest\DataForm\DropshipRequestDataProvider">
+        <arguments>
+            <argument name="pool" xsi:type="object">Magestore\DropshipSuccess\Ui\DataProvider\DropshipRequest\DataForm\Modifier\Pool</argument>
+        </arguments>
+    </type>
+    <!-- dropship request form -->
+</config>

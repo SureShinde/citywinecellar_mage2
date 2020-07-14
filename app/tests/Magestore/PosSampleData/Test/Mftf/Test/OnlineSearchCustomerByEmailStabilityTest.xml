@@ -1,0 +1,447 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright © 2019 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  ~
+  -->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+    <test name="OnlineSearchCustomerStabilityByEmail1">
+        <annotations>
+            <features value="Customer"/>
+            <stories value="Search Customer Stable Online"/>
+            <title value="Search Customer Stable By Email - Number 1"/>
+            <description value="Search Customer Stable By Email - Number 1"/>
+            <severity value="MAJOR"/>
+            <group value="Stable"/>
+            <group value="Stable-Online"/>
+            <group value="Stable-Online-Customer"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="SwitchOnlineModeActionGroup" stepKey="SwitchToOnlineMode" />
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+
+        <actionGroup ref="SearchCustomerByKeywordActionGroup" stepKey="SearchCustomerByKeywordActionGroup">
+            <argument name="keyword" value="stability_customer_00000002.email"/>
+            <argument name="customer" value="stability_customer_00000002"/>
+        </actionGroup>
+    </test>
+
+    <test name="OnlineSearchCustomerStabilityByEmail2">
+        <annotations>
+            <features value="Customer"/>
+            <stories value="Search Customer Stable Online"/>
+            <title value="Search Customer Stable By Email - Number 2"/>
+            <description value="Search Customer Stable By Email - Number 2"/>
+            <severity value="MAJOR"/>
+            <group value="Stable"/>
+            <group value="Stable-Online"/>
+            <group value="Stable-Online-Customer"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+
+        <actionGroup ref="SearchCustomerByKeywordActionGroup" stepKey="SearchCustomerByKeywordActionGroup">
+            <argument name="keyword" value="stability_customer_00000003.email"/>
+            <argument name="customer" value="stability_customer_00000003"/>
+        </actionGroup>
+    </test>
+
+    <test name="OnlineSearchCustomerStabilityByEmail3">
+        <annotations>
+            <features value="Customer"/>
+            <stories value="Search Customer Stable Online"/>
+            <title value="Search Customer Stable By Email - Number 3"/>
+            <description value="Search Customer Stable By Email - Number 3"/>
+            <severity value="MAJOR"/>
+            <group value="Stable"/>
+            <group value="Stable-Online"/>
+            <group value="Stable-Online-Customer"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+
+        <actionGroup ref="SearchCustomerByKeywordActionGroup" stepKey="SearchCustomerByKeywordActionGroup">
+            <argument name="keyword" value="stability_customer_00000004.email"/>
+            <argument name="customer" value="stability_customer_00000004"/>
+        </actionGroup>
+    </test>
+
+    <test name="OnlineSearchCustomerStabilityByEmail4">
+        <annotations>
+            <features value="Customer"/>
+            <stories value="Search Customer Stable Online"/>
+            <title value="Search Customer Stable By Email - Number 4"/>
+            <description value="Search Customer Stable By Email - Number 4"/>
+            <severity value="MAJOR"/>
+            <group value="Stable"/>
+            <group value="Stable-Online"/>
+            <group value="Stable-Online-Customer"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+
+        <actionGroup ref="SearchCustomerByKeywordActionGroup" stepKey="SearchCustomerByKeywordActionGroup">
+            <argument name="keyword" value="stability_customer_00000005.email"/>
+            <argument name="customer" value="stability_customer_00000005"/>
+        </actionGroup>
+    </test>
+
+    <test name="OnlineSearchCustomerStabilityByEmail5">
+        <annotations>
+            <features value="Customer"/>
+            <stories value="Search Customer Stable Online"/>
+            <title value="Search Customer Stable By Email - Number 5"/>
+            <description value="Search Customer Stable By Email - Number 5"/>
+            <severity value="MAJOR"/>
+            <group value="Stable"/>
+            <group value="Stable-Online"/>
+            <group value="Stable-Online-Customer"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+
+        <actionGroup ref="SearchCustomerByKeywordActionGroup" stepKey="SearchCustomerByKeywordActionGroup">
+            <argument name="keyword" value="stability_customer_00000006.email"/>
+            <argument name="customer" value="stability_customer_00000006"/>
+        </actionGroup>
+    </test>
+
+    <test name="OnlineSearchCustomerStabilityByEmail6">
+        <annotations>
+            <features value="Customer"/>
+            <stories value="Search Customer Stable Online"/>
+            <title value="Search Customer Stable By Email - Number 6"/>
+            <description value="Search Customer Stable By Email - Number 6"/>
+            <severity value="MAJOR"/>
+            <group value="Stable"/>
+            <group value="Stable-Online"/>
+            <group value="Stable-Online-Customer"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+
+        <actionGroup ref="SearchCustomerByKeywordActionGroup" stepKey="SearchCustomerByKeywordActionGroup">
+            <argument name="keyword" value="stability_customer_00000007.email"/>
+            <argument name="customer" value="stability_customer_00000007"/>
+        </actionGroup>
+    </test>
+
+    <test name="OnlineSearchCustomerStabilityByEmail7">
+        <annotations>
+            <features value="Customer"/>
+            <stories value="Search Customer Stable Online"/>
+            <title value="Search Customer Stable By Email - Number 7"/>
+            <description value="Search Customer Stable By Email - Number 7"/>
+            <severity value="MAJOR"/>
+            <group value="Stable"/>
+            <group value="Stable-Online"/>
+            <group value="Stable-Online-Customer"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+
+        <actionGroup ref="SearchCustomerByKeywordActionGroup" stepKey="SearchCustomerByKeywordActionGroup">
+            <argument name="keyword" value="stability_customer_00000008.email"/>
+            <argument name="customer" value="stability_customer_00000008"/>
+        </actionGroup>
+    </test>
+
+    <test name="OnlineSearchCustomerStabilityByEmail8">
+        <annotations>
+            <features value="Customer"/>
+            <stories value="Search Customer Stable Online"/>
+            <title value="Search Customer Stable By Email - Number 8"/>
+            <description value="Search Customer Stable By Email - Number 8"/>
+            <severity value="MAJOR"/>
+            <group value="Stable"/>
+            <group value="Stable-Online"/>
+            <group value="Stable-Online-Customer"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+
+        <actionGroup ref="SearchCustomerByKeywordActionGroup" stepKey="SearchCustomerByKeywordActionGroup">
+            <argument name="keyword" value="stability_customer_00000009.email"/>
+            <argument name="customer" value="stability_customer_00000009"/>
+        </actionGroup>
+    </test>
+
+    <test name="OnlineSearchCustomerStabilityByEmail9">
+        <annotations>
+            <features value="Customer"/>
+            <stories value="Search Customer Stable Online"/>
+            <title value="Search Customer Stable By Email - Number 9"/>
+            <description value="Search Customer Stable By Email - Number 9"/>
+            <severity value="MAJOR"/>
+            <group value="Stable"/>
+            <group value="Stable-Online"/>
+            <group value="Stable-Online-Customer"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+
+        <actionGroup ref="SearchCustomerByKeywordActionGroup" stepKey="SearchCustomerByKeywordActionGroup">
+            <argument name="keyword" value="stability_customer_00000010.email"/>
+            <argument name="customer" value="stability_customer_00000010"/>
+        </actionGroup>
+    </test>
+
+    <test name="OnlineSearchCustomerStabilityByEmail10">
+        <annotations>
+            <features value="Customer"/>
+            <stories value="Search Customer Stable Online"/>
+            <title value="Search Customer Stable By Email - Number 10"/>
+            <description value="Search Customer Stable By Email - Number 10"/>
+            <severity value="MAJOR"/>
+            <group value="Stable"/>
+            <group value="Stable-Online"/>
+            <group value="Stable-Online-Customer"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+
+        <actionGroup ref="SearchCustomerByKeywordActionGroup" stepKey="SearchCustomerByKeywordActionGroup">
+            <argument name="keyword" value="stability_customer_00000011.email"/>
+            <argument name="customer" value="stability_customer_00000011"/>
+        </actionGroup>
+    </test>
+
+    <test name="OnlineSearchCustomerStabilityByEmail11">
+        <annotations>
+            <features value="Customer"/>
+            <stories value="Search Customer Stable Online"/>
+            <title value="Search Customer Stable By Email - Number 11"/>
+            <description value="Search Customer Stable By Email - Number 11"/>
+            <severity value="MAJOR"/>
+            <group value="Stable"/>
+            <group value="Stable-Online"/>
+            <group value="Stable-Online-Customer"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+
+        <actionGroup ref="SearchCustomerByKeywordActionGroup" stepKey="SearchCustomerByKeywordActionGroup">
+            <argument name="keyword" value="stability_customer_00000012.email"/>
+            <argument name="customer" value="stability_customer_00000012"/>
+        </actionGroup>
+    </test>
+
+    <test name="OnlineSearchCustomerStabilityByEmail12">
+        <annotations>
+            <features value="Customer"/>
+            <stories value="Search Customer Stable Online"/>
+            <title value="Search Customer Stable By Email - Number 12"/>
+            <description value="Search Customer Stable By Email - Number 12"/>
+            <severity value="MAJOR"/>
+            <group value="Stable"/>
+            <group value="Stable-Online"/>
+            <group value="Stable-Online-Customer"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+
+        <actionGroup ref="SearchCustomerByKeywordActionGroup" stepKey="SearchCustomerByKeywordActionGroup">
+            <argument name="keyword" value="stability_customer_00000013.email"/>
+            <argument name="customer" value="stability_customer_00000013"/>
+        </actionGroup>
+    </test>
+
+    <test name="OnlineSearchCustomerStabilityByEmail13">
+        <annotations>
+            <features value="Customer"/>
+            <stories value="Search Customer Stable Online"/>
+            <title value="Search Customer Stable By Email - Number 13"/>
+            <description value="Search Customer Stable By Email - Number 13"/>
+            <severity value="MAJOR"/>
+            <group value="Stable"/>
+            <group value="Stable-Online"/>
+            <group value="Stable-Online-Customer"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+
+        <actionGroup ref="SearchCustomerByKeywordActionGroup" stepKey="SearchCustomerByKeywordActionGroup">
+            <argument name="keyword" value="stability_customer_00000014.email"/>
+            <argument name="customer" value="stability_customer_00000014"/>
+        </actionGroup>
+    </test>
+
+    <test name="OnlineSearchCustomerStabilityByEmail14">
+        <annotations>
+            <features value="Customer"/>
+            <stories value="Search Customer Stable Online"/>
+            <title value="Search Customer Stable By Email - Number 14"/>
+            <description value="Search Customer Stable By Email - Number 14"/>
+            <severity value="MAJOR"/>
+            <group value="Stable"/>
+            <group value="Stable-Online"/>
+            <group value="Stable-Online-Customer"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+
+        <actionGroup ref="SearchCustomerByKeywordActionGroup" stepKey="SearchCustomerByKeywordActionGroup">
+            <argument name="keyword" value="stability_customer_00000015.email"/>
+            <argument name="customer" value="stability_customer_00000015"/>
+        </actionGroup>
+    </test>
+
+    <test name="OnlineSearchCustomerStabilityByEmail15">
+        <annotations>
+            <features value="Customer"/>
+            <stories value="Search Customer Stable Online"/>
+            <title value="Search Customer Stable By Email - Number 15"/>
+            <description value="Search Customer Stable By Email - Number 15"/>
+            <severity value="MAJOR"/>
+            <group value="Stable"/>
+            <group value="Stable-Online"/>
+            <group value="Stable-Online-Customer"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+
+        <actionGroup ref="SearchCustomerByKeywordActionGroup" stepKey="SearchCustomerByKeywordActionGroup">
+            <argument name="keyword" value="stability_customer_00000016.email"/>
+            <argument name="customer" value="stability_customer_00000016"/>
+        </actionGroup>
+    </test>
+
+    <test name="OnlineSearchCustomerStabilityByEmail16">
+        <annotations>
+            <features value="Customer"/>
+            <stories value="Search Customer Stable Online"/>
+            <title value="Search Customer Stable By Email - Number 16"/>
+            <description value="Search Customer Stable By Email - Number 16"/>
+            <severity value="MAJOR"/>
+            <group value="Stable"/>
+            <group value="Stable-Online"/>
+            <group value="Stable-Online-Customer"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+
+        <actionGroup ref="SearchCustomerByKeywordActionGroup" stepKey="SearchCustomerByKeywordActionGroup">
+            <argument name="keyword" value="stability_customer_00000017.email"/>
+            <argument name="customer" value="stability_customer_00000017"/>
+        </actionGroup>
+    </test>
+
+    <test name="OnlineSearchCustomerStabilityFourResultByEmail1">
+        <annotations>
+            <features value="Customer"/>
+            <stories value="Search Customer Stable Online"/>
+            <title value="Search Customer Stable Four Result - Number 1"/>
+            <description value="Search Customer Stable Four Result - Number 1"/>
+            <severity value="MAJOR"/>
+            <group value="Stable"/>
+            <group value="Stable-Online"/>
+            <group value="Stable-Online-Customer"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+
+        <actionGroup ref="SearchCustomerByKeywordMultiResultsActionGroup" stepKey="SearchCustomerByKeywordActionGroup">
+            <argument name="keyword" value="four_result.keyword_mail"/>
+        </actionGroup>
+    </test>
+
+    <test name="OnlineSearchCustomerStabilityFourResultByEmail2">
+        <annotations>
+            <features value="Customer"/>
+            <stories value="Search Customer Stable Online"/>
+            <title value="Search Customer Stable Four Result - Number 2"/>
+            <description value="Search Customer Stable Four Result - Number 2"/>
+            <severity value="MAJOR"/>
+            <group value="Stable"/>
+            <group value="Stable-Online"/>
+            <group value="Stable-Online-Customer"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+
+        <actionGroup ref="SearchCustomerByKeywordMultiResultsActionGroup" stepKey="SearchCustomerByKeywordActionGroup">
+            <argument name="keyword" value="four_result.keyword_mail"/>
+        </actionGroup>
+    </test>
+
+    <test name="OnlineSearchCustomerStabilityElevenResultByEmail1">
+        <annotations>
+            <features value="Customer"/>
+            <stories value="Search Customer Stable Online"/>
+            <title value="Search Customer Stable Eleven Result - Number 1"/>
+            <description value="Search Customer Stable Eleven Result - Number 1"/>
+            <severity value="MAJOR"/>
+            <group value="Stable"/>
+            <group value="Stable-Online"/>
+            <group value="Stable-Online-Customer"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+
+        <actionGroup ref="SearchCustomerByKeywordMultiResultsMultiPagesActionGroup" stepKey="SearchCustomerByKeywordActionGroup">
+            <argument name="keyword" value="eleven_result.keyword_mail"/>
+        </actionGroup>
+    </test>
+
+    <test name="OnlineSearchCustomerStabilityElevenResultByEmail2">
+        <annotations>
+            <features value="Customer"/>
+            <stories value="Search Customer Stable Online"/>
+            <title value="Search Customer Stable Eleven Result - Number 2"/>
+            <description value="Search Customer Stable Eleven Result - Number 2"/>
+            <severity value="MAJOR"/>
+            <group value="Stable"/>
+            <group value="Stable-Online"/>
+            <group value="Stable-Online-Customer"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+
+        <actionGroup ref="SearchCustomerByKeywordMultiResultsMultiPagesActionGroup" stepKey="SearchCustomerByKeywordActionGroup">
+            <argument name="keyword" value="eleven_result.keyword_mail"/>
+        </actionGroup>
+    </test>
+</tests>

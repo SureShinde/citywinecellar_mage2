@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Framework\View\Page\Config\Renderer">
+        <plugin name="Amasty_Blog::make-css" type="Amasty\Blog\Plugin\View\Page\Config\Renderer" />
+    </type>
+
+    <type name="Magento\Framework\App\RouterList">
+        <arguments>
+            <argument name="routerList" xsi:type="array">
+                <item name="amasty_blog_root" xsi:type="array">
+                    <item name="class" xsi:type="string">Amasty\Blog\Controller\Router</item>
+                    <item name="disable" xsi:type="boolean">false</item>
+                    <item name="sortOrder" xsi:type="string">60</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Theme\Block\Html\Topmenu">
+        <plugin name="blog-topmenu" type="Amasty\Blog\Plugin\Block\Topmenu" />
+    </type>
+
+    <type name="Magento\Framework\App\PageCache\Identifier">
+        <plugin name="Amasty_Blog::mobileSettingsFPC"
+                type="Amasty\Blog\Plugin\Framework\App\PageCache\Identifier" sortOrder="20"/>
+    </type>
+
+    <type name="Infortis\UltraMegamenu\Block\Navigation">
+        <plugin name="Amasty_Blog::TopMenuUltimo"
+                type="Amasty\Blog\Plugin\Block\TopmenuThemes" sortOrder="900" />
+    </type>
+
+    <type name="Smartwave\Megamenu\Block\Topmenu">
+        <plugin name="Amasty_Blog::TopMenuPorto"
+                type="Amasty\Blog\Plugin\Block\TopmenuThemes" sortOrder="900" />
+    </type>
+
+    <type name="Amasty\MegaMenu\Observer\Layout\Handle">
+        <plugin name="Amasty_Blog::compatibility_with_mega_menu"
+                type="Amasty\Blog\Plugin\MegaMenu\Observer\Layout\HandlePlugin" sortOrder="900" />
+    </type>
+
+    <type name="Amasty\ShopbyBrand\Block\BrandsPopup">
+        <plugin name="Amasty_Blog::compatibility_with_brands_popup"
+                type="Amasty\Blog\Plugin\ShopbyBrand\Block\BrandsPopupPlugin" sortOrder="900" />
+    </type>
+
+    <type name="Amasty\MegaMenu\Model\Menu\TreeResolver">
+        <plugin name="Amasty_Blog::Amasty_MegaMenu"
+                type="Amasty\Blog\Plugin\MegaMenu\Model\Menu\TreeResolverPlugin" sortOrder="20" />
+    </type>
+</config>

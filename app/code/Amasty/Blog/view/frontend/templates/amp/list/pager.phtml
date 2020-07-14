@@ -1,0 +1,35 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+?>
+<?php
+/** @var \Amasty\Blog\Block\Content\Lists $block */
+
+$collection = $block->getCollection();
+?>
+
+<?php if ($collection && $collection->getSize() && $block->getLastPageNum() > 1) : ?>
+    <?php if (!$block->isFirstPage()) : ?>
+        <div class="newer item">
+            <a class="older-link"
+               href="<?= $block->escapeUrl($block->getPreviousPageUrl()) ?>"
+               rel="prev"
+               title="<?= $block->escapeHtml(__('Newer Entries')) ?>">
+                <?= $block->escapeHtml(__('Newer Entries')) ?></a>
+        </div>
+    <?php endif; ?>
+    <?php if (!$block->isLastPage()) : ?>
+        <div class="older item">
+            <a class="newer-link"
+               href="<?= $block->escapeUrl($block->getNextPageUrl()) ?>"
+               rel="next"
+               title="<?= $block->escapeHtml(__('Older Entries')) ?>">
+                <?= $block->escapeHtml(__('Older Entries')) ?>
+            </a>
+        </div>
+    <?php endif; ?>
+    <div class="clear"></div>
+<?php endif ?>

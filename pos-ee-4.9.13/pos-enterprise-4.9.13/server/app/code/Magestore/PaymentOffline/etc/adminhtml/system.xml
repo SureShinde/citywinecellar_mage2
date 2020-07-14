@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="webpos">
+            <group id="payment">
+                <group id="payment_offline" translate="label" sortOrder="0" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <frontend_model>Magestore\PaymentOffline\Block\Adminhtml\Config\Form\Field\PaymentOffline</frontend_model>
+                </group>
+            </group>
+        </section>
+    </system>
+</config>

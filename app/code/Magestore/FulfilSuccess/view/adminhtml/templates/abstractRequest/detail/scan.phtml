@@ -1,0 +1,30 @@
+<?php
+/**
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/** @var $block \Magestore\FulfilSuccess\Block\Adminhtml\AbstractRequest\Detail\Scan */ ?>
+<div class="admin__page-section-content">
+    <div class="admin__page-section-item">
+        <div class="admin__page-section-item-title">
+            <span class="title"><?php echo $block->getTitle();?></span>
+        </div>
+        <div class="admin__page-section-item-content">
+            <div class="scan-container" data-role="os-scan-container">
+                <div class="message message-warning" style="display: none" data-role="os-scan-warning-message"></div>
+                <div class="message message-success" style="display: none" data-role="os-scan-success-message"></div>
+                <div class="admin__field-control scan-input">
+                    <input class="admin__control-text scan-input" onfocus="this.select()" type="text" data-role="os-scan-input" placeholder="<?php echo $block->getPlaceHolder();?>">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    require([
+        "<?php echo $block->getJsService(); ?>"
+    ], function(ScanService){
+        ScanService.init('<?php echo $block->getDataSource();?>');
+    });
+</script>

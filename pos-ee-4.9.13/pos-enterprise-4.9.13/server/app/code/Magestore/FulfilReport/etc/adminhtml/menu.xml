@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Magestore_FulfilReport::fulfil_reports" title="Fulfilment Reports" translate="title" module="Magestore_FulfilReport" parent="Magestore_OrderSuccess::all" sortOrder="70" resource="Magestore_OrderSuccess::fulfil_reports"/>
+            <add id="Magestore_FulfilReport::fulfil_dashboard" title="Dashboard" translate="title" module="Magestore_FulfilReport" parent="Magestore_FulfilReport::fulfil_reports" sortOrder="10" action="fulfilreport/report/dashboard" resource="Magestore_FulfilReport::fulfil_dashboard"/>
+            <add id="Magestore_FulfilReport::reports" title="Reports" translate="title" module="Magestore_FulfilReport" parent="Magestore_FulfilReport::fulfil_reports" sortOrder="100" action="fulfilreport/report/index" resource="Magestore_FulfilReport::reports"/>
+    </menu>
+</config>

@@ -1,0 +1,33 @@
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<div class="pick_request_form_control">
+    <div class="message message-warning" style="display: none" data-bind="visible:showWarning,text:warningMessage"></div>
+    <div class="message message-success" style="display: none" data-bind="visible:showSuccess,text:successMessage"></div>
+    <div class="admin__field-control scan-input">
+        <input class="admin__control-text" onfocus="this.select()" type="text" data-bind="event:{change:change},value:data,attr:{placeholder:placeHolder}">
+    </div>
+    <div class="admin__field-control additional-info"  data-bind="visible:orderIncrementId">
+        <label class="admin__field-label">
+            <b>[<span data-bind="i18n:'Pick #'"></span><span data-bind="text:currentPickRequestId"></span>]</b>
+        </label>
+        <label class="admin__field-label">
+            <b><span data-bind="i18n:'Order'"></span></b>
+        </label>        
+        <b><a data-bind="attr:{href:orderlink},text:orderIncrementId"></a></b>
+        <div class="additional-actions">
+            <!--<button type="button" data-bind="click: moveToNeedShip" class="action-secondary">-->
+                <!--<span data-bind="i18n: 'Move to Prepare Fulfil'"></span>-->
+            <!--</button>-->
+            <button type="button" data-bind="click: cancel" class="action-secondary">
+                <span data-bind="i18n: 'Cancel Scanning'"></span>
+            </button>
+            <button type="button" data-bind="click: markAsPicked" class="action-primary">
+                <span data-bind="i18n: 'Mark as picked'"></span>
+            </button>
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>

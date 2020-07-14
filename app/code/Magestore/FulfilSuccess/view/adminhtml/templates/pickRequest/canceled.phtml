@@ -1,0 +1,120 @@
+<?php
+/**
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/** @var \Magestore\FulfilSuccess\Block\Adminhtml\AbstractRequest\Detail $block */
+?>
+<form id="pack_request_form" method="post" action="<?php /* @escapeNotVerified */ echo $block->getSaveUrl() ?>">
+    <?php echo $block->getLayout()->getMessagesBlock()->getGroupedHtml() ?>
+    <?php echo $block->getBlockHtml('formkey') ?>
+    <input type="hidden" id="pack_request_id" name="pack_request_id" value="<?php echo $block->getPackRequestId(); ?>"/>
+    <input type="hidden" id="warehouse_id" name="shipment[warehouse]" value="<?php echo $block->getWarehouseId(); ?>"/>
+    <div id="messages">
+        <div class="messages">
+            <div class="message message-notice notice">
+                <div data-ui-id="messages-message-notice">
+                    <?php echo __('This pick has been canceled. You should return all picked items to the warehouse.') ?>
+                </div>
+            </div>
+        </div>
+    </div>       
+    <section class="admin__page-section">
+        <div class="admin__page-section-content">
+            <?php echo $block->getTopChilds(); ?>
+        </div>
+    </section>
+    <section class="admin__page-section">
+        <?php echo $block->getItemsHtml() ?>
+    </section>    
+    <section class="admin__page-section">
+        <div class="admin__page-section-content">
+            <div class="admin__page-section-item order-comments-history">
+                <div class="admin__page-section-item-title">
+                    <span class="title"><?php /* @escapeNotVerified */
+                        echo __('Notes for this Sales')
+                        ?></span>
+                </div>
+                <?php echo $block->getChildHtml('order_history') ?>
+
+            </div>
+        </div>
+    </section>
+
+    <?php echo $block->getChildHtml('fulfil_packaging'); ?>
+</form>
+<script>
+    require([
+        "jquery",
+        "mage/mage",
+        "prototype"
+    ], function (jQuery) {
+        jQuery('#edit_form').mage('form').mage('validation');
+
+        $$('.qty-to-ship-input').each(function(item) {
+            var itemId = item.id;
+            itemId = itemId.replace("shipment[items][", "");
+            itemId = itemId.replace("]", "");
+            var qtyToShip = parseFloat(item.value);
+            if (isNaN(qtyToShip)) {
+                qtyToShip = 0;
+            }
+            Event.observe(item, 'change', changeQtyToShip);
+        });
+
+        /**
+         * Change qty-to-ship
+         */
+        function changeQtyToShip(event) {
+            var qtyToShipEl = $(event.target.id);
+            if ((parseFloat(qtyToShipEl.value) < parseFloat(qtyToShipEl.min)) || qtyToShipEl.value == '') {
+                qtyToShipEl.value = qtyToShipEl.min;
+            }
+            if (parseFloat(qtyToShipEl.value) > parseFloat(qtyToShipEl.max)) {
+                qtyToShipEl.value = qtyToShipEl.max;
+            }
+        }
+    });
+
+    /**
+     * @todo add validation for fields
+     */
+    function submitAndReloadAreaPacking(area, url) {
+        if($(area)) {
+            var fields = $(area).select('input', 'select', 'textarea');
+            var data = Form.serializeElements(fields, true);
+            url = url + (url.match(new RegExp('\\?')) ? '&isAjax=true' : '?isAjax=true');
+            new Ajax.Request(url, {
+                parameters: $H(data),
+                loaderArea: area,
+                onSuccess: function(transport) {
+                    try {
+                        if (transport.responseText.isJSON()) {
+                            var response = transport.responseText.evalJSON()
+                            if (response.error) {
+                                console.log(response);
+                                alert(response.message);
+                            }
+                            console.log(response);
+                            if(response.ajaxExpired && response.ajaxRedirect) {
+                                console.log(response);
+                                setLocation(response.ajaxRedirect);
+                            }
+                        } else {
+                            if (transport.responseText == 'completed') {
+                                console.log(transport.responseText);
+                                location.reload();
+                            }
+                            $(area).update(transport.responseText);
+                        }
+                    }
+                    catch (e) {
+                        $(area).update(transport.responseText);
+                    }
+                }
+            });
+        }
+    }
+
+</script>

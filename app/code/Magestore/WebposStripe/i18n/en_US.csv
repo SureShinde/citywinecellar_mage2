@@ -1,0 +1,29 @@
+"Connection failed. Please contact admin to check the configuration of API.","Connection failed. Please contact admin to check the configuration of API."
+"Authorize Only","Authorize Only"
+"Authorize and Capture","Authorize and Capture"
+"Charge for POS","Charge for POS"
+"Transaction is failed","Transaction is failed"
+"Sorry, this payment method can not be used at the moment. Try again later.","Sorry, this payment method can not be used at the moment. Try again later."
+"Stripe SDK not found, please go to the configuration to get the instruction to install the SDK","Stripe SDK not found, please go to the configuration to get the instruction to install the SDK"
+"Stripe application client id and client secret are required","Stripe application client id and client secret are required"
+"Stripe integration is disabled","Stripe integration is disabled"
+"Installation guide","Installation guide"
+"Install the Stripe REST SDK","Install the Stripe REST SDK"
+"If you can access to your server via SSH:","If you can access to your server via SSH:"
+"Use cd command to your Magento root folder. After that, enter the command:","Use cd command to your Magento root folder. After that, enter the command:"
+"View detail","View detail"
+"Test the API connection","Test the API connection"
+"After install the SDK and save all the API information, you can click the button below to test the connection","After install the SDK and save all the API information, you can click the button below to test the connection"
+"Test API connection","Test API connection"
+Success,Success
+Error,Error
+"Please check your network connection","Please check your network connection"
+Stripe,Stripe
+Enabled,Enabled
+Title,Title
+"Api Key","Api Key"
+"Publishable Key","Publishable Key"
+"Sandbox Mode","Sandbox Mode"
+"Sort Order","Sort Order"
+Guide,Guide
+"Setup guide","Setup guide"

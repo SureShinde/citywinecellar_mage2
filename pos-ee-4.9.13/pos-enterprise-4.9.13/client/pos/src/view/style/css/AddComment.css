@@ -1,0 +1,61 @@
+.wrapper-action-left .btn.btn-add-comment {
+    background-image: url('../images/add-comment.svg');
+    border-bottom: solid 1px #dfe1e4;
+}
+
+.popup-messages.popup-add-comment .modal-body {
+    padding: 0;
+}
+
+.popup-messages.popup-add-comment .save {
+    color: #4a90e2;
+    right: 25px;
+}
+
+.popup-messages.popup-add-comment .save.disabled {
+    color: #7c7d80;
+    cursor: not-allowed;
+}
+
+.popup-messages.popup-add-comment .modal-header {
+    background-color: #fff;
+    padding: 21px 25px;
+    border-radius: 10px 10px 0 0;
+    line-height: 24px;
+    color: #3f4245;
+    text-align: center;
+    position: relative;
+    width: 100%
+}
+
+.popup-messages.popup-add-comment .save {
+    padding: 0;
+    opacity: 1;
+    height: 24px;
+    line-height: 24px;
+    background-color: transparent;
+    border: none;
+    font-size: 15px;
+    font-weight: normal;
+    position: absolute;
+    top: 21px;
+    z-index: 4;
+    display: block;
+}
+
+.popup-messages.popup-add-comment .modal-body {
+    background-color: #f8f8f8;
+    border: none;
+    padding: 0;
+    max-height: calc(100% - 67px);
+    max-height: -o-calc(100% - 67px);
+    border-radius: 0 0 10px 10px;
+}
+
+.popup-messages.popup-add-comment .form-control {
+    border-width: 0 0 0;
+    border-style: solid;
+    border-color: #dfe1e4;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}

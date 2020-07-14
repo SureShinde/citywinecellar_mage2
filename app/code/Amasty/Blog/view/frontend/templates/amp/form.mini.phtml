@@ -1,0 +1,45 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+?>
+<?php
+/** @var $block \Magento\Framework\View\Element\Template */
+/** @var $helper \Magento\Search\Helper\Data */
+
+// @codingStandardsIgnoreLine
+$helper = $this->helper(\Magento\Search\Helper\Data::class);
+$url = str_replace(['https:', 'http:'], '', $helper->getResultUrl());
+?>
+
+<div class="amblog-search-form">
+    <label for="amblog-amp-search">
+        <i class="fas fa-search amblog-amp-icon"></i>
+    </label>
+    <input type="checkbox" class="amblog-amp-icon -hidden" id="amblog-amp-search">
+    <div class="amblog-amp-search -hidden">
+        <form class="form minisearch" id="search_mini_form"
+              target="_top"
+              action="<?= $block->escapeUrl($url) ?>"
+              method="get">
+            <input id="search"
+                   type="text"
+                   name="<?= $block->escapeHtml($helper->getQueryParamName()) ?>"
+                   value="<?= $block->escapeHtml($helper->getEscapedQueryText()) ?>"
+                   placeholder="<?= $block->escapeHtml(__('Search entire store here...')) ?>"
+                   class="amblog-amp-input"
+                   maxlength="<?= $block->escapeHtml($helper->getMaxQueryLength()); ?>"
+                   role="combobox"
+                   aria-haspopup="false"
+                   aria-autocomplete="both"
+                   autocomplete="off"/>
+            <button type="submit"
+                    title="<?= $block->escapeHtml(__('Search')) ?>"
+                    class="amblog-amp-action">
+                <?= $block->escapeHtml(__('Search')) ?>
+            </button>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="amblog_default"/>
+    <body>
+        <referenceContainer name="layout.content">
+            <block class="Amasty\Blog\Block\Content\Post" name="amblog.post" as="post" template="Amasty_Blog::post.phtml" cacheable="false">
+                <block class="Amasty\Blog\Block\Social"
+                       name="amblog_social"
+                       as="amblog_social"
+                       template="Amasty_Blog::social.phtml"/>
+                <block class="Amasty\Blog\Block\Content\Post\Helpful"
+                       name="amblog_helpful"
+                       as="amblog_helpful"/>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

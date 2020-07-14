@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <preference for="Magestore\FulfilSuccess\Api\Data\BatchInterface" type="Magestore\FulfilSuccess\Model\PickRequest\Batch" />
+
+    <preference for="Magestore\FulfilSuccess\Api\Data\PickRequestInterface" type="Magestore\FulfilSuccess\Model\PickRequest\PickRequest" />
+
+    <preference for="Magestore\FulfilSuccess\Api\Data\PickRequestItemInterface" type="Magestore\FulfilSuccess\Model\PickRequest\PickRequestItem" />
+
+    <preference for="Magestore\FulfilSuccess\Api\Data\BatchSearchResultsInterface" type="Magento\Framework\Api\SearchResults" />
+
+    <preference for="Magestore\FulfilSuccess\Api\Data\PickRequestSearchResultsInterface" type="Magento\Framework\Api\SearchResults" />
+
+    <preference for="Magestore\FulfilSuccess\Api\BatchRepositoryInterface" type="Magestore\FulfilSuccess\Model\Repository\PickRequest\BatchRepository" />
+
+    <preference for="Magestore\FulfilSuccess\Api\PickRequestRepositoryInterface" type="Magestore\FulfilSuccess\Model\Repository\PickRequest\PickRequestRepository" />
+
+    <preference for="Magestore\FulfilSuccess\Api\PickRequestItemRepositoryInterface" type="Magestore\FulfilSuccess\Model\Repository\PickRequest\PickRequestItemRepository" />
+
+    <preference for="Magestore\FulfilSuccess\Api\OrderItemRepositoryInterface" type="Magestore\FulfilSuccess\Model\Repository\PickRequest\OrderItemRepository" />
+
+    <preference for="Magestore\FulfilSuccess\Model\Db\QueryProcessorInterface" type="Magestore\FulfilSuccess\Model\Db\QueryProcessor" />
+
+    <preference for="Magestore\FulfilSuccess\Service\Location\LocationServiceInterface" type="Magestore\FulfilSuccess\Service\Location\LocationService" />
+
+    <preference for="Magestore\FulfilSuccess\Service\Barcode\BarcodeServiceInterface" type="Magestore\FulfilSuccess\Service\Barcode\BarcodeService" />
+
+    <preference for="Magestore\FulfilSuccess\Service\Locator\BatchServiceInterface" type="Magestore\FulfilSuccess\Service\Locator\BatchService" />
+
+    <preference for="Magestore\FulfilSuccess\Service\Locator\UserServiceInterface" type="Magestore\FulfilSuccess\Service\Locator\UserService" />
+
+    <preference for="Magestore\FulfilSuccess\Api\Data\PackRequestInterface" type="Magestore\FulfilSuccess\Model\PackRequest\PackRequest" />
+
+    <preference for="Magestore\FulfilSuccess\Api\Data\PackRequestItemInterface" type="Magestore\FulfilSuccess\Model\PackRequest\PackRequestItem" />
+
+    <preference for="Magestore\FulfilSuccess\Api\Data\PackRequestSearchResultsInterface" type="Magento\Framework\Api\SearchResults" />
+
+    <preference for="Magestore\FulfilSuccess\Api\PackRequestRepositoryInterface" type="Magestore\FulfilSuccess\Model\Repository\PackRequest\PackRequestRepository" />
+
+    <preference for="Magestore\FulfilSuccess\Api\PackRequestItemRepositoryInterface" type="Magestore\FulfilSuccess\Model\Repository\PackRequest\PackRequestItemRepository"/>
+
+    <preference for="Magestore\FulfilSuccess\Service\Warehouse\WarehouseServiceInterface" type="Magestore\FulfilSuccess\Service\Warehouse\WarehouseService" />
+
+    <preference for="Magestore\FulfilSuccess\Api\Data\PackageInterface" type="Magestore\FulfilSuccess\Model\Package\Package"/>
+
+    <preference for="Magestore\FulfilSuccess\Api\Data\PackageItemInterface" type="Magestore\FulfilSuccess\Model\Package\PackageItem"/>
+
+    <preference for="Magestore\FulfilSuccess\Api\PackageRepositoryInterface" type="Magestore\FulfilSuccess\Model\Repository\Package\PackageRepository"/>
+
+    <preference for="Magestore\FulfilSuccess\Api\PackageItemRepositoryInterface" type="Magestore\FulfilSuccess\Model\Repository\Package\PackageItemRepository"/>
+
+    <preference for="Magestore\FulfilSuccess\Api\PackRequestOrderItemRepositoryInterface" type="Magestore\FulfilSuccess\Model\Repository\PackRequest\PackRequestOrderItemRepository"/>
+
+    <preference for="Magestore\FulfilSuccess\Api\PermissionManagementInterface" type="Magestore\FulfilSuccess\Model\Permission\PermissionManagement"/>
+
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="pickrequest_listing_data_source" xsi:type="string">Magestore\FulfilSuccess\Model\ResourceModel\PickRequest\Grid\Collection</item>
+                <item name="recent_picked_listing_data_source" xsi:type="string">Magestore\FulfilSuccess\Model\ResourceModel\PickRequest\Grid\RecentCollection</item>
+                <item name="fulfilsuccess_packrequest_listing_data_source" xsi:type="string">Magestore\FulfilSuccess\Model\ResourceModel\PackRequest\Grid\Collection</item>
+                <item name="recent_packed_listing_data_source" xsi:type="string">Magestore\FulfilSuccess\Model\ResourceModel\PackRequest\Grid\RecentCollection</item>
+                <item name="shipment_listing_data_source" xsi:type="string">Magestore\FulfilSuccess\Model\ResourceModel\Shipment\Grid\Collection</item>
+                <item name="package_listing_data_source" xsi:type="string">Magestore\FulfilSuccess\Model\ResourceModel\Package\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <!-- Add Filfill chanel to Prepare Fulfil Process of OrderSuccess -->
+    <type name="Magestore\OrderSuccess\Model\Source\Adminhtml\ShippingChanel">
+        <arguments>
+            <argument name="chanels" xsi:type="array">
+                <item name="fulfil" xsi:type="array">
+                    <item name="code" xsi:type="string">fulfil</item>
+                    <item name="title" xsi:type="string" translate="true">Request Pick from Warehouse</item>
+                    <item name="block" xsi:type="string">Magestore\FulfilSuccess\Block\Adminhtml\PickRequest\ShipProcess\Grid</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <preference for="Magestore\FulfilSuccess\Api\FulfilManagementInterface" type="Magestore\FulfilSuccess\Model\FulfilManagement"/>
+    <preference for="Magestore\FulfilSuccess\Api\MultiSourceInventory\SourceRepositoryInterface" type="Magestore\FulfilSuccess\Model\MultiSourceInventory\SourceRepository"/>
+    <preference for="Magestore\FulfilSuccess\Api\MultiSourceInventory\SourceItemRepositoryInterface" type="Magestore\FulfilSuccess\Model\MultiSourceInventory\SourceItemRepository"/>
+
+    <type name="Magestore\OrderSuccess\Model\Source\Adminhtml\ShippingChanel">
+        <plugin name="fulfil_change_label_request_pick" type="Magestore\FulfilSuccess\Plugin\OrderSuccess\Model\Source\Adminhtml\ShippingChannel"/>
+    </type>
+</config>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright © 2019 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  ~
+  -->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="CreateOrderWithVirtualQuoteActionGroup">
+        <arguments>
+            <argument name="dataProduct" defaultValue="pos_simple_product_test_order"/>
+            <argument name="dataCustomer" defaultValue="default_customer"/>
+            <argument name="discountAmount" defaultValue="3.00" type="string"/>
+        </arguments>
+
+
+        <!-- Disable print popup and complete order -->
+        <executeJS function="
+             document.getElementById('triggerPrintButton').remove();
+        " stepKey="executeJS"/>
+
+
+        <!-- Clear cart -->
+        <click selector="{{CartSection.clearCartButton}}" stepKey="clickClearCart"/>
+
+        <!-- Search and add product to cart -->
+        <fillField stepKey="fillProductSearchBox" selector="{{ProductListSection.searchBox}}" userInput="{{dataProduct.sku}}"/>
+        <wait time="1" stepKey="waitOneSecond"/>
+        <waitForElementVisible  time="30" selector="{{ProductListSection.firstProduct}}"  stepKey="seeAtLeaseOneProductAfterSearch"/>
+        <click stepKey="clickOnProductFoundInList" selector="{{ProductListSection.firstProduct}}"/>
+
+        <waitForElementVisible selector="{{CartSection.productFoundOnCartByName(dataProduct.name)}}" time="30" stepKey="waitProductIsAddedToCartSuccessfully"/>
+
+        <click selector="{{CartSection.productFoundOnCartByName(dataProduct.name)}}" stepKey="clickToIncreaseItemQty" />
+        <pressKey selector="{{CustomSaleSection.numpad}}" parameterArray="[\Facebook\WebDriver\WebDriverKeys::BACKSPACE]"  stepKey="clearAmountQty"/>
+        <pressKey selector="{{CartSection.numpad}}" userInput="{{dataProduct.qty}}" stepKey="enterQtyItem"/>
+        <click selector="{{CartSection.closeNumpad}}" stepKey="clickCloseNumpad"/>
+
+        <!-- search and add customer to cart -->
+        <conditionalClick selector="{{CustomerListSection.remove}}" dependentSelector="{{CustomerListSection.remove}}" visible="true" stepKey="clickRemove"/>
+        <click selector="{{CustomerListSection.add_button}}" stepKey="clickAddCustomerButton"/>
+        <fillField userInput="{{dataCustomer.email}}" selector="{{CustomerListSection.search_form}}" stepKey="fillSearchFormCustomer"/>
+        <wait time="2" stepKey="waitStartSearchCustomer" />
+        <waitForElementVisible selector=".list-customer li" time="30" stepKey="waitForCustomerVisible"/>
+        <click selector=".list-customer li" stepKey="clickAddCustomer"/>
+        <waitForText userInput="{{dataCustomer.fullName}}" selector=".customer-drop a" time="30" stepKey="waitForAddCustomer"/>
+
+        <click selector="{{CartSection.chargeButton}}" stepKey="clickChargeButton" />
+
+        <wait time="2" stepKey="waitToProcess" />
+
+        <!-- Add custom discount -->
+        <click stepKey="clickOnDiscountTotal" selector="{{TotalSection.totalDiscount}}"/>
+        <waitForElementVisible selector="{{DiscountSection.discountContainer}}" time="30" stepKey="waitDiscountPopupVisible"/>
+        <click stepKey="clickOnFixDiscountButton" selector="{{DiscountSection.fixDiscountButton}}"/>
+        <click stepKey="clickOnDiscountField" selector="{{DiscountSection.addDiscountFixField}}"/>
+        <pressKey selector="{{PosCheckoutPaymentSection.numpad}}" userInput="{{discountAmount}}" stepKey="enterAmount"/>
+        <pressKey selector="{{PosCheckoutPaymentSection.numpad}}" parameterArray="[\Facebook\WebDriver\WebDriverKeys::ENTER]" stepKey="closePopup"/>
+        <click stepKey="applyAmount" selector="{{DiscountSection.applyDiscount}}" />
+        <waitForElementNotVisible selector="{{DiscountSection.discountContainer}}" time="30" stepKey="waitDiscountClosed"/>
+
+        <!-- Choose cash in payment method -->
+        <waitForElementVisible selector="{{PosCheckoutPaymentSection.cash}}" time="30" stepKey="waitCashPaymentVisible"/>
+        <click selector="{{PosCheckoutPaymentSection.cash}}" stepKey="clickCash"/>
+        <click selector="{{PosCheckoutPaymentSection.accept}}" stepKey="clickAccept"/>
+
+
+        <click selector="{{PosCheckoutPaymentSection.complete}}" stepKey="clickToCompleteButton" />
+
+        <waitForElementVisible selector="{{ProductListSection.toastSuccessMessage}}" time="30" stepKey="seeToastSuccessShow"/>
+        <seeElement selector="{{ProductListSection.contentSuccessMessage('Order #', 'has been created successfully!')}}" stepKey="checkSuccessMessage"/>
+    </actionGroup>
+</actionGroups>

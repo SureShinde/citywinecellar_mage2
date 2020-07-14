@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+  ~  Copyright © 2018 Magestore. All rights reserved.
+  ~  See COPYING.txt for license details.
+  -->
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="styles"/>
+    <head>
+        <css src="Magestore_ReportSuccess::css/inventory/intelligent-block.css"/>
+        <css src="Magestore_ReportSuccess::css/grid/no-button.css"/>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="Magestore\ReportSuccess\Block\Adminhtml\Report\Inventory\IncomingStock\Total" name="report_success_inventory_incoming_stock_total" template="Magestore_ReportSuccess::report/inventory/incomingstock/total.phtml" before="-"/>
+            <uiComponent name="inventory_report_incomingstock"/>
+        </referenceContainer>
+    </body>
+</page>

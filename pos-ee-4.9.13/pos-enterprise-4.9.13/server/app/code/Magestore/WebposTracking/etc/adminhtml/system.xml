@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+
+<!--
+  ~ Copyright © 2018 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="webpos">
+            <group id="support" translate="label" sortOrder="150" type="text" showInDefault="1" showInWebsite="1" showInStore="0">
+                <label>Magestore Support</label>
+                <field id="enable_tracking" translate="label" sortOrder="10" type="select" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Enable tracking data</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="syncing_time" translate="label" type="time" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Syncing time</label>
+                    <frontend_model>Magestore\WebposTracking\Block\Adminhtml\System\Config\CollectionTimeLabel</frontend_model>
+                    <backend_model>Magestore\WebposTracking\Model\Config\Backend\CollectionTime</backend_model>
+                    <depends>
+                        <field id="enable_tracking">1</field>
+                    </depends>
+                </field>
+                <field id="last_syncing_order_id" translate="label" sortOrder="30" type="text" showInDefault="0" showInWebsite="0" showInStore="0">
+                    <label>Last syncing order id</label>
+                </field>
+                <field id="customer_id" translate="label" sortOrder="40" type="text" showInDefault="0" showInWebsite="0" showInStore="0">
+                    <label>Customer id</label>
+                </field>
+                <field id="is_show_notification" translate="label" sortOrder="50" type="select" showInDefault="0" showInWebsite="0" showInStore="0">
+                    <label>Is Show Notification</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

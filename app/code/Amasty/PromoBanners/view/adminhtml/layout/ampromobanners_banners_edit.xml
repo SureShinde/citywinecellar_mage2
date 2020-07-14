@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_PromoBanners
+ */
+-->
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="admin-2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="ampromobanners_banners_edit"/>
+    <update handle="editor"/>
+    <body>
+        <referenceContainer name="left">
+            <block class="Amasty\PromoBanners\Block\Adminhtml\Banners\Edit\Tabs" name="ampromobanneres_banners_edit_tabs">
+                <block class="Amasty\PromoBanners\Block\Adminhtml\Banners\Edit\Tab\General" name="ampromobanners_banners_edit_tab_general"/>
+                <block class="Amasty\PromoBanners\Block\Adminhtml\Banners\Edit\Tab\Content" name="ampromobanners_banners_edit_tab_content"/>
+                <block class="Amasty\PromoBanners\Block\Adminhtml\Banners\Edit\Tab\Products" name="ampromobanners_banners_edit_tab_products"/>
+                <block class="Amasty\PromoBanners\Block\Adminhtml\Banners\Edit\Tab\Conditions" name="ampromobanners_banners_edit_tab_conditions"/>
+                <block class="Amasty\PromoBanners\Block\Adminhtml\Banners\Edit\Tab\Segments" name="ampromobanners_banners_edit_tab_segments" />
+                <block class="Magento\Backend\Block\Widget\Tab" name="ampromobanners_banners_edit_tab_products">
+                    <arguments>
+                        <argument name="label" xsi:type="string" translate="true">Products</argument>
+                        <argument name="class" xsi:type="string">ajax</argument>
+                        <argument name="url" xsi:type="url" path="ampromobanners/products/index">
+                            <param name="_current">1</param>
+                        </argument>
+                    </arguments>
+                </block>
+                <action method="addTab">
+                    <argument name="name" xsi:type="string">general_section</argument>
+                    <argument name="block" xsi:type="string">ampromobanners_banners_edit_tab_general</argument>
+                </action>
+                <action method="addTab">
+                    <argument name="name" xsi:type="string">content_section</argument>
+                    <argument name="block" xsi:type="string">ampromobanners_banners_edit_tab_content</argument>
+                </action>
+                <action method="addTab">
+                    <argument name="name" xsi:type="string">products_section</argument>
+                    <argument name="block" xsi:type="string">ampromobanners_banners_edit_tab_products</argument>
+                </action>
+                <action method="addTab">
+                    <argument name="name" xsi:type="string">conditions_section</argument>
+                    <argument name="block" xsi:type="string">ampromobanners_banners_edit_tab_conditions</argument>
+                </action>
+                <action method="addTab">
+                    <argument name="name" xsi:type="string">ampromobanners_banners_edit_tab_segments</argument>
+                    <argument name="block" xsi:type="string">ampromobanners_banners_edit_tab_segments</argument>
+                </action>
+            </block>
+            <block class="Magento\Backend\Block\Template" template="Amasty_PromoBanners::js.phtml" name="ampromobanners_js"/>
+        </referenceContainer>
+        <referenceContainer name="content">
+            <block class="Amasty\PromoBanners\Block\Adminhtml\Banners\Edit" name="ampromobanners_banners_edit"/>
+        </referenceContainer>
+    </body>
+</page>

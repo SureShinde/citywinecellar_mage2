@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
+    <section name="PosGroupedProductPopup">
+        <element name="product1plus" type="button" selector=".product-grouped-wrapper .grouped-item:nth-child(1) .qtyplus"/>
+        <element name="product2plus" type="button" selector=".product-grouped-wrapper .grouped-item:nth-child(2) .qtyplus"/>
+        <element name="product3plus" type="button" selector=".product-grouped-wrapper .grouped-item:nth-child(3) .qtyplus"/>
+        <element name="product4plus" type="button" selector=".product-grouped-wrapper .grouped-item:nth-child(4) .qtyplus"/>
+        <element name="addToCart" type="button" selector='.modal-content:not([style*="display: none"]) .addtocart'/>
+    </section>
+</sections>

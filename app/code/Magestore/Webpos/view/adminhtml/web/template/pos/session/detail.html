@@ -1,0 +1,111 @@
+<!--
+  ~ Copyright © 2018 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<!-- ko if: !error() && shiftData() && shiftData().shift_id > 0 -->
+<div class="admin__field-complex fieldset-wrapper admin__fieldset-section session-id">
+    <div class="admin__field-complex-elements">
+        <!-- ko if: !isClosed() -->
+        <button type="button" data-bind="click: refreshData" class="action-basic">
+            <span data-bind="i18n: 'Refresh'"></span>
+        </button>
+        <!-- /ko -->
+    </div>
+    <div class="admin__field-complex-content fieldset-wrapper-title title">
+        <strong data-bind="html: shiftData().shift_increment_id"></strong>
+    </div>
+</div>
+<div class="admin__field-complex session-detail-content">
+    <div class="session-content session-content-header">
+        <table>
+            <tr>
+                <td class="label" data-bind="i18n: 'Staff'"></td>
+                <td data-bind="html: shiftData().staff_name"></td>
+            </tr>
+            <tr>
+                <td class="label" data-bind="i18n: 'Opened'"></td>
+                <td data-bind="html: shiftData().opened_at"></td>
+            </tr>
+            <!-- ko if: isClosed() -->
+            <tr>
+                <td class="label" data-bind="i18n: 'Closed'"></td>
+                <td data-bind="html: shiftData().closed_at"></td>
+            </tr>
+            <!-- /ko -->
+        </table>
+    </div>
+    <!-- ko ifnot: isClosed() -->
+    <div class="session-content session-content-balance-action">
+        <button class="balance-action" data-bind="i18n: 'Put Money In',click : putMoneyIn"></button>
+        <button class="balance-action" data-bind="i18n: 'Take Money Out', click : takeMoneyOut"></button>
+        <!-- ko if : inClosing() -->
+        <button class="balance-action" data-bind="i18n: 'Edit Closing Balance', click : closeSession "></button>
+        <!-- /ko -->
+    </div>
+    <!-- /ko -->
+
+    <div class="session-content session-content-balance">
+        <div class="section-left">
+            <table>
+                <tr>
+                    <td class="label" data-bind="i18n: 'Opening Balance'"></td>
+                    <td data-bind="text: formatPrice(shiftData().opening_amount)"></td>
+                </tr>
+                <tr>
+                    <td class="label cash-activity" data-bind="i18n: 'Cash In', click: showCashIn"></td>
+                    <td data-bind="text: '+ ' + formatPrice(totalCashIn())"></td>
+                </tr>
+                <tr>
+                    <td class="label cash-activity" data-bind="i18n: 'Cash Out', click: showCashOut"></td>
+                    <td data-bind="text: '- ' + formatPrice(totalCashOut())"></td>
+                </tr>
+                <tr>
+                    <td class="label" data-bind="i18n: 'Theoretical Closing Balance'"></td>
+                    <td data-bind="text: formatPrice(theoreticalAmount())"></td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- ko if: isClosed() || inClosing() -->
+        <div class="section-right">
+            <table>
+                <tr>
+                    <td class="label" data-bind="i18n: 'Real Closing Balance'"></td>
+                    <td data-bind="text: realClosingAmount "></td>
+                </tr>
+                <tr>
+                    <td class="label" data-bind="i18n: 'Difference'"></td>
+                    <td data-bind="text: differentAmount"></td>
+                </tr>
+                <!-- ko if: isShowReason() -->
+                <tr>
+                    <td class="label" data-bind="i18n: 'Note'"></td>
+                    <td data-bind="text: differentReason"></td>
+                </tr>
+                <!-- /ko -->
+            </table>
+        </div>
+        <!-- /ko -->
+
+    </div>
+    <div class="session-content session-content-footer">
+        <!-- ko ifnot: isClosed() -->
+        <button class="footer-action" data-bind="i18n: 'X-Report',click : printReport "></button>
+
+        <!-- ko ifnot : inClosing() -->
+        <button class="footer-action" data-bind="i18n: 'Close Session', click : closeSession"></button>
+        <!-- /ko -->
+
+        <!-- ko if : inClosing() -->
+        <button class="footer-action" data-bind="i18n: 'Validate', click : validate"></button>
+        <!-- /ko -->
+
+        <!-- /ko -->
+
+        <!-- ko if: isClosed() -->
+        <button class="footer-action" data-bind="i18n: 'Z-Report', click : printReport"></button>
+        <!-- /ko -->
+    </div>
+</div>
+<!-- /ko -->

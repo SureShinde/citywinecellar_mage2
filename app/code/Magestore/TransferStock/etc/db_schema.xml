@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="os_inventorytransfer" resource="default" engine="innodb" comment="Inventory Transfer">
+        <column xsi:type="smallint" name="inventorytransfer_id" padding="6" unsigned="false" nullable="false" identity="true" comment="Inventory Transfer Id"/>
+        <column xsi:type="varchar" name="inventorytransfer_code" nullable="false" length="255" comment="Inventory Transfer Code" default=""/>
+        <column xsi:type="varchar" name="source_warehouse_code" nullable="false" length="255" comment="Source Warehouse Code" default=""/>
+        <column xsi:type="varchar" name="des_warehouse_code" nullable="false" length="255" comment="Destination Warehouse Code" default=""/>
+        <column xsi:type="mediumtext" name="reason" nullable="true" comment="Reason"/>
+        <column xsi:type="varchar" name="created_by" nullable="false" length="255" comment="Created By" default=""/>
+        <column xsi:type="timestamp" name="created_on" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created On"/>
+        <column xsi:type="varchar" name="status" nullable="true" length="32" comment="Status" default="open"/>
+        <column xsi:type="varchar" name="stage" nullable="true" length="32" comment="Stage" default="new"/>
+        <column xsi:type="decimal" name="qty_transferred" scale="4" precision="12" unsigned="false" nullable="true" comment="Transfer Qty" default="0"/>
+        <column xsi:type="decimal" name="qty_received" scale="4" precision="12" unsigned="false" nullable="true" comment="Qty Received" default="0"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="inventorytransfer_id"/>
+        </constraint>
+    </table>
+
+    <table name="os_inventorytransfer_receive" resource="default" engine="innodb" comment="Inventory Transfer Receive">
+        <column xsi:type="smallint" name="receive_id" padding="6" unsigned="false" nullable="false" identity="true"
+                comment="Receive Id"/>
+        <column xsi:type="smallint" name="inventorytransfer_id" padding="6" unsigned="false" nullable="false"
+                comment="Inventory Transfer Id"/>
+        <column xsi:type="varchar" name="created_by" nullable="false" length="255" comment="Created By" default=""/>
+        <column xsi:type="timestamp" name="created_on" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
+                comment="Created On"/>
+        <column xsi:type="decimal" name="total_qty" scale="4" precision="12" unsigned="false"
+                nullable="true" comment="Total Qty" default="0"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="receive_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="INVENTORYTRANSFER_ID_RECEIVE_ID"
+                    table="os_inventorytransfer_receive" column="inventorytransfer_id"
+                    referenceTable="os_inventorytransfer" referenceColumn="inventorytransfer_id"
+                    onDelete="CASCADE"/>
+    </table>
+
+    <table name="os_inventorytransfer_product" resource="default" engine="innodb" comment="Inventory Transfer Product">
+        <column xsi:type="int" name="entity_id" padding="10" unsigned="false" nullable="false" identity="true" comment="Inventory Transfer Product Id"/>
+        <column xsi:type="smallint" name="inventorytransfer_id" padding="6" unsigned="false" nullable="false" comment="Inventory Transfer Id"/>
+        <column xsi:type="int" name="product_id" padding="6" unsigned="false" nullable="false" comment="Product Id"/>
+        <column xsi:type="varchar" name="product_name" nullable="false" default="" comment="Product Name"/>
+        <column xsi:type="varchar" name="product_sku" nullable="false" default="" comment="Product Sku"/>
+        <column xsi:type="decimal" name="qty_transferred" scale="4" default="0" comment="Qty transferred"/>
+        <column xsi:type="decimal" name="qty_received" scale="4" default="0" comment="Qty transferred"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="INVENTORY_TRANSFER_REQUEST_ID_INVENTORY_TRANSFER_PRODUCT_REQUEST_ID"
+                    table="os_inventorytransfer_product" column="inventorytransfer_id" referenceTable="os_inventorytransfer"
+                    referenceColumn="inventorytransfer_id" onDelete="CASCADE"/>
+    </table>
+
+    <table name="os_inventorytransfer_receive_product" resource="default" engine="innodb" comment="Inventory Transfer Receive Product">
+        <column xsi:type="int" name="receive_product_id" padding="10" unsigned="false" nullable="false" identity="true" comment="Receive Product Id"/>
+        <column xsi:type="smallint" name="receive_id" padding="6" unsigned="false" nullable="false" comment="Receive Id"/>
+        <column xsi:type="int" name="product_id" padding="6" unsigned="false" nullable="false" comment="Product Id"/>
+        <column xsi:type="varchar" name="product_name" nullable="false" default="" comment="Product Name"/>
+        <column xsi:type="varchar" name="product_sku" nullable="false" default="" comment="Product Sku"/>
+        <column xsi:type="decimal" name="qty" scale="4" default="0" comment="Qty"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="receive_product_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="RECEIVE_ID_RECEIVE_PRODUCT_ID"
+                    table="os_inventorytransfer_receive_product" column="receive_id"
+                    referenceTable="os_inventorytransfer_receive" referenceColumn="receive_id"
+                    onDelete="CASCADE"/>
+    </table>
+</schema>

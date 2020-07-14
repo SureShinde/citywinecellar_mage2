@@ -1,0 +1,15 @@
+<div class="os_panel">
+    <div class="header">
+        <label><?php echo __('Instruction');?></label>
+    </div>
+    <ul class="content">
+        <li class="item">
+            <span><?php echo __($this->getContent());?></span>
+            <span data-role="data" data-key="form" data-type="text" class="value"></span>
+            <div class="clear"></div>
+        </li>
+        <li class="item">
+            <span><a href="<?php echo $block->getCsvSampleLink();?>"><?php echo __('Download'); ?></a></span>
+        </li>
+    </ul>
+</div>

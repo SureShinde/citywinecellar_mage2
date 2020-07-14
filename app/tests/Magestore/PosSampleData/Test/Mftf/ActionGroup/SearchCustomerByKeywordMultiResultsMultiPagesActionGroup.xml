@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright © 2019 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  ~
+  -->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="SearchCustomerByKeywordMultiResultsMultiPagesActionGroup">
+        <arguments>
+            <argument name="keyword" defaultValue=""/>
+        </arguments>
+<!--        <conditionalClick selector="{{CustomerListSection.remove}}" dependentSelector="{{CustomerListSection.remove}}" visible="true" stepKey="clickRemove"/>-->
+        <click selector="{{CustomerListSection.add_button}}" stepKey="clickAddButton"/>
+        <fillField userInput="{{keyword}}" selector="{{CustomerListSection.search_form}}" stepKey="fillSearchForm"/>
+        <wait time="2" stepKey="waitStartSearchCustomer" />
+        <waitForElementNotVisible selector="{{CustomerListSection.loader}}" time="30" stepKey="waitForScroll"/>
+        <pressKey selector=".list-customer" parameterArray="[\Facebook\WebDriver\WebDriverKeys::PAGE_DOWN]"  stepKey="scrollPageDown1"/>
+        <waitForElementNotVisible selector="{{CustomerListSection.loader}}" time="30" stepKey="waitForScroll1"/>
+        <pressKey selector=".list-customer" parameterArray="[\Facebook\WebDriver\WebDriverKeys::PAGE_DOWN]"  stepKey="scrollPageDown2"/>
+        <waitForElementNotVisible selector="{{CustomerListSection.loader}}" time="30" stepKey="waitForScroll2"/>
+        <pressKey selector=".list-customer" parameterArray="[\Facebook\WebDriver\WebDriverKeys::PAGE_DOWN]"  stepKey="scrollPageDown3"/>
+        <waitForElementNotVisible selector="{{CustomerListSection.loader}}" time="30" stepKey="waitForScroll3"/>
+        <waitForElementVisible selector="{{CustomerListSection.customer_item_n('11')}}" time="30" stepKey="waitElevenCustomer"/>
+        <seeElementInDOM selector="{{CustomerListSection.customer_item_n('11')}}" stepKey="seeElevenCustomer"/>
+        <dontSeeElementInDOM selector="{{CustomerListSection.customer_item_n('12')}}" stepKey="dontSeeTwelveCustomer"/>
+    </actionGroup>
+</actionGroups>

@@ -1,0 +1,11 @@
+source_code,store_name,description,email,phone,fax,address,state,city,zipcode,country_id,latitude,longitude
+source_FR,Tommy Bune,,tommy.hello@wawa.fr,03 24 27 62 30,09 42 70 37 48,4 rue de Strasbourg<br>8200 SEDAN,Aube,SEDAN,8200,FR,49.695021,4.945221
+source_DE,Berlin Store,,berlin@gmail.com,123456789,,boddinstrasse 4,Mecklenburg-Vorpommern,Berlin,12053,DE,52.481434,13.433594
+source_GB,Yoma,,test@test.com,0,,Speke Road,,Liverpool,L19 2RF,GB,26,85
+source_US,Chipolte,,sam@sadfasdf.com,2343344333,,"N 48th St, Phoenix",Arizona,Phoenix,Enter your zip code here,US,33.472023,111.978093
+source_GB, Crown Bakery,delivery and take away only,Gillian@crownbakery.com,01702 420666,,13 Crown Point Parade,"Croydon	",London,6320,GB,51.4224352,-0.1052941
+source_TW,Service Center,,service@712.com,02-29940456,,Kao Lew Street,,Kaohsiung,850,TW,25.034612,121.561285
+source_IN,DGL - Sarbamangala Store,Test,support@dgl.biz,8100336682,,FE- 512,WEST BENGAL,Kolkata,700106,IN,22.5733423,88.4137279
+source_ZA,ZA Store,First Pickup TIme,12345@test.com,123456,1231233124,1 K E Masinga Street,,Durban,4000,ZA,-29.850379,31.035516
+source_MX,TIENDA MEXICO,tienda para prueba,mail@contacto.com,5555555555,,Insurgentes sur 324,distrito federal,México,15500,MX,32,54
+source_CA,Victoriaville,asdads,qweqwe@asdasd.com,987-9579,,2020 du finfin,Newfoundland and Labrador,Victoriaville,G6T1P8,CA,46.0733678,-71.9911797

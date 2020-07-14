@@ -1,0 +1,81 @@
+/*
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+.pick_request_form_control .scan-input{
+    margin: 30px 0px;
+}
+.scan-container .scan-input input,
+.pick_request_form_control .scan-input input{
+    height: 50px;
+    text-align: center;
+}
+.pick_request_form_control .additional-info{
+    margin-bottom: 10px;
+}
+.pick_request_form_control .additional-info .additional-actions{
+    float:right;
+}
+.clear{
+    clear:both;
+}
+.os_fulfilsuccess_pickrequest_listing_os_fulfilsuccess_pickrequest_listing_pickrequest_scan_item_modal_container_pickrequest_scan_item_modal .admin__data-grid-header .admin__data-grid-header-row.row-gutter{
+    width:100%;
+}
+.button-show-scan-modal{
+    float: right;
+}
+.button-show-scan-modal button.action-secondary {
+    width: 260px; 
+    height: 50px; 
+    font-size: 18px;
+    background-color: #eb5202;
+    border-color: #eb5202;
+}
+
+.separator{
+    height:20px;
+}
+.text-center{
+    text-align: center;
+}
+.width-small{
+    width:70px;
+}
+.os_fulfilsuccess_pickrequest_listing_os_fulfilsuccess_pickrequest_listing_os_fulfilsuccess_recent_picked_container_os_fulfilsuccess_recent_picked_fieldset_os_fulfilsuccess_recent_picked_listing .action-multicheck-wrap .action-multicheck-toggle,
+.os_fulfilsuccess_pickrequest_listing_os_fulfilsuccess_pickrequest_listing_pickrequest_scan_item_modal_container_pickrequest_scan_item_modal .action-multicheck-wrap .action-multicheck-toggle{
+    position: absolute;
+    margin-left: -0.8rem;
+}
+
+.os_fulfilsuccess_pickrequest_listing_os_fulfilsuccess_pickrequest_listing_os_fulfilsuccess_recent_picked_container_os_fulfilsuccess_recent_picked_fieldset_os_fulfilsuccess_recent_picked_listing {
+    box-sizing: inherit;
+}
+
+.order-pack-button {
+    float: right;
+}
+
+.order-pack-button button {
+    display: block;
+    width: 360px;
+    height: 48px;
+    margin-bottom: 16px;
+}
+
+.column-width-40{
+    width:40vw;
+}
+
+.column-width-30{
+    width:30vw;
+}
+
+.page-actions-buttons button.ordersuccess-current { 
+    background-color: #eb5202 !important;
+    border-color: #eb5202 !important;
+    color: #ffffff !important;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.25) !important;
+    opacity: 0.7 !important;  
+}

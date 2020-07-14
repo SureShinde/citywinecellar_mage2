@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../../../../../vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Page/etc/SectionObject.xsd">
+    <section name="AddProductsToAdjustStockModalSection">
+        <element name="modal" type="text" selector=".os_adjuststock_form_os_adjuststock_form_os_adjuststock_product_stock_modal"/>
+
+        <!-- Filter Section -->
+        <element name="filterButton" type="button" selector="//div[contains(@class, 'os_adjuststock_form_os_adjuststock_form_os_adjuststock_product_stock_modal')]//button[@data-action='grid-filter-expand']"/>
+        <element name="applyFilterButton" type="button" selector="//div[contains(@class, 'os_adjuststock_form_os_adjuststock_form_os_adjuststock_product_stock_modal')]//button[@data-action='grid-filter-apply']"/>
+        <element name="skuFilterInput" type="input" selector=".os_adjuststock_form_os_adjuststock_form_os_adjuststock_product_stock_modal input[name='sku']"/>
+
+        <element name="firstProductCheckbox" type="checkbox" selector=".os_adjuststock_form_os_adjuststock_form_os_adjuststock_product_stock_modal tbody tr:nth-child(1) input[class='admin__control-checkbox']"/>
+
+        <element name="addSelectedProductsButton" type="button" selector=".os_adjuststock_form_os_adjuststock_form_os_adjuststock_product_stock_modal button.action-primary"/>
+    </section>
+</sections>

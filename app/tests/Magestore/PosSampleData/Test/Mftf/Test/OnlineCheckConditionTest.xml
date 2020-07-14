@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright © 2019 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  ~
+  -->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+    <test name="OnlineCheckConditionTest">
+        <annotations>
+            <features value="Switch To Online"/>
+            <stories value="Switch To Online"/>
+            <title value="Switch To Online"/>
+            <description value="Switch To Online"/>
+            <severity value="CRITICAL"/>
+            <group value="Stable"/>
+            <group value="Stable-Online"/>
+            <group value="Stable-Online-Customer"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="SwitchOnlineModeActionGroup" stepKey="SwitchOnlineModeActionGroup"/>
+    </test>
+</tests>

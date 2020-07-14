@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="SearchAndClickBundleProduct">
+        <arguments>
+            <argument name="dataProduct" defaultValue=""/>
+        </arguments>
+        <fillField stepKey="fillProductSearchBox" selector="{{ProductListSection.searchBox}}" userInput="{{dataProduct.sku}}"/>
+        <wait time="5" stepKey="wait5"/>
+
+        <!-- fix for search by sku -->
+        <!-- <waitForElementNotVisible  time="120" selector="{{ProductListSection.secondProduct}}"  stepKey="seeAtLeaseNoTwoProductAfterSearch"/> -->
+        <waitForElementVisible  time="300" selector="{{ProductListSection.firstProduct}}"  stepKey="seeAtLeaseOneProductAfterSearch"/>
+        <wait time="1" stepKey="waitForProductClickable"/>
+        <click stepKey="clickOnProductFoundInList" selector="{{ProductListSection.firstProduct}}"/>
+        <!-- wait for exactly bundle product loaded popup completly -->
+        <wait time="10" stepKey="waitToAdd0"/>
+    </actionGroup>
+</actionGroups>

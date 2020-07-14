@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="CustomSaleAddToCart">
+        <arguments>
+            <argument name="custom_sale" defaultValue="custom_sale"/>
+        </arguments>
+
+        <click selector="{{CustomSaleSection.buttonAddCustomSale}}" stepKey="clickAddCustomSale" />
+
+        <waitForElementVisible selector="{{CustomSaleSection.buttonAddToCart}}" time="120" stepKey="waitForShowPopup" />
+
+        <fillField userInput="{{custom_sale.name}}" selector="{{CustomSaleSection.fieldName}}" stepKey="fillName" />
+
+        <click selector="{{CustomSaleSection.fieldPrice}}" stepKey="clickPrice" />
+        <pressKey selector="{{CustomSaleSection.numpad}}" userInput="{{custom_sale.price}}" stepKey="enterAmountPrice"/>
+        <click selector="{{CustomSaleSection.closeNumpadPrice}}" stepKey="clickCloseNumpadPrice"/>
+
+        <click selector="{{CustomSaleSection.fieldQty}}" stepKey="clickQty" />
+        <pressKey selector="{{CustomSaleSection.numpad}}" parameterArray="[\Facebook\WebDriver\WebDriverKeys::BACKSPACE]"  stepKey="clearAmountQty"/>
+        <pressKey selector="{{CustomSaleSection.numpad}}" userInput="{{custom_sale.qty}}" stepKey="enterAmountQty"/>
+        <click selector="{{CustomSaleSection.closeNumpadQty}}" stepKey="clickCloseNumpadQty"/>
+
+        <selectOption userInput="{{custom_sale.tax_class}}" selector="{{CustomSaleSection.fieldTax}}" stepKey="fillTaxClass" />
+        <fillField userInput="{{custom_sale.note}}" selector="{{CustomSaleSection.fieldNote}}" stepKey="fillNote" />
+
+        <click selector="{{CustomSaleSection.buttonAddToCart}}" stepKey="addToCard" />
+    </actionGroup>
+</actionGroups>

@@ -1,0 +1,14 @@
+<!--
+  ~ Copyright © 2018 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+<!-- ko if: error() -->
+<div class="admin__field-complex" data-index="container_header">
+    <div class="admin__field-complex-elements">
+        <button type="button" data-bind="click: refreshData" class="action-basic" data-index="button_add">
+            <span data-bind="i18n: 'Refresh'"></span>
+        </button>
+    </div>
+    <div class="admin__field-complex-content" data-bind="html: error"></div>
+</div>
+<!-- /ko -->

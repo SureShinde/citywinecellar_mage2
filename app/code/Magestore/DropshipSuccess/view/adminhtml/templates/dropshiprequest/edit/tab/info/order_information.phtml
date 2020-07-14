@@ -1,0 +1,51 @@
+<?php
+/**
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+// @codingStandardsIgnoreFile
+
+?>
+<?php /** @var $block \Magestore\DropshipSuccess\Block\Adminhtml\DropshipRequest\Edit\Tab\OrderInformation */ ?>
+<?php $_order = $block->getOrder() ?>
+
+<section class="admin__page-section order-view-account-information">
+    <div class="admin__page-section-content">
+        <div class="admin__page-section-item order-information">
+            <?php /* Account Information */?>
+            <div class="admin__page-section-item-title">
+                <span class="title"><?php /* @escapeNotVerified */ echo __('Customer Information') ?></span>
+            </div>
+            <div class="admin__page-section-item-content">
+                <table class="admin__table-secondary order-account-information-table">
+                    <tr>
+                        <th><?php /* @escapeNotVerified */ echo __('Customer Name') ?></th>
+                        <td>
+                            <?php if ($_customerUrl = $block->getCustomerViewUrl()) : ?>
+                                <a href="<?php /* @escapeNotVerified */ echo $_customerUrl ?>" target="_blank">
+                                    <span><?php echo $block->escapeHtml($_order->getCustomerName()) ?></span>
+                                </a>
+                            <?php else: ?>
+                                <?php echo $block->escapeHtml($_order->getCustomerName()) ?>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><?php /* @escapeNotVerified */ echo __('Email') ?></th>
+                        <td><a href="mailto:<?php echo $block->escapeHtml($_order->getCustomerEmail()) ?>"><?php echo $block->escapeHtml($_order->getCustomerEmail()) ?></a></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="admin__page-section-item order-account-information">
+            <?php if (!$block->getOrder()->getIsVirtual()): ?>
+                <div class="admin__page-section-item-title">
+                    <span class="title"><?php /* @escapeNotVerified */ echo __('Shipping Address') ?></span>
+                </div>
+                <div class="admin__page-section-item-content">
+                    <address class="admin__page-section-item-content"><?php /* @escapeNotVerified */ echo $block->getFormattedAddress($_order->getShippingAddress()); ?></address>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+</section>

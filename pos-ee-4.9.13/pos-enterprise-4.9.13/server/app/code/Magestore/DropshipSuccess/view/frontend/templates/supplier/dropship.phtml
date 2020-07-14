@@ -1,0 +1,59 @@
+<?php
+/**
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+?>
+<style>
+    .order-products-toolbar div.limiter {float: right;}
+</style>
+<?php $droships = $block->getDropships(); ?>
+<?php /** @var \Magestore\DropshipSuccess\Block\Supplier\Dropship $block */?>
+<?php echo $block->getChildHtml('info');?>
+<?php $dropshipStatus = $block->getDropshipStatus() ?>
+<?php if ($droships && count($droships)): ?>
+    <div class="table-wrapper orders-history">
+        <table class="data table table-order-items history" id="my-orders-table">
+            <caption class="table-caption"><?php /* @escapeNotVerified */ echo __('Dropships') ?></caption>
+            <thead>
+                <tr>
+                    <th scope="col" class="col id"><?php /* @escapeNotVerified */ echo __('Dropship #') ?></th>
+                    <th scope="col" class="col date"><?php /* @escapeNotVerified */ echo __('Request Date') ?></th>
+                    <th scope="col" class="col shipping"><?php /* @escapeNotVerified */ echo __('Ship To') ?></th>
+                    <th scope="col" class="col total"><?php /* @escapeNotVerified */ echo __('Total Items Requested') ?></th>
+                    <th scope="col" class="col status"><?php /* @escapeNotVerified */ echo __('Status') ?></th>
+                    <th scope="col" class="col actions">&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($droships as $droship): ?>
+                    <tr>
+                        <td data-th="<?php echo $block->escapeHtml(__('Dropship #')) ?>" class="col id"><?php /* @escapeNotVerified */ echo $droship->getId() ?></td>
+                        <td data-th="<?php echo $block->escapeHtml(__('Request Date')) ?>" class="col date"><?php /* @escapeNotVerified */ echo $block->formatDate($droship->getCreatedAt()) ?></td>
+<!--                        --><?php //$extra = $block->getChildBlock('extra.container'); ?>
+<!--                        --><?php //if ($extra): ?>
+<!--                            --><?php //$extra->setOrder($droship); ?>
+<!--                            --><?php ///* @noEscape */ echo $extra->getChildHtml() ?>
+<!--                        --><?php //endif; ?>
+                        <td data-th="<?php echo $block->escapeHtml(__('Ship To')) ?>" class="col shipping"><?php echo $droship->getShippingName() ? $block->escapeHtml($droship->getShippingName()) : '&nbsp;' ?></td>
+                        <td data-th="<?php echo $block->escapeHtml(__('Total Items Requested')) ?>" class="col total"><?php /* @escapeNotVerified */ echo $droship->getTotalRequested() ?></td>
+                        <td data-th="<?php echo $block->escapeHtml(__('Status')) ?>" class="col status"><?php /* @escapeNotVerified */ echo $dropshipStatus[$droship->getStatus()] ?></td>
+                        <td data-th="<?php echo $block->escapeHtml(__('Actions')) ?>" class="col actions">
+                            <a href="<?php /* @escapeNotVerified */ echo $block->getViewUrl($droship) ?>" class="action view">
+                                <span><?php /* @escapeNotVerified */ echo __('View') ?></span>
+                            </a>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+    <?php if ($block->getPagerHtml()): ?>
+        <div class="order-products-toolbar toolbar bottom"><?php echo $block->getPagerHtml(); ?></div>
+    <?php endif ?>
+<?php else: ?>
+    <div class="message info empty"><span><?php /* @escapeNotVerified */ echo __('You have no dropships.'); ?></span></div>
+<?php endif ?>

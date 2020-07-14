@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">os_supplier_form.os_supplier_form_data_source</item>
+            <item name="deps" xsi:type="string">os_supplier_form.os_supplier_form_data_source</item>
+            <!--<item name="namespace" xsi:type="string">os_supplier_form</item>-->
+        </item>
+        <item name="config" xsi:type="array">
+            <!--<item name="dataScope" xsi:type="string">data</item>-->
+            <item name="namespace" xsi:type="string">os_supplier_form</item>
+        </item>
+        <item name="buttons" xsi:type="array">
+            <item name="back" xsi:type="string">Magestore\SupplierSuccess\Block\Adminhtml\Supplier\Edit\Button\BackButton</item>
+            <item name="save" xsi:type="string">Magestore\SupplierSuccess\Block\Adminhtml\Supplier\Edit\Button\SaveButton</item>
+        </item>
+
+        <item name="template" xsi:type="string">templates/form/collapsible</item>
+        <item name="childrenFromMeta" xsi:type="boolean">true</item>
+    </argument>
+    <dataSource name="os_supplier_form_data_source">
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">Magestore\SupplierSuccess\Ui\DataProvider\Supplier\DataForm\SupplierDataProvider</argument>
+            <argument name="name" xsi:type="string">os_supplier_form_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">supplier_id</argument>
+            <argument name="requestFieldName" xsi:type="string">id</argument>
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="submit_url" xsi:type="url" path="*/*/save"/>
+                </item>
+            </argument>
+        </argument>
+        <argument name="data" xsi:type="array">
+            <item name="js_config" xsi:type="array">
+                <item name="component" xsi:type="string">Magento_Ui/js/form/provider</item>
+                <!--<item name="component" xsi:type="string">Magestore_SupplierSuccess/js/form/provider</item>-->
+            </item>
+        </argument>
+    </dataSource>
+
+    <!--<fieldset name="assign_products">-->
+        <!--<argument name="data" xsi:type="array">-->
+            <!--<item name="config" xsi:type="array">-->
+                <!--<item name="label" xsi:type="string" translate="true">Products in Category</item>-->
+                <!--<item name="collapsible" xsi:type="boolean">true</item>-->
+                <!--<item name="sortOrder" xsi:type="number">40</item>-->
+            <!--</item>-->
+        <!--</argument>-->
+        <!--<container name="assign_products_container" >-->
+            <!--<argument name="data" xsi:type="array">-->
+                <!--<item name="config" xsi:type="array">-->
+                    <!--<item name="sortOrder" xsi:type="number">160</item>-->
+                <!--</item>-->
+            <!--</argument>-->
+            <!--<htmlContent name="html_content">-->
+                <!--<argument name="block" xsi:type="object">Magento\Catalog\Block\Adminhtml\Category\AssignProducts</argument>-->
+            <!--</htmlContent>-->
+        <!--</container>-->
+    <!--</fieldset>-->
+    <!--<fieldset name="address">-->
+        <!--&lt;!&ndash;<field name="country_id">&ndash;&gt;-->
+            <!--&lt;!&ndash;<argument name="data" xsi:type="array">&ndash;&gt;-->
+                <!--&lt;!&ndash;<item name="config" xsi:type="array">&ndash;&gt;-->
+                    <!--&lt;!&ndash;<item name="dataType" xsi:type="string">text</item>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<item name="formElement" xsi:type="string">select</item>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<item name="source" xsi:type="string">address</item>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<item name="validation" xsi:type="array">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<item name="required-entry" xsi:type="boolean">true</item>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</item>&ndash;&gt;-->
+                <!--&lt;!&ndash;</item>&ndash;&gt;-->
+            <!--&lt;!&ndash;</argument>&ndash;&gt;-->
+        <!--&lt;!&ndash;</field>&ndash;&gt;-->
+        <!--&lt;!&ndash;<field name="region">&ndash;&gt;-->
+            <!--&lt;!&ndash;<argument name="data" xsi:type="array">&ndash;&gt;-->
+                <!--&lt;!&ndash;<item name="config" xsi:type="array">&ndash;&gt;-->
+                    <!--&lt;!&ndash;<item name="visible" xsi:type="boolean">false</item>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<item name="dataType" xsi:type="string">text</item>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<item name="formElement" xsi:type="string">input</item>&ndash;&gt;-->
+                    <!--&lt;!&ndash;&lt;!&ndash;<item name="source" xsi:type="string">address</item>&ndash;&gt;&ndash;&gt;-->
+                <!--&lt;!&ndash;</item>&ndash;&gt;-->
+            <!--&lt;!&ndash;</argument>&ndash;&gt;-->
+        <!--&lt;!&ndash;</field>&ndash;&gt;-->
+        <!--&lt;!&ndash;<field name="region_id">&ndash;&gt;-->
+            <!--&lt;!&ndash;<argument name="data" xsi:type="array">&ndash;&gt;-->
+                <!--&lt;!&ndash;<item name="config" xsi:type="array">&ndash;&gt;-->
+                    <!--&lt;!&ndash;<item name="dataType" xsi:type="string">text</item>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<item name="formElement" xsi:type="string">select</item>&ndash;&gt;-->
+                    <!--&lt;!&ndash;&lt;!&ndash;<item name="source" xsi:type="string">address</item>&ndash;&gt;&ndash;&gt;-->
+                    <!--&lt;!&ndash;<item name="customEntry" xsi:type="string">region</item>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<item name="validation" xsi:type="array">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<item name="required-entry" xsi:type="boolean">true</item>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</item>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<item name="filterBy" xsi:type="array">&ndash;&gt;-->
+                        <!--&lt;!&ndash;<item name="target" xsi:type="string">${ $.provider }:${ $.parentScope }.country_id</item>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<item name="field" xsi:type="string">country_id</item>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</item>&ndash;&gt;-->
+                <!--&lt;!&ndash;</item>&ndash;&gt;-->
+            <!--&lt;!&ndash;</argument>&ndash;&gt;-->
+        <!--&lt;!&ndash;</field>&ndash;&gt;-->
+    <!--</fieldset>-->
+</form>

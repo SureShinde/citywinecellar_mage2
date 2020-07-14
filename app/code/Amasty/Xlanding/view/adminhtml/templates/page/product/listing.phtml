@@ -1,0 +1,145 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Xlanding
+ */
+?>
+<?php /** @var \Amasty\DynamicProducts\Block\Adminhtml\Page\Edit\Tab\Product\Listing $block */ ?>
+<?php
+/** @var \Magento\Catalog\Helper\Image $imageBlock */
+$imageHelper =  $block->getImageHelper();
+$productCollection = $block->getCollection();
+$countRecords = $productCollection->count() ? $productCollection->getSize() : $productCollection->count();
+?>
+<div data-role="page_products">
+    <div class="admin__data-grid-header admin__data-grid-toolbar">
+        <div class="admin__data-grid-header-row"> </div>
+        <div class="admin__data-grid-header-row">
+            <div class="admin__control-support-text">
+                <span id="<?= $block->getHtmlId() ?>-total-count" <?= $block->escapeHtml($block->getUiId('total-count')) ?>><?= $block->escapeHtml($countRecords) ?></span> <?= $block->escapeHtml(__('records found')) ?>
+            </div>
+            <?php if ($block->getPagerVisibility()): ?>
+                <div class="admin__data-grid-pager-wrap">
+                    <select name="<?= $block->escapeHtml($block->getVarNameLimit()) ?>"
+                            id="<?= $block->getHtmlId() ?>_page-limit"
+                            data-role="page_limiter"
+                            class="admin__control-select">
+                        <?php foreach([20, 30, 50, 100, 200] as $perPageSize): ?>
+                            <option value="<?= $block->escapeHtml($perPageSize) ?>"<?php if ($block->getPageSize() == $perPageSize): ?>
+                                selected="selected"<?php endif; ?>><?= $block->escapeHtml($perPageSize) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                    <label for="<?= $block->getHtmlId() ?><?= $block->getHtmlId() ?>_page-limit"
+                           class="admin__control-support-text"><?= $block->escapeHtml(__('per page')) ?></label>
+                    <div class="admin__data-grid-pager">
+                        <?php $_curPage = $block->getCurrentPage() ?>
+                        <?php $_lastPage = $block->getLastPageNumber() ?>
+                        <?php if ($_curPage > 1): ?>
+                            <button class="action-previous"
+                                    type="button"
+                                    data-role="button_previous"
+                                    data-value="<?= $block->escapeHtml(($_curPage - 1)) ?>">
+                                <span><?= $block->escapeHtml(__('Previous page')) ?></span>
+                            </button>
+                        <?php else: ?>
+                            <button type="button" class="action-previous disabled"><span><?= $block->escapeHtml(__('Previous page')) ?></span></button>
+                        <?php endif; ?>
+                        <input type="text"
+                               id="<?= $block->getHtmlId() ?>_page-current"
+                               name="<?= $block->escapeHtml($block->getVarNamePage()) ?>"
+                               value="<?= $block->escapeHtml($_curPage) ?>"
+                               class="admin__control-text"
+                               data-role="input_page"
+                            <?= $block->escapeHtml($block->getUiId('current-page')) ?> />
+                        <label class="admin__control-support-text" for="<?= $block->getHtmlId() ?>_page-current">
+                            <?= /* @escapeNotVerified */ __('of %1', '<span>' . $_lastPage . '</span>') ?>
+                        </label>
+                        <?php if ($_curPage < $_lastPage): ?>
+                            <button type="button"
+                                    title="<?= $block->escapeHtml(__('Next page')) ?>"
+                                    class="action-next"
+                                    data-role="button_next"
+                                    data-value="<?= $block->escapeHtml(($_curPage + 1)) ?>">
+                                <span><?= $block->escapeHtml(__('Next page')) ?></span>
+                            </button>
+                        <?php else: ?>
+                            <button type="button" class="action-next disabled"><span><?= $block->escapeHtml(__('Next page')) ?></span></button>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            <?php endif ?>
+        </div>
+    </div>
+
+    <div class="admin__data-grid-wrap admin__data-grid-wrap-static <?php if($block->isFirstPage()): ?> am-first-page <?php endif; ?>">
+        <ul id="am-product-list" class="am-products-list">
+            <?php if ($countRecords): ?>
+                <?php foreach ($productCollection as $_index => $_product): ?>
+                    <?php /** @var \Magento\Catalog\Model\Product $_item */ ?>
+                    <li class="am-product">
+                        <div class="am-image-wrapper">
+                            <img src="<?= $block->escapeHtml($block->getImageUrl($_product)) ?>" class="am-image" alt="<?= $block->escapeHtml(__('Product image')) ?>" />
+                        </div>
+                        <div class="am-info">
+                            <?php foreach($block->getAttributesToDisplay($_product) as $attribute): ?>
+                                <?= /* @escapeNotVerified */ $attribute->render() ?>
+                            <?php endforeach; ?>
+                        </div>
+                        <div class="am-controlbar">
+                            <div class="am-position">
+                                <input type="hidden" name="position" value="<?= $block->escapeHtml($_product->getPosition()) ?>" />
+                                <div class="am-switch-button <?php if($_product->getIsManual()): ?> -manual<?php endif; ?>"
+                                     data-role="switcher"
+                                     data-amlanding-js="am-switch-button">
+                                    <input type="checkbox"
+                                           id="am-position_<?= $block->escapeHtml($_index) ?>_checkbox"
+                                           class="admin__actions-switch-checkbox am-display-mode"
+                                           data-amlanding-js="am-display-mode"
+                                           name="manual_sort"
+                                           value="0"
+                                        <?php if($_product->getIsManual()): ?> checked="checked" <?php endif; ?>>
+                                    <label class="am-label am-button"
+                                           title="<?php if($_product->getIsManual()): ?>
+                                                   <?= $block->escapeHtml(__('Enable Auto Sorting')) ?>
+                                               <?php else: ?>
+                                                   <?= $block->escapeHtml(__('Enable Manual Sorting')) ?>
+                                               <?php endif; ?>"
+                                           for="am-position_<?= $block->escapeHtml($_index) ?>_checkbox"
+                                           data-amlanding-js="am-label">
+                                    </label>
+                                    <span class="am-label-text" data-amlanding-js="am-label-text">
+                                    <?php if($_product->getIsManual()): ?>
+                                        <?= $block->escapeHtml(__('Manual')) ?>
+                                    <?php else : ?>
+                                        <?= $block->escapeHtml(__('Auto')) ?>
+                                    <?php endif; ?>
+                                </span>
+                                </div>
+                                <a href="#"
+                                   class="am-move-top am-button"
+                                   data-amlanding-js="am-move-top"
+                                   title="<?= $block->escapeHtml(__('Move to top')) ?>">
+                                    <div class="am-arrow-up"></div>
+                                </a>
+                            </div>
+                            <input type="hidden" name="entity_id" value="<?= $block->escapeHtml($_product->getId()) ?>" />
+                        </div>
+                    </li>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </ul>
+    </div>
+</div>
+
+<script type="text/x-magento-init">
+{
+    "[data-role=page_products]": {
+        "Amasty_Xlanding/js/pager": {
+            "gridUrl": "<?= $block->escapeHtml($block->getGridUrl()) ?>",
+            "varNamePage": "<?= $block->escapeHtml($block->getVarNamePage()) ?>"
+        }
+    }
+}
+</script>

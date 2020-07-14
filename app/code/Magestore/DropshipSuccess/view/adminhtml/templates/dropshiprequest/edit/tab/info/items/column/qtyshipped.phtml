@@ -1,0 +1,16 @@
+<?php
+/**
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+if ($_item = $block->getItem()): ?>
+    <?php $qtyNeedToShip = $_item->getQtyRequested() - $_item->getQtyShipped() - $_item->getQtyCanceled(); ?>
+    <?php if ((float) $qtyNeedToShip): ?>
+        <input type="number"
+               class="input-text admin__control-text qty-input"
+               name="shipment[items][<?php echo $_item->getItemId() ?>]"
+               onblur="checkMaxQtyDropship(this, <?php echo $qtyNeedToShip ?>)"
+               value="<?php /* @escapeNotVerified */ echo $qtyNeedToShip*1 ?>"/>
+    <?php endif; ?>
+<?php endif; ?>

@@ -1,0 +1,45 @@
+<!--
+  ~ Copyright © 2018 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+<div id="cash-transaction-popover" class="modal-popup _show"
+     data-bind="css: {_show: is_show_cash_transactions()}">
+    <div class="modal-inner-wrap">
+        <div class="modal-header">
+            <h1 class="modal-title" data-bind="i18n: 'Cash Transactions'"></h1>
+            <button class="action-close" type="button" data-bind="click: hideCashTransaction">
+                <span>Close</span>
+            </button>
+        </div>
+        <!-- ko if: is_show_cash_transactions() -->
+        <div class="modal-content">
+            <div class="cash-transaction-type">
+                <div class="section-left">
+                    <div class="section-right cash-button"
+                         data-bind="i18n: 'Cash In', click: showCashIn(true), css: {active: is_show_cash_in()}"></div>
+                </div>
+                <div class="section-right">
+                    <div class="section-left cash-button"
+                         data-bind="i18n: 'Cash Out', click: showCashIn(false), css: {active: !is_show_cash_in()}">
+                    </div>
+                </div>
+            </div>
+            <div class="cash-transactions">
+                <!-- ko foreach: { data: shiftData().cash_transaction, as: 'transaction' } -->
+                <!-- ko if: ($parents[0].is_show_cash_in() && transaction.type === 'add') || (!$parents[0].is_show_cash_in() && transaction.type !== 'add') -->
+                <div class="subitem">
+                    <span class="datetime pull-left"
+                          data-bind="text: $parents[0].formatDate(transaction.created_at)"></span>
+                    <span class="price pull-right"
+                          data-bind="text: (transaction.type === 'add' ? '+ ' : '- ') + $parents[0].formatPrice(transaction.value)"></span>
+                    <span class="title" data-bind="text: transaction.note"></span>
+                </div>
+                <!-- /ko -->
+                <!-- /ko -->
+            </div>
+        </div>
+        <!-- /ko -->
+        <div class="modal-footer"></div>
+    </div>
+</div>
+<div class="modals-overlay" data-bind="visible: is_show_cash_transactions()" style="z-index: 899;"></div>

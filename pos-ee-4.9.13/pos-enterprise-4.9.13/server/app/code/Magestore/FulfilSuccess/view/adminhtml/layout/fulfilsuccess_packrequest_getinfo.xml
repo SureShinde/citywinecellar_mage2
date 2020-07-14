@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content">
+            <block class="Magestore\FulfilSuccess\Block\Adminhtml\PackRequest\PackRequestDetail" name="pack_request_detail">
+                
+                <block class="Magestore\FulfilSuccess\Block\Adminhtml\AbstractRequest\Detail\OrderInfo" name="request_order"/>
+                
+                <block class="Magestore\FulfilSuccess\Block\Adminhtml\AbstractRequest\Detail\Account" name="request_account"/>
+
+                <block class="Magestore\FulfilSuccess\Block\Adminhtml\AbstractRequest\Detail\ShippingAddress" name="request_shipping_address"/>
+
+                <block class="Magento\Backend\Block\Template" name="before_items" template="Magestore_FulfilSuccess::abstractRequest/detail/before-items.phtml">
+                    <block class="Magestore\FulfilSuccess\Block\Adminhtml\PackRequest\Detail\Scan" name="scan_form"/>
+                </block>
+
+                <block class="Magestore\FulfilSuccess\Block\Adminhtml\PackRequest\Detail\Items" name="picked_items" template="Magestore_FulfilSuccess::packRequest/detail/items.phtml">
+                    <block class="Magestore\FulfilSuccess\Block\Adminhtml\PackRequest\Detail\Items\DefaultRenderer" as="default" template="Magestore_FulfilSuccess::packRequest/detail/items/renderer/default.phtml">
+                    </block>
+                    <block class="Magestore\FulfilSuccess\Block\Adminhtml\PackRequest\Detail\Items\BundleRenderer" as="bundle" template="Magestore_FulfilSuccess::packRequest/detail/items/renderer/bundle.phtml">
+                    </block>
+                    <block class="Magento\Sales\Block\Adminhtml\Items\Column\Name" name="column_name" template="items/column/name.phtml" group="column"/>
+                    <block class="Magento\Framework\View\Element\Text\ListText" name="order_item_extra_info"/>
+                </block>
+
+                <!--<block class="Magestore\FulfilSuccess\Block\Adminhtml\AbstractRequest\Detail\Tracking"-->
+                       <!--name="shipment_tracking"-->
+                       <!--template="Magestore_FulfilSuccess::abstractRequest/detail/tracking.phtml"/>-->
+
+                <block class="Magestore\FulfilSuccess\Block\Adminhtml\PackRequest\Detail\Tracking" name="shipment_tracking" template="Magestore_FulfilSuccess::packRequest/detail/tracking.phtml"/>
+
+                <block class="Magento\Sales\Block\Adminhtml\Order\View\History" name="order_history" template="order/view/history.phtml"/>
+
+                <block class="Magento\Sales\Block\Adminhtml\Order\Totals" name="order_totals" template="order/totals.phtml">
+                    <block class="Magento\Sales\Block\Adminhtml\Order\Totals\Tax" name="tax" template="order/totals/tax.phtml"/>
+                </block>
+
+                <block class="Magestore\FulfilSuccess\Block\Adminhtml\AbstractRequest\Detail\Shipping" name="shipping_info" template="Magestore_FulfilSuccess::abstractRequest/detail/shipping.phtml"/>
+
+                <block class="Magestore\FulfilSuccess\Block\Adminhtml\PackRequest\Detail\PackedPackages" name="packed_packages" template="Magestore_FulfilSuccess::packRequest/detail/packed_packages.phtml"/>
+
+                <block class="Magestore\FulfilSuccess\Block\Adminhtml\PackRequest\Packaging" name="fulfil_packaging" template="Magestore_FulfilSuccess::packRequest/packaging/popup.phtml"/>
+
+                <block class="Magestore\FulfilSuccess\Block\Adminhtml\PackRequest\Detail\Js" name="packrequest_js" template="Magestore_FulfilSuccess::packRequest/detail/js.phtml"/>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

@@ -1,0 +1,18 @@
+<?php
+/**
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+?>
+<?php
+/**
+ * @var \Magestore\FulfilSuccess\Block\Adminhtml\AbstractRequest\Detail\Items\Renderer\DefaultRenderer $block
+ */
+$_item = $block->getItem() ?>
+<tr>
+    <td class="col-product"><?php echo $block->getColumnHtml($_item, 'name') ?></td>
+    <td class="col-barcode"><?php echo $block->getColumnHtml($_item, 'barcode') ?></td>
+    <td class="col-request-qty"><?php echo $block->getColumnHtml($_item, 'request_qty') ?></td>
+    <td class="col-picked-qty"><?php echo $block->getColumnHtml($_item, 'picked_qty') ?></td>
+</tr>

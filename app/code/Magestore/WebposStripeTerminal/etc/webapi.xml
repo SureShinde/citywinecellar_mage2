@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+
+<!--
+  ~ Copyright © 2018 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <route url="/V1/webpos/stripeterminal/connection_token" method="POST">
+        <service class="Magestore\WebposStripeTerminal\Api\StripeTerminalServiceInterface" method="connectionToken"/>
+        <resources>
+            <resource ref="Magestore_Webpos::manage_pos" />
+        </resources>
+    </route>
+    <route url="/V1/webpos/stripeterminal/create_payment_intent" method="POST">
+        <service class="Magestore\WebposStripeTerminal\Api\StripeTerminalServiceInterface" method="createPaymentIntent"/>
+        <resources>
+            <resource ref="Magestore_Webpos::manage_pos" />
+        </resources>
+    </route>
+    <route url="/V1/webpos/stripeterminal/capture_payment_intent" method="POST">
+        <service class="Magestore\WebposStripeTerminal\Api\StripeTerminalServiceInterface" method="capturePaymentIntent"/>
+        <resources>
+            <resource ref="Magestore_Webpos::manage_pos" />
+        </resources>
+    </route>
+    <route url="/V1/webpos/stripeterminal/register_reader" method="POST">
+        <service class="Magestore\WebposStripeTerminal\Api\StripeTerminalServiceInterface" method="registerReader"/>
+        <resources>
+            <resource ref="Magestore_Webpos::manage_pos" />
+        </resources>
+    </route>
+    <route url="/V1/webpos/stripeterminal/refund_payment_intent" method="POST">
+        <service class="Magestore\WebposStripeTerminal\Api\StripeTerminalServiceInterface" method="refundPaymentIntent"/>
+        <resources>
+            <resource ref="Magestore_Webpos::manage_pos" />
+        </resources>
+    </route>
+    <route url="/V1/webpos/stripeterminal/save_connected_reader" method="POST">
+        <service class="Magestore\WebposStripeTerminal\Api\StripeTerminalServiceInterface" method="saveConnectedReader"/>
+        <resources>
+            <resource ref="Magestore_Webpos::manage_pos" />
+        </resources>
+    </route>
+</routes>

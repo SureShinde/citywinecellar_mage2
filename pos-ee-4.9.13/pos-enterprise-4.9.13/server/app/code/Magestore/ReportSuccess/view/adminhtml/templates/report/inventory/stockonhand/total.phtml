@@ -1,0 +1,23 @@
+<div class="parent-container">
+    <div class="total-container" id="qty_on_hand">
+        <div class="count"></div>
+        <div class="text">Total Qty</div>
+    </div>
+    <div class="total-container" id="stock_value">
+        <div class="count"></div>
+        <div class="text">Stock Value</div>
+    </div>
+    <div class="total-container" id="potential_revenue">
+        <div class="count"></div>
+        <div class="text">Potential Revenue</div>
+    </div>
+    <div class="total-container" id="potential_profit">
+        <div class="count"></div>
+        <div class="text">Potential Profit</div>
+    </div>
+
+</div>
+
+<script>
+    window.priceFormat = <?php echo \Zend_Json::encode($block->getPriceFormat()); ?>;
+</script>

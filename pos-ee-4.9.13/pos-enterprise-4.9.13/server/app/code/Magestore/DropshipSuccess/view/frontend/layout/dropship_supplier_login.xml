@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="supplier_account"/>
+    <body>
+        <referenceContainer name="content">
+            <container name="supplier.login.container" label="Supplier Login Container" htmlTag="div" htmlClass="login-container">
+                <block class="Magestore\DropshipSuccess\Block\Supplier\Form\Login" name="supplier_form_login" template="supplier/form/login.phtml">
+                    <container name="form.additional.info" as="form_additional_info"/>
+                </block>
+            </container>
+        </referenceContainer>
+    </body>
+</page>

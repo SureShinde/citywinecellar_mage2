@@ -1,0 +1,12 @@
+<?php
+/**
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+if ($_item = $block->getItem()): ?>
+    <?php $qtyNeedToShip = $_item->getQtyRequested() - $_item->getQtyShipped() - $_item->getQtyCanceled(); ?>
+    <?php if ((float) $qtyNeedToShip): ?>
+        <label><?php /* @escapeNotVerified */ echo $qtyNeedToShip*1 ?></label>
+    <?php endif; ?>
+<?php endif; ?>

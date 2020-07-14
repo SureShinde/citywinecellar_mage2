@@ -1,0 +1,83 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+?>
+<?php
+/** @var  \Amasty\Blog\Block\Sidebar\Tag $block */
+$collection = $block->getCollection();
+$cloudEnabledClass = $block->getMtEnabled() ? 'cloud-enabled' : '';
+$uniqueValue = random_int(0, 10000);
+?>
+
+<?php if (!$block->isAlreadyWrapped()): ?>
+    <div class="amblog-element-block">
+<?php endif; ?>
+
+<?php if ($block->getDisplay() && $collection && $collection->getSize()): ?>
+    <div class="amblog-tags amblog-widget-container -tags" data-amblog-js="accordion">
+        <div class="block-title amblog-title" data-amblog-js="heading">
+            <?= $block->escapeHtml(__('Tags')) ?>
+        </div>
+        <div class="block-content" data-amblog-js="content">
+            <?php if ($block->getMtEnabled()): ?>
+                <div id="amblog_canvas_container<?= (int)$uniqueValue ?>" class="noSwipe amblog-cloud-tags">
+                    <canvas class="amblog-cloud" height="<?= $block->escapeHtml($block->getMtHeight()); ?>"
+                            id="amblog_canvas<?= (int)$uniqueValue ?>">
+                        <?= $block->escapeHtml(__("Unfortunately, your browser doesn't support HTML5 canvas.")); ?>
+                    </canvas>
+                </div>
+            <?php endif; ?>
+            <div id="amblog_tags<?= (int)$uniqueValue ?>" class="tag-list <?= /* @noEscape */ $cloudEnabledClass; ?>">
+                <div class="amblog-item">
+                    <?php foreach ($collection as $tag): ?>
+                        <?php $activeClass = $block->isActive($tag) ? 'active' : ''; ?>
+                        <a href="<?= $block->escapeUrl($tag->getUrl()); ?>"
+                           class="tag amblog-tag<?= /* @noEscape */ $cloudEnabledClass; ?> <?= /* @noEscape */ $activeClass; ?>"
+                           data-weight="<?= /* @noEscape */ $block->getTagWeight($tag->getPostCount()) ?>"
+                           title="<?= $block->escapeHtml(__("%1 Topics", $tag->getPostCount())); ?>">
+                            <?= $block->escapeHtml($tag->getName()); ?>
+                        </a>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </div>
+    <?php if ($block->getMtEnabled()): ?>
+        <script type="text/javascript">
+            //<![CDATA[
+            require(['jquery', 'Amasty_Blog/js/tagcloud/tagcanvas.min'], function ($) {
+                $(document).ready(function () {
+                    try {
+                        var options = {
+                            weight: true,
+                            weightMode: 'both',
+                            weightFrom: 'data-weight',
+                            textHeight: 16,
+                            textColour: '<?= $block->escapeHtml($block->getMtTextColor()); ?>',
+                            outlineColour: '<?= $block->escapeHtml($block->getMtHiColor()); ?>',
+                            weightGradient: {
+                                0: '<?= $block->escapeHtml($block->getMtTextColor()); ?>',
+                                1: '<?= $block->escapeHtml($block->getMtTextColor2()); ?>'
+                            }
+                        };
+
+                        TagCanvas.Start('amblog_canvas<?= (int)$uniqueValue ?>', 'amblog_tags<?= (int)$uniqueValue ?>', options);
+                    } catch (e) {
+                        console.log(e);
+                        document.getElementById('amblog_canvas_container<?= (int)$uniqueValue ?>').style.display = 'none';
+                    }
+                })
+            });
+            //]]>
+        </script>
+    <?php endif; ?>
+    </div>
+<?php else: ?>
+    <div class="amblog-empty"><?= $block->escapeHtml(__('Tags were not found')); ?></div>
+<?php endif; ?>
+
+<?php if (!$block->isAlreadyWrapped()): ?>
+    </div>
+<?php endif; ?>

@@ -1,0 +1,79 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Xlanding
+ */
+-->
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="admin-2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="jquery/fileUploader/css/jquery.fileupload-ui.css"/>
+        <css src="Amasty_Xlanding::css/page_products.css"/>
+    </head>
+    <update handle="editor"/>
+    <body>
+        <referenceContainer name="content">
+            <block class="Amasty\Xlanding\Block\Adminhtml\Page\Edit" name="amasty_xlanding_page_edit"/>
+        </referenceContainer>
+        <referenceContainer name="left">
+            <block class="Amasty\Xlanding\Block\Adminhtml\Page\Edit\Tabs" name="amasty_xlanding_page_edit_tabs">
+
+                <block class="Amasty\Xlanding\Block\Adminhtml\Page\Edit\Tab\Main" name="amasty_xlanding_page_edit_tab_main"/>
+                <block class="Amasty\Xlanding\Block\Adminhtml\Page\Edit\Tab\Design" name="amasty_xlanding_page_edit_tab_design"/>
+                <block class="Amasty\Xlanding\Block\Adminhtml\Page\Edit\Tab\Meta" name="amasty_xlanding_page_edit_tab_meta"/>
+                <block class="Amasty\Xlanding\Block\Adminhtml\Page\Edit\Tab\Conditions" name="amasty_xlanding_page_edit_tab_conditions"/>
+                <block class="Amasty\Xlanding\Block\Adminhtml\Page\Edit\Tab\Product" name="amasty_xlanding_page_edit_tab_product" template="Amasty_Xlanding::page/product/container.phtml">
+                    <block class="Amasty\Xlanding\Block\Adminhtml\Page\Edit\Tab\Product\Listing"
+                           name="amasty_xlanding_page_edit_tab_product_listing"
+                           as="product.listing"
+                           template="Amasty_Xlanding::page/product/listing.phtml" />
+                    <block class="Magento\Backend\Block\Widget\Button" name="amasty_xlanding_page_edit_tab_product_sort_products_button" as="sort_products_button">
+                        <arguments>
+                            <argument name="id" xsi:type="string">am-products-sort</argument>
+                            <argument name="label" translate="true" xsi:type="string">Sort</argument>
+                            <argument name="class" xsi:type="string">secondary sort-products</argument>
+                        </arguments>
+                    </block>
+                    <block class="Amasty\Xlanding\Block\Adminhtml\Widget\Select\SortOrder" name="amasty_xlanding_page_edit_tab_product_sort_order" as="sort_order">
+                        <arguments>
+                            <argument name="label" translate="true" xsi:type="string">Sort order</argument>
+                            <argument name="class" xsi:type="string">sort_order</argument>
+                            <argument name="name" xsi:type="string">sort_order</argument>
+                        </arguments>
+                    </block>
+                    <block class="Amasty\Xlanding\Block\Adminhtml\Widget\Select\Store" name="amasty_xlanding_page_edit_tab_product_store" as="store">
+                        <arguments>
+                            <argument name="label" translate="true" xsi:type="string">Store</argument>
+                            <argument name="class" xsi:type="string">store</argument>
+                            <argument name="name" xsi:type="string">store_id</argument>
+                        </arguments>
+                    </block>
+                </block>
+
+                <action method="addTab">
+                    <argument name="name" xsi:type="string">main_section</argument>
+                    <argument name="block" xsi:type="string">amasty_xlanding_page_edit_tab_main</argument>
+                </action>
+                <action method="addTab">
+                    <argument name="name" xsi:type="string">design_section</argument>
+                    <argument name="block" xsi:type="string">amasty_xlanding_page_edit_tab_design</argument>
+                </action>
+                <action method="addTab">
+                    <argument name="name" xsi:type="string">meta_section</argument>
+                    <argument name="block" xsi:type="string">amasty_xlanding_page_edit_tab_meta</argument>
+                </action>
+                <action method="addTab">
+                    <argument name="name" xsi:type="string">conditions_section</argument>
+                    <argument name="block" xsi:type="string">amasty_xlanding_page_edit_tab_conditions</argument>
+                </action>
+                <action method="addTab">
+                    <argument name="name" xsi:type="string">products_section</argument>
+                    <argument name="block" xsi:type="string">amasty_xlanding_page_edit_tab_product</argument>
+                </action>
+            </block>
+        </referenceContainer>
+
+    </body>
+</page>

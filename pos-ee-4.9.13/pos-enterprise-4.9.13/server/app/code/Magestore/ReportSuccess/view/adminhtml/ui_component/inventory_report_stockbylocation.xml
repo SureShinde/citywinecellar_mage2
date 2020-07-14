@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~  Copyright © 2018 Magestore. All rights reserved.
+  ~  See COPYING.txt for license details.
+  -->
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd" class="Magestore\ReportSuccess\Ui\Component\Listing">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">inventory_report_stockbylocation.inventory_report_stockbylocation_data_source</item>
+            <item name="deps" xsi:type="string">inventory_report_stockbylocation.inventory_report_stockbylocation_data_source</item>
+        </item>
+        <item name="spinner" xsi:type="string">inventory_report_stockbylocation_columns</item>
+        <item name="buttons" xsi:type="array">
+            <item name="add" xsi:type="array">
+                <item name="name" xsi:type="string">add</item>
+                <item name="label" xsi:type="string" translate="true">Add New Page</item>
+                <item name="class" xsi:type="string">primary</item>
+                <item name="url" xsi:type="string">*/*/new</item>
+            </item>
+        </item>
+    </argument>
+
+
+    <dataSource name="inventory_report_stockbylocation_data_source">
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">Magestore\ReportSuccess\Ui\DataProvider\Report\StockByLocation\DataProvider</argument>
+            <argument name="name" xsi:type="string">inventory_report_stockbylocation_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">entity_id</argument>
+            <argument name="requestFieldName" xsi:type="string">id</argument>
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="update_url" xsi:type="url" path="mui/index/render"/>
+                    <item name="component" xsi:type="string">Magestore_ReportSuccess/js/grid/inventory/stockbylocation/provider</item>
+                    <item name="storageConfig" xsi:type="array">
+                        <item name="indexField" xsi:type="string">entity_id</item>
+                        <item name="cacheRequests" xsi:type="boolean">false</item>
+                    </item>
+                </item>
+            </argument>
+        </argument>
+    </dataSource>
+
+    <!--General Information-->
+    <container name="select_locations">
+        <fieldset name="general_information">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="component" xsi:type="string">Magestore_ReportSuccess/js/components/stockbylocation/fieldset</item>
+                    <item name="label" xsi:type="string" translate="true"> </item>
+                    <item name="collapsible" xsi:type="boolean">false</item>
+                </item>
+            </argument>
+            <field name="location" class="Magestore\ReportSuccess\Ui\DataProvider\Report\StockByLocation\Form\SelectLocations\Location">
+                <argument name="data" xsi:type="array">
+                    <item name="options" xsi:type="object">Magestore\ReportSuccess\Model\Source\Adminhtml\Warehouse</item>
+                    <item name="config" xsi:type="array">
+                        <item name="label" xsi:type="string" translate="true">Select Warehouse</item>
+                        <item name="componentType" xsi:type="string">field</item>
+                        <item name="formElement" xsi:type="string">select</item>
+                        <item name="selectedPlaceholders" xsi:type="array">
+                            <item name="defaultPlaceholder" xsi:type="string" translate="true">All Warehouses</item>
+                        </item>
+                        <item name="component" xsi:type="string">Magento_Ui/js/form/element/ui-select</item>
+                        <item name="elementTmpl" xsi:type="string">ui/grid/filters/elements/ui-select</item>
+                        <item name="filterOptions" xsi:type="boolean">true</item>
+                        <item name="showCheckbox" xsi:type="boolean">true</item>
+                        <item name="disableLabel" xsi:type="boolean">true</item>
+                        <item name="multiple" xsi:type="boolean">true</item>
+                        <item name="sortOrder" xsi:type="number">10</item>
+                    </item>
+                </argument>
+            </field>
+            <field name="metric">
+                <argument name="data" xsi:type="array">
+                    <item name="options" xsi:type="object">Magestore\ReportSuccess\Model\Source\Adminhtml\StockByLocation\Metric</item>
+                    <item name="config" xsi:type="array">
+                        <item name="label" xsi:type="string" translate="true">Select Metric</item>
+                        <item name="componentType" xsi:type="string">field</item>
+                        <item name="formElement" xsi:type="string">select</item>
+                        <item name="component" xsi:type="string">Magento_Ui/js/form/element/ui-select</item>
+                        <item name="elementTmpl" xsi:type="string">ui/grid/filters/elements/ui-select</item>
+                        <item name="filterOptions" xsi:type="boolean">false</item>
+                        <item name="showCheckbox" xsi:type="boolean">false</item>
+                        <item name="disableLabel" xsi:type="boolean">true</item>
+                        <item name="multiple" xsi:type="boolean">false</item>
+                        <item name="sortOrder" xsi:type="number">20</item>
+                        <item name="selectedPlaceholders" xsi:type="array">
+                            <item name="defaultPlaceholder" xsi:type="string" translate="true">Qty On-hand</item>
+                        </item>
+                    </item>
+                </argument>
+            </field>
+            <field name="show_report">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="sortOrder" xsi:type="number">40</item>
+                        <item name="formElement" xsi:type="string">input</item>
+                        <item name="component" xsi:type="string">Magestore_ReportSuccess/js/grid/inventory/stockbylocation/button</item>
+                        <item name="submit_url" xsi:type="url" path="omcreports/inventory/saveStockByLocation"/>
+                        <item name="elementId" xsi:type="string">show_report</item>
+                        <item name="dialogUrl" xsi:type="url" path="omcreports/inventory/saveStockByLocation">
+                            <param name="target_element_id">show_report</param>
+                        </item>
+                    </item>
+                </argument>
+            </field>
+        </fieldset>
+    </container>
+
+    <listingToolbar name="listing_top">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="sticky" xsi:type="boolean">true</item>
+            </item>
+        </argument>
+        <bookmark name="bookmarks"/>
+        <exportButton class="Magestore\ReportSuccess\Ui\Component\ExportButton">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="component" xsi:type="string">Magento_Ui/js/grid/export</item>
+                    <item name="displayArea" xsi:type="string">dataGridActions</item>
+                    <item name="options" xsi:type="array">
+                        <item name="csv" xsi:type="array">
+                            <item name="value" xsi:type="string">csv</item>
+                            <item name="label" xsi:type="string" translate="true">CSV</item>
+                            <item name="url" xsi:type="string">omcreports/report_stockByLocation/exportCsv/is_export/true</item>
+                        </item>
+                    </item>
+                </item>
+            </argument>
+        </exportButton>
+        <columnsControls name="columns_controls"/>
+        <paging name="listing_paging"/>
+        <filters name="listing_filters"/>
+    </listingToolbar>
+
+
+
+    <columns name="inventory_report_stockbylocation_columns" class="Magestore\ReportSuccess\Ui\Component\Columns\Columns">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="storageConfig" xsi:type="array">
+                    <item name="provider" xsi:type="string">inventory_report_stockbylocation.inventory_report_stockbylocation.listing_top.bookmarks</item>
+                    <item name="namespace" xsi:type="string">current</item>
+                </item>
+                <item name="childDefaults" xsi:type="array">
+                    <item name="fieldAction" xsi:type="array">
+                        <item name="provider" xsi:type="string">inventory_report_stockbylocation.inventory_report_stockbylocation.inventory_report_stockbylocation_columns_editor</item>
+                        <item name="target" xsi:type="string">startEdit</item>
+                        <item name="params" xsi:type="array">
+                            <item name="0" xsi:type="string">${ $.$data.rowIndex }</item>
+                            <item name="1" xsi:type="boolean">true</item>
+                        </item>
+                    </item>
+                    <item name="storageConfig" xsi:type="array">
+                        <item name="provider" xsi:type="string">inventory_report_stockbylocation.inventory_report_stockbylocation.listing_top.bookmarks</item>
+                        <item name="root" xsi:type="string">columns.${ $.index }</item>
+                        <item name="namespace" xsi:type="string">current.${ $.storageConfig.root }</item>
+                    </item>
+                </item>
+            </item>
+        </argument>
+        <selectionsColumn name="ids">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="resizeEnabled" xsi:type="boolean">false</item>
+                    <item name="resizeDefaultWidth" xsi:type="string">55</item>
+                    <item name="indexField" xsi:type="string">entity_id</item>
+                    <item name="sortOrder" xsi:type="number">1</item>
+                    <item name="visible" xsi:type="boolean">false</item>
+                </item>
+            </argument>
+        </selectionsColumn>
+        <column name="sku">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">SKU</item>
+                    <item name="sortOrder" xsi:type="number">10</item>
+                </item>
+            </argument>
+        </column>
+        <column name="barcode" class="Magestore\ReportSuccess\Ui\Component\Listing\Columns\Barcode">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Barcode</item>
+                    <item name="sortOrder" xsi:type="number">20</item>
+                </item>
+            </argument>
+        </column>
+        <column name="name">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Name</item>
+                    <item name="sortOrder" xsi:type="number">30</item>
+                </item>
+            </argument>
+        </column>
+    </columns>
+</listing>

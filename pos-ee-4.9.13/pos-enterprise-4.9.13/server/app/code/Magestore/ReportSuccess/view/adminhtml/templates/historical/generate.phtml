@@ -1,0 +1,59 @@
+<!--
+  ~ Copyright © 2018 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+<?php /** @var \Magestore\ReportSuccess\Block\Adminhtml\Report\Inventory\HistoricalStock\GenerateReport $block */ ?>
+<div id="popup-generate" style="display: none">
+    <div class="wrap-popup">
+        <form class="modal-body admin__form-field" id="location_select_form"
+              action="<?php echo $block->getUrl('*/historicalStock/generate') ?>" method="POST">
+            <label class="admin__form-field-label">
+                <strong><?php echo $block->getSelectResourceLabel(); ?></strong>
+            </label>
+            <input name="form_key" type="hidden" value="<?php echo $block->escapeHtml($block->getFormKey()) ?>"/>
+            <div class="admin__form-field-control location-select">
+                <select class="admin__control-select" id="location_code" name="location_code">
+                    <?php foreach ($block->getLocations() as $location) : ?>
+                        <option value="<?php echo $location['value'] ?>"><?php echo $location['label'] ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div class="admin__form-field-label location-note">
+                <i><?php echo __('This process may take few minutes.'); ?></i>
+            </div>
+        </form>
+
+    </div>
+</div>
+<style>
+    .location-select {
+        margin-top: 10px;
+    }
+
+    .location-note {
+        margin-top: 10px;
+    }
+</style>
+<script>
+    require([
+        'jquery',
+        'mage/translate',
+        'Magento_Ui/js/modal/modal'
+    ], function ($, __, Modal) {
+        Modal({
+            title: __(''),
+            clickableOverlay: true,
+            buttons: [{
+                text: __('Generate'),
+                class: '',
+                click: function (event) {
+                    $('#location_select_form').submit();
+                    //this.closeModal(event);
+                }
+            }]
+        }, $('#popup-generate'));
+    });
+
+
+</script>
+

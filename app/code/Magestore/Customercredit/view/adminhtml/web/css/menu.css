@@ -1,0 +1,18 @@
+.admin__menu .level-0>.submenu>ul .item-storecredit.level-1>.submenu-group-title{display: block;}
+@media all and (max-height: 700px) {
+    .menu-wrapper._fixed .admin__menu #nav ._active >.submenu>ul[role="menu"],
+    .menu-wrapper._fixed .admin__menu #nav ._show >.submenu>ul[role="menu"] {
+        overflow-y: scroll;
+        -webkit-overflow-scrolling: touch;
+        height: 700px;
+    }
+    /* Chrome and Safari */
+    .menu-wrapper._fixed .admin__menu #nav ._active >.submenu>ul[role="menu"]::-webkit-scrollbar,
+    .menu-wrapper._fixed .admin__menu #nav ._show >.submenu>ul[role="menu"]::-webkit-scrollbar { width: 0 !important }
+    /* IE 10+ */
+    .menu-wrapper._fixed .admin__menu #nav ._active >.submenu>ul[role="menu"],
+    .menu-wrapper._fixed .admin__menu #nav ._show >.submenu>ul[role="menu"] { -ms-overflow-style: none; }
+    /* Firefox */
+    .menu-wrapper._fixed .admin__menu #nav ._active >.submenu>ul[role="menu"],
+    .menu-wrapper._fixed .admin__menu #nav ._show >.submenu>ul[role="menu"] { overflow: -moz-scrollbars-none; }
+}

@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<!--
+  ~ Copyright © 2018 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="Magestore_Webpos::posclient" title="POS Client">
+                    <resource id="Magestore_Webpos::manage_pos" title="Manage POS" sortOrder="20">
+                        <resource id="Magestore_Webpos::manage_checkout" title="Checkout" sortOrder="10">
+                            <resource id="Magestore_Webpos::custom_price_on_item" title="Custom price on items" sortOrder="50"/>
+                        </resource>
+                        <resource id="Magestore_Webpos::manage_session" title="Manage Session" sortOrder="20">
+                            <resource id="Magestore_Webpos::make_adjustment" title="Make adjustment (put money in/ take money out)" sortOrder="10"/>
+                            <resource id="Magestore_Webpos::view_sessions_created_by_other_staff" title="View sessions created by other staff" sortOrder="20"/>
+                        </resource>
+                        <resource id="Magestore_Webpos::check_external_stock" title="Check external stock" sortOrder="30"/>
+                        <resource id="Magestore_Webpos::manage_order" title="Manage Order" sortOrder="40">
+                            <resource id="Magestore_Webpos::manage_order_created_at_location_of_staff" title="POS orders created from location of the staff" sortOrder="10"/>
+                            <resource id="Magestore_Webpos::manage_order_that_are_created_at_or_assigned_to_location_of_staff" title="All orders assigned to location of the staff" sortOrder="20"/>
+                            <resource id="Magestore_Webpos::manage_order_created_at_all_location" title="POS orders created from all locations" sortOrder="30"/>
+                            <resource id="Magestore_Webpos::manage_all_orders_in_system" title="All orders (POS orders &amp; online orders)" sortOrder="40"/>
+                        </resource>
+                        <resource id="Magestore_Webpos::refund" title="Refund" sortOrder="50"/>
+                    </resource>
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>

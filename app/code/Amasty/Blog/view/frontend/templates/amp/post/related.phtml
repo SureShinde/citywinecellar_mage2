@@ -1,0 +1,46 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+?>
+<?php /** @var \Amasty\Blog\Block\Content\Post\Related $block */
+$collection = $block->getCollection() ?>
+
+<?php if ($collection && $collection->getSize()): ?>
+    <div class="amblog-related-wrapper amblog-grid-wrap amblog-post-wrap">
+        <div class="amblog-title"><?= $block->escapeHtml(__('Related Posts'));?></div>
+        <?php foreach ($collection as $post): ?>
+            <div class="list-item">
+                <h3>
+                    <a class="amblog-title" href="<?= $block->escapeUrl($post->geUrl()); ?>"
+                       title="<?= $block->escapeHtml($post->getTitle()); ?>">
+                        <?= $block->escapeHtml($post->getTitle()); ?>
+                    </a>
+                </h3>
+
+                <?php if ($post->getListThumbnailSrc()): ?>
+                    <div class="amp-img-container">
+                        <a href="<?= $block->escapeUrl($post->getUrl()); ?>"
+                           title="<?= $block->escapeHtml($post->getTitle()); ?>">
+                            <amp-img alt="<?= $block->escapeHtml($post->getThumbnailAlt()); ?>"
+                                     src="<?= $block->escapeUrl($post->getListThumbnailSrc()); ?>"
+                                     layout="fill">
+                            </amp-img>
+                        </a>
+                    </div>
+                <?php endif; ?>
+
+                <div class="post-header">
+                    <?= $block->getAmpHeaderHtml($post); ?>
+                </div>
+
+                <a class="button am-readmore" href="<?= $block->escapeUrl($block->getReadMoreUrl($post)); ?>"
+                   title="<?= $block->escapeHtml(__("Read More")); ?>">
+                    <?= $block->escapeHtml(__("Read More")); ?>
+                </a>
+            </div>
+        <?php endforeach; ?>
+    </div>
+<?php endif; ?>

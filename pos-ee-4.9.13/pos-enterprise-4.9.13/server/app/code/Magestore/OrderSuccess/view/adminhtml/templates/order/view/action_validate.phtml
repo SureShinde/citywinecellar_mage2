@@ -1,0 +1,27 @@
+<?php
+/**
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+?>
+<input type="hidden" id="current_order_id" value="<?php echo $block->getOrder()->getId() ?>"/>
+<script>
+    var ActionValidation = <?php echo $block->getActionValidationJson() ?>;
+    require([
+        'jquery'
+    ], function ($) {
+        
+        if(ActionValidation.canCancel) {
+            $('.cancel-order')[0].removeAttribute('disabled');
+        } else {
+            $('.cancel-order')[0].disabled = 'disabled';
+        }
+        
+        if(ActionValidation.canHold) {
+            $('.hold-order')[0].removeAttribute('disabled');
+        } else {
+            $('.hold-order')[0].disabled = 'disabled';
+        }        
+    });
+</script>

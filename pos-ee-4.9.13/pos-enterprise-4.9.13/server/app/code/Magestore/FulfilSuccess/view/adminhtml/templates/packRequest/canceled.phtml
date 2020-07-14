@@ -1,0 +1,81 @@
+<?php
+/**
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/** @var \Magestore\FulfilSuccess\Block\Adminhtml\PackRequest\PackRequestDetail $block */
+?>
+<form id="pack_request_form" method="post" action="<?php /* @escapeNotVerified */ echo $block->getSaveUrl() ?>">
+    <?php echo $block->getLayout()->getMessagesBlock()->getGroupedHtml() ?>
+    <?php echo $block->getBlockHtml('formkey') ?>
+    <input type="hidden" id="pack_request_id" name="pack_request_id" value="<?php echo $block->getPackRequestId(); ?>"/>
+    <input type="hidden" id="warehouse_id" name="shipment[warehouse]" value="<?php echo $block->getWarehouseId(); ?>"/>
+    <div id="messages">
+        <div class="messages">
+            <div class="message message-notice notice">
+                <div data-ui-id="messages-message-notice">
+                    <?php echo __('This pack has been canceled. You should return all packed items to the warehouse.') ?>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="admin__page-section">
+        <div class="admin__page-section-content">
+            <div style="width: 35%; float: left; margin-right:2%;">
+                <?php echo $block->getChildHtml('request_order'); ?>
+            </div>
+            <div style="width: 35%; float: left; margin-right:2%;">
+                <?php echo $block->getChildHtml('request_account'); ?>
+            </div>
+            <div style="width: 25%; float: left;">
+                <?php echo $block->getChildHtml('request_shipping_address'); ?>
+            </div>
+        </div>
+    </section>
+    <section class="admin__page-section">
+        <!--
+        <div class="admin__page-section-title">
+            <span class="title"><?php /* @escapeNotVerified */
+        echo __('Items Picked')
+        ?></span>
+        </div>
+        -->
+        <?php echo $block->getBeforeItemsHtml() ?>
+        <?php echo $block->getItemsHtml() ?>
+    </section>
+
+    <section class="admin__page-section">
+        <!--    <div class="admin__page-section-title">-->
+        <!--        <span class="title">--><?php ///* @escapeNotVerified */ echo __('Sales Total')  ?><!--</span>-->
+        <!--    </div>-->
+        <div class="admin__page-section-content">
+            <div class="admin__page-section-item order-comments-history">
+                <div class="admin__page-section-item-title">
+                    <span class="title"><?php /* @escapeNotVerified */
+                        echo __('Notes for this Sales')
+                        ?></span>
+                </div>
+                <?php echo $block->getChildHtml('order_history') ?>
+
+            </div>
+            <div class="admin__page-section-item order-shipping-address">
+                <div><?php echo $block->getChildHtml('shipping_info') ?></div>
+                <?php if (!$block->canCreateShippingLabel()): ?>
+                    <?php echo $block->getChildHtml('shipment_tracking') ?>
+                <?php endif ?>
+            </div>
+            <div class="admin__page-section-item order-pack-button">
+                <?php if ($block->canCreateShippingLabel() && !$block->isPackedRequest()): ?>
+                    <div class="field choice admin__field admin__field-option field-create create_shipping_label">
+                        <input id="create_shipping_label" type="hidden" name="shipment[create_shipping_label]" value="1" />
+                    </div>
+                <?php endif ?>
+
+            </div>
+        </div>
+    </section>
+
+    <?php echo $block->getChildHtml('fulfil_packaging'); ?>
+    <?php echo $block->getChildHtml('packrequest_js'); ?>
+</form>

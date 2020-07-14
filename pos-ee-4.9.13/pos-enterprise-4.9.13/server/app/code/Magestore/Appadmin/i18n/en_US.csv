@@ -1,0 +1,58 @@
+Save,Save
+Delete,Delete
+"Save and Continue Edit","Save and Continue Edit"
+"Edit Role '%1'","Edit Role '%1'"
+"New Role","New Role"
+"Role Information","Role Information"
+"Role Name","Role Name"
+Description,Description
+"Edit Role %1","Edit Role %1"
+"Role Resources","Role Resources"
+General,General
+"Maximum custom discount rate can apply (%)","Maximum custom discount rate can apply (%)"
+ID,ID
+"User Name","User Name"
+"Display Name","Display Name"
+Email,Email
+Status,Status
+Permission,Permission
+"Staff List","Staff List"
+Back,Back
+Reset,Reset
+"Role was successfully deleted","Role was successfully deleted"
+"This Role no longer exists.","This Role no longer exists."
+Role,Role
+"Please correct the data sent.","Please correct the data sent."
+"A total of %1 record(s) were deleted.","A total of %1 record(s) were deleted."
+"Role was successfully saved","Role was successfully saved"
+"Staff was successfully deleted","Staff was successfully deleted"
+"New Staff","New Staff"
+"Edit Staff %1","Edit Staff %1"
+Staff,Staff
+"Email %1 already exists.","Email %1 already exists."
+"Username already exists.","Username already exists."
+"Staff was successfully saved","Staff was successfully saved"
+"Role Name already exists.","Role Name already exists."
+Enabled,Enabled
+Disabled,Disabled
+"Could not save role.","Could not save role."
+"Role with id ""%1"" does not exist.","Role with id ""%1"" does not exist."
+"Password must be at least of %1 characters.","Password must be at least of %1 characters."
+"Password must include both numeric and alphabetic characters.","Password must include both numeric and alphabetic characters."
+"Password confirmation must be same as password.","Password confirmation must be same as password."
+"A user with the same user name already exists.","A user with the same user name already exists."
+"Could not save staff.","Could not save staff."
+"Staff with id ""%1"" does not exist.","Staff with id ""%1"" does not exist."
+Edit,Edit
+"Staff Information","Staff Information"
+"POS permission","POS permission"
+Password,Password
+"Password Confirmation","Password Confirmation"
+"Email Address","Email Address"
+"New Password","New Password"
+"Add Staff","Add Staff"
+"Delete items","Delete items"
+"Are you sure you want to delete selected items?","Are you sure you want to delete selected items?"
+Username,Username
+Location,Location
+"Add Role","Add Role"

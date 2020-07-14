@@ -1,0 +1,34 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+?>
+<?php
+/** @var \Amasty\Blog\Block\Social $block */
+?>
+
+<?php if ($block->getButtonsCount()) : ?>
+    <div class="amblog-social-container" id="social">
+        <?php foreach ($block->getButtons() as $button) : ?>
+            <?php $buttonValue = $button->getValue(); ?>
+            <?php // TODO: Facebook doesn't work now ?>
+            <?php if ($block->isPreConfigAmpType($button) && $buttonValue !== 'facebook') : ?>
+                <amp-social-share class="rounded"
+                                  width="36"
+                                  height="36"
+                                  type="<?= /* @noEscape */ $buttonValue; ?>">
+                </amp-social-share>
+            <?php elseif ($buttonValue !== 'facebook') : ?>
+                <amp-social-share class="rounded"
+                                  width="36"
+                                  height="36"
+                                  type="<?= /* @noEscape */ $buttonValue; ?>"
+                                  data-share-endpoint="<?= $block->escapeUrl($block->getButtonUrl($button)); ?>">
+                    <?= /* @noEscape */ $block->getAmpSocialButton($buttonValue)?>
+                </amp-social-share>
+            <?php endif; ?>
+        <?php endforeach; ?>
+    </div>
+<?php endif; ?>

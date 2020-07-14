@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright © 2019 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  ~
+  -->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="SwitchOnlineModeActionGroup">
+        <click selector="{{MenuSection.menuButton}}" stepKey="clickMenuButton1" />
+        <waitForElementVisible selector="{{MenuSection.menuItem('item-settings')}}" time="30" stepKey="waitMenuOrderShow" />
+        <click selector="{{MenuSection.menuItem('item-settings')}}" stepKey="clickSettings" />
+        <waitForElementVisible selector=".list-lv1 label" time="30" stepKey="waitButtonSync" />
+        <executeJS function="if (document.getElementsByTagName('input')[0].checked === true) {document.getElementsByTagName('input')[0].click()}" stepKey="switchToOnline"/>
+        <!-- Back to checkout page -->
+        <click selector="{{MenuSection.menuButton}}" stepKey="clickMenuButtonCheckout" />
+        <waitForElementVisible selector="{{MenuSection.menuItem('item-checkout')}}" time="30" stepKey="waitMenuOrderShowCheckout" />
+        <click selector="{{MenuSection.menuItem('item-checkout')}}" stepKey="goToPageCheckout" />
+        <wait time="2" stepKey="waitBeforeFinishActionGroup" />
+    </actionGroup>
+
+    <actionGroup name="SwitchOfflineModeActionGroup">
+        <click selector="{{MenuSection.menuButton}}" stepKey="clickMenuButton1" />
+        <waitForElementVisible selector="{{MenuSection.menuItem('item-settings')}}" time="30" stepKey="waitMenuOrderShow" />
+        <click selector="{{MenuSection.menuItem('item-settings')}}" stepKey="clickSettings" />
+        <waitForElementVisible selector=".list-lv1 label" time="30" stepKey="waitButtonSync" />
+        <executeJS function="if (document.getElementsByTagName('input')[0].checked === false) {document.getElementsByTagName('input')[0].click()}" stepKey="switchToOfflineMode"/>
+        <!-- Back to checkout page -->
+        <click selector="{{MenuSection.menuButton}}" stepKey="clickMenuButtonCheckout" />
+        <waitForElementVisible selector="{{MenuSection.menuItem('item-checkout')}}" time="30" stepKey="waitMenuOrderShowCheckout" />
+        <click selector="{{MenuSection.menuItem('item-checkout')}}" stepKey="goToPageCheckout" />
+        <waitForJS function="
+        if (!window.count) {
+            window.count = 1;
+        } else {
+            window.count += 1;
+        }
+        if (document.getElementsByClassName('online-info')[0].style.display === 'none' || window.count === 300) {
+            window.count = 0;
+            return true;
+        }
+        await new Promise(r => setTimeout(r, 1000));
+        return false;
+        " time="500" stepKey="waitForJS"/>
+    </actionGroup>
+</actionGroups>

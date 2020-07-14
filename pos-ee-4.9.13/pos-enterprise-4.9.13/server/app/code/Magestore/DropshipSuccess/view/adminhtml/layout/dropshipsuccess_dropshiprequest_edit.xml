@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="admin-2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="sales_order_transactions_grid_block"/>
+    <head>
+        <link src="Magento_Sales::js/bootstrap/order-create-index.js"/>
+        <link src="Magento_Sales::js/bootstrap/order-post-action.js"/>
+    </head>
+    <update handle="sales_order_item_price"/>
+    <body>
+        <referenceContainer name="content">
+            <block class="Magestore\DropshipSuccess\Block\Adminhtml\DropshipRequest\Edit" name="dropship_request_edit"/>
+        </referenceContainer>
+        <referenceContainer name="left">
+            <block class="Magestore\DropshipSuccess\Block\Adminhtml\DropshipRequest\Edit\Tabs" name="dropship_request_edit_tabs">
+                <block class="Magestore\DropshipSuccess\Block\Adminhtml\DropshipRequest\Edit\Tab\Info" name="dropship_request_info_tab" template="Magestore_DropshipSuccess::dropshiprequest/edit/tab/info.phtml">
+                    <block class="Magestore\DropshipSuccess\Block\Adminhtml\DropshipRequest\Edit\Tab\Info\OrderInformation" name="order_info" template="dropshiprequest/edit/tab/info/order_information.phtml"/>
+                    <block class="Magestore\DropshipSuccess\Block\Adminhtml\DropshipRequest\Edit\Tab\Info\SupplierInformation" name="supplier_info" template="dropshiprequest/edit/tab/info/supplier_information.phtml" />
+
+                    <block class="Magestore\DropshipSuccess\Block\Adminhtml\DropshipRequest\Edit\Tab\Info\Items" name="dropship_request_items" template="dropshiprequest/edit/tab/info/items.phtml">
+                        <arguments>
+                            <argument name="columns" xsi:type="array">
+                                <item name="product" xsi:type="string" translate="true">Product</item>
+                                <item name="sku" xsi:type="string" translate="true">SKU</item>
+                                <item name="qty" xsi:type="string" translate="true">Qty</item>
+                                <item name="qty_to_ship" xsi:type="string" translate="true">Qty To Ship</item>
+                                <item name="qty_shipped" xsi:type="string" translate="true">Qty Dropship</item>
+                            </argument>
+                        </arguments>
+                        <block class="Magestore\DropshipSuccess\Block\Adminhtml\DropshipRequest\Edit\Tab\Info\Items\Renderer\DefaultRenderer" as="default" template="dropshiprequest/edit/tab/info/items/renderer/default.phtml">
+                            <arguments>
+                                <argument name="columns" xsi:type="array">
+                                    <item name="product" xsi:type="string" translate="false">col-product</item>
+                                    <item name="sku" xsi:type="string" translate="false">col-sku</item>
+                                    <item name="qty" xsi:type="string" translate="false">col-qty</item>
+                                    <item name="qty_to_ship" xsi:type="string" translate="false">col-qty-to-ship</item>
+                                    <item name="qty_shipped" xsi:type="string" translate="false">col-qty-shipped</item>
+                                </argument>
+                            </arguments>
+                        </block>
+                        <block class="Magento\Sales\Block\Adminhtml\Items\Column\Name" name="column_name" template="items/column/name.phtml" group="column"/>
+                        <block class="Magestore\DropshipSuccess\Block\Adminhtml\DropshipRequest\Edit\Tab\Info\Items\Column\Qty" name="column_qty" template="dropshiprequest/edit/tab/info/items/column/qty.phtml" group="column"/>
+                        <block class="Magestore\DropshipSuccess\Block\Adminhtml\DropshipRequest\Edit\Tab\Info\Items\Column\Qty" name="column_qty_to_ship" template="dropshiprequest/edit/tab/info/items/column/qtytoship.phtml" group="column"/>
+                        <block class="Magestore\DropshipSuccess\Block\Adminhtml\DropshipRequest\Edit\Tab\Info\Items\Column\Qty" name="column_qty_shipped" template="dropshiprequest/edit/tab/info/items/column/qtyshipped.phtml" group="column"/>
+                        <block class="Magento\Framework\View\Element\Text\ListText" name="order_item_extra_info"/>
+                    </block>
+                </block>
+                <action method="addTab">
+                    <argument name="name" xsi:type="string">dropship_request_info</argument>
+                    <argument name="block" xsi:type="string">dropship_request_info_tab</argument>
+                </action>
+                <block class="Magestore\DropshipSuccess\Block\Adminhtml\DropshipRequest\Edit\Tab\Shipments" name="dropship_request_shipment.grid.container"/>
+                <action method="addTab">
+                    <argument name="name" xsi:type="string">dropship_request_shipment</argument>
+                    <argument name="block" xsi:type="string">dropship_request_shipment.grid.container</argument>
+                </action>
+            </block>
+        </referenceContainer>
+        <referenceBlock name="head.components">
+            <block class="Magento\Framework\View\Element\Js\Components" name="sales_page_head_components" template="Magento_Sales::page/js/components.phtml"/>
+        </referenceBlock>
+        <referenceBlock name="dropship_request_shipment.grid.container">
+            <uiComponent name="os_dropship_request_shipment_grid"/>
+        </referenceBlock>
+    </body>
+</page>

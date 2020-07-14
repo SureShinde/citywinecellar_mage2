@@ -1,0 +1,41 @@
+<?php
+/**
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/** @var \Magestore\PurchaseOrderSuccess\Block\Adminhtml\PurchaseOrder\Edit\Fieldset\PurchaseSumary $block */
+
+/** @var \Magestore\PurchaseOrderSuccess\Block\Adminhtml\PurchaseOrder\Edit\Fieldset\PurchaseSumary\Item $blockGrid */
+$blockGrid = $block->getBlockGrid();
+$gridJsObjectName = $blockGrid->getJsObjectName();
+$hiddenInputField = $blockGrid->getHiddenInputField();
+$dataFormPart = $block->getDataFormPart();
+$editFields = $blockGrid->getEditFields();
+$originCostField = $blockGrid->getOriginCostField();
+?>
+<?php echo $block->getGridHtml(); ?>
+<input type="hidden" name="<?php echo $hiddenInputField ?>" id="<?php echo $hiddenInputField ?>"
+       data-form-part="<?php echo $dataFormPart ?>" value="" />
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "Magestore_PurchaseOrderSuccess/js/grid/selected-product": {
+                "selectedProducts": <?php /* @escapeNotVerified */ echo $blockGrid->getSelectedProductData(); ?>,
+                "gridJsObjectName": <?php /* @escapeNotVerified */ echo '"' . $gridJsObjectName . '"' ?: '{}'; ?>,
+                "hiddenInputField": <?php /* @escapeNotVerified */ echo '"'.$hiddenInputField.'"' ?>,
+                "originCostField": <?php /* @escapeNotVerified */ echo '"'.$originCostField.'"' ?>,
+                "editFields": <?php /* @escapeNotVerified */ echo $editFields ?>,
+                "deleteUrl": <?php /* @escapeNotVerified */ echo '"' . $blockGrid->getDeleteUrl() . '"' ?: '""'; ?>,
+                "updateCostUrl": <?php /* @escapeNotVerified */ echo '"' . $blockGrid->getUpdateCostUrl() . '"' ?: '""'; ?>,
+                "priceListJson": <?php /* @escapeNotVerified */ echo $blockGrid->getPriceListJson(); ?>,
+                "reloadTotalUrl": <?php /* @escapeNotVerified */ echo '"' . $blockGrid->getReloadTotalUrl() . '"' ?: '""'; ?>
+            }
+        }
+    }
+</script>
+<?php echo $block->getTotalHtml(); ?>
+<!-- @todo remove when "UI components" will support such initialization -->
+<script>
+    require('mage/apply/main').apply();
+</script>

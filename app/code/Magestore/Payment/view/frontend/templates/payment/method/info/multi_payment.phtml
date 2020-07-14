@@ -1,0 +1,47 @@
+<!--
+/**
+ * Magestore
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Magestore.com license that is
+ * available through the world-wide-web at this URL:
+ * http://www.magestore.com/license-agreement.html
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade this extension to newer
+ * version in the future.
+ *
+ * @category    Magestore
+ * @package     Magestore_Webpos
+ * @copyright   Copyright (c) 2012 Magestore (http://www.magestore.com/)
+ * @license     http://www.magestore.com/license-agreement.html
+ */
+-->
+<?php
+$specificInfo = $block->getSpecificInformation();
+?>
+<dl class="payment-method">
+    <?php if ($specificInfo):?>
+        <dd class="content">
+            <table class="data table">
+                <?php foreach ($specificInfo as $item):?>
+                    <tr>
+                        <th scope="row"><?= $block->escapeHtml($item['label']) ?></th>
+                        <td>
+                            <?= /* @noEscape */ $item['value'] ?>
+                        </td>
+                    </tr>
+                    <?php if (isset($item['reference_number']) && $item['reference_number']):?>
+                        <tr>
+                            <th style="padding-left: 10px; font-size: 12px"><i><?= __('Reference No')?></i></th>
+                            <td><?= $item['reference_number'] ?></td>
+                        </tr>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            </table>
+        </dd>
+    <?php endif;?>
+</dl>
+<?= $block->getChildHtml() ?>

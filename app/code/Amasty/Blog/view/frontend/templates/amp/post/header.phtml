@@ -1,0 +1,51 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+?>
+<?php
+/** @var \Amasty\Blog\Block\Content\Post\Details $block */
+
+$post = $block->getPost();
+?>
+
+<?php if ($block->showAuthor() && $post->getPostedBy()) : ?>
+    <span class="posted-by item">
+        <i class="fas fa-user amblog-details-icon"></i>
+        <?= $block->escapeHtml(__("By ")); ?>
+        <?php if ($block->useSocialProfile()) : ?>
+            <a rel="author"
+               href="<?= $block->escapeUrl($block->getSocialProfileUrl()); ?>"
+               target="_blank"
+               title="<?= $block->escapeHtml($post->getPostedBy()); ?>">
+        <?php endif; ?>
+        <?= $block->escapeHtml($post->getPostedBy()); ?>
+        <?php if ($block->useSocialProfile()) : ?>
+            </a>
+        <?php endif; ?>
+    </span>
+<?php endif; ?>
+
+<?php if ($post->getCreatedAt()) : ?>
+    <span class="date item">
+        <i class="fas fa-calendar-alt amblog-details-icon"></i>
+        <?= /* @noEscape */ $block->renderDate($post->getPublishedAt()); ?>
+    </span>
+<?php endif; ?>
+
+<?php if ($post->getCommentsEnabled()) : ?>
+    <span class="comments item">
+    <?php $commentCount = $block->getCommentsCount();
+    if ($commentCount == 1) : ?>
+        <i class="fas fa-comment amblog-details-icon"></i>
+        <?= /* @noEscape */ __("%1 comment", $commentCount); ?>
+    <?php elseif ($commentCount > 1) : ?>
+        <i class="fas fa-comment amblog-details-icon"></i>
+        <?= /* @noEscape */ __("%1 comments", $commentCount); ?>
+    <?php else : ?>
+        <?= $block->escapeHtml(__("No comments")); ?>
+    <?php endif; ?>
+    </span>
+<?php endif; ?>

@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">os_fulfilsuccess_pickrequest_listing.pickrequest_listing_data_source</item>
+            <item name="deps" xsi:type="string">os_fulfilsuccess_pickrequest_listing.pickrequest_listing_data_source</item>
+        </item>
+        <item name="spinner" xsi:type="string">os_fulfilsuccess_pickrequest_listing_columns</item>
+        <item name="buttons" xsi:type="array">              
+            <item name="pick_item" xsi:type="string">Magestore\FulfilSuccess\Block\Adminhtml\PickRequest\Button\PickItemButton</item>
+            <item name="pack_item" xsi:type="string">Magestore\FulfilSuccess\Block\Adminhtml\PackRequest\Button\PackItemButton</item>
+            <item name="package" xsi:type="string">Magestore\FulfilSuccess\Block\Adminhtml\Package\Button\PackageButton</item>               
+        </item>        
+    </argument>
+    <dataSource name="pickrequest_listing_data_source">
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider</argument>
+            <argument name="name" xsi:type="string">pickrequest_listing_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">pick_request_id</argument>
+            <argument name="requestFieldName" xsi:type="string">id</argument>
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="component" xsi:type="string">Magento_Ui/js/grid/provider</item>
+                    <item name="update_url" xsi:type="url" path="mui/index/render"/>
+                    <item name="storageConfig" xsi:type="array">
+                        <item name="indexField" xsi:type="string">pick_request_id</item>
+                    </item>
+                </item>
+            </argument>
+        </argument>
+        <argument name="data" xsi:type="array">
+            <item name="js_config" xsi:type="array">
+                <item name="component" xsi:type="string">Magento_Ui/js/grid/provider</item>
+            </item>
+        </argument>
+    </dataSource>
+    <container name="warehouse">
+        <field name="warehouse_select" class="Magestore\FulfilSuccess\Ui\DataProvider\PickRequest\SelectWarehouse">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">Magestore\FulfilSuccess\Model\PickRequest\Warehouse\Options</item>
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="formElement" xsi:type="string">select</item>
+                    <item name="component" xsi:type="string">Magestore_FulfilSuccess/js/fulfilrequest/warehouse</item>
+                    <item name="dataScope" xsi:type="string">warehouse_select</item>
+                    <item name="template" xsi:type="string">Magestore_FulfilSuccess/fulfilrequest/warehouse</item>
+                </item>
+            </argument>
+        </field>
+    </container>
+    <container name="pick_buttons">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="title" xsi:type="string">Scan Picked Order Items</item>
+                <item name="label" xsi:type="string" translate="true">Scan Order Items</item>
+                <item name="class" xsi:type="string">primary</item>
+                <item name="additionalClasses" xsi:type="string">button-show-scan-modal primary</item>
+                <item name="component" xsi:type="string">Magento_Ui/js/form/components/button</item>
+                <item name="template" xsi:type="string">ui/form/components/button/container</item>
+                <item name="actions" xsi:type="array">
+                    <item name="0" xsi:type="array">
+                        <item name="targetName" xsi:type="string">os_fulfilsuccess_pickrequest_listing.os_fulfilsuccess_pickrequest_listing.pickrequest_scan_item_modal_container.pickrequest_scan_item_modal</item>
+                        <item name="actionName" xsi:type="string">openModal</item>
+                    </item>
+                </item>
+            </item>
+        </argument>
+    </container>
+    <container name="separator">
+        <field name="separator">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="template" xsi:type="string">Magestore_FulfilSuccess/form/separator</item>
+                </item>
+            </argument>
+        </field>
+    </container>
+    <container name="pickrequest_scan_item_modal_container">
+        <modal name="pickrequest_scan_item_modal">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="options" xsi:type="array">
+                        <item name="title" xsi:type="string">Scan Picked Items</item>
+                        <item name="name" xsi:type="string">pickrequest_scan_item_modal</item>
+                        <item name="type" xsi:type="string">slide</item>
+                        <item name="focus" xsi:type="string">[placeholder="Scan Pick ID Here"]</item>
+                    </item>
+                </item>
+            </argument>
+            <container name="control_container">
+                <insertForm name="os_fulfilsuccess_scan_item_form">
+                    <argument name="data" xsi:type="array">
+                        <item name="config" xsi:type="array">
+                            <item name="autoRender" xsi:type="boolean">true</item>
+                            <item name="ns" xsi:type="string">os_fulfilsuccess_scan_item_form</item>
+                            <item name="component" xsi:type="string">Magestore_FulfilSuccess/js/components/form/insert-form</item>
+                        </item>
+                    </argument>
+                </insertForm>
+            </container>            
+            <insertListing name="os_fulfilsuccess_picked_listing">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="autoRender" xsi:type="string">true</item>
+                        <item name="ns" xsi:type="string">os_fulfilsuccess_picked_listing</item>
+                        <item name="externalProvider" xsi:type="string">os_fulfilsuccess_picked_listing.picked_listing_data_source</item>
+                    </item>
+                </argument>
+            </insertListing>
+        </modal>
+    </container>
+    <container name="batch_listing">
+        <paging name="listing_batch" class="Magestore\FulfilSuccess\Ui\Component\Batch">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="component" xsi:type="string">Magestore_FulfilSuccess/js/grid/batch</item>
+                </item>
+            </argument>
+        </paging>           
+    </container>
+    <container name="listing_top">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="template" xsi:type="string">ui/grid/toolbar</item>
+                <item name="sticky" xsi:type="boolean">false</item>
+            </item>
+        </argument>     
+        <bookmark name="bookmarks"/>
+        <columnsControls name="columns_controls"/>
+        <paging name="listing_paging"/>
+
+        <filters name="listing_filters"/>
+
+        <exportButton name="export_button">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="selectProvider" xsi:type="string">os_fulfilsuccess_pickrequest_listing.os_fulfilsuccess_pickrequest_listing.os_fulfilsuccess_pickrequest_listing_columns.ids</item>
+                </item>
+            </argument>
+        </exportButton>
+
+        <massaction name="listing_massaction">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="component" xsi:type="string">Magestore_FulfilSuccess/js/pickrequest/grid/massactions/popup</item>
+                </item>
+            </argument>
+            <action name="print-picking-list-order">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="type" xsi:type="string">print-order</item>
+                        <item name="label" xsi:type="string" translate="true">Print Picking List (group by Pick #)</item>
+                        <item name="popup" xsi:type="boolean">true</item>
+                        <item name="url" xsi:type="url" path="fulfilsuccess/pickRequest/printPickingList">
+                            <param name="type">1</param>
+                        </item>
+                    </item>
+                </argument>
+            </action>
+            <action name="print-picking-list-product">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="type" xsi:type="string">print-product</item>
+                        <item name="label" xsi:type="string" translate="true">Print Picking List (group by Product)</item>
+                        <item name="popup" xsi:type="boolean">true</item>
+                        <item name="url" xsi:type="url" path="fulfilsuccess/pickRequest/printPickingList">
+                            <param name="type">2</param>
+                        </item>
+                    </item>
+                </argument>
+            </action>
+            <action name="add-batch" class="Magestore\FulfilSuccess\Ui\Component\Listing\MassActions\DynamicAction">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="type" xsi:type="string">add-batch</item>
+                        <item name="label" xsi:type="string" translate="true">Add to Batch</item>
+                        <item name="action_resource" xsi:type="object">Magestore\FulfilSuccess\Ui\DataProvider\PickRequest\AddBatchActions</item>
+                    </item>
+                </argument>
+            </action>
+            <action name="remove-batch" class="Magestore\FulfilSuccess\Ui\Component\Listing\MassActions\DynamicAction">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="type" xsi:type="string">remove-batch</item>
+                        <item name="label" xsi:type="string" translate="true">Remove from Batch</item>
+                        <item name="action_resource" xsi:type="object">Magestore\FulfilSuccess\Ui\DataProvider\PickRequest\RemoveBatchActions</item>
+                    </item>
+                </argument>
+            </action>
+        </massaction>
+    </container>
+
+        <columns name="os_fulfilsuccess_pickrequest_listing_columns">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="storageConfig" xsi:type="array">
+                        <item name="provider" xsi:type="string">os_fulfilsuccess_pickrequest_listing.os_fulfilsuccess_pickrequest_listing.os_fulfilsuccess_pickrequest_listing_columns.ids</item>
+                        <item name="namespace" xsi:type="string">current</item>
+                    </item>
+                    <item name="editorConfig" xsi:type="array">
+                        <item name="selectProvider" xsi:type="string">os_fulfilsuccess_pickrequest_listing.os_fulfilsuccess_pickrequest_listing.os_fulfilsuccess_pickrequest_listing_columns.ids</item>
+                        <item name="enabled" xsi:type="boolean">true</item>
+                        <item name="indexField" xsi:type="string">pick_request_id</item>
+                    </item>
+                    <item name="childDefaults" xsi:type="array">
+                        <item name="fieldAction" xsi:type="array">
+                            <item name="provider" xsi:type="string">os_fulfilsuccess_pickrequest_listing.os_fulfilsuccess_pickrequest_listing.os_fulfilsuccess_pickrequest_listing_columns.actions</item>
+                            <item name="target" xsi:type="string">applyAction</item>
+                            <item name="params" xsi:type="array">
+                                <item name="0" xsi:type="string">edit</item>
+                                <item name="1" xsi:type="string">${ $.$data.rowIndex }</item>
+                            </item>
+                        </item>
+                        <item name="controlVisibility" xsi:type="boolean">true</item>
+                        <item name="storageConfig" xsi:type="array">
+                            <item name="provider" xsi:type="string">os_fulfilsuccess_pickrequest_listing.os_fulfilsuccess_pickrequest_listing.listing_top.bookmarks</item>
+                            <item name="root" xsi:type="string">columns.${ $.index }</item>
+                            <item name="namespace" xsi:type="string">current.${ $.storageConfig.root}</item>
+                        </item>
+                    </item>
+                </item>
+            </argument>
+
+            <selectionsColumn name="ids">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="resizeEnabled" xsi:type="boolean">false</item>
+                        <item name="resizeDefaultWidth" xsi:type="string">55</item>
+                        <item name="indexField" xsi:type="string">pick_request_id</item>
+                        <item name="sortOrder" xsi:type="number">0</item>
+                    </item>
+                </argument>
+            </selectionsColumn>
+            <column name="pick_request_id">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="filter" xsi:type="string">textRange</item>
+                        <item name="sorting" xsi:type="string">asc</item>
+                        <item name="label" xsi:type="string" translate="true">Pick #</item>
+                        <item name="sortOrder" xsi:type="number">1</item>
+                    </item>
+                </argument>
+            </column>
+            <column name="age">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="component" xsi:type="string">Magestore_FulfilSuccess/js/grid/columns/age</item>
+                        <item name="filter" xsi:type="string">false</item>
+                        <item name="sorting" xsi:type="string">DESC</item>
+                        <item name="label" xsi:type="string" translate="true">Age</item>
+                        <item name="sortOrder" xsi:type="number">10</item>
+                    </item>
+                </argument>
+            </column>
+            <column name="increment_id" class="Magestore\FulfilSuccess\Ui\Component\Listing\Columns\PickRequest\Renderer\OrderIncrementId">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="indexField" xsi:type="string">order_id</item>
+                        <item name="filter" xsi:type="string">text</item>
+                        <item name="component" xsi:type="string">Magento_Ui/js/grid/columns/actions</item>
+                        <item name="draggable" xsi:type="boolean">true</item>
+                        <item name="label" xsi:type="string" translate="true">Order #</item>
+                        <item name="sortOrder" xsi:type="number">20</item>
+                        <item name="fieldClass" xsi:type="array">
+                            <item name="data-grid-actions-cell" xsi:type="boolean">false</item>
+                        </item>
+                    </item>
+                </argument>
+            </column>
+            <column name="batch_id" class="Magestore\FulfilSuccess\Ui\Component\Listing\Columns\PickRequest\Renderer\BatchNumber">
+                <argument name="data" xsi:type="array">
+                    <item name="options" xsi:type="object">Magestore\FulfilSuccess\Model\PickRequest\Batch\Options</item>
+                    <item name="config" xsi:type="array">
+                        <item name="indexField" xsi:type="string">batch_id</item>
+                        <item name="filter" xsi:type="string">select</item>
+                        <item name="component" xsi:type="string">Magestore_FulfilSuccess/js/pickrequest/grid/filter-action</item>
+                        <item name="dataType" xsi:type="string">select</item>
+                        <item name="draggable" xsi:type="boolean">true</item>
+                        <item name="sortable" xsi:type="boolean">true</item>
+                        <item name="label" xsi:type="string" translate="true">Batch #</item>
+                        <item name="sortOrder" xsi:type="number">30</item>
+                        <item name="fieldClass" xsi:type="array">
+                            <item name="data-grid-actions-cell" xsi:type="boolean">false</item>
+                        </item>
+                    </item>
+                </argument>
+            </column>
+            <column name="purchased_at" class="Magento\Ui\Component\Listing\Columns\Date">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="filter" xsi:type="string">dateRange</item>
+                        <item name="component" xsi:type="string">Magento_Ui/js/grid/columns/date</item>
+                        <item name="dataType" xsi:type="string">date</item>
+                        <item name="label" xsi:type="string" translate="true">Purchased Date</item>
+                        <item name="sortOrder" xsi:type="number">40</item>
+                    </item>
+                </argument>
+            </column>
+            <column name="shipping_name">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="filter" xsi:type="string">text</item>
+                        <item name="label" xsi:type="string" translate="true">Ship-to Name</item>
+                        <item name="sortOrder" xsi:type="number">50</item>
+                    </item>
+                </argument>
+            </column>
+            <column name="customer_email">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="filter" xsi:type="string">text</item>
+                        <item name="label" xsi:type="string" translate="true">Email</item>
+                        <item name="sortOrder" xsi:type="number">60</item>
+                    </item>
+                </argument>
+            </column>
+            <column name="base_grand_total" class="Magento\Catalog\Ui\Component\Listing\Columns\Price">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="filter" xsi:type="string">textRange</item>
+                        <item name="label" xsi:type="string" translate="true">Grand Total (Base)</item>
+                        <item name="sortOrder" xsi:type="number">70</item>
+                    </item>
+                </argument>
+            </column>
+            <column name="total_items">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="filter" xsi:type="string">textRange</item>
+                        <item name="label" xsi:type="string" translate="true">Total Items</item>
+                        <item name="sortOrder" xsi:type="number">80</item>
+                    </item>
+                </argument>
+            </column>
+            <!--
+            <column name="status">
+                <argument name="data" xsi:type="array">
+                    <item name="options" xsi:type="object">Magestore\FulfilSuccess\Model\PickRequest\Options\Status</item>
+                    <item name="config" xsi:type="array">
+                        <item name="editor" xsi:type="array">
+                            <item name="editorType" xsi:type="string">select</item>
+                        </item>
+                        <item name="filters" xsi:type="string">select</item>
+                        <item name="component" xsi:type="string">Magento_Ui/js/grid/columns/select</item>
+                        <item name="dataType" xsi:type="string">select</item>
+                        <item name="label" xsi:type="string" translate="true">Status</item>
+                        <item name="index" xsi:type="string">status</item>
+                        <item name="sortOrder" xsi:type="number">60</item>
+                    </item>
+                </argument>
+            </column>
+            -->
+            <actionsColumn name="show_order" class="Magestore\FulfilSuccess\Ui\Component\Listing\Columns\PickRequest\Detail">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="component" xsi:type="string">Magestore_FulfilSuccess/js/pickrequest/grid/columns/detail</item>
+                        <item name="indexField" xsi:type="string">pick_request_id</item>
+                        <item name="sortable" xsi:type="boolean">false</item>
+                        <item name="label" xsi:type="string" translate="true">Action</item>
+                        <item name="sortOrder" xsi:type="number">100</item>
+                    </item>
+                </argument>
+            </actionsColumn>
+        </columns>
+
+
+    <!--<container name="os_fulfilsuccess_recent_picked_container">-->
+        <!--<fieldset name="os_fulfilsuccess_recent_picked_fieldset">-->
+            <!--<argument name="data" xsi:type="array">-->
+                <!--<item name="config" xsi:type="array">-->
+                    <!--<item name="label" xsi:type="string" translate="true">Recently Picked</item>-->
+                    <!--<item name="collapsible" xsi:type="boolean">false</item>-->
+                    <!--<item name="sortOrder" xsi:type="number">1</item>-->
+                    <!--<item name="ns" xsi:type="string">os_fulfilsuccess_recent_picked_fieldset</item>-->
+                <!--</item>-->
+            <!--</argument>-->
+            <!--<insertListing name="os_fulfilsuccess_recent_picked_listing">-->
+                <!--<argument name="data" xsi:type="array">-->
+                    <!--<item name="config" xsi:type="array">-->
+                        <!--<item name="autoRender" xsi:type="string">true</item>-->
+                        <!--<item name="ns" xsi:type="string">os_fulfilsuccess_recent_picked_listing</item>-->
+                        <!--<item name="externalProvider" xsi:type="string">os_fulfilsuccess_recent_picked_listing.recent_picked_listing_data_source</item>-->
+                    <!--</item>-->
+                <!--</argument>-->
+            <!--</insertListing>-->
+        <!--</fieldset>-->
+    <!--</container>-->
+</listing>

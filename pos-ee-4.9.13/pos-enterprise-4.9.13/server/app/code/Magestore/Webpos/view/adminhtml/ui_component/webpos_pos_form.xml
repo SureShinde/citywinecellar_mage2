@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright © 2018 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">webpos_pos_form.webpos_pos_form_data_source
+            </item>
+            <item name="deps" xsi:type="string">webpos_pos_form.webpos_pos_form_data_source</item>
+            <item name="namespace" xsi:type="string">webpos_pos_form</item>
+        </item>
+        <item name="buttons" xsi:type="array">
+            <item name="back" xsi:type="string">Magestore\Webpos\Block\Adminhtml\Pos\Pos\Edit\Buttons\Back</item>
+            <item name="reset" xsi:type="string">Magestore\Webpos\Block\Adminhtml\Pos\Pos\Edit\Buttons\Reset</item>
+            <item name="forceSignOut" xsi:type="string">Magestore\Webpos\Block\Adminhtml\Pos\Pos\Edit\Buttons\ForceSignOut</item>
+            <item name="save" xsi:type="string">Magestore\Webpos\Block\Adminhtml\Pos\Pos\Edit\Buttons\Save</item>
+            <item name="saveAndContinue" xsi:type="string">Magestore\Webpos\Block\Adminhtml\Pos\Pos\Edit\Buttons\SaveAndContinue</item>
+            <item name="delete" xsi:type="string">Magestore\Webpos\Block\Adminhtml\Pos\Pos\Edit\Buttons\Delete</item>
+        </item>
+        <item name="template" xsi:type="string">templates/form/collapsible</item>
+        <item name="childrenFromMeta" xsi:type="boolean">true</item>
+    </argument>
+
+    <dataSource name="webpos_pos_form_data_source">
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">Magestore\Webpos\Ui\DataProvider\Pos\Form\Pos</argument>
+            <argument name="name" xsi:type="string">webpos_pos_form_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">pos_id</argument>
+            <argument name="requestFieldName" xsi:type="string">id</argument>
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="submit_url" xsi:type="url" path="webposadmin/pos/save"/>
+                </item>
+            </argument>
+        </argument>
+        <argument name="data" xsi:type="array">
+            <item name="js_config" xsi:type="array">
+                <item name="component" xsi:type="string">Magento_Ui/js/form/provider</item>
+            </item>
+        </argument>
+    </dataSource>
+</form>

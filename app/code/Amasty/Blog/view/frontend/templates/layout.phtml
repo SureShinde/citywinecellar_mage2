@@ -1,0 +1,96 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+?>
+<?php /** @var \Amasty\Blog\Block\Layout $block */ ?>
+<?php $swipeText = $block->hasMobileLeftColumn() ? __('Swipe to the right') : __('Swipe to the left'); ?>
+
+<article class="mobile <?= $block->escapeHtml($block->getMobileLayoutCode()); ?>">
+    <?php if ($block->hasMobileLeftColumn()) : ?>
+        <aside class="left amblog-aside-left" id="amblog_left_off_canvas">
+            <div class="amblog-close" data-amblog-js="close"></div>
+            <?php foreach ($block->getMobileBlocks('left_side') as $alias) : ?>
+                <div data-amblog-js="element-block" class="mobile-block amblog-element-block" data-set="sidebar-<?= $block->escapeHtml($alias); ?>">
+                    <?= $block->getSidebarBlockHtml($alias); ?>
+                </div>
+            <?php endforeach; ?>
+        </aside>
+        <script type="text/javascript">
+            //<![CDATA[
+            require(['jquery', 'Amasty_Blog/js/vendor/swipe/swipy'], function ($) {
+                $(document).ready(function () {
+                    $('#amblog_left_off_canvas').swipy({'side':'left'});
+                });
+            });
+            //]]>
+        </script>
+    <?php endif; ?>
+    <section class="content amblog-main-content">
+        <div class="swipe-me amblog-swipe <?= $block->escapeHtml($block->hasMobileLeftColumn() ? "-left" : "-right"); ?>"
+             data-amblog-js="swipe-me"
+             title="<?= $block->escapeHtml($swipeText) ?>">
+        </div>
+        <?php foreach ($block->getMobileBlocks('content') as $alias) : ?>
+            <div class="mobile-block amblog-item" data-set="content-<?= $block->escapeHtml($alias); ?>">
+                <?= $block->getContentBlockHtml($alias); ?>
+            </div>
+        <?php endforeach; ?>
+    </section>
+    <?php if ($block->hasMobileRightColumn()) : ?>
+        <aside class="right amblog-aside-right" id="amblog_right_off_canvas">
+            <div class="amblog-close" data-amblog-js="close"></div>
+            <?php foreach ($block->getMobileBlocks('right_side') as $alias) : ?>
+                <div data-amblog-js="element-block" class="mobile-block amblog-element-block" data-set="sidebar-<?= $block->escapeHtml($alias); ?>">
+                    <?= $block->getSidebarBlockHtml($alias); ?>
+                </div>
+            <?php endforeach; ?>
+        </aside>
+        <script type="text/javascript">
+            //<![CDATA[
+            require(['Amasty_Blog/js/vendor/swipe/swipy', 'jquery'], function (swip, $) {
+                $('#amblog_right_off_canvas').swipy({'side':'right'});
+            });
+            //]]>
+        </script>
+    <?php endif; ?>
+</article>
+
+<article class="desktop <?= $block->escapeHtml($block->getDesktopLayoutCode()); ?>">
+    <?php if ($block->hasDesktopLeftColumn()) : ?>
+        <aside class="left">
+            <?php foreach ($block->getDesktopBlocks('left_side') as $alias) : ?>
+                <div data-amblog-js="element-block" class="desktop-block amblog-element-block" data-set="sidebar-<?= $block->escapeHtml($alias); ?>">
+                    <?= $block->getSidebarBlockHtml($alias); ?>
+                </div>
+            <?php endforeach; ?>
+        </aside>
+    <?php endif; ?>
+    <section class="content amblog-main-content">
+        <?php foreach ($block->getDesktopBlocks('content') as $alias) : ?>
+            <div class="desktop-block amblog-item"  data-set="content-<?= $block->escapeHtml($alias); ?>">
+                <?= $block->getContentBlockHtml($alias); ?>
+            </div>
+        <?php endforeach; ?>
+    </section>
+    <?php if ($block->hasDesktopRightColumn()) : ?>
+        <aside class="right">
+            <?php foreach ($block->getDesktopBlocks('right_side') as $alias) : ?>
+                <div data-amblog-js="element-block" class="desktop-block amblog-element-block"  data-set="sidebar-<?= $block->escapeHtml($alias); ?>">
+                    <?= $block->getSidebarBlockHtml($alias); ?>
+                </div>
+            <?php endforeach; ?>
+        </aside>
+    <?php endif; ?>
+</article>
+
+<script type="text/javascript">
+    require(
+        ['jquery', 'Amasty_Blog/js/vendor/appendaround/appendaround'],
+        function ($) {
+            $('<?= $block->escapeHtml($block->getAskedBlockSelector()); ?>').appendAround();
+        }
+    )
+</script>

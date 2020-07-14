@@ -1,0 +1,8 @@
+
+.admin__scope-old .col-in_staff .checkbox {
+    z-index: -1;
+}
+
+.admin__scope-old .col-in_staff label label {
+    opacity: 0.5;
+}

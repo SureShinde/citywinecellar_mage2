@@ -1,0 +1,48 @@
+/*
+ * Copyright © 2016 Magestore. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+.dashboard-section {
+    background-color: #F8F8F8;
+    padding: 20px;
+}
+
+.chart-container {
+    min-width: 400px;
+    height: 400px;
+    margin: 0 auto;
+}
+
+.change-time-range-section {
+    margin-bottom: 10px;
+}
+
+.time-range-select {
+    padding: 2px 0;
+    font-weight: bold;
+}
+
+.time-range-submit {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 2px 0;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 15px;
+    width: 50px;
+    font-weight: bold;
+}
+
+.custom-timer {
+    margin-top: 10px;
+    display: none;
+}
+
+.custom-timer input {
+    width: 120px;
+    margin-right: 5px;
+    font-weight: bold;
+}

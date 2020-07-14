@@ -1,0 +1,49 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Blog
+ */
+?>
+<?php
+$group = $block->getGroupName();
+$groupCss = $block->getGroupCss();
+$groupBehavior = $block->getGroupBehaviour() ? $block->getGroupBehaviour() : '{"tabs":{"openedState":"active"}}';
+?>
+
+<?php if ($detailedInfoGroup = $block->getGroupChildNames($group, 'getChildHtml')) : ?>
+    <amp-sidebar id="navigation"
+                 layout="nodisplay"
+                 side="left"
+                 class="amblog-amp-sidebar">
+        <div class="amp-close-image"
+             on="tap:navigation.close"
+             role="button"
+             tabindex="0">&#10799;
+        </div>
+        <amp-selector role="tablist"
+                      layout="container"
+                      class="amblog-amp-menu">
+            <?php $layout = $block->getLayout(); ?>
+            <?php foreach ($detailedInfoGroup as $key => $name) : ?>
+                <?php
+                $html = $layout->renderElement($name);
+                if (!trim($html) && ($block->getUseForce() != true)) {
+                    continue;
+                }
+                $alias = $layout->getElementAlias($name);
+                $label = $block->getChildData($alias, 'title');
+                ?>
+                <div class="amblog-amp-tab section-item-title <?= $block->escapeHtml($groupCss); ?>-item-title"
+                     role="tab" <?= $key == 0 ? 'selected' : ''; ?> option="<?= /* @noEscape */ $key; ?>">
+                    <?= $block->escapeHtml($label); ?>
+                </div>
+                <div role="tabpanel"
+                     class="amblog-amp-content section-item-content <?= $block->escapeHtml($groupCss); ?>-item-content"
+                     id="<?= /* @noEscape */ $alias; ?>" data-role="content">
+                    <?= /* @noEscape */ $html; ?>
+                </div>
+            <?php endforeach; ?>
+        </amp-selector>
+    </amp-sidebar>
+<?php endif; ?>

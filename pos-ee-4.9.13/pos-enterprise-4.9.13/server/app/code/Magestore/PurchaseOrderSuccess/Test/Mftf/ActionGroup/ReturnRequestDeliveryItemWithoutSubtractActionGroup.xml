@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="ReturnRequestDeliveryItemWithoutSubtractActionGroup">
+        <arguments>
+            <argument name="productData" defaultValue="product_1"/>
+        </arguments>
+
+        <click stepKey="clickToDeliveryItemSection" selector="{{ReturnRequestDetailSection.deliveredItemSection}}"/>
+        <waitForPageLoad stepKey="waitForSectionDeliveryLoadedSuccessfully"/>
+        <click stepKey="clickToTransferItemButton" selector="{{ReturnRequestDetailSection.deliveredItemButton}}"/>
+        <waitForPageLoad stepKey="waitForDeliveryModalLoadedSuccessfully"/>
+
+        <!-- Click to disable subtract stock -->
+        <click stepKey="clickToCheckBoxSubtractQuantity" selector="{{ReturnRequestDetailSection.checkBoxSubtractQuantity}}"/>
+
+        <click stepKey="clickToSelectProductToTransferItemButton" selector="{{ReturnRequestDetailSection.buttonSelectProductToTransfer}}"/>
+        <waitForPageLoad stepKey="waitForModalSelectProductLoadedSuccessfully"/>
+        <click stepKey="clickToChooseProductToTransfer" selector="{{ReturnRequestDetailSection.selectProductToTransfer(productData.sku)}}"/>
+        <click stepKey="clickToSaveTransferredItem" selector="{{ReturnRequestDetailSection.saveTransferProductButton}}"/>
+        <waitForPageLoad stepKey="waitForTransferredItemsAreSelected"/>
+        <fillField selector="{{ReturnRequestDetailSection.fieldTransferQty(productData.sku)}}" stepKey="fillQtyTransferredForProduct" userInput="1" />
+        <click stepKey="clickToStartTransferItem" selector="{{ReturnRequestDetailSection.saveTransferButton}}"/>
+        <waitForPageLoad stepKey="waitForTransferProductsSuccessfully"/>
+    </actionGroup>
+</actionGroups>

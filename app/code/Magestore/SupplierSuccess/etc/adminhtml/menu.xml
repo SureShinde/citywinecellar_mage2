@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <!--supplier menu-->
+        <add id="Magestore_SupplierSuccess::supplier" title="Supplier" translate="title" module="Magestore_SupplierSuccess" sortOrder="20" resource="Magestore_SupplierSuccess::supplier" />
+        <!-- parent="Magestore_PurchaseOrderSuccess::purchase_order" -->
+            <add id="Magestore_SupplierSuccess::supplier_listing" title="Manage Suppliers" translate="title" module="Magestore_SupplierSuccess" sortOrder="10" parent="Magestore_SupplierSuccess::supplier" resource="Magestore_SupplierSuccess::supplier_listing" action="suppliersuccess/supplier/index"/>
+
+        <add id="Magestore_SupplierSuccess::supplier_pricinglist" title="Manage Pricelist" translate="title" module="Magestore_SupplierSuccess" sortOrder="20" parent="Magestore_SupplierSuccess::supplier" resource="Magestore_SupplierSuccess::supplier_pricinglist" action="suppliersuccess/supplier_pricinglist/index" dependsOnConfig="suppliersuccess/pricelist/enable"/>
+
+        <add id="Magestore_SupplierSuccess::supplier_configuration" title="Supplier Configuration" translate="title" module="Magestore_SupplierSuccess" sortOrder="100" parent="Magestore_SupplierSuccess::supplier" resource="Magestore_SupplierSuccess::configuration" action="adminhtml/system_config/edit/section/suppliersuccess"/>
+        <!--end supplier menu-->
+
+    </menu>
+</config>

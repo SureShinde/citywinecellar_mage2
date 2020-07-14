@@ -1,0 +1,232 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <virtualType name="orderSuccessPurchaseOrderModifierPool" type="Magento\Ui\DataProvider\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="received_product" xsi:type="array">
+                    <item name="class" xsi:type="string">Magestore\PurchaseOrderSuccess\Ui\DataProvider\PurchaseOrder\Form\Modifier\ReceivedProduct</item>
+                    <item name="sortOrder" xsi:type="number">10</item>
+                </item>
+                <item name="transferred_product" xsi:type="array">
+                    <item name="class" xsi:type="string">Magestore\PurchaseOrderSuccess\Ui\DataProvider\PurchaseOrder\Form\Modifier\TransferredProduct</item>
+                    <item name="sortOrder" xsi:type="number">20</item>
+                </item>
+                <item name="purchase_sumary" xsi:type="array">
+                    <item name="class" xsi:type="string">Magestore\PurchaseOrderSuccess\Ui\DataProvider\PurchaseOrder\Form\Modifier\PurchaseSumary</item>
+                    <item name="sortOrder" xsi:type="number">30</item>
+                </item>
+                <item name="invoice_list" xsi:type="array">
+                    <item name="class" xsi:type="string">Magestore\PurchaseOrderSuccess\Ui\DataProvider\PurchaseOrder\Form\Modifier\InvoiceList</item>
+                    <item name="sortOrder" xsi:type="number">40</item>
+                </item>
+                <item name="returned_product" xsi:type="array">
+                    <item name="class" xsi:type="string">Magestore\PurchaseOrderSuccess\Ui\DataProvider\PurchaseOrder\Form\Modifier\ReturnedProduct</item>
+                    <item name="sortOrder" xsi:type="number">50</item>
+                </item>
+                <item name="shortfall_product" xsi:type="array">
+                    <item name="class" xsi:type="string">Magestore\PurchaseOrderSuccess\Ui\DataProvider\PurchaseOrder\Form\Modifier\ShortfallProduct</item>
+                    <item name="sortOrder" xsi:type="number">60</item>
+                </item>
+                <item name="general" xsi:type="array">
+                    <item name="class" xsi:type="string">Magestore\PurchaseOrderSuccess\Ui\DataProvider\PurchaseOrder\Form\Modifier\General</item>
+                    <item name="sortOrder" xsi:type="number">80</item>
+                </item>
+                <item name="shipping_payment" xsi:type="array">
+                    <item name="class" xsi:type="string">Magestore\PurchaseOrderSuccess\Ui\DataProvider\PurchaseOrder\Form\Modifier\ShippingPayment</item>
+                    <item name="sortOrder" xsi:type="number">90</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Magestore\PurchaseOrderSuccess\Ui\DataProvider\PurchaseOrder\Form\PurchaseOrder">
+        <arguments>
+            <argument name="pool" xsi:type="object">orderSuccessPurchaseOrderModifierPool</argument>
+        </arguments>
+    </type>
+
+    <virtualType name="orderSuccessReturnOrderModifierPool" type="Magento\Ui\DataProvider\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="transferred_product" xsi:type="array">
+                    <item name="class" xsi:type="string">Magestore\PurchaseOrderSuccess\Ui\DataProvider\ReturnOrder\Form\Modifier\TransferredProduct</item>
+                    <item name="sortOrder" xsi:type="number">20</item>
+                </item>
+                <item name="return_sumary" xsi:type="array">
+                    <item name="class" xsi:type="string">Magestore\PurchaseOrderSuccess\Ui\DataProvider\ReturnOrder\Form\Modifier\ReturnSumary</item>
+                    <item name="sortOrder" xsi:type="number">10</item>
+                </item>
+                <!--<item name="shortfall_product" xsi:type="array">-->
+                    <!--<item name="class" xsi:type="string">Magestore\PurchaseOrderSuccess\Ui\DataProvider\ReturnOrder\Form\Modifier\ShortfallProduct</item>-->
+                    <!--<item name="sortOrder" xsi:type="number">60</item>-->
+                <!--</item>-->
+                <item name="general" xsi:type="array">
+                    <item name="class" xsi:type="string">Magestore\PurchaseOrderSuccess\Ui\DataProvider\ReturnOrder\Form\Modifier\General</item>
+                    <item name="sortOrder" xsi:type="number">80</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Magestore\PurchaseOrderSuccess\Ui\DataProvider\ReturnOrder\Form\ReturnOrder">
+        <arguments>
+            <argument name="pool" xsi:type="object">orderSuccessReturnOrderModifierPool</argument>
+        </arguments>
+    </type>
+
+    <virtualType name="orderSuccessReturnOrderScanProductModifierPool" type="Magento\Ui\DataProvider\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="product_list" xsi:type="array">
+                    <item name="class" xsi:type="string">Magestore\PurchaseOrderSuccess\Ui\DataProvider\ReturnOrder\Form\Modifier\ReturnSumary\Modifier\ScanBarcodeDataProvider\ProductList</item>
+                    <item name="sortOrder" xsi:type="number">10</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Magestore\PurchaseOrderSuccess\Ui\DataProvider\ReturnOrder\Form\Modifier\ReturnSumary\ScanBarcodeDataProvider">
+        <arguments>
+            <argument name="pool" xsi:type="object">orderSuccessReturnOrderScanProductModifierPool</argument>
+        </arguments>
+    </type>
+
+    <virtualType name="orderSuccessPurchaseOrderReceivedProductModifierPool" type="Magento\Ui\DataProvider\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="general" xsi:type="array">
+                    <item name="class" xsi:type="string">Magestore\PurchaseOrderSuccess\Ui\DataProvider\PurchaseOrder\ReceivedProduct\Form\Modifier\General</item>
+                    <item name="sortOrder" xsi:type="number">10</item>
+                </item>
+                <item name="product_list" xsi:type="array">
+                    <item name="class" xsi:type="string">Magestore\PurchaseOrderSuccess\Ui\DataProvider\PurchaseOrder\ReceivedProduct\Form\Modifier\ProductList</item>
+                    <item name="sortOrder" xsi:type="number">20</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Magestore\PurchaseOrderSuccess\Ui\DataProvider\PurchaseOrder\ReceivedProduct\Form\ReceivedProduct">
+        <arguments>
+            <argument name="pool" xsi:type="object">orderSuccessPurchaseOrderReceivedProductModifierPool</argument>
+        </arguments>
+    </type>
+
+    <virtualType name="orderSuccessPurchaseOrderReturnedProductModifierPool" type="Magento\Ui\DataProvider\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="general" xsi:type="array">
+                    <item name="class" xsi:type="string">Magestore\PurchaseOrderSuccess\Ui\DataProvider\PurchaseOrder\ReturnedProduct\Form\Modifier\General</item>
+                    <item name="sortOrder" xsi:type="number">10</item>
+                </item>
+                <item name="product_list" xsi:type="array">
+                    <item name="class" xsi:type="string">Magestore\PurchaseOrderSuccess\Ui\DataProvider\PurchaseOrder\ReturnedProduct\Form\Modifier\ProductList</item>
+                    <item name="sortOrder" xsi:type="number">20</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Magestore\PurchaseOrderSuccess\Ui\DataProvider\PurchaseOrder\ReturnedProduct\Form\ReturnedProduct">
+        <arguments>
+            <argument name="pool" xsi:type="object">orderSuccessPurchaseOrderReturnedProductModifierPool</argument>
+        </arguments>
+    </type>
+
+    <virtualType name="orderSuccessPurchaseOrderTransferredProductModifierPool" type="Magento\Ui\DataProvider\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="general" xsi:type="array">
+                    <item name="class" xsi:type="string">Magestore\PurchaseOrderSuccess\Ui\DataProvider\PurchaseOrder\TransferredProduct\Form\Modifier\General</item>
+                    <item name="sortOrder" xsi:type="number">10</item>
+                </item>
+                <item name="product_list" xsi:type="array">
+                    <item name="class" xsi:type="string">Magestore\PurchaseOrderSuccess\Ui\DataProvider\PurchaseOrder\TransferredProduct\Form\Modifier\ProductList</item>
+                    <item name="sortOrder" xsi:type="number">20</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Magestore\PurchaseOrderSuccess\Ui\DataProvider\PurchaseOrder\TransferredProduct\Form\TransferredProduct">
+        <arguments>
+            <argument name="pool" xsi:type="object">orderSuccessPurchaseOrderTransferredProductModifierPool</argument>
+        </arguments>
+    </type>
+
+    <virtualType name="orderSuccessReturnOrderTransferredProductModifierPool" type="Magento\Ui\DataProvider\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="general" xsi:type="array">
+                    <item name="class" xsi:type="string">Magestore\PurchaseOrderSuccess\Ui\DataProvider\ReturnOrder\TransferredProduct\Form\Modifier\General</item>
+                    <item name="sortOrder" xsi:type="number">10</item>
+                </item>
+                <item name="product_list" xsi:type="array">
+                    <item name="class" xsi:type="string">Magestore\PurchaseOrderSuccess\Ui\DataProvider\ReturnOrder\TransferredProduct\Form\Modifier\ProductList</item>
+                    <item name="sortOrder" xsi:type="number">20</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Magestore\PurchaseOrderSuccess\Ui\DataProvider\ReturnOrder\TransferredProduct\Form\TransferredProduct">
+        <arguments>
+            <argument name="pool" xsi:type="object">orderSuccessReturnOrderTransferredProductModifierPool</argument>
+        </arguments>
+    </type>
+
+    <virtualType name="orderSuccessPurchaseOrderInvoiceModifierPool" type="Magento\Ui\DataProvider\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="general" xsi:type="array">
+                    <item name="class" xsi:type="string">Magestore\PurchaseOrderSuccess\Ui\DataProvider\PurchaseOrder\Invoice\Form\Modifier\General</item>
+                    <item name="sortOrder" xsi:type="number">10</item>
+                </item>
+                <item name="product_list" xsi:type="array">
+                    <item name="class" xsi:type="string">Magestore\PurchaseOrderSuccess\Ui\DataProvider\PurchaseOrder\Invoice\Form\Modifier\ProductList</item>
+                    <item name="sortOrder" xsi:type="number">20</item>
+                </item>
+                <item name="payment_list" xsi:type="array">
+                    <item name="class" xsi:type="string">Magestore\PurchaseOrderSuccess\Ui\DataProvider\PurchaseOrder\Invoice\Form\Modifier\PaymentList</item>
+                    <item name="sortOrder" xsi:type="number">30</item>
+                </item>
+                <item name="refund_list" xsi:type="array">
+                    <item name="class" xsi:type="string">Magestore\PurchaseOrderSuccess\Ui\DataProvider\PurchaseOrder\Invoice\Form\Modifier\RefundList</item>
+                    <item name="sortOrder" xsi:type="number">40</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Magestore\PurchaseOrderSuccess\Ui\DataProvider\PurchaseOrder\Invoice\Form\Invoice">
+        <arguments>
+            <argument name="pool" xsi:type="object">orderSuccessPurchaseOrderInvoiceModifierPool</argument>
+        </arguments>
+    </type>
+
+    <virtualType name="orderSuccessPurchaseOrderInvoicePaymentModifierPool" type="Magento\Ui\DataProvider\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="general" xsi:type="array">
+                    <item name="class" xsi:type="string">Magestore\PurchaseOrderSuccess\Ui\DataProvider\PurchaseOrder\Invoice\Payment\Form\Modifier\General</item>
+                    <item name="sortOrder" xsi:type="number">10</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Magestore\PurchaseOrderSuccess\Ui\DataProvider\PurchaseOrder\Invoice\Payment\Form\Payment">
+        <arguments>
+            <argument name="pool" xsi:type="object">orderSuccessPurchaseOrderInvoicePaymentModifierPool</argument>
+        </arguments>
+    </type>
+
+
+    <virtualType name="Magestore\SupplierSuccess\Ui\DataProvider\Supplier\DataForm\Modifier\Pool" type="Magento\Ui\DataProvider\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="purchase_order_list" xsi:type="array">
+                    <item name="class" xsi:type="string">Magestore\PurchaseOrderSuccess\Ui\DataProvider\Supplier\Form\Modifier\PurchaseOrderList</item>
+                    <item name="sortOrder" xsi:type="number">100</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+</config>

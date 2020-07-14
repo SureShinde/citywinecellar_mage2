@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!--
+  ~ Copyright © 2016 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="Magestore_OrderSuccess::all" title="Order Success" translate="title" sortOrder="1">
+                    <resource id="Magestore_SupplierSuccess::supplier" title="Supplier Management" translate="title" sortOrder="1">
+                        <!-- Supplier Section -->
+                        <resource id="Magestore_SupplierSuccess::supplier_listing" title="Supplier Listing" translate="title" sortOrder="0">
+                        </resource>
+                        <resource id="Magestore_SupplierSuccess::view_supplier" title="Supplier Editing" translate="title" sortOrder="10">
+                        </resource>
+                        <!-- End Supplier Section -->
+
+                        <!-- Pricelist Section -->
+                        <resource id="Magestore_SupplierSuccess::supplier_pricinglist" title="Pricelist" translate="title" sortOrder="20">
+                        </resource>
+                        <resource id="Magestore_SupplierSuccess::supplier_pricinglist_edit" title="Editing Pricelist" translate="title" sortOrder="30">
+                        </resource>
+                        <!-- End Pricelist Section -->                                       
+                    </resource>
+                </resource>
+                <resource id="Magento_Backend::stores">
+                    <resource id="Magento_Backend::stores_settings">
+                        <resource id="Magento_Config::config">
+                            <resource id="Magestore_SupplierSuccess::configuration" title="Supplier Settings" translate="title" />
+                        </resource>
+                    </resource>
+                </resource>                  
+            </resource>
+        </resources>
+    </acl>
+</config>
