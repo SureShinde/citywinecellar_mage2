@@ -1,0 +1,10 @@
+.amasty-rewards-highlight {
+    padding-bottom: 5px;
+    display: inline-flex;
+}
+
+.amasty-rewards-highlight > .caption strong{
+    font-size: 1.4rem;
+    font-weight: 500;
+    line-height: 1.1;
+}

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="RPFunctionalHighlightWithTwoStoreView"
+          extends="RPConfigurationEarningCalculationAfterTaxExclPriceInclShip">
+        <annotations>
+            <features value="Rewards Highlight and Points Earning Rule"/>
+            <stories value="Functional Rewards Highlight and Points Earning Rule"/>
+            <title value="Check Rewards Rewards Highlight and Points Earning"/>
+            <description value="Check Rewards Rewards Highlight and Points Earning for Second Store View"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="RP-MFTF-58"/>
+            <group value="Amasty"/>
+            <group value="Rewards"/>
+            <group value="RewardsHighlight"/>
+            <group value="RewardsFunctional"/>
+            <group value="RewardsFunctionalRules"/>
+        </annotations>
+
+        <before>
+            <remove keyForRemoval="createTaxRate"/>
+            <remove keyForRemoval="createTaxRule"/>
+            <remove keyForRemoval="ConfigurationTaxSetting"/>
+            <remove keyForRemoval="createCartPriceRule"/>
+            <actionGroup ref="AdminCreateStoreViewActionGroup" stepKey="createCustomStoreView" after="loginAsAdmin">
+                <argument name="StoreGroup" value="RewardsStoreGroup"/>
+                <argument name="customStore" value="RewardsStoreView"/>
+            </actionGroup>
+            <magentoCLI command="indexer:reindex" stepKey="reindex" after="createCustomStoreView"/>
+            <actionGroup ref="AdminConfigurationSettingRewardsPointsEarning" stepKey="ConfigurationPointsEarningSettingRewards">
+                <argument name="adminSettingRewardsPointsEarning" value="SetDefaultSettingRewardsPointsEarning"/>
+            </actionGroup>
+            <actionGroup ref="AdminConfigurationSettingHighlightPointOnStorefront" stepKey="ConfigurationHighlightPointOnStorefront"
+                         after="ConfigurationGeneralSettingRewards">
+                <argument name="adminSettingHighlightPointOnStorefront" value="SetSettingHighlightPointOnStorefrontAllEnable"/>
+            </actionGroup>
+            <actionGroup ref="AdminCreateRewardPointsRule" stepKey="CreateRewardsRuleComplete">
+                <argument name="rewardPointsRule" value="ruleOrderComplete"/>
+            </actionGroup>
+        </before>
+
+        <after>
+            <remove keyForRemoval="ReturnDefaultSettingTax"/>
+            <remove keyForRemoval="deleteCartPriceRule"/>
+            <remove keyForRemoval="deleteTaxRule"/>
+            <remove keyForRemoval="deleteTaxRate"/>
+            <actionGroup ref="AdminDeleteRewardPointsRuleByName" stepKey="deleteRewardsRuleComplete" after="deleteRewardsRule">
+                <argument name="rewardPointsRule" value="ruleOrderComplete"/>
+            </actionGroup>
+            <actionGroup ref="AdminDeleteStoreViewActionGroup" stepKey="deleteCreatedStoreView" after="deleteRewardsRuleComplete">
+                <argument name="customStore" value="RewardsStoreView"/>
+            </actionGroup>
+            <actionGroup ref="AdminConfigurationSettingHighlightPointOnStorefront" stepKey="ConfigurationHighlightPointOnStorefront"
+                         after="deleteCreatedStoreView">
+                <argument name="adminSettingHighlightPointOnStorefront" value="SetDefaultSettingHighlightPointOnStorefront"/>
+            </actionGroup>
+        </after>
+
+        <remove keyForRemoval="checkDiscountOnTheCart"/>
+        <remove keyForRemoval="checkTaxInOrderAfterInvoice"/>
+        <remove keyForRemoval="CheckCustomerCurrentBalance"/>
+        <!-- Switch to Second Store View-->
+        <actionGroup ref="StorefrontSwitchStoreViewActionGroup" stepKey="switchStoreView" after="loginAsCustomer">
+            <argument name="storeView" value="RewardsStoreView"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCheckRewardPointsHighlightOnCategoryPage" stepKey="CheckSecondProductHighlightOnCategory"
+                     after="switchStoreView">
+            <argument name="amountInHighlight" value="CheckHighlightTwoStoreView.HighlightValueProductTwo"/>
+            <argument name="category" value="$$createCategory$$"/>
+            <argument name="product" value="$$createSecondSimpleProduct$$"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCheckRewardPointsHighlightOnProductPage" stepKey="CheckSecondHighlightOnProductPage"
+                     after="CheckSecondProductHighlightOnCategory">
+            <argument name="amountInHighlight" value="CheckHighlightTwoStoreView.HighlightValueProductOne"/>
+            <argument name="product" value="$$createFirstSimpleProduct$$"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCheckRewardPointsHighlightOnTheCart" stepKey="CheckHighlightOnTheCart" after="AddSecondProductToCart">
+            <argument name="amountInHighlight" value="CheckHighlightTwoStoreView.HighlightCartAndCheckoutValue"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCheckRewardPointsHighlightOnTheCheckoutPaymentPage" stepKey="CheckHighlightOnTheCheckoutPaymentPage"
+                     after="GoToCheckoutOnThePaymentPageAsCustomer">
+            <argument name="amountInHighlight" value="CheckHighlightTwoStoreView.HighlightCartAndCheckoutValue"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCheckRewardPointsHistoryActionInCustomerAccount" stepKey="CheckRewardsHistory">
+            <argument name="rewardsHistoryRecordData" value="CheckHighlightTwoStoreCompleteHistory"/>
+        </actionGroup>
+        <actionGroup ref="AdminCheckRewardPointsHistoryActionInCustomerAccount" stepKey="AdminCheckRewardsHistory" after="CheckRewardsHistory">
+            <argument name="customerId" value="$$createCustomer.id$$"/>
+            <argument name="rewardsHistoryRecordData" value="CheckHighlightTwoStoreSpentHistory"/>
+        </actionGroup>
+
+    </test>
+</tests>

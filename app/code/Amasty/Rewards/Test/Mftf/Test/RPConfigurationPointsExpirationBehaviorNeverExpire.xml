@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="RPConfigurationPointsExpirationBehaviorNeverExpire">
+        <annotations>
+            <features value="Points Expiration Behavior"/>
+            <stories value="Points Expiration Behavior via Customer"/>
+            <title value="Check Setting Points Expiration Behavior with Never Expire"/>
+            <description value="Check Configuration Setting Points Expiration Behavior with Never Expire"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="RP-MFTF-23"/>
+            <group value="Amasty"/>
+            <group value="Rewards"/>
+            <group value="RewardsConfiguration"/>
+            <group value="RewardsConfigurationPointsEarning"/>
+            <group value="RewardsConfigurationExpirationSettings"/>
+        </annotations>
+
+        <before>
+            <!-- Create Data for Test -->
+            <createData entity="RewardPointsCustomer" stepKey="createCustomer"/>
+            <createData entity="_defaultCategory" stepKey="createCategory"/>
+            <createData entity="SimpleProductByCrownSummitBackpack" stepKey="createFirstSimpleProduct">
+                <requiredEntity createDataKey="createCategory"/>
+            </createData>
+            <!-- Login To Admin Area -->
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <!-- Configuration Settings for Test-->
+            <actionGroup ref="AdminConfigurationSettingRewardsGeneral" stepKey="configurationGeneralSettingRewards">
+                <argument name="adminSettingRewardsGeneral" value="enableRewards"/>
+            </actionGroup>
+            <actionGroup ref="AdminConfigurationSettingRewardsPointsEarning" stepKey="ConfigurationPointsEarningSettingRewards">
+                <argument name="adminSettingRewardsPointsEarning" value="SetDefaultSettingRewardsPointsEarning"/>
+            </actionGroup>
+            <actionGroup ref="AdminConfigurationSettingRewardsExpiration" stepKey="configurationPointsExpirationSetting">
+                <argument name="adminSettingRewardsExpirationSettings" value="SetDefaultSettingRewardsExpirationSettings"/>
+            </actionGroup>
+            <actionGroup ref="AdminCreateRewardPointsRule" stepKey="CreateRewardsRuleForOrder">
+                <argument name="rewardPointsRule" value="ruleOrderComplete"/>
+            </actionGroup>
+        </before>
+
+        <after>
+            <!-- Delete All Created Data -->
+            <deleteData createDataKey="createCustomer" stepKey="deleteCustomer"/>
+            <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
+            <deleteData createDataKey="createFirstSimpleProduct" stepKey="deleteFirstSimpleProduct"/>
+            <actionGroup ref="AdminDeleteRewardPointsRuleByName" stepKey="deleteRewardsRuleOrder">
+                <argument name="rewardPointsRule" value="ruleOrderComplete" />
+            </actionGroup>
+            <!-- Return the Default Settings Module -->
+            <actionGroup ref="AdminConfigurationSettingRewardsGeneral" stepKey="configurationGeneralSettingRewards">
+                <argument name="adminSettingRewardsGeneral" value="defaultGeneralSettingRewards"/>
+            </actionGroup>
+            <actionGroup ref="AdminConfigurationSettingRewardsExpirationWithClearFields" stepKey="defaultConfigurationPointsExpire">
+                <argument name="adminSettingRewardsExpirationSettings" value="SetDefaultSettingRewardsExpirationSettings"/>
+            </actionGroup>
+        </after>
+
+        <!-- Login to Storefront as Previously Created Customer-->
+        <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginAsCustomer">
+            <argument name="Customer" value="$$createCustomer$$"/>
+        </actionGroup>
+        <!-- Add First Created Product to Cart-->
+        <actionGroup ref="AddCreatedProductToCart" stepKey="AddFirstProductToCart">
+            <argument name="valueQty" value="_enterQty1"/>
+            <argument name="product" value="$$createFirstSimpleProduct$$"/>
+        </actionGroup>
+        <!-- Go to Checkout, Fill Shipping Page and Click to Next-->
+        <actionGroup ref="AmastyCreateOrderAsCustomerOnCheckoutShippingPage" stepKey="GoToCheckoutOnThePaymentPageAsCustomer">
+            <argument name="shippingMethodsOnCheckout" value="FlatRateMethod"/>
+        </actionGroup>
+        <!-- Create Order with Payment Methods Check Money -->
+        <actionGroup ref="StorefrontCreateOrderAndGrabOrderNumber" stepKey="CreateOrderAsCustomerWithCheckMoney">
+            <argument name="paymentMethods" value="paymentCheckMoneyOrder"/>
+        </actionGroup>
+        <!-- Create Invoice and Shipment for Order -->
+        <actionGroup ref="AdminOpenOrderOnId" stepKey="openOrder">
+            <argument name="orderId" value="{$grabOrderNumberCreateOrderAsCustomerWithCheckMoney}"/>
+        </actionGroup>
+        <actionGroup ref="AdminCreateInvoiceAndShipmentActionGroup" stepKey="createInvoiceAndShipment"/>
+        <!-- Check Usage History Reward Points (Change, Days Left, Points Left) -->
+        <actionGroup ref="StorefrontCheckRewardPointsHistoryActionInCustomerAccount" stepKey="CheckRewardsHistoryChangeAndLeft">
+            <argument name="rewardsHistoryRecordData" value="PointsExpirationNeverExpireHistory"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCheckRewardPointsHistoryInCustomerAccountNoExpireDay" stepKey="CheckRewardsHistoryExpireDay">
+            <argument name="rewardsHistoryRecordData" value="PointsExpirationNeverExpireHistory"/>
+        </actionGroup>
+        <!-- Check Current Balance after Apply Rewards Rule -->
+        <actionGroup ref="StorefrontCheckCurrentBalanceRewardPointsInCustomerAccount" stepKey="CheckCustomerCurrentBalance">
+            <argument name="currentBalance" value="PointsExpirationNeverExpireHistory.currentBalance"/>
+        </actionGroup>
+
+    </test>
+</tests>

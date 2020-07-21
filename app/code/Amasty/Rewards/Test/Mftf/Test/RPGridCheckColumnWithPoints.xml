@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="RPGridCheckColumnWithPoints">
+        <annotations>
+            <features value="Customer Grid Reward Points"/>
+            <stories value="Customer Grid Reward Points via Customer"/>
+            <title value="Check Grid Have Column Reward Points"/>
+            <description value="Check Grid Have Column Reward Points Without Customers With Points"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="RP-MFTF-63"/>
+            <group value="Amasty"/>
+            <group value="Rewards"/>
+            <group value="RewardsGrid"/>
+        </annotations>
+
+        <before>
+            <!-- Create Data for Test and Login to Admin Area-->
+            <createData entity="RewardPointsCustomer" stepKey="createCustomer"/>
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminConfigurationSettingRewardsGeneral" stepKey="DefaultConfigurationGeneralSettingRewards">
+                <argument name="adminSettingRewardsGeneral" value="defaultGeneralSettingRewards"/>
+            </actionGroup>
+        </before>
+
+        <after>
+            <!-- Delete Created Data After Test -->
+            <deleteData createDataKey="createCustomer" stepKey="deleteCustomer"/>
+            <actionGroup ref="logout" stepKey="logout"/>
+        </after>
+
+        <!-- Check Column With Reward Points in Customer Grid -->
+        <actionGroup ref="AdminCheckRewardPointsColumnByCustomerGrid" stepKey="AssertHaveColumnByCustomerGrid"/>
+    </test>
+</tests>

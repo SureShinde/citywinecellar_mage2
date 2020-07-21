@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+
+    <!-- For Add Points without Expiration Period -->
+    <actionGroup name="AdminAddOrDeductPointsToCustomer">
+        <arguments>
+            <argument name="customerId" type="string"/>
+            <argument name="adminAddOrDeductPoints"/>
+        </arguments>
+        <amOnPage url="{{AdminEditCustomerPage.url(customerId)}}" stepKey="openCustomerEditPage"/>
+        <waitForPageLoad stepKey="waitForPageWithCustomerDataLoad"/>
+        <click selector="{{AdminCustomerAccountRewardPointsSection.RewardPointsTab}}" stepKey="openAdminRewardPointsTab"/>
+        <waitForPageLoad stepKey="waitForLoadRewardPointsPage"/>
+        <click selector="{{AdminCustomerAccountRewardPointsSection.AddOrDeductPoints}}" stepKey="clickToAddPointsButton"/>
+        <selectOption selector="{{AdminCustomerAccountRewardPointsSection.AddOrDeductPointsAction}}"
+                      userInput="{{adminAddOrDeductPoints.action}}"
+                      stepKey="selectAction"/>
+        <fillField selector="{{AdminCustomerAccountRewardPointsSection.AddOrDeductPointsAmount}}"
+                   userInput="{{adminAddOrDeductPoints.amount}}" stepKey="enterAmount"/>
+        <fillField selector="{{AdminCustomerAccountRewardPointsSection.AddOrDeductPointsComment}}"
+                   userInput="{{adminAddOrDeductPoints.comment}}" stepKey="enterComment"/>
+        <click selector="{{AdminCustomerAccountRewardPointsSection.AddOrDeductPointsButtonApply}}" stepKey="clickButtonApply"/>
+        <waitForPageLoad stepKey="waitForPageAfterApplyRule"/>
+    </actionGroup>
+
+    <!-- For Add Points with Expiration Period (Use Only With Action Add) -->
+    <actionGroup name="AdminAddExpirationPointsToCustomer" extends="AdminAddOrDeductPointsToCustomer">
+        <selectOption selector="{{AdminCustomerAccountRewardPointsSection.AddOrDeductPointsExpiration}}"
+                      userInput="{{adminAddOrDeductPoints.expirationBehavior}}"
+                      after="enterAmount" stepKey="selectPointsExpirationBehavior"/>
+        <fillField selector="{{AdminCustomerAccountRewardPointsSection.AddOrDeductPointsExpirationPeriod}}"
+                   userInput="{{adminAddOrDeductPoints.expirationPeriod}}"
+                   after="selectPointsExpirationBehavior" stepKey="enterPeriod"/>
+    </actionGroup>
+
+    <!-- Open Filter by Customer Grid, Enter Reward Points From and To, Apply Filter -->
+    <actionGroup name="AdminSearchCustomerByRewardPoints">
+        <arguments>
+            <argument name="pointsFrom" defaultValue="AddRewardPointsNotExpire.amount"/>
+            <argument name="pointsTo" defaultValue="AddRewardPointsNotExpire.amount"/>
+        </arguments>
+        <amOnPage url="{{AdminCustomerPage.url}}" stepKey="openCustomersGridPage"/>
+        <waitForPageLoad stepKey="waitForPageLoadAfterOpenGrid"/>
+        <conditionalClick selector="{{AdminCustomerFiltersSection.clearAll}}"
+                          dependentSelector="{{AdminCustomerFiltersSection.clearAll}}"
+                          visible="true" stepKey="clickClearFilters"/>
+        <click selector="{{AdminCustomerFiltersSection.filtersButton}}" stepKey="openFilters"/>
+        <fillField selector="{{AdminAllCustomersGrid.SearchRewardPointsFrom}}" userInput="{{pointsFrom}}" stepKey="fillRewardsFrom"/>
+        <fillField selector="{{AdminAllCustomersGrid.SearchRewardPointsTo}}" userInput="{{pointsTo}}" stepKey="fillRewardsTo"/>
+        <click selector="{{AdminCustomerFiltersSection.apply}}" stepKey="clickApplyFilters"/>
+        <waitForPageLoad stepKey="waitForPageLoadAfterApplyFilter"/>
+    </actionGroup>
+
+    <!-- Open Filter by Customer Grid, Enter Reward Points Only From, Apply Filter -->
+    <actionGroup name="AdminSearchCustomerByRewardPointsOnlyFrom" extends="AdminSearchCustomerByRewardPoints">
+        <remove keyForRemoval="fillRewardsTo"/>
+    </actionGroup>
+
+    <!-- Open Filter by Customer Grid, Enter Reward Points Only To, Apply Filter -->
+    <actionGroup name="AdminSearchCustomerByRewardPointsOnlyTo" extends="AdminSearchCustomerByRewardPoints">
+        <remove keyForRemoval="fillRewardsFrom"/>
+    </actionGroup>
+
+    <!-- Open First Customer In Grid -->
+    <actionGroup name="AdminOpenCustomerAfterSearch">
+        <click selector="{{AdminAllCustomersGrid.FirstByIndexCustomer}}" stepKey="openFirstCustomerOnTheGrid"/>
+        <waitForPageLoad stepKey="waitForPageLoadAfterOpenCustomer"/>
+    </actionGroup>
+
+</actionGroups>

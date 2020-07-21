@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
+
+    <section name="AdminOpenOrder">
+        <element name="RefundRewardPoints" type="input" selector="//input[@id='amasty_refund_reward_points']"/>
+        <element name="DeductRewardPoints" type="input" selector="//input[@id='amasty_earn_reward_points']"/>
+        <element name="ApplyRewardsForOrderField" type="input" selector="//input[@id='amreward_amount']"/>
+        <element name="ApplyRewardsForOrderButton" type="input" selector="//input[@id='amreward_amount']/following-sibling::button" timeout="10"/>
+        <element name="CancelRewardsForOrderButton" type="input" selector="//a[@id='rewards_cancel_button']"/>
+        <element name="CreditMemo" type="button" selector="#order_creditmemo"/>
+        <element name="PageTitleCreditMemo" type="text" selector="//header//h1[contains(string(), 'New Memo')]"/>
+        <element name="MessageToMuch" type="text" selector="//div[@id='messages']//div[contains(string(), 'Too much point(s) used.')]"/>
+        <element name="ProductQtyToRefund" type="input" parameterized="true"
+                 selector="//div[@id='creditmemo_item_container']//table//tbody/tr[contains(string(), '{{productName}}')]//input[contains(@name, '[qty]')]"/>
+    </section>
+
+</sections>

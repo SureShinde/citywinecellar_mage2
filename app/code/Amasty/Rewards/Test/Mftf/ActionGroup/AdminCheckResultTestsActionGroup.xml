@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+
+    <!-- Checking Current Balance in the Customer Account on Admin Area
+         Extend from Magento ActionGroup -->
+    <actionGroup name="AdminCheckCurrentBalanceRewardPointsInCustomerAccount" extends="AdminOpenCustomerEditPageActionGroup">
+        <arguments>
+            <argument name="currentBalance"/>
+        </arguments>
+        <waitForPageLoad stepKey="waitForPageWithCustomerDataLoad"/>
+        <click stepKey="openAdminRewardPointsTab" selector="{{AdminCustomerAccountRewardPointsSection.RewardPointsTab}}"/>
+        <waitForPageLoad stepKey="waitForLoadRewardPointsPage"/>
+        <see selector="{{AdminCustomerAccountRewardPointsSection.CurrentBalance}}"
+             userInput="{{currentBalance}}"
+             stepKey="checkCurrentBalanceOnTheAdminArea"/>
+    </actionGroup>
+
+    <!-- Checking Reward Points History in the Customer Account on Admin Area
+         Checking only columns Change and Points Left -->
+    <actionGroup name="AdminCheckRewardPointsHistoryActionInCustomerAccount" extends="AdminOpenCustomerEditPageActionGroup">
+        <arguments>
+            <argument name="rewardsHistoryRecordData"/>
+        </arguments>
+        <waitForPageLoad stepKey="waitForPageWithCustomerDataLoad"/>
+        <click stepKey="openAdminRewardPointsHistoryTab" selector="{{AdminCustomerAccountRewardPointsHistorySection.RewardPointsHistoryTab}}"/>
+        <waitForPageLoad stepKey="waitForLoadRewardPointsHistoryPage"/>
+        <see selector="{{AdminCustomerAccountRewardPointsHistorySection.HistoryChangeAmount(rewardsHistoryRecordData.numberLine)}}"
+             userInput="{{rewardsHistoryRecordData.change}}"
+             stepKey="checkChangeOnAdminRewardsHistoryRecord"/>
+        <see selector="{{AdminCustomerAccountRewardPointsHistorySection.HistoryPointsLeft(rewardsHistoryRecordData.numberLine)}}"
+             userInput="{{rewardsHistoryRecordData.pointsLeft}}"
+             stepKey="checkPointsLeftOnAdminRewardsHistoryRecord"/>
+    </actionGroup>
+
+    <!-- Checking Reward Points History in the Customer Account on Admin Area
+         Checking Only Action Text-->
+    <actionGroup name="AdminCheckRewardPointsHistoryActionInCustomerAccountActionText" extends="AdminOpenCustomerEditPageActionGroup">
+        <arguments>
+            <argument name="rewardsHistoryRecordData"/>
+        </arguments>
+        <waitForPageLoad stepKey="waitForPageWithCustomerDataLoad"/>
+        <click stepKey="openAdminRewardPointsHistoryTab" selector="{{AdminCustomerAccountRewardPointsHistorySection.RewardPointsHistoryTab}}"/>
+        <waitForPageLoad stepKey="waitForLoadRewardPointsHistoryPage"/>
+        <see selector="{{AdminCustomerAccountRewardPointsHistorySection.HistoryAction(rewardsHistoryRecordData.numberLine)}}"
+             userInput="{{rewardsHistoryRecordData.actionText}}"
+             stepKey="checkActionTextOnAdminRewardsHistoryRecord"/>
+    </actionGroup>
+
+    <!-- Checking Reward Points History Comment in the Customer Account on Admin Area -->
+    <actionGroup name="AdminCheckRewardPointsHistoryActionInCustomerAccountComment" extends="AdminOpenCustomerEditPageActionGroup">
+        <arguments>
+            <argument name="rewardsHistoryRecordData"/>
+        </arguments>
+        <waitForPageLoad stepKey="waitForPageWithCustomerDataLoad"/>
+        <click stepKey="openAdminRewardPointsHistoryTab" selector="{{AdminCustomerAccountRewardPointsHistorySection.RewardPointsHistoryTab}}"/>
+        <waitForPageLoad stepKey="waitForLoadRewardPointsHistoryPage"/>
+        <see selector="{{AdminCustomerAccountRewardPointsHistorySection.HistoryComment(rewardsHistoryRecordData.numberLine)}}"
+             userInput="{{rewardsHistoryRecordData.comment}}"
+             stepKey="checkActionTextOnAdminRewardsHistoryRecord"/>
+    </actionGroup>
+
+    <!-- Checking Deduct Much Points than Have Customer on Admin Area -->
+    <actionGroup name="AdminCheckErrorMessageAfterDeductToMuchPoints" extends="AdminAddOrDeductPointsToCustomer">
+        <seeElement selector="{{AdminCustomerAccountRewardPointsSection.AddOrDeductPointsErrorMessage}}"
+                    stepKey="checkActionTextOnAdminRewardsHistoryRecord"/>
+    </actionGroup>
+
+    <!-- Checking Tax In Created Order on Admin Area With Searching Order By Number -->
+    <actionGroup name="AdminCheckTaxInOrder" extends="AdminOpenOrderOnId">
+        <arguments>
+            <argument name="tax"/>
+        </arguments>
+        <see selector="{{AdminOpenOrder.Tax}}" userInput="{{tax}}"
+             stepKey="checkTax"/>
+    </actionGroup>
+
+    <!-- Checking Column By Customers Grid -->
+    <actionGroup name="AdminCheckRewardPointsColumnByCustomerGrid" extends="NavigateToAllCustomerPage">
+        <seeElement selector="{{AdminAllCustomersGrid.RewardPointsColumnHeader}}" stepKey="seeColumnRewardPointsByGrid"/>
+    </actionGroup>
+
+    <actionGroup name="AdminClearFiltersOnCustomersGrid" extends="NavigateToAllCustomerPage">
+        <conditionalClick selector="{{AdminCustomerFiltersSection.clearAll}}"
+                          dependentSelector="{{AdminCustomerFiltersSection.clearAll}}"
+                          visible="true" stepKey="clickClearFilters"/>
+        <waitForPageLoad stepKey="waitForPageLoadAfterClear"/>
+    </actionGroup>
+
+    <!-- Checking Reward Points of Customer in Grid -->
+    <actionGroup name="AdminCheckRewardPointsByCustomerGrid" extends="NavigateToAllCustomerPage">
+        <arguments>
+            <argument name="customerEmail" type="string"/>
+            <argument name="countPoints" type="string"/>
+        </arguments>
+        <seeElement selector="{{AdminAllCustomersGrid.RewardPointsByCustomer(customerEmail, countPoints)}}" stepKey="seeRewardPointsByCustomer"/>
+    </actionGroup>
+
+    <!-- Checking No Customer With Reward Points in Grid -->
+    <actionGroup name="AdminCheckNoRewardPointsByCustomerGrid" extends="NavigateToAllCustomerPage">
+        <arguments>
+            <argument name="customerEmail" type="string"/>
+            <argument name="countPoints" type="string"/>
+        </arguments>
+        <dontSeeElement selector="{{AdminAllCustomersGrid.RewardPointsByCustomer(customerEmail, countPoints)}}" stepKey="seeRewardPointsByCustomer"/>
+    </actionGroup>
+
+</actionGroups>

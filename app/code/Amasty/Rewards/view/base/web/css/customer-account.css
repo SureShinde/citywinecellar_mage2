@@ -1,0 +1,96 @@
+.amrewards-expiration {
+    display: inline-block;
+    padding: 3px 15px;
+    white-space: nowrap;
+    border-radius: 20px;
+}
+
+.amrewards-expiration.-warning {
+    color: #fff;
+    background: #ffa63d;
+}
+
+.amrewards-expiration.-critical {
+    color: #fff;
+    background: #eb5757;
+}
+
+.amrewards-expiration.-expired {
+    color: #838383;
+    background: #ececec;
+}
+
+.amrewards-info-table {
+    color: #000;
+    border-top: 1px solid #ccc;
+}
+
+.amrewards-info-table .amrewards-table-header .col {
+    font-weight: normal;
+    font-size: 16px;
+    color: #888;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.amrewards-info-table .col.status {
+    white-space: nowrap;
+}
+
+.amrewards-current-balance .amrewards-balance {
+    font-weight: bold;
+    font-size: 36px;
+}
+
+.amrewards-current-balance .amrewards-label {
+    font-size: 18px;
+}
+
+.amrewards-total-info {
+    margin-bottom: 5px;
+}
+
+.amrewards-expiring-wrapper.table-wrapper {
+    border-top: none;
+    border-bottom: none;
+}
+
+.amrewards-expiring-wrapper .amrewards-title {
+    font-weight: 600;
+    font-size: 20px;
+}
+
+.amrewards-expiring-wrapper .amrewards-info-table {
+    max-width: 460px;
+    margin-top: 15px;
+}
+
+.customer-information {
+    margin-bottom: 35px;
+}
+.rewards-data, .reward-description {
+    margin-bottom: 20px;
+}
+
+.rewards-block-handler .rewards-data {
+    min-width: 200px;
+    padding-right: 10px;
+}
+
+@media only screen and (min-width: 768px) {
+    .amrewards-pointsleft,
+    .amrewards-info-table .amrewards-table-header .col.left {
+        text-align: right;
+    }
+    .rewards-block-handler {
+        display: inline-flex;
+    }
+    .rewards-data, .reward-description {
+        margin-bottom: 0;
+    }
+    .rewards-block-handler .rewards-data {
+        min-width: 460px;
+        padding-bottom: 15px;
+    }
+}
+

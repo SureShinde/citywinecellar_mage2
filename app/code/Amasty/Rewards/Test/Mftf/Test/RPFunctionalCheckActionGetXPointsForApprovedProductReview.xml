@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="RPFunctionalCheckActionGetXPointsForApprovedProductReview">
+        <annotations>
+            <features value="Rewards Points Earning Rule"/>
+            <stories value="Functional Rewards Points Earning Rule"/>
+            <title value="Check Rewards Points Earning Rule for Approved Product Review"/>
+            <description value="Check Rewards Points Earning Rule for Approved Product Review Never Expire"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="RP-MFTF-36"/>
+            <group value="Amasty"/>
+            <group value="Rewards"/>
+            <group value="RewardsFunctional"/>
+            <group value="RewardsFunctionalRules"/>
+        </annotations>
+
+        <before>
+            <!-- Create Data for Test -->
+            <createData entity="RewardPointsCustomer" stepKey="createCustomer"/>
+            <createData entity="_defaultCategory" stepKey="createCategory"/>
+            <createData entity="SimpleProductByImpulseDuffle" stepKey="createFirstSimpleProduct">
+                <requiredEntity createDataKey="createCategory"/>
+            </createData>
+            <!-- Login To Admin Area -->
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <!-- Configuration Settings for Test-->
+            <actionGroup ref="AdminConfigurationSettingRewardsGeneral" stepKey="ConfigurationGeneralSettingRewards">
+                <argument name="adminSettingRewardsGeneral" value="defaultGeneralSettingRewards"/>
+            </actionGroup>
+            <actionGroup ref="AdminConfigurationSettingRewardsExpirationWithClearFields" stepKey="configurationPointsExpirationSetting">
+                <argument name="adminSettingRewardsExpirationSettings" value="SetDefaultSettingRewardsExpirationSettings"/>
+            </actionGroup>
+            <actionGroup ref="AdminCreateRewardPointsRule" stepKey="CreateRewardsRuleApprovedProductReview">
+                <argument name="rewardPointsRule" value="ruleCheckActionGetXPointsForReview"/>
+            </actionGroup>
+        </before>
+
+        <after>
+            <!-- Delete All Created Data -->
+            <deleteData createDataKey="createCustomer" stepKey="deleteCustomer"/>
+            <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
+            <deleteData createDataKey="createFirstSimpleProduct" stepKey="deleteFirstSimpleProduct"/>
+            <actionGroup ref="AdminDeleteRewardPointsRuleByName" stepKey="deleteRewardsRule">
+                <argument name="rewardPointsRule" value="ruleCheckActionGetXPointsForReview" />
+            </actionGroup>
+            <amOnPage url="admin/admin/auth/logout/" stepKey="amOnLogoutPage"/>
+        </after>
+
+        <!-- Login to Storefront as Previously Created Customer-->
+        <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginAsCustomer">
+            <argument name="Customer" value="$$createCustomer$$"/>
+        </actionGroup>
+        <!-- Go to the product view page and add review with current user -->
+        <actionGroup ref="StorefrontOpenProductPageActionGroup" stepKey="openCreatedProductPage">
+            <argument name="productUrl" value="$$createFirstSimpleProduct.custom_attributes[url_key]$$"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontAddReviewToProduct" stepKey="addReviewForProduct">
+            <argument name="review" value="rewardsProductReview"/>
+        </actionGroup>
+        <!-- Go to Pending reviews page and clear filters. Moderate product review. -->
+        <actionGroup ref="AdminChangeStatusReview" stepKey="ApprovedReview">
+            <argument name="nickname" value="rewardsProductReview.nickname"/>
+        </actionGroup>
+        <!-- Check Usage History Reward Points (Change, Days Left, Points Left) on Storefront -->
+        <actionGroup ref="StorefrontCheckRewardPointsHistoryActionInCustomerAccount" stepKey="CheckRewardsHistoryChangeAndLeft">
+            <argument name="rewardsHistoryRecordData" value="CheckActionGetXPointsForReviewHistory"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCheckRewardPointsHistoryInCustomerAccountNoExpireDay" stepKey="CheckRewardsHistoryExpireDay">
+            <argument name="rewardsHistoryRecordData" value="CheckActionGetXPointsForReviewHistory"/>
+        </actionGroup>
+        <!-- Check Usage History Reward Points on Admin Area -->
+        <actionGroup ref="AdminCheckRewardPointsHistoryActionInCustomerAccount" stepKey="CheckRewardsHistory">
+            <argument name="customerId" value="$$createCustomer.id$$"/>
+            <argument name="rewardsHistoryRecordData" value="CheckActionGetXPointsForReviewHistory"/>
+        </actionGroup>
+
+    </test>
+</tests>

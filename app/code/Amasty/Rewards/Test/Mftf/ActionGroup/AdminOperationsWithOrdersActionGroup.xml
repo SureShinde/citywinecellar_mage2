@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+
+    <!-- For Fill Return Points by Credit Memo-->
+    <actionGroup name="AdminFillRefundRewardPointsInOrder">
+        <arguments>
+            <argument name="refundRewardsAmount"/>
+        </arguments>
+        <fillField selector="{{AdminOpenOrder.RefundRewardPoints}}"
+                   userInput="{{refundRewardsAmount}}" stepKey="enterRefundRewardsAmount"/>
+    </actionGroup>
+
+    <!-- For Fill Deduct Points by Credit Memo-->
+    <actionGroup name="AdminFillDeductRewardPointsInOrder">
+        <arguments>
+            <argument name="deductRewardsAmount"/>
+        </arguments>
+        <fillField selector="{{AdminOpenOrder.DeductRewardPoints}}"
+                   userInput="{{deductRewardsAmount}}" stepKey="enterDeductRewardsAmount"/>
+    </actionGroup>
+
+    <!-- For Create Order With Using Reward Points -->
+    <actionGroup name="AdminCreateOrderWithApplyRewardPoints" extends="CreateOrderActionGroup">
+        <arguments>
+            <argument name="applyRewardsAmountForOrder"/>
+        </arguments>
+        <fillField selector="{{AdminOpenOrder.ApplyRewardsForOrderField}}" after="waitForProductAddedInOrder"
+                   userInput="{{applyRewardsAmountForOrder}}" stepKey="enterApplyRewardsAmount"/>
+        <click selector="{{AdminOpenOrder.ApplyRewardsForOrderButton}}"
+               after="enterApplyRewardsAmount" stepKey="clickToApplyPoints"/>
+        <waitForElementVisible selector="{{AdminOpenOrder.CancelRewardsForOrderButton}}"
+                               after="clickToApplyPoints" stepKey="waitAppliedPoints"/>
+        <waitForPageLoad after="waitAppliedPoints" stepKey="waitForPageLoadAfterAppliedPoints"/>
+    </actionGroup>
+
+    <!-- For Open Order by ID and Start CreditMemo -->
+    <actionGroup name="AdminOpenOrderAndStartCreditMemo" extends="AdminOpenOrderOnId">
+        <remove keyForRemoval="navigateToOrderPage"/>
+        <click selector="{{AdminOpenOrder.CreditMemo}}" stepKey="clickCreditMemo"/>
+        <waitForElementVisible selector="{{AdminOpenOrder.PageTitleCreditMemo}}" stepKey="waitForVisibleTitle"/>
+        <seeElement selector="{{AdminOpenOrder.PageTitleCreditMemo}}" stepKey="seeNewMemoPageTitle"/>
+    </actionGroup>
+
+    <!-- For Change Product Qty by CreditMemo -->
+    <actionGroup name="AdminChangeQtyProductToRefund">
+        <arguments>
+            <argument name="valueQty"/>
+            <argument name="product"/>
+        </arguments>
+        <fillField selector="{{AdminOpenOrder.ProductQtyToRefund(product.name)}}" userInput="{{valueQty.qty}}" stepKey="enterNewQty"/>
+        <click selector="{{AdminCreditMemoItemsSection.updateQty}}" stepKey="updateQuantityToRefund"/>
+    </actionGroup>
+
+    <!-- For Submit CreditMemo and Check Message About Use To Much Points-->
+    <actionGroup name="AdminSubmitCreditMemoToMuchPointsUsedMessageActionGroup" extends="SubmitCreditMemoActionGroup">
+        <remove keyForRemoval="grabOrderId"/>
+        <remove keyForRemoval="seeCreditMemoCreateSuccess"/>
+        <remove keyForRemoval="seeViewOrderPageCreditMemo"/>
+        <remove keyForRemoval="waitForMessageAppears"/>
+        <waitForPageLoad after="clickSubmitCreditMemo" stepKey="waitForLoadPageAfterSubmitMemo"/>
+        <seeElement selector="{{AdminOpenOrder.MessageToMuch}}" after="waitForLoadPageAfterSubmitMemo" stepKey="seeCreditMemoCreateSuccess"/>
+    </actionGroup>
+
+</actionGroups>

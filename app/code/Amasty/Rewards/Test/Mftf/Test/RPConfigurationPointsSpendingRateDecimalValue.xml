@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="RPConfigurationPointsSpendingRateDecimalValue">
+        <annotations>
+            <features value="Spent Reward Points"/>
+            <stories value="Spent Reward Points via Customer"/>
+            <title value="Check Setting Points Spending Rate with Decimal"/>
+            <description value="Check Setting Points Spending Rate with Decimal Less than One"/>
+            <severity value="MAJOR"/>
+            <testCaseId value="RP-MFTF-03"/>
+            <group value="Amasty"/>
+            <group value="Rewards"/>
+            <group value="Checkout"/>
+            <group value="RewardsSpending"/>
+            <group value="RewardsConfiguration"/>
+            <group value="RewardsConfigurationGeneral"/>
+        </annotations>
+
+        <before>
+            <!-- Create Data for Test -->
+            <createData entity="RewardPointsCustomer" stepKey="createCustomer"/>
+            <createData entity="AddRewardPointsNotExpire" stepKey="addRewardPointsToCustomer">
+                <requiredEntity createDataKey="createCustomer"/>
+            </createData>
+            <createData entity="_defaultCategory" stepKey="createCategory"/>
+            <createData entity="SimpleProductByImpulseDuffle" stepKey="createFirstSimpleProduct">
+                <requiredEntity createDataKey="createCategory"/>
+            </createData>
+            <createData entity="SimpleProductByCrownSummitBackpack" stepKey="createSecondSimpleProduct">
+                <requiredEntity createDataKey="createCategory"/>
+            </createData>
+            <!-- Login To Admin Area -->
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <!-- Configuration Settings for Test-->
+            <actionGroup ref="AdminConfigurationSettingRewardsGeneral" stepKey="ConfigurationGeneralSettingRewards">
+                <argument name="adminSettingRewardsGeneral" value="defaultGeneralSettingRewards"/>
+            </actionGroup>
+            <actionGroup ref="AdminConfigurationSettingRewardsPointsEarning" stepKey="ConfigurationPointsEarningSettingRewards">
+                <argument name="adminSettingRewardsPointsEarning" value="SetSettingRewardsPointsSpendingRate0_25"/>
+            </actionGroup>
+        </before>
+
+        <after>
+            <!-- Delete All Created Data -->
+            <deleteData createDataKey="createCustomer" stepKey="deleteCustomer"/>
+            <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
+            <deleteData createDataKey="createFirstSimpleProduct" stepKey="deleteFirstSimpleProduct"/>
+            <deleteData createDataKey="createSecondSimpleProduct" stepKey="deleteSecondSimpleProduct"/>
+            <!-- Return the Default Settings Module -->
+            <actionGroup ref="AdminConfigurationSettingRewardsPointsEarning" stepKey="ConfigurationPointsEarningSettingRewards">
+                <argument name="adminSettingRewardsPointsEarning" value="SetDefaultSettingRewardsPointsEarning"/>
+            </actionGroup>
+        </after>
+
+        <!-- Login to storefront as previously created customer-->
+        <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginAsCustomer">
+            <argument name="Customer" value="$$createCustomer$$"/>
+        </actionGroup>
+        <!-- Add First Created Product to Cart-->
+        <actionGroup ref="AddCreatedProductToCart" stepKey="AddFirstProductToCart">
+            <argument name="valueQty" value="_enterQty1"/>
+            <argument name="product" value="$$createFirstSimpleProduct$$"/>
+        </actionGroup>
+        <!-- Add Second Created Product to Cart-->
+        <actionGroup ref="AddCreatedProductToCart" stepKey="AddSecondProductToCart">
+            <argument name="valueQty" value="_enterQty1"/>
+            <argument name="product" value="$$createSecondSimpleProduct$$"/>
+        </actionGroup>
+        <!-- Apply Reward Points On The Cart-->
+        <actionGroup ref="StorefrontApplyRewardPointsOnTheCart" stepKey="ApplyRewardPointOnTheCart">
+            <argument name="rewardsAmount" value="PointsSpendingDecimalValue.applyRewardsAmountOne"/>
+        </actionGroup>
+        <!-- Check Apply Reward on the Cart: Discount and Amount Applied Points-->
+        <actionGroup ref="StorefrontCheckDiscountAndAppliedRewardsOnTheCart" stepKey="CheckDiscountAndAmountInFieldApply">
+            <argument name="discountAmount" value="PointsSpendingDecimalValue.discountAmountOne"/>
+            <argument name="appliedRewardsAmount" value="PointsSpendingDecimalValue.applyRewardsAmountOne"/>
+        </actionGroup>
+        <!-- Cancel Applied Reward Points On The Cart-->
+        <actionGroup ref="StorefrontCancelAppliedRewardPointsOnTheCart" stepKey="cancelAppliedRewards"/>
+        <!-- Go to Checkout, Fill Shipping Page and Click to Next-->
+        <actionGroup ref="AmastyCreateOrderAsCustomerOnCheckoutShippingPage" stepKey="GoToCheckoutOnThePaymentPageAsCustomer">
+            <argument name="shippingMethodsOnCheckout" value="FlatRateMethod"/>
+        </actionGroup>
+        <!-- Apply Reward Points On The Checkout-->
+        <actionGroup ref="StorefrontApplyRewardPointsOnTheCheckout" stepKey="ApplyRewardPointOnTheCheckout">
+            <argument name="rewardsAmount" value="PointsSpendingDecimalValue.applyRewardsAmountTwo"/>
+        </actionGroup>
+        <!-- Check Apply Reward on the Checkout: Discount and Discount Name-->
+        <actionGroup ref="StorefrontCheckDiscountAndTextBellowDiscountOnTheCheckout" stepKey="CheckDiscountAndDiscountName">
+            <argument name="discountAmount" value="PointsSpendingDecimalValue.discountAmountTwo"/>
+            <argument name="appliedRewardsAmount" value="PointsSpendingDecimalValue.applyRewardsAmountTwo"/>
+        </actionGroup>
+        <!-- Create Order with Payment Methods Check Money -->
+        <actionGroup ref="StorefrontCreateOrderAndGrabOrderNumber" stepKey="CreateOrderAsCustomerWithCheckMoney">
+            <argument name="paymentMethods" value="paymentCheckMoneyOrder"/>
+        </actionGroup>
+        <!-- Check Current Balance after used Reward Points -->
+        <actionGroup ref="AdminCheckCurrentBalanceRewardPointsInCustomerAccount" stepKey="CheckCustomerCurrentBalance">
+            <argument name="customerId" value="$$createCustomer.id$$"/>
+            <argument name="currentBalance" value="PointsSpendingDecimalValue.currentBalance"/>
+        </actionGroup>
+        <!-- Check Usage History Reward Points -->
+        <actionGroup ref="AdminCheckRewardPointsHistoryActionInCustomerAccount" stepKey="CheckRewardsHistory">
+            <argument name="customerId" value="$$createCustomer.id$$"/>
+            <argument name="rewardsHistoryRecordData" value="PointsSpendingDecimalValueRewardsHistory"/>
+        </actionGroup>
+
+    </test>
+</tests>

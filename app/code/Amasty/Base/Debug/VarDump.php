@@ -32,6 +32,7 @@ class VarDump
     private static $amastyIps = [
         '213.184.226.82',
         '87.252.238.217',
+        '82.209.247.206',
     ];
 
     /**

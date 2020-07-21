@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+
+    <!-- Open Review by Nickname -->
+    <actionGroup name="AdminOpenReviewByNickname">
+        <arguments>
+            <argument name="nickname"/>
+        </arguments>
+        <amOnPage url="{{AdminReviewsGridPage.url}}" stepKey="openReviewsPageActionGroup"/>
+        <waitForPageLoad stepKey="waitForReviewsPageLoad"/>
+        <conditionalClick selector="{{AdminReviewsGridSection.clearFilters}}"
+                          dependentSelector="{{AdminReviewsGridSection.clearFilters}}"
+                          visible="true" stepKey="clearExistingOrderFilters"/>
+        <fillField selector="{{AdminReviewsGridSection.nickname}}" userInput="{{nickname}}" stepKey="fillNickname"/>
+        <click selector="{{AdminReviewsGridSection.applyFilters}}" stepKey="clickApplyFilters"/>
+        <click selector="{{AdminReviewsGridSection.firstRow}}" stepKey="clickFirstRow"/>
+        <waitForPageLoad stepKey="waitForEditReviewPageLoad"/>
+    </actionGroup>
+
+    <!-- For Change Status Product Review -->
+    <actionGroup name="AdminChangeStatusReview" extends="AdminOpenReviewByNickname">
+        <arguments>
+            <argument name="status" type="string" defaultValue="1"/>
+        </arguments>
+        <selectOption selector="{{AdminOpenReviewSection.status}}" userInput="{{status}}" stepKey="changeReviewStatus"/>
+        <click selector="{{AdminOpenReviewSection.saveReview}}" stepKey="saveReview"/>
+        <waitForElementVisible selector="{{AdminOpenReviewSection.success}}" stepKey="waitForSuccessMessage"/>
+        <see selector="{{AdminOpenReviewSection.success}}" userInput="You saved the review." stepKey="seeSuccessMessage"/>
+    </actionGroup>
+
+</actionGroups>

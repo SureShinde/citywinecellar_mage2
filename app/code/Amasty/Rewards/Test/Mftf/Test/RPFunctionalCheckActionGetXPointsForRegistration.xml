@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="RPFunctionalCheckActionGetXPointsForRegistration">
+        <annotations>
+            <features value="Rewards Points Earning Rule"/>
+            <stories value="Functional Rewards Points Earning Rule"/>
+            <title value="Check Rewards Points Earning Rule for Registration"/>
+            <description value="Check Rewards Points Earning Rule for Registration Expire Today"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="RP-MFTF-35"/>
+            <group value="Amasty"/>
+            <group value="Rewards"/>
+            <group value="RewardsFunctional"/>
+            <group value="RewardsFunctionalRules"/>
+        </annotations>
+
+        <before>
+            <!-- Login To Admin Area -->
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <!-- Configuration Settings for Test-->
+            <actionGroup ref="AdminConfigurationSettingRewardsGeneral" stepKey="ConfigurationGeneralSettingRewards">
+                <argument name="adminSettingRewardsGeneral" value="defaultGeneralSettingRewards"/>
+            </actionGroup>
+            <actionGroup ref="AdminConfigurationSettingRewardsExpirationWithDays" stepKey="configurationPointsExpirationSetting">
+                <argument name="adminSettingRewardsExpirationSettings" value="SetSettingRewardsExpirationSettingsExpireFourDays"/>
+            </actionGroup>
+            <actionGroup ref="AdminCreateRewardPointsRuleWithExpirePeriod" stepKey="CreateRewardsRuleApprovedProductReview">
+                <argument name="rewardPointsRule" value="ruleCheckActionGetXPointsForRegistration"/>
+            </actionGroup>
+        </before>
+
+        <after>
+            <!-- Delete All Created Data -->
+            <actionGroup ref="AdminDeleteRewardPointsRuleByName" stepKey="deleteRewardsRule">
+                <argument name="rewardPointsRule" value="ruleCheckActionGetXPointsForRegistration" />
+            </actionGroup>
+            <!-- Return the Default Settings Module -->
+            <actionGroup ref="AdminConfigurationSettingRewardsExpirationWithClearFields" stepKey="defaultConfigurationPointsExpire">
+                <argument name="adminSettingRewardsExpirationSettings" value="SetDefaultSettingRewardsExpirationSettings"/>
+            </actionGroup>
+            <amOnPage url="admin/admin/auth/logout/" stepKey="amOnLogoutPage"/>
+        </after>
+
+        <!-- Create New Customer Account on Storefront -->
+        <actionGroup ref="StorefrontOpenCustomerAccountCreatePageActionGroup" stepKey="openCreateAccountPage"/>
+        <actionGroup ref="StorefrontFillCustomerAccountCreationFormActionGroup" stepKey="fillCreateAccountForm">
+            <argument name="customer" value="RewardPointsCustomer"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontClickCreateAnAccountCustomerAccountCreationFormActionGroup" stepKey="submitCreateAccountForm"/>
+        <!-- Check Usage History Reward Points (Change, Days Left, Points Left) on Storefront -->
+        <actionGroup ref="StorefrontCheckRewardPointsHistoryActionInCustomerAccount" stepKey="CheckRewardsHistoryChangeAndLeft">
+            <argument name="rewardsHistoryRecordData" value="CheckActionGetXPointsForRegistrationHistory"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCheckRewardPointsHistoryInCustomerAccountExpireDay" stepKey="CheckRewardsHistoryExpireDay">
+            <argument name="rewardsHistoryRecordData" value="CheckActionGetXPointsForRegistrationHistory"/>
+        </actionGroup>
+
+    </test>
+</tests>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <columns name="customer_columns">
+        <column name="amrewardpoints" sortOrder="280" class="Amasty\Rewards\Ui\Component\Listing\Column\PointsColumn">
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">Reward Points</label>
+                <sortable>true</sortable>
+                <sorting>asc</sorting>
+                <dataType>select</dataType>
+            </settings>
+        </column>
+    </columns>
+</listing>

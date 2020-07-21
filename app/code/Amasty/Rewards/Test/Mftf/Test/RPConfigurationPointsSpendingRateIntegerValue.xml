@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="RPConfigurationPointsSpendingRateIntegerValue" extends="RPConfigurationPointsSpendingRateDecimalValue">
+        <annotations>
+            <features value="Spent Reward Points"/>
+            <stories value="Spent Reward Points via Customer"/>
+            <title value="Check Setting Points Spending Rate"/>
+            <description value="Check Setting Points Spending Rate with Integer Value"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="RP-MFTF-02"/>
+            <group value="Amasty"/>
+            <group value="Rewards"/>
+            <group value="Checkout"/>
+            <group value="RewardsSpending"/>
+            <group value="RewardsConfiguration"/>
+            <group value="RewardsConfigurationGeneral"/>
+        </annotations>
+
+        <before>
+            <actionGroup ref="AdminConfigurationSettingRewardsPointsEarning" stepKey="ConfigurationPointsEarningSettingRewards">
+                <argument name="adminSettingRewardsPointsEarning" value="SetSettingRewardsPointsSpendingRate10"/>
+            </actionGroup>
+        </before>
+
+        <remove keyForRemoval="CheckDiscountAndAmountInFieldApply"/>
+        <remove keyForRemoval="cancelAppliedRewards"/>
+        <remove keyForRemoval="ApplyRewardPointOnTheCheckout"/>
+        <remove keyForRemoval="CheckDiscountAndDiscountName"/>
+        <!-- Apply Reward Points On The Cart-->
+        <actionGroup ref="StorefrontApplyRewardPointsOnTheCart" stepKey="ApplyRewardPointOnTheCart">
+            <argument name="rewardsAmount" value="PointsSpendingIntegerValue.applyRewardsAmount"/>
+        </actionGroup>
+        <!-- Check Apply Reward on the Cart: Discount and Discount Name-->
+        <actionGroup ref="StorefrontCheckDiscountAndTextBellowDiscountOnTheCart" stepKey="CheckDiscountAndDiscountName"
+                     after="ApplyRewardPointOnTheCart">
+            <argument name="discountAmount" value="PointsSpendingIntegerValue.discountAmount"/>
+            <argument name="appliedRewardsAmount" value="PointsSpendingIntegerValue.applyRewardsAmount"/>
+        </actionGroup>
+        <!-- Check Apply Reward on the Checkout: Discount and Amount Applied Points-->
+        <actionGroup ref="StorefrontCheckDiscountAndAppliedRewardsOnTheCheckout" stepKey="CheckDiscountAndAmountInFieldApply"
+                     after="GoToCheckoutOnThePaymentPageAsCustomer">
+            <argument name="discountAmount" value="PointsSpendingIntegerValue.discountAmount"/>
+            <argument name="appliedRewardsAmount" value="PointsSpendingIntegerValue.applyRewardsAmount"/>
+        </actionGroup>
+        <!-- Check Current Balance after used Reward Points -->
+        <actionGroup ref="StorefrontCheckCurrentBalanceRewardPointsInCustomerAccount" stepKey="CheckCustomerCurrentBalance">
+            <argument name="currentBalance" value="PointsSpendingIntegerValue.currentBalance"/>
+        </actionGroup>
+        <!-- Check Usage History Reward Points -->
+        <actionGroup ref="StorefrontCheckRewardPointsHistoryActionInCustomerAccount" stepKey="CheckRewardsHistory">
+            <argument name="rewardsHistoryRecordData" value="PointsSpendingIntegerValueRewardsHistory"/>
+        </actionGroup>
+
+    </test>
+</tests>

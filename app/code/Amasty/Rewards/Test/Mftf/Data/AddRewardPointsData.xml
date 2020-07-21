@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:DataGenerator/etc/dataProfileSchema.xsd">
+
+    <entity name="AddRewardPointsNotExpire" type="rewards_add">
+        <data key="amount">100</data>
+        <var key="customerId" entityKey="id" entityType="customer"/>
+        <data key="action" unique="suffix">ApiPointChange_</data>
+        <data key="comment" unique="suffix">ApiAddComment_</data>
+        <requiredEntity type="expiration_reward_points">NotExpirationPoints</requiredEntity>
+    </entity>
+
+    <entity name="AddRewardPointsExpireToday" type="rewards_add">
+        <data key="amount">100</data>
+        <var key="customerId" entityKey="id" entityType="customer"/>
+        <data key="action" unique="suffix">ApiPointChange_</data>
+        <data key="comment" unique="suffix">ApiAddComment_</data>
+        <requiredEntity type="expiration_reward_points">ExpirationPointsToday</requiredEntity>
+    </entity>
+
+    <entity name="AddRewardPointsExpireFourDays" type="rewards_add">
+        <data key="amount">100</data>
+        <var key="customerId" entityKey="id" entityType="customer"/>
+        <data key="action" unique="suffix">ApiPointChange_</data>
+        <data key="comment" unique="suffix">ApiAddComment_</data>
+        <requiredEntity type="expiration_reward_points">ExpirationPointsFourDays</requiredEntity>
+    </entity>
+
+    <entity name="NotExpirationPoints" type="expiration_reward_points">
+        <data key="expire">false</data>
+        <data key="days">0</data>
+    </entity>
+
+    <entity name="ExpirationPointsToday" type="expiration_reward_points">
+        <data key="expire">true</data>
+        <data key="days">0</data>
+    </entity>
+
+    <entity name="ExpirationPointsFourDays" type="expiration_reward_points">
+        <data key="expire">true</data>
+        <data key="days">4</data>
+    </entity>
+
+    <entity name="AddNineteenRewardPointsNotExpire" type="rewards_add" extends="AddRewardPointsNotExpire">
+        <data key="amount">19</data>
+    </entity>
+
+    <entity name="AddOneRewardPointsNotExpire" type="rewards_add" extends="AddRewardPointsNotExpire">
+        <data key="amount">1</data>
+    </entity>
+
+    <entity name="AddRewardPointsNotExpire20_08" type="rewards_add" extends="AddRewardPointsNotExpire">
+        <data key="amount">20.08</data>
+    </entity>
+
+    <entity name="AddRewardPointsNotExpire40" type="rewards_add" extends="AddRewardPointsNotExpire">
+        <data key="amount">40</data>
+    </entity>
+
+    <entity name="AddRewardPointsExpireToday10" type="rewards_add" extends="AddRewardPointsExpireToday">
+        <data key="amount">10</data>
+    </entity>
+
+    <entity name="AddRewardPointsExpireFourDays5" type="rewards_add" extends="AddRewardPointsExpireFourDays">
+        <data key="amount">5</data>
+    </entity>
+
+</entities>

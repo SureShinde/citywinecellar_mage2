@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="RPFunctionalPointsForYSpentConditionSubtotalIsValidation"
+          extends="RPFunctionalCheckActionGetXPointsForEachYSpent">
+        <annotations>
+            <features value="Rewards Rule With Conditions"/>
+            <stories value="Functional Rewards Rule With Conditions"/>
+            <title value="Check Rewards Points Rule Get X for Y Spent With Conditions"/>
+            <description value="Check Rewards Points Rule Get X for Y Spent With Conditions Subtotal Is Validation"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="RP-MFTF-5002"/>
+            <group value="Amasty"/>
+            <group value="Rewards"/>
+            <group value="RewardsFunctional"/>
+            <group value="RewardsFunctionalRules"/>
+        </annotations>
+
+        <before>
+            <remove keyForRemoval="configurationPointsExpirationSetting"/>
+            <actionGroup ref="AdminCreateRewardPointsRuleWithActionForYSpent" stepKey="CreateRewardsRuleYSpent">
+                <argument name="rewardPointsRule" value="ruleCheckRuleYSpentWithSubtotal"/>
+            </actionGroup>
+            <actionGroup ref="AdminOpenRewardPointsRuleByName" stepKey="OpenRewardsRuleForEdit"
+                         after="CreateRewardsRuleYSpent">
+                <argument name="rewardPointsRule" value="ruleCheckRuleYSpentWithSubtotal"/>
+            </actionGroup>
+            <actionGroup ref="EditRewardsRuleAddGlobalConditionsWithInput" stepKey="AddConditionsInRule"
+                         after="OpenRewardsRuleForEdit">
+                <argument name="conditionsOptions" value="_subtotal"/>
+                <argument name="conditionsAttribute" value="_equalsOrGreaterThan"/>
+                <argument name="conditionsData" value="ruleCheckRuleYSpentWithSubtotal.conditions"/>
+            </actionGroup>
+        </before>
+
+        <after>
+            <remove keyForRemoval="SetDefaultSettingRewardsExpirationSettings"/>
+            <actionGroup ref="AdminDeleteRewardPointsRuleByName" stepKey="deleteRewardsRule">
+                <argument name="rewardPointsRule" value="ruleCheckRuleYSpentWithSubtotal" />
+            </actionGroup>
+        </after>
+
+        <remove keyForRemoval="CheckRewardsHistoryExpireDay"/>
+        <actionGroup ref="StorefrontCheckRewardPointsHistoryActionInCustomerAccount" stepKey="CheckRewardsHistoryChangeAndLeft">
+            <argument name="rewardsHistoryRecordData" value="CheckRuleYSpentWithConditionSubtotalIsValid"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCheckCurrentBalanceRewardPointsInCustomerAccount" stepKey="CheckCustomerCurrentBalance"
+                     after="CheckRewardsHistoryChangeAndLeft">
+            <argument name="currentBalance" value="CheckRuleYSpentWithConditionSubtotalIsValid.currentBalance"/>
+        </actionGroup>
+        <actionGroup ref="AdminCheckRewardPointsHistoryActionInCustomerAccount" stepKey="AdminCheckRewardsHistoryChangePointsLeft"
+                     after="CheckCustomerCurrentBalance">
+            <argument name="customerId" value="$$createCustomer.id$$"/>
+            <argument name="rewardsHistoryRecordData" value="CheckRuleYSpentWithConditionSubtotalIsValid"/>
+        </actionGroup>
+        <actionGroup ref="AdminCheckCurrentBalanceRewardPointsInCustomerAccount" stepKey="AdminCheckCustomerCurrentBalance"
+                     after="AdminCheckRewardsHistoryChangePointsLeft">
+            <argument name="customerId" value="$$createCustomer.id$$"/>
+            <argument name="currentBalance" value="CheckRuleYSpentWithConditionSubtotalIsValid.currentBalance"/>
+        </actionGroup>
+    </test>
+</tests>

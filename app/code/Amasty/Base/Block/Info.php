@@ -8,25 +8,34 @@
 
 namespace Amasty\Base\Block;
 
-use Amasty\Base\Helper\Module;
+use Amasty\Base\Model\ModuleInfoProvider;
+use Magento\Backend\Block\Context;
+use Magento\Backend\Model\Auth\Session;
+use Magento\Config\Block\System\Config\Form\Field;
+use Magento\Config\Block\System\Config\Form\Fieldset;
+use Magento\Cron\Model\ResourceModel\Schedule\CollectionFactory;
+use Magento\Framework\App\DeploymentConfig\Reader;
+use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\App\ProductMetadataInterface;
+use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\App\State;
 use Magento\Framework\Data\Form\Element\AbstractElement;
+use Magento\Framework\View\Helper\Js;
 
-class Info extends \Magento\Config\Block\System\Config\Form\Fieldset
+class Info extends Fieldset
 {
     /**
-     * @var \Magento\Cron\Model\ResourceModel\Schedule\CollectionFactory
+     * @var CollectionFactory
      */
     private $cronFactory;
 
     /**
-     * @var \Magento\Framework\App\Filesystem\DirectoryList
+     * @var DirectoryList
      */
     private $directoryList;
 
     /**
-     * @var \Magento\Framework\App\ResourceConnection
+     * @var ResourceConnection
      */
     private $resourceConnection;
 
@@ -36,40 +45,39 @@ class Info extends \Magento\Config\Block\System\Config\Form\Fieldset
     private $productMetadata;
 
     /**
-     * @var \Magento\Framework\App\DeploymentConfig\Reader
+     * @var Reader
      */
     private $reader;
 
     /**
-     * @var \Magento\Config\Block\System\Config\Form\Field|null
+     * @var Field|null
      */
     protected $fieldRenderer;
 
     /**
-     * @var Module
+     * @var ModuleInfoProvider
      */
-    private $moduleHelper;
+    private $moduleInfoProvider;
 
     public function __construct(
-        \Magento\Backend\Block\Context $context,
-        \Magento\Backend\Model\Auth\Session $authSession,
-        \Magento\Framework\View\Helper\Js $jsHelper,
-        \Magento\Cron\Model\ResourceModel\Schedule\CollectionFactory $cronFactory,
-        \Magento\Framework\App\Filesystem\DirectoryList $directoryList,
-        \Magento\Framework\App\DeploymentConfig\Reader $reader,
-        Module $moduleHelper,
-        \Magento\Framework\App\ResourceConnection $resourceConnection,
+        Context $context,
+        Session $authSession,
+        Js $jsHelper,
+        CollectionFactory $cronFactory,
+        DirectoryList $directoryList,
+        Reader $reader,
+        ResourceConnection $resourceConnection,
         ProductMetadataInterface $productMetadata,
+        ModuleInfoProvider $moduleInfoProvider,
         array $data = []
     ) {
         parent::__construct($context, $authSession, $jsHelper, $data);
-
         $this->cronFactory = $cronFactory;
         $this->directoryList = $directoryList;
         $this->resourceConnection = $resourceConnection;
         $this->productMetadata = $productMetadata;
         $this->reader = $reader;
-        $this->moduleHelper = $moduleHelper;
+        $this->moduleInfoProvider = $moduleInfoProvider;
     }
 
     /**
@@ -100,7 +108,7 @@ class Info extends \Magento\Config\Block\System\Config\Form\Fieldset
     {
         if (empty($this->fieldRenderer)) {
             $this->fieldRenderer = $this->_layout->createBlock(
-                \Magento\Config\Block\System\Config\Form\Field::class
+                Field::class
             );
         }
 
@@ -183,7 +191,7 @@ class Info extends \Magento\Config\Block\System\Config\Form\Fieldset
         if ($crontabCollection->count() === 0) {
             $value = '<div class="red">';
             $value .= __('No cron jobs found') . '</div>';
-            if (!$this->moduleHelper->isOriginMarketplace()) {
+            if (!$this->moduleInfoProvider->isOriginMarketplace()) {
                 $value .=
                     '<a target="_blank"
                   href="https://support.amasty.com/index.php?/Knowledgebase/Article/View/72/24/magento-cron">' .

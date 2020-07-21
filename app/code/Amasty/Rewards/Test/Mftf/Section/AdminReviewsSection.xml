@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
+
+    <section name="AdminReviewsGridSection">
+        <element name="clearFilters" type="button" selector=".admin__data-grid-header [data-action='grid-filter-reset']" timeout="30"/>
+        <element name="applyFilters" type="button" selector="button[data-action='grid-filter-apply']" timeout="30"/>
+        <element name="nickname" type="input" selector="#reviwGrid_filter_nickname"/>
+        <element name="firstRow" type="block" selector=".data-grid tbody tr:nth-of-type(1)"/>
+    </section>
+
+    <section name="AdminOpenReviewSection">
+        <element name="status" type="select" selector="#status_id"/>
+        <element name="saveReview" type="button" selector="#save_button"/>
+        <element name="success" type="text" selector="#messages div.message-success"/>
+    </section>
+
+</sections>

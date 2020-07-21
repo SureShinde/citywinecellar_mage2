@@ -12,7 +12,7 @@ use Magento\Backend\Block\Menu as NativeMenu;
 
 class Menu
 {
-    const MAX_ITEMS = 10;
+    const MAX_ITEMS = 300;
 
     /**
      * @param NativeMenu $subject

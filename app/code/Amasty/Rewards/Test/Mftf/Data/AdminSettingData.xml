@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:DataGenerator/etc/dataProfileSchema.xsd">
+
+    <entity name="enableRewards" type="adminSettingRewardsGeneral">
+        <data key="isEnable">Yes</data>
+    </entity>
+
+    <entity name="disableRewards" type="adminSettingRewardsGeneral">
+        <data key="isEnable">No</data>
+    </entity>
+
+    <entity name="defaultGeneralSettingRewards" type="adminSettingRewardsGeneral">
+        <data key="isEnable">Yes</data>
+    </entity>
+
+    <entity name="SetDefaultSettingRewardsPointsEarning" type="adminSettingRewardsPointsEarning">
+        <data key="spendingRate">1</data>
+        <data key="roundingRule">down</data>
+        <data key="birthdayOffset">-1</data>
+        <data key="pointsEarningCalculation">before_tax</data>
+    </entity>
+
+    <entity name="SetSettingRewardsPointsEarningAfterTax" type="adminSettingRewardsPointsEarning" extends="SetDefaultSettingRewardsPointsEarning">
+        <data key="pointsEarningCalculation">after_tax</data>
+    </entity>
+
+    <entity name="SetSettingRewardsPointsSpendingRate10" type="adminSettingRewardsPointsEarning" extends="SetDefaultSettingRewardsPointsEarning">
+        <data key="spendingRate">10</data>
+    </entity>
+
+    <entity name="SetSettingRewardsPointsSpendingRate0_25" type="adminSettingRewardsPointsEarning" extends="SetDefaultSettingRewardsPointsEarning">
+        <data key="spendingRate">0.25</data>
+    </entity>
+
+    <entity name="SetSettingRewardsPointsSpendingRate4_45" type="adminSettingRewardsPointsEarning" extends="SetDefaultSettingRewardsPointsEarning">
+        <data key="spendingRate">4.45</data>
+    </entity>
+
+    <entity name="SetSettingRewardsPointsRoundingRuleNoRounding" type="adminSettingRewardsPointsEarning" extends="SetDefaultSettingRewardsPointsEarning">
+        <data key="roundingRule">no</data>
+    </entity>
+
+    <entity name="SetSettingRewardsPointsRoundingRuleRoundUp" type="adminSettingRewardsPointsEarning" extends="SetDefaultSettingRewardsPointsEarning">
+        <data key="roundingRule">up</data>
+    </entity>
+
+    <entity name="SetSettingRewardsPointsRoundingRuleRoundDown" type="adminSettingRewardsPointsEarning" extends="SetDefaultSettingRewardsPointsEarning">
+        <data key="roundingRule">down</data>
+    </entity>
+
+    <entity name="SetDefaultSettingHighlightPointOnStorefront" type="adminSettingHighlightPointOnStorefront">
+        <data key="showInCart">No</data>
+        <data key="showOnCheckoutPage">No</data>
+        <data key="showOnProductPages">No</data>
+        <data key="showOnCategoriesPages">No</data>
+        <data key="showHighlightForGuests">No</data>
+        <data key="textColor">#000000</data>
+    </entity>
+
+    <entity name="SetSettingHighlightPointOnStorefrontAllEnable" type="adminSettingHighlightPointOnStorefront">
+        <data key="showInCart">Yes</data>
+        <data key="showOnCheckoutPage">Yes</data>
+        <data key="showOnProductPages">Yes</data>
+        <data key="showOnCategoriesPages">Yes</data>
+        <data key="showHighlightForGuests">Yes</data>
+    </entity>
+
+    <entity name="SetDefaultSettingRewardsOrderLimitations" type="adminSettingRewardsOrderLimitations">
+        <data key="minimumPointsRequirement">0</data>
+        <data key="isDisableRewardPointsForOrders">No</data>
+        <data key="applyRedemptionLimit">No</data>
+        <data key="redemptionLimitPerOrder">0</data>
+    </entity>
+
+    <entity name="SetSettingRewardsOrderLimitationsMinimumPointsTwenty" type="adminSettingRewardsOrderLimitations"
+            extends="SetDefaultSettingRewardsOrderLimitations">
+        <data key="minimumPointsRequirement">20</data>
+    </entity>
+
+    <entity name="SetSettingRewardsOrderLimitationsDisablePointsYes" type="adminSettingRewardsOrderLimitations"
+            extends="SetDefaultSettingRewardsOrderLimitations">
+        <data key="isDisableRewardPointsForOrders">Yes</data>
+    </entity>
+
+    <entity name="SetSettingRewardsOrderLimitationsLimitAmount" type="adminSettingRewardsOrderLimitations"
+            extends="SetDefaultSettingRewardsOrderLimitations">
+        <data key="applyRedemptionLimit">Yes (amount in reward points)</data>
+        <data key="redemptionLimitPerOrder">10</data>
+    </entity>
+
+    <entity name="SetSettingRewardsOrderLimitationsLimitPercent" type="adminSettingRewardsOrderLimitations"
+            extends="SetDefaultSettingRewardsOrderLimitations">
+        <data key="applyRedemptionLimit">Yes (percent of checkout sum)</data>
+        <data key="redemptionLimitPerOrder">10</data>
+    </entity>
+
+    <entity name="isApplyRedemptionLimitOrderLimitations" type="adminSettingRewardsOrderLimitations">
+        <data key="applyRedemptionLimitNo">0</data>
+        <data key="applyRedemptionLimitYesAmount">1</data>
+        <data key="applyRedemptionLimitYesPercent">2</data>
+    </entity>
+
+    <entity name="SetDefaultSettingRewardsExpirationSettings" type="adminSettingRewardsExpirationSettings">
+        <data key="pointsExpirationBehavior">Never expire</data>
+        <data key="pointsExpirationPeriodDays">0</data>
+    </entity>
+
+    <entity name="SetSettingRewardsExpirationSettingsExpireFourDays" type="adminSettingRewardsExpirationSettings">
+        <data key="pointsExpirationBehavior">Expire</data>
+        <data key="pointsExpirationPeriodDays">4</data>
+    </entity>
+
+    <entity name="SetSettingRewardsExpirationSettingsExpireToday" type="adminSettingRewardsExpirationSettings">
+        <data key="pointsExpirationBehavior">Expire</data>
+        <data key="pointsExpirationPeriodDays">0</data>
+    </entity>
+
+    <entity name="isPointsExpirationBehavior" type="adminSettingRewardsExpirationSettings">
+        <data key="pointsExpirationBehaviorNeverExpire">0</data>
+        <data key="pointsExpirationBehaviorExpire">1</data>
+    </entity>
+
+    <entity name="SetDefaultSettingRewardsOtherSettings" type="adminSettingRewardsOtherSettings">
+        <data key="adminTextAction">Admin Point Change</data>
+    </entity>
+
+    <entity name="SetTestSettingRewardsOtherSettings" type="adminSettingRewardsOtherSettings">
+        <data key="adminTextAction">Test Admin Point Change</data>
+    </entity>
+
+    <entity name="SetDefaultSettingRewardsCustomerAccount" type="adminSettingRewardsCustomerAccount">
+        <data key="showRewardPointsDescription">No</data>
+        <data key="showActualRewardPointsBalance">No</data>
+        <data key="customerAccountBalanceLabel">Reward Points</data>
+    </entity>
+
+    <entity name="isShowRewardPointsDescription" type="adminSettingRewardsCustomerAccount">
+        <data key="showRewardPointsDescriptionYes">1</data>
+        <data key="showRewardPointsDescriptionNo">0</data>
+    </entity>
+
+    <entity name="SetSettingRewardsCustomerAccountDescription" type="adminSettingRewardsCustomerAccount"
+            extends="SetDefaultSettingRewardsCustomerAccount">
+        <data key="showRewardPointsDescription">Yes</data>
+        <data key="rewardPointsDescription">Test Reward Points Description</data>
+    </entity>
+
+    <entity name="SetSettingRewardsCustomerAccountActualBalance" type="adminSettingRewardsCustomerAccount"
+            extends="SetDefaultSettingRewardsCustomerAccount">
+        <data key="showActualRewardPointsBalance">Yes</data>
+        <data key="customerAccountBalanceLabel">Test Balance Label</data>
+    </entity>
+
+</entities>

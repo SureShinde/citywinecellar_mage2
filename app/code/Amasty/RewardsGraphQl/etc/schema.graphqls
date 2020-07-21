@@ -1,0 +1,45 @@
+type Query {
+    rewards: Rewards @resolver(class: "Amasty\\RewardsGraphQl\\Model\\Resolver\\Rewards")
+    @doc(description: "Customer rewards information query."),
+    guestRewards(page: Int! @doc(description: "Id of the page")): HighlightOutput @resolver(class: "Amasty\\RewardsGraphQl\\Model\\Resolver\\GuestHighlight")
+    @doc(description: "Information about highlight points available for guest."),
+}
+
+type Mutation {
+    useRewardPoints(points: Float!): String @resolver(class: "Amasty\\RewardsGraphQl\\Model\\Resolver\\UseRewardPoints")
+    @doc(description: "Apply or cancel (set points to 0) rewards points to current cart.")
+}
+
+type Rewards {
+    balance: Float @doc(description: "Current customer rewards balance."),
+    history: HistoryOutput @doc(description: "Information about the movement of reward points."),
+    highlight: HighlightQuery @doc(description: "Customer rewards information query."),
+}
+
+type HistoryOutput {
+    total_count: Int @doc(description: "Total amount of history records."),
+    items(pageSize: Int = 10, currentPage: Int = 1): [HistoryItem] @resolver(class: "Amasty\\RewardsGraphQl\\Model\\Resolver\\HistoryItems")
+        @doc(description: "History records. Count must be limited.")
+}
+
+type HistoryItem {
+    action_date: String @doc(description: "The date of transaction."),
+    amount: Float @doc(description: "Transaction amount of reward points."),
+    action: String @doc(description: "Type of transaction or accrual source."),
+    points_left: Float @doc(description: "Customer reward point balance after transaction done."),
+    expiration_date: String @doc(description: "Reward points expiration. Null if spending action or points are lifelong.")
+}
+
+type HighlightQuery {
+    product (productId: Int! @doc(description: "Id of the product"), attributes: String @doc(description: "Product adding request data.")): HighlightOutput @resolver(class: "Amasty\\RewardsGraphQl\\Model\\Resolver\\HighlightProduct")
+    @doc(description: "Information about highlight points available by product."),
+    category (productId: Int! @doc(description: "Id of the product"), attributes: String @doc(description: "Product adding request data.")): HighlightOutput @resolver(class: "Amasty\\RewardsGraphQl\\Model\\Resolver\\HighlightCategory")
+    @doc(description: "Information about highlight points available by category."),
+    cart: HighlightOutput @resolver(class: "Amasty\\RewardsGraphQl\\Model\\Resolver\\HighlightCart") @doc(description: "Information about highlight points available by cart content."),
+}
+
+type HighlightOutput {
+    visible: Boolean @doc(description: "Is capture visible on storefront.")
+    caption_color: String @doc(description: "Capture custom color.")
+    caption_text: String @doc(description: "Amout of points with description.")
+}

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="RPConfigurationPointsRoundingRuleRoundUp" extends="RPConfigurationPointsRoundingRuleRoundDown">
+        <annotations>
+            <features value="Points Rounding Rule"/>
+            <stories value="Points Rounding Rule via Customer"/>
+            <title value="Check Setting Points Rounding Rule with Round Up Value"/>
+            <description value="Check Setting Points Rounding Rule with Round Up Value"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="RP-MFTF-07"/>
+            <group value="Amasty"/>
+            <group value="Rewards"/>
+            <group value="Checkout"/>
+            <group value="RewardsSpending"/>
+            <group value="RewardsConfiguration"/>
+            <group value="RewardsConfigurationGeneral"/>
+        </annotations>
+
+        <before>
+            <actionGroup ref="AdminConfigurationSettingRewardsPointsEarning" stepKey="ConfigurationPointsEarningSettingRewards">
+                <argument name="adminSettingRewardsPointsEarning" value="SetSettingRewardsPointsRoundingRuleRoundUp"/>
+            </actionGroup>
+        </before>
+
+        <remove keyForRemoval="ApplyRewardPointOnTheCart"/>
+        <remove keyForRemoval="CheckDiscountAndAmountInFieldApplyOnTheCart"/>
+        <remove keyForRemoval="cancelAppliedRewards"/>
+        <!-- Apply Reward Points On The Checkout-->
+        <actionGroup ref="StorefrontApplyRewardPointsOnTheCheckout" stepKey="ApplyRewardPointOnTheCheckout">
+            <argument name="rewardsAmount" value="PointsRoundingRuleRoundUp.applyRewardsAmount"/>
+        </actionGroup>
+        <!-- Check Apply Reward on the Checkout: Discount and Amount Applied Points-->
+        <actionGroup ref="StorefrontCheckDiscountAndAppliedRewardsOnTheCheckout" stepKey="CheckDiscountAndAmountInFieldApplyOnTheCheckout">
+            <argument name="discountAmount" value="PointsRoundingRuleRoundUp.discountAmount"/>
+            <argument name="appliedRewardsAmount" value="PointsRoundingRuleRoundUp.appliedRewardsAmount"/>
+        </actionGroup>
+        <!-- Check Current Balance after used Reward Points -->
+        <actionGroup ref="StorefrontCheckCurrentBalanceRewardPointsInCustomerAccount" stepKey="CheckCustomerCurrentBalance">
+            <argument name="currentBalance" value="PointsRoundingRuleRoundUp.currentBalance"/>
+        </actionGroup>
+        <!-- Check Usage History Reward Points -->
+        <actionGroup ref="StorefrontCheckRewardPointsHistoryActionInCustomerAccount" stepKey="CheckRewardsHistory">
+            <argument name="rewardsHistoryRecordData" value="PointsRoundingRuleRoundUpRewardsHistory"/>
+        </actionGroup>
+
+    </test>
+</tests>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="RPConfigurationShowActualRewardPointsBalanceOnStorefront">
+        <annotations>
+            <features value="Setting Show Actual Reward Points Balance"/>
+            <stories value="Setting Show Actual Reward Points Balance via Customer"/>
+            <title value="Check Setting Show Actual Reward Points Balance On Storefront with Yes Value"/>
+            <description value="Check Setting Show Actual Reward Points Balance On Storefront with Yes Value"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="RP-MFTF-29"/>
+            <group value="Amasty"/>
+            <group value="Rewards"/>
+            <group value="RewardsConfiguration"/>
+            <group value="RewardsConfigurationDisplayOptions"/>
+            <group value="RewardsConfigurationCustomerAccount"/>
+        </annotations>
+
+        <before>
+            <!-- Create Data for Test -->
+            <createData entity="RewardPointsCustomer" stepKey="createCustomer"/>
+            <createData entity="AddRewardPointsNotExpire20_08" stepKey="addRewardPointsToCustomer">
+                <requiredEntity createDataKey="createCustomer"/>
+            </createData>
+            <!-- Login To Admin Area -->
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <!-- Configuration Settings for Test-->
+            <actionGroup ref="AdminConfigurationSettingRewardsGeneral" stepKey="ConfigurationGeneralSettingRewards">
+                <argument name="adminSettingRewardsGeneral" value="enableRewards"/>
+            </actionGroup>
+            <actionGroup ref="AdminConfigurationSettingCustomerAccount" stepKey="ConfigurationCustomerAccountSettings">
+                <argument name="adminSettingRewardsCustomerAccount" value="SetSettingRewardsCustomerAccountActualBalance"/>
+            </actionGroup>
+        </before>
+
+        <after>
+            <!-- Delete All Created Data -->
+            <deleteData createDataKey="createCustomer" stepKey="deleteCustomer"/>
+            <!-- Return the Default Settings Module -->
+            <actionGroup ref="AdminConfigurationSettingRewardsGeneral" stepKey="DefaultConfigurationGeneralSettingRewards">
+                <argument name="adminSettingRewardsGeneral" value="defaultGeneralSettingRewards"/>
+            </actionGroup>
+            <actionGroup ref="AdminConfigurationSettingCustomerAccountWithClearFields" stepKey="ConfigurationCustomerAccountSettings">
+                <argument name="adminSettingRewardsCustomerAccount" value="SetDefaultSettingRewardsCustomerAccount"/>
+            </actionGroup>
+            <amOnPage url="admin/admin/auth/logout/" stepKey="amOnLogoutPage"/>
+        </after>
+
+        <!-- Login to storefront as previously created customer-->
+        <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginAsCustomer">
+            <argument name="Customer" value="$$createCustomer$$"/>
+        </actionGroup>
+        <!-- Check Actual Reward Points Balance Label on the Storefront -->
+        <actionGroup ref="StorefrontCheckActualRewardPointsBalanceOnStorefront" stepKey="checkHaveActualRewardPointsBalance">
+            <argument name="actualBalanceLabel" value="SetSettingRewardsCustomerAccountActualBalance.customerAccountBalanceLabel"/>
+            <argument name="actualBalanceAmount" value="AddRewardPointsNotExpire20_08.amount"/>
+        </actionGroup>
+
+    </test>
+</tests>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="RPGridCountOfPointsByCustomer">
+        <annotations>
+            <features value="Customer Grid Reward Points"/>
+            <stories value="Customer Grid Reward Points via Customer"/>
+            <title value="Check Count Of Reward Points By Customer Grid"/>
+            <description value="Check Count Of Reward Points By Customer Grid"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="RP-MFTF-64"/>
+            <group value="Amasty"/>
+            <group value="Rewards"/>
+            <group value="RewardsGrid"/>
+        </annotations>
+
+        <before>
+            <!-- Create Data for Test, Login to Admin Area and Configuration Settings-->
+            <createData entity="RewardPointsCustomer" stepKey="createCustomerOne"/>
+            <createData entity="RewardPointsCustomer" stepKey="createCustomerTwo"/>
+            <createData entity="RewardPointsCustomer" stepKey="createCustomerThree"/>
+            <createData entity="AddNineteenRewardPointsNotExpire" stepKey="addRewardPointsToFirstCustomer">
+                <requiredEntity createDataKey="createCustomerOne"/>
+            </createData>
+            <createData entity="AddRewardPointsExpireFourDays5" stepKey="addRewardPointsToSecondCustomer">
+                <requiredEntity createDataKey="createCustomerTwo"/>
+            </createData>
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="AdminConfigurationSettingRewardsGeneral" stepKey="DefaultConfigurationGeneralSettingRewards">
+                <argument name="adminSettingRewardsGeneral" value="defaultGeneralSettingRewards"/>
+            </actionGroup>
+        </before>
+
+        <after>
+            <!-- Delete Created Data After Test -->
+            <deleteData createDataKey="createCustomerOne" stepKey="deleteCustomerOne"/>
+            <deleteData createDataKey="createCustomerTwo" stepKey="deleteCustomerTwo"/>
+            <deleteData createDataKey="createCustomerThree" stepKey="deleteCustomerThree"/>
+            <actionGroup ref="logout" stepKey="logout"/>
+        </after>
+
+        <!-- Clear All Fields in Customers Grid -->
+        <actionGroup ref="AdminClearFiltersOnCustomersGrid" stepKey="clearFiltersByCustomerGrid"/>
+        <!-- Checking Points by Customer in Grid -->
+        <actionGroup ref="AdminCheckRewardPointsByCustomerGrid" stepKey="AssertRewardPointsByFirstCustomer">
+            <argument name="customerEmail" value="$$createCustomerOne.email$$"/>
+            <argument name="countPoints" value="{{AddNineteenRewardPointsNotExpire.amount}}"/>
+        </actionGroup>
+        <actionGroup ref="AdminCheckRewardPointsByCustomerGrid" stepKey="AssertRewardPointsBySecondCustomer">
+            <argument name="customerEmail" value="$$createCustomerTwo.email$$"/>
+            <argument name="countPoints" value="{{AddRewardPointsExpireFourDays5.amount}}"/>
+        </actionGroup>
+        <actionGroup ref="AdminCheckRewardPointsByCustomerGrid" stepKey="AssertRewardPointsByThirdCustomer">
+            <argument name="customerEmail" value="$$createCustomerThree.email$$"/>
+            <argument name="countPoints" value="{{CheckRewardPointsByCustomerGrid.amountCustomerPointsNull}}"/>
+        </actionGroup>
+        <actionGroup ref="AdminClearFiltersOnCustomersGrid" stepKey="clearFiltersByCustomerGridAfterTest"/>
+    </test>
+</tests>

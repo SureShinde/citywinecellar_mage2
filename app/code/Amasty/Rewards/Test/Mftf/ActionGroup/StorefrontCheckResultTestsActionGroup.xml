@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+
+    <!-- Checking Discount on the Cart -->
+    <actionGroup name="StorefrontCheckDiscountOnTheCart">
+        <arguments>
+            <argument name="discountAmount"/>
+        </arguments>
+        <amOnPage url="{{FrontCartPage.url}}" stepKey="navigateToShoppingCart"/>
+        <waitForPageLoad stepKey="waitForCartPageLoad"/>
+        <waitForElementNotVisible selector="{{FrontCartSection.CartTotalLoader}}" stepKey="waitWhenNotVisibleLoaderTotals"/>
+        <waitForAjaxLoad stepKey="waitForCartAjaxLoad"/>
+        <see selector="{{FrontCartSection.DiscountAmount}}" userInput="{{discountAmount}}" stepKey="checkDiscount"/>
+    </actionGroup>
+
+    <!-- Checking Discount on the Cart and Amount Points in Field Apply Reward -->
+    <actionGroup name="StorefrontCheckDiscountAndAppliedRewardsOnTheCart" extends="StorefrontCheckDiscountOnTheCart">
+        <arguments>
+            <argument name="appliedRewardsAmount"/>
+        </arguments>
+        <conditionalClick stepKey="openApplyRewardsTab"
+                          selector="{{StorefrontCartSection.ApplyRewardsTab}}"
+                          dependentSelector="{{StorefrontCartSection.ApplyRewardsInputAmount}}"
+                          visible="false"/>
+        <seeInField selector="{{StorefrontCartSection.ApplyRewardsInputAmount}}"
+                   userInput="{{appliedRewardsAmount}}" stepKey="seeAmountAppliedRewards"/>
+    </actionGroup>
+
+    <!-- Checking the Amount in the Discount Name on the Cart-->
+    <actionGroup name="StorefrontCheckDiscountAndTextBellowDiscountOnTheCart" extends="StorefrontCheckDiscountOnTheCart">
+        <arguments>
+            <argument name="appliedRewardsAmount"/>
+        </arguments>
+        <seeElement selector="{{StorefrontCartSection.DiscountRewardsName(appliedRewardsAmount)}}" stepKey="checkTextDiscount"/>
+    </actionGroup>
+
+    <!-- Checking Discount on the Checkout Payment Information Page
+         Use After AmastyCreateOrderAsCustomerOnCheckoutShippingPage -->
+    <actionGroup name="StorefrontCheckDiscountOnTheCheckout">
+        <arguments>
+            <argument name="discountAmount"/>
+        </arguments>
+        <waitForPageLoad stepKey="waitForCheckoutPaymentPageLoad"/>
+        <waitForElementNotVisible selector="{{StorefrontCheckoutPaymentAddressSection.CheckoutLoader}}" stepKey="waitWhenNotVisibleLoaderTotals"/>
+        <waitForAjaxLoad stepKey="waitForCheckoutPaymentAjaxLoad"/>
+        <see selector="{{StorefrontCheckoutPaymentAddressSection.DiscountAmount}}" userInput="{{discountAmount}}" stepKey="checkDiscount"/>
+    </actionGroup>
+
+    <!-- Checking Discount on the Checkout and Amount Points in Field Apply Reward -->
+    <actionGroup name="StorefrontCheckDiscountAndAppliedRewardsOnTheCheckout" extends="StorefrontCheckDiscountOnTheCheckout">
+        <arguments>
+            <argument name="appliedRewardsAmount"/>
+        </arguments>
+        <conditionalClick stepKey="openApplyRewardsTab"
+                          selector="{{StorefrontCheckoutPaymentAddressSection.ApplyRewardsTab}}"
+                          dependentSelector="{{StorefrontCheckoutPaymentAddressSection.ApplyRewardsInputAmount}}"
+                          visible="false"/>
+        <seeInField selector="{{StorefrontCheckoutPaymentAddressSection.ApplyRewardsInputAmount}}"
+                     userInput="{{appliedRewardsAmount}}" stepKey="seeAmountAppliedRewards"/>
+    </actionGroup>
+
+    <!-- Checking the Amount in the Discount Name on the Checkout-->
+    <actionGroup name="StorefrontCheckDiscountAndTextBellowDiscountOnTheCheckout" extends="StorefrontCheckDiscountOnTheCheckout">
+        <arguments>
+            <argument name="appliedRewardsAmount"/>
+        </arguments>
+        <seeElement selector="{{StorefrontCheckoutPaymentAddressSection.DiscountRewardsName(appliedRewardsAmount)}}" stepKey="checkTextDiscount"/>
+    </actionGroup>
+
+    <!-- Checking Have Tabs Reward Points and Reward Points History on the Customer Account-->
+    <actionGroup name="StorefrontCheckModuleEnable">
+        <amOnPage url="{{StorefrontCustomerDashboardPage.url}}" stepKey="navigateToCustomerDashboard"/>
+        <waitForPageLoad stepKey="waitForLoadCustomerAccountDashboardPage"/>
+        <seeElement selector="{{StorefrontCustomerAccountRewardPointsSection.RewardPointsTab}}"
+                    stepKey="checkHaveRewardPointsTab"/>
+        <seeElement selector="{{StorefrontCustomerAccountRewardPointsHistorySection.RewardPointsHistoryTab}}"
+                    stepKey="checkHaveRewardPointsHistoryTab"/>
+    </actionGroup>
+
+    <!-- Checking Don't Have Tabs Reward Points and Reward Points History on the Customer Account-->
+    <actionGroup name="StorefrontCheckModuleDisable">
+        <amOnPage url="{{StorefrontCustomerDashboardPage.url}}" stepKey="navigateToCustomerDashboard"/>
+        <waitForPageLoad stepKey="waitForLoadCustomerAccountDashboardPage"/>
+        <dontSeeElement selector="{{StorefrontCustomerAccountRewardPointsSection.RewardPointsTab}}"
+                    stepKey="checkNoRewardPointsTab"/>
+        <dontSeeElement selector="{{StorefrontCustomerAccountRewardPointsHistorySection.RewardPointsHistoryTab}}"
+                    stepKey="checkNoRewardPointsHistoryTab"/>
+    </actionGroup>
+
+    <!-- Checking Don't Have Have Apply Reward Points Tab -->
+    <actionGroup name="StorefrontCheckNoHaveApplyRewardPointsTabOnTheCart">
+        <amOnPage url="{{FrontCartPage.url}}" stepKey="navigateToShoppingCart"/>
+        <waitForPageLoad stepKey="waitForLoadCustomerAccountDashboardPage"/>
+        <dontSeeElement selector="{{StorefrontCartSection.ApplyRewardsTab}}"
+                        stepKey="checkNoApplyRewardPointsTab"/>
+        <dontSeeElement selector="{{StorefrontCartSection.ApplyRewardsInputAmount}}"
+                        stepKey="checkNoApplyRewardPointsInputField"/>
+    </actionGroup>
+
+    <!-- Checking Current Balance in the Customer Account on Storefront -->
+    <actionGroup name="StorefrontCheckCurrentBalanceRewardPointsInCustomerAccount">
+        <arguments>
+            <argument name="currentBalance"/>
+        </arguments>
+        <amOnPage url="{{StorefrontCustomerAccountRewardsPointsPage.url}}" stepKey="navigateToRewardsStorefront"/>
+        <waitForPageLoad stepKey="waitForRewardsPointsPageLoad"/>
+        <see selector="{{StorefrontCustomerAccountRewardPointsSection.CurrentBalance}}"
+             userInput="{{currentBalance}}"
+             stepKey="checkCurrentBalanceOnTheStorefront"/>
+    </actionGroup>
+
+    <!-- Checking Reward Points History Change and Points Left in the Customer Account on Storefront -->
+    <actionGroup name="StorefrontCheckRewardPointsHistoryActionInCustomerAccount">
+        <arguments>
+            <argument name="rewardsHistoryRecordData"/>
+        </arguments>
+        <amOnPage url="{{StorefrontCustomerAccountRewardsPointsHistoryPage.url}}" stepKey="navigateToRewardsHistoryStorefront"/>
+        <waitForPageLoad stepKey="waitForRewardPointsHistoryPageLoad"/>
+        <see selector="{{StorefrontCustomerAccountRewardPointsHistorySection.HistoryChangeAmount(rewardsHistoryRecordData.numberLine)}}"
+             userInput="{{rewardsHistoryRecordData.change}}"
+             stepKey="checkChangeInRewardsHistoryRecord"/>
+        <see selector="{{StorefrontCustomerAccountRewardPointsHistorySection.HistoryPointsLeft(rewardsHistoryRecordData.numberLine)}}"
+             userInput="{{rewardsHistoryRecordData.pointsLeft}}"
+             stepKey="checkPointsLeftInRewardsHistoryRecord"/>
+    </actionGroup>
+
+    <!-- Checking Reward Points History Expire Day in the Customer Account on Storefront -->
+    <actionGroup name="StorefrontCheckRewardPointsHistoryInCustomerAccountExpireDay">
+        <arguments>
+            <argument name="rewardsHistoryRecordData"/>
+        </arguments>
+        <amOnPage url="{{StorefrontCustomerAccountRewardsPointsHistoryPage.url}}" stepKey="navigateToRewardsHistoryStorefront"/>
+        <waitForPageLoad stepKey="waitForRewardPointsHistoryPageLoad"/>
+        <see selector="{{StorefrontCustomerAccountRewardPointsHistorySection.HistoryDaysLeft(rewardsHistoryRecordData.numberLine)}}"
+             userInput="{{rewardsHistoryRecordData.expireDays}}"
+             stepKey="checkDaysLeftInRewardsHistoryRecord"/>
+    </actionGroup>
+
+    <!-- Checking Reward Points History No Expire Period in the Customer Account on Storefront -->
+    <actionGroup name="StorefrontCheckRewardPointsHistoryInCustomerAccountNoExpireDay">
+        <arguments>
+            <argument name="rewardsHistoryRecordData"/>
+        </arguments>
+        <amOnPage url="{{StorefrontCustomerAccountRewardsPointsHistoryPage.url}}" stepKey="navigateToRewardsStorefront"/>
+        <waitForPageLoad stepKey="waitForRewardPointsHistoryPageLoad"/>
+        <dontSeeElement selector="{{StorefrontCustomerAccountRewardPointsHistorySection.HistoryDaysLeft(rewardsHistoryRecordData.numberLine)}}"
+                        stepKey="checkDaysLeftInRewardsHistoryRecord"/>
+    </actionGroup>
+
+    <!-- Checking Reward Points History Comment in the Customer Account on Storefront -->
+    <actionGroup name="StorefrontCheckRewardPointsHistoryActionInCustomerAccountComment">
+        <arguments>
+            <argument name="rewardsHistoryRecordData"/>
+        </arguments>
+        <amOnPage url="{{StorefrontCustomerAccountRewardsPointsHistoryPage.url}}" stepKey="navigateToRewardsHistoryStorefront"/>
+        <waitForPageLoad stepKey="waitForRewardPointsHistoryPageLoad"/>
+        <see selector="{{StorefrontCustomerAccountRewardPointsHistorySection.HistoryComment(rewardsHistoryRecordData.numberLine)}}"
+             userInput="{{rewardsHistoryRecordData.comment}}"
+             stepKey="checkChangeInRewardsHistoryRecord"/>
+    </actionGroup>
+
+    <!-- Checking Reward Points History Action Text in the Customer Account on Storefront -->
+    <actionGroup name="StorefrontCheckRewardPointsHistoryActionInCustomerAccountActionText">
+        <arguments>
+            <argument name="rewardsHistoryRecordData"/>
+        </arguments>
+        <amOnPage url="{{StorefrontCustomerAccountRewardsPointsHistoryPage.url}}" stepKey="navigateToRewardsHistoryStorefront"/>
+        <waitForPageLoad stepKey="waitForRewardPointsHistoryPageLoad"/>
+        <see selector="{{StorefrontCustomerAccountRewardPointsHistorySection.HistoryAction(rewardsHistoryRecordData.numberLine)}}"
+             userInput="{{rewardsHistoryRecordData.actionText}}"
+             stepKey="checkActionTextInRewardsHistoryRecord"/>
+    </actionGroup>
+
+    <!-- Checking Highlight on the Product Page -->
+    <actionGroup name="StorefrontCheckRewardPointsHighlightOnProductPage">
+        <arguments>
+            <argument name="amountInHighlight"/>
+            <argument name="product"/>
+        </arguments>
+        <amOnPage url="{{StorefrontProductPage.url(product.custom_attributes[url_key])}}" stepKey="goToProductPage"/>
+        <waitForPageLoad stepKey="waitForPageLoad"/>
+        <waitForAjaxLoad stepKey="waitForAjaxLoad"/>
+        <see selector="{{StorefrontProductPageSection.RewardPointsHighlightAmount}}"
+             userInput="{{amountInHighlight}}"
+             stepKey="checkRewardPointsHighlightAmountOnProductPage"/>
+    </actionGroup>
+
+    <!-- Checking Highlight on the Product Page (Check Only One Product In Category) -->
+    <actionGroup name="StorefrontCheckRewardPointsHighlightOnCategoryPage">
+        <arguments>
+            <argument name="amountInHighlight"/>
+            <argument name="category"/>
+            <argument name="product"/>
+        </arguments>
+        <amOnPage url="{{StorefrontCategoryPage.url(category.name)}}" stepKey="navigateToCategoryPage"/>
+        <waitForPageLoad stepKey="waitForPageLoad"/>
+        <waitForAjaxLoad stepKey="waitForAjaxLoad"/>
+        <see selector="{{StorefrontCategoryPageSection.ProductRewardPointsHighlightAmount(product.name)}}"
+             userInput="{{amountInHighlight}}"
+             stepKey="checkProductRewardPointsHighlightAmountOnCategoryPage"/>
+    </actionGroup>
+
+    <!-- Checking Highlight on the Cart -->
+    <actionGroup name="StorefrontCheckRewardPointsHighlightOnTheCart">
+        <arguments>
+            <argument name="amountInHighlight"/>
+        </arguments>
+        <amOnPage url="{{FrontCartPage.url}}" stepKey="navigateToShoppingCart"/>
+        <waitForPageLoad stepKey="waitForPageLoad"/>
+        <waitForAjaxLoad stepKey="waitForAjaxLoad"/>
+        <see selector="{{StorefrontCartSection.RewardPointsHighlightAmount}}"
+             userInput="{{amountInHighlight}}"
+             stepKey="checkRewardPointsHighlightAmountOnTheCart"/>
+    </actionGroup>
+
+    <!-- Checking Highlight on the Checkout Shipping Information Page -->
+    <actionGroup name="StorefrontCheckRewardPointsHighlightOnTheCheckoutShippingPage">
+        <arguments>
+            <argument name="amountInHighlight"/>
+        </arguments>
+        <amOnPage url="{{CheckoutShippingPage.url}}" stepKey="navigateToStorefrontCheckoutShippingPage"/>
+        <waitForPageLoad stepKey="waitForPageLoad"/>
+        <waitForAjaxLoad stepKey="waitForAjaxLoad"/>
+        <see selector="{{StorefrontCheckoutShippingAddressSection.RewardPointsHighlightAmount}}"
+             userInput="{{amountInHighlight}}"
+             stepKey="checkRewardPointsHighlightAmountOnTheCart"/>
+    </actionGroup>
+
+    <!-- Checking Highlight on the Checkout Payment Information Page -->
+    <actionGroup name="StorefrontCheckRewardPointsHighlightOnTheCheckoutPaymentPage">
+        <arguments>
+            <argument name="amountInHighlight"/>
+        </arguments>
+        <waitForPageLoad stepKey="waitForPageLoad"/>
+        <waitForAjaxLoad stepKey="waitForAjaxLoad"/>
+        <see selector="{{StorefrontCheckoutPaymentAddressSection.RewardPointsHighlightAmount}}"
+             userInput="{{amountInHighlight}}"
+             stepKey="checkRewardPointsHighlightAmountOnTheCart"/>
+    </actionGroup>
+
+    <!-- Checking Have Message about Minimum Points Require on the Cart -->
+    <actionGroup name="StorefrontCheckHaveMinimumPointsRequireMessageOnTheCart">
+        <arguments>
+            <argument name="redemptionLimitAmount"/>
+        </arguments>
+        <amOnPage url="{{FrontCartPage.url}}" stepKey="navigateToShoppingCart"/>
+        <waitForPageLoad stepKey="waitForCartPageLoad"/>
+        <conditionalClick stepKey="openApplyRewardsTab"
+                          selector="{{StorefrontCartSection.ApplyRewardsTab}}"
+                          dependentSelector="{{StorefrontCartSection.ApplyRewardsInputAmount}}"
+                          visible="false"/>
+        <seeElement selector="{{StorefrontCartSection.MinimumPointsRedemptionMessageAmount(redemptionLimitAmount)}}"
+                    stepKey="checkHaveRedemptionLimit"/>
+        <seeElement selector="{{StorefrontCartSection.ApplyRewardsFieldDisable}}"
+                    stepKey="checkFieldApplyRewardsIsDisable"/>
+    </actionGroup>
+
+    <!-- Checking Message about Minimum Points Require on the Cart -->
+    <actionGroup name="StorefrontCheckDontHaveMinimumPointsRequireMessageOnTheCart">
+        <amOnPage url="{{FrontCartPage.url}}" stepKey="navigateToShoppingCart"/>
+        <waitForPageLoad stepKey="waitForCartPageLoad"/>
+        <conditionalClick stepKey="openApplyRewardsTab"
+                          selector="{{StorefrontCartSection.ApplyRewardsTab}}"
+                          dependentSelector="{{StorefrontCartSection.ApplyRewardsInputAmount}}"
+                          visible="false"/>
+        <dontSeeElement selector="{{StorefrontCartSection.MinimumPointsRedemptionMessage}}"
+                        stepKey="checkHaveRedemptionLimit"/>
+        <dontSeeElement selector="{{StorefrontCartSection.ApplyRewardsFieldDisable}}"
+                        stepKey="checkFieldApplyRewardsIsDisable"/>
+    </actionGroup>
+
+    <!-- Checking Disable Apply Reward Points Field and Applied Minimum Required on the Checkout
+         Use After AmastyCreateOrderAsCustomerOnCheckoutShippingPage -->
+    <actionGroup name="StorefrontCheckHaveMinimumPointsRequireMessageOnTheCheckout">
+        <waitForPageLoad stepKey="waitForCheckoutPageLoad"/>
+        <conditionalClick stepKey="openApplyRewardsTab"
+                          selector="{{StorefrontCheckoutPaymentAddressSection.ApplyRewardsTab}}"
+                          dependentSelector="{{StorefrontCheckoutPaymentAddressSection.ApplyRewardsInputAmount}}"
+                          visible="false"/>
+        <seeElement selector="{{StorefrontCheckoutPaymentAddressSection.ApplyRewardsFieldDisable}}"
+                    stepKey="checkFieldApplyRewardsIsDisable"/>
+    </actionGroup>
+
+    <!-- Checking Apply Reward Points Field is Enable and No Minimum Required Message on the Checkout
+         Use After AmastyCreateOrderAsCustomerOnCheckoutShippingPage -->
+    <actionGroup name="StorefrontCheckDontHaveMinimumPointsRequireMessageOnTheCheckout">
+        <waitForPageLoad stepKey="waitForCheckoutPageLoad"/>
+        <conditionalClick stepKey="openApplyRewardsTab"
+                          selector="{{StorefrontCheckoutPaymentAddressSection.ApplyRewardsTab}}"
+                          dependentSelector="{{StorefrontCheckoutPaymentAddressSection.ApplyRewardsInputAmount}}"
+                          visible="false"/>
+        <dontSeeElement selector="{{StorefrontCheckoutPaymentAddressSection.MinimumPointsRedemptionMessage}}"
+                        stepKey="checkHaveRedemptionLimit"/>
+        <dontSeeElement selector="{{StorefrontCheckoutPaymentAddressSection.ApplyRewardsFieldDisable}}"
+                        stepKey="checkFieldApplyRewardsIsDisable"/>
+    </actionGroup>
+
+    <!-- Checking Rewards Description in Customer Account on Storefront -->
+    <actionGroup name="StorefrontCheckHaveRewardsDescriptionInCustomerAccount">
+        <arguments>
+            <argument name="descriptionText"/>
+        </arguments>
+        <amOnPage url="{{StorefrontCustomerAccountRewardsPointsPage.url}}" stepKey="navigateToRewardsStorefront"/>
+        <waitForPageLoad stepKey="waitForRewardsPointsPageLoad"/>
+        <see selector="{{StorefrontCustomerAccountRewardPointsSection.Description}}"
+             userInput="{{descriptionText}}" stepKey="checkDescription"/>
+    </actionGroup>
+
+    <!-- Checking No Rewards Description in Customer Account on Storefront -->
+    <actionGroup name="StorefrontCheckDontHaveRewardsDescriptionInCustomerAccount">
+        <arguments>
+            <argument name="descriptionText"/>
+        </arguments>
+        <amOnPage url="{{StorefrontCustomerAccountRewardsPointsPage.url}}" stepKey="navigateToRewardsStorefront"/>
+        <waitForPageLoad stepKey="waitForRewardsPointsPageLoad"/>
+        <dontSee selector="{{StorefrontCustomerAccountRewardPointsSection.Description}}"
+                 userInput="{{descriptionText}}" stepKey="checkNoDescription"/>
+    </actionGroup>
+
+    <!-- Checking Text and Amount in Balance Label on Storefront -->
+    <actionGroup name="StorefrontCheckActualRewardPointsBalanceOnStorefront">
+        <arguments>
+            <argument name="actualBalanceLabel"/>
+            <argument name="actualBalanceAmount"/>
+        </arguments>
+        <amOnPage url="{{StorefrontCustomerAccountRewardsPointsPage.url}}" stepKey="navigateToRewardsStorefront"/>
+        <waitForPageLoad stepKey="waitForRewardsPointsPageLoad"/>
+        <see selector="{{StorefrontCustomerAccountRewardPointsSection.ActualRewardPointsLabel}}"
+             userInput="{{actualBalanceLabel}}" stepKey="checkActualBalanceLabel"/>
+        <see selector="{{StorefrontCustomerAccountRewardPointsSection.ActualRewardPointsAmount}}"
+             userInput="{{actualBalanceAmount}}" stepKey="checkActualBalanceAmount"/>
+    </actionGroup>
+
+    <!-- Checking No Balance Label on Storefront -->
+    <actionGroup name="StorefrontCheckNoActualRewardPointsBalanceOnStorefront">
+        <amOnPage url="{{StorefrontCustomerAccountRewardsPointsPage.url}}" stepKey="navigateToRewardsStorefront"/>
+        <waitForPageLoad stepKey="waitForRewardsPointsPageLoad"/>
+        <dontSeeElement selector="{{StorefrontCustomerAccountRewardPointsSection.ActualRewardPointsLabel}}"
+                        stepKey="checkActualBalanceLabel"/>
+        <dontSeeElement selector="{{StorefrontCustomerAccountRewardPointsSection.ActualRewardPointsAmount}}"
+                        stepKey="checkActualBalanceAmount"/>
+    </actionGroup>
+
+</actionGroups>

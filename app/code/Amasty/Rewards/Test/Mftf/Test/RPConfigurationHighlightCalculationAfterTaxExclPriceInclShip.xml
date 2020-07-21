@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="RPConfigurationHighlightCalculationAfterTaxExclPriceInclShip">
+        <annotations>
+            <features value="Points Calculation Highlight"/>
+            <stories value="Points Calculation Highlight Point with After Tax on Storefront"/>
+            <title value="Check Settings Points Highlight with After Tax Value"/>
+            <description value="Check Settings Points Highlight with After Tax Exclude Catalog and Include Shipping"/>
+            <severity value="MAJOR"/>
+            <testCaseId value="RP-MFTF-11"/>
+            <group value="Amasty"/>
+            <group value="Rewards"/>
+            <group value="Tax"/>
+            <group value="RewardsHighlight"/>
+            <group value="RewardsConfiguration"/>
+            <group value="RewardsConfigurationDisplayOptions"/>
+        </annotations>
+
+        <before>
+            <!-- Create Data for Test -->
+            <createData entity="RewardPointsCustomerTaxArizona" stepKey="createCustomer"/>
+            <createData entity="taxRateArizona" stepKey="createTaxRate"/>
+            <createData entity="_defaultCategory" stepKey="createCategory"/>
+            <createData entity="SimpleProductPrice36_20" stepKey="createFirstSimpleProduct">
+                <requiredEntity createDataKey="createCategory"/>
+            </createData>
+            <createData entity="SimpleProductPrice54_60" stepKey="createSecondSimpleProduct">
+                <requiredEntity createDataKey="createCategory"/>
+            </createData>
+            <!-- Login To Admin Area -->
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <!-- Configuration Settings for Test-->
+            <actionGroup ref="AdminCreateTaxRuleActionGroup" stepKey="createTaxRule">
+                <argument name="taxRule" value="taxRuleRewards"/>
+                <argument name="taxRate" value="$$createTaxRate$$"/>
+            </actionGroup>
+            <actionGroup ref="AdminConfigurationMainSettingTaxCalculation" stepKey="ConfigurationTaxSetting">
+                <argument name="calculationTax" value="taxExclCatalogInclShipping"/>
+            </actionGroup>
+            <actionGroup ref="AdminConfigurationSettingRewardsGeneral" stepKey="ConfigurationGeneralSettingRewards">
+                <argument name="adminSettingRewardsGeneral" value="enableRewards"/>
+            </actionGroup>
+            <actionGroup ref="AdminConfigurationSettingRewardsPointsEarning" stepKey="ConfigurationPointsEarningSettingRewards">
+                <argument name="adminSettingRewardsPointsEarning" value="SetSettingRewardsPointsEarningAfterTax"/>
+            </actionGroup>
+            <actionGroup ref="AdminConfigurationSettingHighlightPointOnStorefront" stepKey="ConfigurationHighlightPointOnStorefront">
+                <argument name="adminSettingHighlightPointOnStorefront" value="SetSettingHighlightPointOnStorefrontAllEnable"/>
+            </actionGroup>
+            <actionGroup ref="AdminCreateRewardPointsRuleWithActionForYSpent" stepKey="CreateRewardsRuleForYSpent">
+                <argument name="rewardPointsRule" value="ruleGetXPointsForEachYSpent"/>
+            </actionGroup>
+            <actionGroup ref="AdminCreateCartPriceRuleActionGroup" stepKey="createCartPriceRule">
+                <argument name="ruleName" value="RewardsDefaultCartPriceRulePercentDiscount20"/>
+            </actionGroup>
+        </before>
+
+        <after>
+            <actionGroup ref="AdminDefaultConfigurationSettingCalculationTax" stepKey="ReturnDefaultSettingTax"/>
+            <!-- Delete All Created Data -->
+            <deleteData createDataKey="createCustomer" stepKey="deleteCustomer"/>
+            <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
+            <deleteData createDataKey="createFirstSimpleProduct" stepKey="deleteFirstSimpleProduct"/>
+            <deleteData createDataKey="createSecondSimpleProduct" stepKey="deleteSecondSimpleProduct"/>
+            <actionGroup ref="AdminDeleteCartPriceRuleActionGroup" stepKey="deleteCartPriceRule">
+                <argument name="ruleName" value="RewardsDefaultCartPriceRulePercentDiscount20"/>
+            </actionGroup>
+            <actionGroup ref="AdminDeleteTaxRule" stepKey="deleteTaxRule">
+                <argument name="taxRuleCode" value="{{taxRuleRewards.code}}" />
+            </actionGroup>
+            <deleteData createDataKey="createTaxRate" stepKey="deleteTaxRate"/>
+            <actionGroup ref="AdminDeleteRewardPointsRuleByName" stepKey="deleteRewardsRule">
+                <argument name="rewardPointsRule" value="ruleGetXPointsForEachYSpent" />
+            </actionGroup>
+            <!-- Return the Default Settings Module -->
+            <actionGroup ref="AdminConfigurationSettingRewardsGeneral" stepKey="ConfigurationGeneralSettingRewards">
+                <argument name="adminSettingRewardsGeneral" value="defaultGeneralSettingRewards"/>
+            </actionGroup>
+            <actionGroup ref="AdminConfigurationSettingRewardsPointsEarning" stepKey="ConfigurationPointsEarningSettingRewards">
+                <argument name="adminSettingRewardsPointsEarning" value="SetDefaultSettingRewardsPointsEarning"/>
+            </actionGroup>
+            <actionGroup ref="AdminConfigurationSettingHighlightPointOnStorefront" stepKey="ConfigurationHighlightPointOnStorefront">
+                <argument name="adminSettingHighlightPointOnStorefront" value="SetDefaultSettingHighlightPointOnStorefront"/>
+            </actionGroup>
+        </after>
+
+        <!-- Login to Storefront as Previously Created Customer-->
+        <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginAsCustomer">
+            <argument name="Customer" value="$$createCustomer$$"/>
+        </actionGroup>
+        <!-- Check Highlight on Category Page-->
+        <actionGroup ref="StorefrontCheckRewardPointsHighlightOnCategoryPage" stepKey="CheckFirstProductHighlightOnCategory">
+            <argument name="amountInHighlight" value="HighlightCalculateAfterTaxExclPrice.HighlightValueProductOne"/>
+            <argument name="category" value="$$createCategory$$"/>
+            <argument name="product" value="$$createFirstSimpleProduct$$"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCheckRewardPointsHighlightOnCategoryPage" stepKey="CheckSecondProductHighlightOnCategory">
+            <argument name="amountInHighlight" value="HighlightCalculateAfterTaxExclPrice.HighlightValueProductTwo"/>
+            <argument name="category" value="$$createCategory$$"/>
+            <argument name="product" value="$$createSecondSimpleProduct$$"/>
+        </actionGroup>
+        <!-- Check Highlight and Add First Created Product to Cart-->
+        <actionGroup ref="StorefrontCheckRewardPointsHighlightOnProductPage" stepKey="CheckFirstHighlightOnProductPage">
+            <argument name="amountInHighlight" value="HighlightCalculateAfterTaxExclPrice.HighlightValueProductOne"/>
+            <argument name="product" value="$$createFirstSimpleProduct$$"/>
+        </actionGroup>
+        <actionGroup ref="AddCreatedProductToCart" stepKey="AddFirstProductToCart">
+            <argument name="valueQty" value="_enterQty1"/>
+            <argument name="product" value="$$createFirstSimpleProduct$$"/>
+        </actionGroup>
+        <!-- Check Highlight and Add Second Created Product to Cart-->
+        <actionGroup ref="StorefrontCheckRewardPointsHighlightOnProductPage" stepKey="CheckSecondHighlightOnProductPage">
+            <argument name="amountInHighlight" value="HighlightCalculateAfterTaxExclPrice.HighlightValueProductTwo"/>
+            <argument name="product" value="$$createSecondSimpleProduct$$"/>
+        </actionGroup>
+        <actionGroup ref="AddCreatedProductToCart" stepKey="AddSecondProductToCart">
+            <argument name="valueQty" value="_enterQty1"/>
+            <argument name="product" value="$$createSecondSimpleProduct$$"/>
+        </actionGroup>
+        <!-- Check Highlight on the Cart and Checkout Shipping Page-->
+        <actionGroup ref="StorefrontCheckRewardPointsHighlightOnTheCart" stepKey="CheckHighlightOnTheCart">
+            <argument name="amountInHighlight" value="HighlightCalculateAfterTaxExclPrice.HighlightCartAndCheckoutValue"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCheckRewardPointsHighlightOnTheCheckoutShippingPage" stepKey="CheckHighlightOnTheCheckoutShippingPage">
+            <argument name="amountInHighlight" value="HighlightCalculateAfterTaxExclPrice.HighlightCartAndCheckoutValue"/>
+        </actionGroup>
+        <!-- Check Highlight on the Checkout Payment Page Page-->
+        <actionGroup ref="AmastyCreateOrderAsCustomerOnCheckoutShippingPage" stepKey="GoToCheckoutOnThePaymentPageAsCustomer">
+            <argument name="shippingMethodsOnCheckout" value="FlatRateMethod"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCheckRewardPointsHighlightOnTheCheckoutPaymentPage" stepKey="CheckHighlightOnTheCheckoutPaymentPage">
+            <argument name="amountInHighlight" value="HighlightCalculateAfterTaxExclPrice.HighlightCartAndCheckoutValue"/>
+        </actionGroup>
+
+    </test>
+</tests>

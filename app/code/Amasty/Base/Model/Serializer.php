@@ -11,6 +11,7 @@ use Magento\Framework\ObjectManagerInterface;
 use Magento\Framework\Serialize\SerializerInterface;
 use Magento\Framework\Unserialize\Unserialize;
 use Zend\Serializer\Adapter\PhpSerialize;
+use Zend\Serializer\Serializer as SerializerFactory;
 
 /**
  * Wrapper for Serialize
@@ -35,15 +36,14 @@ class Serializer
 
     public function __construct(
         ObjectManagerInterface $objectManager,
-        Unserialize $unserialize,
-        PhpSerialize $phpSerialize //deus ex machina
+        Unserialize $unserialize
     ) {
         if (interface_exists(SerializerInterface::class)) {
             // for magento later then 2.2
             $this->serializer = $objectManager->get(SerializerInterface::class);
         }
         $this->unserialize = $unserialize;
-        $this->phpSerialize = $phpSerialize;
+        $this->phpSerialize = SerializerFactory::getDefaultAdapter(); //deus ex machina
     }
 
     public function serialize($value)

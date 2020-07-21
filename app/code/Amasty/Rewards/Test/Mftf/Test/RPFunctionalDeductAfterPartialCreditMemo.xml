@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="RPFunctionalDeductAfterPartialCreditMemo" extends="RPFunctionalReturnPointsAfterCancelOrder">
+        <annotations>
+            <features value="Deduct Points to Customer"/>
+            <stories value="Deduct Points via Customer"/>
+            <title value="Check Deduct Points to Customer"/>
+            <description value="Check Deduct Large Points to Customer After Partial Credit Memo Order"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="RP-MFTF-72"/>
+            <group value="Amasty"/>
+            <group value="Rewards"/>
+            <group value="RewardsFunctional"/>
+            <group value="RewardsFunctionalDeductPoints"/>
+        </annotations>
+
+        <before>
+            <createData entity="SimpleProductByWatchClamberData" after="createFirstSimpleProduct" stepKey="createSecondSimpleProduct">
+                <requiredEntity createDataKey="createCategory"/>
+            </createData>
+            <actionGroup ref="AdminCreateRewardPointsRule" after="ConfigurationGeneralSettingRewards" stepKey="CreateRewardsRuleForComplete">
+                <argument name="rewardPointsRule" value="ruleOrderComplete"/>
+            </actionGroup>
+            <actionGroup ref="AdminCreateRewardPointsRuleWithActionForYSpent" after="CreateRewardsRuleForComplete" stepKey="CreateRewardsRuleForYSpent">
+                <argument name="rewardPointsRule" value="ruleGetXPointsForEachYSpent"/>
+            </actionGroup>
+        </before>
+
+        <after>
+            <deleteData createDataKey="createSecondSimpleProduct" after="deleteFirstSimpleProduct" stepKey="deleteSecondSimpleProduct"/>
+            <actionGroup ref="AdminDeleteRewardPointsRuleByName" after="deleteSecondSimpleProduct" stepKey="deleteRewardsRuleOrderComplete">
+                <argument name="rewardPointsRule" value="ruleOrderComplete" />
+            </actionGroup>
+            <actionGroup ref="AdminDeleteRewardPointsRuleByName" after="deleteRewardsRuleOrderComplete" stepKey="deleteRewardsRuleXSpent">
+                <argument name="rewardPointsRule" value="ruleGetXPointsForEachYSpent" />
+            </actionGroup>
+        </after>
+
+        <remove keyForRemoval="cancelOrder"/>
+        <remove keyForRemoval="ApplyRewardPointOnTheCart"/>
+        <remove keyForRemoval="CheckDiscountAndAmountInFieldApply"/>
+        <remove keyForRemoval="AdminCheckComment"/>
+        <remove keyForRemoval="AdminCheckActionText"/>
+
+        <!-- Add Second Created Product to Cart-->
+        <actionGroup ref="AddCreatedProductToCart" stepKey="AddSecondProductToCart" after="AddFirstProductToCart">
+            <argument name="valueQty" value="_enterQty2"/>
+            <argument name="product" value="$$createSecondSimpleProduct$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminCreateInvoiceAndShipmentActionGroup" stepKey="createInvoiceAndShipment" after="openOrder"/>
+        <!--Create First Part Credit Memo-->
+        <actionGroup ref="AdminOpenOrderAndStartCreditMemo" after="createInvoiceAndShipment" stepKey="startToCreateFirstPartCreditMemo">
+            <argument name="orderId" value="{$grabOrderNumberCreateOrderAsCustomerWithCheckMoney}"/>
+        </actionGroup>
+        <actionGroup ref="AdminChangeQtyProductToRefund" after="startToCreateFirstPartCreditMemo" stepKey="changeQtyForSecondProduct">
+            <argument name="valueQty" value="_enterQty1"/>
+            <argument name="product" value="$$createSecondSimpleProduct$$"/>
+        </actionGroup>
+        <actionGroup ref="AdminFillDeductRewardPointsInOrder" after="changeQtyForSecondProduct" stepKey="enterValueForDeductPointsFirstPartCreditMemo">
+            <argument name="deductRewardsAmount" value="DeductAfterPartialCreditMemo.deductRewardsAmount"/>
+        </actionGroup>
+        <actionGroup ref="SubmitCreditMemoActionGroup" after="enterValueForDeductPointsFirstPartCreditMemo" stepKey="submitFirstCreditMemo"/>
+        <!-- Check Deduct Points In Customer Account -->
+        <actionGroup ref="StorefrontCheckRewardPointsHistoryActionInCustomerAccount" stepKey="StorefrontCheckChangeAndLeft">
+            <argument name="rewardsHistoryRecordData" value="DeductAfterPartialCreditMemoFirstDeductHistory"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCheckRewardPointsHistoryActionInCustomerAccountComment" stepKey="StorefrontCheckComment">
+            <argument name="rewardsHistoryRecordData" value="DeductAfterPartialCreditMemoFirstDeductHistory"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCheckRewardPointsHistoryActionInCustomerAccountActionText" stepKey="StorefrontCheckActionText">
+            <argument name="rewardsHistoryRecordData" value="DeductAfterPartialCreditMemoFirstDeductHistory"/>
+        </actionGroup>
+        <!-- Check Deduct Points In Admin Customer Account Area-->
+        <actionGroup ref="AdminCheckRewardPointsHistoryActionInCustomerAccount" stepKey="AdminCheckChangeAndLeft">
+            <argument name="customerId" value="$$createCustomer.id$$"/>
+            <argument name="rewardsHistoryRecordData" value="DeductAfterPartialCreditMemoFirstDeductHistory"/>
+        </actionGroup>
+        <!--Create Second Part Credit Memo-->
+        <actionGroup ref="AdminOpenOrderAndStartCreditMemo" stepKey="startToCreateSecondPartCreditMemo">
+            <argument name="orderId" value="{$grabOrderNumberCreateOrderAsCustomerWithCheckMoney}"/>
+        </actionGroup>
+        <actionGroup ref="SubmitCreditMemoActionGroup" stepKey="submitSecondCreditMemo"/>
+        <!-- Check Deduct Points In Admin Customer Account Area-->
+        <actionGroup ref="AdminCheckRewardPointsHistoryActionInCustomerAccount" stepKey="AdminCheckChangeAndLeftSecondCreditMemo">
+            <argument name="customerId" value="$$createCustomer.id$$"/>
+            <argument name="rewardsHistoryRecordData" value="DeductAfterPartialCreditMemoSecondDeductHistory"/>
+        </actionGroup>
+        <actionGroup ref="AdminCheckRewardPointsHistoryActionInCustomerAccountActionText" stepKey="AdminCheckCommentSecondCreditMemo">
+            <argument name="customerId" value="$$createCustomer.id$$"/>
+            <argument name="rewardsHistoryRecordData" value="DeductAfterPartialCreditMemoSecondDeductHistory"/>
+        </actionGroup>
+        <actionGroup ref="AdminCheckRewardPointsHistoryActionInCustomerAccountComment" stepKey="AdminCheckActionTextSecondCreditMemo">
+            <argument name="customerId" value="$$createCustomer.id$$"/>
+            <argument name="rewardsHistoryRecordData" value="DeductAfterPartialCreditMemoSecondDeductHistory"/>
+        </actionGroup>
+        <!-- Check Deduct Points In Customer Account -->
+        <actionGroup ref="StorefrontCheckRewardPointsHistoryActionInCustomerAccount" stepKey="StorefrontCheckChangeAndLeftSecondCreditMemo">
+            <argument name="rewardsHistoryRecordData" value="DeductAfterPartialCreditMemoSecondDeductHistory"/>
+        </actionGroup>
+    </test>
+</tests>

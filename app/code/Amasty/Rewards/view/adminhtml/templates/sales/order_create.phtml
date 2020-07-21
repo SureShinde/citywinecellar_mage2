@@ -1,0 +1,52 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+?>
+<?php /** @var \Amasty\Rewards\Block\Adminhtml\Sales\OrderCreate $block */?>
+<?php if ($block->isCanUsePoint()) : ?>
+<div class="admin__field field-apply-coupon-code field-apply-rewards">
+    <label class="admin__field-label"><span><?= $block->escapeHtml(__('Apply Rewards Points for Order')) ?></span></label>
+    <div class="admin__field-control">
+        <input type="text" class="admin__control-text" id="amreward_amount" value="<?= $block->getUsedRewards() ?>" name="amreward_amount" />
+        <?= $block->getButtonHtml($block->escapeHtml(__('Apply')), 'applyRewards(); return false;') ?>
+    </div>
+    <p>
+        <?= /* @escapeNotVerified */ __('Current Customer Balance: %1 reward points.', '<a id="amrewards_balance" href="javascript:void(0)" title="' . __('Apply all available reward points') . '">' . (float)$block->getCustomerRewardsBalance() .'</a>')?><br/>
+        <?= /* @escapeNotVerified */ __('Reward Points to Base Currency Rate: %1 points = 1.', (float)$block->getRate()) ?>
+    </p>
+    <?php if ($block->getUsedRewards()) : ?>
+        <p>
+            <?= /* @escapeNotVerified */ __('Applied Reward Points: %1', $block->getUsedRewards()) ?>
+            <a id="rewards_cancel_button" href="#" title="<?= /* @escapeNotVerified */ __('Remove') ?>" class="action-remove"><span><?= /* @escapeNotVerified */ __('Remove') ?></span></a>
+        </p>
+    <?php endif; ?>
+</div>
+<script>
+    require([
+        'jquery',
+        'domReady!'
+    ], function ($) {
+        $('#rewards_cancel_button').on('click', function() {
+            $('#amreward_amount').val(0);
+            applyRewards();
+            return false;
+        });
+        $('#amrewards_balance').on('click', function() {
+            $('#amreward_amount').val('<?= (float)$block->getCustomerRewardsBalance() ?>');
+            applyRewards();
+            return false;
+        });
+        window.applyRewards = function () {
+            var data = {
+                'amreward_amount': $('#amreward_amount').val()
+            };
+            order.loadArea(['totals', 'items', 'billing_method'], true, data);
+
+            return false;
+        };
+    });
+</script>
+<?php endif; ?>

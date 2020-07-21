@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:DataGenerator/etc/dataProfileSchema.xsd">
+
+    <entity name="RewardPointsCustomer" type="customer">
+        <data key="group_id">1</data>
+        <data key="default_billing">false</data>
+        <data key="default_shipping">false</data>
+        <data key="email" unique="prefix">RewardPointsTest@example.com</data>
+        <data key="firstname">Reward</data>
+        <data key="lastname">Points</data>
+        <data key="password">aA111111</data>
+        <data key="store_id">0</data>
+        <data key="website_id">0</data>
+        <requiredEntity type="address">RewardPoints_Address_MI</requiredEntity>
+    </entity>
+
+    <entity name="RewardPoints_Address_MI" type="address">
+        <data key="firstname">Reward</data>
+        <data key="lastname">Points</data>
+        <data key="company">Magento</data>
+        <array key="street">
+            <item>6146 Honey Bluff Parkway</item>
+        </array>
+        <data key="city">Calder</data>
+        <data key="state">Michigan</data>
+        <data key="country_id">US</data>
+        <data key="country">United States</data>
+        <data key="postcode">49628-7978</data>
+        <data key="telephone">(555) 229-3326</data>
+        <data key="default_billing">Yes</data>
+        <data key="default_shipping">Yes</data>
+        <requiredEntity type="region">RewardPointsRegionMI</requiredEntity>
+    </entity>
+
+    <entity name="RewardPointsRegionMI" type="region">
+        <data key="region">Michigan</data>
+        <data key="region_code">MI</data>
+        <data key="region_id">33</data>
+    </entity>
+
+    <entity name="RewardPointsCustomerTaxArizona" type="customer">
+        <data key="group_id">3</data>
+        <data key="default_billing">false</data>
+        <data key="default_shipping">false</data>
+        <data key="email" unique="prefix">RewardPointsTaxTest@example.com</data>
+        <data key="firstname">RewardTax</data>
+        <data key="lastname">PointsTax</data>
+        <data key="password">aA111111</data>
+        <data key="store_id">0</data>
+        <data key="website_id">0</data>
+        <requiredEntity type="address">RewardPoints_Address_AZ</requiredEntity>
+    </entity>
+
+    <entity name="RewardPoints_Address_AZ" type="address">
+        <data key="firstname">Reward</data>
+        <data key="lastname">Points</data>
+        <data key="company">Magento</data>
+        <array key="street">
+            <item>298-218 N Central Ave</item>
+        </array>
+        <data key="city">Phoenix</data>
+        <data key="state">Arizona</data>
+        <data key="country_id">US</data>
+        <data key="country">United States</data>
+        <data key="postcode">85004</data>
+        <data key="telephone">(555) 229-3326</data>
+        <data key="default_billing">Yes</data>
+        <data key="default_shipping">Yes</data>
+        <requiredEntity type="region">RewardPointsRegionAZ</requiredEntity>
+    </entity>
+
+    <entity name="RewardPointsRegionAZ" type="region">
+        <data key="region">Arizona</data>
+        <data key="region_code">AZ</data>
+        <data key="region_id">4</data>
+    </entity>
+
+    <entity name="RewardPointsCustomerRetailer" type="customer" extends="RewardPointsCustomer">
+        <data key="group_id">3</data>
+    </entity>
+
+    <entity name="RewardPointsCustomerAustralia" type="customer" extends="RewardPointsCustomer">
+        <requiredEntity type="address">RewardPoints_Address_QLD</requiredEntity>
+    </entity>
+
+    <entity name="RewardPoints_Address_QLD" type="address">
+        <data key="firstname">Reward</data>
+        <data key="lastname">Points</data>
+        <data key="company">Magento</data>
+        <array key="street">
+            <item>35-39 Oondooroo St</item>
+        </array>
+        <data key="city">Winton</data>
+        <data key="state">Queensland</data>
+        <data key="country_id">AU</data>
+        <data key="country">Australia</data>
+        <data key="postcode">4735</data>
+        <data key="telephone">(555) 4735-4735</data>
+        <data key="default_billing">Yes</data>
+        <data key="default_shipping">Yes</data>
+        <requiredEntity type="region">RewardPointsRegionQLD</requiredEntity>
+    </entity>
+
+    <entity name="RewardPointsRegionQLD" type="region">
+        <data key="region">Queensland</data>
+        <data key="region_code">QLD</data>
+        <data key="region_id">572</data>
+    </entity>
+
+</entities>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="RPFunctionalCheckActionGetXPointsForNewsletterSubscription">
+        <annotations>
+            <features value="Rewards Points Earning Rule"/>
+            <stories value="Functional Rewards Points Earning Rule"/>
+            <title value="Check Rewards Points Earning Rule for Newsletter Subscription"/>
+            <description value="Check Rewards Points Earning Rule for Newsletter Subscription to 10 day"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="RP-MFTF-33"/>
+            <group value="Amasty"/>
+            <group value="Rewards"/>
+            <group value="RewardsFunctional"/>
+            <group value="RewardsFunctionalRules"/>
+        </annotations>
+
+        <before>
+            <!-- Create Data for Test -->
+            <createData entity="RewardPointsCustomer" stepKey="createCustomer"/>
+            <!-- Login To Admin Area -->
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <!-- Configuration Settings for Test-->
+            <actionGroup ref="AdminConfigurationSettingRewardsGeneral" stepKey="ConfigurationGeneralSettingRewards">
+                <argument name="adminSettingRewardsGeneral" value="defaultGeneralSettingRewards"/>
+            </actionGroup>
+            <actionGroup ref="AdminConfigurationSettingRewardsExpirationWithDays" stepKey="configurationPointsExpirationSetting">
+                <argument name="adminSettingRewardsExpirationSettings" value="SetSettingRewardsExpirationSettingsExpireToday"/>
+            </actionGroup>
+            <actionGroup ref="AdminCreateRewardPointsRuleWithExpirePeriod" stepKey="CreateRewardsRuleNewsletterSubscription">
+                <argument name="rewardPointsRule" value="ruleCheckActionGetXPointsForNews"/>
+            </actionGroup>
+        </before>
+
+        <after>
+            <!-- Delete All Created Data -->
+            <deleteData createDataKey="createCustomer" stepKey="deleteCustomer"/>
+            <actionGroup ref="AdminDeleteRewardPointsRuleByName" stepKey="deleteRewardsRule">
+                <argument name="rewardPointsRule" value="ruleCheckActionGetXPointsForNews" />
+            </actionGroup>
+            <!-- Return the Default Settings Module -->
+            <actionGroup ref="AdminConfigurationSettingRewardsExpirationWithClearFields" stepKey="defaultConfigurationPointsExpire">
+                <argument name="adminSettingRewardsExpirationSettings" value="SetDefaultSettingRewardsExpirationSettings"/>
+            </actionGroup>
+            <amOnPage url="admin/admin/auth/logout/" stepKey="amOnLogoutPage"/>
+        </after>
+
+        <!-- Login to Storefront as Previously Created Customer-->
+        <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginAsCustomer">
+            <argument name="Customer" value="$$createCustomer$$"/>
+        </actionGroup>
+        <!-- Check General Subscription in Customer Account -->
+        <actionGroup ref="StorefrontApplyNewsletterSubscription" stepKey="applyNewsletterSubscription"/>
+        <!-- Check Usage History Reward Points (Change, Days Left, Points Left) on Storefront -->
+        <actionGroup ref="StorefrontCheckRewardPointsHistoryActionInCustomerAccount" stepKey="CheckRewardsHistoryChangeAndLeft">
+            <argument name="rewardsHistoryRecordData" value="CheckActionGetXPointsForNewsHistory"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCheckRewardPointsHistoryInCustomerAccountExpireDay" stepKey="CheckRewardsHistoryExpireDay">
+            <argument name="rewardsHistoryRecordData" value="CheckActionGetXPointsForNewsHistory"/>
+        </actionGroup>
+        <!-- Check Usage History Reward Points on Admin Area -->
+        <actionGroup ref="AdminCheckRewardPointsHistoryActionInCustomerAccount" stepKey="CheckRewardsHistory">
+            <argument name="customerId" value="$$createCustomer.id$$"/>
+            <argument name="rewardsHistoryRecordData" value="CheckActionGetXPointsForNewsHistory"/>
+        </actionGroup>
+
+    </test>
+</tests>

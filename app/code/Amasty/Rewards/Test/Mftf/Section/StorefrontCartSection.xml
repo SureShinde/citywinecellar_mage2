@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
+
+    <section name="StorefrontCartSection">
+        <element name="ApplyRewardsTab" type="button" selector="//div[@id='block-reward']"/>
+        <element name="ApplyRewardsInputAmount" type="input" selector="//input[@id='amreward_amount']"/>
+        <element name="ApplyRewardsButtonApply" type="button" selector="//button[@id='apply-amreward']"/>
+        <element name="ApplyRewardsButtonCancel" type="button" selector="//button[@id='cancel-amreward']"/>
+        <element name="DiscountAmount" type="block" selector="//td[@data-th='Discount']/span"/>
+        <element name="DiscountRewardsName" type="block" parameterized="true"
+                 selector="//tr[@class='totals']//span[contains(string(), 'Discount (Used {{rewardsAmount}} reward points)')]"/>
+        <element name="RewardPointsHighlightAmount" type="block" selector="//div[@class='amasty-rewards-highlight']//b"/>
+        <element name="ApplyRewardsFieldDisable" type="input" selector="//input[@id='amreward_amount'][@disabled]"/>
+        <element name="MinimumPointsRedemptionMessage" type="block" selector="//div[contains(@class, 'amrewards-minimum-points-note')]"/>
+        <element name="MinimumPointsRedemptionMessageAmount" type="block" parameterized="true"
+                 selector="//form[@id='discount-reward-form']//div[contains(string(), 'Note: You need at least {{pointsCount}} points to pay for the order with reward points.')]"/>
+        <element name="MessageAboutRewardsRedemptionLimitAmount" type="block" parameterized="true"
+                 selector="//div[@data-ui-id='message-notice']//div[contains(string(), 'Number of redeemed reward points cannot exceed {{limitValue}} for this order.')]"/>
+        <element name="MessageAboutRewardsRedemptionLimitPercent" type="block" parameterized="true"
+                 selector="//div[@data-ui-id='message-notice']//div[contains(string(), 'Number of redeemed reward points cannot exceed {{limitValue}} % of cart subtotal excluding tax for this order.')]"/>
+    </section>
+
+</sections>
+

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="RPFunctionalPointsForCompleteWithCondCountryIsValidation"
+          extends="RPFunctionalCheckActionGetXPointsForCompletingOrder">
+        <annotations>
+            <features value="Rewards Rule With Conditions"/>
+            <stories value="Functional Rewards Rule With Conditions"/>
+            <title value="Check Rewards Rule Order Complete With Conditions"/>
+            <description value="Check Rewards Rule Order Complete With Conditions Country Validation"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="RP-MFTF-4802"/>
+            <group value="Amasty"/>
+            <group value="Rewards"/>
+            <group value="RewardsFunctional"/>
+            <group value="RewardsFunctionalRules"/>
+        </annotations>
+
+        <before>
+            <createData entity="RewardPointsCustomerAustralia" stepKey="createCustomer"/>
+            <remove keyForRemoval="configurationPointsExpirationSetting"/>
+            <actionGroup ref="AdminCreateRewardPointsRule" stepKey="CreateRewardsRuleOrderComplete">
+                <argument name="rewardPointsRule" value="ruleCheckRuleOrderCompleteWithCountry"/>
+            </actionGroup>
+            <actionGroup ref="AdminOpenRewardPointsRuleByName" stepKey="OpenRewardsRuleForEdit"
+                         after="CreateRewardsRuleOrderComplete">
+                <argument name="rewardPointsRule" value="ruleCheckRuleOrderCompleteWithCountry"/>
+            </actionGroup>
+            <actionGroup ref="EditRewardsRuleAddGlobalConditionsWithSelect" stepKey="AddConditionsInRule"
+                         after="OpenRewardsRuleForEdit">
+                <argument name="conditionsOptions" value="_shippingCountry"/>
+                <argument name="conditionsAttribute" value="_is"/>
+                <argument name="conditionsData" value="ruleCheckRuleOrderCompleteWithCountry.conditions"/>
+            </actionGroup>
+        </before>
+
+        <after>
+            <remove keyForRemoval="defaultConfigurationPointsExpire"/>
+            <actionGroup ref="AdminDeleteRewardPointsRuleByName" stepKey="deleteRewardsRule">
+                <argument name="rewardPointsRule" value="ruleCheckRuleOrderCompleteWithCountry" />
+            </actionGroup>
+        </after>
+
+        <remove keyForRemoval="CheckRewardsHistoryExpireDay"/>
+        <actionGroup ref="StorefrontCheckRewardPointsHistoryActionInCustomerAccount" stepKey="CheckRewardsHistoryChangeAndLeft">
+            <argument name="rewardsHistoryRecordData" value="CheckCompleteOrderConditionIsValidHistory"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCheckCurrentBalanceRewardPointsInCustomerAccount" stepKey="CheckCustomerCurrentBalance"
+                     after="CheckRewardsHistoryChangeAndLeft">
+            <argument name="currentBalance" value="CheckCompleteOrderConditionIsValidHistory.currentBalance"/>
+        </actionGroup>
+        <actionGroup ref="AdminCheckRewardPointsHistoryActionInCustomerAccount" stepKey="AdminCheckRewardsHistoryChangePointsLeft"
+                     after="CheckCustomerCurrentBalance">
+            <argument name="customerId" value="$$createCustomer.id$$"/>
+            <argument name="rewardsHistoryRecordData" value="CheckCompleteOrderConditionIsValidHistory"/>
+        </actionGroup>
+        <actionGroup ref="AdminCheckCurrentBalanceRewardPointsInCustomerAccount" stepKey="AdminCheckCustomerCurrentBalance"
+                     after="AdminCheckRewardsHistoryChangePointsLeft">
+            <argument name="customerId" value="$$createCustomer.id$$"/>
+            <argument name="currentBalance" value="CheckCompleteOrderConditionIsValidHistory.currentBalance"/>
+        </actionGroup>
+
+    </test>
+</tests>

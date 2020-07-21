@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="RPFunctionalCheckDeductPointFromAdminArea">
+        <annotations>
+            <features value="Rewards Points Deduct from Admin Area"/>
+            <stories value="Functional Rewards Points Deduct from Admin Area"/>
+            <title value="Check Deduct Rewards Points from Admin Area"/>
+            <description value="Check Deduct Rewards Points from Admin Area"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="RP-MFTF-40"/>
+            <group value="Amasty"/>
+            <group value="Rewards"/>
+            <group value="RewardsFunctional"/>
+            <group value="RewardsFunctionalAdminAddOrDeductPoints"/>
+        </annotations>
+
+        <before>
+            <!-- Create Data for Test -->
+            <createData entity="RewardPointsCustomer" stepKey="createCustomer"/>
+            <createData entity="AddRewardPointsNotExpire" stepKey="addRewardPointsToCustomer">
+                <requiredEntity createDataKey="createCustomer"/>
+            </createData>
+            <!-- Login To Admin Area -->
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <!-- Configuration Settings for Test-->
+            <actionGroup ref="AdminConfigurationSettingRewardsGeneral" stepKey="ConfigurationGeneralSettingRewards">
+                <argument name="adminSettingRewardsGeneral" value="defaultGeneralSettingRewards"/>
+            </actionGroup>
+        </before>
+
+        <after>
+            <!-- Delete Created Data -->
+            <deleteData createDataKey="createCustomer" stepKey="deleteCustomer"/>
+            <amOnPage url="admin/admin/auth/logout/" stepKey="amOnLogoutPage"/>
+        </after>
+
+        <!-- Deduct Points From Admin Area -->
+        <actionGroup ref="AdminAddOrDeductPointsToCustomer" stepKey="addPointsToCustomerFromAdminArea">
+            <argument name="customerId" value="$$createCustomer.id$$"/>
+            <argument name="adminAddOrDeductPoints" value="deductDecimalValueRewardPoints"/>
+        </actionGroup>
+        <!-- Login to Storefront as Previously Created Customer-->
+        <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginAsCustomer">
+            <argument name="Customer" value="$$createCustomer$$"/>
+        </actionGroup>
+        <!-- Check Usage History Reward Points Change and Amount Points Left on Admin Area-->
+        <actionGroup ref="AdminCheckRewardPointsHistoryActionInCustomerAccount" stepKey="CheckRewardsHistoryChangePointsLeft">
+            <argument name="customerId" value="$$createCustomer.id$$"/>
+            <argument name="rewardsHistoryRecordData" value="CheckDeductPointAdminAreaHistory"/>
+        </actionGroup>
+        <actionGroup ref="AdminCheckRewardPointsHistoryActionInCustomerAccountComment" stepKey="CheckRewardsHistoryActionText">
+            <argument name="customerId" value="$$createCustomer.id$$"/>
+            <argument name="rewardsHistoryRecordData" value="CheckDeductPointAdminAreaHistory"/>
+        </actionGroup>
+        <!-- Check Usage History Reward Points (Change, Days Left, Points Left) on Storefront -->
+        <actionGroup ref="StorefrontCheckRewardPointsHistoryActionInCustomerAccount" stepKey="CheckRewardsHistoryChangeAndLeft">
+            <argument name="rewardsHistoryRecordData" value="CheckDeductPointAdminAreaHistory"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCheckRewardPointsHistoryActionInCustomerAccountComment" stepKey="CheckRewardsHistoryComment">
+            <argument name="rewardsHistoryRecordData" value="CheckDeductPointAdminAreaHistory"/>
+        </actionGroup>
+
+    </test>
+</tests>

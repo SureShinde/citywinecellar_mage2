@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+
+    <!-- Apply Newsletter Subscribed from Customer Account-->
+    <actionGroup name="StorefrontApplyNewsletterSubscription">
+        <amOnPage url="{{StorefrontNewsletterManagePage.url}}" stepKey="navigateToNewsletterManagePage"/>
+        <waitForPageLoad stepKey="waitForNewsletterPageLoad"/>
+        <checkOption selector="{{StorefrontNewsletterManageSection.subscriptionCheckbox}}" stepKey="checkApplySubscribedNewsletter"/>
+        <click selector="{{StorefrontNewsletterManageSection.saveButton}}" stepKey="clickSaveButton"/>
+        <waitForPageLoad stepKey="waitForPageLoadAfterSubscribedNewsletter"/>
+    </actionGroup>
+
+</actionGroups>

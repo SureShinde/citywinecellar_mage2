@@ -1,0 +1,21 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+?>
+<?php /** @var \Amasty\Rewards\Block\Frontend\Catalog\HighlightProduct $block */ ?>
+<div data-bind="scope: 'amasty-rewards-highlight-catalog'">
+    <div class="amasty-rewards-loader" data-bind="visible: loader" style="display: none;">
+        <img src="<?php echo $block->getViewFileUrl('Amasty_Rewards::images/ajax-loader.gif'); ?>" />
+    </div>
+    <!-- ko template: getTemplate() --><!-- /ko -->
+    <script type="text/x-magento-init">
+        {
+            "*": {
+                "Magento_Ui/js/core/app": <?php /* @escapeNotVerified */ echo $block->getJsLayout();?>
+            }
+        }
+    </script>
+</div>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="RPFunctionalHighlightWithMultiCurrency"
+          extends="RPConfigurationHighlightCalculationAfterTaxExclPriceInclShip">
+        <annotations>
+            <features value="Rewards Highlight"/>
+            <stories value="Functional Rewards Highlight"/>
+            <title value="Check Rewards Rewards Highlight"/>
+            <description value="Check Rewards Rewards Highlight with MultiCurrency"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="RP-MFTF-57"/>
+            <group value="Amasty"/>
+            <group value="Rewards"/>
+            <group value="RewardsHighlight"/>
+            <group value="RewardsFunctional"/>
+            <group value="RewardsFunctionalRules"/>
+        </annotations>
+
+        <before>
+            <remove keyForRemoval="createTaxRate"/>
+            <remove keyForRemoval="createTaxRule"/>
+            <remove keyForRemoval="ConfigurationTaxSetting"/>
+            <remove keyForRemoval="createCartPriceRule"/>
+            <actionGroup ref="ChooseCurrencyInConfigurations" stepKey="settingMultiCurrency" after="loginAsAdmin">
+                <argument name="currenciesConfigurations" value="_CurrencySetOne"/>
+            </actionGroup>
+            <actionGroup ref="InputRateUSDAndEUR" stepKey="addCurrencyRate" after="settingMultiCurrency">
+                <argument name="cartRule" value="PointsSpendingAndMultiCurrency.rateUSDAndEUR"/>
+            </actionGroup>
+            <actionGroup ref="AdminConfigurationSettingRewardsPointsEarning" stepKey="ConfigurationPointsEarningSettingRewards">
+                <argument name="adminSettingRewardsPointsEarning" value="SetDefaultSettingRewardsPointsEarning"/>
+            </actionGroup>
+            <actionGroup ref="AdminCreateRewardPointsRule" stepKey="CreateRewardsRuleComplete">
+                <argument name="rewardPointsRule" value="ruleOrderComplete"/>
+            </actionGroup>
+        </before>
+
+        <after>
+            <remove keyForRemoval="ReturnDefaultSettingTax"/>
+            <remove keyForRemoval="deleteCartPriceRule"/>
+            <remove keyForRemoval="deleteTaxRule"/>
+            <remove keyForRemoval="deleteTaxRate"/>
+            <actionGroup ref="AdminDeleteRewardPointsRuleByName" stepKey="deleteRewardsRuleComplete" after="deleteRewardsRule">
+                <argument name="rewardPointsRule" value="ruleOrderComplete"/>
+            </actionGroup>
+            <!-- Return Default Currency (USD) -->
+            <actionGroup ref="ChooseDefaultCurrencyInConfigurations" stepKey="returnDefaultSettingCurrency"/>
+        </after>
+
+        <remove keyForRemoval="CheckCustomerCurrentBalance"/>
+        <remove keyForRemoval="CheckRewardsHistory"/>
+        <remove keyForRemoval="CheckSecondProductHighlightOnCategory"/>
+        <remove keyForRemoval="CheckFirstHighlightOnProductPage"/>
+        <remove keyForRemoval="CheckHighlightOnTheCheckoutShippingPage"/>
+        <!-- Switch to Euro-->
+        <actionGroup ref="ChooseCurrency" stepKey="ChooseCurrencyEuro" after="loginAsCustomer">
+            <argument name="currencies" value="_Euro"/>
+        </actionGroup>
+        <!-- Check Highlight Second Product on Category Page-->
+        <actionGroup ref="StorefrontCheckRewardPointsHighlightOnCategoryPage" stepKey="CheckFirstProductHighlightOnCategory">
+            <argument name="amountInHighlight" value="CheckHighlightMultiCurrency.HighlightValueProductOne"/>
+            <argument name="category" value="$$createCategory$$"/>
+            <argument name="product" value="$$createFirstSimpleProduct$$"/>
+        </actionGroup>
+        <!-- Check Highlight and Add First Created Product to Cart-->
+        <actionGroup ref="StorefrontCheckRewardPointsHighlightOnProductPage" stepKey="CheckSecondHighlightOnProductPage">
+            <argument name="amountInHighlight" value="CheckHighlightMultiCurrency.HighlightValueProductTwo"/>
+            <argument name="product" value="$$createSecondSimpleProduct$$"/>
+        </actionGroup>
+        <!-- Check Highlight on the Cart-->
+        <actionGroup ref="StorefrontCheckRewardPointsHighlightOnTheCart" stepKey="CheckHighlightOnTheCart">
+            <argument name="amountInHighlight" value="CheckHighlightMultiCurrency.HighlightCartAndCheckoutValue"/>
+        </actionGroup>
+        <!--Assert Shopping Cart Summary-->
+        <actionGroup ref="AssertStorefrontShoppingCartSummaryItemsActionGroup" stepKey="AssertCartSummary" after="CheckHighlightOnTheCart">
+            <argument name="subtotal" value="{{CheckHighlightMultiCurrency.subtotalCart}}"/>
+            <argument name="total" value="{{CheckHighlightMultiCurrency.totalCart}}"/>
+        </actionGroup>
+        <!-- Check Highlight on the Checkout Payment Page-->
+        <actionGroup ref="StorefrontCheckRewardPointsHighlightOnTheCheckoutPaymentPage" stepKey="CheckHighlightOnTheCheckoutPaymentPage">
+            <argument name="amountInHighlight" value="CheckHighlightMultiCurrency.HighlightCartAndCheckoutValue"/>
+        </actionGroup>
+
+    </test>
+</tests>

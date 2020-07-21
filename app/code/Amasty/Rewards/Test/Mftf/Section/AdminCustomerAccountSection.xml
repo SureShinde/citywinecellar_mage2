@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
+
+    <section name="AdminCustomerAccountRewardPointsSection">
+        <element name="RewardPointsTab" type="button" selector="//a[@id='tab_block_amrewards']"/>
+        <element name="CurrentBalance" type="block" selector="//span[@class='amrewards-balance']"/>
+        <element name="AddOrDeductPoints" type="button" selector="//button[@id='add_points_button']" timeout="10"/>
+        <element name="AddOrDeductPointsAction" type="select" selector="//select[@id='new_rewards_action']"/>
+        <element name="AddOrDeductPointsAmount" type="input" selector="//input[@id='new_rewards_amount']"/>
+        <element name="AddOrDeductPointsExpiration" type="select" selector="//select[@id='new_rewards_expiration_behavior']"/>
+        <element name="AddOrDeductPointsExpirationPeriod" type="input" selector="//input[@id='new_rewards_expiration_period']"/>
+        <element name="AddOrDeductPointsComment" type="textarea" selector="//textarea[@id='new_rewards_comment']"/>
+        <element name="AddOrDeductPointsButtonApply" type="button" selector="//button[@class='action-primary']" timeout="10"/>
+        <element name="AddOrDeductPointsErrorMessage" type="block" selector="//div[@id='new_rewards_messages']//div[contains(string(), 'Too much point(s) used.')]"/>
+    </section>
+
+    <section name="AdminCustomerAccountRewardPointsHistorySection">
+        <element name="RewardPointsHistoryTab" type="button" selector="//a[@id='tab_block_amrewardsHistory']"/>
+        <element name="HistoryDate" type="block" parameterized="true"
+                 selector="//table[@id='rewardsGrid_table']//tbody//tr[{{numberLine}}]/td[@data-column='action_date']"/>
+        <element name="HistoryChangeAmount" type="block" parameterized="true"
+                 selector="//table[@id='rewardsGrid_table']//tbody//tr[{{numberLine}}]/td[@data-column='amount']"/>
+        <element name="HistoryComment" type="block" parameterized="true"
+                 selector="//table[@id='rewardsGrid_table']//tbody//tr[{{numberLine}}]/td[@data-column='comment']"/>
+        <element name="HistoryAction" type="block" parameterized="true"
+                 selector="//table[@id='rewardsGrid_table']//tbody//tr[{{numberLine}}]/td[@data-column='action']"/>
+        <element name="HistoryPointsLeft" type="block" parameterized="true"
+                 selector="//table[@id='rewardsGrid_table']//tbody//tr[{{numberLine}}]/td[@data-column='points_left']"/>
+    </section>
+
+    <section name="AdminAllCustomersGrid">
+        <element name="RewardPointsColumnHeader" type="block" selector="//table[@data-role='grid']//span[contains(string(), 'Reward Points')]"/>
+        <element name="RewardPointsByCustomer" type="block"
+                 selector="//tbody//td[contains(string(), '{{customerEmail}}')]/following-sibling::td[contains(string(), '{{countPoints}}')]" parameterized="true"/>
+        <element name="SearchRewardPointsFrom" type="input"
+                 selector="//fieldset[contains(string(),'Reward Points')][@class='admin__form-field']//div[contains(string(),'from')]//input"/>
+        <element name="SearchRewardPointsTo" type="input"
+                 selector="//fieldset[contains(string(),'Reward Points')][@class='admin__form-field']//div[contains(string(),'to')]//input"/>
+        <element name="FirstByIndexCustomer" type="text" selector="//tr[contains(@class, 'data-row')][1]//a" timeout="10"/>
+    </section>
+
+</sections>

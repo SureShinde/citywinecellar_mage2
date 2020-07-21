@@ -1,0 +1,35 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+?>
+<?php
+// @codingStandardsIgnoreFile
+/** @var Amasty\Rewards\Block\Frontend\Balance $block */
+?>
+
+<li class="amasty-rewards-balance" data-bind="scope: 'amasty-rewards-balance'">
+    <a href="<?= $block->getUrl('amrewards') ?>">
+        <!-- ko if: visible-->
+        <span class="rewards-text" data-bind="text: captionText"></span><div class="rewards-amount" data-bind="text: balance"></div>
+        <!-- /ko -->
+    </a>
+    <script type="text/x-magento-init">
+        {
+            "*": {
+                "Magento_Ui/js/core/app": {
+                    "components": {
+                        "amasty-rewards-balance": {
+                            "component": "Amasty_Rewards/js/view/balance",
+                            "captionText": "<?= $block->getBalanceLabel() ?>",
+                            "balance": "<?= $block->getCustomerBalance() ?>"
+                        }
+                    }
+                }
+            }
+        }
+
+    </script>
+</li>

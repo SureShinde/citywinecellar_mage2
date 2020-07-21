@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="RPConfigurationEarningCalculationAfterTaxExclPriceInclShip">
+        <annotations>
+            <features value="Points Earning Calculation"/>
+            <stories value="Points Earning Calculation with After Tax on Storefront"/>
+            <title value="Check Setting Points Earning Calculation with After Tax Value"/>
+            <description value="Check Setting Points Earning Calculation with After Tax Exclude Catalog and Include Shipping"/>
+            <severity value="MAJOR"/>
+            <testCaseId value="RP-MFTF-10"/>
+            <group value="Amasty"/>
+            <group value="Rewards"/>
+            <group value="Tax"/>
+            <group value="RewardsEarning"/>
+            <group value="RewardsConfiguration"/>
+            <group value="RewardsConfigurationPointsEarning"/>
+        </annotations>
+
+        <before>
+            <!-- Create Data for Test -->
+            <createData entity="RewardPointsCustomerTaxArizona" stepKey="createCustomer"/>
+            <createData entity="taxRateArizona" stepKey="createTaxRate"/>
+            <createData entity="_defaultCategory" stepKey="createCategory"/>
+            <createData entity="SimpleProductPrice36_20" stepKey="createFirstSimpleProduct">
+                <requiredEntity createDataKey="createCategory"/>
+            </createData>
+            <createData entity="SimpleProductPrice54_60" stepKey="createSecondSimpleProduct">
+                <requiredEntity createDataKey="createCategory"/>
+            </createData>
+            <!-- Login To Admin Area -->
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <!-- Configuration Settings for Test-->
+            <actionGroup ref="AdminCreateTaxRuleActionGroup" stepKey="createTaxRule">
+                <argument name="taxRule" value="taxRuleRewards"/>
+                <argument name="taxRate" value="$$createTaxRate$$"/>
+            </actionGroup>
+            <actionGroup ref="AdminConfigurationMainSettingTaxCalculation" stepKey="ConfigurationTaxSetting">
+                <argument name="calculationTax" value="taxExclCatalogInclShipping"/>
+            </actionGroup>
+            <actionGroup ref="AdminConfigurationSettingRewardsGeneral" stepKey="ConfigurationGeneralSettingRewards">
+                <argument name="adminSettingRewardsGeneral" value="enableRewards"/>
+            </actionGroup>
+            <actionGroup ref="AdminConfigurationSettingRewardsPointsEarning" stepKey="ConfigurationPointsEarningSettingRewards">
+                <argument name="adminSettingRewardsPointsEarning" value="SetSettingRewardsPointsEarningAfterTax"/>
+            </actionGroup>
+            <actionGroup ref="AdminCreateRewardPointsRuleWithActionForYSpent" stepKey="CreateRewardsRuleForYSpent">
+                <argument name="rewardPointsRule" value="ruleGetXPointsForEachYSpent"/>
+            </actionGroup>
+            <actionGroup ref="AdminCreateCartPriceRuleActionGroup" stepKey="createCartPriceRule">
+                <argument name="ruleName" value="RewardsDefaultCartPriceRulePercentDiscount20"/>
+            </actionGroup>
+        </before>
+
+        <after>
+            <!-- Delete Created Data -->
+            <deleteData createDataKey="createCustomer" stepKey="deleteCustomer"/>
+            <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
+            <deleteData createDataKey="createFirstSimpleProduct" stepKey="deleteFirstSimpleProduct"/>
+            <deleteData createDataKey="createSecondSimpleProduct" stepKey="deleteSecondSimpleProduct"/>
+            <actionGroup ref="AdminDeleteTaxRule" stepKey="deleteTaxRule">
+                <argument name="taxRuleCode" value="{{taxRuleRewards.code}}" />
+            </actionGroup>
+            <deleteData createDataKey="createTaxRate" stepKey="deleteTaxRate"/>
+            <actionGroup ref="AdminDeleteRewardPointsRuleByName" stepKey="deleteRewardsRule">
+                <argument name="rewardPointsRule" value="ruleGetXPointsForEachYSpent" />
+            </actionGroup>
+            <actionGroup ref="AdminDeleteCartPriceRuleActionGroup" stepKey="deleteCartPriceRule">
+                <argument name="ruleName" value="RewardsDefaultCartPriceRulePercentDiscount20"/>
+            </actionGroup>
+            <!-- Return the Default Settings Module -->
+            <actionGroup ref="AdminDefaultConfigurationSettingCalculationTax" stepKey="ReturnDefaultSettingTax"/>
+            <actionGroup ref="AdminConfigurationSettingRewardsGeneral" stepKey="ConfigurationGeneralSettingRewards">
+                <argument name="adminSettingRewardsGeneral" value="defaultGeneralSettingRewards"/>
+            </actionGroup>
+            <actionGroup ref="AdminConfigurationSettingRewardsPointsEarning" stepKey="ConfigurationPointsEarningSettingRewards">
+                <argument name="adminSettingRewardsPointsEarning" value="SetDefaultSettingRewardsPointsEarning"/>
+            </actionGroup>
+        </after>
+
+        <!-- Login to Storefront as Previously Created Customer-->
+        <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginAsCustomer">
+            <argument name="Customer" value="$$createCustomer$$"/>
+        </actionGroup>
+        <!-- Add Products to Cart-->
+        <actionGroup ref="AddCreatedProductToCart" stepKey="AddFirstProductToCart">
+            <argument name="valueQty" value="_enterQty1"/>
+            <argument name="product" value="$$createFirstSimpleProduct$$"/>
+        </actionGroup>
+        <actionGroup ref="AddCreatedProductToCart" stepKey="AddSecondProductToCart">
+            <argument name="valueQty" value="_enterQty1"/>
+            <argument name="product" value="$$createSecondSimpleProduct$$"/>
+        </actionGroup>
+        <!-- Check Discount on the Cart -->
+        <actionGroup ref="StorefrontCheckDiscountOnTheCart" stepKey="checkDiscountOnTheCart">
+            <argument name="discountAmount" value="PointsCalculateAfterTaxExclPrice.discountAmount"/>
+        </actionGroup>
+        <!-- Create Order with Payment Methods Check Money -->
+        <actionGroup ref="AmastyCreateOrderAsCustomerOnCheckoutShippingPage" stepKey="GoToCheckoutOnThePaymentPageAsCustomer">
+            <argument name="shippingMethodsOnCheckout" value="FlatRateMethod"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCreateOrderAndGrabOrderNumber" stepKey="CreateOrderAsCustomerWithCheckMoney">
+            <argument name="paymentMethods" value="paymentCheckMoneyOrder"/>
+        </actionGroup>
+        <!-- Create Invoice and Shipment for Order -->
+        <actionGroup ref="AdminOpenOrderOnId" stepKey="openOrder">
+            <argument name="orderId" value="{$grabOrderNumberCreateOrderAsCustomerWithCheckMoney}"/>
+        </actionGroup>
+        <actionGroup ref="AdminCreateInvoiceAndShipmentActionGroup" stepKey="createShipment"/>
+        <!-- Check Tax After Invoice Order in Admin Area -->
+        <actionGroup ref="AdminCheckTaxInOrder" stepKey="checkTaxInOrderAfterInvoice">
+            <argument name="orderId" value="{$grabOrderNumberCreateOrderAsCustomerWithCheckMoney}"/>
+            <argument name="tax" value="PointsCalculateAfterTaxExclPrice.tax"/>
+        </actionGroup>
+        <!-- Check Current Balance after Apply Rewards Rule -->
+        <actionGroup ref="StorefrontCheckCurrentBalanceRewardPointsInCustomerAccount" stepKey="CheckCustomerCurrentBalance">
+            <argument name="currentBalance" value="PointsCalculateAfterTaxExclPrice.currentBalance"/>
+        </actionGroup>
+        <!-- Check Usage History Reward Points -->
+        <actionGroup ref="StorefrontCheckRewardPointsHistoryActionInCustomerAccount" stepKey="CheckRewardsHistory">
+            <argument name="rewardsHistoryRecordData" value="PointsCalculateAfterTaxExclPriceHistory"/>
+        </actionGroup>
+
+    </test>
+</tests>

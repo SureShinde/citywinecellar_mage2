@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="RPGridSearchByRewardPointsAndCheckGrid" extends="RPGridSearchByRewardPointsAndOpenCustomer">
+        <annotations>
+            <features value="Customer Grid Reward Points"/>
+            <stories value="Customer Grid Reward Points via Customer"/>
+            <title value="Check Search by Reward Points in Customer Grid"/>
+            <description value="Check Search Customer by Reward Points in Customer Grid and Check Result"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="RP-MFTF-66"/>
+            <group value="Amasty"/>
+            <group value="Rewards"/>
+            <group value="RewardsGrid"/>
+        </annotations>
+
+        <remove keyForRemoval="OpenFindCustomerOne"/>
+        <remove keyForRemoval="checkInformationFirstCustomer"/>
+        <remove keyForRemoval="OpenFindCustomerTwo"/>
+        <remove keyForRemoval="checkInformationSecondCustomer"/>
+        <!-- Search Customers With Points From 4 and Checking Found Customers in Grid-->
+        <actionGroup ref="AdminSearchCustomerByRewardPointsOnlyFrom" stepKey="SearchCustomerFrom">
+            <argument name="pointsFrom" value="SearchCustomerByRewardPointsAndCheckResult.amountFromFour"/>
+        </actionGroup>
+        <actionGroup ref="AdminCheckRewardPointsByCustomerGrid" stepKey="AssertRewardPointsByCustomerOneFrom" after="SearchCustomerFrom">
+            <argument name="customerEmail" value="$$createCustomerOne.email$$"/>
+            <argument name="countPoints" value="{{AddNineteenRewardPointsNotExpire.amount}}"/>
+        </actionGroup>
+        <actionGroup ref="AdminCheckRewardPointsByCustomerGrid" stepKey="AssertRewardPointsByCustomerTwoFrom" after="AssertRewardPointsByCustomerOneFrom">
+            <argument name="customerEmail" value="$$createCustomerTwo.email$$"/>
+            <argument name="countPoints" value="{{AddRewardPointsExpireFourDays5.amount}}"/>
+        </actionGroup>
+        <actionGroup ref="AdminCheckNoRewardPointsByCustomerGrid" stepKey="AssertNoRewardPointsByCustomerThreeFrom" after="AssertRewardPointsByCustomerTwoFrom">
+            <argument name="customerEmail" value="$$createCustomerThree.email$$"/>
+            <argument name="countPoints" value="{{CheckRewardPointsByCustomerGrid.amountCustomerPointsNull}}"/>
+        </actionGroup>
+        <!-- Search Customers With Points To 4 and Checking Found Customers in Grid-->
+        <actionGroup ref="AdminSearchCustomerByRewardPointsOnlyTo" stepKey="SearchCustomerTo">
+            <argument name="pointsTo" value="SearchCustomerByRewardPointsAndCheckResult.amountToFour"/>
+        </actionGroup>
+        <actionGroup ref="AdminCheckNoRewardPointsByCustomerGrid" stepKey="AssertNoRewardPointsByCustomerOneTo" after="AssertRewardPointsByCustomerThree">
+            <argument name="customerEmail" value="$$createCustomerOne.email$$"/>
+            <argument name="countPoints" value="{{AddNineteenRewardPointsNotExpire.amount}}"/>
+        </actionGroup>
+        <actionGroup ref="AdminCheckNoRewardPointsByCustomerGrid" stepKey="AssertNoRewardPointsByCustomerTwoTo" after="AssertNoRewardPointsByCustomerOneTo">
+            <argument name="customerEmail" value="$$createCustomerTwo.email$$"/>
+            <argument name="countPoints" value="{{AddRewardPointsExpireFourDays5.amount}}"/>
+        </actionGroup>
+        <!-- Search Customers With Points From 8 To 20 and Checking Found Customers in Grid-->
+        <actionGroup ref="AdminSearchCustomerByRewardPoints" stepKey="SearchCustomerFromAndTo">
+            <argument name="pointsFrom" value="SearchCustomerByRewardPointsAndCheckResult.amountFromEight"/>
+            <argument name="pointsTo" value="SearchCustomerByRewardPointsAndCheckResult.amountToTwenty"/>
+        </actionGroup>
+        <actionGroup ref="AdminCheckRewardPointsByCustomerGrid" stepKey="AssertRewardPointsByCustomerOneFromTo" after="SearchCustomerFromAndTo">
+            <argument name="customerEmail" value="$$createCustomerOne.email$$"/>
+            <argument name="countPoints" value="{{AddNineteenRewardPointsNotExpire.amount}}"/>
+        </actionGroup>
+        <actionGroup ref="AdminCheckNoRewardPointsByCustomerGrid" stepKey="AssertNoRewardPointsByCustomerThreeFromTo" after="AssertRewardPointsByCustomerOneFromTo">
+            <argument name="customerEmail" value="$$createCustomerThree.email$$"/>
+            <argument name="countPoints" value="{{CheckRewardPointsByCustomerGrid.amountCustomerPointsNull}}"/>
+        </actionGroup>
+        <actionGroup ref="AdminClearFiltersOnCustomersGrid" stepKey="clearFiltersByCustomerGridAfterTest"/>
+    </test>
+</tests>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="RPFunctionalHighlightForGuest">
+        <annotations>
+            <features value="Rewards Highlight"/>
+            <stories value="Functional Rewards Highlight"/>
+            <title value="Check Rewards Rewards Highlight with Rule for Registration"/>
+            <description value="Check Rewards Rewards Highlight for Guest with Rule for Registration"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="RP-MFTF-55"/>
+            <group value="Amasty"/>
+            <group value="Rewards"/>
+            <group value="RewardsHighlight"/>
+            <group value="RewardsFunctional"/>
+            <group value="RewardsFunctionalRules"/>
+        </annotations>
+
+        <before>
+            <!-- Create Data for Test -->
+            <createData entity="_defaultCategory" stepKey="createCategory"/>
+            <createData entity="SimpleProductByBagWayfarerMessenger" stepKey="createFirstSimpleProduct">
+                <requiredEntity createDataKey="createCategory"/>
+            </createData>
+            <createData entity="SimpleProductByWatchClamberData" stepKey="createSecondSimpleProduct">
+                <requiredEntity createDataKey="createCategory"/>
+            </createData>
+            <!-- Login To Admin Area -->
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <!-- Configuration Settings for Test-->
+            <actionGroup ref="AdminConfigurationSettingRewardsGeneral" stepKey="ConfigurationGeneralSettingRewards">
+                <argument name="adminSettingRewardsGeneral" value="defaultGeneralSettingRewards"/>
+            </actionGroup>
+            <actionGroup ref="AdminConfigurationSettingHighlightPointOnStorefront" stepKey="ConfigurationHighlightPointOnStorefront">
+                <argument name="adminSettingHighlightPointOnStorefront" value="SetSettingHighlightPointOnStorefrontAllEnable"/>
+            </actionGroup>
+            <actionGroup ref="AdminCreateRewardPointsRule" stepKey="CreateRewardsRuleForRegistration">
+                <argument name="rewardPointsRule" value="ruleCheckHighlightFoGuest"/>
+            </actionGroup>
+        </before>
+
+        <after>
+            <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
+            <deleteData createDataKey="createFirstSimpleProduct" stepKey="deleteFirstVirtualProduct"/>
+            <deleteData createDataKey="createSecondSimpleProduct" stepKey="deleteSecondVirtualProduct"/>
+            <actionGroup ref="AdminDeleteRewardPointsRuleByName" stepKey="deleteRewardsRuleForRegistration">
+                <argument name="rewardPointsRule" value="ruleCheckHighlightFoGuest"/>
+            </actionGroup>
+            <actionGroup ref="AdminConfigurationSettingHighlightPointOnStorefront" stepKey="ConfigurationHighlightPointOnStorefront">
+                <argument name="adminSettingHighlightPointOnStorefront" value="SetDefaultSettingHighlightPointOnStorefront"/>
+            </actionGroup>
+            <actionGroup ref="logout" stepKey="logout"/>
+        </after>
+
+        <!-- Check Highlight and Add First Created Product to Cart-->
+        <actionGroup ref="StorefrontCheckRewardPointsHighlightOnProductPage" stepKey="CheckFirstHighlightOnProductPage">
+            <argument name="amountInHighlight" value="CheckHighlightForGuest.HighlightValueForGuest"/>
+            <argument name="product" value="$$createFirstSimpleProduct$$"/>
+        </actionGroup>
+        <actionGroup ref="AddCreatedProductToCart" stepKey="AddFirstProductToCart">
+            <argument name="valueQty" value="_enterQty1"/>
+            <argument name="product" value="$$createFirstSimpleProduct$$"/>
+        </actionGroup>
+        <!-- Check Highlight and Add First Created Product to Cart-->
+        <actionGroup ref="StorefrontCheckRewardPointsHighlightOnProductPage" stepKey="CheckSecondHighlightOnProductPage">
+            <argument name="amountInHighlight" value="CheckHighlightForGuest.HighlightValueForGuest"/>
+            <argument name="product" value="$$createSecondSimpleProduct$$"/>
+        </actionGroup>
+        <actionGroup ref="AddCreatedProductToCart" stepKey="AddSecondProductToCart">
+            <argument name="valueQty" value="_enterQty1"/>
+            <argument name="product" value="$$createSecondSimpleProduct$$"/>
+        </actionGroup>
+        <!-- Check Highlight on the Cart-->
+        <actionGroup ref="StorefrontCheckRewardPointsHighlightOnTheCart" stepKey="CheckHighlightOnTheCart">
+            <argument name="amountInHighlight" value="CheckHighlightForGuest.HighlightValueForGuest"/>
+        </actionGroup>
+        <!-- Check Highlight on the Checkout-->
+        <actionGroup ref="StorefrontCheckRewardPointsHighlightOnTheCheckoutShippingPage" stepKey="CheckHighlightOnTheCheckoutPaymentPage">
+            <argument name="amountInHighlight" value="CheckHighlightForGuest.HighlightValueForGuest"/>
+        </actionGroup>
+
+    </test>
+</tests>

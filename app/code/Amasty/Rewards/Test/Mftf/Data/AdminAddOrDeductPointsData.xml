@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:DataGenerator/etc/dataProfileSchema.xsd">
+
+    <entity name="addTenRewardPoints" type="adminAddOrDeductPoints">
+        <data key="action">Add</data>
+        <data key="amount">10</data>
+        <data key="comment">AddTenPointsFromAdmin</data>
+    </entity>
+
+    <entity name="addRewardPointsExpireFiveDays" type="adminAddOrDeductPoints">
+        <data key="action">Add</data>
+        <data key="amount">20.5</data>
+        <data key="comment">Test 20,5</data>
+        <data key="expirationBehavior">Expire</data>
+        <data key="expirationPeriod">5</data>
+    </entity>
+
+    <entity name="addRewardPointsExpireToday" type="adminAddOrDeductPoints">
+        <data key="action">Add</data>
+        <data key="amount">150</data>
+        <data key="comment">123 456 789</data>
+        <data key="expirationBehavior">Expire</data>
+        <data key="expirationPeriod">0</data>
+    </entity>
+
+    <entity name="addRewardPointsNeverExpire" type="adminAddOrDeductPoints">
+        <data key="action">Add</data>
+        <data key="amount">0.02</data>
+        <data key="comment">I am Admin</data>
+        <data key="expirationBehavior">Never Expire</data>
+    </entity>
+
+    <entity name="deductDecimalValueRewardPoints" type="adminAddOrDeductPoints">
+        <data key="action">Deduct</data>
+        <data key="amount">60.07</data>
+        <data key="comment">Test Deduct 60,07</data>
+    </entity>
+
+    <entity name="deductIntegerValueRewardPoints" type="adminAddOrDeductPoints">
+        <data key="action">Deduct</data>
+        <data key="amount">41</data>
+        <data key="comment">Test Deduct 41</data>
+    </entity>
+
+</entities>

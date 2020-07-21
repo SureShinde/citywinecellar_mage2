@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="RPFunctionalDeductAfterCreditMemoTwoRule" extends="RPFunctionalReturnPointsAfterCancelOrder">
+        <annotations>
+            <features value="Deduct Points to Customer"/>
+            <stories value="Deduct Points via Customer"/>
+            <title value="Check Deduct Points to Customer"/>
+            <description value="Check Deduct Points to Customer After Credit Memo Order with Complete and X Spent Rules"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="RP-MFTF-69"/>
+            <group value="Amasty"/>
+            <group value="Rewards"/>
+            <group value="RewardsFunctional"/>
+            <group value="RewardsFunctionalDeductPoints"/>
+        </annotations>
+
+        <before>
+            <actionGroup ref="AdminCreateRewardPointsRule" stepKey="CreateRewardsRuleForComplete" after="ConfigurationGeneralSettingRewards">
+                <argument name="rewardPointsRule" value="ruleOrderComplete"/>
+            </actionGroup>
+            <actionGroup ref="AdminCreateRewardPointsRuleWithActionForYSpent" stepKey="CreateRewardsRuleForYSpent" after="CreateRewardsRuleForComplete">
+                <argument name="rewardPointsRule" value="ruleGetXPointsForEachYSpent"/>
+            </actionGroup>
+        </before>
+
+        <after>
+            <actionGroup ref="AdminDeleteRewardPointsRuleByName" stepKey="deleteRewardsRuleOrderComplete" after="deleteFirstSimpleProduct">
+                <argument name="rewardPointsRule" value="ruleOrderComplete" />
+            </actionGroup>
+            <actionGroup ref="AdminDeleteRewardPointsRuleByName" stepKey="deleteRewardsRuleXSpent" after="deleteRewardsRuleOrderComplete">
+                <argument name="rewardPointsRule" value="ruleGetXPointsForEachYSpent" />
+            </actionGroup>
+        </after>
+
+        <remove keyForRemoval="cancelOrder"/>
+        <remove keyForRemoval="ApplyRewardPointOnTheCart"/>
+        <remove keyForRemoval="CheckDiscountAndAmountInFieldApply"/>
+        <remove keyForRemoval="AdminCheckComment"/>
+        <remove keyForRemoval="AdminCheckActionText"/>
+
+        <actionGroup ref="AdminCreateInvoiceAndShipmentActionGroup" stepKey="createInvoiceAndShipment" after="openOrder"/>
+        <!--Create Credit Memo-->
+        <actionGroup ref="AdminOpenOrderAndStartCreditMemo" stepKey="startToCreateCreditMemo" after="createInvoiceAndShipment">
+            <argument name="orderId" value="{$grabOrderNumberCreateOrderAsCustomerWithCheckMoney}"/>
+        </actionGroup>
+        <actionGroup ref="SubmitCreditMemoActionGroup" stepKey="submitCreditMemo" after="startToCreateCreditMemo"/>
+        <!-- Check Deduct Points in Customer Account -->
+        <actionGroup ref="StorefrontCheckRewardPointsHistoryActionInCustomerAccount" stepKey="StorefrontCheckChangeAndLeft">
+            <argument name="rewardsHistoryRecordData" value="DeductAfterCreditMemoTwoRule"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCheckRewardPointsHistoryActionInCustomerAccountComment" stepKey="StorefrontCheckComment">
+            <argument name="rewardsHistoryRecordData" value="DeductAfterCreditMemoTwoRule"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCheckRewardPointsHistoryActionInCustomerAccountActionText" stepKey="StorefrontCheckActionText">
+            <argument name="rewardsHistoryRecordData" value="DeductAfterCreditMemoTwoRule"/>
+        </actionGroup>
+        <!-- Check Deduct Points in Admin Customer Account Area -->
+        <actionGroup ref="AdminCheckRewardPointsHistoryActionInCustomerAccount" stepKey="AdminCheckChangeAndLeft">
+            <argument name="customerId" value="$$createCustomer.id$$"/>
+            <argument name="rewardsHistoryRecordData" value="DeductAfterCreditMemoTwoRule"/>
+        </actionGroup>
+    </test>
+</tests>

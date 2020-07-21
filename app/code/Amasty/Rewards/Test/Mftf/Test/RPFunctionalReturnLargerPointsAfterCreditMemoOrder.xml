@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="RPFunctionalReturnLargerPointsAfterCreditMemoOrder" extends="RPFunctionalReturnPointsAfterCancelOrder">
+        <annotations>
+            <features value="Returns Points to Customer"/>
+            <stories value="Returns Points via Customer"/>
+            <title value="Check Returns Points to Customer"/>
+            <description value="Check Returns Larger Points to Customer After Credit Memo Order"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="RP-MFTF-46"/>
+            <group value="Amasty"/>
+            <group value="Rewards"/>
+            <group value="RewardsFunctional"/>
+            <group value="RewardsFunctionalReturnPoints"/>
+        </annotations>
+
+        <remove keyForRemoval="cancelOrder"/>
+        <remove keyForRemoval="StorefrontCheckChangeAndLeft"/>
+        <remove keyForRemoval="StorefrontCheckComment"/>
+        <remove keyForRemoval="StorefrontCheckActionText"/>
+        <actionGroup ref="StorefrontApplyRewardPointsOnTheCart" stepKey="ApplyRewardPointOnTheCart">
+            <argument name="rewardsAmount" value="CheckReturnLargerPointsAfterRefund.applyRewardsAmount"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCheckDiscountAndAppliedRewardsOnTheCart" stepKey="CheckDiscountAndAmountInFieldApply">
+            <argument name="discountAmount" value="CheckReturnLargerPointsAfterRefund.discountAmount"/>
+            <argument name="appliedRewardsAmount" value="CheckReturnLargerPointsAfterRefund.applyRewardsAmount"/>
+        </actionGroup>
+        <actionGroup ref="AdminCreateInvoiceAndShipmentActionGroup" stepKey="createInvoiceAndShipment" after="openOrder"/>
+        <!--Create Credit Memo-->
+        <actionGroup ref="AdminOpenOrderAndStartCreditMemo" stepKey="startToCreateCreditMemo" after="createInvoiceAndShipment">
+            <argument name="orderId" value="{$grabOrderNumberCreateOrderAsCustomerWithCheckMoney}"/>
+        </actionGroup>
+        <actionGroup ref="AdminFillRefundRewardPointsInOrder" stepKey="enterValueForRefundPoints" after="startToCreateCreditMemo">
+            <argument name="refundRewardsAmount" value="CheckReturnLargerPointsAfterRefund.refundRewardsAmount"/>
+        </actionGroup>
+        <actionGroup ref="SubmitCreditMemoActionGroup" stepKey="submitCreditMemo" after="enterValueForRefundPoints"/>
+        <actionGroup ref="AdminCheckRewardPointsHistoryActionInCustomerAccount" stepKey="AdminCheckChangeAndLeft">
+            <argument name="customerId" value="$$createCustomer.id$$"/>
+            <argument name="rewardsHistoryRecordData" value="CheckReturnLargerPointsAfterRefundHistory"/>
+        </actionGroup>
+        <actionGroup ref="AdminCheckRewardPointsHistoryActionInCustomerAccountActionText" stepKey="AdminCheckComment">
+            <argument name="customerId" value="$$createCustomer.id$$"/>
+            <argument name="rewardsHistoryRecordData" value="CheckReturnLargerPointsAfterRefundHistory"/>
+        </actionGroup>
+        <actionGroup ref="AdminCheckRewardPointsHistoryActionInCustomerAccountComment" stepKey="AdminCheckActionText">
+            <argument name="customerId" value="$$createCustomer.id$$"/>
+            <argument name="rewardsHistoryRecordData" value="CheckReturnLargerPointsAfterRefundHistory"/>
+        </actionGroup>
+
+    </test>
+</tests>

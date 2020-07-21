@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="RPFunctionalCheckAddPointFromAdminAreaExpireToday">
+        <annotations>
+            <features value="Rewards Points Add from Admin Area"/>
+            <stories value="Functional Rewards Points Add from Admin Area"/>
+            <title value="Check Add Rewards Points from Admin Area"/>
+            <description value="Check Add Rewards Points from Admin Area Expire Today"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="RP-MFTF-38"/>
+            <group value="Amasty"/>
+            <group value="Rewards"/>
+            <group value="RewardsFunctional"/>
+            <group value="RewardsFunctionalAdminAddOrDeductPoints"/>
+        </annotations>
+
+        <before>
+            <!-- Create Data for Test -->
+            <createData entity="RewardPointsCustomer" stepKey="createCustomer"/>
+            <!-- Login To Admin Area -->
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <!-- Configuration Settings for Test-->
+            <actionGroup ref="AdminConfigurationSettingRewardsGeneral" stepKey="ConfigurationGeneralSettingRewards">
+                <argument name="adminSettingRewardsGeneral" value="defaultGeneralSettingRewards"/>
+            </actionGroup>
+        </before>
+
+        <after>
+            <!-- Delete Created Data -->
+            <deleteData createDataKey="createCustomer" stepKey="deleteCustomer"/>
+            <amOnPage url="admin/admin/auth/logout/" stepKey="amOnLogoutPage"/>
+        </after>
+
+        <!-- Add Points From Admin Area -->
+        <actionGroup ref="AdminAddExpirationPointsToCustomer" stepKey="addPointsToCustomerFromAdminArea">
+            <argument name="customerId" value="$$createCustomer.id$$"/>
+            <argument name="adminAddOrDeductPoints" value="addRewardPointsExpireToday"/>
+        </actionGroup>
+        <!-- Login to Storefront as Previously Created Customer-->
+        <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginAsCustomer">
+            <argument name="Customer" value="$$createCustomer$$"/>
+        </actionGroup>
+        <!-- Check Usage History Reward Points Change and Amount Points Left-->
+        <actionGroup ref="AdminCheckRewardPointsHistoryActionInCustomerAccount" stepKey="CheckRewardsHistoryChangePointsLeft">
+            <argument name="customerId" value="$$createCustomer.id$$"/>
+            <argument name="rewardsHistoryRecordData" value="CheckAddPointAdminAreaExpireTodayHistory"/>
+        </actionGroup>
+        <!-- Check Usage History Reward Points Comment-->
+        <actionGroup ref="AdminCheckRewardPointsHistoryActionInCustomerAccountComment" stepKey="CheckRewardsHistoryActionText">
+            <argument name="customerId" value="$$createCustomer.id$$"/>
+            <argument name="rewardsHistoryRecordData" value="CheckAddPointAdminAreaExpireTodayHistory"/>
+        </actionGroup>
+        <!-- Check Usage History Reward Points (Change, Days Left, Points Left) on Storefront -->
+        <actionGroup ref="StorefrontCheckRewardPointsHistoryActionInCustomerAccount" stepKey="CheckRewardsHistoryChangeAndLeft">
+            <argument name="rewardsHistoryRecordData" value="CheckAddPointAdminAreaExpireTodayHistory"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCheckRewardPointsHistoryInCustomerAccountExpireDay" stepKey="CheckRewardsHistoryExpireDay">
+            <argument name="rewardsHistoryRecordData" value="CheckAddPointAdminAreaExpireTodayHistory"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCheckRewardPointsHistoryActionInCustomerAccountComment" stepKey="CheckRewardsHistoryComment">
+            <argument name="rewardsHistoryRecordData" value="CheckAddPointAdminAreaExpireTodayHistory"/>
+        </actionGroup>
+
+    </test>
+</tests>
