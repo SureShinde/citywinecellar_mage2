@@ -310,6 +310,7 @@ return array(
     'MSP\\ReCaptcha\\' => array($vendorDir . '/msp/recaptcha'),
     'MFTF\\' => array($vendorDir . '/magento/magento2-functional-testing-framework/dev/tests/functional/MFTF'),
     'League\\Container\\' => array($vendorDir . '/league/container/src'),
+    'Klaviyo\\Reclaim\\' => array($vendorDir . '/klaviyo/magento2-extension'),
     'Klarna\\Ordermanagement\\' => array($vendorDir . '/klarna/module-ordermanagement'),
     'Klarna\\Kp\\' => array($vendorDir . '/klarna/module-kp'),
     'Klarna\\Core\\' => array($vendorDir . '/klarna/module-core'),

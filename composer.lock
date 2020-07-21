@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f9f6649a64b46a582cd4d111665b6929",
+    "content-hash": "ce34fa9e0d1807d3aad55d2e5c304358",
     "packages": [
         {
             "name": "amzn/amazon-pay-and-login-magento-2-module",
@@ -1936,6 +1936,25 @@
                 }
             ],
             "description": "Klarna Order Management Magento 2 Extension"
+        },
+        {
+            "name": "klaviyo/magento2-extension",
+            "version": "1.2.0",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/klaviyo/magento2-extension/klaviyo-magento2-extension-1.2.0.0.zip",
+                "shasum": "bbd1a385ba81c3647f742b72ed9cf94cbbf569c4"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Klaviyo\\Reclaim\\": ""
+                }
+            },
+            "description": "Klaviyo extension for Magento 2. Allows pushing newsletters to Klaviyo's platform and more."
         },
         {
             "name": "magento/composer",
@@ -10472,6 +10491,7 @@
                 "rest",
                 "sdk"
             ],
+            "abandoned": true,
             "time": "2019-01-04T20:04:25+00:00"
         },
         {

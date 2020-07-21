@@ -1,0 +1,12 @@
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../../lib/internal/Magento/Framework/App/etc/events.xsd">
+    <event name="config_data_save_before">
+        <observer name="klaviyo_reclaim" instance="Klaviyo\Reclaim\Observer\PrivateApiKeyObserver" />
+    </event>
+    <event name="newsletter_subscriber_save_commit_after">
+        <observer name="klaviyo_reclaim" instance="Klaviyo\Reclaim\Observer\UserProfileNewsletterSubscribeObserver" />
+    </event>
+    <event
+    name="admin_system_config_changed_section_klaviyo_reclaim_user">
+        <observer name="custom_admin_system_config_changed_section_klaviyo_reclaim_user" instance="Klaviyo\Reclaim\Observer\KlaviyoUserObserver"/>
+    </event>
+</config>

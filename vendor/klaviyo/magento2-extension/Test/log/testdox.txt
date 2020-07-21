@@ -1,0 +1,76 @@
+Klaviyo\Reclaim\Test\Unit\Block\Catalog\Product\ViewedProduct
+ [x] Viewed product instance
+ [x] Get public api key
+ [x] Is klaviyo enabled
+ [x] Get product
+ [x] Get product categories
+ [x] Get product categories as json
+ [x] Get price
+ [x] Get final price
+ [x] Get product image
+ [x] Get viewed product json
+
+Klaviyo\Reclaim\Test\Unit\Block\Initialize
+ [x] Initialize instance
+ [x] Get public api key
+ [x] Is klaviyo enabled
+ [x] Is logged in
+ [x] Get customer email
+ [x] Get customer firstname
+ [x] Get customer lastname
+
+Klaviyo\Reclaim\Test\Unit\Block\System\Config\Form\Field\Newsletter
+ [x] Newsletter instance
+
+Klaviyo\Reclaim\Test\Unit\Helper\ScopeSetting
+ [x] Scope setting instance
+ [x] Get version
+ [x] Is enabled
+ [x] Get public api key
+ [x] Get private api key
+ [x] Set private api key
+ [x] Is logger enabled
+ [x] Get klaviyo username
+ [x] Unset klaviyo username
+ [x] Get klaviyo password
+ [x] Unset klaviyo password
+ [x] Get klaviyo email
+ [x] Unset klaviyo email
+ [x] Get custom media u r l
+ [x] Get newsletter
+ [x] Get opt in setting
+
+Klaviyo\Reclaim\Test\Unit\Model\Config\Source\ListOptions
+ [x] List options instance
+ [x] To option array
+
+Klaviyo\Reclaim\Test\Unit\Model\Config\Source\RadioBtn
+ [x] To option array
+
+Klaviyo\Reclaim\Test\Unit\Model\Reclaim
+ [x] Reclaim instance
+ [x] Reclaim
+ [x] Get log
+ [x] Clean log
+ [x] Append log
+
+Klaviyo\Reclaim\Test\Unit\Observer\KlaviyoUserObserver
+ [x] Klaviyo user observer instance
+ [x] Execute
+
+Klaviyo\Reclaim\Test\Unit\Observer\NewsletterSubscribeObserver
+ [x] Newsletter subscribe observer instance
+ [x] Execute
+
+Klaviyo\Reclaim\Test\Unit\Observer\PrivateApiKeyObserver
+ [x] Private api key observer instance
+ [x] Execute
+
+Klaviyo\Reclaim\Test\Unit\Observer\UserProfileNewsletterSubscribeObserver
+ [x] Newsletter subscribe observer instance
+ [x] Execute
+
+Klaviyo\Reclaim\Test\Unit\Plugin\Customer\Model\CustomerData
+ [x] Customer data instance
+ [x] After get section data
+

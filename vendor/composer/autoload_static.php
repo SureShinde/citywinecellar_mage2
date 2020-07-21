@@ -257,6 +257,7 @@ class ComposerStaticInitfabeccfb0b2fd0dfa4b82eda2300a2fd
         '3109cb1a231dcd04bee1f9f620d46975' => __DIR__ . '/..' . '/paragonie/sodium_compat/autoload.php',
         'aa75ea0761a2f40c1f3b32ad314f86c4' => __DIR__ . '/..' . '/phpseclib/mcrypt_compat/lib/mcrypt.php',
         '153a7817726e1caca4e6c3b7bc76f329' => __DIR__ . '/..' . '/temando/module-shipping-m2/registration.php',
+        'b9aadd33005ad499392449d63f246638' => __DIR__ . '/..' . '/klaviyo/magento2-extension/registration.php',
         'eda65932675b68b5aee4503e0762d64d' => __DIR__ . '/..' . '/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/_bootstrap.php',
         'b4cf39431a4b949eea8aa69ebb3d39da' => __DIR__ . '/../..' . '/app/etc/NonComposerComponentRegistration.php',
     );
@@ -604,6 +605,7 @@ class ComposerStaticInitfabeccfb0b2fd0dfa4b82eda2300a2fd
         ),
         'K' => 
         array (
+            'Klaviyo\\Reclaim\\' => 16,
             'Klarna\\Ordermanagement\\' => 23,
             'Klarna\\Kp\\' => 10,
             'Klarna\\Core\\' => 12,
@@ -1898,6 +1900,10 @@ class ComposerStaticInitfabeccfb0b2fd0dfa4b82eda2300a2fd
         'League\\Container\\' => 
         array (
             0 => __DIR__ . '/..' . '/league/container/src',
+        ),
+        'Klaviyo\\Reclaim\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/klaviyo/magento2-extension',
         ),
         'Klarna\\Ordermanagement\\' => 
         array (

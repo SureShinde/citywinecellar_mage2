@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>Dashboard for /var/www/html/vendor/klaviyo/magento2-extension</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href=".css/bootstrap.min.css" rel="stylesheet" type="text/css">
+  <link href=".css/nv.d3.min.css" rel="stylesheet" type="text/css">
+  <link href=".css/style.css" rel="stylesheet" type="text/css">
+  <!--[if lt IE 9]>
+  <script src=".js/html5shiv.min.js"></script>
+  <script src=".js/respond.min.js"></script>
+  <![endif]-->
+ </head>
+ <body>
+  <header>
+   <div class="container">
+    <div class="row">
+     <div class="col-md-12">
+      <ol class="breadcrumb">
+        <li><a href="index.html">/var/www/html/vendor/klaviyo/magento2-extension</a></li>
+        <li class="active">(Dashboard)</li>
+
+      </ol>
+     </div>
+    </div>
+   </div>
+  </header>
+  <div class="container">
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Classes</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="classCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="classComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Block/System/Config/Form/Field/Newsletter.php.html#5">Klaviyo\Reclaim\Block\System\Config\Form\Field\Newsletter</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controller/Checkout/Cart.php.html#5">Klaviyo\Reclaim\Controller\Checkout\Cart</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controller/Checkout/Email.php.html#5">Klaviyo\Reclaim\Controller\Checkout\Email</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controller/Checkout/Reload.php.html#5">Klaviyo\Reclaim\Controller\Checkout\Reload</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Helper/Data.php.html#4">Klaviyo\Reclaim\Helper\Data</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Setup/InstallData.php.html#13">Klaviyo\Reclaim\Setup\InstallData</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Setup/Uninstall.php.html#9">Klaviyo\Reclaim\Setup\Uninstall</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Setup/UpgradeData.php.html#8">Klaviyo\Reclaim\Setup\UpgradeData</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Model/Reclaim.php.html#9">Klaviyo\Reclaim\Model\Reclaim</a></td><td class="text-right">24%</td></tr>
+       <tr><td><a href="Block/Catalog/Product/ViewedProduct.php.html#12">Klaviyo\Reclaim\Block\Catalog\Product\ViewedProduct</a></td><td class="text-right">68%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Model/Reclaim.php.html#9">Klaviyo\Reclaim\Model\Reclaim</a></td><td class="text-right">1181</td></tr>
+       <tr><td><a href="Helper/Data.php.html#4">Klaviyo\Reclaim\Helper\Data</a></td><td class="text-right">756</td></tr>
+       <tr><td><a href="Block/Catalog/Product/ViewedProduct.php.html#12">Klaviyo\Reclaim\Block\Catalog\Product\ViewedProduct</a></td><td class="text-right">39</td></tr>
+       <tr><td><a href="Setup/InstallData.php.html#13">Klaviyo\Reclaim\Setup\InstallData</a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Setup/UpgradeData.php.html#8">Klaviyo\Reclaim\Setup\UpgradeData</a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Controller/Checkout/Cart.php.html#5">Klaviyo\Reclaim\Controller\Checkout\Cart</a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Controller/Checkout/Email.php.html#5">Klaviyo\Reclaim\Controller\Checkout\Email</a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Setup/Uninstall.php.html#9">Klaviyo\Reclaim\Setup\Uninstall</a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Block/System/Config/Form/Field/Newsletter.php.html#5">Klaviyo\Reclaim\Block\System\Config\Form\Field\Newsletter</a></td><td class="text-right">6</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Methods</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="methodCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="methodComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Setup/UpgradeData.php.html#50"><abbr title="Klaviyo\Reclaim\Setup\UpgradeData::upgrade">upgrade</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Model/Reclaim.php.html#333"><abbr title="Klaviyo\Reclaim\Model\Reclaim::getSubscribersCount">getSubscribersCount</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Block/Catalog/Product/ViewedProduct.php.html#164"><abbr title="Klaviyo\Reclaim\Block\Catalog\Product\ViewedProduct::_toHtml">_toHtml</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Setup/Uninstall.php.html#24"><abbr title="Klaviyo\Reclaim\Setup\Uninstall::uninstall">uninstall</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Model/Reclaim.php.html#194"><abbr title="Klaviyo\Reclaim\Model\Reclaim::stores">stores</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Model/Reclaim.php.html#222"><abbr title="Klaviyo\Reclaim\Model\Reclaim::product">product</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Model/Reclaim.php.html#253"><abbr title="Klaviyo\Reclaim\Model\Reclaim::productVariantInventory">productVariantInventory</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Model/Reclaim.php.html#304"><abbr title="Klaviyo\Reclaim\Model\Reclaim::productinspector">productinspector</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Model/Reclaim.php.html#339"><abbr title="Klaviyo\Reclaim\Model\Reclaim::getSubscribersById">getSubscribersById</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Setup/Uninstall.php.html#17"><abbr title="Klaviyo\Reclaim\Setup\Uninstall::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Model/Reclaim.php.html#365"><abbr title="Klaviyo\Reclaim\Model\Reclaim::getSubscribersByDateRange">getSubscribersByDateRange</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Model/Reclaim.php.html#400"><abbr title="Klaviyo\Reclaim\Model\Reclaim::_packageSubscribers">_packageSubscribers</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Model/Reclaim.php.html#412"><abbr title="Klaviyo\Reclaim\Model\Reclaim::_storeFilter">_storeFilter</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Model/Reclaim.php.html#421"><abbr title="Klaviyo\Reclaim\Model\Reclaim::_getImages">_getImages</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Model/Reclaim.php.html#431"><abbr title="Klaviyo\Reclaim\Model\Reclaim::handleMediaURL">handleMediaURL</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Model/Reclaim.php.html#439"><abbr title="Klaviyo\Reclaim\Model\Reclaim::_getStockItem">_getStockItem</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Setup/InstallData.php.html#51"><abbr title="Klaviyo\Reclaim\Setup\InstallData::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Setup/UpgradeData.php.html#37"><abbr title="Klaviyo\Reclaim\Setup\UpgradeData::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Helper/Data.php.html#167"><abbr title="Klaviyo\Reclaim\Helper\Data::sendApiRequest">sendApiRequest</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Helper/Data.php.html#154"><abbr title="Klaviyo\Reclaim\Helper\Data::make_request">make_request</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controller/Checkout/Reload.php.html#22"><abbr title="Klaviyo\Reclaim\Controller\Checkout\Reload::execute">execute</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Block/Catalog/Product/ViewedProduct.php.html#200"><abbr title="Klaviyo\Reclaim\Block\Catalog\Product\ViewedProduct::getViewedItemJson">getViewedItemJson</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Block/System/Config/Form/Field/Newsletter.php.html#7"><abbr title="Klaviyo\Reclaim\Block\System\Config\Form\Field\Newsletter::_getElementHtml">_getElementHtml</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controller/Checkout/Cart.php.html#12"><abbr title="Klaviyo\Reclaim\Controller\Checkout\Cart::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controller/Checkout/Cart.php.html#32"><abbr title="Klaviyo\Reclaim\Controller\Checkout\Cart::execute">execute</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controller/Checkout/Email.php.html#7"><abbr title="Klaviyo\Reclaim\Controller\Checkout\Email::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controller/Checkout/Email.php.html#23"><abbr title="Klaviyo\Reclaim\Controller\Checkout\Email::execute">execute</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Controller/Checkout/Reload.php.html#9"><abbr title="Klaviyo\Reclaim\Controller\Checkout\Reload::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Helper/Data.php.html#22"><abbr title="Klaviyo\Reclaim\Helper\Data::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Helper/Data.php.html#150"><abbr title="Klaviyo\Reclaim\Helper\Data::build_params">build_params</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Helper/Data.php.html#32"><abbr title="Klaviyo\Reclaim\Helper\Data::getKlaviyoLists">getKlaviyoLists</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Helper/Data.php.html#57"><abbr title="Klaviyo\Reclaim\Helper\Data::anonymousFunction:57#351">anonymousFunction:57#351</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Helper/Data.php.html#61"><abbr title="Klaviyo\Reclaim\Helper\Data::anonymousFunction:61#378">anonymousFunction:61#378</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Helper/Data.php.html#81"><abbr title="Klaviyo\Reclaim\Helper\Data::subscribeEmailToKlaviyoList">subscribeEmailToKlaviyoList</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Helper/Data.php.html#110"><abbr title="Klaviyo\Reclaim\Helper\Data::unsubscribeEmailFromKlaviyoList">unsubscribeEmailFromKlaviyoList</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Helper/Data.php.html#129"><abbr title="Klaviyo\Reclaim\Helper\Data::klaviyoTrackEvent">klaviyoTrackEvent</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Setup/InstallData.php.html#63"><abbr title="Klaviyo\Reclaim\Setup\InstallData::install">install</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Model/Config/Source/ListOptions.php.html#23"><abbr title="Klaviyo\Reclaim\Model\Config\Source\ListOptions::toOptionArray">toOptionArray</abbr></a></td><td class="text-right">40%</td></tr>
+       <tr><td><a href="Block/Catalog/Product/ViewedProduct.php.html#118"><abbr title="Klaviyo\Reclaim\Block\Catalog\Product\ViewedProduct::getPrice">getPrice</abbr></a></td><td class="text-right">50%</td></tr>
+       <tr><td><a href="Helper/ScopeSetting.php.html#48"><abbr title="Klaviyo\Reclaim\Helper\ScopeSetting::checkAreaCode">checkAreaCode</abbr></a></td><td class="text-right">50%</td></tr>
+       <tr><td><a href="Helper/ScopeSetting.php.html#95"><abbr title="Klaviyo\Reclaim\Helper\ScopeSetting::setScopeSetting">setScopeSetting</abbr></a></td><td class="text-right">58%</td></tr>
+       <tr><td><a href="Helper/ScopeSetting.php.html#67"><abbr title="Klaviyo\Reclaim\Helper\ScopeSetting::getScopeSetting">getScopeSetting</abbr></a></td><td class="text-right">58%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Model/Reclaim.php.html#365"><abbr title="Klaviyo\Reclaim\Model\Reclaim::getSubscribersByDateRange">getSubscribersByDateRange</abbr></a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Model/Reclaim.php.html#304"><abbr title="Klaviyo\Reclaim\Model\Reclaim::productinspector">productinspector</abbr></a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Helper/Data.php.html#32"><abbr title="Klaviyo\Reclaim\Helper\Data::getKlaviyoLists">getKlaviyoLists</abbr></a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Model/Reclaim.php.html#253"><abbr title="Klaviyo\Reclaim\Model\Reclaim::productVariantInventory">productVariantInventory</abbr></a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Helper/Data.php.html#129"><abbr title="Klaviyo\Reclaim\Helper\Data::klaviyoTrackEvent">klaviyoTrackEvent</abbr></a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Model/Reclaim.php.html#339"><abbr title="Klaviyo\Reclaim\Model\Reclaim::getSubscribersById">getSubscribersById</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Helper/Data.php.html#81"><abbr title="Klaviyo\Reclaim\Helper\Data::subscribeEmailToKlaviyoList">subscribeEmailToKlaviyoList</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Model/Reclaim.php.html#222"><abbr title="Klaviyo\Reclaim\Model\Reclaim::product">product</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Setup/UpgradeData.php.html#50"><abbr title="Klaviyo\Reclaim\Setup\UpgradeData::upgrade">upgrade</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Block/Catalog/Product/ViewedProduct.php.html#164"><abbr title="Klaviyo\Reclaim\Block\Catalog\Product\ViewedProduct::_toHtml">_toHtml</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Setup/InstallData.php.html#63"><abbr title="Klaviyo\Reclaim\Setup\InstallData::install">install</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Block/Catalog/Product/ViewedProduct.php.html#118"><abbr title="Klaviyo\Reclaim\Block\Catalog\Product\ViewedProduct::getPrice">getPrice</abbr></a></td><td class="text-right">8</td></tr>
+       <tr><td><a href="Model/Config/Source/ListOptions.php.html#23"><abbr title="Klaviyo\Reclaim\Model\Config\Source\ListOptions::toOptionArray">toOptionArray</abbr></a></td><td class="text-right">7</td></tr>
+       <tr><td><a href="Controller/Checkout/Cart.php.html#32"><abbr title="Klaviyo\Reclaim\Controller\Checkout\Cart::execute">execute</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Block/Catalog/Product/ViewedProduct.php.html#200"><abbr title="Klaviyo\Reclaim\Block\Catalog\Product\ViewedProduct::getViewedItemJson">getViewedItemJson</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Helper/Data.php.html#167"><abbr title="Klaviyo\Reclaim\Helper\Data::sendApiRequest">sendApiRequest</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Model/Reclaim.php.html#194"><abbr title="Klaviyo\Reclaim\Model\Reclaim::stores">stores</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Helper/Data.php.html#110"><abbr title="Klaviyo\Reclaim\Helper\Data::unsubscribeEmailFromKlaviyoList">unsubscribeEmailFromKlaviyoList</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Helper/Data.php.html#61"><abbr title="Klaviyo\Reclaim\Helper\Data::anonymousFunction:61#378">anonymousFunction:61#378</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Controller/Checkout/Email.php.html#23"><abbr title="Klaviyo\Reclaim\Controller\Checkout\Email::execute">execute</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Setup/Uninstall.php.html#24"><abbr title="Klaviyo\Reclaim\Setup\Uninstall::uninstall">uninstall</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Block/System/Config/Form/Field/Newsletter.php.html#7"><abbr title="Klaviyo\Reclaim\Block\System\Config\Form\Field\Newsletter::_getElementHtml">_getElementHtml</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Model/Reclaim.php.html#400"><abbr title="Klaviyo\Reclaim\Model\Reclaim::_packageSubscribers">_packageSubscribers</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Model/Reclaim.php.html#412"><abbr title="Klaviyo\Reclaim\Model\Reclaim::_storeFilter">_storeFilter</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Model/Reclaim.php.html#421"><abbr title="Klaviyo\Reclaim\Model\Reclaim::_getImages">_getImages</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Model/Reclaim.php.html#431"><abbr title="Klaviyo\Reclaim\Model\Reclaim::handleMediaURL">handleMediaURL</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Helper/ScopeSetting.php.html#95"><abbr title="Klaviyo\Reclaim\Helper\ScopeSetting::setScopeSetting">setScopeSetting</abbr></a></td><td class="text-right">5</td></tr>
+       <tr><td><a href="Helper/ScopeSetting.php.html#67"><abbr title="Klaviyo\Reclaim\Helper\ScopeSetting::getScopeSetting">getScopeSetting</abbr></a></td><td class="text-right">5</td></tr>
+       <tr><td><a href="Helper/ScopeSetting.php.html#48"><abbr title="Klaviyo\Reclaim\Helper\ScopeSetting::checkAreaCode">checkAreaCode</abbr></a></td><td class="text-right">2</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <footer>
+    <hr/>
+    <p>
+     <small>Generated by <a href="https://github.com/sebastianbergmann/php-code-coverage" target="_top">php-code-coverage 5.3.2</a> using <a href="https://secure.php.net/" target="_top">PHP 7.1.33-14+ubuntu16.04.1+deb.sury.org+1</a> with <a href="https://xdebug.org/">Xdebug 2.9.3</a> and <a href="https://phpunit.de/">PHPUnit 6.2.4</a> at Fri May 8 0:38:27 UTC 2020.</small>
+    </p>
+   </footer>
+  </div>
+  <script src=".js/jquery.min.js" type="text/javascript"></script>
+  <script src=".js/bootstrap.min.js" type="text/javascript"></script>
+  <script src=".js/holder.min.js" type="text/javascript"></script>
+  <script src=".js/d3.min.js" type="text/javascript"></script>
+  <script src=".js/nv.d3.min.js" type="text/javascript"></script>
+  <script type="text/javascript">
+$(document).ready(function() {
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#classCoverageDistribution svg')
+      .datum(getCoverageDistributionData([8,0,0,1,0,0,0,1,2,1,2,5], "Class Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#methodCoverageDistribution svg')
+      .datum(getCoverageDistributionData([37,0,0,0,0,1,4,0,0,2,1,50], "Method Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getCoverageDistributionData(data, label) {
+    var labels = [
+      '0%',
+      '0-10%',
+      '10-20%',
+      '20-30%',
+      '30-40%',
+      '40-50%',
+      '50-60%',
+      '60-70%',
+      '70-80%',
+      '80-90%',
+      '90-100%',
+      '100%'
+    ];
+    var values = [];
+    $.each(labels, function(key) {
+      values.push({x: labels[key], y: data[key]});
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Cyclomatic Complexity');
+
+    d3.select('#classComplexity svg')
+      .datum(getComplexityData([[68.51851851851852,23,"<a href=\"Block\/Catalog\/Product\/ViewedProduct.php.html#12\">Klaviyo\\Reclaim\\Block\\Catalog\\Product\\ViewedProduct<\/a>"],[100,7,"<a href=\"Block\/Initialize.php.html#5\">Klaviyo\\Reclaim\\Block\\Initialize<\/a>"],[0,2,"<a href=\"Block\/System\/Config\/Form\/Field\/Newsletter.php.html#5\">Klaviyo\\Reclaim\\Block\\System\\Config\\Form\\Field\\Newsletter<\/a>"],[0,3,"<a href=\"Controller\/Checkout\/Cart.php.html#5\">Klaviyo\\Reclaim\\Controller\\Checkout\\Cart<\/a>"],[0,3,"<a href=\"Controller\/Checkout\/Email.php.html#5\">Klaviyo\\Reclaim\\Controller\\Checkout\\Email<\/a>"],[0,2,"<a href=\"Controller\/Checkout\/Reload.php.html#5\">Klaviyo\\Reclaim\\Controller\\Checkout\\Reload<\/a>"],[0,27,"<a href=\"Helper\/Data.php.html#4\">Klaviyo\\Reclaim\\Helper\\Data<\/a>"],[100,6,"<a href=\"Helper\/Logger.php.html#8\">Klaviyo\\Reclaim\\Helper\\Logger<\/a>"],[77.77777777777779,27,"<a href=\"Helper\/ScopeSetting.php.html#4\">Klaviyo\\Reclaim\\Helper\\ScopeSetting<\/a>"],[70,6,"<a href=\"Model\/Config\/Source\/ListOptions.php.html#4\">Klaviyo\\Reclaim\\Model\\Config\\Source\\ListOptions<\/a>"],[100,1,"<a href=\"Model\/Config\/Source\/Radiobtn.php.html#3\">Klaviyo\\Reclaim\\Model\\Config\\Source\\Radiobtn<\/a>"],[24.2603550295858,51,"<a href=\"Model\/Reclaim.php.html#9\">Klaviyo\\Reclaim\\Model\\Reclaim<\/a>"],[87.87878787878788,7,"<a href=\"Observer\/KlaviyoUserObserver.php.html#13\">Klaviyo\\Reclaim\\Observer\\KlaviyoUserObserver<\/a>"],[100,3,"<a href=\"Observer\/NewsletterSubscribeObserver.php.html#8\">Klaviyo\\Reclaim\\Observer\\NewsletterSubscribeObserver<\/a>"],[91.66666666666666,6,"<a href=\"Observer\/PrivateApiKeyObserver.php.html#8\">Klaviyo\\Reclaim\\Observer\\PrivateApiKeyObserver<\/a>"],[93.75,5,"<a href=\"Observer\/UserProfileNewsletterSubscribeObserver.php.html#8\">Klaviyo\\Reclaim\\Observer\\UserProfileNewsletterSubscribeObserver<\/a>"],[100,3,"<a href=\"Plugin\/Customer\/Model\/CustomerData.php.html#12\">Klaviyo\\Reclaim\\Plugin\\Customer\\Model\\CustomerData<\/a>"],[0,4,"<a href=\"Setup\/InstallData.php.html#13\">Klaviyo\\Reclaim\\Setup\\InstallData<\/a>"],[0,3,"<a href=\"Setup\/Uninstall.php.html#9\">Klaviyo\\Reclaim\\Setup\\Uninstall<\/a>"],[0,4,"<a href=\"Setup\/UpgradeData.php.html#8\">Klaviyo\\Reclaim\\Setup\\UpgradeData<\/a>"]], 'Class Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Method Complexity');
+
+    d3.select('#methodComplexity svg')
+      .datum(getComplexityData([[100,1,"<a href=\"Block\/Catalog\/Product\/ViewedProduct.php.html#35\">Klaviyo\\Reclaim\\Block\\Catalog\\Product\\ViewedProduct::__construct<\/a>"],[100,1,"<a href=\"Block\/Catalog\/Product\/ViewedProduct.php.html#57\">Klaviyo\\Reclaim\\Block\\Catalog\\Product\\ViewedProduct::getPublicApiKey<\/a>"],[100,1,"<a href=\"Block\/Catalog\/Product\/ViewedProduct.php.html#68\">Klaviyo\\Reclaim\\Block\\Catalog\\Product\\ViewedProduct::isKlaviyoEnabled<\/a>"],[100,1,"<a href=\"Block\/Catalog\/Product\/ViewedProduct.php.html#79\">Klaviyo\\Reclaim\\Block\\Catalog\\Product\\ViewedProduct::getProduct<\/a>"],[100,3,"<a href=\"Block\/Catalog\/Product\/ViewedProduct.php.html#90\">Klaviyo\\Reclaim\\Block\\Catalog\\Product\\ViewedProduct::getProductCategories<\/a>"],[100,1,"<a href=\"Block\/Catalog\/Product\/ViewedProduct.php.html#108\">Klaviyo\\Reclaim\\Block\\Catalog\\Product\\ViewedProduct::getProductCategoriesAsJson<\/a>"],[50,5,"<a href=\"Block\/Catalog\/Product\/ViewedProduct.php.html#118\">Klaviyo\\Reclaim\\Block\\Catalog\\Product\\ViewedProduct::getPrice<\/a>"],[100,1,"<a href=\"Block\/Catalog\/Product\/ViewedProduct.php.html#143\">Klaviyo\\Reclaim\\Block\\Catalog\\Product\\ViewedProduct::getFinalPrice<\/a>"],[100,2,"<a href=\"Block\/Catalog\/Product\/ViewedProduct.php.html#148\">Klaviyo\\Reclaim\\Block\\Catalog\\Product\\ViewedProduct::getProductImage<\/a>"],[0,3,"<a href=\"Block\/Catalog\/Product\/ViewedProduct.php.html#164\">Klaviyo\\Reclaim\\Block\\Catalog\\Product\\ViewedProduct::_toHtml<\/a>"],[100,2,"<a href=\"Block\/Catalog\/Product\/ViewedProduct.php.html#176\">Klaviyo\\Reclaim\\Block\\Catalog\\Product\\ViewedProduct::getViewedProductJson<\/a>"],[0,2,"<a href=\"Block\/Catalog\/Product\/ViewedProduct.php.html#200\">Klaviyo\\Reclaim\\Block\\Catalog\\Product\\ViewedProduct::getViewedItemJson<\/a>"],[100,1,"<a href=\"Block\/Initialize.php.html#10\">Klaviyo\\Reclaim\\Block\\Initialize::__construct<\/a>"],[100,1,"<a href=\"Block\/Initialize.php.html#28\">Klaviyo\\Reclaim\\Block\\Initialize::getPublicApiKey<\/a>"],[100,1,"<a href=\"Block\/Initialize.php.html#39\">Klaviyo\\Reclaim\\Block\\Initialize::isKlaviyoEnabled<\/a>"],[100,1,"<a href=\"Block\/Initialize.php.html#50\">Klaviyo\\Reclaim\\Block\\Initialize::isLoggedIn<\/a>"],[100,1,"<a href=\"Block\/Initialize.php.html#61\">Klaviyo\\Reclaim\\Block\\Initialize::getCustomerEmail<\/a>"],[100,1,"<a href=\"Block\/Initialize.php.html#72\">Klaviyo\\Reclaim\\Block\\Initialize::getCustomerFirstname<\/a>"],[100,1,"<a href=\"Block\/Initialize.php.html#83\">Klaviyo\\Reclaim\\Block\\Initialize::getCustomerLastname<\/a>"],[0,2,"<a href=\"Block\/System\/Config\/Form\/Field\/Newsletter.php.html#7\">Klaviyo\\Reclaim\\Block\\System\\Config\\Form\\Field\\Newsletter::_getElementHtml<\/a>"],[0,1,"<a href=\"Controller\/Checkout\/Cart.php.html#12\">Klaviyo\\Reclaim\\Controller\\Checkout\\Cart::__construct<\/a>"],[0,2,"<a href=\"Controller\/Checkout\/Cart.php.html#32\">Klaviyo\\Reclaim\\Controller\\Checkout\\Cart::execute<\/a>"],[0,1,"<a href=\"Controller\/Checkout\/Email.php.html#7\">Klaviyo\\Reclaim\\Controller\\Checkout\\Email::__construct<\/a>"],[0,2,"<a href=\"Controller\/Checkout\/Email.php.html#23\">Klaviyo\\Reclaim\\Controller\\Checkout\\Email::execute<\/a>"],[0,1,"<a href=\"Controller\/Checkout\/Reload.php.html#9\">Klaviyo\\Reclaim\\Controller\\Checkout\\Reload::__construct<\/a>"],[0,1,"<a href=\"Controller\/Checkout\/Reload.php.html#22\">Klaviyo\\Reclaim\\Controller\\Checkout\\Reload::execute<\/a>"],[0,1,"<a href=\"Helper\/Data.php.html#22\">Klaviyo\\Reclaim\\Helper\\Data::__construct<\/a>"],[0,6,"<a href=\"Helper\/Data.php.html#32\">Klaviyo\\Reclaim\\Helper\\Data::getKlaviyoLists<\/a>"],[0,1,"<a href=\"Helper\/Data.php.html#57\">Klaviyo\\Reclaim\\Helper\\Data::anonymousFunction:57#351<\/a>"],[0,2,"<a href=\"Helper\/Data.php.html#61\">Klaviyo\\Reclaim\\Helper\\Data::anonymousFunction:61#378<\/a>"],[0,5,"<a href=\"Helper\/Data.php.html#81\">Klaviyo\\Reclaim\\Helper\\Data::subscribeEmailToKlaviyoList<\/a>"],[0,2,"<a href=\"Helper\/Data.php.html#110\">Klaviyo\\Reclaim\\Helper\\Data::unsubscribeEmailFromKlaviyoList<\/a>"],[0,6,"<a href=\"Helper\/Data.php.html#129\">Klaviyo\\Reclaim\\Helper\\Data::klaviyoTrackEvent<\/a>"],[0,1,"<a href=\"Helper\/Data.php.html#150\">Klaviyo\\Reclaim\\Helper\\Data::build_params<\/a>"],[0,1,"<a href=\"Helper\/Data.php.html#154\">Klaviyo\\Reclaim\\Helper\\Data::make_request<\/a>"],[0,2,"<a href=\"Helper\/Data.php.html#167\">Klaviyo\\Reclaim\\Helper\\Data::sendApiRequest<\/a>"],[100,3,"<a href=\"Helper\/Logger.php.html#35\">Klaviyo\\Reclaim\\Helper\\Logger::__construct<\/a>"],[100,1,"<a href=\"Helper\/Logger.php.html#52\">Klaviyo\\Reclaim\\Helper\\Logger::getPath<\/a>"],[100,2,"<a href=\"Helper\/Logger.php.html#61\">Klaviyo\\Reclaim\\Helper\\Logger::log<\/a>"],[100,1,"<a href=\"Helper\/ScopeSetting.php.html#29\">Klaviyo\\Reclaim\\Helper\\ScopeSetting::__construct<\/a>"],[50,2,"<a href=\"Helper\/ScopeSetting.php.html#48\">Klaviyo\\Reclaim\\Helper\\ScopeSetting::checkAreaCode<\/a>"],[58.333333333333336,4,"<a href=\"Helper\/ScopeSetting.php.html#67\">Klaviyo\\Reclaim\\Helper\\ScopeSetting::getScopeSetting<\/a>"],[58.333333333333336,4,"<a href=\"Helper\/ScopeSetting.php.html#95\">Klaviyo\\Reclaim\\Helper\\ScopeSetting::setScopeSetting<\/a>"],[100,1,"<a href=\"Helper\/ScopeSetting.php.html#118\">Klaviyo\\Reclaim\\Helper\\ScopeSetting::getVersion<\/a>"],[100,1,"<a href=\"Helper\/ScopeSetting.php.html#124\">Klaviyo\\Reclaim\\Helper\\ScopeSetting::isEnabled<\/a>"],[100,1,"<a href=\"Helper\/ScopeSetting.php.html#129\">Klaviyo\\Reclaim\\Helper\\ScopeSetting::getPublicApiKey<\/a>"],[100,1,"<a href=\"Helper\/ScopeSetting.php.html#134\">Klaviyo\\Reclaim\\Helper\\ScopeSetting::getPrivateApiKey<\/a>"],[100,1,"<a href=\"Helper\/ScopeSetting.php.html#139\">Klaviyo\\Reclaim\\Helper\\ScopeSetting::setPrivateApiKey<\/a>"],[100,1,"<a href=\"Helper\/ScopeSetting.php.html#144\">Klaviyo\\Reclaim\\Helper\\ScopeSetting::isLoggerEnabled<\/a>"],[100,1,"<a href=\"Helper\/ScopeSetting.php.html#149\">Klaviyo\\Reclaim\\Helper\\ScopeSetting::getKlaviyoUsername<\/a>"],[100,1,"<a href=\"Helper\/ScopeSetting.php.html#154\">Klaviyo\\Reclaim\\Helper\\ScopeSetting::unsetKlaviyoUsername<\/a>"],[100,1,"<a href=\"Helper\/ScopeSetting.php.html#159\">Klaviyo\\Reclaim\\Helper\\ScopeSetting::getKlaviyoPassword<\/a>"],[100,1,"<a href=\"Helper\/ScopeSetting.php.html#164\">Klaviyo\\Reclaim\\Helper\\ScopeSetting::unsetKlaviyoPassword<\/a>"],[100,1,"<a href=\"Helper\/ScopeSetting.php.html#169\">Klaviyo\\Reclaim\\Helper\\ScopeSetting::getKlaviyoEmail<\/a>"],[100,1,"<a href=\"Helper\/ScopeSetting.php.html#174\">Klaviyo\\Reclaim\\Helper\\ScopeSetting::unsetKlaviyoEmail<\/a>"],[100,1,"<a href=\"Helper\/ScopeSetting.php.html#179\">Klaviyo\\Reclaim\\Helper\\ScopeSetting::getCustomMediaURL<\/a>"],[100,1,"<a href=\"Helper\/ScopeSetting.php.html#184\">Klaviyo\\Reclaim\\Helper\\ScopeSetting::getNewsletter<\/a>"],[100,2,"<a href=\"Helper\/ScopeSetting.php.html#189\">Klaviyo\\Reclaim\\Helper\\ScopeSetting::getOptInSetting<\/a>"],[100,1,"<a href=\"Model\/Config\/Source\/ListOptions.php.html#10\">Klaviyo\\Reclaim\\Model\\Config\\Source\\ListOptions::__construct<\/a>"],[40,4,"<a href=\"Model\/Config\/Source\/ListOptions.php.html#23\">Klaviyo\\Reclaim\\Model\\Config\\Source\\ListOptions::toOptionArray<\/a>"],[100,1,"<a href=\"Model\/Config\/Source\/ListOptions.php.html#51\">Klaviyo\\Reclaim\\Model\\Config\\Source\\ListOptions::anonymousFunction:51#294<\/a>"],[100,1,"<a href=\"Model\/Config\/Source\/Radiobtn.php.html#5\">Klaviyo\\Reclaim\\Model\\Config\\Source\\Radiobtn::toOptionArray<\/a>"],[100,1,"<a href=\"Model\/Reclaim.php.html#44\">Klaviyo\\Reclaim\\Model\\Reclaim::__construct<\/a>"],[100,1,"<a href=\"Model\/Reclaim.php.html#73\">Klaviyo\\Reclaim\\Model\\Reclaim::reclaim<\/a>"],[100,4,"<a href=\"Model\/Reclaim.php.html#84\">Klaviyo\\Reclaim\\Model\\Reclaim::getLog<\/a>"],[100,4,"<a href=\"Model\/Reclaim.php.html#110\">Klaviyo\\Reclaim\\Model\\Reclaim::cleanLog<\/a>"],[100,1,"<a href=\"Model\/Reclaim.php.html#177\">Klaviyo\\Reclaim\\Model\\Reclaim::appendLog<\/a>"],[0,2,"<a href=\"Model\/Reclaim.php.html#194\">Klaviyo\\Reclaim\\Model\\Reclaim::stores<\/a>"],[0,5,"<a href=\"Model\/Reclaim.php.html#222\">Klaviyo\\Reclaim\\Model\\Reclaim::product<\/a>"],[0,6,"<a href=\"Model\/Reclaim.php.html#253\">Klaviyo\\Reclaim\\Model\\Reclaim::productVariantInventory<\/a>"],[0,6,"<a href=\"Model\/Reclaim.php.html#304\">Klaviyo\\Reclaim\\Model\\Reclaim::productinspector<\/a>"],[0,1,"<a href=\"Model\/Reclaim.php.html#333\">Klaviyo\\Reclaim\\Model\\Reclaim::getSubscribersCount<\/a>"],[0,5,"<a href=\"Model\/Reclaim.php.html#339\">Klaviyo\\Reclaim\\Model\\Reclaim::getSubscribersById<\/a>"],[0,6,"<a href=\"Model\/Reclaim.php.html#365\">Klaviyo\\Reclaim\\Model\\Reclaim::getSubscribersByDateRange<\/a>"],[0,2,"<a href=\"Model\/Reclaim.php.html#400\">Klaviyo\\Reclaim\\Model\\Reclaim::_packageSubscribers<\/a>"],[0,2,"<a href=\"Model\/Reclaim.php.html#412\">Klaviyo\\Reclaim\\Model\\Reclaim::_storeFilter<\/a>"],[0,2,"<a href=\"Model\/Reclaim.php.html#421\">Klaviyo\\Reclaim\\Model\\Reclaim::_getImages<\/a>"],[0,2,"<a href=\"Model\/Reclaim.php.html#431\">Klaviyo\\Reclaim\\Model\\Reclaim::handleMediaURL<\/a>"],[0,1,"<a href=\"Model\/Reclaim.php.html#439\">Klaviyo\\Reclaim\\Model\\Reclaim::_getStockItem<\/a>"],[100,1,"<a href=\"Observer\/KlaviyoUserObserver.php.html#55\">Klaviyo\\Reclaim\\Observer\\KlaviyoUserObserver::__construct<\/a>"],[85.71428571428571,6,"<a href=\"Observer\/KlaviyoUserObserver.php.html#67\">Klaviyo\\Reclaim\\Observer\\KlaviyoUserObserver::execute<\/a>"],[100,1,"<a href=\"Observer\/NewsletterSubscribeObserver.php.html#13\">Klaviyo\\Reclaim\\Observer\\NewsletterSubscribeObserver::__construct<\/a>"],[100,2,"<a href=\"Observer\/NewsletterSubscribeObserver.php.html#23\">Klaviyo\\Reclaim\\Observer\\NewsletterSubscribeObserver::execute<\/a>"],[100,1,"<a href=\"Observer\/PrivateApiKeyObserver.php.html#13\">Klaviyo\\Reclaim\\Observer\\PrivateApiKeyObserver::__construct<\/a>"],[88.88888888888889,5,"<a href=\"Observer\/PrivateApiKeyObserver.php.html#21\">Klaviyo\\Reclaim\\Observer\\PrivateApiKeyObserver::execute<\/a>"],[100,1,"<a href=\"Observer\/UserProfileNewsletterSubscribeObserver.php.html#14\">Klaviyo\\Reclaim\\Observer\\UserProfileNewsletterSubscribeObserver::__construct<\/a>"],[90.9090909090909,4,"<a href=\"Observer\/UserProfileNewsletterSubscribeObserver.php.html#26\">Klaviyo\\Reclaim\\Observer\\UserProfileNewsletterSubscribeObserver::execute<\/a>"],[100,1,"<a href=\"Plugin\/Customer\/Model\/CustomerData.php.html#23\">Klaviyo\\Reclaim\\Plugin\\Customer\\Model\\CustomerData::__construct<\/a>"],[100,2,"<a href=\"Plugin\/Customer\/Model\/CustomerData.php.html#34\">Klaviyo\\Reclaim\\Plugin\\Customer\\Model\\CustomerData::afterGetSectionData<\/a>"],[0,1,"<a href=\"Setup\/InstallData.php.html#51\">Klaviyo\\Reclaim\\Setup\\InstallData::__construct<\/a>"],[0,3,"<a href=\"Setup\/InstallData.php.html#63\">Klaviyo\\Reclaim\\Setup\\InstallData::install<\/a>"],[0,1,"<a href=\"Setup\/Uninstall.php.html#17\">Klaviyo\\Reclaim\\Setup\\Uninstall::__construct<\/a>"],[0,2,"<a href=\"Setup\/Uninstall.php.html#24\">Klaviyo\\Reclaim\\Setup\\Uninstall::uninstall<\/a>"],[0,1,"<a href=\"Setup\/UpgradeData.php.html#37\">Klaviyo\\Reclaim\\Setup\\UpgradeData::__construct<\/a>"],[0,3,"<a href=\"Setup\/UpgradeData.php.html#50\">Klaviyo\\Reclaim\\Setup\\UpgradeData::upgrade<\/a>"]], 'Method Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getComplexityData(data, label) {
+    var values = [];
+    $.each(data, function(key) {
+      var value = Math.round(data[key][0]*100) / 100;
+      values.push({
+        x: value,
+        y: data[key][1],
+        class: data[key][2],
+        size: 0.05,
+        shape: 'diamond'
+      });
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+});
+  </script>
+ </body>
+</html>

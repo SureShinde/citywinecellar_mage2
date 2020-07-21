@@ -3718,6 +3718,27 @@
         "description": "Klarna Order Management Magento 2 Extension"
     },
     {
+        "name": "klaviyo/magento2-extension",
+        "version": "1.2.0",
+        "version_normalized": "1.2.0.0",
+        "dist": {
+            "type": "zip",
+            "url": "https://repo.magento.com/archives/klaviyo/magento2-extension/klaviyo-magento2-extension-1.2.0.0.zip",
+            "shasum": "bbd1a385ba81c3647f742b72ed9cf94cbbf569c4"
+        },
+        "type": "magento2-module",
+        "installation-source": "dist",
+        "autoload": {
+            "files": [
+                "registration.php"
+            ],
+            "psr-4": {
+                "Klaviyo\\Reclaim\\": ""
+            }
+        },
+        "description": "Klaviyo extension for Magento 2. Allows pushing newsletters to Klaviyo's platform and more."
+    },
+    {
         "name": "league/container",
         "version": "2.4.1",
         "version_normalized": "2.4.1.0",
@@ -13055,7 +13076,8 @@
             "paypal",
             "rest",
             "sdk"
-        ]
+        ],
+        "abandoned": true
     },
     {
         "name": "pdepend/pdepend",

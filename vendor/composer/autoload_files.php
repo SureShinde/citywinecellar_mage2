@@ -256,6 +256,7 @@ return array(
     '3109cb1a231dcd04bee1f9f620d46975' => $vendorDir . '/paragonie/sodium_compat/autoload.php',
     'aa75ea0761a2f40c1f3b32ad314f86c4' => $vendorDir . '/phpseclib/mcrypt_compat/lib/mcrypt.php',
     '153a7817726e1caca4e6c3b7bc76f329' => $vendorDir . '/temando/module-shipping-m2/registration.php',
+    'b9aadd33005ad499392449d63f246638' => $vendorDir . '/klaviyo/magento2-extension/registration.php',
     'eda65932675b68b5aee4503e0762d64d' => $vendorDir . '/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/_bootstrap.php',
     'b4cf39431a4b949eea8aa69ebb3d39da' => $baseDir . '/app/etc/NonComposerComponentRegistration.php',
 );
