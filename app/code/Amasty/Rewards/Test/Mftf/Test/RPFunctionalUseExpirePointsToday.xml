@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="RPFunctionalUseExpirePointsToday" extends="RPConfigurationPointsSpendingRateDecimalValue">
+        <annotations>
+            <features value="Spent Expire Reward Points"/>
+            <stories value="Functional Spent Expire Reward Points via Customer"/>
+            <title value="Check Functional Spent Expire Reward Points"/>
+            <description value="Check Functional Spent Expire Reward Points Today"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="RP-MFTF-60"/>
+            <group value="Amasty"/>
+            <group value="Rewards"/>
+            <group value="RewardsSpending"/>
+            <group value="RewardsFunctional"/>
+        </annotations>
+
+        <before>
+            <createData entity="AddRewardPointsExpireToday10" stepKey="addRewardPointsExpireToday" after="addRewardPointsToCustomer">
+                <requiredEntity createDataKey="createCustomer"/>
+            </createData>
+            <createData entity="AddRewardPointsExpireFourDays5" stepKey="addRewardPointsExpireFourDays" after="addRewardPointsExpireToday">
+                <requiredEntity createDataKey="createCustomer"/>
+            </createData>
+            <actionGroup ref="AdminConfigurationSettingRewardsPointsEarning" stepKey="ConfigurationPointsEarningSettingRewards">
+                <argument name="adminSettingRewardsPointsEarning" value="SetDefaultSettingRewardsPointsEarning"/>
+            </actionGroup>
+        </before>
+
+        <remove keyForRemoval="CheckDiscountAndAmountInFieldApply"/>
+        <remove keyForRemoval="cancelAppliedRewards"/>
+        <remove keyForRemoval="ApplyRewardPointOnTheCheckout"/>
+        <remove keyForRemoval="CheckCustomerCurrentBalance"/>
+        <remove keyForRemoval="CheckRewardsHistory"/>
+
+        <actionGroup ref="StorefrontApplyRewardPointsOnTheCart" stepKey="ApplyRewardPointOnTheCart">
+            <argument name="rewardsAmount" value="CheckUseExpirePointsToday.applyRewardsAmount"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCheckDiscountAndTextBellowDiscountOnTheCheckout" stepKey="CheckDiscountAndDiscountName">
+            <argument name="discountAmount" value="CheckUseExpirePointsToday.discountAmount"/>
+            <argument name="appliedRewardsAmount" value="CheckUseExpirePointsToday.applyRewardsAmount"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCheckRewardPointsHistoryInCustomerAccountExpireDay" stepKey="CheckRewardsHistoryExpireDay10Points">
+            <argument name="rewardsHistoryRecordData" value="CheckUseExpireTenPointsTodayHistory"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCheckRewardPointsHistoryInCustomerAccountExpireDay" stepKey="CheckRewardsHistoryExpireDay5Points">
+            <argument name="rewardsHistoryRecordData" value="CheckUseExpireFivePointsTodayHistory"/>
+        </actionGroup>
+
+    </test>
+</tests>

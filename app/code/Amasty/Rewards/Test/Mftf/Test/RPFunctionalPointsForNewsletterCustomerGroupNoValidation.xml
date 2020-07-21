@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="RPFunctionalPointsForNewsletterCustomerGroupNoValidation"
+          extends="RPFunctionalCheckActionGetXPointsForNewsletterSubscription">
+        <annotations>
+            <features value="Rewards Points Earning Rule"/>
+            <stories value="Functional Rewards Points Rule Customer Group"/>
+            <title value="Check Rewards Points Rule for Newsletter Subscription with Customer Group"/>
+            <description value="Check Rewards Points Rule for Newsletter Subscription with Customer Group No Validation"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="RP-MFTF-4901"/>
+            <group value="Amasty"/>
+            <group value="Rewards"/>
+            <group value="RewardsFunctional"/>
+            <group value="RewardsFunctionalRules"/>
+        </annotations>
+
+        <before>
+            <remove keyForRemoval="configurationPointsExpirationSetting"/>
+            <actionGroup ref="AdminCreateRewardPointsRule" stepKey="CreateRewardsRuleNewsletterSubscription">
+                <argument name="rewardPointsRule" value="ruleCheckNewsletterWithCustomerOnlyRetailer"/>
+            </actionGroup>
+        </before>
+
+        <after>
+            <remove keyForRemoval="defaultConfigurationPointsExpire"/>
+            <actionGroup ref="AdminDeleteRewardPointsRuleByName" stepKey="deleteRewardsRule">
+                <argument name="rewardPointsRule" value="ruleCheckNewsletterWithCustomerOnlyRetailer" />
+            </actionGroup>
+        </after>
+
+        <remove keyForRemoval="CheckRewardsHistoryChangeAndLeft"/>
+        <remove keyForRemoval="CheckRewardsHistoryExpireDay"/>
+        <remove keyForRemoval="CheckRewardsHistory"/>
+        <actionGroup ref="StorefrontCheckCurrentBalanceRewardPointsInCustomerAccount" stepKey="CheckCustomerCurrentBalance"
+                     after="applyNewsletterSubscription">
+            <argument name="currentBalance" value="CheckCurrentBalanceIsNull.currentBalance"/>
+        </actionGroup>
+        <actionGroup ref="AdminCheckCurrentBalanceRewardPointsInCustomerAccount" stepKey="AdminCheckCustomerCurrentBalance"
+                     after="CheckCustomerCurrentBalance">
+            <argument name="customerId" value="$$createCustomer.id$$"/>
+            <argument name="currentBalance" value="CheckCurrentBalanceIsNull.currentBalance"/>
+        </actionGroup>
+
+    </test>
+</tests>

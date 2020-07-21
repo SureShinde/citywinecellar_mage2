@@ -1,0 +1,12 @@
+#amrewards_highlight_color {
+    opacity: initial;
+    cursor: default;
+}
+
+.accordion .config .value.with-tooltip select + div.tooltip {
+    margin: -23px -28px 0 0;
+}
+
+.accordion .config .value.with-tooltip div.tooltip {
+    margin: 6px -28px 0 0;
+}

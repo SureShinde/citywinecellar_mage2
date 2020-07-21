@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:DataGenerator/etc/dataProfileSchema.xsd">
+
+    <entity name="ruleGetXPointsForEachYSpent" type="rewardPointsRuleData">
+        <data key="name">Test Reward Earning Rule Get X Points For Each Y Spent</data>
+        <data key="status">1</data>
+        <data key="websites">Main Website</data>
+        <data key="customerGroups">'NOT LOGGED IN', 'General', 'Wholesale', 'Retailer'</data>
+        <data key="action">moneyspent</data>
+        <data key="amount">1</data>
+        <data key="pointsExpirationBehavior">0</data>
+        <data key="spentAmount">1</data>
+    </entity>
+
+    <entity name="ruleOrderComplete" type="rewardPointsRuleData">
+        <data key="name">Test Reward Earning Rule Order Complete</data>
+        <data key="status">1</data>
+        <data key="websites">Main Website</data>
+        <data key="customerGroups">'NOT LOGGED IN', 'General', 'Wholesale', 'Retailer'</data>
+        <data key="action">ordercompleted</data>
+        <data key="amount">10</data>
+        <data key="pointsExpirationBehavior">0</data>
+    </entity>
+
+    <entity name="ruleNewsletterSubscription" type="rewardPointsRuleData">
+        <data key="name">Test Reward Earning Rule Newsletter Subscription</data>
+        <data key="status">1</data>
+        <data key="websites">Main Website</data>
+        <data key="customerGroups">'NOT LOGGED IN', 'General', 'Wholesale', 'Retailer'</data>
+        <data key="action">subscription</data>
+        <data key="amount">10</data>
+        <data key="pointsExpirationBehavior">0</data>
+    </entity>
+
+    <entity name="ruleApprovedReview" type="rewardPointsRuleData">
+        <data key="name">Test Reward Earning Rule Approved Review</data>
+        <data key="status">1</data>
+        <data key="websites">Main Website</data>
+        <data key="customerGroups">'NOT LOGGED IN', 'General', 'Wholesale', 'Retailer'</data>
+        <data key="action">review</data>
+        <data key="amount">15</data>
+        <data key="pointsExpirationBehavior">0</data>
+    </entity>
+
+    <entity name="ruleRegistration" type="rewardPointsRuleData">
+        <data key="name">Test Reward Earning Rule Newsletter Subscription</data>
+        <data key="status">1</data>
+        <data key="websites">Main Website</data>
+        <data key="customerGroups">'NOT LOGGED IN', 'General', 'Wholesale', 'Retailer'</data>
+        <data key="action">registration</data>
+        <data key="amount">80</data>
+        <data key="pointsExpirationBehavior">0</data>
+    </entity>
+
+    <entity name="ruleCheckActionGetXPointsForCompletingOrder" type="rewardPointsRuleData" extends="ruleOrderComplete">
+        <data key="name">Check Rewards Points Earning Rule Order Complete</data>
+        <data key="pointsExpirationBehavior">Never expire</data>
+    </entity>
+
+    <entity name="ruleCheckActionGetXPointsForYSpent" type="rewardPointsRuleData" extends="ruleGetXPointsForEachYSpent">
+        <data key="name">Check Rewards Points Earning Rule Get X for Y Spent with Expire to 8 Days</data>
+        <data key="pointsExpirationBehavior">Custom</data>
+        <data key="pointsExpirationPeriod">8</data>
+    </entity>
+
+    <entity name="ruleCheckActionGetXPointsForNews" type="rewardPointsRuleData" extends="ruleNewsletterSubscription">
+        <data key="name">Check Rewards Points Earning Rule for Newsletter Subscription to 10 day</data>
+        <data key="amount">20</data>
+        <data key="pointsExpirationBehavior">Custom</data>
+        <data key="pointsExpirationPeriod">10</data>
+    </entity>
+
+    <entity name="ruleCheckActionGetXPointsForReview" type="rewardPointsRuleData" extends="ruleApprovedReview">
+        <data key="name">Check Rewards Points Earning Rule for Approved Product Review Never Expire</data>
+        <data key="amount">0.02</data>
+        <data key="pointsExpirationBehavior">Never expire</data>
+    </entity>
+
+    <entity name="ruleCheckActionGetXPointsForRegistration" type="rewardPointsRuleData" extends="ruleRegistration">
+        <data key="name">Check Rewards Points Earning Rule for Registration Expire Today</data>
+        <data key="amount">21.55</data>
+        <data key="pointsExpirationBehavior">Custom</data>
+        <data key="pointsExpirationPeriod">0</data>
+    </entity>
+
+    <entity name="ruleCheckRuleOrderCompleteWithCountry" type="rewardPointsRuleData" extends="ruleOrderComplete">
+        <data key="name">Check Rewards Rule Order Complete With Conditions Country</data>
+        <data key="conditions">Australia</data>
+    </entity>
+
+    <entity name="ruleCheckNewsletterWithCustomerOnlyRetailer" type="rewardPointsRuleData" extends="ruleNewsletterSubscription">
+        <data key="name">Check Rewards Points Rule for Newsletter Subscription with Customer Group</data>
+        <data key="customerGroups">'Retailer'</data>
+    </entity>
+
+    <entity name="ruleCheckRuleYSpentWithSubtotal" type="rewardPointsRuleData" extends="ruleGetXPointsForEachYSpent">
+        <data key="name">Check Rewards Points Rule Get X for Y Spent With Conditions</data>
+        <data key="conditions">85</data>
+    </entity>
+
+    <entity name="ruleCheckRuleYSpentWithPromoSKU" type="rewardPointsRuleData" extends="ruleGetXPointsForEachYSpent">
+        <data key="name">Check Rewards Points Rule Get X for Y With Promo Items</data>
+        <data key="amount">1.35</data>
+        <data key="spentAmount">2</data>
+    </entity>
+
+    <entity name="ruleCheckHighlightFoGuest" type="rewardPointsRuleData" extends="ruleRegistration">
+        <data key="name">Check Rewards Rewards Highlight for Guest with Rule for Registration</data>
+        <data key="amount">25.02</data>
+    </entity>
+
+</entities>

@@ -1,0 +1,20 @@
+<!--@subject {{trans " %earned_reward reward points earned at %store_name" store_name=$store.getFrontendName() earned_reward=$earned_reward}} @-->
+
+<!--@vars {
+"var customer.getName()|escape":"Customer Name",
+"var earned_reward":"Points Change",
+"var store.getFrontendName()":"Store Name",
+"var rewards_balance_change_date":"Balance Change Data",
+"store url=\"\"":"Store URL"
+} @-->
+
+<p class="greeting">Hello {{trans "%name," name=$customer.getName()}}</p>
+<p>Thank you for being our loyal customer.</p>
+<p>
+    You just earned {{var earned_reward}} reward points as a bonus ({{var action}}). Reward points were added to your balance on {{var rewards_balance_change_date}}. You can use it for purchasing items in our online store right away.
+    Visit us at <a href="{{store url=""}}">{{var store.getFrontendName()}}</a>.
+</p>
+<p>Kindest Regards, </br>
+    {{var store.getFrontendName()}} Team </p>
+
+<p>P.S. You can unsubscribe from this type of emails by logging in to your account and adjusting reward points notification settings.</p>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="RPFunctionalReturnAndDeductAfterCreditMemoCompleteRule" extends="RPFunctionalReturnPointsAfterCancelOrder">
+        <annotations>
+            <features value="Returns Points and Deduct to Customer"/>
+            <stories value="Returns Points and Deduct via Customer"/>
+            <title value="Check Returns and Deduct Points to Customer"/>
+            <description value="Check Returns and Deduct Points to Customer After Credit Memo Order with Complete Rule"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="RP-MFTF-68"/>
+            <group value="Amasty"/>
+            <group value="Rewards"/>
+            <group value="RewardsFunctional"/>
+            <group value="RewardsFunctionalDeductPoints"/>
+        </annotations>
+
+        <before>
+            <actionGroup ref="AdminCreateRewardPointsRule" stepKey="CreateRewardsRuleOrderComplete" after="ConfigurationGeneralSettingRewards">
+                <argument name="rewardPointsRule" value="ruleOrderComplete"/>
+            </actionGroup>
+        </before>
+
+        <after>
+            <actionGroup ref="AdminDeleteRewardPointsRuleByName" stepKey="deleteRewardsRule" after="deleteFirstSimpleProduct">
+                <argument name="rewardPointsRule" value="ruleOrderComplete" />
+            </actionGroup>
+        </after>
+
+        <remove keyForRemoval="cancelOrder"/>
+        <remove keyForRemoval="AdminCheckChangeAndLeft"/>
+        <remove keyForRemoval="AdminCheckComment"/>
+        <remove keyForRemoval="AdminCheckActionText"/>
+
+        <actionGroup ref="StorefrontApplyRewardPointsOnTheCart" stepKey="ApplyRewardPointOnTheCart">
+            <argument name="rewardsAmount" value="ReturnAndDeductCompleteRule.applyRewardsAmount"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCheckDiscountAndAppliedRewardsOnTheCart" stepKey="CheckDiscountAndAmountInFieldApply">
+            <argument name="discountAmount" value="ReturnAndDeductCompleteRule.discountAmount"/>
+            <argument name="appliedRewardsAmount" value="ReturnAndDeductCompleteRule.applyRewardsAmount"/>
+        </actionGroup>
+        <actionGroup ref="AdminCreateInvoiceAndShipmentActionGroup" stepKey="createInvoiceAndShipment" after="openOrder"/>
+        <!--Create Credit Memo-->
+        <actionGroup ref="AdminOpenOrderAndStartCreditMemo" stepKey="startToCreateCreditMemo" after="createInvoiceAndShipment">
+            <argument name="orderId" value="{$grabOrderNumberCreateOrderAsCustomerWithCheckMoney}"/>
+        </actionGroup>
+        <actionGroup ref="SubmitCreditMemoActionGroup" stepKey="submitCreditMemo" after="startToCreateCreditMemo"/>
+        <!-- Check Deduct Points in Customer Account -->
+        <actionGroup ref="StorefrontCheckRewardPointsHistoryActionInCustomerAccount" stepKey="StorefrontCheckChangeAndLeft">
+            <argument name="rewardsHistoryRecordData" value="ReturnAndDeductCompleteRuleDeductHistory"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCheckRewardPointsHistoryActionInCustomerAccountComment" stepKey="StorefrontCheckComment">
+            <argument name="rewardsHistoryRecordData" value="ReturnAndDeductCompleteRuleDeductHistory"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCheckRewardPointsHistoryActionInCustomerAccountActionText" stepKey="StorefrontCheckActionText">
+            <argument name="rewardsHistoryRecordData" value="ReturnAndDeductCompleteRuleDeductHistory"/>
+        </actionGroup>
+        <!-- Check Return Points in Customer Account -->
+        <actionGroup ref="StorefrontCheckRewardPointsHistoryActionInCustomerAccount" stepKey="StorefrontCheckChangeAndLeftRefundUsed">
+            <argument name="rewardsHistoryRecordData" value="ReturnAndDeductCompleteRuleRefundHistory"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCheckRewardPointsHistoryActionInCustomerAccountComment" stepKey="StorefrontCheckCommentRefundUsed">
+            <argument name="rewardsHistoryRecordData" value="ReturnAndDeductCompleteRuleRefundHistory"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCheckRewardPointsHistoryActionInCustomerAccountActionText" stepKey="StorefrontCheckActionTextRefundUsed">
+            <argument name="rewardsHistoryRecordData" value="ReturnAndDeductCompleteRuleRefundHistory"/>
+        </actionGroup>
+    </test>
+</tests>

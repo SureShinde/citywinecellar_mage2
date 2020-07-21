@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="RPConfigurationApplyRedemptionLimitAmount">
+        <annotations>
+            <features value="Setting Apply Redemption Limit"/>
+            <stories value="Disable Apply Redemption Limit with Amount Value"/>
+            <title value="Check Disable Apply Redemption Limit"/>
+            <description value="Check Disable Apply Redemption Limit with Amount Value"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="RP-MFTF-21"/>
+            <group value="Amasty"/>
+            <group value="Rewards"/>
+            <group value="RewardsConfiguration"/>
+            <group value="RewardsConfigurationPointsEarning"/>
+            <group value="RewardsConfigurationOrderLimitations"/>
+        </annotations>
+
+        <before>
+            <!-- Create Data for Test -->
+            <createData entity="RewardPointsCustomer" stepKey="createCustomer"/>
+            <createData entity="AddRewardPointsNotExpire" stepKey="addRewardPointsToCustomer">
+                <requiredEntity createDataKey="createCustomer"/>
+            </createData>
+            <createData entity="_defaultCategory" stepKey="createCategory"/>
+            <createData entity="SimpleProductByImpulseDuffle" stepKey="createFirstSimpleProduct">
+                <requiredEntity createDataKey="createCategory"/>
+            </createData>
+            <!-- Login To Admin Area -->
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <!-- Configuration Settings for Test-->
+            <actionGroup ref="AdminConfigurationSettingRewardsGeneral" stepKey="ConfigurationGeneralSettingRewards">
+                <argument name="adminSettingRewardsGeneral" value="enableRewards"/>
+            </actionGroup>
+            <actionGroup ref="AdminConfigurationSettingRewardsPointsEarning" stepKey="ConfigurationPointsEarningSettingRewards">
+                <argument name="adminSettingRewardsPointsEarning" value="SetDefaultSettingRewardsPointsEarning"/>
+            </actionGroup>
+            <actionGroup ref="AdminConfigurationSettingRewardsOrderLimitationsWithLimitAmount" stepKey="ConfigurationPointsLimitation">
+                <argument name="adminSettingRewardsOrderLimitations" value="SetSettingRewardsOrderLimitationsLimitAmount"/>
+            </actionGroup>
+        </before>
+
+        <after>
+            <!-- Delete All Created Data -->
+            <deleteData createDataKey="createCustomer" stepKey="deleteCustomer"/>
+            <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
+            <deleteData createDataKey="createFirstSimpleProduct" stepKey="deleteFirstSimpleProduct"/>
+            <!-- Return the Default Settings Module -->
+            <actionGroup ref="AdminConfigurationSettingRewardsGeneral" stepKey="DefaultConfigurationGeneralSettingRewards">
+                <argument name="adminSettingRewardsGeneral" value="defaultGeneralSettingRewards"/>
+            </actionGroup>
+            <actionGroup ref="AdminConfigurationSettingRewardsOrderLimitationsClearInputFields" stepKey="DefaultConfigurationPointsLimitation">
+                <argument name="adminSettingRewardsOrderLimitations" value="SetDefaultSettingRewardsOrderLimitations"/>
+            </actionGroup>
+            <amOnPage url="admin/admin/auth/logout/" stepKey="amOnLogoutPage"/>
+        </after>
+
+        <!-- Login to Storefront as Previously Created Customer-->
+        <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginAsCustomer">
+            <argument name="Customer" value="$$createCustomer$$"/>
+        </actionGroup>
+        <!-- Add First Created Product to Cart-->
+        <actionGroup ref="AddCreatedProductToCart" stepKey="AddFirstProductToCart">
+            <argument name="valueQty" value="_enterQty1"/>
+            <argument name="product" value="$$createFirstSimpleProduct$$"/>
+        </actionGroup>
+        <!-- Apply Reward Points On The Cart and Check Redemption Limit On the Cart-->
+        <actionGroup ref="StorefrontCheckApplyPointsLimitAmountOnTheCart" stepKey="ApplyRewardPointOnTheCart">
+            <argument name="rewardsAmount" value="ApplyRedemptionLimitAmount.applyRewardsAmount"/>
+            <argument name="redemptionLimitValue" value="SetSettingRewardsOrderLimitationsLimitAmount.redemptionLimitPerOrder"/>
+        </actionGroup>
+        <!-- Check Apply Reward on the Cart: Discount and Amount Applied Points-->
+        <actionGroup ref="StorefrontCheckDiscountAndAppliedRewardsOnTheCart" stepKey="CheckDiscountAndAmountInFieldApplyOnCart">
+            <argument name="discountAmount" value="ApplyRedemptionLimitAmount.discountAmount"/>
+            <argument name="appliedRewardsAmount" value="ApplyRedemptionLimitAmount.appliedRewardsAmount"/>
+        </actionGroup>
+        <!-- Cancel Applied Reward Points On The Cart-->
+        <actionGroup ref="StorefrontCancelAppliedRewardPointsOnTheCart" stepKey="cancelAppliedRewards"/>
+        <!-- Go to Checkout, Fill Shipping Page and Click to Next, Apply Points and Check Redemption Limit Checkout-->
+        <actionGroup ref="AmastyCreateOrderAsCustomerOnCheckoutShippingPage" stepKey="GoToCheckoutOnThePaymentPageAsCustomer">
+            <argument name="shippingMethodsOnCheckout" value="FlatRateMethod"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCheckApplyLimitAmountOnTheCheckout" stepKey="ApplyRewardsOnTheCheckout">
+            <argument name="rewardsAmount" value="ApplyRedemptionLimitAmount.applyRewardsAmount"/>
+            <argument name="redemptionLimitValue" value="SetSettingRewardsOrderLimitationsLimitAmount.redemptionLimitPerOrder"/>
+        </actionGroup>
+        <!-- Check Apply Reward on the Checkout: Discount and Discount Name-->
+        <actionGroup ref="StorefrontCheckDiscountAndTextBellowDiscountOnTheCheckout" stepKey="CheckDiscountAndDiscountNameOnCheckout">
+            <argument name="discountAmount" value="ApplyRedemptionLimitAmount.discountAmount"/>
+            <argument name="appliedRewardsAmount" value="ApplyRedemptionLimitAmount.appliedRewardsAmount"/>
+        </actionGroup>
+
+    </test>
+</tests>

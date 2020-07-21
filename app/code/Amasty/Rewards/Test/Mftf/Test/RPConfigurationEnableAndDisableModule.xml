@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="RPConfigurationEnableAndDisableModule">
+        <annotations>
+            <features value="Enable, Disable Module Reward Points"/>
+            <stories value="Enable and Disable Module Reward Points"/>
+            <title value="Check Setting Enable Rewards Points"/>
+            <description value="Check Setting Enable and Disable Module Rewards Points"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="RP-MFTF-01"/>
+            <group value="Amasty"/>
+            <group value="Rewards"/>
+            <group value="Checkout"/>
+            <group value="RewardsConfiguration"/>
+        </annotations>
+
+        <before>
+            <!-- Create Data for Test -->
+            <createData entity="RewardPointsCustomer" stepKey="createCustomer"/>
+            <createData entity="_defaultCategory" stepKey="createCategory"/>
+            <createData entity="SimpleProductByImpulseDuffle" stepKey="createFirstSimpleProduct">
+                <requiredEntity createDataKey="createCategory"/>
+            </createData>
+            <!-- Login To Admin Area -->
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <!-- Configuration Settings for Test-->
+            <actionGroup ref="AdminConfigurationSettingRewardsGeneral" stepKey="ConfigurationGeneralSettingRewards">
+                <argument name="adminSettingRewardsGeneral" value="enableRewards"/>
+            </actionGroup>
+        </before>
+
+        <after>
+            <!-- Delete All Created Data -->
+            <deleteData createDataKey="createCustomer" stepKey="deleteCustomer"/>
+            <deleteData createDataKey="createCategory" stepKey="deleteCategory"/>
+            <deleteData createDataKey="createFirstSimpleProduct" stepKey="deleteFirstSimpleProduct"/>
+            <!-- Return the Default Settings Module -->
+            <actionGroup ref="AdminConfigurationSettingRewardsGeneral" stepKey="ConfigurationGeneralSettingRewards">
+                <argument name="adminSettingRewardsGeneral" value="defaultGeneralSettingRewards"/>
+            </actionGroup>
+        </after>
+
+        <!-- Login to storefront as previously created customer-->
+        <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginAsCustomer">
+            <argument name="Customer" value="$$createCustomer$$"/>
+        </actionGroup>
+        <!-- Check Have Reward Points Tabs on the Customer Account-->
+        <actionGroup ref="StorefrontCheckModuleEnable" stepKey="checkModuleIsEnable"/>
+        <!-- Disable Module -->
+        <actionGroup ref="AdminConfigurationSettingRewardsGeneral" stepKey="ConfigurationGeneralSettingRewards">
+            <argument name="adminSettingRewardsGeneral" value="disableRewards"/>
+        </actionGroup>
+        <!-- Check Don't Have Reward Points Tabs on the Customer Account-->
+        <actionGroup ref="StorefrontCheckModuleDisable" stepKey="checkModuleIsDisable"/>
+        <!-- Add First Created Product to Cart-->
+        <actionGroup ref="AddCreatedProductToCart" stepKey="AddFirstProductToCart">
+            <argument name="valueQty" value="_enterQty1"/>
+            <argument name="product" value="$$createFirstSimpleProduct$$"/>
+        </actionGroup>
+        <!-- Check Don't Have Apply Reward Points on the Cart-->
+        <actionGroup ref="StorefrontCheckNoHaveApplyRewardPointsTabOnTheCart" stepKey="ApplyRewardPointOnTheCart"/>
+
+    </test>
+</tests>

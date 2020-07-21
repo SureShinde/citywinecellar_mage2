@@ -1,0 +1,57 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+?>
+<?php /** @var $block \Amasty\Rewards\Block\Frontend\History */ ?>
+<?php $rewards = $block->getRewards();
+if ($rewards && count($rewards)) : ?>
+    <div class="table-wrapper orders-history">
+        <table class="data table table-order-items amrewards-info-table" id="my-orders-table">
+            <thead class="amrewards-table-header">
+                <tr>
+                    <th scope="col" class="col date"><?= $block->escapeHtml(__('Date')) ?></th>
+                    <th scope="col" class="col total"><?= $block->escapeHtml(__('Change')) ?></th>
+                    <th scope="col" class="col days-left"></th>
+                    <th scope="col" class="col status"><?= $block->escapeHtml(__('Comment')) ?></th>
+                    <th scope="col" class="col action"><?= $block->escapeHtml(__('Action')) ?></th>
+                    <th scope="col" class="col left"><?= $block->escapeHtml(__('Points Left')) ?></th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($rewards as $reward) : ?>
+                <tr>
+                    <td data-th="<?= $block->escapeHtml(__('Date')) ?>" class="col date">
+                        <?= $block->escapeHtml($block->formatDateByLocal($reward->getActionDate())) ?>
+                    </td>
+                    <td data-th="<?= $block->escapeHtml(__('Amount')) ?>" class="col amount">
+                        <?= $block->escapeHtml($reward->getAmount() > 0 ? '+' . $reward->getAmount() : $reward->getAmount()) ?>
+                    </td>
+                    <td data-th="<?= $block->escapeHtml(__('Days Left')) ?>" class="col days-left">
+                    <?php if ($block->canExpire($reward)) : ?>
+                        <div class="amrewards-expiration <?= $block->escapeHtml($block->getExpirationLabelClass($reward)) ?>">
+                            <?= $block->escapeHtml($block->getExpirationLabel($reward)) ?>
+                        </div>
+                    <?php endif; ?>
+                    </td>
+                    <td data-th="<?= $block->escapeHtml(__('Comment')) ?>" class="col comment">
+                        <?= $reward->getComment() ?>
+                    </td>
+                    <td data-th="<?= $block->escapeHtml(__('Action')) ?>" class="col status">
+                        <?= $block->escapeHtml($reward->getAction()) ?>
+                    </td>
+                    <td data-th="<?= $block->escapeHtml(__('Points Left')) ?>" class="col status amrewards-pointsleft">
+                        <?= $block->escapeHtml($reward->getPointsLeft()) ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+<?php else : ?>
+    <div class="message info empty">
+        <span><?= $block->escapeHtml(__('You have no rewards.')); ?></span>
+    </div>
+<?php endif ?>

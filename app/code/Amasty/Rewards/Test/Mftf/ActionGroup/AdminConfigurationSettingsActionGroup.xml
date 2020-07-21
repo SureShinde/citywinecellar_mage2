@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+
+    <!-- For Configuration General Settings -->
+    <actionGroup name="AdminConfigurationSettingRewardsGeneral">
+        <arguments>
+            <argument name="adminSettingRewardsGeneral"/>
+        </arguments>
+        <amOnPage url="{{AdminRewardsConfigurationPage.url}}" stepKey="navigateToRewardsConfiguration"/>
+        <conditionalClick stepKey="openGeneralTab"
+                          selector="{{AdminConfigurationsRewardsSection.GeneralTab}}"
+                          dependentSelector="{{AdminConfigurationsRewardsSection.GeneralTabOpen}}"
+                          visible="false"/>
+        <selectOption selector="{{AdminConfigurationsRewardsSection.EnableOneStepCheckout}}"
+                      userInput="{{adminSettingRewardsGeneral.isEnable}}"
+                      stepKey="selectForEnable"/>
+        <click selector="{{AdminConfigurationsRewardsSection.Save}}" stepKey="saveGeneralSetting"/>
+        <waitForPageLoad stepKey="waitForPageLoadAfterSave"/>
+    </actionGroup>
+
+    <!-- For Configuration Points Earning and Spending Calculation Settings -->
+    <actionGroup name="AdminConfigurationSettingRewardsPointsEarning">
+        <arguments>
+            <argument name="adminSettingRewardsPointsEarning"/>
+        </arguments>
+        <amOnPage url="{{AdminRewardsConfigurationPage.url}}" stepKey="navigateToRewardsConfiguration"/>
+        <conditionalClick stepKey="openPointsEarningTab"
+                          selector="{{AdminConfigurationsRewardsSection.PointsEarningTab}}"
+                          dependentSelector="{{AdminConfigurationsRewardsSection.PointsSpendingRate}}"
+                          visible="false"/>
+        <fillField selector="{{AdminConfigurationsRewardsSection.PointsSpendingRate}}"
+                   userInput="{{adminSettingRewardsPointsEarning.spendingRate}}"
+                   stepKey="fillSpendingRateValue"/>
+        <selectOption selector="{{AdminConfigurationsRewardsSection.PointsRoundingRule}}"
+                      userInput="{{adminSettingRewardsPointsEarning.roundingRule}}"
+                      stepKey="selectRoundingRuleValue"/>
+        <fillField selector="{{AdminConfigurationsRewardsSection.BirthdayOffset}}"
+                   userInput="{{adminSettingRewardsPointsEarning.birthdayOffset}}"
+                   stepKey="fillBirthdayOffsetValue"/>
+        <selectOption selector="{{AdminConfigurationsRewardsSection.PointsEarningCalculation}}"
+                      userInput="{{adminSettingRewardsPointsEarning.pointsEarningCalculation}}"
+                      stepKey="selectPointsEarningCalculationValue"/>
+        <click selector="{{AdminConfigurationsRewardsSection.Save}}" stepKey="saveGeneralSetting"/>
+        <waitForPageLoad stepKey="waitForPageLoadAfterSave"/>
+    </actionGroup>
+
+    <!-- Action Groups For Configuration Main Tax Setting -->
+    <actionGroup name="AdminConfigurationMainSettingTaxCalculation">
+        <arguments>
+            <argument name="calculationTax"/>
+        </arguments>
+        <amOnPage url="{{AdminConfigurationsTaxPage.url}}" stepKey="navigateAdminOSCConfiguration"/>
+        <waitForPageLoad stepKey="waitForPageLoad1"/>
+        <conditionalClick stepKey="openTaxClassesTab"
+                          selector="{{AdminConfigurationsTaxSection.TaxClassesTab}}"
+                          dependentSelector="{{AdminConfigurationsTaxSection.TaxClassesTabOpen}}"
+                          visible="false"/>
+        <uncheckOption selector="{{AdminConfigurationsTaxSection.TaxClassForShippingSystemValue}}"
+                       stepKey="uncheckUseSystemValueForClassShipping"/>
+        <selectOption selector="{{AdminConfigurationsTaxSection.TaxClassForShipping}}"
+                      userInput="{{calculationTax.taxClassForShipping}}" stepKey="selectTaxClassForShipping"/>
+        <uncheckOption selector="{{AdminConfigurationsTaxSection.TaxClassForProductSystemValue}}"
+                       stepKey="uncheckUseSystemValueForClassProduct"/>
+        <selectOption selector="{{AdminConfigurationsTaxSection.TaxClassForProduct}}"
+                      userInput="{{calculationTax.taxClassForProduct}}" stepKey="selectTaxClassForProduct"/>
+        <conditionalClick stepKey="openCalculationSettingsTab"
+                          selector="{{AdminConfigurationsTaxSection.CalculationSettingsTab}}"
+                          dependentSelector="{{AdminConfigurationsTaxSection.CalculationSettingsTabOpen}}"
+                          visible="false"/>
+        <uncheckOption selector="{{AdminConfigurationsTaxSection.CalculationCatalogPricesSystemValue}}"
+                       stepKey="uncheckUseSystemValueForCatalogPrices"/>
+        <selectOption selector="{{AdminConfigurationsTaxSection.CalculationCatalogPrices}}"
+                      userInput="{{calculationTax.calculationCatalogPrices}}" stepKey="selectTaxClassForCatalogPrices"/>
+        <uncheckOption selector="{{AdminConfigurationsTaxSection.CalculationShippingPricesSystemValue}}"
+                       stepKey="uncheckUseSystemValueForShippingPrices"/>
+        <selectOption selector="{{AdminConfigurationsTaxSection.CalculationShippingPrices}}"
+                      userInput="{{calculationTax.calculationShippingPrices}}" stepKey="selectTaxClassForShippingPrices"/>
+        <selectOption selector="{{AdminConfigurationsTaxSection.CalculationEnableCrossBorderTrade}}"
+                      userInput="1" stepKey="enableCrossBorderTrade"/>
+        <click selector="{{AdminConfigurationsTaxSection.Save}}" stepKey="clickSaveButton"/>
+        <waitForPageLoad stepKey="waitForPageLoadAfterSave"/>
+    </actionGroup>
+
+    <!-- For Configuration Points Earning Expiration Settings -->
+    <actionGroup name="AdminConfigurationSettingRewardsExpiration">
+        <arguments>
+            <argument name="adminSettingRewardsExpirationSettings"/>
+        </arguments>
+        <amOnPage url="{{AdminRewardsConfigurationPage.url}}" stepKey="navigateToRewardsConfiguration"/>
+        <conditionalClick stepKey="openPointsEarningTab"
+                          selector="{{AdminConfigurationsRewardsSection.PointsEarningTab}}"
+                          dependentSelector="{{AdminConfigurationsRewardsSection.PointsSpendingRate}}"
+                          visible="false"/>
+        <conditionalClick stepKey="openExpirationSettingsTab"
+                          selector="{{AdminConfigurationsRewardsSection.ExpirationSettingsTab}}"
+                          dependentSelector="{{AdminConfigurationsRewardsSection.PointsExpirationBehavior}}"
+                          visible="false"/>
+        <selectOption selector="{{AdminConfigurationsRewardsSection.PointsExpirationBehavior}}"
+                      userInput="{{adminSettingRewardsExpirationSettings.pointsExpirationBehavior}}"
+                      stepKey="selectPointsExpirationBehaviorValue"/>
+        <click selector="{{AdminConfigurationsRewardsSection.Save}}" stepKey="saveRewardsExpirationSettings"/>
+        <waitForPageLoad stepKey="waitForPageLoadAfterSave"/>
+    </actionGroup>
+
+    <actionGroup name="AdminConfigurationSettingRewardsExpirationWithDays" extends="AdminConfigurationSettingRewardsExpiration">
+        <fillField selector="{{AdminConfigurationsRewardsSection.PointsExpirationPeriodDays}}"
+                   userInput="{{adminSettingRewardsExpirationSettings.pointsExpirationPeriodDays}}"
+                   after="selectPointsExpirationBehaviorValue" stepKey="enterExpireDaysValue"/>
+    </actionGroup>
+
+    <actionGroup name="AdminConfigurationSettingRewardsExpirationWithClearFields" extends="AdminConfigurationSettingRewardsExpiration">
+        <selectOption selector="{{AdminConfigurationsRewardsSection.PointsExpirationBehavior}}"
+                      userInput="{{isPointsExpirationBehavior.pointsExpirationBehaviorExpire}}"
+                      after="openExpirationSettingsTab" stepKey="selectPointsExpirationBehaviorExpire"/>
+        <clearField selector="{{AdminConfigurationsRewardsSection.PointsExpirationPeriodDays}}"
+                    after="selectPointsExpirationBehaviorExpire" stepKey="clearPointsExpirationPeriodDaysField"/>
+    </actionGroup>
+
+    <!-- For Configuration Points Earning Order Limitations Settings -->
+    <actionGroup name="AdminConfigurationSettingRewardsOrderLimitations">
+        <arguments>
+            <argument name="adminSettingRewardsOrderLimitations"/>
+        </arguments>
+        <amOnPage url="{{AdminRewardsConfigurationPage.url}}" stepKey="navigateToRewardsConfiguration"/>
+        <conditionalClick stepKey="openPointsEarningTab"
+                          selector="{{AdminConfigurationsRewardsSection.PointsEarningTab}}"
+                          dependentSelector="{{AdminConfigurationsRewardsSection.PointsSpendingRate}}"
+                          visible="false"/>
+        <conditionalClick stepKey="openOrderLimitationsTab"
+                          selector="{{AdminConfigurationsRewardsSection.OrderLimitationsTab}}"
+                          dependentSelector="{{AdminConfigurationsRewardsSection.MinimumPointsRequirement}}"
+                          visible="false"/>
+        <fillField selector="{{AdminConfigurationsRewardsSection.MinimumPointsRequirement}}"
+                   userInput="{{adminSettingRewardsOrderLimitations.minimumPointsRequirement}}"
+                   stepKey="fillMinimumPointsRequirementValue"/>
+        <selectOption selector="{{AdminConfigurationsRewardsSection.DisableRewardPointsForOrders}}"
+                      userInput="{{adminSettingRewardsOrderLimitations.isDisableRewardPointsForOrders}}"
+                      stepKey="selectDisableRewardPointsForOrdersValue"/>
+        <selectOption selector="{{AdminConfigurationsRewardsSection.ApplyRedemptionLimit}}"
+                      userInput="{{adminSettingRewardsOrderLimitations.applyRedemptionLimit}}"
+                      stepKey="selectApplyRedemptionLimitValue"/>
+        <click selector="{{AdminConfigurationsRewardsSection.Save}}" stepKey="saveRewardsOrderLimitationsSetting"/>
+        <waitForPageLoad stepKey="waitForPageLoadAfterSave"/>
+    </actionGroup>
+
+    <actionGroup name="AdminConfigurationSettingRewardsOrderLimitationsWithLimitAmount" extends="AdminConfigurationSettingRewardsOrderLimitations">
+        <fillField selector="{{AdminConfigurationsRewardsSection.RedemptionLimitPerOrderAmount}}"
+                   userInput="{{adminSettingRewardsOrderLimitations.RedemptionLimitPerOrder}}"
+                   after="selectApplyRedemptionLimitValue" stepKey="enterRedemptionLimitPerOrderValue"/>
+    </actionGroup>
+
+    <actionGroup name="AdminConfigurationSettingRewardsOrderLimitationsWithLimitPercent" extends="AdminConfigurationSettingRewardsOrderLimitations">
+        <fillField selector="{{AdminConfigurationsRewardsSection.RedemptionLimitPerOrderPercent}}"
+                   userInput="{{adminSettingRewardsOrderLimitations.RedemptionLimitPerOrder}}"
+                   after="selectApplyRedemptionLimitValue" stepKey="enterRedemptionLimitPerOrderValue"/>
+    </actionGroup>
+
+    <actionGroup name="AdminConfigurationSettingRewardsOrderLimitationsClearInputFields" extends="AdminConfigurationSettingRewardsOrderLimitations">
+        <remove keyForRemoval="fillMinimumPointsRequirementValue"/>
+        <clearField selector="{{AdminConfigurationsRewardsSection.MinimumPointsRequirement}}"
+                    after="openOrderLimitationsTab" stepKey="clearMinimumPointsRequirementValue"/>
+        <selectOption selector="{{AdminConfigurationsRewardsSection.ApplyRedemptionLimit}}"
+                      userInput="{{isApplyRedemptionLimitOrderLimitations.applyRedemptionLimitYesAmount}}"
+                      after="selectDisableRewardPointsForOrdersValue" stepKey="selectApplyRedemptionLimitValueYesAmount"/>
+        <clearField selector="{{AdminConfigurationsRewardsSection.RedemptionLimitPerOrderAmount}}"
+                    after="selectApplyRedemptionLimitValueYesAmount" stepKey="clearRedemptionLimitPerOrderAmountField"/>
+        <selectOption selector="{{AdminConfigurationsRewardsSection.ApplyRedemptionLimit}}"
+                      userInput="{{isApplyRedemptionLimitOrderLimitations.applyRedemptionLimitYesPercent}}"
+                      after="clearRedemptionLimitPerOrderAmountField" stepKey="selectApplyRedemptionLimitYesPercent"/>
+        <clearField selector="{{AdminConfigurationsRewardsSection.RedemptionLimitPerOrderPercent}}"
+                    after="selectApplyRedemptionLimitYesPercent" stepKey="clearRedemptionLimitPerOrderPercentField"/>
+    </actionGroup>
+
+    <!-- For Configuration Points Earning Order Limitations Settings -->
+    <actionGroup name="AdminConfigurationSettingRewardsOtherSettings">
+        <arguments>
+            <argument name="adminSettingRewardsOtherSettings"/>
+        </arguments>
+        <amOnPage url="{{AdminRewardsConfigurationPage.url}}" stepKey="navigateToRewardsConfiguration"/>
+        <conditionalClick stepKey="openPointsEarningTab"
+                          selector="{{AdminConfigurationsRewardsSection.PointsEarningTab}}"
+                          dependentSelector="{{AdminConfigurationsRewardsSection.PointsSpendingRate}}"
+                          visible="false"/>
+        <conditionalClick stepKey="openExpirationSettingsTab"
+                          selector="{{AdminConfigurationsRewardsSection.OtherSettingsTab}}"
+                          dependentSelector="{{AdminConfigurationsRewardsSection.AdminActionText}}"
+                          visible="false"/>
+        <fillField selector="{{AdminConfigurationsRewardsSection.AdminActionText}}"
+                   userInput="{{adminSettingRewardsOtherSettings.adminTextAction}}"
+                   stepKey="enterAdminTextActionValue"/>
+        <click selector="{{AdminConfigurationsRewardsSection.Save}}" stepKey="saveRewardsOtherSettings"/>
+        <waitForPageLoad stepKey="waitForPageLoadAfterSave"/>
+    </actionGroup>
+
+    <!-- For Configuration Display Options Highlight -->
+    <actionGroup name="AdminConfigurationSettingHighlightPointOnStorefront">
+        <arguments>
+            <argument name="adminSettingHighlightPointOnStorefront"/>
+        </arguments>
+        <amOnPage url="{{AdminRewardsConfigurationPage.url}}" stepKey="navigateToRewardsConfiguration"/>
+        <conditionalClick stepKey="openDisplayOptionsTab"
+                          selector="{{AdminConfigurationsRewardsSection.DisplayOptionsTab}}"
+                          dependentSelector="{{AdminConfigurationsRewardsSection.HighlightPointOnStorefrontTab}}"
+                          visible="false"/>
+        <conditionalClick stepKey="openHighlightPointOnStorefrontTab"
+                          selector="{{AdminConfigurationsRewardsSection.HighlightPointOnStorefrontTab}}"
+                          dependentSelector="{{AdminConfigurationsRewardsSection.ShowInCart}}"
+                          visible="false"/>
+        <selectOption selector="{{AdminConfigurationsRewardsSection.ShowInCart}}"
+                      userInput="{{adminSettingHighlightPointOnStorefront.showInCart}}"
+                      stepKey="selectShowInCartValue"/>
+        <selectOption selector="{{AdminConfigurationsRewardsSection.ShowOnCheckoutPage}}"
+                      userInput="{{adminSettingHighlightPointOnStorefront.showOnCheckoutPage}}"
+                      stepKey="selectShowOnCheckoutPageValue"/>
+        <selectOption selector="{{AdminConfigurationsRewardsSection.ShowOnProductPages}}"
+                      userInput="{{adminSettingHighlightPointOnStorefront.showOnProductPages}}"
+                      stepKey="selectShowOnProductPagesValue"/>
+        <selectOption selector="{{AdminConfigurationsRewardsSection.ShowOnCategoriesPages}}"
+                      userInput="{{adminSettingHighlightPointOnStorefront.showOnCategoriesPages}}"
+                      stepKey="selectShowOnCategoriesPagesValue"/>
+        <selectOption selector="{{AdminConfigurationsRewardsSection.ShowHighlightForGuests}}"
+                      userInput="{{adminSettingHighlightPointOnStorefront.showHighlightForGuests}}"
+                      stepKey="selectShowHighlightForGuestsValue"/>
+        <click selector="{{AdminConfigurationsRewardsSection.Save}}" stepKey="saveHighlightSetting"/>
+        <waitForPageLoad stepKey="waitForPageLoadAfterSave"/>
+    </actionGroup>
+
+    <!-- For Configuration Display Options Customer Account -->
+    <actionGroup name="AdminConfigurationSettingCustomerAccount">
+        <arguments>
+            <argument name="adminSettingRewardsCustomerAccount"/>
+        </arguments>
+        <amOnPage url="{{AdminRewardsConfigurationPage.url}}" stepKey="navigateToRewardsConfiguration"/>
+        <conditionalClick stepKey="openDisplayOptionsTab"
+                          selector="{{AdminConfigurationsRewardsSection.DisplayOptionsTab}}"
+                          dependentSelector="{{AdminConfigurationsRewardsSection.CustomerAccountTab}}"
+                          visible="false"/>
+        <conditionalClick stepKey="openCustomerAccountTab"
+                          selector="{{AdminConfigurationsRewardsSection.CustomerAccountTab}}"
+                          dependentSelector="{{AdminConfigurationsRewardsSection.ShowRewardPointsDescription}}"
+                          visible="false"/>
+        <selectOption selector="{{AdminConfigurationsRewardsSection.ShowRewardPointsDescription}}"
+                      userInput="{{adminSettingRewardsCustomerAccount.showRewardPointsDescription}}"
+                      stepKey="selectShowRewardPointsDescriptionValue"/>
+        <selectOption selector="{{AdminConfigurationsRewardsSection.ShowActualRewardPointsBalance}}"
+                      userInput="{{adminSettingRewardsCustomerAccount.showActualRewardPointsBalance}}"
+                      stepKey="selectShowActualRewardPointsBalanceValue"/>
+        <fillField selector="{{AdminConfigurationsRewardsSection.CustomerAccountBalanceLabel}}"
+                   userInput="{{adminSettingRewardsCustomerAccount.customerAccountBalanceLabel}}"
+                   stepKey="enterCustomerAccountBalanceLabelValue"/>
+        <click selector="{{AdminConfigurationsRewardsSection.Save}}" stepKey="saveRewardsCustomerAccountSettings"/>
+        <waitForPageLoad stepKey="waitForPageLoadAfterSave"/>
+    </actionGroup>
+
+    <actionGroup name="AdminConfigurationSettingCustomerAccountWithDescription" extends="AdminConfigurationSettingCustomerAccount">
+        <conditionalClick stepKey="openRewardPointsDescriptionTab"
+                          selector="{{AdminConfigurationsRewardsSection.RewardPointsDescriptionTab}}"
+                          dependentSelector="{{AdminConfigurationsRewardsSection.RewardPointsDescription}}"
+                          after="selectShowRewardPointsDescriptionValue" visible="false"/>
+        <fillField selector="{{AdminConfigurationsRewardsSection.RewardPointsDescription}}"
+                   userInput="{{adminSettingRewardsCustomerAccount.rewardPointsDescription}}"
+                   after="openRewardPointsDescriptionTab" stepKey="enterExpireDaysValue"/>
+    </actionGroup>
+
+    <actionGroup name="AdminConfigurationSettingCustomerAccountWithClearFields" extends="AdminConfigurationSettingCustomerAccount">
+        <selectOption selector="{{AdminConfigurationsRewardsSection.ShowRewardPointsDescription}}"
+                      userInput="{{isShowRewardPointsDescription.showRewardPointsDescriptionYes}}"
+                      after="openCustomerAccountTab" stepKey="selectShowRewardPointsDescriptionYes"/>
+        <conditionalClick stepKey="openRewardPointsDescriptionTab"
+                          selector="{{AdminConfigurationsRewardsSection.RewardPointsDescriptionTab}}"
+                          dependentSelector="{{AdminConfigurationsRewardsSection.RewardPointsDescription}}"
+                          after="selectShowRewardPointsDescriptionYes" visible="false"/>
+        <clearField selector="{{AdminConfigurationsRewardsSection.RewardPointsDescription}}"
+                    after="openRewardPointsDescriptionTab" stepKey="clearRewardPointsDescription"/>
+    </actionGroup>
+
+</actionGroups>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<operations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:noNamespaceSchemaLocation="urn:magento:mftf:DataGenerator/etc/dataOperation.xsd">
+
+    <operation name="AddRewardPointsToCustomer" dataType="rewards_add" type="create" auth="adminOauth" url="/V1/rewards/management/points/add" method="POST">
+        <contentType>application/json</contentType>
+        <field key="amount">number</field>
+        <field key="customerId">integer</field>
+        <field key="action">string</field>
+        <field key="comment">string</field>
+        <object key="expire" dataType="expiration_reward_points">
+            <field key="expire">boolean</field>
+            <field key="days">integer</field>
+        </object>
+    </operation>
+
+</operations>

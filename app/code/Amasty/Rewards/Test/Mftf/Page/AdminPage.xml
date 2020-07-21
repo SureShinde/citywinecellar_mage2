@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<pages xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/PageObject.xsd">
+
+    <page name="AdminRewardsConfigurationPage" url="/admin/system_config/edit/section/amrewards/" area="admin" module="Amasty_Rewards">
+        <section name="AdminConfigurationsRewardsSection"/>
+    </page>
+
+    <page name="AdminRewardPointsEarningRulesGridPage" url="/amasty_rewards/rule/" area="admin" module="Amasty_Rewards">
+        <section name="AdminRewardPointsEarningRulesGridSection"/>
+    </page>
+
+    <page name="AdminReviewsGridPage" url="review/product/" area="admin" module="Review">
+        <section name="AdminReviewsGridSection"/>
+    </page>
+
+</pages>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="RPFunctionalDeductLargeAfterCreditMemo" extends="RPFunctionalReturnPointsAfterCancelOrder">
+        <annotations>
+            <features value="Deduct Points to Customer"/>
+            <stories value="Deduct Points via Customer"/>
+            <title value="Check Deduct Large Points to Customer"/>
+            <description value="Check Deduct Large Points to Customer After Credit Memo Order"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="RP-MFTF-71"/>
+            <group value="Amasty"/>
+            <group value="Rewards"/>
+            <group value="RewardsFunctional"/>
+            <group value="RewardsFunctionalDeductPoints"/>
+        </annotations>
+
+        <before>
+            <actionGroup ref="AdminCreateRewardPointsRule" stepKey="CreateRewardsRuleForComplete" after="ConfigurationGeneralSettingRewards">
+                <argument name="rewardPointsRule" value="ruleOrderComplete"/>
+            </actionGroup>
+            <actionGroup ref="AdminCreateRewardPointsRuleWithActionForYSpent" stepKey="CreateRewardsRuleForYSpent" after="CreateRewardsRuleForComplete">
+                <argument name="rewardPointsRule" value="ruleGetXPointsForEachYSpent"/>
+            </actionGroup>
+        </before>
+
+        <after>
+            <actionGroup ref="AdminDeleteRewardPointsRuleByName" stepKey="deleteRewardsRuleOrderComplete" after="deleteFirstSimpleProduct">
+                <argument name="rewardPointsRule" value="ruleOrderComplete" />
+            </actionGroup>
+            <actionGroup ref="AdminDeleteRewardPointsRuleByName" stepKey="deleteRewardsRuleXSpent" after="deleteRewardsRuleOrderComplete">
+                <argument name="rewardPointsRule" value="ruleGetXPointsForEachYSpent" />
+            </actionGroup>
+        </after>
+
+        <remove keyForRemoval="cancelOrder"/>
+        <remove keyForRemoval="ApplyRewardPointOnTheCart"/>
+        <remove keyForRemoval="CheckDiscountAndAmountInFieldApply"/>
+        <remove keyForRemoval="StorefrontCheckChangeAndLeft"/>
+        <remove keyForRemoval="StorefrontCheckComment"/>
+        <remove keyForRemoval="StorefrontCheckActionText"/>
+        <remove keyForRemoval="AdminCheckChangeAndLeft"/>
+        <remove keyForRemoval="AdminCheckComment"/>
+        <remove keyForRemoval="AdminCheckActionText"/>
+
+        <actionGroup ref="AdminCreateInvoiceAndShipmentActionGroup" stepKey="createInvoiceAndShipment" after="openOrder"/>
+        <!--Create Credit Memo-->
+        <actionGroup ref="AdminOpenOrderAndStartCreditMemo" stepKey="startToCreateCreditMemo" after="createInvoiceAndShipment">
+            <argument name="orderId" value="{$grabOrderNumberCreateOrderAsCustomerWithCheckMoney}"/>
+        </actionGroup>
+        <actionGroup ref="AdminFillDeductRewardPointsInOrder" stepKey="enterValueForDeductPoints" after="startToCreateCreditMemo">
+            <argument name="deductRewardsAmount" value="DeductLargeAfterCreditMemo.deductRewardsAmount"/>
+        </actionGroup>
+        <actionGroup ref="AdminSubmitCreditMemoToMuchPointsUsedMessageActionGroup" stepKey="submitCreditMemo" after="enterValueForDeductPoints"/>
+        <!-- Check Current Balance after used Reward Points -->
+        <actionGroup ref="AdminCheckCurrentBalanceRewardPointsInCustomerAccount" after="submitCreditMemo" stepKey="AdminCheckCustomerCurrentBalance">
+            <argument name="customerId" value="$$createCustomer.id$$"/>
+            <argument name="currentBalance" value="DeductLargeAfterCreditMemo.currentBalance"/>
+        </actionGroup>
+        <!-- Check Current Balance after Apply Rewards Rule -->
+        <actionGroup ref="StorefrontCheckCurrentBalanceRewardPointsInCustomerAccount" after="AdminCheckCustomerCurrentBalance" stepKey="StorefrontCheckCustomerCurrentBalance">
+            <argument name="currentBalance" value="DeductLargeAfterCreditMemo.currentBalance"/>
+        </actionGroup>
+
+    </test>
+</tests>

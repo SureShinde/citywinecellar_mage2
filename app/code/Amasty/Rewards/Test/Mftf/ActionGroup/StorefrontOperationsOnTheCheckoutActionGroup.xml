@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+
+    <!-- Apply Reward Points on the Checkout
+         Use After AmastyCreateOrderAsCustomerOnCheckoutShippingPage -->
+    <actionGroup name="StorefrontApplyRewardPointsOnTheCheckout">
+        <arguments>
+            <argument name="rewardsAmount"/>
+        </arguments>
+        <waitForPageLoad stepKey="waitForCheckoutPaymentPageLoad"/>
+        <conditionalClick stepKey="openApplyRewardsTab"
+                          selector="{{StorefrontCheckoutPaymentAddressSection.ApplyRewardsTab}}"
+                          dependentSelector="{{StorefrontCheckoutPaymentAddressSection.ApplyRewardsInputAmount}}"
+                          visible="false"/>
+        <fillField selector="{{StorefrontCheckoutPaymentAddressSection.ApplyRewardsInputAmount}}"
+                   userInput="{{rewardsAmount}}" stepKey="enterAmount"/>
+        <click selector="{{StorefrontCheckoutPaymentAddressSection.ApplyRewardsButtonApply}}" stepKey="applyRewardPoints"/>
+        <waitForPageLoad stepKey="waitForCheckoutPaymentPageLoadAfterAppliedRewards"/>
+    </actionGroup>
+
+    <!-- Apply Reward Points on the Cart
+         Use After AmastyCreateOrderAsCustomerOnCheckoutShippingPage -->
+    <actionGroup name="StorefrontCancelAppliedRewardPointsOnTheCheckout">
+        <waitForPageLoad stepKey="waitForCheckoutPaymentPageLoad"/>
+        <conditionalClick stepKey="openApplyRewardsTab"
+                          selector="{{StorefrontCheckoutPaymentAddressSection.ApplyRewardsTab}}"
+                          dependentSelector="{{StorefrontCheckoutPaymentAddressSection.ApplyRewardsInputAmount}}"
+                          visible="false"/>
+        <click selector="{{StorefrontCheckoutPaymentAddressSection.ApplyRewardsButtonCancel}}" stepKey="cancelAppliedRewardPoints"/>
+        <waitForPageLoad stepKey="waitForPageLoadAfterCanceledRewards"/>
+    </actionGroup>
+
+    <!-- Apply Reward Points on the Checkout and Check Redemption Limit Message with Amount -->
+    <actionGroup name="StorefrontCheckApplyLimitAmountOnTheCheckout" extends="StorefrontApplyRewardPointsOnTheCheckout">
+        <arguments>
+            <argument name="redemptionLimitValue"/>
+        </arguments>
+        <waitForPageLoad stepKey="waitForLoadCartPageAndRedemptionMessage"/>
+        <seeElement selector="{{StorefrontCheckoutPaymentAddressSection.MessageAboutRewardsRedemptionLimitAmount(redemptionLimitValue)}}"
+                    stepKey="checkRedemptionLimitAmountMessage"/>
+    </actionGroup>
+
+    <!-- Apply Reward Points on the Checkout and Check Redemption Limit Message with Percent -->
+    <actionGroup name="StorefrontCheckApplyLimitPercentOnTheCheckout" extends="StorefrontApplyRewardPointsOnTheCheckout">
+        <arguments>
+            <argument name="redemptionLimitValue"/>
+        </arguments>
+        <waitForPageLoad stepKey="waitForLoadCartPageAndRedemptionMessage"/>
+        <seeElement selector="{{StorefrontCheckoutPaymentAddressSection.MessageAboutRewardsRedemptionLimitPercent(redemptionLimitValue)}}"
+                    stepKey="checkRedemptionLimitAmountMessage"/>
+    </actionGroup>
+
+</actionGroups>

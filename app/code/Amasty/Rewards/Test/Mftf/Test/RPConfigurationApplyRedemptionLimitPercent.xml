@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="RPConfigurationApplyRedemptionLimitPercent" extends="RPConfigurationApplyRedemptionLimitAmount">
+        <annotations>
+            <features value="Setting Apply Redemption Limit"/>
+            <stories value="Disable Apply Redemption Limit with Percent Value"/>
+            <title value="Check Disable Apply Redemption Limit"/>
+            <description value="Check Disable Apply Redemption Limit with Percent Value"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="RP-MFTF-22"/>
+            <group value="Amasty"/>
+            <group value="Rewards"/>
+            <group value="RewardsConfiguration"/>
+            <group value="RewardsConfigurationPointsEarning"/>
+            <group value="RewardsConfigurationOrderLimitations"/>
+        </annotations>
+
+        <before>
+            <createData entity="SimpleProductByCrownSummitBackpack" stepKey="createSecondSimpleProduct">
+                <requiredEntity createDataKey="createCategory"/>
+            </createData>
+            <actionGroup ref="AdminConfigurationSettingRewardsOrderLimitationsWithLimitPercent" stepKey="ConfigurationPointsLimitation">
+                <argument name="adminSettingRewardsOrderLimitations" value="SetSettingRewardsOrderLimitationsLimitPercent"/>
+            </actionGroup>
+        </before>
+
+        <after>
+            <deleteData createDataKey="createSecondSimpleProduct" stepKey="deleteSecondSimpleProduct"/>
+        </after>
+
+        <actionGroup ref="AddCreatedProductToCart" stepKey="AddSecondProductToCart" after="AddFirstProductToCart">
+            <argument name="valueQty" value="_enterQty1"/>
+            <argument name="product" value="$$createSecondSimpleProduct$$"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCheckApplyPointsLimitPercentOnTheCart" stepKey="ApplyRewardPointOnTheCart">
+            <argument name="rewardsAmount" value="RPConfigurationApplyRedemptionLimitPercent.applyRewardsAmount"/>
+            <argument name="redemptionLimitValue" value="SetSettingRewardsOrderLimitationsLimitPercent.redemptionLimitPerOrder"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCheckDiscountAndAppliedRewardsOnTheCart" stepKey="CheckDiscountAndAmountInFieldApplyOnCart">
+            <argument name="discountAmount" value="RPConfigurationApplyRedemptionLimitPercent.discountAmount"/>
+            <argument name="appliedRewardsAmount" value="RPConfigurationApplyRedemptionLimitPercent.appliedRewardsAmount"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCheckApplyLimitPercentOnTheCheckout" stepKey="ApplyRewardsOnTheCheckout">
+            <argument name="rewardsAmount" value="RPConfigurationApplyRedemptionLimitPercent.applyRewardsAmount"/>
+            <argument name="redemptionLimitValue" value="SetSettingRewardsOrderLimitationsLimitPercent.redemptionLimitPerOrder"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCheckDiscountAndTextBellowDiscountOnTheCheckout" stepKey="CheckDiscountAndDiscountNameOnCheckout">
+            <argument name="discountAmount" value="RPConfigurationApplyRedemptionLimitPercent.discountAmount"/>
+            <argument name="appliedRewardsAmount" value="RPConfigurationApplyRedemptionLimitPercent.appliedRewardsAmount"/>
+        </actionGroup>
+
+    </test>
+</tests>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
+
+    <section name="AdminRewardPointsEarningRulesGridSection">
+        <element name="AddNewRuleButton" type="button" selector="//button[@id='add']"/>
+        <element name="FilterByNameInput" type="input" selector="//input[@name='name']"/>
+        <element name="SearchButton" type="button" selector="//button[@data-action='grid-filter-apply']"/>
+        <element name="RowByIndex" type="text" selector="tr[data-role='row']:nth-of-type({{var1}})" parameterized="true" timeout="10"/>
+    </section>
+
+    <section name="AdminRewardPointsEarningRulesFormSection">
+        <element name="GeneralTab" type="button" selector="//div[@data-index='general']"/>
+        <element name="Name" type="input" selector="//input[@name='name']"/>
+        <element name="Status" type="select" selector="//select[@name='is_active']"/>
+        <element name="Websites" type="select" selector="//select[@name='website_ids']"/>
+        <element name="CustomerGroups" type="select" selector="//select[@name='customer_group_ids']"/>
+        <element name="ActionsTab" type="button" selector="//div[@data-index='actions']"/>
+        <element name="Action" type="select" selector="//select[@name='action']"/>
+        <element name="Amount" type="input" selector="//input[@name='amount']"/>
+        <element name="SpentAmount" type="input" selector="//input[@name='spent_amount']"/>
+        <element name="PromoItems" type="input" selector="//input[@name='promo_skus']"/>
+        <element name="PointsExpirationBehavior" type="select" selector="//select[@name='expiration_behavior']"/>
+        <element name="PointsExpirationPeriod" type="input" selector="//input[@name='expiration_period']"/>
+        <element name="SaveAndContinue" type="button" selector="//button[@id='save_and_continue']"/>
+        <element name="Delete" type="button" selector="//button[@id='delete']"/>
+        <element name="ModalAcceptButton" type="button" selector="button.action-accept"/>
+        <!-- Conditions Tab -->
+        <element name="ConditionsTab" type="button" selector="//div[@data-index='conditions']/div[@class='fieldset-wrapper-title']"/>
+        <element name="ConditionsTabOpen" type="block" selector="//div[@data-index='conditions']/div[@data-state-collapsible='open']"/>
+        <element name="ConditionsTabClosed" type="block" selector="//div[@data-index='conditions']/div[@data-state-collapsible='closed']"/>
+        <element name="ConditionsText" type="block" selector="//fieldset[@id='rule_conditions_fieldset']"/>
+        <element name="ButtonGlobalConditions" type="button" selector="//div[@data-index='conditions']//span[@class='rule-param rule-param-new-child']"/>
+        <element name="SelectConditionOption" type="select" selector="//div[@data-index='conditions']//select[@id='conditions__1__new_child']"/>
+        <element name="ConditionAttrForClick" type="button" parameterized="true"
+                 selector="//input[@value='{{conditionOptionValue}}']/following::span[@class='rule-param']/a[text()='is']"/>
+        <element name="SelectForAttribute" type="select" parameterized="true"
+                 selector="//input[@value='{{conditionOptionValue}}']/following::span[@class='rule-param rule-param-edit']//select"/>
+        <element name="ConditionsDataForClick" type="button" parameterized="true"
+                 selector="//input[@value='{{conditionOptionValue}}']/following::span[@class='rule-param']/a[text()='...']"/>
+        <element name="ConditionsWrapper" type="block" selector="//div[@class='rule-tree-wrapper']"/>
+        <element name="SelectConditionsData" type="select" parameterized="true"
+                 selector="//input[@value='{{conditionOptionValue}}']/following::span[@class='rule-param rule-param-edit']//select"/>
+        <element name="InputConditionsData" type="input" parameterized="true"
+                 selector="//input[@value='{{conditionOptionValue}}']/following::span[@class='rule-param rule-param-edit']//input"/>
+    </section>
+
+</sections>
+

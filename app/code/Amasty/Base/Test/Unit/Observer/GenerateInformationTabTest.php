@@ -9,6 +9,8 @@
 namespace Amasty\Base\Test\Unit\Observer;
 
 use Amasty\Base\Helper\Module;
+use Amasty\Base\Model\Feed\ExtensionsProvider;
+use Amasty\Base\Model\ModuleInfoProvider;
 use Amasty\Base\Observer\GenerateInformationTab;
 use Amasty\Base\Test\Unit\Traits;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -68,8 +70,8 @@ class GenerateInformationTabTest extends \PHPUnit\Framework\TestCase
             GenerateInformationTab::class,
             ['getCurrentVersion', 'isLastVersion', 'getModuleName', 'getLogoHtml', 'getChangeLogLink']
         );
-        $moduleHelper = $this->createMock(Module::class);
-        $this->setProperty($this->observer, 'moduleHelper', $moduleHelper, GenerateInformationTab::class);
+        $moduleInfoProvider = $this->createMock(ModuleInfoProvider::class);
+        $this->setProperty($this->observer, 'moduleInfoProvider', $moduleInfoProvider, GenerateInformationTab::class);
         $this->observer->expects($this->any())->method('getCurrentVersion')->willReturn('2.2.2');
         $this->observer->expects($this->any())->method('isLastVersion')->willReturn(false);
         $this->observer->expects($this->any())->method('getModuleName')->willReturn('test');
@@ -119,20 +121,30 @@ class GenerateInformationTabTest extends \PHPUnit\Framework\TestCase
             ['findResourceName']
         );
         $configStructure = $this->createMock(\Magento\Config\Model\Config\Structure::class);
-
+        $extensionsProvider = $this->createPartialMock(
+            ExtensionsProvider::class,
+            ['getFeedModuleData']
+        );
+        $extensionsProvider->expects($this->atLeastOnce())
+            ->method('getFeedModuleData')
+            ->willReturn('test');
+        $this->setProperty($this->observer, 'extensionsProvider', $extensionsProvider, GenerateInformationTab::class);
         $this->observer->expects($this->any())->method('findResourceName')->willReturnOnConsecutiveCalls('test', '', '');
 
         $this->setProperty($this->observer, 'configStructure', $configStructure, GenerateInformationTab::class);
-
+        $this->setProperty($this->observer, 'moduleCode', 'test_code', GenerateInformationTab::class);
         $this->assertEquals('test', $this->invokeMethod($this->observer, 'getModuleName'));
-        $this->setProperty($this->observer, 'moduleData', 'test', GenerateInformationTab::class);
         $this->assertEquals('Extension', $this->invokeMethod($this->observer, 'getModuleName')->getText());
-        $this->setProperty(
-            $this->observer,
-            'moduleData',
-            ['name' => 'test for Magento 2'],
-            GenerateInformationTab::class
+
+        $extensionsProvider = $this->createPartialMock(
+            ExtensionsProvider::class,
+            ['getFeedModuleData']
         );
+        $extensionsProvider->expects($this->atLeastOnce())
+            ->method('getFeedModuleData')
+            ->willReturn(['name' => 'test for Magento 2']);
+        $this->setProperty($this->observer, 'extensionsProvider', $extensionsProvider, GenerateInformationTab::class);
+
         $this->assertEquals('test', $this->invokeMethod($this->observer, 'getModuleName'));
     }
 }

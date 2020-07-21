@@ -1,0 +1,50 @@
+<?php
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+?>
+<?php
+use Amasty\Rewards\Model\ResourceModel\Rewards;
+/**
+ * @var \Amasty\Rewards\Block\Adminhtml\Edit\Tab\View\PersonalInfo $block
+ */
+$statistic = $block->getStatistic();
+
+?>
+
+<?php if ($statistic && count($statistic)) : ?>
+    <div class="fieldset-wrapper customer-information">
+        <div class="amrewards-current-balance">
+            <span class="amrewards-balance"><?= $block->escapeHtml($statistic[Rewards::BALANCE]) ?></span>
+            <p class="amrewards-label"><?= $block->escapeHtml(__('Current Balance')) ?></p>
+        </div>
+        <p><?= $block->getDeadlineComment(); ?></p>
+        <hr>
+        <div class="amrewards-total-info">
+            <span><?= $block->escapeHtml(__('Total Earned: ')) ?></span>
+            <strong><?= $block->escapeHtml(abs($statistic[Rewards::REWARDED]))?></strong>
+        </div>
+        <div class="amrewards-total-info">
+            <span><?= $block->escapeHtml(__('Total Spent: ')) ?></span>
+            <strong><?= $block->escapeHtml(abs($statistic[Rewards::REDEEMED]))?></strong>
+        </div>
+        <div>
+            <span><?= $block->escapeHtml(__('Expired: ')) ?></span>
+            <strong><?= $block->escapeHtml(abs($statistic[Rewards::EXPIRED]))?></strong>
+        </div>
+    </div>
+<?php endif; ?>
+
+<button data-ui-id="widget-button-1"
+        onclick="jQuery('#add-points').modal('openModal')"
+        class="action-default scalable"
+        type="button"
+        title="Add or Deduct Points"
+        id="add_points_button">
+    <span>Add or Deduct Points</span>
+</button>
+<div class="fieldset-wrapper-title expiring-grid-title">
+    <span class="title"><?= /* @escapeNotVerified */ __('Expiring Points Breakdown') ?></span>
+</div>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+
+    <!-- Apply Reward Points on the Cart -->
+    <actionGroup name="StorefrontApplyRewardPointsOnTheCart">
+        <arguments>
+            <argument name="rewardsAmount"/>
+        </arguments>
+        <amOnPage url="{{FrontCartPage.url}}" stepKey="navigateToShoppingCart"/>
+        <waitForPageLoad stepKey="waitForCartPageLoad"/>
+        <conditionalClick stepKey="openApplyRewardsTab"
+                          selector="{{StorefrontCartSection.ApplyRewardsTab}}"
+                          dependentSelector="{{StorefrontCartSection.ApplyRewardsInputAmount}}"
+                          visible="false"/>
+        <fillField selector="{{StorefrontCartSection.ApplyRewardsInputAmount}}"
+                   userInput="{{rewardsAmount}}" stepKey="enterAmount"/>
+        <click selector="{{StorefrontCartSection.ApplyRewardsButtonApply}}" stepKey="applyRewardPoints"/>
+        <waitForPageLoad stepKey="waitForPageLoadAfterAppliedRewards"/>
+    </actionGroup>
+
+    <!-- Cancel Applied Reward Points on the Cart -->
+    <actionGroup name="StorefrontCancelAppliedRewardPointsOnTheCart">
+        <amOnPage url="{{FrontCartPage.url}}" stepKey="navigateToShoppingCart"/>
+        <waitForPageLoad stepKey="waitForCartPageLoad"/>
+        <conditionalClick stepKey="openApplyRewardsTab"
+                          selector="{{StorefrontCartSection.ApplyRewardsTab}}"
+                          dependentSelector="{{StorefrontCartSection.ApplyRewardsInputAmount}}"
+                          visible="false"/>
+        <click selector="{{StorefrontCartSection.ApplyRewardsButtonCancel}}" stepKey="cancelApplyRewardPoints"/>
+        <waitForPageLoad stepKey="waitForPageLoadAfterCanceledRewards"/>
+    </actionGroup>
+
+    <!-- Apply Reward Points on the Cart and Check Redemption Limit Message with Amount -->
+    <actionGroup name="StorefrontCheckApplyPointsLimitAmountOnTheCart" extends="StorefrontApplyRewardPointsOnTheCart">
+        <arguments>
+            <argument name="redemptionLimitValue"/>
+        </arguments>
+        <waitForPageLoad stepKey="waitForLoadCartPageAndRedemptionMessage"/>
+        <seeElement selector="{{StorefrontCartSection.MessageAboutRewardsRedemptionLimitAmount(redemptionLimitValue)}}"
+                    stepKey="checkRedemptionLimitAmountMessage"/>
+    </actionGroup>
+
+    <!-- Apply Reward Points on the Cart and Check Redemption Limit Message with Percent -->
+    <actionGroup name="StorefrontCheckApplyPointsLimitPercentOnTheCart" extends="StorefrontApplyRewardPointsOnTheCart">
+        <arguments>
+            <argument name="redemptionLimitValue"/>
+        </arguments>
+        <waitForPageLoad stepKey="waitForLoadCartPageAndRedemptionMessage"/>
+        <seeElement selector="{{StorefrontCartSection.MessageAboutRewardsRedemptionLimitPercent(redemptionLimitValue)}}"
+                    stepKey="checkRedemptionLimitAmountMessage"/>
+    </actionGroup>
+
+</actionGroups>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="RPConfigurationShowRewardPointsDescription">
+        <annotations>
+            <features value="Setting Show Reward Points Description"/>
+            <stories value="Setting Show Reward Points Description via Customer"/>
+            <title value="Check Setting Show Reward Points Description with Yes Value"/>
+            <description value="Check Setting Show Reward Points Description Yes Value"/>
+            <severity value="MAJOR"/>
+            <testCaseId value="RP-MFTF-27"/>
+            <group value="Amasty"/>
+            <group value="Rewards"/>
+            <group value="RewardsConfiguration"/>
+            <group value="RewardsConfigurationDisplayOptions"/>
+            <group value="RewardsConfigurationCustomerAccount"/>
+        </annotations>
+
+        <before>
+            <!-- Create Data for Test -->
+            <createData entity="RewardPointsCustomer" stepKey="createCustomer"/>
+            <!-- Login To Admin Area -->
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <!-- Configuration Settings for Test-->
+            <actionGroup ref="AdminConfigurationSettingRewardsGeneral" stepKey="ConfigurationGeneralSettingRewards">
+                <argument name="adminSettingRewardsGeneral" value="enableRewards"/>
+            </actionGroup>
+            <actionGroup ref="AdminConfigurationSettingCustomerAccountWithDescription" stepKey="ConfigurationCustomerAccountSettings">
+                <argument name="adminSettingRewardsCustomerAccount" value="SetSettingRewardsCustomerAccountDescription"/>
+            </actionGroup>
+        </before>
+
+        <after>
+            <!-- Delete All Created Data -->
+            <deleteData createDataKey="createCustomer" stepKey="deleteCustomer"/>
+            <!-- Return the Default Settings Module -->
+            <actionGroup ref="AdminConfigurationSettingRewardsGeneral" stepKey="DefaultConfigurationGeneralSettingRewards">
+                <argument name="adminSettingRewardsGeneral" value="defaultGeneralSettingRewards"/>
+            </actionGroup>
+            <actionGroup ref="AdminConfigurationSettingCustomerAccountWithClearFields" stepKey="ConfigurationCustomerAccountSettings">
+                <argument name="adminSettingRewardsCustomerAccount" value="SetDefaultSettingRewardsCustomerAccount"/>
+            </actionGroup>
+            <amOnPage url="admin/admin/auth/logout/" stepKey="amOnLogoutPage"/>
+        </after>
+
+        <!-- Login to storefront as previously created customer-->
+        <actionGroup ref="LoginToStorefrontActionGroup" stepKey="loginAsCustomer">
+            <argument name="Customer" value="$$createCustomer$$"/>
+        </actionGroup>
+        <!-- Check Reward Description in Customer Account on Storefront -->
+        <actionGroup ref="StorefrontCheckHaveRewardsDescriptionInCustomerAccount" stepKey="checkDescriptionInCustomerAccount">
+            <argument name="descriptionText" value="SetSettingRewardsCustomerAccountDescription.rewardPointsDescription"/>
+        </actionGroup>
+
+    </test>
+</tests>

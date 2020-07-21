@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
+
+    <section name="StorefrontCheckoutPaymentAddressSection">
+        <element name="ApplyRewardsTab" type="button" selector="//span[@id='block-reward-heading']"/>
+        <element name="ApplyRewardsInputAmount" type="input" selector="//input[@id='amreward_amount']"/>
+        <element name="ApplyRewardsButtonApply" type="button" selector="//button[@value='Apply Reward']"/>
+        <element name="ApplyRewardsButtonCancel" type="button" selector="//button[@value='Cancel Reward']"/>
+        <element name="RewardPointsHighlightAmount" type="block" selector="//div[@class='amasty-rewards-highlight checkout']//b"/>
+        <element name="DiscountAmount" type="block" selector="//tr[@class='totals discount']//span[@class='price']"/>
+        <element name="DiscountRewardsName" type="block"
+                 selector="//tr[@class='totals discount']//span[contains(string(), 'Discount (Used {{rewardsAmount}} reward points)')]"
+                 parameterized="true"/>
+        <element name="CheckoutLoader" type="block" selector="//div[@data-role='loader']"/>
+        <element name="ApplyRewardsFieldDisable" type="input" selector="//input[@id='amreward_amount'][@disabled]"/>
+        <element name="ApplyRewardsButtonDisable" type="button" selector="//button[@value='Apply Reward'][@disabled]"/>
+        <element name="MinimumPointsRedemptionMessage" type="block" selector="//div[contains(@class, 'amrewards-minimum-points-note')]"/>
+        <element name="MinimumPointsRedemptionMessageAmount" type="block" parameterized="true"
+                 selector="//div[@class='amrewards-minimum-points-note'][contains(string(), '{{pointsCount}}')]"/>
+        <element name="MessageAboutRewardsRedemptionLimitAmount" type="block" parameterized="true"
+                 selector="//div[@class='message notice']//span[contains(string(), 'Number of redeemed reward points cannot exceed {{limitValue}} for this order.')]"/>
+        <element name="MessageAboutRewardsRedemptionLimitPercent" type="block" parameterized="true"
+                 selector="//div[@class='message notice']//span[contains(string(), 'Number of redeemed reward points cannot exceed {{limitValue}} % of cart subtotal excluding tax for this order.')]"/>
+    </section>
+
+    <section name="StorefrontCheckoutShippingAddressSection">
+        <element name="RewardPointsHighlightAmount" type="block" selector="//div[@class='amasty-rewards-highlight checkout']//b"/>
+    </section>
+
+</sections>

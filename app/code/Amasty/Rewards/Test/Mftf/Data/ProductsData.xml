@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:DataGenerator/etc/dataProfileSchema.xsd">
+
+    <entity name="SimpleProductByImpulseDuffle" type="product">
+        <data key="sku" unique="suffix">24-UB02-</data>
+        <data key="type_id">simple</data>
+        <data key="attribute_set_id">4</data>
+        <data key="name" unique="suffix">Impulse Duffle </data>
+        <data key="price">74.00</data>
+        <data key="visibility">4</data>
+        <data key="status">1</data>
+        <data key="quantity">100</data>
+        <data key="urlKey" unique="suffix">impulse-duffle-</data>
+        <data key="weight">1</data>
+        <requiredEntity type="product_extension_attribute">EavStockItem</requiredEntity>
+        <requiredEntity type="custom_attribute_array">CustomAttributeCategoryIds</requiredEntity>
+    </entity>
+
+    <entity name="SimpleProductByCrownSummitBackpack" type="product">
+        <data key="sku" unique="suffix">24-MB03-</data>
+        <data key="type_id">simple</data>
+        <data key="attribute_set_id">4</data>
+        <data key="name" unique="suffix">Crown Summit Backpack </data>
+        <data key="price">38.00</data>
+        <data key="visibility">4</data>
+        <data key="status">1</data>
+        <data key="quantity">100</data>
+        <data key="tax_class_id">2</data>
+        <data key="urlKey" unique="suffix">crown-summit-backpack-</data>
+        <data key="weight">1</data>
+        <requiredEntity type="product_extension_attribute">EavStock100</requiredEntity>
+        <requiredEntity type="custom_attribute_array">CustomAttributeCategoryIds</requiredEntity>
+    </entity>
+
+    <entity name="SimpleProductByBagWayfarerMessenger" type="product">
+        <data key="sku" unique="suffix">24-MB05-</data>
+        <data key="type_id">simple</data>
+        <data key="attribute_set_id">4</data>
+        <data key="name" unique="suffix">Wayfarer Messenger Bag </data>
+        <data key="price">45.00</data>
+        <data key="visibility">4</data>
+        <data key="status">1</data>
+        <data key="quantity">100</data>
+        <data key="tax_class_id">2</data>
+        <data key="urlKey" unique="suffix">wayfarer-messenger-bag-</data>
+        <data key="weight">1</data>
+        <requiredEntity type="product_extension_attribute">EavStock100</requiredEntity>
+        <requiredEntity type="custom_attribute_array">CustomAttributeCategoryIds</requiredEntity>
+    </entity>
+
+    <entity name="SimpleProductByBagOvernightDuffle" type="product">
+        <data key="sku" unique="suffix">24-WB07-</data>
+        <data key="type_id">simple</data>
+        <data key="attribute_set_id">4</data>
+        <data key="name" unique="suffix">Overnight Duffle </data>
+        <data key="price">45.00</data>
+        <data key="visibility">4</data>
+        <data key="status">1</data>
+        <data key="quantity">100</data>
+        <data key="tax_class_id">2</data>
+        <data key="urlKey" unique="suffix">overnight-duffle-</data>
+        <data key="weight">1</data>
+        <requiredEntity type="product_extension_attribute">EavStock100</requiredEntity>
+        <requiredEntity type="custom_attribute_array">CustomAttributeCategoryIds</requiredEntity>
+    </entity>
+
+    <entity name="SimpleProductByWatchClamberData" type="product">
+        <data key="sku" unique="suffix">24-WG03-</data>
+        <data key="type_id">simple</data>
+        <data key="attribute_set_id">4</data>
+        <data key="name" unique="suffix">Clamber Watch </data>
+        <data key="price">54.00</data>
+        <data key="visibility">4</data>
+        <data key="status">1</data>
+        <data key="quantity">100</data>
+        <data key="tax_class_id">2</data>
+        <data key="urlKey" unique="suffix">clamber-watch-</data>
+        <data key="weight">1</data>
+        <requiredEntity type="product_extension_attribute">EavStock100</requiredEntity>
+        <requiredEntity type="custom_attribute_array">CustomAttributeCategoryIds</requiredEntity>
+    </entity>
+
+    <entity name="RewardsSimpleProduct" type="product">
+        <data key="sku" unique="suffix">simple-product-</data>
+        <data key="type_id">simple</data>
+        <data key="attribute_set_id">4</data>
+        <data key="name" unique="suffix">Simple Product </data>
+        <data key="price">100.00</data>
+        <data key="visibility">4</data>
+        <data key="status">1</data>
+        <data key="quantity">100</data>
+        <data key="tax_class_id">2</data>
+        <data key="urlKey" unique="suffix">simple-product-</data>
+        <data key="weight">1</data>
+        <requiredEntity type="product_extension_attribute">EavStock100</requiredEntity>
+        <requiredEntity type="custom_attribute_array">CustomAttributeCategoryIds</requiredEntity>
+    </entity>
+
+    <entity name="SimpleProductPrice22_40" type="product" extends="RewardsSimpleProduct">
+        <data key="price">22.40</data>
+    </entity>
+
+    <entity name="SimpleProductPrice36_20" type="product" extends="RewardsSimpleProduct">
+        <data key="price">36.20</data>
+    </entity>
+
+    <entity name="SimpleProductPrice54_60" type="product" extends="RewardsSimpleProduct">
+        <data key="price">54.60</data>
+    </entity>
+
+    <entity name="SimpleProductPrice35_60" type="product" extends="RewardsSimpleProduct">
+        <data key="price">35.60</data>
+    </entity>
+
+    <entity name="SimpleProductPrice54_20" type="product" extends="RewardsSimpleProduct">
+        <data key="price">54.20</data>
+    </entity>
+
+    <entity name="SimpleProductPrice52" type="product" extends="RewardsSimpleProduct">
+        <data key="price">52.00</data>
+    </entity>
+
+</entities>

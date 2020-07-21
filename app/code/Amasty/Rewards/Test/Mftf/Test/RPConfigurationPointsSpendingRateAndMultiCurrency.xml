@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="RPConfigurationPointsSpendingRateAndMultiCurrency" extends="RPConfigurationPointsSpendingRateDecimalValue">
+        <annotations>
+            <features value="Spent Reward Points"/>
+            <stories value="Spent Reward Points via Customer"/>
+            <title value="Check Setting Points Spending Rate with MultiCurrency"/>
+            <description value="Check Setting Points Spending Rate with MultiCurrency"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="RP-MFTF-04"/>
+            <group value="Amasty"/>
+            <group value="Rewards"/>
+            <group value="Checkout"/>
+            <group value="RewardsSpending"/>
+            <group value="RewardsConfiguration"/>
+            <group value="RewardsConfigurationGeneral"/>
+        </annotations>
+
+        <before>
+            <!-- Configuration Currency Settings -->
+            <actionGroup ref="ChooseCurrencyInConfigurations" stepKey="settingMultiCurrency">
+                <argument name="currenciesConfigurations" value="_CurrencySetOne"/>
+            </actionGroup>
+            <actionGroup ref="InputRateUSDAndEUR" stepKey="addCurrencyRate">
+                <argument name="cartRule" value="PointsSpendingAndMultiCurrency.rateUSDAndEUR"/>
+            </actionGroup>
+            <!-- Configuration Settings for Test-->
+            <actionGroup ref="AdminConfigurationSettingRewardsPointsEarning" stepKey="ConfigurationPointsEarningSettingRewards">
+                <argument name="adminSettingRewardsPointsEarning" value="SetSettingRewardsPointsSpendingRate4_45"/>
+            </actionGroup>
+        </before>
+
+        <after>
+            <!-- Return Default Currency (USD) -->
+            <actionGroup ref="ChooseDefaultCurrencyInConfigurations" stepKey="returnDefaultSettingCurrency"
+                         after="deleteSecondSimpleProduct"/>
+        </after>
+
+        <remove keyForRemoval="CheckDiscountAndAmountInFieldApply"/>
+        <remove keyForRemoval="CheckDiscountAndDiscountName"/>
+        <!-- Switch to Euro-->
+        <actionGroup ref="ChooseCurrency" stepKey="ChooseCurrencyEuro" after="loginAsCustomer">
+            <argument name="currencies" value="_Euro"/>
+        </actionGroup>
+        <!-- Apply Reward Points On The Cart-->
+        <actionGroup ref="StorefrontApplyRewardPointsOnTheCart" stepKey="ApplyRewardPointOnTheCart">
+            <argument name="rewardsAmount" value="PointsSpendingAndMultiCurrency.applyRewardsAmountOne"/>
+        </actionGroup>
+        <!-- Check Apply Reward on the Cart: Discount and Discount Name-->
+        <actionGroup ref="StorefrontCheckDiscountAndTextBellowDiscountOnTheCart" stepKey="CheckDiscountAndAmountInFieldApply"
+                     after="ApplyRewardPointOnTheCart">
+            <argument name="discountAmount" value="PointsSpendingAndMultiCurrency.discountAmountOne"/>
+            <argument name="appliedRewardsAmount" value="PointsSpendingAndMultiCurrency.applyRewardsAmountOne"/>
+        </actionGroup>
+        <!-- Apply Reward Points On The Checkout-->
+        <actionGroup ref="StorefrontApplyRewardPointsOnTheCheckout" stepKey="ApplyRewardPointOnTheCheckout">
+            <argument name="rewardsAmount" value="PointsSpendingAndMultiCurrency.applyRewardsAmountTwo"/>
+        </actionGroup>
+        <!-- Check Apply Reward on the Checkout: Discount and Amount Applied Points-->
+        <actionGroup ref="StorefrontCheckDiscountAndAppliedRewardsOnTheCheckout" stepKey="CheckDiscountAndDiscountName"
+                     after="ApplyRewardPointOnTheCheckout">
+            <argument name="discountAmount" value="PointsSpendingAndMultiCurrency.discountAmountTwo"/>
+            <argument name="appliedRewardsAmount" value="PointsSpendingAndMultiCurrency.applyRewardsAmountTwo"/>
+        </actionGroup>
+        <!-- Check Current Balance after used Reward Points -->
+        <actionGroup ref="AdminCheckCurrentBalanceRewardPointsInCustomerAccount" stepKey="CheckCustomerCurrentBalance">
+            <argument name="customerId" value="$$createCustomer.id$$"/>
+            <argument name="currentBalance" value="PointsSpendingAndMultiCurrency.currentBalance"/>
+        </actionGroup>
+        <!-- Check Usage History Reward Points -->
+        <actionGroup ref="AdminCheckRewardPointsHistoryActionInCustomerAccount" stepKey="CheckRewardsHistory">
+            <argument name="customerId" value="$$createCustomer.id$$"/>
+            <argument name="rewardsHistoryRecordData" value="PointsSpendingAndMultiCurrencyRewardsHistory"/>
+        </actionGroup>
+
+    </test>
+</tests>

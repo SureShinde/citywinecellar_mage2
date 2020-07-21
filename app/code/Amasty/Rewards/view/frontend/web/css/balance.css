@@ -1,0 +1,33 @@
+.amasty-rewards-balance {
+    border-left-style: solid;
+    border-right-style: solid;
+    border-width: 1px;
+    border-color: #A6A6A6;
+}
+
+.amasty-rewards-balance .rewards-text {
+    margin-right: 10px
+}
+
+.amasty-rewards-balance .rewards-amount {
+    background: #F2C94C;
+    border-radius: 2px;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: normal;
+    text-align: center;
+    color: #000000;
+    display: inline;
+    padding: 0 5px;
+    cursor: pointer;
+}
+
+@media only screen and (min-width: 768px) {
+    .amasty-rewards-balance {
+        padding: 0 5px;
+    }
+
+    .amasty-rewards-balance .rewards-amount {
+        display: inherit;
+    }
+}

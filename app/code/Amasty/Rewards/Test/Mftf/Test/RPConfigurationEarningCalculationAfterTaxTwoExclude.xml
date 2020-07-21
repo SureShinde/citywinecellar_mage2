@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="RPConfigurationEarningCalculationAfterTaxTwoExclude"
+          extends="RPConfigurationEarningCalculationAfterTaxExclPriceInclShip">
+        <annotations>
+            <features value="Points Earning Calculation"/>
+            <stories value="Points Earning Calculation with After Tax on Storefront"/>
+            <title value="Check Setting Points Earning Calculation with After Tax Value"/>
+            <description value="Check Setting Points Earning Calculation with After Tax Exclude Catalog and Exclude Shipping"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="RP-MFTF-16"/>
+            <group value="Amasty"/>
+            <group value="Rewards"/>
+            <group value="Tax"/>
+            <group value="RewardsEarning"/>
+            <group value="RewardsConfiguration"/>
+            <group value="RewardsConfigurationPointsEarning"/>
+        </annotations>
+
+        <before>
+            <!-- Create Data for Test -->
+            <createData entity="SimpleProductByCrownSummitBackpack" stepKey="createFirstSimpleProduct">
+                <requiredEntity createDataKey="createCategory"/>
+            </createData>
+            <createData entity="SimpleProductByBagWayfarerMessenger" stepKey="createSecondSimpleProduct">
+                <requiredEntity createDataKey="createCategory"/>
+            </createData>
+            <!-- Configuration Settings for Test-->
+            <actionGroup ref="AdminConfigurationMainSettingTaxCalculation" stepKey="ConfigurationTaxSetting">
+                <argument name="calculationTax" value="taxExclCatalogAndShipping"/>
+            </actionGroup>
+            <remove keyForRemoval="createCartPriceRule"/>
+        </before>
+
+        <after>
+            <remove keyForRemoval="deleteCartPriceRule"/>
+        </after>
+
+        <remove keyForRemoval="checkDiscountOnTheCart"/>
+        <!--Check Tax on Order-->
+        <actionGroup ref="AdminCheckTaxInOrder" stepKey="checkTaxInOrderAfterInvoice">
+            <argument name="orderId" value="{$grabOrderNumberCreateOrderAsCustomerWithCheckMoney}"/>
+            <argument name="tax" value="PointsCalculationAfterTaxTwoExclude.tax"/>
+        </actionGroup>
+        <!-- Check Current Balance after Apply Rewards Rule -->
+        <actionGroup ref="StorefrontCheckCurrentBalanceRewardPointsInCustomerAccount" stepKey="CheckCustomerCurrentBalance">
+            <argument name="currentBalance" value="PointsCalculationAfterTaxTwoExclude.currentBalance"/>
+        </actionGroup>
+        <!-- Check Usage History Reward Points -->
+        <actionGroup ref="StorefrontCheckRewardPointsHistoryActionInCustomerAccount" stepKey="CheckRewardsHistory">
+            <argument name="rewardsHistoryRecordData" value="PointsCalculationAfterTaxTwoExcludeHistory"/>
+        </actionGroup>
+
+    </test>
+</tests>

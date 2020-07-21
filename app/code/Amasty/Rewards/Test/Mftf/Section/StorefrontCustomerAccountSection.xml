@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
+
+    <section name="StorefrontCustomerAccountRewardPointsSection">
+        <element name="RewardPointsTab" type="button" selector="//a[text()='Reward Points']"/>
+        <element name="CurrentBalance" type="block" selector="//span[@class='amrewards-balance']"/>
+        <element name="Description" type="block" selector="//div[@class='reward-description']"/>
+        <element name="ActualRewardPointsLabel" type="block" selector="//div[@class='panel header']//span[@class='rewards-text']"/>
+        <element name="ActualRewardPointsAmount" type="block" selector="//div[@class='panel header']//div[@class='rewards-amount']"/>
+    </section>
+
+    <section name="StorefrontCustomerAccountRewardPointsHistorySection">
+        <element name="RewardPointsHistoryTab" type="button" selector="//a[text()='Reward Points History']"/>
+        <element name="HistoryDate" type="block" parameterized="true"
+                 selector="//table[@id='my-orders-table']//tbody//tr[{{numberLine}}]/td[@data-th='Date']"/>
+        <element name="HistoryChangeAmount" type="block" parameterized="true"
+                 selector="//table[@id='my-orders-table']//tbody//tr[{{numberLine}}]/td[@data-th='Amount']"/>
+        <element name="HistoryDaysLeft" type="block" parameterized="true"
+                 selector="//table[@id='my-orders-table']//tbody//tr[{{numberLine}}]/td[@data-th='Days Left']/div"/>
+        <element name="HistoryComment" type="block" parameterized="true"
+                 selector="//table[@id='my-orders-table']//tbody//tr[{{numberLine}}]/td[@data-th='Comment']"/>
+        <element name="HistoryAction" type="block" parameterized="true"
+                 selector="//table[@id='my-orders-table']//tbody//tr[{{numberLine}}]/td[@data-th='Action']"/>
+        <element name="HistoryPointsLeft" type="block" parameterized="true"
+                 selector="//table[@id='my-orders-table']//tbody//tr[{{numberLine}}]/td[@data-th='Points Left']"/>
+    </section>
+
+</sections>

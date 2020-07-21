@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+
+    <!-- For Create Reward Points Rules (Expect Action - Spent Y Rule) -->
+    <actionGroup name="AdminCreateRewardPointsRule">
+        <arguments>
+            <argument name="rewardPointsRule"/>
+        </arguments>
+        <amOnPage url="{{AdminRewardPointsEarningRulesGridPage.url}}" stepKey="navigateToRewardPointsRulesGrid"/>
+        <waitForPageLoad stepKey="waitForRewardsGridPageLoad"/>
+        <click selector="{{AdminRewardPointsEarningRulesGridSection.AddNewRuleButton}}" stepKey="clickToAddNewRule"/>
+        <waitForPageLoad stepKey="waitForNewRewardsPageLoad"/>
+        <conditionalClick stepKey="openGeneralTab"
+                          selector="{{AdminRewardPointsEarningRulesFormSection.GeneralTab}}"
+                          dependentSelector="{{AdminRewardPointsEarningRulesFormSection.Name}}"
+                          visible="false"/>
+        <fillField selector="{{AdminRewardPointsEarningRulesFormSection.Name}}"
+                   userInput="{{rewardPointsRule.name}}" stepKey="enterName"/>
+        <selectOption selector="{{AdminRewardPointsEarningRulesFormSection.Status}}"
+                       userInput="{{rewardPointsRule.status}}" stepKey="selectStatus"/>
+        <selectOption selector="{{AdminRewardPointsEarningRulesFormSection.Websites}}"
+                      userInput="{{rewardPointsRule.websites}}" stepKey="selectWebsites"/>
+        <selectOption selector="{{AdminRewardPointsEarningRulesFormSection.CustomerGroups}}"
+                      parameterArray="[{{rewardPointsRule.customerGroups}}]" stepKey="selectCustomerGroup"/>
+        <conditionalClick stepKey="openActionsTab"
+                          selector="{{AdminRewardPointsEarningRulesFormSection.ActionsTab}}"
+                          dependentSelector="{{AdminRewardPointsEarningRulesFormSection.Action}}"
+                          visible="false"/>
+        <selectOption selector="{{AdminRewardPointsEarningRulesFormSection.Action}}"
+                       userInput="{{rewardPointsRule.action}}" stepKey="selectAction"/>
+        <fillField selector="{{AdminRewardPointsEarningRulesFormSection.Amount}}"
+                   userInput="{{rewardPointsRule.amount}}" stepKey="enterAmount"/>
+        <selectOption selector="{{AdminRewardPointsEarningRulesFormSection.PointsExpirationBehavior}}"
+                      userInput="{{rewardPointsRule.pointsExpirationBehavior}}" stepKey="selectExpirationValue"/>
+        <click selector="{{AdminRewardPointsEarningRulesFormSection.SaveAndContinue}}" stepKey="SaveRule"/>
+        <waitForPageLoad stepKey="waitForPageLoadAfterSave"/>
+    </actionGroup>
+
+    <!-- For Create Reward Points Rules with Expiration Period (Expect Action - Spent Y Rule) -->
+    <actionGroup name="AdminCreateRewardPointsRuleWithExpirePeriod" extends="AdminCreateRewardPointsRule">
+        <fillField selector="{{AdminRewardPointsEarningRulesFormSection.PointsExpirationPeriod}}"
+                   userInput="{{rewardPointsRule.pointsExpirationPeriod}}"
+                   after="selectExpirationValue" stepKey="enterPointsExpirationPeriod"/>
+    </actionGroup>
+
+    <!-- For Create Reward Points Rules with Action - Get X for Y Spent -->
+    <actionGroup name="AdminCreateRewardPointsRuleWithActionForYSpent" extends="AdminCreateRewardPointsRule">
+        <remove keyForRemoval="SaveRule"/>
+        <remove keyForRemoval="waitForPageLoadAfterSave"/>
+        <fillField selector="{{AdminRewardPointsEarningRulesFormSection.SpentAmount}}"
+                   userInput="{{rewardPointsRule.spentAmount}}" stepKey="enterSpentAmount"/>
+        <click selector="{{AdminRewardPointsEarningRulesFormSection.SaveAndContinue}}" stepKey="SaveRuleWithYSpentRule"/>
+        <waitForPageLoad stepKey="waitForPageLoadAfterSaveYSpentRule"/>
+    </actionGroup>
+
+    <!-- For Create Reward Points Rules with Action - Get X for Y Spent and Expiration Period -->
+    <actionGroup name="AdminCreateRewardPointsRuleWithActionForYSpentWithExpirePeriod" extends="AdminCreateRewardPointsRule">
+        <remove keyForRemoval="SaveRule"/>
+        <remove keyForRemoval="waitForPageLoadAfterSave"/>
+        <fillField selector="{{AdminRewardPointsEarningRulesFormSection.SpentAmount}}"
+                   userInput="{{rewardPointsRule.spentAmount}}" stepKey="enterSpentAmount"/>
+        <fillField selector="{{AdminRewardPointsEarningRulesFormSection.PointsExpirationPeriod}}"
+                   userInput="{{rewardPointsRule.pointsExpirationPeriod}}"
+                   stepKey="enterPointsExpirationPeriod"/>
+        <click selector="{{AdminRewardPointsEarningRulesFormSection.SaveAndContinue}}" stepKey="SaveRuleWithYSpentAndExpirePeriodRule"/>
+        <waitForPageLoad stepKey="waitForPageLoadAfterSaveYSpentRule"/>
+    </actionGroup>
+
+    <!-- Open Rewards Earning Rules from Grid -->
+    <actionGroup name="AdminOpenRewardPointsRuleByName">
+        <arguments>
+            <argument name="rewardPointsRule"/>
+        </arguments>
+        <amOnPage url="{{AdminRewardPointsEarningRulesGridPage.url}}" stepKey="navigateToRewardPointsRulesGrid"/>
+        <waitForPageLoad stepKey="waitForRewardsGridPageLoad"/>
+        <fillField selector="{{AdminRewardPointsEarningRulesGridSection.FilterByNameInput}}"
+                   userInput="{{rewardPointsRule.name}}" stepKey="filterByName"/>
+        <click selector="{{AdminRewardPointsEarningRulesGridSection.SearchButton}}" stepKey="doFilter"/>
+        <click selector="{{AdminRewardPointsEarningRulesGridSection.RowByIndex('1')}}" stepKey="goToEditRulePage"/>
+    </actionGroup>
+
+    <!-- For Delete Created Rewards Rule -->
+    <actionGroup name="AdminDeleteRewardPointsRuleByName" extends="AdminOpenRewardPointsRuleByName">
+        <conditionalClick selector="{{AdminRewardPointsEarningRulesFormSection.Delete}}"
+                          dependentSelector="{{AdminRewardPointsEarningRulesFormSection.Delete}}"
+                          visible="true" stepKey="clickDeleteButton" />
+        <waitForPageLoad stepKey="waitForPageLoadAfterClickDelete"/>
+        <conditionalClick selector="{{AdminRewardPointsEarningRulesFormSection.ModalAcceptButton}}"
+                          dependentSelector="{{AdminRewardPointsEarningRulesFormSection.ModalAcceptButton}}"
+                          visible="true" stepKey="confirmDelete"/>
+        <waitForPageLoad stepKey="waitForPageLoadAfterConfirmDelete"/>
+    </actionGroup>
+
+    <!-- For Add Conditions With Select To Rule. Using after AdminOpenRewardPointsRuleByName -->
+    <actionGroup name="EditRewardsRuleAddGlobalConditionsWithSelect">
+        <arguments>
+            <argument name="conditionsOptions"/>
+            <argument name="conditionsAttribute"/>
+            <argument name="conditionsData"/>
+        </arguments>
+        <waitForPageLoad stepKey="waitForLoadPageAfterOpenRule"/>
+        <conditionalClick stepKey="openConditionsTab"
+                          selector="{{AdminRewardPointsEarningRulesFormSection.ConditionsTab}}"
+                          dependentSelector="{{AdminRewardPointsEarningRulesFormSection.ButtonGlobalConditions}}"
+                          visible="false"/>
+        <scrollTo selector="{{AdminRewardPointsEarningRulesFormSection.ConditionsTab}}" stepKey="GoToConditions"/>
+        <click selector="{{AdminRewardPointsEarningRulesFormSection.ButtonGlobalConditions}}" stepKey="clickButtonGlobalCondition"/>
+        <waitForElementVisible selector="{{AdminRewardPointsEarningRulesFormSection.SelectConditionOption}}"
+                               stepKey="waitForVisibleSelectConditionOption"/>
+        <selectOption selector="{{AdminRewardPointsEarningRulesFormSection.SelectConditionOption}}"
+                      userInput="{{conditionsOptions.optionsText}}"
+                      stepKey="selectConditionOptions"/>
+        <waitForElementVisible selector="{{AdminRewardPointsEarningRulesFormSection.ConditionAttrForClick(conditionsOptions.optionsValue)}}"
+                               stepKey="waitForParamDataVisible"/>
+        <click selector="{{AdminRewardPointsEarningRulesFormSection.ConditionAttrForClick(conditionsOptions.optionsValue)}}"
+               stepKey="clickChooseParamData"/>
+        <waitForElementVisible selector="{{AdminRewardPointsEarningRulesFormSection.SelectForAttribute(conditionsOptions.optionsValue)}}"
+                               stepKey="waitForFirstParamVisible"/>
+        <selectOption selector="{{AdminRewardPointsEarningRulesFormSection.SelectForAttribute(conditionsOptions.optionsValue)}}"
+                      userInput="{{conditionsAttribute.optionsValue}}"
+                      stepKey="chooseFirstParam"/>
+        <waitForElementVisible selector="{{AdminRewardPointsEarningRulesFormSection.ConditionsDataForClick(conditionsOptions.optionsValue)}}"
+                               stepKey="waitForSelectDataVisible"/>
+        <click selector="{{AdminRewardPointsEarningRulesFormSection.ConditionsDataForClick(conditionsOptions.optionsValue)}}"
+               stepKey="clickForInputData"/>
+        <conditionalClick stepKey="ifDontOpenSelectFirst"
+                          selector="{{AdminRewardPointsEarningRulesFormSection.ConditionsDataForClick(conditionsOptions.optionsValue)}}"
+                          dependentSelector="{{AdminRewardPointsEarningRulesFormSection.SelectConditionsData(conditionsOptions.optionsValue)}}"
+                          visible="false"/>
+        <waitForElementVisible selector="{{AdminRewardPointsEarningRulesFormSection.SelectConditionsData(conditionsOptions.optionsValue)}}"
+                               stepKey="waitForConditionsDataVisible"/>
+        <selectOption selector="{{AdminRewardPointsEarningRulesFormSection.SelectConditionsData(conditionsOptions.optionsValue)}}"
+                      userInput="{{conditionsData}}" stepKey="ConditionsData"/>
+        <waitForPageLoad stepKey="waitForPageLoadAfterChooseValue"/>
+        <click selector="{{AdminRewardPointsEarningRulesFormSection.SaveAndContinue}}" stepKey="clickOnSave"/>
+        <waitForPageLoad stepKey="waitForPageLoadAfterSave"/>
+    </actionGroup>
+
+    <!-- For Add Conditions With Input To Rule. Using after AdminOpenRewardPointsRuleByName -->
+    <actionGroup name="EditRewardsRuleAddGlobalConditionsWithInput" extends="EditRewardsRuleAddGlobalConditionsWithSelect">
+        <conditionalClick stepKey="ifDontOpenSelectFirst"
+                          selector="{{AdminRewardPointsEarningRulesFormSection.ConditionsDataForClick(conditionsOptions.optionsValue)}}"
+                          dependentSelector="{{AdminRewardPointsEarningRulesFormSection.InputConditionsData(conditionsOptions.optionsValue)}}"
+                          visible="false"/>
+        <waitForElementVisible selector="{{AdminRewardPointsEarningRulesFormSection.InputConditionsData(conditionsOptions.optionsValue)}}"
+                               stepKey="waitForConditionsDataVisible"/>
+        <fillField selector="{{AdminRewardPointsEarningRulesFormSection.InputConditionsData(conditionsOptions.optionsValue)}}"
+                   userInput="{{conditionsData}}" stepKey="ConditionsData"/>
+    </actionGroup>
+
+    <!-- For Add Promo Items to Rule with Action Y Spent -->
+    <actionGroup name="AdminAddPromoItemsToRuleWithActionForYSpent" extends="AdminOpenRewardPointsRuleByName">
+        <arguments>
+            <argument name="rewardsPromoItems"/>
+        </arguments>
+        <conditionalClick stepKey="openActionsTab"
+                          selector="{{AdminRewardPointsEarningRulesFormSection.ActionsTab}}"
+                          dependentSelector="{{AdminRewardPointsEarningRulesFormSection.Action}}"
+                          visible="false"/>
+        <fillField selector="{{AdminRewardPointsEarningRulesFormSection.PromoItems}}"
+                   userInput="{{rewardsPromoItems}}" stepKey="fillPromoItemsField"/>
+        <click selector="{{AdminRewardPointsEarningRulesFormSection.SaveAndContinue}}" stepKey="clickOnSave"/>
+        <waitForPageLoad stepKey="waitForPageLoadAfterSave"/>
+    </actionGroup>
+
+</actionGroups>

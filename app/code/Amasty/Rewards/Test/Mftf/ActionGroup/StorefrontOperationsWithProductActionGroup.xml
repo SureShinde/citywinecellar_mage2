@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/actionGroupSchema.xsd">
+
+    <!-- Add Review To Product -->
+    <actionGroup name="StorefrontAddReviewToProduct">
+        <arguments>
+            <argument name="review"/>
+        </arguments>
+        <click selector="{{StorefrontProductPageSection.reviewsTab}}" stepKey="openReviewTab"/>
+        <fillField selector="{{StorefrontProductPageSection.nicknameField}}" userInput="{{review.nickname}}" stepKey="fillNicknameField"/>
+        <fillField selector="{{StorefrontProductPageSection.summaryField}}" userInput="{{review.title}}" stepKey="fillSummaryField"/>
+        <fillField selector="{{StorefrontProductPageSection.reviewField}}" userInput="{{review.detail}}" stepKey="fillReviewField"/>
+        <conditionalClick selector="{{StorefrontProductPageSection.ratingThreeButton}}"
+                          dependentSelector="{{StorefrontProductPageSection.ratingThreeButton}}"
+                          visible="true" stepKey="addRatingIfHave"/>
+        <click selector="{{StorefrontProductPageSection.submitReviewButton}}" stepKey="clickSubmitReview"/>
+        <waitForElementVisible selector="{{StorefrontProductPageSection.SuccessMsg}}" stepKey="waitForSuccessMessage"/>
+        <see selector="{{StorefrontProductPageSection.SuccessMsg}}" userInput="You submitted your review for moderation." stepKey="seeSuccessMessage"/>
+    </actionGroup>
+
+</actionGroups>

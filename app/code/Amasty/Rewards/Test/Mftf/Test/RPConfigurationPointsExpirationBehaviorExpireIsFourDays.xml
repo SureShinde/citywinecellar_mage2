@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="RPConfigurationPointsExpirationBehaviorExpireIsFourDays" extends="RPConfigurationPointsExpirationBehaviorNeverExpire">
+        <annotations>
+            <features value="Points Expiration Behavior"/>
+            <stories value="Points Expiration Behavior via Customer"/>
+            <title value="Check Setting Points Expiration Behavior with Four Days"/>
+            <description value="Check Configuration Setting Points Expiration Behavior with Four Days"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="RP-MFTF-25"/>
+            <group value="Amasty"/>
+            <group value="Rewards"/>
+            <group value="RewardsConfiguration"/>
+            <group value="RewardsConfigurationPointsEarning"/>
+            <group value="RewardsConfigurationExpirationSettings"/>
+        </annotations>
+
+        <before>
+            <remove keyForRemoval="CreateRewardsRuleForOrder"/>
+            <actionGroup ref="AdminConfigurationSettingRewardsExpirationWithDays" stepKey="configurationPointsExpirationSetting">
+                <argument name="adminSettingRewardsExpirationSettings" value="SetSettingRewardsExpirationSettingsExpireFourDays"/>
+            </actionGroup>
+            <actionGroup ref="AdminCreateRewardPointsRuleWithActionForYSpent" stepKey="CreateRewardsRuleForYSpent"
+                         after="configurationPointsExpirationSetting">
+                <argument name="rewardPointsRule" value="ruleGetXPointsForEachYSpent"/>
+            </actionGroup>
+        </before>
+
+    <after>
+        <remove keyForRemoval="deleteRewardsRuleOrder"/>
+        <actionGroup ref="AdminDeleteRewardPointsRuleByName" stepKey="deleteRewardsRuleForYSpent" after="deleteFirstSimpleProduct">
+            <argument name="rewardPointsRule" value="ruleGetXPointsForEachYSpent" />
+        </actionGroup>
+    </after>
+
+        <!-- Check Usage History Reward Points (Change, Days Left, Points Left) -->
+        <actionGroup ref="StorefrontCheckRewardPointsHistoryActionInCustomerAccount" stepKey="CheckRewardsHistoryChangeAndLeft">
+            <argument name="rewardsHistoryRecordData" value="PointsExpirationFourDaysHistory"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCheckRewardPointsHistoryInCustomerAccountExpireDay" stepKey="CheckRewardsHistoryExpireDay">
+            <argument name="rewardsHistoryRecordData" value="PointsExpirationFourDaysHistory"/>
+        </actionGroup>
+        <!-- Check Current Balance after Apply Rewards Rule -->
+        <actionGroup ref="StorefrontCheckCurrentBalanceRewardPointsInCustomerAccount" stepKey="CheckCustomerCurrentBalance">
+            <argument name="currentBalance" value="PointsExpirationFourDaysHistory.currentBalance"/>
+        </actionGroup>
+
+    </test>
+</tests>

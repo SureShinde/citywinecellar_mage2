@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="RPConfigurationHighlightCalculationAfterTaxTwoExclude"
+          extends="RPConfigurationHighlightCalculationAfterTaxExclPriceInclShip">
+        <annotations>
+            <features value="Points Calculation Highlight"/>
+            <stories value="Points Calculation Highlight Point with After Tax on Storefront"/>
+            <title value="Check Settings Points Highlight with After Tax Value"/>
+            <description value="Check Settings Points Highlight with After Tax Exclude Catalog and Exclude Shipping"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="RP-MFTF-17"/>
+            <group value="Amasty"/>
+            <group value="Rewards"/>
+            <group value="Tax"/>
+            <group value="RewardsHighlight"/>
+            <group value="RewardsConfiguration"/>
+            <group value="RewardsConfigurationDisplayOptions"/>
+        </annotations>
+
+        <before>
+            <createData entity="SimpleProductByCrownSummitBackpack" stepKey="createFirstSimpleProduct">
+                <requiredEntity createDataKey="createCategory"/>
+            </createData>
+            <createData entity="SimpleProductByBagWayfarerMessenger" stepKey="createSecondSimpleProduct">
+                <requiredEntity createDataKey="createCategory"/>
+            </createData>
+            <actionGroup ref="AdminConfigurationMainSettingTaxCalculation" stepKey="ConfigurationTaxSetting">
+                <argument name="calculationTax" value="taxExclCatalogAndShipping"/>
+            </actionGroup>
+            <remove keyForRemoval="createCartPriceRule"/>
+        </before>
+
+        <after>
+            <remove keyForRemoval="deleteCartPriceRule"/>
+        </after>
+
+        <actionGroup ref="StorefrontCheckRewardPointsHighlightOnCategoryPage" stepKey="CheckFirstProductHighlightOnCategory">
+            <argument name="amountInHighlight" value="HighlightCalculateAfterTaxTwoExclude.HighlightValueProductOne"/>
+            <argument name="category" value="$$createCategory$$"/>
+            <argument name="product" value="$$createFirstSimpleProduct$$"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCheckRewardPointsHighlightOnCategoryPage" stepKey="CheckSecondProductHighlightOnCategory">
+            <argument name="amountInHighlight" value="HighlightCalculateAfterTaxTwoExclude.HighlightValueProductTwo"/>
+            <argument name="category" value="$$createCategory$$"/>
+            <argument name="product" value="$$createSecondSimpleProduct$$"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCheckRewardPointsHighlightOnProductPage" stepKey="CheckFirstHighlightOnProductPage">
+            <argument name="amountInHighlight" value="HighlightCalculateAfterTaxTwoExclude.HighlightValueProductOne"/>
+            <argument name="product" value="$$createFirstSimpleProduct$$"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCheckRewardPointsHighlightOnProductPage" stepKey="CheckSecondHighlightOnProductPage">
+            <argument name="amountInHighlight" value="HighlightCalculateAfterTaxTwoExclude.HighlightValueProductTwo"/>
+            <argument name="product" value="$$createSecondSimpleProduct$$"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCheckRewardPointsHighlightOnTheCart" stepKey="CheckHighlightOnTheCart">
+            <argument name="amountInHighlight" value="HighlightCalculateAfterTaxTwoExclude.HighlightCartAndCheckoutValue"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCheckRewardPointsHighlightOnTheCheckoutShippingPage" stepKey="CheckHighlightOnTheCheckoutShippingPage">
+            <argument name="amountInHighlight" value="HighlightCalculateAfterTaxTwoExclude.HighlightCartAndCheckoutValue"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCheckRewardPointsHighlightOnTheCheckoutPaymentPage" stepKey="CheckHighlightOnTheCheckoutPaymentPage">
+            <argument name="amountInHighlight" value="HighlightCalculateAfterTaxTwoExclude.HighlightCartAndCheckoutValue"/>
+        </actionGroup>
+
+    </test>
+</tests>

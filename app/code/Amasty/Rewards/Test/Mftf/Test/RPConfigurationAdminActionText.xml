@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="RPConfigurationAdminActionText">
+        <annotations>
+            <features value="Setting Admin Action Text"/>
+            <stories value="Setting Admin Action Text via Admin"/>
+            <title value="Check Setting Admin Action Text"/>
+            <description value="Check Setting Admin Action Text"/>
+            <severity value="MAJOR"/>
+            <testCaseId value="RP-MFTF-26"/>
+            <group value="Amasty"/>
+            <group value="Rewards"/>
+            <group value="RewardsConfiguration"/>
+            <group value="RewardsConfigurationPointsEarning"/>
+            <group value="RewardsConfigurationOtherSettings"/>
+        </annotations>
+
+        <before>
+            <!-- Create Data for Test -->
+            <createData entity="RewardPointsCustomer" stepKey="createCustomer"/>
+            <!-- Login To Admin Area -->
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <!-- Configuration Settings for Test-->
+            <actionGroup ref="AdminConfigurationSettingRewardsGeneral" stepKey="ConfigurationGeneralSettingRewards">
+                <argument name="adminSettingRewardsGeneral" value="enableRewards"/>
+            </actionGroup>
+            <actionGroup ref="AdminConfigurationSettingRewardsOtherSettings" stepKey="ConfigurationOtherSettings">
+                <argument name="adminSettingRewardsOtherSettings" value="SetTestSettingRewardsOtherSettings"/>
+            </actionGroup>
+        </before>
+
+        <after>
+            <!-- Delete All Created Data -->
+            <deleteData createDataKey="createCustomer" stepKey="deleteCustomer"/>
+            <!-- Return the Default Settings Module -->
+            <actionGroup ref="AdminConfigurationSettingRewardsGeneral" stepKey="DefaultConfigurationGeneralSettingRewards">
+                <argument name="adminSettingRewardsGeneral" value="defaultGeneralSettingRewards"/>
+            </actionGroup>
+            <actionGroup ref="AdminConfigurationSettingRewardsOtherSettings" stepKey="ConfigurationOtherSettings">
+                <argument name="adminSettingRewardsOtherSettings" value="SetDefaultSettingRewardsOtherSettings"/>
+            </actionGroup>
+            <amOnPage url="admin/admin/auth/logout/" stepKey="amOnLogoutPage"/>
+        </after>
+
+        <!-- Add Points From Admin Area -->
+        <actionGroup ref="AdminAddOrDeductPointsToCustomer" stepKey="addPointsToCustomerFromAdminArea">
+            <argument name="customerId" value="$$createCustomer.id$$"/>
+            <argument name="adminAddOrDeductPoints" value="addTenRewardPoints"/>
+        </actionGroup>
+
+        <!-- Check Usage History Reward Points Change and Amount Points Left-->
+        <actionGroup ref="AdminCheckRewardPointsHistoryActionInCustomerAccount" stepKey="CheckRewardsHistoryChangePointsLeft">
+            <argument name="customerId" value="$$createCustomer.id$$"/>
+            <argument name="rewardsHistoryRecordData" value="AdminActionTextHistory"/>
+        </actionGroup>
+        <!-- Check Usage History Reward Points Action Text-->
+        <actionGroup ref="AdminCheckRewardPointsHistoryActionInCustomerAccountActionText" stepKey="CheckRewardsHistoryActionText">
+            <argument name="customerId" value="$$createCustomer.id$$"/>
+            <argument name="rewardsHistoryRecordData" value="AdminActionTextHistory"/>
+        </actionGroup>
+
+    </test>
+</tests>

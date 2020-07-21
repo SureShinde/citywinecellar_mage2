@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:Page/etc/SectionObject.xsd">
+
+    <section name="AdminConfigurationsRewardsSection">
+        <element name="Save" type="button" selector="//div[@class='page-actions-buttons']/button[@id='save']"/>
+        <!-- General -->
+        <element name="GeneralTab" type="button" selector="//*[@id='amrewards_general-head']"/>
+        <element name="GeneralTabOpen" type="block" selector="//*[@id='amrewards_general-head'][@class='open']"/>
+        <element name="EnableOneStepCheckout" type="select" selector="//*[@id='amrewards_general_enabled']"/>
+        <!-- Points Earning and Spending Calculation -->
+        <element name="PointsEarningTab" type="button" selector="//*[@id='amrewards_points-head']"/>
+        <element name="PointsEarningTabOpen" type="block" selector="//*[@id='amrewards_points-head'][@class='open']"/>
+        <element name="PointsSpendingRate" type="input" selector="//*[@id='amrewards_points_rate']"/>
+        <element name="PointsRoundingRule" type="select" selector="//*[@id='amrewards_points_round_rule']"/>
+        <element name="BirthdayOffset" type="input" selector="//*[@id='amrewards_points_days']"/>
+        <element name="PointsEarningCalculation" type="select" selector="//*[@id='amrewards_points_before_after_tax']"/>
+        <!-- Display Options - Highlight Point on Storefront -->
+        <element name="DisplayOptionsTab" type="button" selector="//*[@id='amrewards_display_options-head']"/>
+        <element name="HighlightPointOnStorefrontTab" type="button" selector="//*[@id='amrewards_display_options_highlight-head']"/>
+        <element name="ShowInCart" type="select" selector="//*[@id='amrewards_display_options_highlight_cart']"/>
+        <element name="ShowOnCheckoutPage" type="select" selector="//*[@id='amrewards_display_options_highlight_checkout']"/>
+        <element name="ShowOnProductPages" type="select" selector="//*[@id='amrewards_display_options_highlight_product']"/>
+        <element name="ShowOnCategoriesPages" type="select" selector="//*[@id='amrewards_display_options_highlight_category']"/>
+        <element name="ShowHighlightForGuests" type="select" selector="//*[@id='amrewards_display_options_highlight_guest']"/>
+        <element name="HighlightTextColor" type="input" selector="//*[@id='amrewards_display_options_highlight_color']"/>
+        <!-- Display Options - Customer Account -->
+        <element name="CustomerAccountTab" type="button" selector="//*[@id='amrewards_display_options_customer-head']"/>
+        <element name="RewardPointsDescriptionTab" type="button" selector="//*[@id='amrewards_display_options_customer_desc-head']"/>
+        <element name="ShowRewardPointsDescription" type="select" selector="//*[@id='amrewards_display_options_customer_description_enable']"/>
+        <element name="RewardPointsDescription" type="textarea" selector="//*[@id='amrewards_display_options_customer_desc_description_message']"/>
+        <element name="ShowActualRewardPointsBalance" type="select" selector="//*[@id='amrewards_display_options_customer_show_balance']"/>
+        <element name="CustomerAccountBalanceLabel" type="input" selector="//*[@id='amrewards_display_options_customer_balance_label']"/>
+        <!-- Order Limitations -->
+        <element name="OrderLimitationsTab" type="button" selector="//*[@id='amrewards_points_limitations-head']"/>
+        <element name="MinimumPointsRequirement" type="input" selector="//*[@id='amrewards_points_limitations_minimum_reward']"/>
+        <element name="DisableRewardPointsForOrders" type="select" selector="//*[@id='amrewards_points_limitations_disable_reward']"/>
+        <element name="ApplyRedemptionLimit" type="select" selector="//*[@id='amrewards_points_limitations_enable_limit']"/>
+        <element name="RedemptionLimitPerOrder" type="input" selector="//input[contains(@id, 'amrewards_points_limitations_limit')]"/>
+        <element name="RedemptionLimitPerOrderAmount" type="input" selector="//*[@id='amrewards_points_limitations_limit_amount_reward']"/>
+        <element name="RedemptionLimitPerOrderPercent" type="input" selector="//*[@id='amrewards_points_limitations_limit_percent_reward']"/>
+        <!-- Expiration Settings -->
+        <element name="PointsExpirationBehavior" type="select" selector="//*[@id='amrewards_points_expiration_expiration_behavior']"/>
+        <element name="PointsExpirationPeriodDays" type="input" selector="//*[@id='amrewards_points_expiration_expiration_period']"/>
+        <element name="ExpirationSettingsTab" type="button" selector="//*[@id='amrewards_points_expiration-head']"/>
+        <!-- Other Settings -->
+        <element name="OtherSettingsTab" type="button" selector="//*[@id='amrewards_points_other-head']"/>
+        <element name="AdminActionText" type="input" selector="//*[@id='amrewards_points_other_adminaction']"/>
+    </section>
+
+</sections>

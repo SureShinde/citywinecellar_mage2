@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="RPFunctionalDeductLessAfterCreditMemo" extends="RPFunctionalReturnPointsAfterCancelOrder">
+        <annotations>
+            <features value="Deduct Points to Customer"/>
+            <stories value="Deduct Points via Customer"/>
+            <title value="Check Deduct Less Points to Customer"/>
+            <description value="Check Deduct Less Points to Customer After Credit Memo Order"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="RP-MFTF-70"/>
+            <group value="Amasty"/>
+            <group value="Rewards"/>
+            <group value="RewardsFunctional"/>
+            <group value="RewardsFunctionalDeductPoints"/>
+        </annotations>
+
+        <before>
+            <actionGroup ref="AdminCreateRewardPointsRule" stepKey="CreateRewardsRuleForComplete" after="ConfigurationGeneralSettingRewards">
+                <argument name="rewardPointsRule" value="ruleOrderComplete"/>
+            </actionGroup>
+            <actionGroup ref="AdminCreateRewardPointsRuleWithActionForYSpent" stepKey="CreateRewardsRuleForYSpent" after="CreateRewardsRuleForComplete">
+                <argument name="rewardPointsRule" value="ruleGetXPointsForEachYSpent"/>
+            </actionGroup>
+        </before>
+
+        <after>
+            <actionGroup ref="AdminDeleteRewardPointsRuleByName" stepKey="deleteRewardsRuleOrderComplete" after="deleteFirstSimpleProduct">
+                <argument name="rewardPointsRule" value="ruleOrderComplete" />
+            </actionGroup>
+            <actionGroup ref="AdminDeleteRewardPointsRuleByName" stepKey="deleteRewardsRuleXSpent" after="deleteRewardsRuleOrderComplete">
+                <argument name="rewardPointsRule" value="ruleGetXPointsForEachYSpent" />
+            </actionGroup>
+        </after>
+
+        <remove keyForRemoval="cancelOrder"/>
+        <remove keyForRemoval="ApplyRewardPointOnTheCart"/>
+        <remove keyForRemoval="CheckDiscountAndAmountInFieldApply"/>
+        <remove keyForRemoval="AdminCheckChangeAndLeft"/>
+        <remove keyForRemoval="AdminCheckComment"/>
+        <remove keyForRemoval="AdminCheckActionText"/>
+
+        <actionGroup ref="AdminCreateInvoiceAndShipmentActionGroup" stepKey="createInvoiceAndShipment" after="openOrder"/>
+        <!--Create Credit Memo-->
+        <actionGroup ref="AdminOpenOrderAndStartCreditMemo" stepKey="startToCreateCreditMemo" after="createInvoiceAndShipment">
+            <argument name="orderId" value="{$grabOrderNumberCreateOrderAsCustomerWithCheckMoney}"/>
+        </actionGroup>
+        <actionGroup ref="AdminFillDeductRewardPointsInOrder" stepKey="enterValueForDeductPoints" after="startToCreateCreditMemo">
+            <argument name="deductRewardsAmount" value="DeductLessAfterCreditMemo.deductRewardsAmount"/>
+        </actionGroup>
+        <actionGroup ref="SubmitCreditMemoActionGroup" stepKey="submitCreditMemo" after="enterValueForDeductPoints"/>
+        <!-- Check Deduct Points by Rule Complete in Customer Account -->
+        <actionGroup ref="StorefrontCheckRewardPointsHistoryActionInCustomerAccount" stepKey="StorefrontCheckChangeAndLeft">
+            <argument name="rewardsHistoryRecordData" value="DeductLessAfterCreditMemoHistory"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCheckRewardPointsHistoryActionInCustomerAccountComment" stepKey="StorefrontCheckComment">
+            <argument name="rewardsHistoryRecordData" value="DeductLessAfterCreditMemoHistory"/>
+        </actionGroup>
+        <actionGroup ref="StorefrontCheckRewardPointsHistoryActionInCustomerAccountActionText" stepKey="StorefrontCheckActionText">
+            <argument name="rewardsHistoryRecordData" value="DeductLessAfterCreditMemoHistory"/>
+        </actionGroup>
+    </test>
+</tests>

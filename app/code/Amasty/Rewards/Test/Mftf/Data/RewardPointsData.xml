@@ -1,0 +1,589 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * @author Amasty Team
+ * @copyright Copyright (c) 2020 Amasty (https://www.amasty.com)
+ * @package Amasty_Rewards
+ */
+-->
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:DataGenerator/etc/dataProfileSchema.xsd">
+
+    <entity name="RewardsDefaultCartPriceRulePercentDiscount20" type="rewardPointsData">
+        <data key="name">Default Rule Rewards Percent Discount</data>
+        <data key="websites">Main Website</data>
+        <data key="customerGroups">'NOT LOGGED IN', 'General', 'Wholesale', 'Retailer'</data>
+        <data key="apply">Percent of product price discount</data>
+        <data key="discountAmount">20</data>
+    </entity>
+    <entity name="RewardsDefaultCartPriceRuleFixedDiscount20" type="rewardPointsData">
+        <data key="name">Default Rule Rewards Fixed Discount</data>
+        <data key="websites">Main Website</data>
+        <data key="customerGroups">'NOT LOGGED IN', 'General', 'Wholesale', 'Retailer'</data>
+        <data key="apply">Fixed amount discount for whole cart</data>
+        <data key="discountAmount">20</data>
+    </entity>
+
+    <entity name="RewardsStoreGroup" type="group">
+        <data key="name">Main Website Store</data>
+        <data key="code">main_website_store</data>
+    </entity>
+
+    <entity name="RewardsStoreView" type="store">
+        <data key="name">StoreViewForTestRewards</data>
+        <data key="code">store_view_for_test_rewards</data>
+    </entity>
+
+
+    <entity name="PointsSpendingIntegerValue" type="rewardPointsData">
+        <data key="applyRewardsAmount">10</data>
+        <data key="discountAmount">-$1.00</data>
+        <data key="currentBalance">90</data>
+    </entity>
+    <entity name="PointsSpendingIntegerValueRewardsHistory" type="rewardsHistoryRecordData">
+        <data key="numberLine">1</data>
+        <data key="change">-10.00</data>
+        <data key="pointsLeft">90.00</data>
+    </entity>
+
+    <entity name="PointsSpendingDecimalValue" type="rewardPointsData">
+        <data key="applyRewardsAmountOne">2.5</data>
+        <data key="applyRewardsAmountTwo">3.5</data>
+        <data key="discountAmountOne">-$10.00</data>
+        <data key="discountAmountTwo">-$14.00</data>
+        <data key="currentBalance">96.5</data>
+    </entity>
+    <entity name="PointsSpendingDecimalValueRewardsHistory" type="rewardsHistoryRecordData">
+        <data key="numberLine">1</data>
+        <data key="change">-3.50</data>
+        <data key="pointsLeft">96.50</data>
+    </entity>
+
+    <entity name="PointsSpendingAndMultiCurrency" type="rewardPointsData">
+        <data key="rateUSDAndEUR">0.8</data>
+        <data key="applyRewardsAmountOne">45.2</data>
+        <data key="applyRewardsAmountTwo">62</data>
+        <data key="discountAmountOne">-€8.13</data>
+        <data key="discountAmountTwo">-€11.15</data>
+        <data key="currentBalance">38</data>
+    </entity>
+    <entity name="PointsSpendingAndMultiCurrencyRewardsHistory" type="rewardsHistoryRecordData">
+        <data key="numberLine">1</data>
+        <data key="change">-62.00</data>
+        <data key="pointsLeft">38.00</data>
+    </entity>
+
+    <entity name="PointsRoundingRuleNoRounding" type="rewardPointsData">
+        <data key="applyRewardsAmount">61</data>
+        <data key="appliedRewardsAmount">60.4</data>
+        <data key="discountAmount">-$60.40</data>
+        <data key="currentBalance">39.6</data>
+    </entity>
+    <entity name="PointsRoundingRuleNoRoundingRewardsHistory" type="rewardsHistoryRecordData">
+        <data key="numberLine">1</data>
+        <data key="change">-60.40</data>
+        <data key="pointsLeft">39.60</data>
+    </entity>
+
+    <entity name="PointsRoundingRuleRoundUp" type="rewardPointsData">
+        <data key="applyRewardsAmount">61</data>
+        <data key="appliedRewardsAmount">61</data>
+        <data key="discountAmount">-$60.40</data>
+        <data key="currentBalance">39</data>
+    </entity>
+    <entity name="PointsRoundingRuleRoundUpRewardsHistory" type="rewardsHistoryRecordData">
+        <data key="numberLine">1</data>
+        <data key="change">-61.00</data>
+        <data key="pointsLeft">39.00</data>
+    </entity>
+
+    <entity name="PointsRoundingRuleRoundDown" type="rewardPointsData">
+        <data key="applyRewardsAmount">61</data>
+        <data key="appliedRewardsAmount">60</data>
+        <data key="discountAmount">-$60.00</data>
+        <data key="currentBalance">40</data>
+    </entity>
+    <entity name="PointsRoundingRuleRoundDownRewardsHistory" type="rewardsHistoryRecordData">
+        <data key="numberLine">1</data>
+        <data key="change">-60.00</data>
+        <data key="pointsLeft">40.00</data>
+    </entity>
+
+    <entity name="PointsCalculationBeforeTax" type="rewardPointsData">
+        <data key="countryTax">United States</data>
+        <data key="stateTax">Arizona</data>
+        <data key="tax">$8.20</data>
+        <data key="currentBalance">72</data>
+    </entity>
+    <entity name="PointsCalculationBeforeTaxHistory" type="rewardsHistoryRecordData">
+        <data key="numberLine">1</data>
+        <data key="change">+72.00</data>
+        <data key="pointsLeft">72.00</data>
+    </entity>
+
+    <entity name="HighlightCalculateBeforeTax" type="rewardPointsData">
+        <data key="HighlightValueProductOne">45 points</data>
+        <data key="HighlightValueProductTwo">45 points</data>
+        <data key="HighlightCartAndCheckoutValue">72 Reward Points</data>
+    </entity>
+
+    <entity name="PointsCalculateAfterTaxExclPrice" type="rewardPointsData">
+        <data key="discountAmount">-$18.16</data>
+        <data key="currentBalance">79</data>
+        <data key="countryTax">United States</data>
+        <data key="stateTax">Arizona</data>
+        <data key="tax">$8.17</data>
+    </entity>
+    <entity name="PointsCalculateAfterTaxExclPriceHistory" type="rewardsHistoryRecordData">
+        <data key="numberLine">1</data>
+        <data key="change">+79.00</data>
+        <data key="pointsLeft">79.00</data>
+    </entity>
+
+    <entity name="HighlightCalculateAfterTaxExclPrice" type="rewardPointsData">
+        <data key="HighlightValueProductOne">39 points</data>
+        <data key="HighlightValueProductTwo">60 points</data>
+        <data key="HighlightCartAndCheckoutValue">79 Reward Points</data>
+    </entity>
+
+    <entity name="PointsCalculateAfterTaxExclShip" type="rewardPointsData">
+        <data key="currentBalance">89</data>
+        <data key="countryTax">United States</data>
+        <data key="stateTax">Arizona</data>
+        <data key="tax">$9.16</data>
+    </entity>
+    <entity name="PointsCalculateAfterTaxExclShipHistory" type="rewardsHistoryRecordData">
+        <data key="numberLine">1</data>
+        <data key="change">+89.00</data>
+        <data key="pointsLeft">89.00</data>
+    </entity>
+
+    <entity name="HighlightCalculateAfterTaxExclShip" type="rewardPointsData">
+        <data key="HighlightValueProductOne">39 points</data>
+        <data key="HighlightValueProductTwo">59 points</data>
+        <data key="HighlightCartAndCheckoutValue">89 Reward Points</data>
+    </entity>
+
+    <entity name="PointsCalculationAfterTaxTwoInclude" type="rewardPointsData">
+        <data key="currentBalance">72</data>
+        <data key="discountAmount">-$20.00</data>
+        <data key="countryTax">United States</data>
+        <data key="stateTax">Arizona</data>
+        <data key="tax">$7.45</data>
+    </entity>
+    <entity name="PointsCalculationAfterTaxTwoIncludeHistory" type="rewardsHistoryRecordData">
+        <data key="numberLine">1</data>
+        <data key="change">+72.00</data>
+        <data key="pointsLeft">72.00</data>
+    </entity>
+
+    <entity name="HighlightCalculateAfterTaxTwoInclude" type="rewardPointsData">
+        <data key="HighlightValueProductOne">41 points</data>
+        <data key="HighlightValueProductTwo">59 points</data>
+        <data key="HighlightCartAndCheckoutValue">72 Reward Points</data>
+    </entity>
+
+    <entity name="PointsCalculationAfterTaxTwoExclude" type="rewardPointsData">
+        <data key="currentBalance">91</data>
+        <data key="countryTax">United States</data>
+        <data key="stateTax">Arizona</data>
+        <data key="tax">$9.30</data>
+    </entity>
+    <entity name="PointsCalculationAfterTaxTwoExcludeHistory" type="rewardsHistoryRecordData">
+        <data key="numberLine">1</data>
+        <data key="change">+91.00</data>
+        <data key="pointsLeft">91.00</data>
+    </entity>
+
+    <entity name="HighlightCalculateAfterTaxTwoExclude" type="rewardPointsData">
+        <data key="HighlightValueProductOne">41 points</data>
+        <data key="HighlightValueProductTwo">49 points</data>
+        <data key="HighlightCartAndCheckoutValue">91 Reward Points</data>
+    </entity>
+
+    <entity name="MinimumPointsRequirementIsTwenty" type="rewardPointsData">
+        <data key="redemptionLimitAmount">20</data>
+        <data key="applyRewardsAmount">10</data>
+    </entity>
+
+    <entity name="MinimumPointsRequirementIsEmpty" type="rewardPointsData">
+        <data key="applyRewardsAmount">10.45</data>
+        <data key="discountAmount">-$10.45</data>
+    </entity>
+
+    <entity name="DisablePointsForOrders" type="rewardPointsData">
+        <data key="applyRewardsAmount">10</data>
+        <data key="discountAmount">-$10.00</data>
+        <data key="currentBalance">90</data>
+    </entity>
+    <entity name="DisablePointsForOrdersHistory" type="rewardsHistoryRecordData">
+        <data key="numberLine">1</data>
+        <data key="change">-10.00</data>
+        <data key="pointsLeft">90.00</data>
+    </entity>
+
+    <entity name="ApplyRedemptionLimitAmount" type="rewardPointsData">
+        <data key="applyRewardsAmount">20</data>
+        <data key="appliedRewardsAmount">10</data>
+        <data key="discountAmount">-$10.00</data>
+    </entity>
+
+    <entity name="RPConfigurationApplyRedemptionLimitPercent" type="rewardPointsData">
+        <data key="applyRewardsAmount">40</data>
+        <data key="appliedRewardsAmount">11.2</data>
+        <data key="discountAmount">-$11.20</data>
+    </entity>
+
+    <entity name="PointsExpirationFourDaysHistory" type="rewardsHistoryRecordData">
+        <data key="currentBalance">38</data>
+        <data key="numberLine">1</data>
+        <data key="change">+38.00</data>
+        <data key="pointsLeft">38.00</data>
+        <data key="expireDays">4 day</data>
+    </entity>
+
+    <entity name="PointsExpirationTodayHistorySpent" type="rewardsHistoryRecordData">
+        <data key="currentBalance">48</data>
+        <data key="numberLine">1</data>
+        <data key="change">+38.00</data>
+        <data key="pointsLeft">48.00</data>
+        <data key="expireDays">0 day</data>
+    </entity>
+    <entity name="PointsExpirationIsTodayHistoryOrder" type="rewardsHistoryRecordData">
+        <data key="numberLine">2</data>
+        <data key="change">+10.00</data>
+        <data key="pointsLeft">10.00</data>
+        <data key="expireDays">0 day</data>
+    </entity>
+
+    <entity name="PointsExpirationNeverExpireHistory" type="rewardsHistoryRecordData">
+        <data key="currentBalance">10</data>
+        <data key="numberLine">1</data>
+        <data key="change">+10.00</data>
+        <data key="pointsLeft">10.00</data>
+    </entity>
+
+    <entity name="AdminActionTextHistory" type="rewardsHistoryRecordData">
+        <data key="numberLine">1</data>
+        <data key="change">+10.00</data>
+        <data key="pointsLeft">10.00</data>
+        <data key="actionText">Test Admin Point Chang</data>
+    </entity>
+
+    <entity name="CheckActionGetXPointsForCompletingOrderHistory" type="rewardsHistoryRecordData">
+        <data key="numberLine">1</data>
+        <data key="change">+10.00</data>
+        <data key="pointsLeft">10.00</data>
+    </entity>
+
+    <entity name="CheckActionGetXPointsForYSpentHistory" type="rewardsHistoryRecordData">
+        <data key="currentBalance">90</data>
+        <data key="numberLine">1</data>
+        <data key="change">+90.00</data>
+        <data key="pointsLeft">90.00</data>
+        <data key="expireDays">8 day</data>
+    </entity>
+
+    <entity name="CheckActionGetXPointsForNewsHistory" type="rewardsHistoryRecordData">
+        <data key="numberLine">1</data>
+        <data key="change">+20.00</data>
+        <data key="pointsLeft">20.00</data>
+        <data key="expireDays">10 day</data>
+    </entity>
+
+    <entity name="rewardsProductReview" type="reviewProduct">
+        <data key="nickname" unique="suffix">rewardsReview</data>
+        <data key="title">Rewards review title</data>
+        <data key="detail">Rewards product review</data>
+    </entity>
+    <entity name="CheckActionGetXPointsForReviewHistory" type="rewardsHistoryRecordData">
+        <data key="currentBalance">0.02</data>
+        <data key="numberLine">1</data>
+        <data key="change">+0.02</data>
+        <data key="pointsLeft">0.02</data>
+    </entity>
+
+    <entity name="CheckActionGetXPointsForRegistrationHistory" type="rewardsHistoryRecordData">
+        <data key="numberLine">1</data>
+        <data key="change">+21.55</data>
+        <data key="pointsLeft">21.55</data>
+        <data key="expireDays">0 day</data>
+    </entity>
+
+    <entity name="CheckAddPointAdminAreaExpireFiveDayHistory" type="rewardsHistoryRecordData">
+        <data key="numberLine">1</data>
+        <data key="change">+20.50</data>
+        <data key="pointsLeft">20.50</data>
+        <data key="expireDays">5 day</data>
+        <data key="comment">Test 20,5</data>
+    </entity>
+
+    <entity name="CheckAddPointAdminAreaExpireTodayHistory" type="rewardsHistoryRecordData">
+        <data key="numberLine">1</data>
+        <data key="change">150</data>
+        <data key="pointsLeft">150</data>
+        <data key="expireDays">0 day</data>
+        <data key="comment">123 456 789</data>
+    </entity>
+
+    <entity name="CheckAddPointAdminAreaNeverExpireHistory" type="rewardsHistoryRecordData">
+        <data key="numberLine">1</data>
+        <data key="change">+0.02</data>
+        <data key="pointsLeft">0.02</data>
+        <data key="comment">I am Admin</data>
+    </entity>
+
+    <entity name="CheckDeductPointAdminAreaHistory" type="rewardsHistoryRecordData">
+        <data key="numberLine">1</data>
+        <data key="change">-60.07</data>
+        <data key="pointsLeft">39.93</data>
+        <data key="comment">Test Deduct 60,07</data>
+    </entity>
+
+    <entity name="CheckCurrentBalanceIsNull" type="rewardsHistoryRecordData">
+        <data key="currentBalance">0</data>
+    </entity>
+
+    <entity name="CheckCompleteOrderConditionIsValidHistory" type="rewardsHistoryRecordData">
+        <data key="currentBalance">10</data>
+        <data key="numberLine">1</data>
+        <data key="change">+10.00</data>
+        <data key="pointsLeft">10.00</data>
+    </entity>
+
+    <entity name="CheckNewsletterCustomerGroupIsValidHistory" type="rewardsHistoryRecordData">
+        <data key="numberLine">1</data>
+        <data key="change">+10.00</data>
+        <data key="pointsLeft">10.00</data>
+    </entity>
+
+    <entity name="CheckRuleYSpentWithConditionSubtotalIsValid" type="rewardsHistoryRecordData">
+        <data key="currentBalance">90</data>
+        <data key="numberLine">1</data>
+        <data key="change">+90.00</data>
+        <data key="pointsLeft">90.00</data>
+    </entity>
+
+    <entity name="CheckReturnPointsAfterCanceledOrder" type="rewardPointsData">
+        <data key="applyRewardsAmount">12.5</data>
+        <data key="discountAmount">-$12.50</data>
+    </entity>
+    <entity name="CheckReturnPointsAfterCanceledOrderHistory" type="rewardsHistoryRecordData">
+        <data key="numberLine">1</data>
+        <data key="change">+12.50</data>
+        <data key="pointsLeft">100.00</data>
+        <data key="actionText">Canceled</data>
+        <data key="comment">Canceled</data>
+    </entity>
+
+    <entity name="CheckReturnLessPointsAfterRefund" type="rewardPointsData">
+        <data key="applyRewardsAmount">30</data>
+        <data key="discountAmount">-$30.00</data>
+        <data key="refundRewardsAmount">25</data>
+    </entity>
+    <entity name="CheckReturnLessPointsAfterRefundHistory" type="rewardsHistoryRecordData">
+        <data key="numberLine">1</data>
+        <data key="change">+25.00</data>
+        <data key="pointsLeft">95.00</data>
+        <data key="actionText">Refund</data>
+        <data key="comment">Refund</data>
+    </entity>
+
+    <entity name="CheckReturnLargerPointsAfterRefund" type="rewardPointsData">
+        <data key="applyRewardsAmount">15</data>
+        <data key="discountAmount">-$15.00</data>
+        <data key="refundRewardsAmount">19.26</data>
+    </entity>
+    <entity name="CheckReturnLargerPointsAfterRefundHistory" type="rewardsHistoryRecordData">
+        <data key="numberLine">1</data>
+        <data key="change">+19.26</data>
+        <data key="pointsLeft">104.26</data>
+        <data key="actionText">Refund</data>
+        <data key="comment">Refund</data>
+    </entity>
+
+    <entity name="CreateOrderAndApplyPointsFromAdminArea" type="rewardPointsData">
+        <data key="applyRewardsAmountForOrder">20.23</data>
+    </entity>
+    <entity name="CreateOrderAndApplyPointsFromAdminAreaHistory" type="rewardsHistoryRecordData">
+        <data key="numberLine">1</data>
+        <data key="change">-20.23</data>
+        <data key="pointsLeft">79.77</data>
+    </entity>
+
+    <entity name="CheckHighlightTwoSpentRulesAndPromo" type="rewardPointsData">
+        <data key="HighlightValueProductOne">60.3 points</data>
+        <data key="HighlightValueProductTwo">54 points</data>
+        <data key="HighlightCartAndCheckoutValue">114.3 Reward Points</data>
+    </entity>
+    <entity name="CheckHighlightTwoSpentRulesHistory" type="rewardsHistoryRecordData">
+        <data key="numberLine">2</data>
+        <data key="change">+90.00</data>
+        <data key="pointsLeft">90.00</data>
+    </entity>
+    <entity name="CheckHighlightTwoSpentRulesPromoHistory" type="rewardsHistoryRecordData">
+        <data key="numberLine">1</data>
+        <data key="change">+24.30</data>
+        <data key="pointsLeft">114.30</data>
+    </entity>
+
+    <entity name="CheckHighlightTwoStoreView" type="rewardPointsData">
+        <data key="HighlightValueProductOne">36 points</data>
+        <data key="HighlightValueProductTwo">54 points</data>
+        <data key="HighlightCartAndCheckoutValue">100 Reward Points</data>
+    </entity>
+    <entity name="CheckHighlightTwoStoreCompleteHistory" type="rewardsHistoryRecordData">
+        <data key="numberLine">2</data>
+        <data key="change">+10.00</data>
+        <data key="pointsLeft">10.00</data>
+    </entity>
+    <entity name="CheckHighlightTwoStoreSpentHistory" type="rewardsHistoryRecordData">
+        <data key="numberLine">1</data>
+        <data key="change">+90.00</data>
+        <data key="pointsLeft">100.00</data>
+    </entity>
+
+    <entity name="CheckHighlightMultiCurrency" type="rewardPointsData">
+        <data key="HighlightValueProductOne">36 points</data>
+        <data key="HighlightValueProductTwo">54 points</data>
+        <data key="HighlightCartAndCheckoutValue">100 Reward Points</data>
+        <data key="subtotalCart">€72.64</data>
+        <data key="totalCart">€</data>
+    </entity>
+
+    <entity name="CheckHighlightForGuest" type="rewardPointsData">
+        <data key="HighlightValueForGuest">25.02 Reward Points</data>
+    </entity>
+
+    <entity name="CheckUseExpirePointsToday" type="rewardPointsData">
+        <data key="applyRewardsAmount">20</data>
+        <data key="discountAmount">-$20.00</data>
+    </entity>
+    <entity name="CheckUseExpireTenPointsTodayHistory" type="rewardsHistoryRecordData">
+        <data key="numberLine">3</data>
+        <data key="expireDays">expired</data>
+    </entity>
+    <entity name="CheckUseExpireFivePointsTodayHistory" type="rewardsHistoryRecordData">
+        <data key="numberLine">2</data>
+        <data key="expireDays">expired</data>
+    </entity>
+
+    <entity name="CheckUseExpirePointsFourDays" type="rewardPointsData">
+        <data key="applyRewardsAmount">4</data>
+        <data key="discountAmount">-$4.00</data>
+    </entity>
+    <entity name="CheckUseExpireFivePointsFourDaysHistory" type="rewardsHistoryRecordData">
+        <data key="numberLine">2</data>
+        <data key="expireDays">4 day</data>
+    </entity>
+
+    <entity name="CheckRewardPointsByCustomerGrid" type="rewardPointsData">
+        <data key="amountCustomerPointsNull">0</data>
+    </entity>
+
+    <entity name="SearchCustomerByRewardPointsInCustomerGrid" type="rewardPointsData">
+        <data key="amountFromFifteen">15</data>
+        <data key="amountFromFour">4</data>
+        <data key="amountToFour">4</data>
+        <data key="amountToSeven">7</data>
+    </entity>
+
+    <entity name="SearchCustomerByRewardPointsAndCheckResult" type="rewardPointsData">
+        <data key="amountFromFour">4</data>
+        <data key="amountFromEight">8</data>
+        <data key="amountToFour">4</data>
+        <data key="amountToTwenty">20</data>
+    </entity>
+
+    <entity name="ReturnAndDeductXSpentRule" type="rewardPointsData">
+        <data key="applyRewardsAmount">10</data>
+        <data key="discountAmount">-$10.00</data>
+        <data key="refundRewardsAmount">10.00</data>
+        <data key="deductRewardsAmount">124.00</data>
+    </entity>
+    <entity name="ReturnAndDeductXSpentRuleDeductHistory" type="rewardsHistoryRecordData">
+        <data key="numberLine">1</data>
+        <data key="change">-118.00</data>
+        <data key="pointsLeft">100.00</data>
+        <data key="actionText">Refund</data>
+        <data key="comment">Deduct</data>
+    </entity>
+    <entity name="ReturnAndDeductXSpentRuleRefundHistory" type="rewardsHistoryRecordData">
+        <data key="numberLine">2</data>
+        <data key="change">+10.00</data>
+        <data key="pointsLeft">218.00</data>
+        <data key="actionText">Refund</data>
+        <data key="comment">Refund</data>
+    </entity>
+
+    <entity name="ReturnAndDeductCompleteRule" type="rewardPointsData">
+        <data key="applyRewardsAmount">15</data>
+        <data key="discountAmount">-$15.00</data>
+        <data key="refundRewardsAmount">15.00</data>
+        <data key="deductRewardsAmount">10.00</data>
+    </entity>
+    <entity name="ReturnAndDeductCompleteRuleDeductHistory" type="rewardsHistoryRecordData">
+        <data key="numberLine">1</data>
+        <data key="change">-10.00</data>
+        <data key="pointsLeft">100.00</data>
+        <data key="actionText">Refund</data>
+        <data key="comment">Deduct</data>
+    </entity>
+    <entity name="ReturnAndDeductCompleteRuleRefundHistory" type="rewardsHistoryRecordData">
+        <data key="numberLine">2</data>
+        <data key="change">+15.00</data>
+        <data key="pointsLeft">110.00</data>
+        <data key="actionText">Refund</data>
+        <data key="comment">Refund</data>
+    </entity>
+
+    <entity name="DeductAfterCreditMemoTwoRule" type="rewardsHistoryRecordData">
+        <data key="numberLine">1</data>
+        <data key="change">-84.00</data>
+        <data key="pointsLeft">100.00</data>
+        <data key="actionText">Refund</data>
+        <data key="comment">Deduct</data>
+    </entity>
+
+    <entity name="DeductLessAfterCreditMemo" type="rewardPointsData">
+        <data key="deductRewardsAmount">64.04</data>
+    </entity>
+    <entity name="DeductLessAfterCreditMemoHistory" type="rewardsHistoryRecordData">
+        <data key="numberLine">1</data>
+        <data key="change">-64.04</data>
+        <data key="pointsLeft">119.96</data>
+        <data key="actionText">Refund</data>
+        <data key="comment">Deduct</data>
+    </entity>
+
+    <entity name="DeductLargeAfterCreditMemo" type="rewardPointsData">
+        <data key="deductRewardsAmount">90.22</data>
+        <data key="currentBalance">184</data>
+    </entity>
+    <entity name="DeductLargeAfterCreditMemoHistory" type="rewardsHistoryRecordData">
+        <data key="numberLine">1</data>
+        <data key="change">-90.22</data>
+        <data key="pointsLeft">93.78</data>
+        <data key="actionText">Refund</data>
+        <data key="comment">Deduct</data>
+    </entity>
+
+    <entity name="DeductAfterPartialCreditMemo" type="rewardPointsData">
+        <data key="deductRewardsAmount">132.33</data>
+    </entity>
+    <entity name="DeductAfterPartialCreditMemoFirstDeductHistory" type="rewardsHistoryRecordData">
+        <data key="numberLine">1</data>
+        <data key="change">-132.33</data>
+        <data key="pointsLeft">159.67</data>
+        <data key="actionText">Refund</data>
+        <data key="comment">Deduct</data>
+    </entity>
+    <entity name="DeductAfterPartialCreditMemoSecondDeductHistory" type="rewardsHistoryRecordData">
+        <data key="numberLine">1</data>
+        <data key="change">-59.67</data>
+        <data key="pointsLeft">100.00</data>
+        <data key="actionText">Refund</data>
+        <data key="comment">Deduct</data>
+    </entity>
+
+</entities>
