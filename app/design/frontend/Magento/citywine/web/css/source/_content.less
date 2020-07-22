@@ -1,0 +1,615 @@
+.title-section {
+    font-size: 24px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    text-align: center;
+    color: #000;
+}
+
+.banner-slide {
+    position: relative;
+    margin-bottom: 77px;
+    .top-slider {
+        position: relative;
+        height: 485px;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        color: #fff;
+        .top-slider_wrap {
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 1280px;
+            padding-left: 20px;
+            padding-right: 20px;
+            display: table;
+            width: 100%;
+            height: 100%;
+            @media (max-width: 1500px) {
+                padding-left: 121px;
+            }
+            @media (max-width: 550px) {
+                padding-left: 74px;
+                padding-right: 74px;
+            }
+        }
+
+        .top-slider_descr {
+            display: table-cell;
+            vertical-align: middle;
+            padding-right: 55%;
+            padding-top: 29px;
+            @media (max-width: 900px) {
+                padding-right: 15%;
+            }
+
+            h3 {
+                font-weight: bold;
+                font-size: 36px;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                @media (max-width: 1150px) {
+                    font-size: 29px;
+                }
+            }
+
+            p {
+                font-size: 24px;
+                margin-bottom: 32px;
+                @media (max-width: 1150px) {
+                    font-size: 18px;
+                }
+            }
+
+            @media (max-width: 700px) {
+                padding-right: 2%;
+            }
+        }
+        & + .top-slider {
+            display: none;
+        }
+        & + .top-slider.slick-slide {
+            display: block;
+        }
+    }
+}
+
+.block-cats {
+    position: relative;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    color: #000;
+    .block-cat {
+        -ms-flex: 0 0 33.333333%;
+        flex: 0 0 33.333333%;
+        max-width: 33.333333%;
+        text-align: center;
+        padding: 0px 15px;
+        img {
+            display: block;
+            margin: 0 auto;
+        }
+        h3 {
+            text-align: center;
+            letter-spacing: 0.03em;
+            font-size: 18px;
+            text-transform: uppercase;
+        }
+        p {
+            font-size: 16px;
+        }
+        a {
+            font-weight: bold;
+            font-size: 16px;
+            color: #000;
+        }
+        @media (max-width: 1150px) {
+            padding: 9px;
+        }
+        @media (max-width: 700px) {
+            -ms-flex: 0 0 100%;
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+    }
+    @media (max-width: 700px) {
+        -webkit-flex-direction: column;
+        flex-direction: column;
+    }
+}
+
+
+.banner-big {
+    position: relative;
+    height: 514px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: #fff;
+    margin-top: 40px;
+    margin-bottom: 76px;
+    .banner-big_wrap {
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 1280px;
+        padding-left: 20px;
+        padding-right: 20px;
+        display: table;
+        width: 100%;
+        height: 100%;
+        .banner-big_descr {
+            display: table-cell;
+            vertical-align: middle;
+            padding-left: 50%;
+            h3 {
+                font-weight: bold;
+                font-size: 36px;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                margin-bottom: 14px;
+                @media (max-width: 1150px) {
+                    font-size: 29px;
+                }
+            }
+            p {
+                font-size: 24px;
+                padding-right: 77px;
+                margin-bottom: 32px;
+                @media (max-width: 1150px) {
+                    font-size: 18px;
+                }
+            }
+            @media (max-width: 700px) {
+                padding-left: 2%;
+            }
+        }
+    }
+}
+
+
+a.btn {
+    font-size: 15px;
+    background-color: #fff;
+    color:#000;
+    text-decoration: none;
+    padding: 11px 20px;
+    display: table;
+    @media (max-width: 500px) {
+        padding: 14px;
+    }
+}
+
+.home-module {
+    h1 {
+        font-size: 2em;
+        margin: 0;
+        padding: 0;
+    }
+    ul {
+        list-style: none;
+        padding: 0;
+    }
+    h2 {
+        margin: 0;
+        font-family: "Josefin Sans", Arial, sans-serif;
+        line-height: normal;
+        font-weight: normal;
+        font-size: 1.5rem;
+    }
+}
+
+.big-banner {
+    margin-bottom: 50px;
+}
+.home-module .info-box {
+    transition: visibility 0.5s,opacity 0.5s;
+    text-align: center;
+    z-index: 10;
+    width: 490px;
+    position: absolute;
+    top: 20%;
+    padding: 10px 30px;
+    left: calc(50% - 245px);
+}
+.home-module .info-box.to-right {
+    right: 7%;
+    left: auto;
+    text-align: right;
+}
+.home-module .info-box .tit {
+    font-family: "Josefin Sans",arial, sans-serif;
+    font-weight: 600;
+    font-weight: normal;
+    font-style: normal;
+    font-size: 40px;
+    line-height: 36px;
+    color: white;
+    letter-spacing: 1px;
+}
+.home-module .info-box .desc {
+    margin-top: 30px;
+    font-family: "Josefin Sans", Arial, sans-serif;
+    font-weight: 300;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 16px;
+    line-height: 19px;
+    color: white;
+    letter-spacing: 0;
+    font-weight: 300;
+}
+.home-module .info-box.to-right .desc {
+    float: right;
+    clear: both;
+}
+.home-module .info-box .reviewer {
+    font-family: "Josefin Sans", Arial, sans-serif;
+    font-weight: 300;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 22px;
+    line-height: 36px;
+    color: white;
+    letter-spacing: 0;
+    font-weight: 600;
+}
+
+
+.cta-filling {
+    color: white;
+    border: 1px solid white;
+    background: transparent;
+    padding: 15px 20px;
+    margin: 25px;
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-radius: 10px;
+    display: inline-block;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: inset 0 0 0 0 #7C0040;
+    -webkit-transition: all ease 0.8s;
+    -moz-transition: all ease 0.8s;
+    transition: all ease 0.8s;
+    &:hover {
+        box-shadow: inset 0 -100px 0 0 #7C0040;
+        color: white;
+    }
+}
+.home-module .info-box .cta-filling {
+    margin: 30px auto 0;
+    width: 200px;
+}
+.home-module .info-box.to-right .cta-filling {
+    clear: both;
+    display: block;
+    float: right;
+}
+
+.home-module .non-wine-module {
+    padding: 15px 0;
+    text-align: center;
+    margin: 0 10% 50px;
+    border-top: 1px solid #cccccc;
+    border-bottom: 1px solid #cccccc;
+}
+.home-module .non-wine-module .non-wine-left {
+    display: inline-block;
+    vertical-align: top;
+    width: 49%;
+    text-align: center;
+    border-right: 1px solid #ccc;
+    padding: 0 60px;
+}
+.home-module .non-wine-module img {
+    max-width: 100px;
+    margin: auto;
+}
+.home-module .non-wine-module .tit {
+    margin-top: 0px;
+    font-family: "Josefin Sans", Arial, sans-serif;
+    font-weight: 300;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 22px;
+    line-height: 24px;
+    color: black;
+    letter-spacing: 0;
+    font-weight: 600;
+}
+.home-module .non-wine-module .desc {
+    margin-top: 30px;
+    font-family: "Josefin Sans", Arial, sans-serif;
+    font-weight: 300;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 16px;
+    line-height: 19px;
+    color: black;
+    letter-spacing: 0;
+    font-weight: 600;
+}
+.home-module .non-wine-module .non-wine-cta {
+    margin: 30px auto 30px;
+    border-color: black;
+    color: black;
+    display: block;
+    max-width: 200px;
+}
+.home-module .non-wine-module .non-wine-right {
+    display: inline-block;
+    vertical-align: top;
+    width: 50%;
+    text-align: center;
+    padding: 0 60px;
+}
+.big-banner {
+    position: relative;
+}
+
+.home-module .hero-slider .info-box, .home-module .big-banner .info-box {
+    max-width: 700px;
+    width: auto;
+}
+.home-module .info-box.to-left {
+    left: 10%;
+    text-align: left;
+}
+.wines {
+    padding: 0 5% 5%;
+    .wine-block {
+        display: inline-block;
+        vertical-align: top;
+        width: 24%;
+        padding: 50px 1% 30px;
+    }
+    .wines-top {
+        text-align: center;
+        border-top: 1px solid #e8e8e8;
+        padding: 40px 6%;
+        min-height: 300px;
+        height: auto;
+        border-bottom: 1px solid #e8e8e8;
+    }
+    .wine-top-fly {
+        position: relative;
+        min-height: 300px;
+    }
+    img {
+        max-width: 60px;
+        margin: auto;
+    }
+    .wines-top-title {
+        font-family: "Josefin Sans",arial, sans-serif;
+        font-weight: 600;
+        font-weight: normal;
+        font-style: normal;
+        font-size: 24px;
+        line-height: 36px;
+        color: black;
+        letter-spacing: 1px;
+    }
+    .wines-desc {
+        font-family: "Josefin Sans", Arial, sans-serif;
+        font-weight: 300;
+        font-style: normal;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        font-size: 14px;
+        line-height: 17px;
+        color: black;
+        letter-spacing: 0;
+        margin-top: 10px;
+    }
+}
+
+.wines .wines-cta {
+    margin: 30px auto 0;
+    border-color: black;
+    color: black;
+    display: block;
+    &:hover {
+        color: white;
+    }
+}
+
+.home-module .product-slide .info-box .tit.big {
+    font-size: 60px;
+    small {
+        font-weight: bold;
+        line-height: 1;
+        font-size: smaller;
+        font-family: "Josefin Sans",arial,sans-serif;
+        color: #fff;
+    }
+}
+.home-module .product-slide .info-box .desc {
+    margin-top: 30px;
+    font-family: "Josefin Sans", Arial, sans-serif;
+    font-weight: 300;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 28px;
+    line-height: 34px;
+    color: white;
+    letter-spacing: 0;
+    font-weight: 600;
+}
+.home-module .product-slide .small-copy {
+    font-size: 20px;
+    margin-top: 20px;
+}
+.slick-slide, .product-slide {
+    position: relative;
+}
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    h2 {
+        font-size: 1.5rem;
+        margin: 0;
+    }
+}
+
+.product-slider .product-slider-title {
+    font-family: "Josefin Sans",arial, sans-serif;
+    font-weight: 600;
+    font-weight: normal;
+    font-style: normal;
+    font-size: 22px;
+    line-height: 36px;
+    color: black;
+    letter-spacing: 1px;
+    text-align: center;
+    width: 40%;
+    margin: auto;
+}
+.product-slider .product-slider-desc {
+    width: 60%;
+    margin: 10px auto 30px;
+    font-family: "Josefin Sans", Arial, sans-serif;
+    font-weight: 300;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 14px;
+    line-height: 17px;
+    color: black;
+    letter-spacing: 0;
+    text-align: center;
+}
+.home-module .product-slide .info-box {
+    top: 10%;
+}
+.home-module .product-slide .desc .price {
+    font-size: 55px;
+    margin-top: 25px;
+    small {
+        position: relative;
+        bottom: 10px;
+        color: #fff;
+        font-size: 55px;
+        font-family: "Josefin Sans", Arial, sans-serif;
+    }
+}
+
+    .product-items {
+        .product-item {
+            display: inline-block;
+            width: 33%;
+            padding: 0 60px;
+            margin-bottom: 40px;
+            .product-item-info {
+                background-color: #fff;
+                border-radius: 7px;
+                overflow: hidden;
+                text-align: center;
+                &:hover {
+                    box-shadow: 8px 7px 9px #cccccc;
+                }
+            }
+            .product-item-link {
+                font-family: "Josefin Sans", Arial, sans-serif;
+                font-weight: 300;
+                font-style: normal;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+                font-size: 14px;
+                line-height: 17px;
+                color: #333;
+                letter-spacing: 0;
+                text-transform: capitalize;
+                height: 35px;
+                overflow: hidden;
+                display: block;
+                @media (max-width: 900px) {
+                    font-size: 13px;
+                }
+            }
+            .price-box {
+                font-family: "Josefin Sans", Arial, sans-serif;
+                font-style: normal;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+                font-size: 15px;
+                line-height: 17px;
+                color: #333;
+                letter-spacing: 0;
+                font-weight: bold;
+                display: inline-block;
+                .price-label {
+                    display:none;
+                }
+                .old-price {
+                    color: #dc1434;
+                }
+                .special-price {
+                    display: inline-block;
+                }
+            }
+        }
+    }
+.page-wrapper>.breadcrumbs {
+    padding: 15px 0;
+    text-align: center;
+    font-size: 16px;
+    ul.items {
+        font-size: 16px;
+        a, li {
+            font-size: 16px;
+        }
+    }
+}
+
+.catalog-category-view {
+    h1.page-title {
+        font-family: "Josefin Sans",arial, sans-serif;
+        font-style: normal;
+        line-height: 36px;
+        color: #7C0040;
+        letter-spacing: 1px;
+        font-size: 27px;
+        text-align: center;
+        margin: 20px auto 30px;
+        font-weight: 600;
+        display: block !important;
+    }
+    .toolbar-products {
+        border-bottom: 1px solid #cccccc;
+        border-top: 1px solid #cccccc;
+        margin-bottom: 20px;
+        position: relative;
+        margin-top: -3px;
+        padding: 10px 0px;
+    }
+}
+.catalog-product-view {
+    .product.right {
+        float: right;
+        width: 69%;
+    }
+
+    .product.info.detailed {
+        float: left;
+        width: 30%;
+        clear: initial;
+        .product.data.items>.item.content {
+            border-bottom: 1px solid #d1d1d1;
+            border-top: 0;
+            background: #f4f4f4;
+        }
+    }
+}
+

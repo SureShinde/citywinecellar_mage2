@@ -1,0 +1,73 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+?>
+<?php
+/**
+ * Template for displaying new products widget
+ *
+ * @var $block \Magento\Catalog\Block\Product\Widget\NewWidget
+ */
+
+// phpcs:disable Magento2.Files.LineLength.MaxExceeded
+// phpcs:disable Magento2.Templates.ThisInTemplate.FoundThis
+
+if ($exist = ($block->getProductCollection() && $block->getProductCollection()->getSize())) {
+    $type = 'widget-new-grid';
+
+    $mode = 'grid';
+
+    $image = 'new_products_content_widget_grid';
+    $title = __('NEW ARRIVALS');
+    $items = $block->getProductCollection()->getItems();
+
+    $showWishlist = true;
+    $showCompare = true;
+    $showCart = true;
+    $templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::DEFAULT_VIEW;
+    $description = false;
+}
+?>
+
+<?php if ($exist) :?>
+    <div class="block widget block-new-products <?= /* @noEscape */ $mode ?>">
+        <div class="block-title">
+            <div class="title-section"><?= $block->escapeHtml($title) ?></div>
+        </div>
+        <div class="block-content">
+            <?= /* @noEscape */ '<!-- ' . $image . '-->' ?>
+            <div class="product-<?= /* @noEscape */ $mode ?> <?= /* @noEscape */ $mode ?>">
+                <div class="product-items <?= /* @noEscape */ $type ?>">
+                    <?php foreach ($items as $_item) :?>
+                        <div class="product-item">
+                            <div class="product-item-info">
+                                <a href="<?= $block->escapeUrl($block->getProductUrl($_item)) ?>"
+                                   class="product-item-photo">
+                                    <?= $block->getImage($_item, $image)->toHtml() ?>
+                                </a>
+                                <div class="product-item-details">
+                                    <strong class="product-item-name">
+                                        <a title="<?= $block->escapeHtmlAttr($_item->getName()) ?>"
+                                           href="<?= $block->escapeUrl($block->getProductUrl($_item)) ?>"
+                                           class="product-item-link">
+                                            <?= $block->escapeHtml($_item->getName()) ?>
+                                        </a>
+                                    </strong>
+                                    <?= $block->getProductPriceHtml($_item, $type); ?>
+
+                                    <?php if ($templateType) :?>
+                                        <?= $block->getReviewsSummaryHtml($_item, $templateType) ?>
+                                    <?php endif; ?>
+
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach ?>
+                </div>
+            </div>
+            <?= $block->getPagerHtml() ?>
+        </div>
+    </div>
+<?php endif;?>
