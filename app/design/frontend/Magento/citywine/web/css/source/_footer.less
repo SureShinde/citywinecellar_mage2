@@ -1,0 +1,142 @@
+.page-wrapper > .page-bottom {
+    max-width: 100%;
+    width: 100%;
+    padding: 0;
+}
+.page-footer {
+    background-color: black;
+    display: table;
+    width: 100%;
+    position: relative;
+    .footer.content {
+        position: relative;
+        border-top: 0;
+        margin-top: 0;
+        color: #BDBDBD;
+        max-width: 1200px;
+        a {
+            color: #fff;
+        }
+        .footer-left {
+            float:left;
+            width: 51%;
+            @media (max-width: 950px) {
+                float: none;
+                width: 100%;
+            }
+        }
+        .footer-right {
+            float: right;
+            width: 49%;
+            p {
+                font-size: 18px;
+                margin-bottom: 38px;
+            }
+            .footer-soc {
+                a {
+                    background-image: url('../images/social-big.png');
+                    display: inline-block;
+                    width: 50px;
+                    height: 50px;
+                    margin-right: 10px;
+                    background-repeat: no-repeat;
+                    font-size: 0;
+                    vertical-align: top;
+                    background-size: 231px;
+                    &.facebook {
+                        background-position: 0 0;
+                    }
+                    &.instagram {
+                        background-position: -59px 0;
+                    }
+                    &.twitter {
+                        background-position: -121px 0;
+                    }
+                    &.youtube {
+                        background-position: -182px 0;
+                    }
+                    &:last-child {
+                        margin-right: 0;
+                    }
+                }
+            }
+            @media (max-width: 950px) {
+                float: none;
+                width: 100%;
+            }
+        }
+        h4 {
+            color: white;
+            margin-bottom: 10px;
+            font-family: "Josefin Sans", Arial, sans-serif;
+            font-weight: 300;
+            font-style: normal;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            font-size: 14px;
+            line-height: 17px;
+            letter-spacing: 0;
+            text-transform: uppercase;
+            margin-top: 0;
+        }
+        @media (max-width: 950px) {
+            text-align: center;
+        }
+        .footer-menu {
+            color: #BDBDBD;
+            float: left;
+            width: 50%;
+            position: relative;
+            margin-bottom: 12px;
+            @media (max-width: 950px) {
+                float: none;
+                width: 100%;
+            }
+            a {
+                font-family: "Josefin Sans", Arial, sans-serif;
+                font-style: normal;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+                font-size: 12px;
+                letter-spacing: 0.05em;
+                text-transform: uppercase;
+                line-height: 1.5em;
+                display: block;
+                color: #aaa;
+                font-weight: 600;
+            }
+            &.payment-method {
+                width:100%
+            }
+        }
+    }
+    &:before {
+        content: "";
+        position: absolute;
+        border-bottom: 3px solid white;
+        width: 100%;
+        height: 1px;
+        top: 5px;
+    }
+    .phone-number {
+        font-family: "Josefin Sans", Arial, sans-serif;
+        font-weight: 300;
+        font-style: normal;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        line-height: 1.5em;
+        font-size: 15px;
+        color: white;
+    }
+}
+div.social-footer-bottom {
+    font-size: 15px;
+    color: white;
+}
+address, cite, code, em, strong {
+    font-style: normal;
+    font-weight: normal;
+}
+
