@@ -38,10 +38,11 @@
         <move element="top.right" destination="header-wrapper" />
         <move element="minicart" destination="top.right"/>
         <move element="profile-top" destination="top.right" after="minicart"/>
-        <move element="top.search" destination="top.right" before="-"/>
+        <move element="top.search" destination="header-wrapper" before="-"/>
         <move element="store.menu" destination="header.panel"  after="-"/>
         <referenceBlock name="catalog.compare.sidebar" remove="true"/>
         <referenceBlock name="wishlist_sidebar" remove="true" />
+
 
 
     </body>
