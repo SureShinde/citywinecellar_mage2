@@ -284,6 +284,9 @@ a.btn {
         color: white;
     }
 }
+.big-banner .cta-filling:visited {
+    color: white;
+}
 .home-module .info-box .cta-filling {
     margin: 30px auto 0;
     width: 200px;
@@ -345,6 +348,9 @@ a.btn {
     color: black;
     display: block;
     max-width: 200px;
+    &:hover {
+        color:#fff;
+    }
 }
 .home-module .non-wine-module .non-wine-right {
     display: inline-block;
@@ -516,6 +522,7 @@ ul {
                 border-radius: 7px;
                 overflow: hidden;
                 text-align: center;
+                padding: 10px;
                 &:hover {
                     box-shadow: 8px 7px 9px #cccccc;
                 }
@@ -534,6 +541,7 @@ ul {
                 height: 35px;
                 overflow: hidden;
                 display: block;
+                text-decoration: none;
                 @media (max-width: 900px) {
                     font-size: 13px;
                 }
@@ -592,7 +600,7 @@ ul {
         margin-bottom: 20px;
         position: relative;
         margin-top: -3px;
-        padding: 10px 0px;
+        padding: 10px 0;
     }
 }
 .catalog-product-view {
@@ -611,5 +619,33 @@ ul {
             background: #f4f4f4;
         }
     }
+    .price-label {
+        display: none;
+    }
+}
+
+.cms-page-view {
+    .columns{
+        margin: 40px auto 60px;
+        max-width: 75%;
+        margin: 0 auto;
+    }
+    h1 {
+        font-family: 'Josefin Sans', Georgia, sans-serif;
+        font-weight: 300;
+        font-style: normal;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        font-size: 30px;
+        line-height: 36px;
+        color: black;
+        letter-spacing: 1px;
+        text-align: center;
+        margin: 20px auto 35px;
+    }
+}
+
+.cms-page-view .breadcrumbs,  .catalog-category-view .breadcrumbs{
+    display:none;
 }
 

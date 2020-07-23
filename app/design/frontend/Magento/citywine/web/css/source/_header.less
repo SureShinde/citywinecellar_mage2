@@ -28,7 +28,10 @@ a:hover, .alink:hover {
     color: #444;
     text-decoration: none;
 }
-.navigation, .breadcrumbs, .page-header .header.panel, .header.content, .footer.content, .page-wrapper>.widget, .page-wrapper>.page-bottom, .block.category.event, .top-container, .page-main {
+.navigation, .breadcrumbs,
+.page-header .header.panel, .header.content, .footer.content,
+.page-wrapper>.widget, .page-wrapper>.page-bottom,
+.block.category.event, .top-container, .page-main {
     max-width: 1500px;
 }
 .catalog-category-view .page-main, .catalog-product-view .page-main{
@@ -164,10 +167,36 @@ a:hover, .alink:hover {
                                     color: black;
                                     letter-spacing: 0.05em;
                                     text-transform: uppercase;
+                                    border: none !important;
                                     &:hover {
                                         background: transparent;
+                                        background-color: #f4f4f4;
                                     }
                                 }
+                            }
+                            &:after, &:before {
+                                left: 62px;
+                                border: solid transparent;
+                                content: " ";
+                                height: 0;
+                                width: 0;
+                                position: absolute;
+                                pointer-events: none;
+                                top: -20px;
+                            }
+                            &:before {
+                                border-color: rgba(204,204,204,0);
+                                border-bottom-color: #ccc;
+                                border-width: 11px;
+                                margin-left: -11px;
+                                top: -22px;
+                            }
+                            &:after {
+                                border-color: rgba(255, 255, 255, 0);
+                                border-bottom-color: #fff;
+                                border-width: 10px;
+                                margin-left: -10px;
+                                z-index: 9;
                             }
                         }
                         @media (max-width: 800px) {
@@ -309,14 +338,14 @@ a:hover, .alink:hover {
                 }
             }
             .block-search {
-                width: 25px;
-                height: 30px;
-                padding-left: 0;
                 cursor: pointer;
-                position: inherit;
-                float: right;
-                margin-top: 0;
-                padding-top: 7px;
+                position: relative;
+                margin: 0;
+                padding: 0 !important;
+                display: table;
+                float: none;
+                width: 100%;
+                display: block;
             }
             @media (max-width: 800px) {
                 width: 100%;
@@ -360,67 +389,60 @@ a:hover, .alink:hover {
 
     .top-search {
         .control {
-            opacity: 0;
-            position: absolute;
-            left: 0;
-            right: 0;
-            top:100%;
-            width: 0;
+            display: none;
+            overflow: hidden;
+            height: 0px;
+            background-color: #dddddd;
+            transition: all, 0.45s;
+            -moz-transition: all, 0.45s;
+            -webkit-transition: all, 0.45s;
+            -ms-transition: all, 0.45s;
+            -o-transition: all, 0.45s;
+            margin: auto;
         }
-        .minisearch {
-            &.active {
-                .control {
-                    display: block;
-                    position: absolute;
-                    left: 0;
-                    top: 100%;
-                    z-index: 9;
-                    right: 0;
-                    opacity: 1;
-                    width: 100%;
-                    @media (max-width: 768px) {
-                        margin: 0;
-                        padding: 0;
-                    }
-                }
-
-                input {
-                    height: 68px;
-                    background: rgba(0, 0, 0, 0.7);
-                    border: none;
-                    font-size: 18px;
-                    padding-left: 50px;
-                    background-image: url("../images/search-icon.png");
-                    border-bottom-left-radius: 9px;
-                    border-bottom-right-radius: 9px;
-                    background-repeat: no-repeat;
-                    background-position: left 12px center;
-                    color: #fff;
-                    box-shadow: none;
-                    @media (max-width: 768px) {
-                        margin: 0;
-                        left: 0;
-                    }
-                }
-            }
+        .-opened .control {
+            display: block;
+            overflow: visible;
+            height: auto;
+            padding: 0;
+            margin: 0;
+            min-height: auto;
+        }
+      .-opened .field.search {
+          background-color: #dddddd;
+          padding: 14px 24px;
+          min-height: 60px;
+          padding-right: 45px;
         }
         label.label {
-            position: relative;
-            overflow: visible;
-            width: auto;
-            height: 100%;
+            position: absolute;
+            width: 19px;
+            height: 20px;
             cursor: pointer;
+            right: 0;
+            clip: auto;
+            top: 7px;
             &:before {
-                content: "";
-                background-image: url("../images/search-big.png");
+                content: "\e986";
+                font-family: "theliquorstore Icon Font";
                 width: 19px;
                 height: 20px;
-                background-repeat: no-repeat;
-                background-size: 100%;
+                font-size: 13px;
+                line-height: 20px;
+                color: #000;
             }
+        }
+        .-opened  label.label {
+            top: 67px;
         }
         .actions {
             display:none;
         }
+        .amsearch-leftside {
+            width: 100% !important;
+        }
     }
+}
+.top-right {
+    margin-right: 24px;
 }
