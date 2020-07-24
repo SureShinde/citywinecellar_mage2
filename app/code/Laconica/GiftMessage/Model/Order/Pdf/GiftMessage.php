@@ -181,7 +181,7 @@ class GiftMessage extends AbstractPdf
      */
     protected function insertOrder(&$page, $order, $putOrderId = true)
     {
-        $this->y = $this->y ? $this->y : 805;
+        $this->y = 805;
         $top = $this->y+20;
 
         $page->setFillColor(new Zend_Pdf_Color_GrayScale(0));
