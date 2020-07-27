@@ -1,0 +1,31 @@
+<?php
+/** @var Laconica\Theme\Block\Html\Breadcrumbs $block */
+
+$crumbs = $block->getCrumbs();
+?>
+
+<?php if ($crumbs && is_array($crumbs)) : ?>
+    <div class="breadcrumbs">
+        <ul class="items">
+            <?php foreach ($crumbs as $crumbName => $crumbInfo) : ?>
+                <?php
+                $label = $block->escapeHtml($crumbInfo['label']);
+                $link = $crumbInfo['link'];
+                ?>
+                <li class="item <?php /* @escapeNotVerified */ echo $crumbName ?>">
+                    <?php if ($link) : ?>
+                        <a href="<?php /* @escapeNotVerified */ echo $link ?>"
+                           title="<?= $block->escapeHtml($crumbInfo['title']) ?>">
+                            <?= $label ?>
+                        </a>
+                    <?php elseif ($crumbInfo['last']) : ?>
+                        <strong><?= $label ?></strong>
+                    <?php else: ?>
+                        <?= $label ?>
+                    <?php endif; ?>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+<?php endif; ?>
+
