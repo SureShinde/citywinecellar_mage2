@@ -142,10 +142,16 @@
                         <argument name="sort_order" xsi:type="string">10</argument>
                     </arguments>
                 </block>
-                <block class="Magento\Catalog\Block\Product\View\Attributes" name="product.attributes" as="additional" template="Magento_Catalog::product/view/attributes.phtml" group="detailed_info">
+                <block class="Laconica\Catalog\Block\Product\View\Attributes" name="product.attributes" as="additional" template="Laconica_Catalog::product/view/attributes.phtml" group="detailed_info">
                     <arguments>
                         <argument translate="true" name="title" xsi:type="string">More Information</argument>
                         <argument name="sort_order" xsi:type="string">20</argument>
+                    </arguments>
+                </block>
+                <block class="Laconica\Catalog\Block\Product\View\Rating" name="product.rating" as="rating" template="Laconica_Catalog::product/view/rating.phtml" group="detailed_info">
+                    <arguments>
+                        <argument translate="true" name="title" xsi:type="string">Rating</argument>
+                        <argument name="sort_order" xsi:type="string">30</argument>
                     </arguments>
                 </block>
             </block>
