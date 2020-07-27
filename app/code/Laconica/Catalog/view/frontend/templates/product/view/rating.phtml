@@ -7,7 +7,7 @@ for ($i = 1; $i < 5; $i++) :
     $pub = $product->getData("pub$i");
     $pubdesc = $product->getData("pubdesc$i");
 ?>
-    <?php if ($rate && $rate > 0): ?>
+    <?php if ($rate && $rate != "0"): ?>
         <h3><?= $rate ?> Points</h3>
         <h3><?= $pub ?></h3>
         <p><?= $pubdesc ?></p>

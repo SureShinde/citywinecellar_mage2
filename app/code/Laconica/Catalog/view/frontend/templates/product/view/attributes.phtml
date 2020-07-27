@@ -42,7 +42,7 @@ $relatedProducts = $block->getRelatedProducts();
                     <th>Related Products</th>
                     <th>
                         <?php foreach ($relatedProducts->getItems() as $relatedProduct) : ?>
-                            <a href="<?= $relatedProduct->getProductLink() ?>"><?= $relatedProduct->getAttributeText('year') ?></a>
+                            <a href="<?= $relatedProduct->getProductUrl() ?>"><?= $relatedProduct->getAttributeText('year') ?></a>
                         <?php endforeach; ?>
                     </th>
                 </tr>
