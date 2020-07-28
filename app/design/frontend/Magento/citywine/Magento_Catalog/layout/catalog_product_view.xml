@@ -39,7 +39,7 @@
                                 <argument name="at_call" xsi:type="string">getSku</argument>
                                 <argument name="at_code" xsi:type="string">sku</argument>
                                 <argument name="css_class" xsi:type="string">sku</argument>
-                                <argument name="at_label" xsi:type="string">default</argument>
+                                <argument name="at_label" xsi:type="string">Item</argument>
                                 <argument name="add_attribute" xsi:type="string">itemprop="sku"</argument>
                             </arguments>
                         </block>
@@ -138,7 +138,7 @@
                         <argument name="at_code" xsi:type="string">description</argument>
                         <argument name="css_class" xsi:type="string">description</argument>
                         <argument name="at_label" xsi:type="string">none</argument>
-                        <argument name="title" translate="true" xsi:type="string">Details</argument>
+                        <argument name="title" translate="true" xsi:type="string">Description</argument>
                         <argument name="sort_order" xsi:type="string">10</argument>
                     </arguments>
                 </block>
@@ -200,6 +200,12 @@
         </referenceContainer>
 
         <referenceBlock name="view.addto.compare" remove="true" />
+        <referenceBlock name="product.info.review" remove="true" />
+        <referenceBlock name="product.info.mailto" remove="true" />
+
+        <move element="page.main.title" destination="product.info.price" before="product.price.final"/>
+        <move element="product.info.overview" destination="product.info.price" after="product.price.final"/>
+
 
     </body>
 </page>

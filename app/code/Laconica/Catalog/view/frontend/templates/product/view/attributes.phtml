@@ -17,37 +17,31 @@ $_helper = $this->helper('Magento\Catalog\Helper\Output');
 $_product = $block->getProduct();
 $relatedProducts = $block->getRelatedProducts();
 ?>
-<h1>
-</h1>
 <?php if ($_additional = $block->getAdditionalData()): ?>
     <div class="additional-attributes-wrapper table-wrapper">
-        <table class="data table additional-attributes" id="product-attribute-specs-table">
-            <caption class="table-caption"><?php /* @escapeNotVerified */
-                echo __('More Information') ?></caption>
-            <tbody>
+        <ul class="data table additional-attributes" id="product-attribute-specs-table">
             <?php foreach ($_additional as $_data): ?>
                 <?php $value = $_helper->productAttribute($_product, $_data['value'], $_data['code']); ?>
                 <?php if (!in_array((string)$value, array('N/A', 'No'))) : ?>
-                    <tr>
-                        <th class="col label" scope="row"><?php echo $block->escapeHtml(__($_data['label'])) ?></th>
-                        <td class="col data"
-                            data-th="<?php echo $block->escapeHtml(__($_data['label'])) ?>"><?php /* @escapeNotVerified */
-                            echo $value ?></td>
-                    </tr>
+                    <li>
+                        <span class="bullet">• </span>
+                        <?php echo $block->escapeHtml(__($_data['label'])) ?>:
+                            <?php /* @escapeNotVerified */
+                            echo $value ?>
+                    </li>
                 <?php endif; ?>
             <?php endforeach; ?>
 
             <?php if ($relatedProducts && count($relatedProducts->getItems()) > 0) : ?>
-                <tr>
-                    <th>Related Products</th>
-                    <th>
+                <li>
+                    <span>Related Products</span>
+                    <span>
                         <?php foreach ($relatedProducts->getItems() as $relatedProduct) : ?>
                             <a href="<?= $relatedProduct->getProductUrl() ?>"><?= $relatedProduct->getAttributeText('year') ?></a>
                         <?php endforeach; ?>
-                    </th>
-                </tr>
+                    </span>
+                </li>
             <?php endif; ?>
-            </tbody>
-        </table>
+        </ul>
     </div>
 <?php endif; ?>
