@@ -39,7 +39,7 @@ $relatedProducts = $block->getRelatedProducts();
 
             <?php if ($relatedProducts && count($relatedProducts->getItems()) > 0) : ?>
                 <tr>
-                    <th>Related Products</th>
+                    <th>Other Years Of This Product:</th>
                     <th>
                         <?php foreach ($relatedProducts->getItems() as $relatedProduct) : ?>
                             <a href="<?= $relatedProduct->getProductUrl() ?>"><?= $relatedProduct->getAttributeText('year') ?></a>
