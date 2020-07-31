@@ -3,4 +3,12 @@
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="Magento\Catalog\Block\Product\View\Attributes"
                 type="Laconica\Catalog\Block\Product\View\Attributes"/>
+
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="import_amasty_rates" xsi:type="object">Laconica\Catalog\Console\Command\ImportAmastyRates</item>
+            </argument>
+        </arguments>
+    </type>
 </config>
