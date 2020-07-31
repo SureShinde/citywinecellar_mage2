@@ -1,0 +1,49 @@
+<!--@subject {{trans "Welcome to %store_name" store_name=$store.getFrontendName()}} @-->
+<!--@vars {
+"var this.getUrl($store, 'customer/account/')":"Customer Account URL",
+"var customer.email":"Customer Email",
+"var customer.name":"Customer Name"
+} @-->
+
+<!--@styles
+@-->
+
+{{template config_path="design/email/header_template"}}
+{{inlinecss file="email-inline.css"}}
+
+<table cellpadding="0" cellspacing="0" border="0">
+    <tr>
+        <td class="action-content">
+            <h1>{{trans "Welcome to %store_name." store_name=$store.getFrontendName()}}</h1>
+            <p>To log in when visiting our site just click <a href="{{store url="customer/account/"}}">Login</a> or <a href="{{store url="customer/account/"}}">My Account</a> at the top of every page, and then enter your email address and password.</p>
+            <p class="highlighted-text">
+                Use the following values when prompted to log in:<br/>
+                <strong>Email</strong>: {{var customer.email}}<br/>
+                <strong>Password</strong>: <em>{{trans "Password you set when creating account"}}</em>
+            </p>
+            <p>When you log in to your account, you will be able to do the following:</p>
+            <ul>
+                <li>Proceed through checkout faster when making a purchase</li>
+                <li>Check the status of orders</li>
+                <li>View past orders</li>
+                <li>Make changes to your account information</li>
+                <li>Change your password</li>
+                <li>Store alternative addresses (for shipping to multiple family members and friends!)</li>
+            </ul>
+            <p>
+                {{trans
+                'Forgot your account password? Click <a href="%reset_url">here</a> to reset it.'
+
+                reset_url="$this.getUrl($store,'customer/account/createPassword/',[_query:[id:$customer.id,token:$customer.rp_token],_nosid:1])"
+                |raw}}
+            </p>
+            <p>
+                If you have any questions, please feel free to contact us at
+                <a href="mailto:{{var store_email}}">{{var store_email}}</a>
+                {{depend store_phone}} or by phone at <a href="tel:{{var phone}}">{{var store_phone}}</a>{{/depend}}.
+            </p>
+        </td>
+    </tr>
+</table>
+
+{{template config_path="design/email/footer_template"}}
