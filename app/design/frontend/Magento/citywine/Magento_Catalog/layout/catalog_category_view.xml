@@ -50,6 +50,15 @@
             <block class="Magento\Catalog\Block\Category\Rss\Link" name="rss.link" template="Magento_Catalog::category/rss.phtml"/>
         </referenceBlock>
 
+        <block class="Magento\Cms\Block\Block" name="filter.link">
+            <arguments>
+                <argument name="block_id" xsi:type="string">filter-link</argument>
+            </arguments>
+        </block>
+
+        <move element="filter.link" destination="content" before="category.products"/>
+
+
 
     </body>
 </page>

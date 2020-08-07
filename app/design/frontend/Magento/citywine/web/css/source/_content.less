@@ -219,6 +219,11 @@ a.btn {
     right: 7%;
     left: auto;
     text-align: right;
+    @media (max-width: 767px) {
+        right: 0 !important;
+        left: 0 !important;
+        text-align: center;
+    }
 }
 .home-module .info-box .tit {
     font-family: "Josefin Sans",arial, sans-serif;
@@ -233,7 +238,6 @@ a.btn {
 .home-module .info-box .desc {
     margin-top: 30px;
     font-family: "Josefin Sans", Arial, sans-serif;
-    font-weight: 300;
     font-style: normal;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -242,6 +246,9 @@ a.btn {
     color: white;
     letter-spacing: 0;
     font-weight: 300;
+    @media (max-width: 767px) {
+        display: none;
+    }
 }
 .home-module .info-box.to-right .desc {
     float: right;
@@ -249,7 +256,6 @@ a.btn {
 }
 .home-module .info-box .reviewer {
     font-family: "Josefin Sans", Arial, sans-serif;
-    font-weight: 300;
     font-style: normal;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -258,6 +264,9 @@ a.btn {
     color: white;
     letter-spacing: 0;
     font-weight: 600;
+    @media (max-width: 950px) {
+        display: none;
+    }
 }
 
 
@@ -290,11 +299,18 @@ a.btn {
 .home-module .info-box .cta-filling {
     margin: 30px auto 0;
     width: 200px;
+    @media (max-width: 767px) {
+        margin: 14px auto 0;
+        padding: 11px 18px;
+    }
 }
 .home-module .info-box.to-right .cta-filling {
     clear: both;
     display: block;
     float: right;
+  @media (max-width: 767px) {
+    float: none;
+  }
 }
 
 .home-module .non-wine-module {
@@ -311,15 +327,20 @@ a.btn {
     text-align: center;
     border-right: 1px solid #ccc;
     padding: 0 60px;
+    @media (max-width: 840px) {
+        border-bottom: 1px solid #cccccc;
+        width: 90%;
+        padding: 0 10%;
+        border-right: 0px solid #ccc;
+    }
 }
 .home-module .non-wine-module img {
     max-width: 100px;
     margin: auto;
 }
 .home-module .non-wine-module .tit {
-    margin-top: 0px;
+    margin-top: 0;
     font-family: "Josefin Sans", Arial, sans-serif;
-    font-weight: 300;
     font-style: normal;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -332,7 +353,6 @@ a.btn {
 .home-module .non-wine-module .desc {
     margin-top: 30px;
     font-family: "Josefin Sans", Arial, sans-serif;
-    font-weight: 300;
     font-style: normal;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -358,6 +378,11 @@ a.btn {
     width: 50%;
     text-align: center;
     padding: 0 60px;
+    @media (max-width: 840px) {
+        width: 90%;
+        padding: 0 10%;
+        border-right: 0px solid #ccc;
+    }
 }
 .big-banner {
     position: relative;
@@ -367,9 +392,27 @@ a.btn {
     max-width: 700px;
     width: auto;
 }
+.cms-index-index {
+    .hero-slider {
+        @media (max-width: 1300px) {
+            padding-left: 0px;
+            padding-right: 0px;
+        }
+    }
+}
+
 .home-module .info-box.to-left {
     left: 10%;
     text-align: left;
+    @media (max-width: 767px) {
+        text-align: center;
+        left: 0;
+        right: 0;
+        width: auto;
+        padding: 3%;
+        height: 100%;
+        top: 0;
+    }
 }
 .wines {
     padding: 0 5% 5%;
@@ -378,6 +421,15 @@ a.btn {
         vertical-align: top;
         width: 24%;
         padding: 50px 1% 30px;
+        @media (max-width: 840px) {
+            width: 49%;
+        }
+        @media (max-width: 630px) {
+            padding: 0 1% 0;
+        }
+        @media (max-width: 450px) {
+            width: 100%;
+        }
     }
     .wines-top {
         text-align: center;
@@ -390,6 +442,9 @@ a.btn {
     .wine-top-fly {
         position: relative;
         min-height: 300px;
+        @media (max-width: 450px) {
+            min-height: 200px;
+        }
     }
     img {
         max-width: 60px;
@@ -438,11 +493,20 @@ a.btn {
         font-family: "Josefin Sans",arial,sans-serif;
         color: #fff;
     }
+    @media (max-width: 1300px) {
+        line-height: 52px;
+        font-size: 50px;
+    }
+    @media (max-width: 767px) {
+        line-height: 34px;
+        font-size: 39px;
+        padding-top: 0;
+        margin-top: 0;
+    }
 }
 .home-module .product-slide .info-box .desc {
     margin-top: 30px;
     font-family: "Josefin Sans", Arial, sans-serif;
-    font-weight: 300;
     font-style: normal;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -451,10 +515,27 @@ a.btn {
     color: white;
     letter-spacing: 0;
     font-weight: 600;
+    @media (max-width: 1300px) {
+        margin-top: 6px;
+        font-size: 18px;
+        line-height: 19px;
+    }
 }
-.home-module .product-slide .small-copy {
-    font-size: 20px;
-    margin-top: 20px;
+.home-module .product-slide {
+    .small-copy {
+        font-size: 20px;
+        margin-top: 20px;
+        @media (max-width: 1300px) {
+            font-size: 16px;
+            margin-top: 11px;
+        }
+    }
+    .large-copy {
+        @media (max-width: 1300px) {
+            font-size: 16px;
+            line-height: 19px;
+        }
+    }
 }
 .slick-slide, .product-slide {
     position: relative;
@@ -498,6 +579,9 @@ ul {
 }
 .home-module .product-slide .info-box {
     top: 10%;
+    @media (max-width: 1300px) {
+        top: 4%;
+    }
 }
 .home-module .product-slide .desc .price {
     font-size: 55px;
@@ -508,6 +592,13 @@ ul {
         color: #fff;
         font-size: 55px;
         font-family: "Josefin Sans", Arial, sans-serif;
+    }
+    @media (max-width: 1300px) {
+        font-size: 45px;
+        margin-top: 25px;
+        small {
+            font-size: 41px;
+        }
     }
 }
 
@@ -567,6 +658,12 @@ ul {
                     display: inline-block;
                 }
             }
+            @media (max-width: 1010px) {
+                padding: 0 25px;
+            }
+            @media (max-width: 767px) {
+                padding: 0 15px;
+            }
         }
     }
 .page-wrapper>.breadcrumbs {
@@ -611,6 +708,41 @@ ul {
         position: relative;
         margin-top: -3px;
         padding: 10px 0;
+    }
+    .products.wrapper~.toolbar {
+        display: none;
+    }
+    .product-item .price-box .price {
+        font-weight: 300;
+    }
+    .click-to-filter-by {
+        position: absolute;
+        top: 19px;
+        cursor: pointer;
+        z-index: 9;
+        > span {
+            &:last-child {
+                display: none;
+            }
+        }
+    }
+    .hide-filter {
+        .sidebar-main {
+            display: none;
+        }
+        .column.main {
+            width: 100%;
+        }
+        .click-to-filter-by {
+            > span {
+                &:first-child {
+                    display: none;
+                }
+                &:last-child {
+                    display: block;
+                }
+            }
+        }
     }
 }
 .catalog-product-view {
@@ -671,6 +803,9 @@ ul {
             letter-spacing: 0.05em;
             font-weight: 600 !important;
             margin: 5px auto 8px;
+        }
+        .price {
+            font-weight: 300;
         }
     }
 

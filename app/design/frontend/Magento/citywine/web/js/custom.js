@@ -25,5 +25,10 @@ require([
             $(this).parents().toggleClass('open');
         });
 
+        $(".js-filter").click(function(){
+            $(".columns").toggleClass('hide-filter');
+        });
+
+
         });
 });

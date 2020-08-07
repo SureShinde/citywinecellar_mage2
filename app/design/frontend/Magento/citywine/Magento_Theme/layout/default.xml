@@ -35,6 +35,7 @@
         <referenceBlock name="footer_links" remove="true"/>
         <referenceBlock name="copyright" remove="true"/>
         <referenceBlock name="report.bugs" remove="true"/>
+        <referenceBlock name="div.sidebar.additional" remove="true"/>
         <move element="top.right" destination="header-wrapper" />
         <move element="minicart" destination="top.right"/>
         <move element="profile-top" destination="top.right" after="minicart"/>
@@ -42,6 +43,8 @@
         <move element="store.menu" destination="header.panel"  after="-"/>
         <referenceBlock name="catalog.compare.sidebar" remove="true"/>
         <referenceBlock name="wishlist_sidebar" remove="true" />
+
+
 
 
 
