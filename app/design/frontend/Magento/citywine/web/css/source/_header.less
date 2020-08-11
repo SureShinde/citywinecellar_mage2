@@ -16,7 +16,9 @@ body {
         box-sizing: border-box;
     }
     &.sticky {
-        padding-top: 45px;
+        @media (min-width: 800px) {
+            padding-top: 45px;
+        }
     }
 }
 
@@ -46,7 +48,7 @@ a:hover, .alink:hover {
 
 .header.content {
     padding: 5px 20px 0;
-    @media (max-width: 450px) {
+    @media (max-width:800px) {
         padding: 5px 0 0;
     }
 }
@@ -119,13 +121,15 @@ a:hover, .alink:hover {
         }
 
         .sticky & {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            right: 0;
-            left: 0;
-            background-color: #fff;
-            z-index: 999;
+            @media (min-width: 800px) {
+                position: fixed;
+                top: 0;
+                width: 100%;
+                right: 0;
+                left: 0;
+                background-color: #fff;
+                z-index: 999;
+            }
         }
     }
     .panel.bottom {
@@ -136,7 +140,6 @@ a:hover, .alink:hover {
                 right: 0;
                 left: 0;
                 padding-bottom: 16px;
-                padding-left: 17px;
             }
         }
     .navigation {
@@ -220,6 +223,11 @@ a:hover, .alink:hover {
                         width: 50%;
                         display: inline-block;
                         vertical-align: middle;
+                        @media (max-width: 800px) {
+                            width: 100%;
+                            display: block;
+                            text-align: center;
+                        }
 
                         a {
                             font-family: "Josefin Sans", Arial, sans-serif;
@@ -267,6 +275,11 @@ a:hover, .alink:hover {
                         margin-left: -10px;
                         z-index: 9;
                     }
+                  @media (max-width: 800px) {
+                      border: 1px solid #fff;
+                      width: 100%;
+                      text-align: center;
+                  }
                 }
                 @media (max-width: 800px) {
                     margin: 0;
@@ -275,9 +288,9 @@ a:hover, .alink:hover {
             @media (max-width: 800px) {
                 display: none;
                 position: absolute;
-                left: 0;
-                right: 0;
-                top: 100%;
+                left: -15px;
+                right: -15px;
+                top: 60px;
                 z-index: 9999;
                 background-color: #fff;
                 .open & {
@@ -329,6 +342,7 @@ a:hover, .alink:hover {
                         bottom: 0;
                         background-color: white;
                         z-index: 999;
+                        left:0;
                     }
                 }
                 .action.showcart {
@@ -339,24 +353,25 @@ a:hover, .alink:hover {
                         &:after {
                             content: "";
                             position: absolute;
-                            width: 40px;
-                            height: 40px;
+                            width: 25px;
+                            height: 30px;
                             background-image: url("../images/cart.svg");
                             background-repeat: no-repeat;
                             background-position: center;
-                            left: -28px;
+                            left: -8px;
+                            background-size: 95%;
                         }
                     }
                     .counter.qty {
                         background: transparent;
-                        min-width: auto;
                         float: right;
                         padding: 2px 3px;
                         color: #444;
                         font-weight: 400;
                         font-size: 14px;
                         line-height: 24px;
-                        margin-right: 7px;
+                        line-height: 24px;
+                        min-width: 22px;
                     }
                     &:before {
                         display: none;
@@ -455,6 +470,9 @@ a:hover, .alink:hover {
                         max-width: 120px;
                         width: 42.413793%;
                         margin-right: 6.1724138%;
+                        @media (max-width: 768px) {
+                            width: 39.413793%;
+                        }
                     }
                     .product-item-name, .label, .values, a {
                         font-size: 13px;
@@ -479,7 +497,7 @@ a:hover, .alink:hover {
                             font-weight: 300;
                         }
                         .product.options.list {
-                            margin-bottom: 0px;
+                            margin-bottom: 0;
                         }
                     }
                     .product.actions {
@@ -498,6 +516,8 @@ a:hover, .alink:hover {
                     }
                     @media (max-width: 768px) {
                         margin-top: 0;
+                        width: 300px;
+                        top: 33px;
                     }
                     .subtitle.empty {
                         padding: 14px 0 10px;
@@ -535,6 +555,13 @@ a:hover, .alink:hover {
                     width: 34px;
                     text-align: left;
                     box-shadow: none !important;
+                }
+                @media (max-width: 800px) {
+                    margin-left: 0;
+                    padding-top: 4px;
+                    height: 36px;
+                    margin-right: 0;
+                    padding-left: 7px;
                 }
                 @media (max-width: 639px) {
                     margin-top: 2px;
@@ -575,6 +602,7 @@ a:hover, .alink:hover {
                 float: none;
                 display: table;
                 margin: 0 auto;
+                padding: 0 15px 2px;
             }
             .profile-top {
                 float: right;
@@ -590,10 +618,6 @@ a:hover, .alink:hover {
                     background-size: 97%;
                 }
             }
-
-        @media (max-width: 800px) {
-            padding: 3px 17px 10px;
-        }
         .logo {
             width: 165px;
             margin-top: 17px !important;
@@ -612,6 +636,9 @@ a:hover, .alink:hover {
         }
 
     .top-search {
+        .amsearch-loupe {
+            top: 30%;
+        }
         .control {
             display: none;
             overflow: hidden;
@@ -637,6 +664,9 @@ a:hover, .alink:hover {
           padding: 14px 24px;
           min-height: 60px;
           padding-right: 45px;
+          @media (max-width: 900px) {
+              padding-right: 24px;
+          }
         }
         label.label {
             position: absolute;
@@ -676,13 +706,20 @@ a:hover, .alink:hover {
         }
     }
 }
+.action.primary {
+    background: #7c0840;
+    border-color: #7c0840;
+    &:hover {
+        background: #650835;
+    }
+}
 .top-right {
     margin-right: 24px;
     @media (max-width: 800px) {
         position: absolute;
         right: 16px;
-        top: 4px;
-        margin-right: 36px;
+        top: 9px;
+        margin-right: 30px;
     }
     @media (max-width: 450px) {
         margin-right: 18px;
