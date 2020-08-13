@@ -294,8 +294,8 @@ a:hover, .alink:hover {
             @media (max-width: 800px) {
                 display: none;
                 position: absolute;
-                left: -15px;
-                right: -15px;
+                left: 0;
+                right: 0;
                 top: 60px;
                 z-index: 9999;
                 background-color: #fff;
@@ -334,7 +334,6 @@ a:hover, .alink:hover {
     }
 }
             .minicart-wrapper {
-                margin-left: 19px;
                 height: 32px;
                 margin-right: 13px;
                 &.active {
@@ -613,15 +612,33 @@ a:hover, .alink:hover {
             .profile-top {
                 float: right;
                 a {
-                    width: 25px;
-                    height: 25px;
-                    background-image: url("../images/profile.svg");
+                    position: relative;
                     display: block;
-                    margin-top: 33px;
-                    margin-left: 19px;
-                    background-repeat: no-repeat;
-                    background-position: center;
-                    background-size: 97%;
+                    vertical-align: middle;
+                    margin: 0;
+                    visibility: visible;
+                    width: auto;
+                    overflow: visible;
+                    line-height: 34px;
+                    font-size: 12px;
+                    border: 1px solid transparent;
+                    border-bottom: none;
+                    font-family: "Josefin Sans",Arial,sans-serif;
+                    font-weight: 300;
+                    font-style: normal;
+                    -webkit-font-smoothing: antialiased;
+                    -moz-osx-font-smoothing: grayscale;
+                    transition: all .45s;
+                    -moz-transition: all .45s;
+                    -webkit-transition: all .45s;
+                    -ms-transition: all .45s;
+                    -o-transition: all .45s;
+                    color: #444;
+                    text-transform: uppercase;
+                    height: auto;
+                }
+                @media (max-width: 800px) {
+                    display: none;
                 }
             }
         .logo {

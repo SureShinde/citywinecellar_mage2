@@ -394,9 +394,9 @@ a.btn {
 }
 .cms-index-index {
     .hero-slider {
-        @media (max-width: 1300px) {
-            padding-left: 0px;
-            padding-right: 0px;
+        @media (max-width: 1500px) {
+            padding-left: 0;
+            padding-right: 0;
         }
     }
 }
@@ -781,11 +781,18 @@ ul {
           }
     }
 
-    .product.info.detailed {
+    .product.left {
         float: left;
         width: 30%;
         clear: initial;
         padding-top: 10%;
+        .product.info.detailed {
+            margin-bottom: 0;
+            clear: inherit;
+            .product.data.items {
+                margin-bottom: 5px;
+            }
+        }
         .product.data.items>.item.content {
             border-bottom: 1px solid #d1d1d1;
             border-top: 0;
@@ -1031,6 +1038,69 @@ ul {
                     color: #999999;
                 }
             }
+        }
+    }
+
+    .social-media-icons {
+        span {
+            font-style: normal;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            font-size: 13px;
+            color: black;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+        a {
+            font-family: "theliquorstore Icon Font";
+            font-size: 13px;
+            margin-right: 10px;
+            color: #333333;
+            display: inline-block;
+            vertical-align: baseline;
+                &.facebook:before {
+                    content: attr(data-icon);
+                    speak: none;
+                    font-style: normal;
+                    font-weight: normal;
+                    font-variant: normal;
+                    text-transform: none;
+                    -webkit-font-smoothing: antialiased;
+                    -moz-osx-font-smoothing: grayscale;
+                    color: #333333;
+                    font-size: 14px;
+                    display: inline-block;
+                    vertical-align: baseline;
+                }
+                &.twitter:before {
+                    content: attr(data-icon);
+                    speak: none;
+                    font-style: normal;
+                    font-weight: normal;
+                    font-variant: normal;
+                    text-transform: none;
+                    -webkit-font-smoothing: antialiased;
+                    -moz-osx-font-smoothing: grayscale;
+                    color: #333333;
+                    font-size: 14px;
+                    display: inline-block;
+                    vertical-align: baseline;
+                }
+                &.pinterest:before {
+                    content: attr(data-icon);
+                    speak: none;
+                    font-style: normal;
+                    font-weight: normal;
+                    font-variant: normal;
+                    text-transform: none;
+                    -webkit-font-smoothing: antialiased;
+                    -moz-osx-font-smoothing: grayscale;
+                    color: #333333;
+                    font-size: 14px;
+                    display: inline-block;
+                    vertical-align: baseline;
+                }
         }
     }
 }
