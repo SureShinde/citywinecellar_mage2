@@ -10,7 +10,11 @@
                 </container>
             </container>
             <container name="top.right" label="Page Header" as="top.right" htmlTag="div" htmlClass="top-right">
-
+                <block class="Magento\Cms\Block\Block" name="profile-top">
+                    <arguments>
+                        <argument name="block_id" xsi:type="string">profile-top</argument>
+                    </arguments>
+                </block>
             </container>
         </referenceContainer>
 

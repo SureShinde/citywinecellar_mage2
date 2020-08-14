@@ -1,0 +1,10 @@
+<?php $_product = $block->getProduct(); ?>
+<div class="social-media-icons">
+    <span class="share-button-title uppercase">SHARE </span>
+    <a class="twitter" data-icon="" href="http://twitter.com/home/?status=<?php echo urlencode($_product->getProductUrl());?>(<?php echo urlencode($_product->getName())?>)" onclick='javascript:window.open(this.href,"","width=640,height=480,left=0,top=0,location=no,status=yes,scrollbars=yes,resizable=yes");return false' title="Share on Twitter">
+    </a>
+    <a class="pinterest" data-icon="" href="https://pinterest.com/pin/create/button/?url=<?php echo urlencode($_product->getProductUrl()); ?>&media=<?php echo urlencode($_product->getImageUrl());?> &description=<?php echo urlencode($_product->getName()); ?>" onclick='javascript:window.open(this.href,"","width=640,height=480,left=0,top=0,location=no,status=yes,scrollbars=yes,resizable=yes");return false' title="Pin it">
+    </a>
+    <a data-icon="" class="facebook" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo urlencode($_product->getProductUrl());?>&t=<?php echo urlencode($_product->getName())?>" onclick='javascript:window.open(this.href,"","width=640,height=480,left=0,top=0,location=no,status=yes,scrollbars=yes,resizable=yes");return false' title="Share on facebook">
+    </a>
+</div>

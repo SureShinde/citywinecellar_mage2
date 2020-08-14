@@ -4,18 +4,21 @@ require([
     'slick'
 ], function ($, domReady) {
     domReady(function () {
-
-        window.onscroll = function() {headSticky()};
-
         let navbar = document.querySelector(".panel.wrapper");
-        let body = document.querySelector("body");
-        let sticky = navbar.offsetTop;
 
-        function headSticky() {
-            if (window.pageYOffset >= sticky) {
-                body.classList.add("sticky")
-            } else {
-                body.classList.remove("sticky");
+
+        if (navbar) {
+            window.onscroll = function() {headSticky()};
+
+            let body = document.querySelector("body");
+            let sticky = navbar.offsetTop;
+
+            function headSticky() {
+                if (window.pageYOffset >= sticky) {
+                    body.classList.add("sticky")
+                } else {
+                    body.classList.remove("sticky");
+                }
             }
         }
 
@@ -29,6 +32,13 @@ require([
             $(".columns").toggleClass('hide-filter');
         });
 
+
+        // newsletter Popup
+
+        $(".newsletter a, .newsletter-overlay, .newsletter-close").click(function(event){
+            event.preventDefault();
+            $("body").toggleClass('open-newsletter');
+        });
 
         });
 });

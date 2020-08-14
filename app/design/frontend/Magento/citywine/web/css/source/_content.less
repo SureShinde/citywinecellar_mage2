@@ -394,9 +394,9 @@ a.btn {
 }
 .cms-index-index {
     .hero-slider {
-        @media (max-width: 1300px) {
-            padding-left: 0px;
-            padding-right: 0px;
+        @media (max-width: 1500px) {
+            padding-left: 0;
+            padding-right: 0;
         }
     }
 }
@@ -781,11 +781,18 @@ ul {
           }
     }
 
-    .product.info.detailed {
+    .product.left {
         float: left;
         width: 30%;
         clear: initial;
         padding-top: 10%;
+        .product.info.detailed {
+            margin-bottom: 0;
+            clear: inherit;
+            .product.data.items {
+                margin-bottom: 5px;
+            }
+        }
         .product.data.items>.item.content {
             border-bottom: 1px solid #d1d1d1;
             border-top: 0;
@@ -1033,6 +1040,69 @@ ul {
             }
         }
     }
+
+    .social-media-icons {
+        span {
+            font-style: normal;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            font-size: 13px;
+            color: black;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+        a {
+            font-family: "theliquorstore Icon Font";
+            font-size: 13px;
+            margin-right: 10px;
+            color: #333333;
+            display: inline-block;
+            vertical-align: baseline;
+                &.facebook:before {
+                    content: attr(data-icon);
+                    speak: none;
+                    font-style: normal;
+                    font-weight: normal;
+                    font-variant: normal;
+                    text-transform: none;
+                    -webkit-font-smoothing: antialiased;
+                    -moz-osx-font-smoothing: grayscale;
+                    color: #333333;
+                    font-size: 14px;
+                    display: inline-block;
+                    vertical-align: baseline;
+                }
+                &.twitter:before {
+                    content: attr(data-icon);
+                    speak: none;
+                    font-style: normal;
+                    font-weight: normal;
+                    font-variant: normal;
+                    text-transform: none;
+                    -webkit-font-smoothing: antialiased;
+                    -moz-osx-font-smoothing: grayscale;
+                    color: #333333;
+                    font-size: 14px;
+                    display: inline-block;
+                    vertical-align: baseline;
+                }
+                &.pinterest:before {
+                    content: attr(data-icon);
+                    speak: none;
+                    font-style: normal;
+                    font-weight: normal;
+                    font-variant: normal;
+                    text-transform: none;
+                    -webkit-font-smoothing: antialiased;
+                    -moz-osx-font-smoothing: grayscale;
+                    color: #333333;
+                    font-size: 14px;
+                    display: inline-block;
+                    vertical-align: baseline;
+                }
+        }
+    }
 }
 
 //
@@ -1082,6 +1152,10 @@ ul {
             display: block;
             margin-top: 15px;
         }
+        .choice.newsletter:before {
+            padding: 0;
+            width: auto;
+        }
     }
 }
 .authentication-wrapper {
@@ -1100,6 +1174,154 @@ ul {
 }
 
 
+
+.newsletter-info {
+    background-color: #ffffff;
+    padding: 15px 60px;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 13px;
+    position: fixed;
+    top: 20%;
+    left: 50%;
+    width: 468px;
+    margin-left: -234px;
+    border: 1px solid #dfdfdf;
+    border-radius: 2px;
+    display:none;
+    z-index: 99999;
+    @media all and (max-width: 510px) {
+        top: 30px;
+        width: 300px;
+        margin-left: -150px;
+    }
+        p {
+        position: relative;
+        display: block;
+        margin: 0 !important;
+        padding: 0 0 20px;
+        font-size: 16px !important;
+        text-transform: initial !important;
+        color: #000;
+    }
+    .form.subscribe {
+        display: block !important;
+        .field.newsletter {
+            display: block;
+            float: none;
+        }
+    }
+    .block.newsletter {
+        float:none;
+        width: 100%;
+        margin-bottom: 0;
+    }
+    .actions {
+        display: table !important;
+        text-align: center;
+        margin: 19px auto 3px;
+        button {
+            text-transform: uppercase;
+        }
+    }
+    input {
+        height: 35px;
+    }
+    .newsletter-title {
+        font-family: 'Josefin Sans', Georgia, sans-serif;
+        font-style: normal;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        color: #333333;
+        font-size: 24px;
+        font-weight: bold;
+        padding: 11px 21px;
+        text-transform: initial;
+        line-height: 28px;
+    }
+    .newsletter-close {
+        cursor: pointer;
+        color: #000000;
+        width: 24px;
+        height: 24px;
+        position: absolute;
+        right: 14px;
+        top: 17px;
+        z-index: 1;
+        -webkit-transform: translate(0, -50%);
+        -moz-transform: translate(0, -50%);
+        -ms-transform: translate(0, -50%);
+        -o-transform: translate(0, -50%);
+        transform: translate(0, -50%);
+        &:before {
+            content: '';
+            border-bottom: 2px solid currentColor;
+            position: absolute;
+            left: 9px;
+            right: 0;
+            top: 50%;
+            -webkit-transform: rotate(45deg);
+            -moz-transform: rotate(45deg);
+            -ms-transform: rotate(45deg);
+            -o-transform: rotate(45deg);
+            transform: rotate(45deg);
+        }
+        &:after {
+            content: '';
+            border-bottom: 2px solid currentColor;
+            position: absolute;
+            left: 9px;
+            right: 0;
+            top: 50%;
+            -webkit-transform: rotate(-45deg);
+            -moz-transform: rotate(-45deg);
+            -ms-transform: rotate(-45deg);
+            -o-transform: rotate(-45deg);
+            transform: rotate(-45deg);
+        }
+    }
+
+    @media all and (max-width: 1300px) {
+        letter-spacing: 0;
+        font-size: 12px;
+        padding: 8px 53px;
+    }
+
+    @media all and (max-width: 560px) {
+        p {
+            font-size: 12px;
+        }
+        .fashion-info-banner-wrap {
+            padding: 7px 6px;
+        }
+    }
+}
+.newsletter-overlay {
+    background-color: rgba(255, 255, 255, 0.9);
+    height: 100%;
+    left: 0;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 101;
+    opacity: 0;
+    -moz-opacity: 0;
+    filter: alpha(opacity=0);
+    display: none;
+}
+
+.open-newsletter {
+    .newsletter-info {
+        display: block;
+    }
+    .newsletter-overlay {
+        display: block;
+        opacity: 0.65;
+    }
+}
+
+
 //
 //  Checkout
 //  _____________________________________________
@@ -1107,13 +1329,51 @@ ul {
 .page-layout-checkout {
     .opc-wrapper {
         width: 54.666667%;
+        @media (max-width: 800px) {
+            width: 100%;
+            padding-right: 0;
+        }
     }
     .opc-sidebar {
         margin: 17px 0 11px;
         width: 41.333333%;
+        @media (max-width: 800px) {
+            left: auto;
+            right: 0;
+            width: 90%;
+        }
     }
     .minicart-items .product-item-details {
         padding-left: 154px;
+        @media (max-width: 350px) {
+            padding-left: 0;
+        }
+    }
+    @media (max-width: 350px) {
+        .product-item {
+            text-align: center;
+            .product-item-inner {
+                display: block;
+            }
+            .product-item-name-block {
+                display: block;
+                padding-right: 5px;
+                text-align: center;
+            }
+            .subtotal {
+                display: block;
+                text-align: center;
+            }
+            .item-options {
+                dt, dd {
+                    display: inline-block !important;
+                    float: none !important;
+                }
+            }
+        }
+        .product-image-container {
+            float: none !important;
+        }
     }
     .table-checkout-shipping-method {
         .col-method {
@@ -1125,7 +1385,7 @@ ul {
         .item-options {
             padding-top: 12px;
             dt {
-                clear: none;
+                clear: none !important;
             }
         }
     }
@@ -1133,6 +1393,48 @@ ul {
         display: block;
         margin-bottom: 8px;
     }
+    @media (max-width: 800px) {
+        .opc-block-summary {
+            padding: 22px 0;
+        }
+        .opc-block-summary>.title {
+            font-size: 2rem;
+        }
+    }
+    @media (max-width: 767px) {
+        .opc-block-summary {
+            padding: 0 17px;
+        }
+        .modal-header {
+            min-height: 0;
+            padding: 7px;
+            border-bottom: 0;
+        }
+        .action.showcart {
+            border: none;
+            box-shadow: none;
+            background-color: transparent !important;
+          .counter.qty {
+            background: transparent;
+            color: #000;
+            font-size: 14px;
+            padding: 0;
+            font-weight: 500;
+          }
+            &:before {
+                position: absolute;
+                width: 25px;
+                height: 30px;
+                background-image: url(../images/cart.svg);
+                background-repeat: no-repeat;
+                background-position: center;
+                left: -8px;
+                background-size: 95%;
+                font-size: 0;
+            }
+        }
+    }
+
 }
 
 
@@ -1156,6 +1458,16 @@ ul {
         text-align: center;
         margin: 20px auto 35px;
     }
+  &.cms-contacts h1 {
+        display: block !important;
+        font-family: "Josefin Sans",arial, sans-serif;
+        font-weight: normal;
+        font-style: normal;
+        font-size: 25px;
+        line-height: 36px;
+        color: #4e0d2c;
+        letter-spacing: 1px;
+  }
 }
 
 .cms-page-view .breadcrumbs,  .catalog-category-view .breadcrumbs{
