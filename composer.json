@@ -13,7 +13,8 @@
     "require": {
         "hybridauth/hybridauth": "^2.15.1",
         "klaviyo/magento2-extension": "^1.2",
-        "magento/product-community-edition": "2.3.1"
+        "magento/product-community-edition": "2.3.1",
+        "picqer/php-barcode-generator": "^2.0"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "~2.13.0",

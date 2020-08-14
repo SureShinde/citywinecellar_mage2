@@ -372,6 +372,7 @@ class ComposerStaticInitfabeccfb0b2fd0dfa4b82eda2300a2fd
             'Psr\\Http\\Message\\' => 17,
             'Psr\\Container\\' => 14,
             'Prophecy\\' => 9,
+            'Picqer\\Barcode\\' => 15,
             'PhpOption\\' => 10,
             'PhpCsFixer\\' => 11,
             'PhpAmqpLib\\' => 11,
@@ -1015,6 +1016,10 @@ class ComposerStaticInitfabeccfb0b2fd0dfa4b82eda2300a2fd
         'Prophecy\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpspec/prophecy/src/Prophecy',
+        ),
+        'Picqer\\Barcode\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/picqer/php-barcode-generator/src',
         ),
         'PhpOption\\' => 
         array (

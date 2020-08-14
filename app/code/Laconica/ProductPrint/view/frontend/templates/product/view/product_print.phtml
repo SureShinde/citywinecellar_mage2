@@ -1,0 +1,62 @@
+<?php
+/** @var Laconica\ProductPrint\Block\Product\View\ProductPrint $block */
+
+$product = $block->getProduct();
+$barcode = $block->getBarcode();
+$rate1 = $product->getResource()->getAttribute('rate1')->getFrontend()->getValue($product);
+$pub1 = $product->getResource()->getAttribute('pub1')->getFrontend()->getValue($product);
+?>
+
+<?php if ($barcode) : ?>
+    <a href="#" class="click-modal-product-print"><span>Print product barcode</span></a>
+
+    <div id="modal-product-print" style="display:none;">
+        <div class="label-box section">
+            <?php if ($rate1 && $pub1) : ?>
+                <div class="top-points">
+                    <span class="rate"><?= $product->getData('rate1') ?></span>
+                    <span class="points">pts</span>
+                </div>
+                <div class="bestbuy2">
+                    <div class="pub"><?= $product->getData('pub1') ?></div>
+                </div>
+            <?php endif; ?>
+            <div class="name"><?= $product->getName() ?></div>
+            <div class="desc"><?= trim($product->getDescription(), '"') ?></div>
+            <div class='price'><?= $product->getFormattedPrice() ?></div>
+            <div class="bar-code">
+                <img src="data:image/png;base64,<?= $barcode ?>">
+            </div>
+            <div class="bar-num"><?= $product->getData('item_lookup_code') ?></div>
+            <div class="logo">
+                <img src="<?= $block->getLayout()->getBlock('logo')->getLogoSrc() ?>">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        require(
+            [
+                'jquery',
+                'Magento_Ui/js/modal/modal'
+            ],
+            function (
+                $,
+                modal
+            ) {
+                var options = {
+                    type: 'popup',
+                    responsive: true,
+                    innerScroll: true,
+                    title: '',
+                    modalClass: 'product-print'
+                };
+
+                modal(options, $('#modal-product-print'));
+                $(".click-modal-product-print").on('click', function () {
+                    $("#modal-product-print").modal("openModal");
+                });
+            }
+        );
+    </script>
+<?php endif; ?>
