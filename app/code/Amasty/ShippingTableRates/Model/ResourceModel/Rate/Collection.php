@@ -165,6 +165,32 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
             //to prefer rate with zip
             $this->setOrder('num_zip_from', 'DESC');
             $this->addOrder('num_zip_to', 'DESC');
+
+            // CUSTOM CODE
+            if ($zipData['district'] && $zipData['district'] > 0) {
+
+                $storeId = $request->getStoreId();
+                $excludeExpr = new \Zend_Db_Expr("(
+                    select count(*) as 'count'
+                    from `la_table_rate_excluded`
+                    where 1=1
+                    and store_id={$storeId}
+                    and (`num_zip_from` <= {$zipData['district']} OR `zip_from` = '')
+                    and (`num_zip_to` >= {$zipData['district']} OR `zip_to` = '')
+                    and (((`country` = '{$request->getDestCountryId()}') or (`country` = '0') or (`country` = '')))
+                    and (((`state` = {$request->getDestRegionId()}) or (`state` = '0') or (`state` = '')))
+                    and (((`city` like '{$request->getDestCity()}') or (`city` = '0') or (`city` = '')))
+                )");
+
+                $this->getSelect()
+                    ->joinLeft(
+                        ['excluded' => $excludeExpr],
+                        'excluded.count > 0'
+                    )
+                    ->where('excluded.count = 0 or excluded.count is null');
+            }
+            // CUSTOM CODE
+
         } else {
             $this->getSelect()->where("? LIKE zip_from OR zip_from = ''", $inputZip);
         }
