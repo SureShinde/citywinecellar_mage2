@@ -24,7 +24,6 @@
         <input type="hidden" name="related_product" id="related-products-field" value="" />
         <input type="hidden" name="item"  value="<?= /* @noEscape */ $block->getRequest()->getParam('id') ?>" />
         <?= $block->getBlockHtml('formkey') ?>
-        <?php echo $block->getChildHtml('modal-product-print'); //CUSTOM CODE ?>
         <?= $block->getChildHtml('form_top') ?>
         <?php if (!$block->hasOptions()):?>
             <?= $block->getChildHtml('product_info_form_content') ?>
