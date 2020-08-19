@@ -3169,13 +3169,13 @@ font-family: 'Josefin Sans', sans-serif;
     padding:10px 0;
     font-size: 20px;
 }
-.logo{
+.logo-print{
     width:180px;
     text-align: center;
     margin: auto;
     padding-bottom:10px;
 }
-.logo img{
+.logo-print img{
     display: block;
     margin: auto;
     text-align: center;

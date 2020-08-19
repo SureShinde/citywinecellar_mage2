@@ -1,0 +1,38 @@
+<?php
+/** @var Laconica\BarcodeSuccess\Block\Product\View\BarcodePrint $block */
+
+$barcodeProducts = $block->getBarcodeProducts();
+
+?>
+<link rel="stylesheet" type="text/css" href="<?php echo $block->getViewFileUrl('Laconica_BarcodeSuccess::css/modal-product-print.css')?>">
+
+<?php foreach ($barcodeProducts as $currentProduct) : ?>
+    <?php
+    $rate1 = $currentProduct->getResource()->getAttribute('rate1')->getFrontend()->getValue($currentProduct);
+    $pub1 = $currentProduct->getResource()->getAttribute('pub1')->getFrontend()->getValue($currentProduct);
+    $barcode = $block->getBarcode($currentProduct->getData('item_lookup_code'));
+    ?>
+    <?php if ($barcode) : ?>
+        <div class="label-box section">
+            <?php if ($rate1 && $pub1) : ?>
+                <div class="top-points">
+                    <span class="rate"><?= $rate1 ?></span>
+                    <span class="points">pts</span>
+                </div>
+                <div class="bestbuy2">
+                    <div class="pub"><?= $pub1 ?></div>
+                </div>
+            <?php endif; ?>
+            <div class="name"><?= $currentProduct->getName() ?></div>
+            <div class="desc"><?= trim($currentProduct->getDescription(), '"') ?></div>
+            <div class='price'><?= $currentProduct->getFormattedPrice() ?></div>
+            <div class="bar-code">
+                <img src="data:image/png;base64,<?= $barcode ?>">
+            </div>
+            <div class="bar-num"><?= $currentProduct->getData('item_lookup_code') ?></div>
+            <div class="logo-print">
+                <img src="<?= $block->getLogoSrc() ?>">
+            </div>
+        </div>
+    <?php endif; ?>
+<?php endforeach; ?>
