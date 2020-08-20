@@ -108,6 +108,10 @@ class RestrictRepository
         }
 
         foreach ($names as $name) {
+            if (!$name) {
+                continue;
+            }
+
             $select->where('name_delivery like "%' . $name . '%"');
         }
     }
