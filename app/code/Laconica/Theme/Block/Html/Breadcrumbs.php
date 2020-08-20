@@ -3,8 +3,10 @@
 namespace Laconica\Theme\Block\Html;
 
 use Exception;
+use Magento\Catalog\Model\CategoryFactory;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Registry;
 use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Catalog\Helper\Data;
 use Magento\Framework\View\Element\Template\Context;
@@ -20,20 +22,30 @@ class Breadcrumbs extends \Magento\Theme\Block\Html\Breadcrumbs
      */
     protected $catalogData;
 
+    protected $registry;
+
+    protected $categoryFactory;
+
     /**
      * @param Context $context
      * @param Data $catalogData
+     * @param Registry $registry
+     * @param CategoryFactory $categoryFactory
      * @param array $data
      * @param Json|null $serializer
      */
     public function __construct(
         Context $context,
         Data $catalogData,
+        Registry $registry,
+        CategoryFactory $categoryFactory,
         array $data = [],
         Json $serializer = null
     ) {
-        $this->catalogData = $catalogData;
         parent::__construct($context, $data, $serializer);
+        $this->catalogData = $catalogData;
+        $this->registry = $registry;
+        $this->categoryFactory = $categoryFactory;
     }
 
     /**
@@ -57,15 +69,36 @@ class Breadcrumbs extends \Magento\Theme\Block\Html\Breadcrumbs
     }
 
     /**
+     * @param $product
+     * @return array|null
+     */
+    public function getCategory($product)
+    {
+        // for multiple categories, select only the first one
+        // remember, index = 0 is 'Default' category
+        if (!$product->getCategoryIds()) {
+            return null;
+        } elseif (isset ($product->getCategoryIds()[1])) {
+            $categoryId = $product->getCategoryIds()[1];
+        }  else {
+            $categoryId = $product->getCategoryIds()[0];
+        }
+        // Additionally for other types of attributes (select, multiselect, ..)
+        $category = $this->categoryFactory->create()->load($categoryId);
+        return ['label' => $category->getName(), 'url' => $category->getUrl()];
+
+    }
+
+    /**
      * Preparing layout
      *
-     * @return Breadcrumbs|\Magento\Catalog\Block\Breadcrumbs
+     * @return Breadcrumbs
      * @throws LocalizedException
      * @throws NoSuchEntityException
      */
     protected function _prepareLayout()
     {
-        $title = [];
+        $product = $this->registry->registry('current_product');
         if ($breadcrumbsBlock = $this->getLayout()->getBlock('breadcrumbs')) {
             $breadcrumbsBlock->addCrumb(
                 'home', [
@@ -74,47 +107,32 @@ class Breadcrumbs extends \Magento\Theme\Block\Html\Breadcrumbs
                     'link' => $this->_storeManager->getStore()->getBaseUrl()
                 ]
             );
+            $title = [];
             $path = $this->catalogData->getBreadcrumbPath();
-            try {
-                $product = $this->catalogData->getProduct();
-            } catch (Exception $e) {
-                $this->_logger->critical('Breadcrumbs exceptions: ' . $e->getMessage());
-                return parent::_prepareLayout();
-            }
 
-            if ($product && count($path) == 1) {
-                $categoryCollection = clone $product->getCategoryCollection();
-                $categoryCollection->clear();
-                $categoryCollection->addAttributeToSort('level', $categoryCollection::SORT_ORDER_DESC)
-                    ->addAttributeToFilter('path', [
-                        'like' => "1/" . $this->_storeManager->getStore()->getRootCategoryId() . "/%"
-                    ]);
-                $categoryCollection->setPageSize(1);
-                $breadcrumbCategories = $categoryCollection->getFirstItem()->getParentCategories();
-
-                foreach ($breadcrumbCategories as $category) {
-                    $catbreadcrumb = ["label" => $category->getName(), "link" => $category->getUrl()];
-                    $breadcrumbsBlock->addCrumb("category" . $category->getId(), $catbreadcrumb);
-                    $title[] = $category->getName();
-                }
-                //add current product to breadcrumb
-                $prodbreadcrumb = ["label" => $product->getName(), "link" => ""];
-                $breadcrumbsBlock->addCrumb("product" . $product->getId(), $prodbreadcrumb);
-                $title[] = $product->getName();
-            } else {
+            if ($product != null) {
+                $foundCatPath = false;
                 foreach ($path as $name => $breadcrumb) {
-                    $breadcrumbsBlock->addCrumb($name, $breadcrumb);
-                    $title[] = $breadcrumb['label'];
+                    if (strpos($name, 'category') > -1)
+                        $foundCatPath = true;
+                }
+
+                if (!$foundCatPath) {
+                    $productCategory = $this->getCategory($product);
+                    if ($productCategory) {
+                        $categoryPath = ['category' => ['label' => $productCategory['label'], 'link' => $productCategory['url']]];
+                        $path = array_merge($categoryPath, $path);
+                    }
                 }
             }
+
+            foreach ($path as $name => $breadcrumb) {
+                $breadcrumbsBlock->addCrumb($name, $breadcrumb);
+                $title[] = $breadcrumb['label'];
+            }
+
             $this->pageConfig->getTitle()->set(join($this->getTitleSeparator(), array_reverse($title)));
-            return parent::_prepareLayout();
         }
-        $path = $this->catalogData->getBreadcrumbPath();
-        foreach ($path as $name => $breadcrumb) {
-            $title[] = $breadcrumb['label'];
-        }
-        $this->pageConfig->getTitle()->set(join($this->getTitleSeparator(), array_reverse($title)));
         return parent::_prepareLayout();
     }
 }
