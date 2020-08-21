@@ -51,6 +51,12 @@ use Magento\Framework\App\Action\Action;
                                     <?= $block->getReviewsSummaryHtml($_item, $templateType) ?>
                                 <?php endif; ?>
 
+                                <?php
+                                echo $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+                                    ->setTemplate('Laconica_Catalog::product/list/rates.phtml')
+                                    ->setData('product', $_item)
+                                    ->toHtml();
+                                ?>
                                 <?= $block->getProductPriceHtml($_item, $type) ?>
 
                                 <?= $block->getProductDetailsHtml($_item) ?>

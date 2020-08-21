@@ -68,6 +68,12 @@ $_helper = $this->helper('Magento\Catalog\Helper\Output');
                                     <?= /* @escapeNotVerified */ $_helper->productAttribute($_product, $_product->getName(), 'name') ?>
                                 </a>
                             </strong>
+                            <?php
+                            echo $block->getLayout()->createBlock('Magento\Framework\View\Element\Template')
+                                ->setTemplate('Laconica_Catalog::product/list/rates.phtml')
+                                ->setData('product', $_product)
+                                ->toHtml();
+                            ?>
                             <?= $block->getReviewsSummaryHtml($_product, $templateType) ?>
                             <?= /* @escapeNotVerified */ $block->getProductPrice($_product) ?>
                             <?= $block->getProductDetailsHtml($_product) ?>

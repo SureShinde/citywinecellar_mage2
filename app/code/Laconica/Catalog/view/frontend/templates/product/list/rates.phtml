@@ -1,0 +1,24 @@
+<?php
+/** @var Magento\Framework\View\Element\Template $block */
+$product = $block->getProduct();
+if ($product) :
+    if ($product->getTypeId() == 'configurable') {
+        $children = $product->getTypeInstance()->getUsedProducts($product);
+    } else {
+        $children = [$product];
+    }
+    foreach ($children as $child) :
+        if ($child->getData('rate1') && $child->getData('pub1')) : ?>
+            <div>
+                <span>
+                    <?= $child->getData('rate1'); ?>
+                </span>
+                <span>
+                    <?= $child->getData('pub1'); ?>
+                </span>
+            </div>
+            <?php break;
+        endif;
+    endforeach;
+endif; ?>
+
