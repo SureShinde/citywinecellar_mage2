@@ -1,0 +1,119 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright   2015 Ayasoftware (http://www.ayasoftware.com).
+ * See COPYING.txt for license details.
+ * author      EL HASSAN MATAR <support@ayasoftware.com>
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="ayasoftware" translate="label" sortOrder="90">
+            <label>Ayasoftware Extensions</label>
+        </tab>
+        <section id="enhanced_configurable_products" translate="label" type="text" sortOrder="1200" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Enhanced Configurable Products</label>
+            <tab>ayasoftware</tab>
+            <resource>Ayasoftware_EnhancedConfigurable::config_spp</resource>
+            <!-- General settings -->
+            <group id="settings" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>SETTINGS</label>
+                <field id="version" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Current Version</label>
+                    <frontend_model>Ayasoftware\EnhancedConfigurable\Block\Version</frontend_model>
+                </field>
+                <field id="enable" translate="label comment" type="select" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable module</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="hideprices" translate="label comment" type="select" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Hide price in dropdowns</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="instocklabel" translate="label comment" type="select" sortOrder="13" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show "In Stock" label in drop-downs</label>
+                    <comment>eg L: ( $15.95 )  (In Stock)</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="from_label" translate="label comment" type="text" sortOrder="14" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>From label</label>
+                </field>
+                
+                
+            </group>
+            <!-- HTML markup configuration -->
+            <group id="markup" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>HTML Markup</label>
+                <field id="product_sku_markup" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Product Sku class</label>
+                    <comment>Find it with Google chrome element inspector </comment>
+                </field>
+                <field id="product_name_markup" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Product name class</label>
+                </field>
+                <field id="product_short_description_markup" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Product short description class</label>
+                </field>
+                <field id="product_description_markup" translate="label comment" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Product description class</label>
+                </field>
+                <field id="product_additional_markup" translate="label comment" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Product attributes class</label>
+                </field>
+                <field id="product_image_markup" translate="label comment" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Product image class</label>
+                </field>
+                <field id="product_customstockdisplay_markup" translate="label comment" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Product stock availability class</label>
+                </field>
+            </group>
+            <group id="details" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Product details</label>
+                <field id="sku" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Update SKU</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="name" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Update name</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                 <field id="short_description" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Update Short description</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="description" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Update description</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="additional" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Update Product attributes</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="updateurl" translate="label comment" type="select" sortOrder="55" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Update URL</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                  <!--  <comment>Active when: Use categories path for product URLs is set to No.</comment> -->
+                </field>
+                <field id="image" translate="label comment" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Update Product Image</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="customstockdisplay" translate="label comment" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Display stock availability</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                
+                <field id="show_out_of_stock_products" translate="label comment" type="select" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Show out of stock products</label>
+                    <comment>No - to use Magento default behavior</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="disable_out_of_stock_option" translate="label comment" type="select" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Disable out of stock option</label>
+                    <comment>Yes - To make out of stock dropdown options unselectable</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright   2017 Ayasoftware (http://www.ayasoftware.com).
+ * See COPYING.txt for license details.
+ * author      EL HASSAN MATAR <support@ayasoftware.com>
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\ConfigurableProduct\Block\Product\View\Type\Configurable">
+        <plugin name="ayasoftware_enhancedconfigurable" type="Ayasoftware\EnhancedConfigurable\Block\ConfigurableProduct\Product\View\Type\Configurable" sortOrder="1"/>
+    </type>
+    <preference for="Magento\ConfigurableProduct\Model\ConfigurableAttributeData" type="Ayasoftware\EnhancedConfigurable\Model\Rewrite\ConfigurableAttributeData" />
+    <type name="Magento\UrlRewrite\Controller\Router">
+        <plugin name="ayasoftware_url_rewrite" type="Ayasoftware\EnhancedConfigurable\Plugin\UrlRewrite\Controller\Router" sortOrder="1"/>
+    </type>
+</config> 

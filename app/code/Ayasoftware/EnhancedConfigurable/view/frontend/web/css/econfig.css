@@ -1,0 +1,12 @@
+.product.media {
+    float: left;
+    margin-bottom: 25px;
+    margin: auto !important;
+    width: 64%;
+    text-align: center;
+}
+.configurable-price-from-label {
+    line-height: 50px;
+    text-align: right;
+    margin-right: 25px;
+}

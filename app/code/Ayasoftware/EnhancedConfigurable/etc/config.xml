@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright   2015 Ayasoftware (http://www.ayasoftware.com).
+ * See COPYING.txt for license details.
+ * author      EL HASSAN MATAR <support@ayasoftware.com>
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <enhanced_configurable_products>
+            <settings>
+                <enable>1</enable>
+                <hideprices>0</hideprices>
+                <cache_lifetime>0</cache_lifetime>
+                <from_label>Starting at:</from_label>
+            </settings>
+            <markup>
+                <product_sku_markup>div.product.attribute.sku</product_sku_markup>
+                <product_name_markup>h1.page-title span.base</product_name_markup>
+                <product_shortdescription_markup></product_shortdescription_markup>
+                <product_description_markup>#product.info.description div div.value p</product_description_markup>
+                <product_image_markup>div.product.media</product_image_markup>
+            </markup>
+        </enhanced_configurable_products>
+    </default>
+</config>

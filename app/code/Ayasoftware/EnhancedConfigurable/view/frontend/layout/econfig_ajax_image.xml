@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<page layout="1column" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <container name="product.info.media" htmlTag="div" htmlClass="product media" after="product.info.main">
+        <block class="Magento\Catalog\Block\Product\View\Gallery" name="product.info.media.image" template="product/view/gallery.phtml"/>
+    </container>
+</page>
