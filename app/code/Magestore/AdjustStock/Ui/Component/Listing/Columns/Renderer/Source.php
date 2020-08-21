@@ -6,6 +6,11 @@
  */
 namespace Magestore\AdjustStock\Ui\Component\Listing\Columns\Renderer;
 
+/**
+ * Class Source
+ *
+ * Source column renderer
+ */
 class Source extends \Magestore\AdjustStock\Ui\Component\Listing\Columns\Actions
 {
     /**
@@ -27,7 +32,7 @@ class Source extends \Magestore\AdjustStock\Ui\Component\Listing\Columns\Actions
                 $name = $this->getData('name');
                 if (isset($item[$labelField])) {
                     $sourceCode = $item[$name];
-                    $item[$name] = array();
+                    $item[$name] =[];
                     $item[$name]['edit'] = [
                         'href' => $this->urlBuilder->getUrl($this->_editUrl, ['source_code' => $sourceCode]),
                         'label' => __($item[$labelField])

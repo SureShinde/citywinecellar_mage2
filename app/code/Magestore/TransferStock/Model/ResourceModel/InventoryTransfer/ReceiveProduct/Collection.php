@@ -7,8 +7,7 @@
 namespace Magestore\TransferStock\Model\ResourceModel\InventoryTransfer\ReceiveProduct;
 
 /**
- * Class Collection
- * @package Magestore\TransferStock\Model\ResourceModel\InventoryTransfer\ReceiveProduct
+ * Receive product collection
  */
 class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection
 {
@@ -20,38 +19,42 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
      */
     protected function _construct()
     {
-        $this->_init(\Magestore\TransferStock\Model\InventoryTransfer\ReceiveProduct::class, \Magestore\TransferStock\Model\ResourceModel\InventoryTransfer\ReceiveProduct::class);
+        $this->_init(
+            \Magestore\TransferStock\Model\InventoryTransfer\ReceiveProduct::class,
+            \Magestore\TransferStock\Model\ResourceModel\InventoryTransfer\ReceiveProduct::class
+        );
     }
 
     /**
-     * get product's image
+     * Get product's image
      */
-    public function getImageProduct() {
+    public function getImageProduct()
+    {
         // get image
         $storeManager = \Magento\Framework\App\ObjectManager::getInstance()
-            ->get('Magento\Store\Model\StoreManagerInterface');
+            ->get(\Magento\Store\Model\StoreManagerInterface::class);
         $path = $storeManager->getStore()->getBaseUrl(
             \Magento\Framework\UrlInterface::URL_TYPE_MEDIA
         );
         $path .= 'catalog/product';
         $edition = \Magento\Framework\App\ObjectManager::getInstance()
-            ->get('Magento\Framework\App\ProductMetadataInterface')
+            ->get(\Magento\Framework\App\ProductMetadataInterface::class)
             ->getEdition();
         $rowId = strtolower($edition) == 'enterprise' ? 'row_id' : 'entity_id';
         /** @var \Magento\Eav\Model\ResourceModel\Entity\Attribute $eavAttribute */
         $eavAttribute = \Magento\Framework\App\ObjectManager::getInstance()
-            ->create('Magento\Eav\Model\ResourceModel\Entity\Attribute');
+            ->create(\Magento\Eav\Model\ResourceModel\Entity\Attribute::class);
         $productImagesAttributeId = $eavAttribute->getIdByCode(\Magento\Catalog\Model\Product::ENTITY, 'thumbnail');
         $this->getSelect()->joinLeft(
-            array('catalog_product_entity_varchar_img' => $this->getTable('catalog_product_entity_varchar')),
+            ['catalog_product_entity_varchar_img' => $this->getTable('catalog_product_entity_varchar')],
             "main_table.product_id = catalog_product_entity_varchar_img.$rowId && 
                 catalog_product_entity_varchar_img.attribute_id = $productImagesAttributeId && 
                 catalog_product_entity_varchar_img.store_id = 0",
-            array('')
-        )->columns(array(
+            ['']
+        )->columns([
             'image' => 'catalog_product_entity_varchar_img.value',
             'image_url' => 'CONCAT("'.$path.'", catalog_product_entity_varchar_img.value)'
-        ));
+        ]);
     }
 
     /**
@@ -60,23 +63,26 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
     public function getProductType()
     {
         $edition = \Magento\Framework\App\ObjectManager::getInstance()
-            ->get('Magento\Framework\App\ProductMetadataInterface')
+            ->get(\Magento\Framework\App\ProductMetadataInterface::class)
             ->getEdition();
         $rowId = strtolower($edition) == 'enterprise' ? 'row_id' : 'entity_id';
         $this->getSelect()->joinLeft(
-            array('catalog_product_entity' => $this->getTable('catalog_product_entity')),
+            ['catalog_product_entity' => $this->getTable('catalog_product_entity')],
             "main_table.product_id = catalog_product_entity.$rowId",
-            array('')
-        )->columns(array(
+            ['']
+        )->columns([
             'product_type_id' => 'catalog_product_entity.type_id',
-        ));
+        ]);
     }
 
     /**
-     * @param $transferId
+     * Get Product From Receive
+     *
+     * @param int $transferId
      * @return $this
      */
-    public function getProductFromReceive($transferId) {
+    public function getProductFromReceive($transferId)
+    {
         $this->getSelect()->joinLeft(
             ['receive' => $this->getTable('os_inventorytransfer_receive')],
             "main_table.receive_id = receive.receive_id",
@@ -87,20 +93,24 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
     }
 
     /**
-     * @param $transferId
+     * Get Number Product Sku Receive
+     *
+     * @param int $transferId
      * @return int
      */
-    public function getNumberProductSkuReceive($transferId) {
+    public function getNumberProductSkuReceive($transferId)
+    {
         return $this->getProductFromReceive($transferId)->getSize();
     }
 
     /**
      * Get list product SKU received
      *
-     * @param $transferId
+     * @param int $transferId
      * @return array
      */
-    public function getListProductSkuReceive($transferId) {
+    public function getListProductSkuReceive($transferId)
+    {
         $items = $this->getProductFromReceive($transferId);
         $listSku = [];
         foreach ($items as $item) {

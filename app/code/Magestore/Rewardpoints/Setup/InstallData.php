@@ -7,6 +7,8 @@ use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 
 /**
+ * Reward points - Install data
+ *
  * @codeCoverageIgnore
  */
 class InstallData implements InstallDataInterface
@@ -21,13 +23,16 @@ class InstallData implements InstallDataInterface
      */
     protected $_urlBuilder;
 
+    /**
+     * InstallData constructor.
+     */
     public function __construct()
     {
         $this->_objectManager = \Magento\Framework\App\ObjectManager::getInstance();
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function install(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
     {
@@ -36,23 +41,27 @@ class InstallData implements InstallDataInterface
         $installer->startSetup();
 
         $this->insertPage();
-        /**
-         * your code here
-         */
 
         $installer->endSetup();
     }
 
-    public function insertPage(){
-        $policycmsPageData = array(
+    /**
+     * Insert Page
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
+    public function insertPage()
+    {
+        $policycmsPageData = [
             'title' => 'Reward Policy',
             'page_layout' => '2columns-left',
             'meta_keywords' => 'reward policy',
             'meta_description' => 'reward policy',
             'identifier' => 'rewardpoints-policy',
             'content_heading' => 'Reward Policy',
-            'stores' => array(0), //available for all store views
+            'stores' => [0], //available for all store views
             'is_active' => '1',
+            // phpcs:disable
             'content' => '<div>
             <style>
                 strong.rewardpoints-title {
@@ -97,21 +106,26 @@ class InstallData implements InstallDataInterface
     </div>
 </div>
 
-',
-        );
+', // phpcs:enable
+        ];
 
-        $policyPage = $this->_objectManager->create('Magento\Cms\Model\Page')->checkIdentifier('rewardpoints-policy', 0);
-        $this->_objectManager->create('Magento\Cms\Model\Page')->load($policyPage)->addData($policycmsPageData)->save();
+        $policyPage = $this->_objectManager->create(\Magento\Cms\Model\Page::class)
+            ->checkIdentifier('rewardpoints-policy', 0);
+        $this->_objectManager->create(\Magento\Cms\Model\Page::class)
+            ->load($policyPage)
+            ->addData($policycmsPageData)
+            ->save();
 
-        $welcomecmsPageData = array(
+        $welcomecmsPageData = [
             'title' => 'Reward Welcome Page',
             'page_layout' => '2columns-left',
             'meta_keywords' => 'reward welcome page',
             'meta_description' => 'reward welcome page',
             'identifier' => 'rewardpoints-welcome',
             'content_heading' => 'WELCOME TO OUR REWARD PROGRAM!',
-            'stores' => array(0), //available for all store views
+            'stores' => [0], //available for all store views
             'is_active' => '1',
+            // phpcs:disable
             'content' => '<div>
              <style>
                 strong.rewardpoints-title {
@@ -136,10 +150,14 @@ class InstallData implements InstallDataInterface
     <div class="rewardpoints-dashboard-list">
         {{block class="Magestore\Rewardpoints\Block\Account\Dashboard\Spend" template="rewardpoints/account/dashboard/spend.phtml"}}
     </div>
-</div>'
-        );
+</div>' // phpcs:enable
+        ];
 
-        $welcomePage = $this->_objectManager->create('Magento\Cms\Model\Page')->checkIdentifier('rewardpoints-welcome', 0);
-        $this->_objectManager->create('Magento\Cms\Model\Page')->load($welcomePage)->addData($welcomecmsPageData)->save();
+        $welcomePage = $this->_objectManager->create(\Magento\Cms\Model\Page::class)
+            ->checkIdentifier('rewardpoints-welcome', 0);
+        $this->_objectManager->create(\Magento\Cms\Model\Page::class)
+            ->load($welcomePage)
+            ->addData($welcomecmsPageData)
+            ->save();
     }
 }

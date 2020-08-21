@@ -1,18 +1,18 @@
 <?php
 /**
  * Magestore
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Magestore.com license that is
  * available through the world-wide-web at this URL:
  * http://www.magestore.com/license-agreement.html
- * 
+ *
  * DISCLAIMER
- * 
+ *
  * Do not edit or add to this file if you wish to upgrade this extension to newer
  * version in the future.
- * 
+ *
  * @category    Magestore
  * @package     Magestore_RewardPoints
  * @copyright   Copyright (c) 2012 Magestore (http://www.magestore.com/)
@@ -22,14 +22,9 @@ namespace Magestore\Rewardpoints\Model\Action\Earning;
 
 /**
  * Action Earn Point for Order
- * 
- * @category    Magestore
- * @package     Magestore_RewardPoints
- * @author      Magestore Developer
  */
-class Creditmemo
-    extends \Magestore\Rewardpoints\Model\Action\AbstractAction
-    implements \Magestore\Rewardpoints\Model\Action\InterfaceAction
+class Creditmemo extends \Magestore\Rewardpoints\Model\Action\AbstractAction implements
+    \Magestore\Rewardpoints\Model\Action\InterfaceAction
 {
     /**
      * @var \Magento\Framework\Logger\Monolog
@@ -50,15 +45,13 @@ class Creditmemo
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Framework\UrlInterface $urlBuilder,
         \Magento\Framework\Logger\Monolog $monolog
-    ){
-        parent::__construct($helper,$transaction,$storeManager,$urlBuilder);
+    ) {
+        parent::__construct($helper, $transaction, $storeManager, $urlBuilder);
         $this->_logger = $monolog;
     }
 
     /**
-     * Calculate and return point amount that customer earned from order
-     * 
-     * @return int
+     * @inheritDoc
      */
     public function getPointAmount()
     {
@@ -67,25 +60,23 @@ class Creditmemo
     }
     
     /**
-     * get Label for this action, this is the reason to change 
-     * customer reward points balance
-     * 
-     * @return string
+     * @inheritDoc
      */
     public function getActionLabel()
     {
         return __('Taken back points for refunding order');
     }
-    
+
+    /**
+     * @inheritDoc
+     */
     public function getActionType()
     {
         return \Magestore\Rewardpoints\Model\Transaction::ACTION_TYPE_EARN;
     }
-    
+
     /**
-     * get Text Title for this action, used when create an transaction
-     * 
-     * @return string
+     * @inheritDoc
      */
     public function getTitle()
     {
@@ -93,22 +84,25 @@ class Creditmemo
         $order      = $creditmemo->getOrder();
         return __('Taken back points for refunding order #%1', $order->getIncrementId());
     }
-    
+
     /**
-     * get HTML Title for action depend on current transaction
-     * 
-     * @param Magestore_RewardPoints_Model_Transaction $transaction
-     * @return string
+     * @inheritDoc
      */
     public function getTitleHtml($transaction = null)
     {
-        if (is_null($transaction)) {
+        if ($transaction === null) {
             return $this->getTitle();
         }
         if ($this->_storeManager->getStore()->getCode() == \Magento\Store\Model\Store::ADMIN_CODE) {
-            $editUrl = $this->_urlBuilder->getUrl('adminhtml/sales_order/view', array('order_id' => $transaction->getOrderId()));
+            $editUrl = $this->_urlBuilder->getUrl(
+                'adminhtml/sales_order/view',
+                ['order_id' => $transaction->getOrderId()]
+            );
         } else {
-            $editUrl = $this->_urlBuilder->getUrl('sales/order/view', array('order_id' => $transaction->getOrderId()));
+            $editUrl = $this->_urlBuilder->getUrl(
+                'sales/order/view',
+                ['order_id' => $transaction->getOrderId()]
+            );
         }
         return __(
             'Taken back points for refunding order %1',
@@ -117,20 +111,16 @@ class Creditmemo
             . '">#' . $transaction->getOrderIncrementId() . '</a>'
         );
     }
-    
+
     /**
-     * prepare data of action to storage on transactions
-     * the array that returned from function $action->getData('transaction_data')
-     * will be setted to transaction model
-     * 
-     * @return Magestore_RewardPoints_Model_Action_Interface
+     * @inheritDoc
      */
     public function prepareTransaction()
     {
         $creditmemo = $this->getData('action_object');
         $order      = $creditmemo->getOrder();
         
-        $transactionData = array(
+        $transactionData = [
             'status'    => \Magestore\Rewardpoints\Model\Transaction::STATUS_COMPLETED,
             'order_id'  => $order->getId(),
             'order_increment_id'    => $order->getIncrementId(),
@@ -141,7 +131,7 @@ class Creditmemo
             'store_id'      => $order->getStoreId(),
             'extra_content' => $creditmemo->getIncrementId(),
             'creditmemo_transaction' => true
-        );
+        ];
         
         // Check all earning transaction is holding
         $earningTransactions = $this->_transaction->create()->getCollection()

@@ -16,6 +16,9 @@ use Magestore\FulfilSuccess\Api\PickRequestRepositoryInterface;
 use Magestore\FulfilSuccess\Api\PickRequestItemRepositoryInterface;
 use Magestore\FulfilSuccess\Service\PackRequest\PackRequestService;
 
+/**
+ * Pack request builder service
+ */
 class BuilderService
 {
     /**
@@ -49,12 +52,14 @@ class BuilderService
     protected $pickRequestRepository;
 
     /**
-     * BuilderService constructor.
+     * BuilderService Construct
+     *
      * @param OrderItemRepositoryInterface $orderItemRepository
      * @param PackRequestInterfaceFactory $packRequestFactory
+     * @param PickRequestRepositoryInterface $pickRequestRepository
      * @param PickRequestItemRepositoryInterface $pickRequestItemRepository
      * @param PackRequestRepositoryInterface $packRequestRepository
-     * @param \Magestore\FulfilSuccess\Service\PackRequest\PackRequestService $packRequestService
+     * @param PackRequestService $packRequestService
      */
     public function __construct(
         OrderItemRepositoryInterface $orderItemRepository,
@@ -63,8 +68,7 @@ class BuilderService
         PickRequestItemRepositoryInterface $pickRequestItemRepository,
         PackRequestRepositoryInterface $packRequestRepository,
         PackRequestService $packRequestService
-    )
-    {
+    ) {
         $this->orderItemRepository = $orderItemRepository;
         $this->packRequestFactory = $packRequestFactory;
         $this->pickRequestItemRepository = $pickRequestItemRepository;
@@ -74,9 +78,11 @@ class BuilderService
     }
 
     /**
+     * Create From Pick Request
      *
      * @param PickRequestInterface $pickRequest
      * @return PackRequestInterface
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function createFromPickRequest(PickRequestInterface $pickRequest)
     {
@@ -88,7 +94,7 @@ class BuilderService
         if (count($packRequests)) {
             foreach ($packRequests as $existedPackRequest) {
                 if ($existedPackRequest->getStatus() == PickRequestInterface::STATUS_PICKING
-                    && $existedPackRequest->getWarehouseId() == $pickRequest->getWarehouseId()
+                    && $existedPackRequest->getSourceCode() == $pickRequest->getSourceCode()
                 ) {
                     $packRequest = $existedPackRequest;
                     break;
@@ -116,12 +122,13 @@ class BuilderService
                     continue;
                 }
                 $this->packRequestService->addPickItemToPackRequest($packRequest, $pickItem);
-//                if ($this->orderItemRepository->get($pickItem->getItemId())->getProductType() == \Magento\Bundle\Model\Product\Type::TYPE_CODE) {
-//                    continue;
-//                }
+                // $productType = $this->orderItemRepository->get($pickItem->getItemId())->getProductType();
+                // if ($productType == \Magento\Bundle\Model\Product\Type::TYPE_CODE) {
+                //     continue;
+                // }
                 // if item is child of bundle product with shipping type is together
                 // do NOT increase total_items of pack request
-                if($pickItem->getParentId()) {
+                if ($pickItem->getParentId()) {
                     continue;
                 }
                 $totalPickedQty += $pickItem->getPickedQty();
@@ -132,7 +139,9 @@ class BuilderService
         /* check total picked qty */
         if ($isNew && !$totalPickedQty) {
             $this->packRequestRepository->delete($packRequest);
-            throw new \Exception(__('There is no items picked to move to packing step.'));
+            throw new \Magento\Framework\Exception\LocalizedException(
+                __('There is no items picked to move to packing step.')
+            );
         }
         /* update pack_id to Pick Request */
         $pickRequest->setPackRequestId($packRequest->getPackRequestId());

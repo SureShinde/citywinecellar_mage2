@@ -19,14 +19,11 @@
  * @license     http://www.magestore.com/license-agreement.html
  */
 
+namespace Magestore\Rewardpoints\Block\Product\View;
+
 /**
  * RewardPoints Show Earning Point on Mini Cart Block
- *
- * @category    Magestore
- * @package     Magestore_RewardPoints
- * @author      Magestore Developer
  */
-namespace Magestore\Rewardpoints\Block\Product\View;
 class Earning extends \Magestore\Rewardpoints\Block\RewardpointTemplate
 {
     /**
@@ -43,7 +40,10 @@ class Earning extends \Magestore\Rewardpoints\Block\RewardpointTemplate
 
     /**
      * Earning constructor.
+     *
      * @param \Magento\Framework\View\Element\Template\Context $context
+     * @param \Magento\Framework\Module\Manager $moduleManager
+     * @param \Magestore\Rewardpoints\Helper\Data $helper
      * @param \Magento\Framework\Registry $registry
      * @param \Magestore\Rewardpoints\Helper\Point $helperPoint
      * @param \Magestore\Rewardpoints\Helper\Calculation\Earning $calculationEarning
@@ -58,7 +58,7 @@ class Earning extends \Magestore\Rewardpoints\Block\RewardpointTemplate
         \Magestore\Rewardpoints\Helper\Calculation\Earning $calculationEarning,
         array $data = []
     ) {
-        parent::__construct($context,$moduleManager,$helper,$helperPoint, $data);
+        parent::__construct($context, $moduleManager, $helper, $helperPoint, $data);
         $this->_coreRegistry = $registry;
         $this->_calculationEarning = $calculationEarning;
     }
@@ -71,22 +71,29 @@ class Earning extends \Magestore\Rewardpoints\Block\RewardpointTemplate
     public function enableDisplay()
     {
         $enableDisplay = $this->_helperPoint->showOnProduct();
-        $container = new \Magento\Framework\DataObject(array(
-            'enable_display' => $enableDisplay
-        ));
+        $container = new \Magento\Framework\DataObject(
+            [
+                'enable_display' => $enableDisplay
+            ]
+        );
 
-        $this->_eventManager->dispatch('rewardpoints_block_show_earning_on_product', array(
-            'container' => $container,
-        ));
+        $this->_eventManager->dispatch(
+            'rewardpoints_block_show_earning_on_product',
+            [
+                'container' => $container,
+            ]
+        );
 
-        if ($container->getEnableDisplay() && !$this->hasEarningRate() || $this->_coreRegistry->registry('product')->getRewardpointsSpend()) {
+        if ($container->getEnableDisplay() && !$this->hasEarningRate()
+            || $this->_coreRegistry->registry('product')->getRewardpointsSpend()
+        ) {
             return false;
         }
         return $container->getEnableDisplay();
     }
 
     /**
-     * check product can earn point by rate or not
+     * Check product can earn point by rate or not
      *
      * @return boolean
      */
@@ -101,7 +108,7 @@ class Earning extends \Magestore\Rewardpoints\Block\RewardpointTemplate
 
             if ($productPrice < 0.0001 && $product->getTypeId() == 'bundle') {
                 $totalsprice = $product->getPriceModel()->getTotalPrices($product);
-                if(isset($totalsprice[0]) && $totalsprice[0]){
+                if (isset($totalsprice[0]) && $totalsprice[0]) {
                     $productPrice = $totalsprice[0];
                 }
             }
@@ -114,7 +121,7 @@ class Earning extends \Magestore\Rewardpoints\Block\RewardpointTemplate
     }
 
     /**
-     * get Image (HTML) for reward points
+     * Get Image (HTML) for reward points
      *
      * @param boolean $hasAnchor
      * @return string
@@ -126,7 +133,7 @@ class Earning extends \Magestore\Rewardpoints\Block\RewardpointTemplate
     }
 
     /**
-     * get plural points name
+     * Get plural points name
      *
      * @return string
      */
@@ -136,7 +143,7 @@ class Earning extends \Magestore\Rewardpoints\Block\RewardpointTemplate
     }
 
     /**
-     * get plural points name
+     * Get points name
      *
      * @return string
      */
@@ -145,6 +152,11 @@ class Earning extends \Magestore\Rewardpoints\Block\RewardpointTemplate
         return $this->_helperPoint->getName();
     }
 
+    /**
+     * Get Earning Points
+     *
+     * @return string
+     */
     public function getEarningPoints()
     {
         $earningPoint = 0;
@@ -153,13 +165,14 @@ class Earning extends \Magestore\Rewardpoints\Block\RewardpointTemplate
         } else {
             if ($this->_coreRegistry->registry('product')
                 && $point = $this->_calculationEarning->getRateEarningPoints(
-                    $this->_coreRegistry->registry('product')->getPriceInfo()->getPrice('final_price')->getAmount()->getValue()
+                    $this->_coreRegistry->registry('product')
+                        ->getPriceInfo()->getPrice('final_price')->getAmount()->getValue()
                 )
             ) {
                 $earningPoint = $point;
             }
         }
-        if($earningPoint <= 1){
+        if ($earningPoint <= 1) {
             return $earningPoint . ' ' . $this->getPointName();
         }
         return $earningPoint. ' ' . $this->getPluralPointName();

@@ -15,14 +15,20 @@ use Magestore\BarcodeSuccess\Model\Locator\LocatorInterface;
 use Magento\Framework\App\Response\Http\FileFactory;
 use Magento\Framework\Filesystem;
 use Magento\Framework\File\Csv;
+use Magento\Framework\App\Action\HttpPostActionInterface as HttpPostActionInterface;
 
-
-class ImportData extends \Magestore\BarcodeSuccess\Controller\Adminhtml\AbstractIndex
+/**
+ * Class ImportData
+ *
+ * Used to import data
+ */
+class ImportData extends \Magestore\BarcodeSuccess\Controller\Adminhtml\AbstractIndex implements
+    HttpPostActionInterface
 {
     /**
      * @var array
      */
-    protected $generated = array();
+    protected $generated = [];
 
     /**
      * @var FileFactory
@@ -38,6 +44,7 @@ class ImportData extends \Magestore\BarcodeSuccess\Controller\Adminhtml\Abstract
      * @var Csv
      */
     protected $csvProcessor;
+
     /**
      * @var \Magento\Backend\Model\Session
      */
@@ -45,6 +52,7 @@ class ImportData extends \Magestore\BarcodeSuccess\Controller\Adminhtml\Abstract
 
     /**
      * DownloadSample constructor.
+     *
      * @param Context $context
      * @param PageFactory $resultPageFactory
      * @param Data $data
@@ -69,26 +77,33 @@ class ImportData extends \Magestore\BarcodeSuccess\Controller\Adminhtml\Abstract
         $this->backendSession = $context->getSession();
     }
 
+    /**
+     * Execute
+     *
+     * @return mixed
+     */
     public function execute()
     {
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
         if ($this->getRequest()->isPost()) {
             $reason = $this->getRequest()->getParam('reason');
             try {
-                $importHandler = $this->_objectManager->create('Magestore\BarcodeSuccess\Model\CsvImportHandler');
+                $importHandler = $this->_objectManager
+                    ->create(\Magestore\BarcodeSuccess\Model\CsvImportHandler::class);
                 $result = $importHandler->importFromCsvFile($this->getRequest()->getFiles('file_csv'), $reason);
                 $importSuccess = $result['import_success'];
                 $editSuccess = $result['edit_success'];
                 if ($importSuccess) {
                     $this->messageManager->addSuccessMessage(__('%1 barcode(s) has been imported.', $importSuccess));
-                    if($editSuccess)
+                    if ($editSuccess) {
                         $this->messageManager->addSuccessMessage(__('%1 barcode(s) has been edited.', $editSuccess));
-                    return $resultRedirect->setPath("*/*/importsuccess/id/".$result['history_id']);
+                    }
+                    return $resultRedirect->setPath("*/*/importsuccess/id/" . $result['history_id']);
                 } else {
-                    if($editSuccess){
+                    if ($editSuccess) {
                         $this->messageManager->addSuccessMessage(__('%1 barcode(s) has been edited.', $editSuccess));
                         return $resultRedirect->setPath('*/*/index');
-                    } else{
+                    } else {
                         $this->messageManager->addErrorMessage(__('No barcode has been imported.'));
                         $this->backendSession->setData('error_import', false);
                         $this->backendSession->setData('sku_exist', null);
@@ -106,6 +121,5 @@ class ImportData extends \Magestore\BarcodeSuccess\Controller\Adminhtml\Abstract
         /** @var \Magento\Backend\Model\View\Result\Redirect $resultRedirect */
         $resultRedirect->setUrl($this->_redirect->getRedirectUrl());
         return $resultRedirect;
-
     }
 }

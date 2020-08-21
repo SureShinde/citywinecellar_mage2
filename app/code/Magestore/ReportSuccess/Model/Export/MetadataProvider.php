@@ -6,11 +6,15 @@
  */
 
 namespace Magestore\ReportSuccess\Model\Export;
+
 use Magento\Framework\View\Element\UiComponentInterface;
+use Magento\Ui\Component\Filters;
+use Magento\Ui\Component\Filters\Type\Select;
 
 /**
  * Class MetadataProvider
- * @package Magestore\ReportSuccess\Model\Export
+ *
+ * Used for metadata provider
  */
 class MetadataProvider extends \Magento\Ui\Model\Export\MetadataProvider
 {
@@ -27,5 +31,34 @@ class MetadataProvider extends \Magento\Ui\Model\Export\MetadataProvider
             $row[$column->getData('name')] = $column->getData('config/label');
         }
         return $row;
+    }
+
+    /**
+     * Returns Filters with options
+     *
+     * @return array
+     */
+    public function getOptions(): array
+    {
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $metadataProvider = $objectManager->get(\Magento\Ui\Model\Export\MetadataProvider::class);
+        if (method_exists($metadataProvider, 'getColumnOptions')) {
+            $options = [];
+            $component = $this->filter->getComponent();
+            $childComponents = $component->getChildComponents();
+            $listingTop = $childComponents['listing_top'];
+            foreach ($listingTop->getChildComponents() as $child) {
+                if ($child instanceof Filters) {
+                    foreach ($child->getChildComponents() as $filter) {
+                        if ($filter instanceof Select) {
+                            $options[$filter->getName()] = $this->getFilterOptions($filter);
+                        }
+                    }
+                }
+            }
+        } else {
+            $options = parent::getOptions();
+        }
+        return $options;
     }
 }

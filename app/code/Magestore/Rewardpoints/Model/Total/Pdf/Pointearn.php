@@ -1,18 +1,18 @@
 <?php
 /**
  * Magestore
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Magestore.com license that is
  * available through the world-wide-web at this URL:
  * http://www.magestore.com/license-agreement.html
- * 
+ *
  * DISCLAIMER
- * 
+ *
  * Do not edit or add to this file if you wish to upgrade this extension to newer
  * version in the future.
- * 
+ *
  * @category    Magestore
  * @package     Magestore_RewardPoints
  * @copyright   Copyright (c) 2012 Magestore (http://www.magestore.com/)
@@ -20,12 +20,9 @@
  */
 
 namespace Magestore\Rewardpoints\Model\Total\Pdf;
+
 /**
  * Rewardpoints Earning Model (use to print invoice PDF)
- * 
- * @category    Magestore
- * @package     Magestore_RewardPoints
- * @author      Magestore Developer
  */
 class Pointearn extends \Magento\Sales\Model\Order\Pdf\Total\DefaultTotal
 {
@@ -46,12 +43,12 @@ class Pointearn extends \Magento\Sales\Model\Order\Pdf\Total\DefaultTotal
         $amount = $this->getAmount();
         $label = __($this->getTitle()) . ':';
         $fontSize = $this->getFontSize() ? $this->getFontSize() : 7;
-        $total = array(
+        $total = [
             'amount'    => $amount,
             'label'     => $label,
             'font_size' => $fontSize
-        );
-        return array($total);
+        ];
+        return [$total];
     }
 
     /**

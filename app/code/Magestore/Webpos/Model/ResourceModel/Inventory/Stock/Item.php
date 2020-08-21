@@ -6,9 +6,22 @@
 
 namespace Magestore\Webpos\Model\ResourceModel\Inventory\Stock;
 
-use Magento\CatalogInventory\Model\Indexer\Stock\Processor;
-use Magento\CatalogInventory\Model\Stock;
+use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Catalog\Model\Product\Type as TypeBundle;
 use Magento\CatalogInventory\Api\StockConfigurationInterface;
+use Magento\CatalogInventory\Model\Indexer\Stock\Processor;
+use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
+use Magento\Framework\App\ObjectManager;
+use Magento\Framework\DB\Ddl\Table;
+use Magento\Framework\EntityManager\MetadataPool;
+use Magento\GroupedProduct\Model\Product\Type\Grouped;
+use Magento\GroupedProduct\Model\ResourceModel\Product\Link;
+use Magento\InventoryIndexer\Indexer\InventoryIndexer;
+use Magento\InventoryIndexer\Indexer\Stock\GetAllStockIds;
+use Magento\InventoryMultiDimensionalIndexerApi\Model\Alias;
+use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameBuilder;
+use Magento\InventoryMultiDimensionalIndexerApi\Model\IndexNameResolverInterface;
+use Magento\InventorySalesAdminUi\Model\ResourceModel\GetAssignedStockIdsBySku;
 
 /**
  * Stock item
@@ -64,6 +77,16 @@ class Item extends \Magento\CatalogInventory\Model\ResourceModel\Stock\Item
     private $dateTime;
 
     /**
+     * @var GetAssignedStockIdsBySku
+     */
+    private $getAssignedStockIdsBySku;
+
+    /**
+     * @var GetAllStockIds
+     */
+    private $getAllStockIds;
+
+    /**
      * Item constructor.
      *
      * @param \Magento\Framework\Model\ResourceModel\Db\Context $context
@@ -101,8 +124,9 @@ class Item extends \Magento\CatalogInventory\Model\ResourceModel\Stock\Item
         $this->stockManagement = $stockManagement;
         $this->date = $date;
         $this->registry = $registry;
-        $this->dateTime = \Magento\Framework\App\ObjectManager::getInstance()
-            ->get(\Magento\Framework\Stdlib\DateTime\DateTime::class);
+        $this->dateTime = ObjectManager::getInstance()->get(\Magento\Framework\Stdlib\DateTime\DateTime::class);
+        $this->getAssignedStockIdsBySku = ObjectManager::getInstance()->get(GetAssignedStockIdsBySku::class);
+        $this->getAllStockIds = ObjectManager::getInstance()->get(GetAllStockIds::class);
     }
 
     /**
@@ -248,6 +272,7 @@ class Item extends \Magento\CatalogInventory\Model\ResourceModel\Stock\Item
         $collection->getSelect()->columns(
             ['is_in_stock' => 'IF(stock_table.is_salable, stock_table.is_salable, 0)']
         );
+        return $collection;
     }
 
     /**
@@ -434,5 +459,274 @@ class Item extends \Magento\CatalogInventory\Model\ResourceModel\Stock\Item
                 ['product_id IN (?)' => new \Zend_Db_Expr($statement->__toString())]
             );
         }
+    }
+
+    /**
+     * Get Assigned Stock Id By ids
+     *
+     * @param array $ids
+     */
+    public function getAssignedStockIdByIds($ids)
+    {
+        $catalogSelect = $this->getConnection()->select()
+            ->from(
+                $this->getTable('catalog_product_entity'),
+                ['entity_id', 'sku']
+            )->where("entity_id IN (?)", $ids);
+
+        $stockItemSelect = $this->getConnection()->select()
+            ->from(
+                ['source_item' => $this->getTable('inventory_source_item')],
+                []
+            );
+        $stockItemSelect->joinInner(
+            ['catalog_product' => $catalogSelect],
+            "source_item.sku = catalog_product.sku"
+        );
+        $stockItemSelect->joinInner(
+            ['source_stock_link' => $this->getTable('inventory_source_stock_link')],
+            "source_item.source_code = source_stock_link.source_code",
+            ['stock_id']
+        );
+
+        // Remove duplicate stock_id by sku
+        $select = $this->getConnection()->select()
+            ->from(
+                $stockItemSelect,
+                new \Zend_Db_Expr('DISTINCT entity_id, stock_id')
+            );
+
+        // Join with composite products
+        $resultSelect = $this->getStockForCompositeProducts($select, $ids);
+
+        $result = [];
+        foreach ($this->getConnection()->fetchAll($resultSelect) as $item) {
+            $result[$item['entity_id']]['stock_id'][] = $item['stock_id'];
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get composite products stock
+     *
+     * @param \Magento\Framework\DB\Select $resultSelect
+     * @param array $ids
+     * @return \Magento\Framework\DB\Select
+     */
+    public function getStockForCompositeProducts($resultSelect, $ids)
+    {
+        $parentSelect = $this->getConnection()->select()
+            ->from(
+                ['e' => $this->getTable('catalog_product_entity')],
+                ['entity_id', 'sku']
+            )
+            ->where("entity_id IN (?)", $ids)
+            ->where('type_id IN (?)', [Grouped::TYPE_CODE, TypeBundle::TYPE_BUNDLE, Configurable::TYPE_CODE]);
+
+        $compositeProduct = [];
+        /** @var IndexNameBuilder $indexNameBuilder */
+        $indexNameBuilder = ObjectManager::getInstance()->create(IndexNameBuilder::class);
+        /** @var IndexNameResolverInterface $indexNameResolver */
+        $indexNameResolver = ObjectManager::getInstance()->create(IndexNameResolverInterface::class);
+        foreach ($this->getAllStockIds->execute() as $stockId) {
+            $indexName = $indexNameBuilder
+                ->setIndexId(InventoryIndexer::INDEXER_ID)
+                ->addDimension('stock_', (string)$stockId)
+                ->setAlias(Alias::ALIAS_MAIN)
+                ->build();
+            $indexTableName = $indexNameResolver->resolveName($indexName);
+
+            $compositeProduct[] = $this->getConnection()->select()
+                ->from(
+                    ['e' => $parentSelect],
+                    ['entity_id']
+                )->joinInner(
+                    ['stock' => $indexTableName],
+                    'e.sku = stock.sku',
+                    ['stock_id' => new \Zend_Db_Expr($stockId)]
+                );
+        }
+
+        if (count($compositeProduct)) {
+            return $this->getConnection()->select()->union(
+                array_merge([$resultSelect], $compositeProduct),
+                \Magento\Framework\DB\Select::SQL_UNION_ALL
+            );
+        } else {
+            return $resultSelect;
+        }
+    }
+
+    /**
+     * Reindex by source items
+     *
+     * @param array $sourceItems
+     * @return array
+     */
+    public function reindexBySourceItem($sourceItems)
+    {
+        $data = [];
+        foreach ($sourceItems as $item) {
+            $data[] = [
+                'source_code' => $item['source_code'],
+                'sku' => $item['sku']
+            ];
+        }
+
+        $tmpTableName = 'tmp_source_item';
+        $tmpTable = $this->getConnection()->newTable($this->getTable($tmpTableName));
+        $tmpTable->addColumn(
+            'source_code',
+            Table::TYPE_TEXT,
+            64,
+            ['nullable' => false],
+            'Source Code'
+        );
+        $tmpTable->addColumn(
+            'sku',
+            Table::TYPE_TEXT,
+            64,
+            ['nullable' => false],
+            'Sku'
+        );
+        $this->getConnection()->createTemporaryTable($tmpTable);
+        $this->getConnection()->insertOnDuplicate($this->getTable($tmpTableName), $data);
+
+        $newSourceItemSelect = $this->getConnection()->select()
+            ->from(
+                ['e' => $this->getTable($tmpTableName)],
+                []
+            );
+        $newSourceItemSelect->joinLeft(
+            ['source_item' => $this->getTable('inventory_source_item')],
+            'e.sku = source_item.sku AND e.source_code = source_item.source_code',
+            []
+        )->where('source_item.source_item_id IS NULL');
+        $newSourceItemSelect->joinInner(
+            ['catalog_entity' => $this->getTable('catalog_product_entity')],
+            'e.sku = catalog_entity.sku',
+            ['entity_id']
+        );
+
+        ///// Get parent product /////
+        /* Bundle */
+        $bundleSelect = $this->bundleProductIndexRowUpdate($newSourceItemSelect);
+
+        /* Grouped */
+        $groupedSelect = $this->groupedProductIndexRowUpdate($newSourceItemSelect);
+
+        /* Configurable */
+        $configurableSelect = $this->configurableProductIndexRowUpdate($newSourceItemSelect);
+        ///// End: Get parent product /////
+
+        $ids = [];
+        foreach ([$newSourceItemSelect, $groupedSelect, $configurableSelect, $bundleSelect] as $select) {
+            $ids = array_merge($ids, $this->getConnection()->fetchCol($select)); // phpcs:ignore
+        }
+
+        $this->getConnection()->dropTemporaryTable($this->getTable($tmpTableName));
+        return $ids;
+    }
+
+    /**
+     * Bundle Product Index Row Update
+     *
+     * @param \Magento\Framework\DB\Select $childrenSelect
+     * @return \Magento\Framework\DB\Select
+     */
+    public function bundleProductIndexRowUpdate($childrenSelect)
+    {
+        $bundleSelect = $this->getConnection()->select()
+            ->from(
+                ['children' => $childrenSelect],
+                []
+            )->joinInner(
+                ['parent_link' => $this->getTable('catalog_product_bundle_selection')],
+                'parent_link.product_id = children.entity_id',
+                []
+            )->joinInner(
+                ['parent_product_entity' => $this->getTable('catalog_product_entity')],
+                'parent_product_entity.' . $this->getProductLinkedField() . ' = parent_link.parent_product_id',
+                ['entity_id']
+            );
+
+        return $this->getConnection()->select()
+            ->from(
+                $bundleSelect,
+                new \Zend_Db_Expr('DISTINCT entity_id')
+            );
+    }
+
+    /**
+     * Grouped Product Index Row Update
+     *
+     * @param \Magento\Framework\DB\Select $childrenSelect
+     * @return \Magento\Framework\DB\Select
+     */
+    public function groupedProductIndexRowUpdate($childrenSelect)
+    {
+        $groupedSelect = $this->getConnection()->select()
+            ->from(
+                ['children' => $childrenSelect],
+                []
+            )->joinInner(
+                ['parent_link' => $this->getTable('catalog_product_link')],
+                'parent_link.linked_product_id = children.entity_id 
+                AND parent_link.link_type_id = ' . Link::LINK_TYPE_GROUPED,
+                []
+            )->joinInner(
+                ['parent_product_entity' => $this->getTable('catalog_product_entity')],
+                'parent_product_entity.' . $this->getProductLinkedField() . ' = parent_link.product_id',
+                ['entity_id']
+            );
+
+        return $this->getConnection()->select()
+            ->from(
+                $groupedSelect,
+                new \Zend_Db_Expr('DISTINCT entity_id')
+            );
+    }
+
+    /**
+     * Configurable Product Index Row Update
+     *
+     * @param \Magento\Framework\DB\Select $childrenSelect
+     * @return \Magento\Framework\DB\Select
+     */
+    public function configurableProductIndexRowUpdate($childrenSelect)
+    {
+        $configurableSelect = $this->getConnection()->select()
+            ->from(
+                ['children' => $childrenSelect],
+                []
+            )->joinInner(
+                ['parent_link' => $this->getTable('catalog_product_super_link')],
+                'parent_link.product_id = children.entity_id',
+                []
+            )->joinInner(
+                ['parent_product_entity' => $this->getTable('catalog_product_entity')],
+                'parent_product_entity.' . $this->getProductLinkedField() . ' = parent_link.parent_id',
+                ['entity_id']
+            );
+
+        return $this->getConnection()->select()
+            ->from(
+                $configurableSelect,
+                new \Zend_Db_Expr('DISTINCT entity_id')
+            );
+    }
+
+    /**
+     * Get linked field of product
+     *
+     * @return string
+     */
+    public function getProductLinkedField()
+    {
+        /** @var MetadataPool $metapool */
+        $metaPool = ObjectManager::getInstance()->create(MetadataPool::class);
+        $metadata = $metaPool->getMetadata(ProductInterface::class);
+        return $metadata->getLinkField();
     }
 }

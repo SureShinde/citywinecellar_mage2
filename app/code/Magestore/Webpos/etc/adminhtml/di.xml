@@ -96,10 +96,6 @@
             </argument>
         </arguments>
     </virtualType>
-    <type name="Magestore\InventorySuccess\Controller\Adminhtml\Warehouse\Save">
-        <plugin name="webpos_handle_inventorysuccess_save_warehouse" type="Magestore\Webpos\Plugin\InventorySuccess\SaveWarehousePlugin" sortOrder="1" disabled="false"/>
-    </type>
-
     <virtualType name="Magestore\Webpos\Ui\DataProvider\Location\Form\Modifier\Pool" type="Magento\Ui\DataProvider\Modifier\Pool">
         <arguments>
             <argument name="modifiers" xsi:type="array">

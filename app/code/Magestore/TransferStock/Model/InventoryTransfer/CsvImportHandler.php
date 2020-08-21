@@ -10,9 +10,13 @@ namespace Magestore\TransferStock\Model\InventoryTransfer;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magestore\TransferStock\Api\Data\InventoryTransfer\InventoryTransferInterface;
 use Magestore\TransferStock\Api\MultiSourceInventory\SourceManagementInterface;
+use Magestore\TransferStock\Model\ResourceModel\InventoryTransfer\GlobalStock\CollectionFactory
+    as GlobalStockCollectionFactory;
 
 /**
  * Tax Rate CSV Import Handler
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.CookieAndSessionMisuse)
  */
 class CsvImportHandler
 {
@@ -34,7 +38,7 @@ class CsvImportHandler
     protected $transferStockManagement;
 
     /**
-     * @var \Magestore\TransferStock\Model\ResourceModel\InventoryTransfer\GlobalStock\CollectionFactory
+     * @var GlobalStockCollectionFactory
      */
     protected $productCollectionFactory;
 
@@ -74,17 +78,19 @@ class CsvImportHandler
 
     /**
      * CsvImportHandler constructor.
+     *
      * @param \Magento\Framework\File\Csv $csvProcessor
      * @param \Magestore\TransferStock\Model\InventoryTransferFactory $transferStockFactory
      * @param \Magestore\TransferStock\Api\TransferManagementInterface $transferStockManagement
      * @param SourceManagementInterface $sourceManagement
      * @param \Magento\Framework\App\RequestInterface $request
      * @param \Magento\Framework\Filesystem $filesystem
-     * @param \Magestore\TransferStock\Model\ResourceModel\InventoryTransfer\GlobalStock\CollectionFactory $productCollectionFactory
+     * @param GlobalStockCollectionFactory $productCollectionFactory
      * @param \Magento\Backend\Model\Session $backendSession
      * @param \Magento\Framework\Filesystem\File\WriteFactory $fileWriteFactory
      * @param \Magento\Framework\Filesystem\Driver\File $driverFile
      * @param \Magento\Catalog\Model\ResourceModel\Product $resourceProduct
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         \Magento\Framework\File\Csv $csvProcessor,
@@ -93,13 +99,12 @@ class CsvImportHandler
         \Magestore\TransferStock\Api\MultiSourceInventory\SourceManagementInterface $sourceManagement,
         \Magento\Framework\App\RequestInterface $request,
         \Magento\Framework\Filesystem $filesystem,
-        \Magestore\TransferStock\Model\ResourceModel\InventoryTransfer\GlobalStock\CollectionFactory $productCollectionFactory,
+        GlobalStockCollectionFactory $productCollectionFactory,
         \Magento\Backend\Model\Session $backendSession,
         \Magento\Framework\Filesystem\File\WriteFactory $fileWriteFactory,
         \Magento\Framework\Filesystem\Driver\File $driverFile,
         \Magento\Catalog\Model\ResourceModel\Product $resourceProduct
-    )
-    {
+    ) {
         $this->csvProcessor = $csvProcessor;
         $this->transferStockFactory = $transferStockFactory;
         $this->transferStockManagement = $transferStockManagement;
@@ -113,12 +118,16 @@ class CsvImportHandler
         $this->resourceProduct = $resourceProduct;
     }
 
-
     /**
-     * @param $file
+     * Import From Csv File
+     *
+     * @param array $file
      * @return array
      * @throws \Exception
      * @throws \Magento\Framework\Exception\LocalizedException
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function importFromCsvFile($file)
     {
@@ -126,7 +135,7 @@ class CsvImportHandler
             throw new \Magento\Framework\Exception\LocalizedException(__('Invalid file upload attempt.'));
         }
 
-        if(strlen($file['name']) <= 4 || substr($file['name'], -4) != '.csv') {
+        if (strlen($file['name']) <= 4 || substr($file['name'], -4) != '.csv') {
             return [
                 'status' => false,
                 'message' => 'The file format is invalid. Please upload a CSV file again.'
@@ -141,18 +150,21 @@ class CsvImportHandler
         /** @var InventoryTransferInterface $transferStock */
         $transferStock = $this->transferStockFactory->create();
         $transferStock->load($this->request->getParam('id'));
-        if(!$transferStock->getInventorytransferId()) {
-            throw new \Magento\Framework\Exception\LocalizedException(__('Inventory transfer with ID %1 is not found.', $this->request->getParam('id')));
+        if (!$transferStock->getInventorytransferId()) {
+            throw new \Magento\Framework\Exception\LocalizedException(
+                __('Inventory transfer with ID %1 is not found.', $this->request->getParam('id'))
+            );
         }
-        if(count($importProductRawData) > 1001) {
+        if (count($importProductRawData) > 1001) {
             return [
                 'status' => false,
-                'message' => 'The file cannot contain the number of SKU exceeding 1000. Please modify and try to upload the file again.'
+                'message' => 'The file cannot contain the number of SKU exceeding 1000. '
+                    . 'Please modify and try to upload the file again.'
             ];
         }
 
-        $transferValidData = array();
-        $invalidData = array();
+        $transferValidData = [];
+        $invalidData = [];
         $productQtyInSendingSource = $this->getProductQty($importProductData, $transferStock->getSourceWarehouseCode());
         foreach ($importProductData as $rowIndex => $dataRow) {
             if ($rowIndex == 0) {
@@ -165,37 +177,37 @@ class CsvImportHandler
                 ->addFieldToFilter('sku', $productSku)
                 ->setPageSize(1)->setCurPage(1)->getFirstItem();
 
-            if(!$this->resourceProduct->getIdBySku($productSku)) {
+            if (!$this->resourceProduct->getIdBySku($productSku)) {
                 $dataRow[2] = 'SKU does not exist in the system.';
                 $invalidData[] = $dataRow;
                 continue;
             }
 
-            if(!$productModel->getId()) {
+            if (!$productModel->getId()) {
                 $dataRow[2] = 'The system does not support uploading this type of product.';
                 $invalidData[] = $dataRow;
                 continue;
             }
 
-            if(!isset($productQtyInSendingSource[$productSku])) {
+            if (!isset($productQtyInSendingSource[$productSku])) {
                 $dataRow[2] = 'SKU does not exist in the sending source.';
                 $invalidData[] = $dataRow;
                 continue;
             }
 
-            if(!isset($dataRow[1]) || $dataRow[1] == null) {
+            if (!isset($dataRow[1]) || $dataRow[1] == null) {
                 $dataRow[2] = 'Qty to Send is null.';
                 $invalidData[] = $dataRow;
                 continue;
             }
 
-            if((float)$dataRow[1] < 0) {
+            if ((float)$dataRow[1] < 0) {
                 $dataRow[2] = 'Qty to Send is negative.';
                 $invalidData[] = $dataRow;
                 continue;
             }
 
-            if((float)$dataRow[1] > $productQtyInSendingSource[$productSku]) {
+            if ((float)$dataRow[1] > $productQtyInSendingSource[$productSku]) {
                 $dataRow[2] = 'Qty to Send is greater than Qty in sending source.';
                 $invalidData[] = $dataRow;
                 continue;
@@ -211,7 +223,10 @@ class CsvImportHandler
         }
 
         if (count($transferValidData)) {
-            $this->transferStockManagement->addProductsToInventoryTransfer($transferStock->getInventorytransferId(), $transferValidData);
+            $this->transferStockManagement->addProductsToInventoryTransfer(
+                $transferStock->getInventorytransferId(),
+                $transferValidData
+            );
         }
 
         if (count($invalidData)) {
@@ -225,11 +240,14 @@ class CsvImportHandler
     }
 
     /**
+     * Get Product Qty
+     *
      * @param array $importProductData
      * @param string $sourceCode
      * @return array
      */
-    public function getProductQty($importProductData, $sourceCode) {
+    public function getProductQty($importProductData, $sourceCode)
+    {
         $result = [];
 
         $skus = [];
@@ -270,6 +288,8 @@ class CsvImportHandler
     }
 
     /**
+     * Create Invalid Adjusted File
+     *
      * @param array $invalidData
      * @throws \Magento\Framework\Exception\FileSystemException
      */
@@ -277,7 +297,8 @@ class CsvImportHandler
     {
         $this->backendSession->setData('error_import', true);
         $this->filesystem->getDirectoryWrite(DirectoryList::VAR_DIR)->create('import');
-        $filename = $this->filesystem->getDirectoryWrite(DirectoryList::VAR_DIR)->getAbsolutePath('import/import_product_to_transferstock_invalid.csv');
+        $filename = $this->filesystem->getDirectoryWrite(DirectoryList::VAR_DIR)
+            ->getAbsolutePath('import/import_product_to_transferstock_invalid.csv');
 
         $file = $this->fileWriteFactory->create(
             $filename,
@@ -286,14 +307,16 @@ class CsvImportHandler
         );
         $file->close();
 
-        $data = array(
-            array('SKU', 'Qty to Send', 'Error reason')
-        );
+        $data = [
+            ['SKU', 'Qty to Send', 'Error reason']
+        ];
         $data = array_merge($data, $invalidData);
         $this->csvProcessor->saveData($filename, $data);
     }
 
     /**
+     * Get Required Csv Fields
+     *
      * @return array
      */
     public function getRequiredCsvFields()
@@ -306,6 +329,8 @@ class CsvImportHandler
     }
 
     /**
+     * Filter Import Product Data
+     *
      * @param array $productRawData
      * @param array $invalidFields
      * @param array $validFields
@@ -322,7 +347,7 @@ class CsvImportHandler
                 continue;
             }
             // unset invalid fields from data row
-            foreach ($dataRow as $fieldIndex => $fieldValue) {
+            foreach (array_keys($dataRow) as $fieldIndex) {
                 if (isset($invalidFields[$fieldIndex])) {
                     unset($productRawData[$rowIndex][$fieldIndex]);
                 }

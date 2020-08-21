@@ -9,7 +9,9 @@ namespace Magestore\BarcodeSuccess\Helper;
 
 /**
  * Class Data
- * @package Magestore\BarcodeSuccess\Helper
+ *
+ * Used to create Helper data
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Data extends \Magento\Framework\App\Helper\AbstractHelper
 {
@@ -51,7 +53,21 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     protected $storeManager;
 
     /**
-     * @param Context $context
+     * @var \Magento\Framework\Escaper
+     */
+    protected $escaper;
+
+    /**
+     * Data constructor.
+     *
+     * @param \Magento\Framework\App\Helper\Context $context
+     * @param \Magento\Framework\Math\Random $random
+     * @param \Magestore\BarcodeSuccess\Model\ResourceModel\Barcode $barcodeResource
+     * @param \Magento\Framework\Stdlib\DateTime\TimezoneInterface $localeDate
+     * @param \Magento\Backend\Model\UrlInterface $backendUrlBuilder
+     * @param \Magestore\BarcodeSuccess\Model\Locator\LocatorInterface $locator
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param \Magento\Framework\Escaper $escaper
      */
     public function __construct(
         \Magento\Framework\App\Helper\Context $context,
@@ -60,9 +76,9 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         \Magento\Framework\Stdlib\DateTime\TimezoneInterface $localeDate,
         \Magento\Backend\Model\UrlInterface $backendUrlBuilder,
         \Magestore\BarcodeSuccess\Model\Locator\LocatorInterface $locator,
-        \Magento\Store\Model\StoreManagerInterface $storeManager
-    )
-    {
+        \Magento\Store\Model\StoreManagerInterface $storeManager,
+        \Magento\Framework\Escaper $escaper
+    ) {
         parent::__construct($context);
         $this->_random = $random;
         $this->resource = $barcodeResource;
@@ -71,18 +87,25 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         $this->_objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $this->locator = $locator;
         $this->storeManager = $storeManager;
+        $this->escaper = $escaper;
     }
 
     /**
-     * @param $string
-     * @return mixed
+     * Generate code
+     *
+     * @param string $pattern
+     * @return bool|string|string[]|null
      */
     public function generateCode($pattern = "")
     {
         $pattern = ($pattern) ? $pattern : $this->getStoreConfig('barcodesuccess/general/barcode_pattern');
         $pattern = strtoupper($pattern);
-        $barcode = preg_replace_callback('#\[([AN]{1,2})\.([0-9]+)\]#', array($this, 'convertExpression'), $pattern);
-        $barcodeModel = $this->getModel('\Magestore\BarcodeSuccess\Api\Data\BarcodeInterface');
+        $barcode = preg_replace_callback(
+            '#\[([AN]{1,2})\.([0-9]+)\]#',
+            [$this, 'convertExpression'],
+            $pattern
+        );
+        $barcodeModel = $this->getModel(\Magestore\BarcodeSuccess\Api\Data\BarcodeInterface::class);
         $this->resource->load($barcodeModel, $barcode, 'barcode');
         if ($barcodeModel->getId()) {
             $count = $this->locator->get('barcode_existing_count');
@@ -101,15 +124,19 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
-     * @param $string
-     * @return mixed
+     * Generate barcode
+     *
+     * @param string $pattern
+     * @return bool|string|string[]|null
      */
     public function generateBarcode($pattern = '')
     {
         $pattern = $this->getStoreConfig('barcodesuccess/general/barcode_pattern');
         $pattern = strtoupper($pattern);
-        $barcode = preg_replace_callback('#\[([AN]{1,2})\.([0-9]+)\]#', array($this, 'convertExpression'), $pattern);
-        $barcodeCollection = $this->_objectManager->create('\Magestore\BarcodeSuccess\Model\ResourceModel\Barcode\Collection');
+        $barcode = preg_replace_callback('#\[([AN]{1,2})\.([0-9]+)\]#', [$this, 'convertExpression'], $pattern);
+        $barcodeCollection = $this->_objectManager->create(
+            \Magestore\BarcodeSuccess\Model\ResourceModel\Barcode\Collection::class
+        );
         $barcodeCollection->addFieldToFilter('barcode', $barcode);
         $generated = $this->locator->get('generated_barcodes');
         $generated = (isset($generated)) ? $generated : [];
@@ -132,19 +159,28 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
-     * @param $string
-     * @return mixed
+     * Generate example code
+     *
+     * @param string $pattern
+     * @return string|string[]|null
      */
     public function generateExampleCode($pattern = "")
     {
         $pattern = ($pattern) ? $pattern : $this->getStoreConfig('barcodesuccess/general/barcode_pattern');
-        $barcode = preg_replace_callback('#\[([AN]{1,2})\.([0-9]+)\]#', array($this, 'convertExpression'), $pattern);
+        $barcode = preg_replace_callback(
+            '#\[([AN]{1,2})\.([0-9]+)\]#',
+            [$this, 'convertExpression'],
+            $pattern
+        );
         return $barcode;
     }
 
     /**
-     * @param $param
-     * @return mixed
+     * Convert expression
+     *
+     * @param array $param
+     * @return string
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function convertExpression($param)
     {
@@ -154,6 +190,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
+     * Get store config
      *
      * @param string $path
      * @return string
@@ -164,8 +201,10 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
-     * string class name
-     * @return Model
+     * Get model class
+     *
+     * @param string $class
+     * @return mixed
      */
     public function getModel($class)
     {
@@ -173,7 +212,9 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
-     * @param $message
+     * Add log
+     *
+     * @param string $message
      * @param string $type
      */
     public function addLog($message, $type = '')
@@ -184,9 +225,6 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
                 break;
             case 'debug':
                 $this->_logger->debug($message);
-                break;
-            case 'info':
-                $this->_logger->info($message);
                 break;
             case 'notice':
                 $this->_logger->notice($message);
@@ -213,7 +251,9 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
-     * @param $data
+     * Format date
+     *
+     * @param string $data
      * @param string $format
      * @return mixed
      */
@@ -224,28 +264,32 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
+     * Format price
      *
      * @param string $data
      * @return string
      */
     public function formatPrice($data)
     {
-        $helper = $this->_objectManager->get('Magento\Framework\Pricing\Helper\Data');
+        $helper = $this->_objectManager->get(\Magento\Framework\Pricing\Helper\Data::class);
         return $helper->currency($data, true, false);
     }
 
     /**
+     * Escape html
      *
      * @param string $str
      * @return string
      */
     public function htmlEscape($str)
     {
-        return htmlspecialchars($str);
+        return $this->escaper->escapeHtml($str);
     }
 
     /**
-     * @param $path
+     * Get url
+     *
+     * @param string $path
      * @param array $params
      * @return mixed
      */
@@ -255,7 +299,9 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
-     * @param $path
+     * Get backend url
+     *
+     * @param string $path
      * @param array $params
      * @return mixed
      */
@@ -265,8 +311,11 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
+     * Get media url
      *
+     * @param string $file
      * @return string
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getMediaUrl($file)
     {
@@ -276,21 +325,28 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
-     * @return mixed|string
+     * Get attribute code
+     *
+     * @return string
      */
     public function getAttributeCode()
     {
-        $attributeCode = $this->scopeConfig->getValue('barcodesuccess/general/attribute_code', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $attributeCode = $this->scopeConfig->getValue(
+            'barcodesuccess/general/attribute_code',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
         return $attributeCode;
     }
 
     /**
-     * get Barcode Configuration url
-     * @return mixed
+     * Get barcode setup guide url
+     *
+     * @return string
      */
     public function getBarcodeSetupGuideUrl()
     {
-        return $this->getBackendUrl('adminhtml/system_config/edit/section/barcodesuccess') . '#barcodesuccess_guide-link';
+        return $this->getBackendUrl('adminhtml/system_config/edit/section/barcodesuccess')
+            . '#barcodesuccess_guide-link';
     }
 
     /**
@@ -300,6 +356,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      */
     public function isZendBarcodeInstalled()
     {
+        // phpcs:ignore Magento2.PHP.LiteralNamespaces.LiteralClassUsage
         return class_exists('\Zend\Barcode\Barcode');
     }
 }

@@ -8,16 +8,16 @@ namespace Magestore\Giftvoucher\Model\Source\GiftTemplate;
 
 /**
  * Class DesignOptions
- * @package Magestore\Giftvoucher\Model\Source\GiftTemplate
+ *
+ * Gift template design options
  */
 class DesignOptions extends \Magento\Eav\Model\Entity\Attribute\Source\AbstractSource
 {
-    
+
     /**
      * @var \Magestore\Giftvoucher\Api\GiftTemplate\IOServiceInterface
      */
     protected $giftTemplateIOService;
-
 
     /**
      * DesignOptions constructor.
@@ -27,7 +27,7 @@ class DesignOptions extends \Magento\Eav\Model\Entity\Attribute\Source\AbstractS
     {
         $this->giftTemplateIOService = $giftTemplateIOService;
     }
-    
+
     /**
      * Get the gift card's type
      *
@@ -46,12 +46,14 @@ class DesignOptions extends \Magento\Eav\Model\Entity\Attribute\Source\AbstractS
     }
 
     /**
+     * Get All Options
+     *
      * @param bool $withEmpty
      * @return array
      */
     public function getAllOptions($withEmpty = true)
     {
-        if (is_null($this->_options)) {
+        if ($this->_options === null) {
             $this->_options = [];
             foreach ($this->getOptionArray() as $value => $label) {
                 $this->_options[] = [

@@ -20,14 +20,11 @@
  * @license     http://www.magestore.com/license-agreement.html
  */
 
-/**
- * RewardPoints Earning Calculation Helper
- *
- * @category    Magestore
- * @package     Magestore_RewardPoints
- * @author      Magestore Developer
- */
 namespace Magestore\Rewardpoints\Helper\Calculation;
+
+/**
+ * RewardPoints Spending Calculation Helper
+ */
 class Spending extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalculation
 {
 
@@ -61,11 +58,12 @@ class Spending extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalcul
 
     /**
      * Spending constructor.
+     *
      * @param \Magento\Framework\App\Helper\Context $context
      * @param \Magestore\Rewardpoints\Helper\Config $scopeConfig
-     * @param \Magento\Framework\Event\ManagerInterface $eventManager
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param \Magento\Checkout\Model\SessionFactory $checkoutSessionFactory
+     * @param \Magento\Framework\ObjectManagerInterface $objectManager
      * @param \Magento\Customer\Model\SessionFactory $customerSessionFactory
      * @param \Magestore\Rewardpoints\Model\RateFactory $rateModelFactory
      */
@@ -77,8 +75,7 @@ class Spending extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalcul
         \Magento\Framework\ObjectManagerInterface $objectManager,
         \Magento\Customer\Model\SessionFactory $customerSessionFactory,
         \Magestore\Rewardpoints\Model\RateFactory $rateModelFactory
-    )
-    {
+    ) {
         $this->_scopeConfig = $scopeConfig;
         $this->_checkoutSessionFactory = $checkoutSessionFactory;
         $this->_rateModelFactory = $rateModelFactory;
@@ -87,7 +84,7 @@ class Spending extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalcul
     }
 
     /**
-     * get Max point that customer can used to spend for an order
+     * Get Max point that customer can used to spend for an order
      *
      * @param mixed $store
      * @return int
@@ -102,62 +99,65 @@ class Spending extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalcul
     }
 
     /**
-     * get Total Point that customer used to spent for the order
+     * Get Total Point that customer used to spent for the order
      *
      * @return int
      */
     public function getTotalPointSpent()
     {
-        $container = new \Magento\Framework\DataObject(array(
+        $container = new \Magento\Framework\DataObject([
             'total_point_spent' => 0
-        ));
+        ]);
 
-        $this->_eventManager->dispatch('rewardpoints_calculation_spending_get_total_point', array(
+        $this->_eventManager->dispatch('rewardpoints_calculation_spending_get_total_point', [
             'container' => $container,
-        ));
-        return $this->getPointItemSpent() + $this->getCheckedRulePoint() + $this->getSliderRulePoint() + $container->getTotalPointSpent();
+        ]);
+        return $this->getPointItemSpent() + $this->getCheckedRulePoint()
+            + $this->getSliderRulePoint() + $container->getTotalPointSpent();
     }
 
     /**
-     * get discount (Base Currency) by points of each product item on the shopping cart
-     * with $item is null, result is the total discount of all items
+     * Get discount (Base Currency) by points of each product item on the shopping cart with $item is null,
      *
-     * @param Mage_Sales_Model_Quote_Item|null $item
+     * Result is the total discount of all items
+     *
+     * @param \Magento\Quote\Model\Quote\Item|null $item
      * @return float
      */
     public function getPointItemDiscount($item = null)
     {
-        $container = new \Magento\Framework\DataObject(array(
+        $container = new \Magento\Framework\DataObject([
             'point_item_discount' => 0
-        ));
-        $this->_eventManager->dispatch('rewardpoints_calculation_spending_point_item_discount', array(
+        ]);
+        $this->_eventManager->dispatch('rewardpoints_calculation_spending_point_item_discount', [
             'item' => $item,
             'container' => $container,
-        ));
+        ]);
         return $container->getPointItemDiscount();
     }
 
     /**
-     * get point that customer used to spend for each product item
-     * with $item is null, result is the total points used for all items
+     * Get point that customer used to spend for each product item with $item is null,
      *
-     * @param Mage_Sales_Model_Quote_Item|null $item
+     * Result is the total points used for all items
+     *
+     * @param \Magento\Quote\Model\Quote\Item|null $item
      * @return int
      */
     public function getPointItemSpent($item = null)
     {
-        $container = new \Magento\Framework\DataObject(array(
+        $container = new \Magento\Framework\DataObject([
             'point_item_spent' => 0
-        ));
-        $this->_eventManager->dispatch('rewardpoints_calculation_spending_point_item_spent', array(
+        ]);
+        $this->_eventManager->dispatch('rewardpoints_calculation_spending_point_item_spent', [
             'item' => $item,
             'container' => $container,
-        ));
+        ]);
         return $container->getPointItemSpent();
     }
 
     /**
-     * pre collect total for quote/address and return quote total
+     * Pre collect total for quote/address and return quote total
      *
      * @param \Magento\Quote\Model\Quote $quote
      * @param null|\Magento\Quote\Model\Quote\Address $address
@@ -182,8 +182,8 @@ class Spending extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalcul
             } else {
                 $baseShippingAmount = $address->getBaseShippingAmount();
             }
-            $baseTotal += $baseShippingAmount 
-                - $address->getBaseShippingDiscountAmount() 
+            $baseTotal += $baseShippingAmount
+                - $address->getBaseShippingDiscountAmount()
                 + $address->getRewardpointsBaseDiscountForShipping();
             if ($isApplyAfterTax) {
                 $baseTotal += $address->getBaseShippingTaxAmount();
@@ -193,7 +193,7 @@ class Spending extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalcul
     }
 
     /**
-     * pre collect total for quote/address and return quote total without shipping fee
+     * Pre collect total for quote/address and return quote total without shipping fee
      *
      * @param \Magento\Quote\Model\Quote $quote
      * @param null|\Magento\Quote\Model\Quote\Address $address
@@ -203,7 +203,7 @@ class Spending extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalcul
     public function getQuoteBaseTotalWithoutShippingFee($quote, &$address = null, $isApplyAfterTax = false)
     {
         $baseTotal = 0;
-        if (is_null($address)) {
+        if ($address === null) {
             if ($quote->isVirtual()) {
                 $address = $quote->getBillingAddress();
             } else {
@@ -218,7 +218,7 @@ class Spending extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalcul
             $baseTotal += $this->getItemBasePrice($item) * $qty
                 - $item->getBaseDiscountAmount()
                 + $item->getRewardpointsBaseDiscount();
-            if($isApplyAfterTax){
+            if ($isApplyAfterTax) {
                 $baseTotal += $item->getBaseTaxAmount();
             }
         }
@@ -250,46 +250,48 @@ class Spending extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalcul
     }
 
     /**
-     * get discount (Base Currency) by points that spent with check rule type
+     * Get discount (Base Currency) by points that spent with check rule type
      *
      * @return float
      */
     public function getCheckedRuleDiscount()
     {
-        $container = new \Magento\Framework\DataObject(array(
+        $container = new \Magento\Framework\DataObject([
             'checked_rule_discount' => 0
-        ));
-        $this->_eventManager->dispatch('rewardpoints_calculation_spending_checked_rule_discount', array(
+        ]);
+        $this->_eventManager->dispatch('rewardpoints_calculation_spending_checked_rule_discount', [
             'container' => $container,
-        ));
+        ]);
         return $container->getCheckedRuleDiscount();
     }
 
     /**
-     * get points used to spend for checked rules
+     * Get points used to spend for checked rules
      *
      * @return int
      */
     public function getCheckedRulePoint()
     {
-        $container = new \Magento\Framework\DataObject(array(
+        $container = new \Magento\Framework\DataObject([
             'checked_rule_point' => 0
-        ));
-        $this->_eventManager->dispatch('rewardpoints_calculation_spending_checked_rule_point', array(
+        ]);
+        $this->_eventManager->dispatch('rewardpoints_calculation_spending_checked_rule_point', [
             'container' => $container,
-        ));
+        ]);
         return $container->getCheckedRulePoint();
     }
 
     /**
-     * get discount (base currency) by points that spent with slider rule type
+     * Get discount (base currency) by points that spent with slider rule type
      *
      * @return float
      */
     public function getSliderRuleDiscount()
     {
         $rewardSalesRules = $this->_checkoutSessionFactory->create()->getRewardSalesRules();
-        if (is_array($rewardSalesRules) && isset($rewardSalesRules['base_discount']) && $this->_checkoutSessionFactory->create()->getData('use_point')
+        if (is_array($rewardSalesRules)
+            && isset($rewardSalesRules['base_discount'])
+            && $this->_checkoutSessionFactory->create()->getData('use_point')
         ) {
             return $rewardSalesRules['base_discount'];
         }
@@ -297,14 +299,16 @@ class Spending extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalcul
     }
 
     /**
-     * get points used to spend by slider rule
+     * Get points used to spend by slider rule
      *
      * @return int
      */
     public function getSliderRulePoint()
     {
         $rewardSalesRules = $this->_checkoutSessionFactory->create()->getRewardSalesRules();
-        if (is_array($rewardSalesRules) && isset($rewardSalesRules['use_point']) && $this->_checkoutSessionFactory->create()->getData('use_point')
+        if (is_array($rewardSalesRules)
+            && isset($rewardSalesRules['use_point'])
+            && $this->_checkoutSessionFactory->create()->getData('use_point')
         ) {
 
             return $rewardSalesRules['use_point'];
@@ -313,7 +317,7 @@ class Spending extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalcul
     }
 
     /**
-     * get total point spent by rules on shopping cart
+     * Get total point spent by rules on shopping cart
      *
      * @return int
      */
@@ -323,9 +327,9 @@ class Spending extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalcul
     }
 
     /**
-     * get quote spending rule by RuleID
+     * Get quote spending rule by RuleID
      *
-     * @param int|'rate' $ruleId
+     * @param int|string $ruleId
      * @return \Magento\Framework\DataObject
      */
     public function getQuoteRule($ruleId = 'rate')
@@ -337,13 +341,13 @@ class Spending extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalcul
                 $this->saveCache($cacheKey, $this->getSpendingRateAsRule());
                 return $this->getCache($cacheKey);
             }
-            $container = new \Magento\Framework\DataObject(array(
+            $container = new \Magento\Framework\DataObject([
                 'quote_rule_model' => null
-            ));
-            $this->_eventManager->dispatch('rewardpoints_calculation_spending_quote_rule_model', array(
+            ]);
+            $this->_eventManager->dispatch('rewardpoints_calculation_spending_quote_rule_model', [
                 'container' => $container,
                 'rule_id' => $ruleId,
-            ));
+            ]);
 
             $this->saveCache($cacheKey, $container->getQuoteRuleModel());
 
@@ -352,7 +356,7 @@ class Spending extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalcul
     }
 
     /**
-     * get Spend Rates as a special rule (with id = 'rate')
+     * Get Spend Rates as a special rule (with id = 'rate')
      *
      * @return \Magento\Framework\DataObject|false
      */
@@ -366,20 +370,22 @@ class Spending extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalcul
 //            return $this->getCache($cacheKey);
 //        }
         $rate = $this->_rateModelFactory->create()->getRate(
-            \Magestore\Rewardpoints\Model\Rate::POINT_TO_MONEY, $customerGroupId, $websiteId
+            \Magestore\Rewardpoints\Model\Rate::POINT_TO_MONEY,
+            $customerGroupId,
+            $websiteId
         );
         if ($rate && $rate->getId()) {
             /**
              * end update
              */
-            $this->saveCache($cacheKey, new \Magento\Framework\DataObject(array(
+            $this->saveCache($cacheKey, new \Magento\Framework\DataObject([
                 'points_spended' => $rate->getPoints(),
                 'base_rate' => $rate->getMoney(),
                 'simple_action' => 'by_price',
                 'id' => 'rate',
                 'max_price_spended_type' => $rate->getMaxPriceSpendedType(), //Hai.Tran 13/11
                 'max_price_spended_value' => $rate->getMaxPriceSpendedValue()//Hai.Tran 13/11
-            )));
+            ]));
         } else {
             $this->saveCache($cacheKey, false);
         }
@@ -387,11 +393,12 @@ class Spending extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalcul
     }
 
     /**
-     * get max points can used to spend for a quote
+     * Get max points can used to spend for a quote
      *
      * @param \Magento\Framework\DataObject $rule
-     * @param Mage_Sales_Model_Quote $quote
+     * @param \Magento\Quote\Model\Quote $quote
      * @return int
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function getRuleMaxPointsForQuote($rule, $quote)
     {
@@ -412,12 +419,13 @@ class Spending extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalcul
                 } else {
                     $maxPriceSpend = 0;
                 }
-                if ($quoteTotal > $maxPriceSpend && $maxPriceSpend > 0)
+                if ($quoteTotal > $maxPriceSpend && $maxPriceSpend > 0) {
                     $quoteTotal = $maxPriceSpend;
+                }
                 //End Hai.Tran 13/11/2013 add limit spend theo quote total
 
-                $maxPoints = ceil(($quoteTotal - $this->getCheckedRuleDiscount()) / $rule->getBaseRate()
-                    ) * $rule->getPointsSpended();
+                $maxPoints = ceil(($quoteTotal - $this->getCheckedRuleDiscount()) / $rule->getBaseRate())
+                    * $rule->getPointsSpended();
                 if ($maxPerOrder = $this->getMaxPointsPerOrder($quote->getStoreId())) {
                     $maxPerOrder -= $this->getPointItemSpent();
                     $maxPerOrder -= $this->getCheckedRulePoint();
@@ -431,14 +439,14 @@ class Spending extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalcul
                 $this->saveCache($cacheKey, $maxPoints);
             }
         } else {
-            $container = new \Magento\Framework\DataObject(array(
+            $container = new \Magento\Framework\DataObject([
                 'rule_max_points' => 0
-            ));
-            $this->_eventManager->dispatch('rewardpoints_calculation_spending_rule_max_points', array(
+            ]);
+            $this->_eventManager->dispatch('rewardpoints_calculation_spending_rule_max_points', [
                 'rule' => $rule,
                 'quote' => $quote,
                 'container' => $container,
-            ));
+            ]);
             $this->saveCache($cacheKey, $container->getRuleMaxPoints());
         }
         if (!$this->hasCache($cacheKey)) {
@@ -448,17 +456,17 @@ class Spending extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalcul
     }
 
     /**
-     * get discount for quote when a rule is applied and recalculate real point used
+     * Get discount for quote when a rule is applied and recalculate real point used
      *
-     * @param Mage_Sales_Model_Quote $quote
+     * @param \Magento\Quote\Model\Quote $quote
      * @param \Magento\Framework\DataObject $rule
      * @param int $points
      * @return float
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function getQuoteRuleDiscount($quote, $rule, &$points)
     {
         $cacheKey = "quote_rule_discount:{$rule->getId()}:$points";
-
 
         if ($this->hasCache($cacheKey)) {
             return $this->getCache($cacheKey);
@@ -470,7 +478,7 @@ class Spending extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalcul
 
                 $baseTotal = $this->getQuoteBaseTotal($quote) - $this->getCheckedRuleDiscount();
 
-                /** Brian 26/1/2015 * */
+                /* Brian 26/1/2015 */
                 $maxDiscountSpended = 0;
                 if ($maxPriceSpended = $rule->getMaxPriceSpendedValue()) {
                     if ($rule->getMaxPriceSpendedType() == 'by_price') {
@@ -479,9 +487,10 @@ class Spending extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalcul
                         $maxDiscountSpended = $this->getQuoteBaseTotal($quote) * $maxPriceSpended / 100;
                     }
                 }
-                if ($maxDiscountSpended > 0)
+                if ($maxDiscountSpended > 0) {
                     $baseTotal = min($maxDiscountSpended, $baseTotal);
-                /** end * */
+                }
+                /* end */
                 $maxPoints = ceil($baseTotal / $rule->getBaseRate()) * $rule->getPointsSpended();
 
                 if ($maxPerOrder = $this->getMaxPointsPerOrder($quote->getStoreId())) {
@@ -497,36 +506,48 @@ class Spending extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalcul
                 $points = min($points, $maxPoints);
 
                 $points = floor($points / $rule->getPointsSpended()) * $rule->getPointsSpended();
-                $this->saveCache($cacheKey, min($points * $rule->getBaseRate() / $rule->getPointsSpended(), $baseTotal));
+                $this->saveCache(
+                    $cacheKey,
+                    min($points * $rule->getBaseRate() / $rule->getPointsSpended(), $baseTotal)
+                );
             } else {
                 $points = 0;
                 $this->saveCache($cacheKey, 0);
             }
         } else {
-            $container = new \Magento\Framework\DataObject(array(
+            $container = new \Magento\Framework\DataObject([
                 'quote_rule_discount' => 0,
                 'points' => $points
-            ));
-            $this->_eventManager->dispatch('rewardpoints_calculation_spending_quote_rule_discount', array(
+            ]);
+            $this->_eventManager->dispatch('rewardpoints_calculation_spending_quote_rule_discount', [
                 'rule' => $rule,
                 'quote' => $quote,
                 'container' => $container,
-            ));
+            ]);
             $points = $container->getPoints();
             $this->saveCache($cacheKey, $container->getQuoteRuleDiscount());
         }
         return $this->getCache($cacheKey);
     }
 
+    /**
+     * Is Use Max Points Default
+     *
+     * @param null|int|string $store
+     * @return mixed
+     */
     public function isUseMaxPointsDefault($store = null)
     {
         return $this->_scopeConfig->getConfig(self::XML_PATH_MAX_POINTS_DEFAULT, $store);
     }
 
+    /**
+     * Is Use Point
+     *
+     * @return mixed
+     */
     public function isUsePoint()
     {
         return $this->_checkoutSessionFactory->create()->getData('use_point');
     }
-
-
 }

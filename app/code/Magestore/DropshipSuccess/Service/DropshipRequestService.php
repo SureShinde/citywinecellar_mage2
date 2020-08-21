@@ -10,6 +10,7 @@ namespace Magestore\DropshipSuccess\Service;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Catalog\Model\Product\Exception;
 use Magento\CatalogInventory\Api\StockManagementInterface;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Model\Order\ShipmentFactory;
 use Magestore\DropshipSuccess\Service\DropshipRequest\DataProcessService;
 use Magento\Sales\Api\OrderRepositoryInterface;
@@ -26,14 +27,22 @@ use Magestore\DropshipSuccess\Model\DropshipRequest\DropshipShipmentFactory;
 use Magestore\SupplierSuccess\Api\Data\SupplierInterface;
 use Magestore\SupplierSuccess\Model\Repository\SupplierRepository;
 use Magento\Store\Api\StoreRepositoryInterface;
+use Magestore\DropshipSuccess\Model\ResourceModel\DropshipRequest\Item\Collection as DropshipItemCollection;
+use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
+use Magestore\DropshipSuccess\Model\ResourceModel\DropshipRequest\DropshipShipment\CollectionFactory as DropshipShipmentCollectionFactory; // phpcs:ignore Generic.Files.LineLength
+use Magestore\DropshipSuccess\Model\ResourceModel\DropshipRequest\CollectionFactory as DropshipRequestCollectionFactory;
+use Magestore\DropshipSuccess\Model\ResourceModel\DropshipRequest\Item\CollectionFactory as DropshipItemCollectionFactory; // phpcs:ignore Generic.Files.LineLength
+use Magestore\DropshipSuccess\Api\DropshipSupplierShipmentRepositoryInterface as DropshipSupplierShipmentRepository; // phpcs:ignore Generic.Files.LineLength
 
 /**
- * Class DropshipRequestService
- * @package Magestore\DropshipSuccess\Service
+ * Service DropshipRequestService
+ *
+ * @SuppressWarnings(PHPMD.TooManyFields)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 class DropshipRequestService
 {
-
     /**
      * @var DataProcessService
      */
@@ -65,7 +74,7 @@ class DropshipRequestService
     protected $dropshipRequestItemRepositoryInerface;
 
     /**
-     * @var \Magestore\DropshipSuccess\Model\ResourceModel\DropshipRequest\CollectionFactory
+     * @var DropshipRequestCollectionFactory
      */
     protected $dropshipRequestCollectionFactory;
 
@@ -80,7 +89,7 @@ class DropshipRequestService
     protected $shipmentFactory;
 
     /**
-     * @var DropshipSuccess\Model\ResourceModel\DropshipRequest\Item\CollectionFactory
+     * @var DropshipItemCollectionFactory
      */
     protected $dropshipRequestItemCollectionFactory;
 
@@ -88,7 +97,6 @@ class DropshipRequestService
      * @var \Magestore\DropshipSuccess\Api\OrderItemRepositoryInterface
      */
     protected $orderItemRepositoryInterface;
-
 
     /**
      * @var \Magento\Sales\Model\ResourceModel\Order\Item\CollectionFactory
@@ -123,7 +131,7 @@ class DropshipRequestService
     protected $trackCollectionFactory;
 
     /**
-     * @var DropshipSuccess\Model\ResourceModel\DropshipRequest\DropshipShipment\CollectionFactory
+     * @var DropshipShipmentCollectionFactory
      */
     protected $dropshipShipmentCollectionFactory;
 
@@ -163,7 +171,7 @@ class DropshipRequestService
     protected $dropshipSupplierShipmentInterface;
 
     /**
-     * @var DropshipSuccess\Api\DropshipSupplierShipmentRepositoryInterface
+     * @var DropshipSupplierShipmentRepository
      */
     protected $dropshipSupplierShipmentRepositoryInterface;
 
@@ -178,24 +186,25 @@ class DropshipRequestService
 
     /**
      * DropshipRequestService constructor.
+     *
      * @param DataProcessService $dataProcessService
      * @param OrderRepositoryInterface $orderRepository
      * @param DropshipRequestFactory $dropshipRequestFactory
      * @param DropshipRequestItemService $dropshipRequestItemService
      * @param DropshipRequestRepositoryInterface $dropshipRequestRepositoryInterface
      * @param DropshipRequestItemRepositoryInterface $dropshipRequestItemRepositoryInerface
-     * @param DropshipSuccess\Model\ResourceModel\DropshipRequest\CollectionFactory $dropshipRequestCollectionFactory
+     * @param DropshipRequestCollectionFactory $dropshipRequestCollectionFactory
      * @param DropshipSuccess\Api\OrderItemRepositoryInterface $orderItemRepositoryInterface
      * @param OrderRepositoryInterface $orderRepositoryInterface
      * @param ShipmentFactory $shipmentFactory
-     * @param DropshipSuccess\Model\ResourceModel\DropshipRequest\Item\CollectionFactory $dropshipRequestItemCollectionFactory
+     * @param DropshipItemCollectionFactory $dropshipRequestItemCollectionFactory
      * @param \Magento\Sales\Model\ResourceModel\Order\Item\CollectionFactory $orderItemcollectionFactory
      * @param DropshipRequestItemRepositoryInterface $dropshipRequestItemRepository
      * @param DropshipShipmentFactory $dropshipShipmentFactory
      * @param DropshipSuccess\Api\DropshipShipmentRepositoryInterface $dropshipShipmentRepository
      * @param \Magento\Framework\Registry $registry
      * @param \Magento\Sales\Model\ResourceModel\Order\Shipment\Track\CollectionFactory $trackCollectionFactory
-     * @param DropshipSuccess\Model\ResourceModel\DropshipRequest\DropshipShipment\CollectionFactory $dropshipShipmentCollectionFactory
+     * @param DropshipShipmentCollectionFactory $dropshipShipmentCollectionFactory
      * @param \Magento\Sales\Model\ResourceModel\Order\Shipment\CollectionFactory $shipmentCollectionFactory
      * @param EmailService $emailService
      * @param ProductRepositoryInterface $productRepository
@@ -203,9 +212,10 @@ class DropshipRequestService
      * @param \Magento\Framework\Url $urlHelper
      * @param SupplierRepository $supplierRepository
      * @param DropshipSuccess\Api\Data\DropshipSupplierShipmentInterface $dropshipSupplierShipmentInterface
-     * @param DropshipSuccess\Api\DropshipSupplierShipmentRepositoryInterface $dropshipSupplierShipmentRepositoryInterface
+     * @param DropshipSupplierShipmentRepository $dropshipSupplierShipmentRepositoryInterface
      * @param StoreRepositoryInterface $storeRepository
      * @param \Magento\Sales\Api\OrderItemRepositoryInterface $orderItemRepository
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         DataProcessService $dataProcessService,
@@ -214,18 +224,18 @@ class DropshipRequestService
         DropshipRequestItemService $dropshipRequestItemService,
         DropshipRequestRepositoryInterface $dropshipRequestRepositoryInterface,
         DropshipRequestItemRepositoryInterface $dropshipRequestItemRepositoryInerface,
-        \Magestore\DropshipSuccess\Model\ResourceModel\DropshipRequest\CollectionFactory $dropshipRequestCollectionFactory,
+        DropshipRequestCollectionFactory $dropshipRequestCollectionFactory,
         \Magestore\DropshipSuccess\Api\OrderItemRepositoryInterface $orderItemRepositoryInterface,
         OrderRepositoryInterface $orderRepositoryInterface,
         ShipmentFactory $shipmentFactory,
-        \Magestore\DropshipSuccess\Model\ResourceModel\DropshipRequest\Item\CollectionFactory $dropshipRequestItemCollectionFactory,
+        DropshipItemCollectionFactory $dropshipRequestItemCollectionFactory,
         \Magento\Sales\Model\ResourceModel\Order\Item\CollectionFactory $orderItemcollectionFactory,
         \Magestore\DropshipSuccess\Api\DropshipRequestItemRepositoryInterface $dropshipRequestItemRepository,
         DropshipShipmentFactory $dropshipShipmentFactory,
         DropshipSuccess\Api\DropshipShipmentRepositoryInterface $dropshipShipmentRepository,
         \Magento\Framework\Registry $registry,
         \Magento\Sales\Model\ResourceModel\Order\Shipment\Track\CollectionFactory $trackCollectionFactory,
-        \Magestore\DropshipSuccess\Model\ResourceModel\DropshipRequest\DropshipShipment\CollectionFactory $dropshipShipmentCollectionFactory,
+        DropshipShipmentCollectionFactory $dropshipShipmentCollectionFactory,
         \Magento\Sales\Model\ResourceModel\Order\Shipment\CollectionFactory $shipmentCollectionFactory,
         \Magestore\DropshipSuccess\Service\EmailService $emailService,
         ProductRepositoryInterface $productRepository,
@@ -233,7 +243,7 @@ class DropshipRequestService
         \Magento\Framework\Url $urlHelper,
         SupplierRepository $supplierRepository,
         DropshipSuccess\Api\Data\DropshipSupplierShipmentInterface $dropshipSupplierShipmentInterface,
-        DropshipSuccess\Api\DropshipSupplierShipmentRepositoryInterface $dropshipSupplierShipmentRepositoryInterface,
+        DropshipSupplierShipmentRepository $dropshipSupplierShipmentRepositoryInterface,
         StoreRepositoryInterface $storeRepository,
         \Magento\Sales\Api\OrderItemRepositoryInterface $orderItemRepository
     ) {
@@ -268,7 +278,9 @@ class DropshipRequestService
     }
 
     /**
-     * @param $data
+     * Create Dropship Requests From Post Data
+     *
+     * @param array $data
      */
     public function createDropshipRequestsFromPostData($data)
     {
@@ -285,10 +297,9 @@ class DropshipRequestService
     }
 
     /**
-     * Create PickRequest from Sales
-     * $items[$itemId => $requestQty]
+     * Create PickRequest from Sales $items[$itemId => $requestQty]
      *
-     * @param int $warehouseId
+     * @param int $supplierId
      * @param \Magento\Sales\Api\Data\OrderInterface $order
      * @param array $items
      * @return PickRequestInterface
@@ -303,7 +314,7 @@ class DropshipRequestService
         if ($supplierId > 0) {
             /** @var \Magestore\SupplierSuccess\Model\Supplier $supplier */
             $supplier = \Magento\Framework\App\ObjectManager::getInstance()->create(
-                'Magestore\SupplierSuccess\Api\SupplierRepositoryInterface'
+                \Magestore\SupplierSuccess\Api\SupplierRepositoryInterface::class
             )->getById($supplierId);
             if ($supplier->getId()) {
                 $dropshipRequest->setSupplierName($supplier->getSupplierName());
@@ -319,7 +330,11 @@ class DropshipRequestService
             /* prepare items to add to Pick Request */
             $requestQty = isset($items[$item->getItemId()]) ? floatval($items[$item->getItemId()]) : 0;
             /** @var \Magestore\DropshipSuccess\Model\DropshipRequest\Item $dropshipRequestItem */
-            $dropshipRequestItem = $this->dropshipRequestItemService->addItemToDropshipRequest($dropshipRequest, $item, $requestQty);
+            $dropshipRequestItem = $this->dropshipRequestItemService->addItemToDropshipRequest(
+                $dropshipRequest,
+                $item,
+                $requestQty
+            );
             $this->dropshipRequestItemService->subtractQtyToShip($order, $item, $requestQty);
             $totalItems += $dropshipRequestItem->getQtyRequested();
         }
@@ -331,8 +346,10 @@ class DropshipRequestService
     }
 
     /**
-     * @param $supplierId
-     * @return mixed
+     * Get Dropship Request By Supplier Id
+     *
+     * @param int $supplierId
+     * @return \Magestore\DropshipSuccess\Model\DropshipRequest
      */
     public function getDropshipRequestBySupplierId($supplierId)
     {
@@ -342,8 +359,7 @@ class DropshipRequestService
     /**
      * Back dropship request to fulfil
      *
-     * @param $requestId
-     * @return mixed
+     * @param int $requestId
      */
     public function backToPrepareFulfil($requestId)
     {
@@ -357,8 +373,7 @@ class DropshipRequestService
     /**
      * Cancel dropship request
      *
-     * @param $requestId
-     * @return mixed
+     * @param \Magestore\DropshipSuccess\Model\DropshipRequest $request
      */
     public function cancel($request)
     {
@@ -371,8 +386,7 @@ class DropshipRequestService
     /**
      * Cancel dropship request items by request id
      *
-     * @param $requestId
-     * @return mixed
+     * @param int $requestId
      */
     public function cancelRequestItems($requestId)
     {
@@ -385,10 +399,10 @@ class DropshipRequestService
             $this->orderItemRepositoryInterface->updateDropshipQty($item->getItemId(), $cancelQty);
 
             $curOrderItem = $this->orderItemRepository->get($item->getItemId());
-            if(!$order) {
+            if (!$order) {
                 $order = $this->orderRepository->get($curOrderItem->getOrderId());
             }
-            if(!$orderItems) {
+            if (!$orderItems) {
                 $orderItems = $order->getItems();
             }
             foreach ($orderItems as $orderItem) {
@@ -402,9 +416,11 @@ class DropshipRequestService
     }
 
     /**
-     * get all item in dropship request
-     * @param $dropshipRequestId
+     * Get all item in dropship request
+     *
+     * @param int $dropshipRequestId
      * @return array
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function getDropshipItemsCollection($dropshipRequestId)
     {
@@ -427,23 +443,24 @@ class DropshipRequestService
         );
 
         $shipmentItems = $shipment->getAllItems();
-        /** @var \Magestore\DropshipSuccess\Model\ResourceModel\DropshipRequest\Item\Collection $dropshipRequestItemCollection */
+        /** @var DropshipItemCollection $dropshipRequestItemCollection */
         $dropshipRequestItemCollection = $this->dropshipRequestItemCollectionFactory->create();
-        $dropshipRequestItem = $dropshipRequestItemCollection->addFieldToFilter('dropship_request_id', $dropshipRequestId);
+        $dropshipRequestItem = $dropshipRequestItemCollection->addFieldToFilter(
+            'dropship_request_id',
+            $dropshipRequestId
+        );
         $pRItems = [];
         /** @var \Magestore\DropshipSuccess\Model\DropshipRequest\Item $pItem */
-        foreach($dropshipRequestItem as $pItem) {
+        foreach ($dropshipRequestItem as $pItem) {
             if ($pItem->getQtyRequested() - $pItem->getQtyShipped() > 0) {
                 $pRItems[$pItem->getItemId()] = $pItem->getData();
             }
         }
         $showItemIds = [];
-        /** @var \Magento\Sales\Model\Order\Shipment\Item $shipmentItem */
 
         foreach ($shipmentItems as $shipmentItem) {
             if (isset($pRItems[$shipmentItem['order_item_id']])
-                && !in_array($pRItems[$shipmentItem['order_item_id']]['item_id'], $showItemIds)
-            ) {
+                && !in_array($pRItems[$shipmentItem['order_item_id']]['item_id'], $showItemIds)) {
                 try {
                     $dropshipItem = $pRItems[$shipmentItem['order_item_id']];
                     if (!isset($dropshipItem['parent_item_id'])) {
@@ -463,35 +480,20 @@ class DropshipRequestService
                             $showItemIds[] = $dropshipItem['item_id'];
                         }
                         if (!$orderItem->isShipSeparately()
-                            && !in_array($dropshipItem['parent_item_id'], $showItemIds)
-                        ) {
-                            $parentItemId = $dropshipItem['parent_item_id'];
-                            if (!isset($pRItems[$parentItemId])) {
-                                foreach ($shipmentItems as $shipmentParent) {
-                                    if ($shipmentParent->getOrderItemId() == $parentItemId) {
-                                        $shipmentItem = $shipmentParent;
-                                        break;
-                                    }
-                                }
-                                /** @var \Magento\Sales\Model\Order\Item $parentItem */
-                                $parentItem = $this->orderItemRepositoryInterface->get($parentItemId);
-                                $shipmentItem['qty'] = $dropshipItem['qty_requested'] - $dropshipItem['qty_shipped'];
-                                $shipmentItem['order_item_id'] = $parentItemId;
-                                $shipmentItem->addData($parentItem->getData());
-                                $shipmentItem->addData($dropshipItem);
-                                $shipmentItem['item_id'] = $parentItemId;
-                                $shipmentItem['product_id'] = $parentItem->getProductId();
-                                $shipmentItem['parent_item_id'] = null;
-                                $shipmentItem['item_name'] = $parentItem->getName();
-                                $shipmentItem['item_sku'] = $dropshipItem['item_sku'];
-                                $shipmentItem['sku'] = $dropshipItem['item_sku'];
-                                $items[] = $shipmentItem;
-                                $showItemIds[] = $parentItemId;
-                            }
+                            && !in_array($dropshipItem['parent_item_id'], $showItemIds)) {
+                            $this->processShipTogetherItem(
+                                $items,
+                                $showItemIds,
+                                $pRItems,
+                                $shipmentItems,
+                                $shipmentItem,
+                                $dropshipItem
+                            );
                         }
 
                     }
                 } catch (\Exception $e) {
+                    return [];
                 }
             }
         }
@@ -499,10 +501,13 @@ class DropshipRequestService
     }
 
     /**
+     * Get Order Item Data
+     *
      * @param \Magento\Sales\Model\Order $order
      * @return array
      */
-    public function getOrderItemData(\Magento\Sales\Model\Order $order) {
+    public function getOrderItemData(\Magento\Sales\Model\Order $order)
+    {
         $data = [];
         foreach ($order->getAllItems() as $item) {
             $data[$item->getId()] = $item->getQtyToShip();
@@ -511,8 +516,9 @@ class DropshipRequestService
     }
 
     /**
-     * get qty to ship for children item with bundle and configuration product
-     * @param $data
+     * Get qty to ship for children item with bundle and configuration product
+     *
+     * @param array $data
      * @return mixed
      */
     public function getDataToUpdateShippedQty($data)
@@ -523,7 +529,6 @@ class DropshipRequestService
         $shippedItems = $orderItemCollection->addFieldToFilter('item_id', ['in' => $itemIds]);
         $shippedItemsIds = $shippedItems->getColumnValues('item_id');
         if (count($shippedItemsIds)) {
-            //** @var \Magento\Sales\Model\ResourceModel\Sales\Item\Collection  $childrenItems */
             $childrenItems = $this->orderItemcollectionFactory->create()
                 ->addFieldToFilter('parent_item_id', ['in' => $shippedItemsIds]);
             if ($childrenItems->getSize()) {
@@ -546,12 +551,13 @@ class DropshipRequestService
 
     /**
      * Update shipped qty for dropship request item
-     * @param $dropshipRequestId
+     *
+     * @param int $dropshipRequestId
      * @param array $changeQtys
      */
     public function updateShippedQtys($dropshipRequestId, array $changeQtys)
     {
-        /** @var \Magestore\DropshipSuccess\Model\ResourceModel\DropshipRequest\Item\Collection $dropshipRequestItemCollection */
+        /** @var DropshipItemCollection $dropshipRequestItemCollection */
         $dropshipRequestItemCollection = $this->dropshipRequestItemCollectionFactory->create();
         $dropshipRequestItemCollection
             ->addFieldToFilter(DropshipRequestItemInterface::DROPSHIP_REQUEST_ID, $dropshipRequestId)
@@ -559,14 +565,16 @@ class DropshipRequestService
 
         /** @var \Magestore\DropshipSuccess\Model\DropshipRequest\Item $dropshipRequestItem */
         foreach ($dropshipRequestItemCollection as $dropshipRequestItem) {
-            $dropshipRequestItem
-                ->setQtyShipped($dropshipRequestItem->getQtyShipped() + $changeQtys[$dropshipRequestItem->getItemId()]);
+            $dropshipRequestItem->setQtyShipped(
+                $dropshipRequestItem->getQtyShipped() + $changeQtys[$dropshipRequestItem->getItemId()]
+            );
             $this->dropshipRequestItemRepository->save($dropshipRequestItem);
         }
     }
 
     /**
-     * update prepare qty for order item after create shipment
+     * Update prepare qty for order item after create shipment
+     *
      * @param Shipment $shipment
      */
     public function updatePrepareShipQty(Shipment $shipment)
@@ -574,7 +582,7 @@ class DropshipRequestService
         $moveItems = [];
         /** @var \Magento\Sales\Api\Data\ShipmentItemInterface[] $items */
         $items = $shipment->getItems();
-        /** @var \Magento\Sales\Api\Data\ShipmentItemInterface  $item */
+        /** @var \Magento\Sales\Api\Data\ShipmentItemInterface $item */
         foreach ($items as $item) {
             $moveItems[$item->getOrderItemId()] = [
                 DropshipRequestItemInterface::ITEM_ID => $item->getOrderItemId(),
@@ -582,7 +590,7 @@ class DropshipRequestService
                 OrderSuccessOrderItemInterface::QTY_PREPARESHIP => -$item->getQty(),
             ];
         }
-        if(count($moveItems)) {
+        if (count($moveItems)) {
             /* update dropship_qty of items in Sales Sales */
             $this->massUpdatePrepareShipQty($moveItems);
         }
@@ -595,29 +603,30 @@ class DropshipRequestService
      */
     public function massUpdatePrepareShipQty($items)
     {
-        foreach($items as $itemId => $qtyChange) {
+        foreach ($items as $itemId => $qtyChange) {
             $qtyPrepareShipChange = isset($qtyChange[OrderSuccessOrderItemInterface::QTY_PREPARESHIP])
-                ? $qtyChange[OrderSuccessOrderItemInterface::QTY_PREPARESHIP] : 0;
+                ? $qtyChange[OrderSuccessOrderItemInterface::QTY_PREPARESHIP]
+                : 0;
 
-            if(!$qtyPrepareShipChange) {
+            if (!$qtyPrepareShipChange) {
                 continue;
             }
             /** @var \Magento\Sales\Model\Order\Item $orderItem */
             $orderItem = $this->orderItemRepositoryInterface->get($itemId);
 
             /* ignore child of ship-together bundle item */
-            if($orderItem->getParentItem()
+            if ($orderItem->getParentItem()
                 && $orderItem->getParentItem()->getProductType() != \Magento\Bundle\Model\Product\Type::TYPE_CODE
                 && !$orderItem->isShipSeparately()) {
                 continue;
             }
 
-            if(!$orderItem->getSku()) {
+            if (!$orderItem->getSku()) {
                 continue;
             }
             $qtyPrepareShip = $orderItem->getData(OrderSuccessOrderItemInterface::QTY_PREPARESHIP);
             $qtyPrepareShip = max(0, ($qtyPrepareShip + $qtyPrepareShipChange));
-            $qtyPrepareShip = min($qtyPrepareShip , $orderItem->getQtyToShip());
+            $qtyPrepareShip = min($qtyPrepareShip, $orderItem->getQtyToShip());
 
             $orderItem->setData(OrderSuccessOrderItemInterface::QTY_PREPARESHIP, $qtyPrepareShip);
 
@@ -627,8 +636,9 @@ class DropshipRequestService
 
     /**
      * Create Dropship Shipment
+     *
      * @param Shipment $shipment
-     * @param $dropshipRequestId
+     * @param int $dropshipRequestId
      */
     public function createDropshipShipmentByShipment(Shipment $shipment, $dropshipRequestId)
     {
@@ -638,17 +648,18 @@ class DropshipRequestService
             $shipmentId = $shipment->getId();
             $dropshipShipment->setShipmentId($shipmentId);
             $dropshipShipment->setDropshipRequestId($dropshipRequestId);
-            /** save dropship shipment */
+            /** Save dropship shipment */
             $this->dropshipShipmentRepository->save($dropshipShipment);
         } catch (\Exception $e) {
-
+            throw new LocalizedException(__('Could not create shipment for that dropship'));
         }
     }
 
     /**
-     * update dropship request status
-     * @param $dropshipRequestId
-     * @param null $status
+     * Update dropship request status
+     *
+     * @param int $dropshipRequestId
+     * @param int|string $status
      */
     public function updateDropshipRequest($dropshipRequestId, $status = null)
     {
@@ -661,7 +672,8 @@ class DropshipRequestService
     }
 
     /**
-     * get dropship request status
+     * Get dropship request status
+     *
      * @param DropshipRequestInterface $dropshipRequest
      * @return int|null|string
      */
@@ -684,7 +696,8 @@ class DropshipRequestService
     }
 
     /**
-     * back qty product to catalog product
+     * Back qty product to catalog product
+     *
      * @param Shipment $shipment
      */
     public function returnQtyToCatalogProduct(Shipment $shipment)
@@ -703,11 +716,11 @@ class DropshipRequestService
         /** @var \Magento\Sales\Model\Order\Item $orderItem */
         foreach ($orderItems as $orderItem) {
             $qty = $shipmentItemQty[$orderItem->getId()];
-            if ($orderItem->getProductType() == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) {
+            if ($orderItem->getProductType() == Configurable::TYPE_CODE) {
                 $parentId = $orderItem->getId();
                 /** @var \Magento\Sales\Model\Order\Item $childrenItem */
                 $childrenItem = \Magento\Framework\App\ObjectManager::getInstance()->create(
-                    'Magento\Sales\Model\ResourceModel\Order\Item\CollectionFactory'
+                    \Magento\Sales\Model\ResourceModel\Order\Item\CollectionFactory::class
                 )->create()
                     ->addFieldToFilter('parent_item_id', $parentId)
                     ->setCurPage(1)
@@ -721,12 +734,15 @@ class DropshipRequestService
             } else {
                 $productId = $orderItem->getProductId();
             }
-            if ($productId)
+            if ($productId) {
                 $this->stockManagement->backItemQty($productId, $qty, $scopeId);
+            }
         }
     }
 
     /**
+     * Is Shipped Request
+     *
      * @return bool
      */
     public function isShippedRequest()
@@ -734,8 +750,10 @@ class DropshipRequestService
         /** @var \Magestore\DropshipSuccess\Model\DropshipRequest $dropshipRequest */
         $dropshipRequest = $this->coreRegistry->registry('current_dropship_request');
         if ($dropshipRequest && $dropshipRequest->getId()) {
-            if (in_array($dropshipRequest->getStatus(),
-                [DropshipRequestInterface::STATUS_SHIPPED, DropshipRequestInterface::STATUS_CANCELED])) {
+            if (in_array(
+                $dropshipRequest->getStatus(),
+                [DropshipRequestInterface::STATUS_SHIPPED, DropshipRequestInterface::STATUS_CANCELED]
+            )) {
                 return true;
             }
         }
@@ -743,13 +761,13 @@ class DropshipRequestService
     }
 
     /**
-     * get track carrier
-     * @param $dropshipRequestId
+     * Get track carrier
+     *
+     * @param int $dropshipRequestId
      * @return \Magento\Sales\Model\ResourceModel\Order\Shipment\Track\Collection|null
      */
     public function getTrackingCarriers($dropshipRequestId)
     {
-        /** @var DropshipSuccess\Model\ResourceModel\DropshipRequest\DropshipShipment\Collection $dropshipShipmentCollection */
         $dropshipShipmentCollection = $this->dropshipShipmentCollectionFactory->create()
             ->addFieldToFilter('dropship_request_id', $dropshipRequestId);
         $shipmentIds = $dropshipShipmentCollection->getColumnValues('shipment_id');
@@ -765,8 +783,23 @@ class DropshipRequestService
     }
 
     /**
-     * @param $dropshipRequestId
+     * Merge array
+     *
+     * @param array $arr1
+     * @param array $arr2
      * @return array
+     */
+    protected function mergeArray($arr1, $arr2)
+    {
+        return array_merge($arr1, $arr2);
+    }
+
+    /**
+     * Get Dropship Items View Collection
+     *
+     * @param int $dropshipRequestId
+     * @return array
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function getDropshipItemsViewCollection($dropshipRequestId)
     {
@@ -775,25 +808,25 @@ class DropshipRequestService
 
         $orderId = $dropshipRequest->getOrderId();
 
-        /** @var \Magento\Sales\Model\Order $order */
-        $order = $this->orderRepositoryInterface->get($orderId);
-
         /** @var \Magento\Sales\Model\ResourceModel\Order\Shipment\Collection $shipmentCollection */
         $shipmentCollection = $this->shipmentCollectionFactory->create()
             ->addFieldToFilter('order_id', $orderId);
         $shipmentItems = [];
-        /** @var \Magento\Sales\Model\Order\Shipment  $shipment */
+        /** @var \Magento\Sales\Model\Order\Shipment $shipment */
         foreach ($shipmentCollection as $shipment) {
-            $shipmentItems = array_merge($shipmentItems, $shipment->getAllItems());
+            $shipmentItems = $this->mergeArray($shipmentItems, $shipment->getAllItems());
         }
 
-        /** @var \Magestore\DropshipSuccess\Model\ResourceModel\DropshipRequest\Item\Collection $dropshipRequestItemCollection */
+        /** @var DropshipItemCollection $dropshipRequestItemCollection */
         $dropshipRequestItemCollection = $this->dropshipRequestItemCollectionFactory->create();
-        $dropshipRequestItem = $dropshipRequestItemCollection->addFieldToFilter('dropship_request_id', $dropshipRequestId);
+        $dropshipRequestItem = $dropshipRequestItemCollection->addFieldToFilter(
+            'dropship_request_id',
+            $dropshipRequestId
+        );
         $pRItems = [];
         /** @var \Magestore\DropshipSuccess\Model\DropshipRequest\Item $pItem */
         $pItemIds = $dropshipRequestItem->getColumnValues('item_id');
-        foreach($dropshipRequestItem as $pItem) {
+        foreach ($dropshipRequestItem as $pItem) {
             $pRItems[$pItem->getItemId()] = $pItem->getData();
             if ($pItem->getParentItemId() && !in_array($pItem->getParentItemId(), $pItemIds)) {
                 $pRItems[$pItem->getParentItemId()] = $pItem->getData();
@@ -801,12 +834,10 @@ class DropshipRequestService
             }
         }
         $showItemIds = [];
-        /** @var \Magento\Sales\Model\Order\Shipment\Item $shipmentItem */
         $items = [];
         foreach ($shipmentItems as $shipmentItem) {
             if (isset($pRItems[$shipmentItem['order_item_id']])
-                && !in_array($pRItems[$shipmentItem['order_item_id']]['item_id'], $showItemIds)
-            ) {
+                && !in_array($pRItems[$shipmentItem['order_item_id']]['item_id'], $showItemIds)) {
                 try {
                     $dropshipItem = $pRItems[$shipmentItem['order_item_id']];
                     if (!$dropshipItem['parent_item_id']) {
@@ -826,36 +857,19 @@ class DropshipRequestService
                             $showItemIds[] = $dropshipItem['item_id'];
                         }
                         if (!$orderItem->isShipSeparately()
-                            && !in_array($dropshipItem['parent_item_id'], $showItemIds)
-                        ) {
-                            $parentItemId = $dropshipItem['parent_item_id'];
-                            if (!isset($pRItems[$parentItemId])) {
-                                foreach ($shipmentItems as $shipmentParent) {
-                                    if ($shipmentParent->getOrderItemId() == $parentItemId) {
-                                        $shipmentItem = $shipmentParent;
-                                        break;
-                                    }
-                                }
-                                /** @var \Magento\Sales\Model\Order\Item $parentItem */
-                                $parentItem = $this->orderItemRepository->get($parentItemId);
-                                $shipmentItem['qty'] = $dropshipItem['qty_requested'] - $dropshipItem['qty_shipped'];
-                                $shipmentItem['order_item_id'] = $parentItemId;
-                                $shipmentItem->addData($parentItem->getData());
-                                $shipmentItem->addData($dropshipItem);
-                                $shipmentItem['item_id'] = $parentItemId;
-                                $shipmentItem['product_id'] = $parentItem->getProductId();
-                                $shipmentItem['parent_item_id'] = null;
-                                $shipmentItem['item_name'] = $parentItem->getName();
-                                $shipmentItem['item_sku'] = $dropshipItem['item_sku'];
-                                $shipmentItem['sku'] = $dropshipItem['item_sku'];
-                                $items[] = $shipmentItem;
-                                $showItemIds[] = $parentItemId;
-                            }
+                            && !in_array($dropshipItem['parent_item_id'], $showItemIds)) {
+                            $this->processShipTogetherItem(
+                                $items,
+                                $showItemIds,
+                                $pRItems,
+                                $shipmentItems,
+                                $shipmentItem,
+                                $dropshipItem
+                            );
                         }
-
                     }
                 } catch (\Exception $e) {
-
+                    throw new LocalizedException(__('Could not get list items of that dropship'));
                 }
             }
         }
@@ -863,27 +877,73 @@ class DropshipRequestService
     }
 
     /**
-     * get dropship url to auto login
-     * @param $supplierId
-     * @param $dropshipRequestId
+     * Modify item ship together
+     *
+     * @param array $items
+     * @param array $showItemIds
+     * @param array $pRItems
+     * @param array $shipmentItems
+     * @param array $shipmentItem
+     * @param array $dropshipItem
+     */
+    protected function processShipTogetherItem(
+        &$items,
+        &$showItemIds,
+        $pRItems,
+        $shipmentItems,
+        $shipmentItem,
+        $dropshipItem
+    ) {
+        $parentItemId = $dropshipItem['parent_item_id'];
+        if (!isset($pRItems[$parentItemId])) {
+            foreach ($shipmentItems as $shipmentParent) {
+                if ($shipmentParent->getOrderItemId() == $parentItemId) {
+                    $shipmentItem = $shipmentParent;
+                    break;
+                }
+            }
+            /** @var \Magento\Sales\Model\Order\Item $parentItem */
+            $parentItem = $this->orderItemRepository->get($parentItemId);
+            $shipmentItem['qty'] = $dropshipItem['qty_requested'] - $dropshipItem['qty_shipped'];
+            $shipmentItem['order_item_id'] = $parentItemId;
+            $shipmentItem->addData($parentItem->getData());
+            $shipmentItem->addData($dropshipItem);
+            $shipmentItem['item_id'] = $parentItemId;
+            $shipmentItem['product_id'] = $parentItem->getProductId();
+            $shipmentItem['parent_item_id'] = null;
+            $shipmentItem['item_name'] = $parentItem->getName();
+            $shipmentItem['item_sku'] = $dropshipItem['item_sku'];
+            $shipmentItem['sku'] = $dropshipItem['item_sku'];
+            $items[] = $shipmentItem;
+            $showItemIds[] = $parentItemId;
+        }
+    }
+
+    /**
+     * Get dropship url to auto login
+     *
+     * @param int $supplierId
+     * @param int $dropshipRequestId
      * @return string
      */
     public function getUrlDropship($supplierId, $dropshipRequestId)
     {
         $param = '';
         if ($supplierId) {
-            $param .= 'supplier_id='.$supplierId;
+            $param .= 'supplier_id=' . $supplierId;
         }
         if ($dropshipRequestId) {
-            $param .= '&dropship_id='.$dropshipRequestId;
+            $param .= '&dropship_id=' . $dropshipRequestId;
         }
         $param = base64_encode($param);
-        $url = $this->urlHelper->getUrl('dropship/supplier/redirect',['dropship' => $param]);
+        $url = $this->urlHelper->getUrl('dropship/supplier/redirect', ['dropship' => $param]);
         return $url;
     }
 
     /**
-     * @param $data
+     * Decode Url Dropship
+     *
+     * @param array $data
      * @return array
      */
     public function decodeUrlDropship($data)
@@ -891,7 +951,10 @@ class DropshipRequestService
         $returnData = [];
         $returnData['supplier_id'] = null;
         $returnData['dropship_id'] = null;
-        $data = base64_decode($data);
+        /** @var \Magento\Framework\Url\DecoderInterface $decoderInterface */
+        $decoderInterface = \Magento\Framework\App\ObjectManager::getInstance()
+            ->create(\Magento\Framework\Url\DecoderInterface::class);
+        $data = $decoderInterface->decode($data);
         $data = explode('&', $data);
         $supplier = $data[0];
         $dropshipRequest = isset($data[1]) ? $data[1] : null;
@@ -909,7 +972,8 @@ class DropshipRequestService
     }
 
     /**
-     * update supplier and shipment
+     * Update supplier and shipment
+     *
      * @param DropshipRequestInterface $dropshipRequest
      * @param Shipment $shipment
      */
@@ -926,26 +990,29 @@ class DropshipRequestService
             $dropshipSupplierShipment->setSupplierCode($supplier->getSupplierCode());
             $this->dropshipSupplierShipmentRepositoryInterface->save($dropshipSupplierShipment);
         } catch (\Exception $e) {
-
+            throw new LocalizedException(__('Could not update supplier shipment'));
         }
     }
 
     /**
-     * forgot password url
+     * Forgot password url
+     *
      * @param SupplierInterface $supplier
      * @return string
      */
     public function getForgotPasswordUrl(SupplierInterface $supplier)
     {
-        $param = 'supplier_id='. $supplier->getId();
-        $param .= '&supplier_code='. $supplier->getSupplierCode();
+        $param = 'supplier_id=' . $supplier->getId();
+        $param .= '&supplier_code=' . $supplier->getSupplierCode();
         $param = base64_encode($param);
-        $url = $this->urlHelper->getUrl('dropship/supplier/createPassword',['forgot' => $param]);
+        $url = $this->urlHelper->getUrl('dropship/supplier/createPassword', ['forgot' => $param]);
         return $url;
     }
 
     /**
-     * @param $data
+     * Decode Forgot Password Url
+     *
+     * @param array $data
      * @return array
      */
     public function decodeForgotPasswordUrl($data)
@@ -953,7 +1020,10 @@ class DropshipRequestService
         $returnData = [];
         $returnData['supplier_id'] = null;
         $returnData['supplier_code'] = null;
-        $data = base64_decode($data);
+        /** @var \Magento\Framework\Url\DecoderInterface $decoderInterface */
+        $decoderInterface = \Magento\Framework\App\ObjectManager::getInstance()
+            ->create(\Magento\Framework\Url\DecoderInterface::class);
+        $data = $decoderInterface->decode($data);
         $data = explode('&', $data);
         $supplierId = $data[0];
         $supplierCode = isset($data[1]) ? $data[1] : null;

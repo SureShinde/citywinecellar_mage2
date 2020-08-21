@@ -5,6 +5,7 @@
  *
  * @author Casper Bakker - picqer.com
  * Based on TCPDF Barcode Generator
+ * phpcs:disable
  */
 
 // Copyright (C) 2002-2015 Nicola Asuni - Tecnick.com LTD
@@ -36,6 +37,10 @@ use Magestore\Giftvoucher\Helper\Exceptions\InvalidFormatException;
 use Magestore\Giftvoucher\Helper\Exceptions\InvalidLengthException;
 use Magestore\Giftvoucher\Helper\Exceptions\UnknownTypeException;
 
+/**
+ * Barcode generator helper
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ */
 abstract class BarcodeGenerator
 {
     const TYPE_CODE_39 = 'C39';
@@ -76,6 +81,8 @@ abstract class BarcodeGenerator
      * @param string $type type of barcode
      * @return array barcode array
      * @public
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function getBarcodeData($code, $type)
     {
@@ -290,7 +297,7 @@ abstract class BarcodeGenerator
         $k = 0;
         $clen = strlen($code);
         for ($i = 0; $i < $clen; ++$i) {
-            $char = $code{$i};
+            $char = $code[$i];
             if ( ! isset($chr[$char])) {
                 throw new InvalidCharacterException('Char ' . $char . ' is unsupported');
             }
@@ -300,7 +307,7 @@ abstract class BarcodeGenerator
                 } else {
                     $t = false; // space
                 }
-                $w = $chr[$char]{$j};
+                $w = $chr[$char][$j];
                 $bararray['bcode'][$k] = array('t' => $t, 'w' => $w, 'h' => 1, 'p' => 0);
                 $bararray['maxw'] += $w;
                 ++$k;
@@ -320,146 +327,147 @@ abstract class BarcodeGenerator
      * @param string $code code to represent.
      * @return bool|string encoded string.
      * @protected
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function encode_code39_ext($code)
     {
         $encode = array(
-            chr(0)   => '%U',
-            chr(1)   => '$A',
-            chr(2)   => '$B',
-            chr(3)   => '$C',
-            chr(4)   => '$D',
-            chr(5)   => '$E',
-            chr(6)   => '$F',
-            chr(7)   => '$G',
-            chr(8)   => '$H',
-            chr(9)   => '$I',
-            chr(10)  => '$J',
-            chr(11)  => '£K',
-            chr(12)  => '$L',
-            chr(13)  => '$M',
-            chr(14)  => '$N',
-            chr(15)  => '$O',
-            chr(16)  => '$P',
-            chr(17)  => '$Q',
-            chr(18)  => '$R',
-            chr(19)  => '$S',
-            chr(20)  => '$T',
-            chr(21)  => '$U',
-            chr(22)  => '$V',
-            chr(23)  => '$W',
-            chr(24)  => '$X',
-            chr(25)  => '$Y',
-            chr(26)  => '$Z',
-            chr(27)  => '%A',
-            chr(28)  => '%B',
-            chr(29)  => '%C',
-            chr(30)  => '%D',
-            chr(31)  => '%E',
-            chr(32)  => ' ',
-            chr(33)  => '/A',
-            chr(34)  => '/B',
-            chr(35)  => '/C',
-            chr(36)  => '/D',
-            chr(37)  => '/E',
-            chr(38)  => '/F',
-            chr(39)  => '/G',
-            chr(40)  => '/H',
-            chr(41)  => '/I',
-            chr(42)  => '/J',
-            chr(43)  => '/K',
-            chr(44)  => '/L',
-            chr(45)  => '-',
-            chr(46)  => '.',
-            chr(47)  => '/O',
-            chr(48)  => '0',
-            chr(49)  => '1',
-            chr(50)  => '2',
-            chr(51)  => '3',
-            chr(52)  => '4',
-            chr(53)  => '5',
-            chr(54)  => '6',
-            chr(55)  => '7',
-            chr(56)  => '8',
-            chr(57)  => '9',
-            chr(58)  => '/Z',
-            chr(59)  => '%F',
-            chr(60)  => '%G',
-            chr(61)  => '%H',
-            chr(62)  => '%I',
-            chr(63)  => '%J',
-            chr(64)  => '%V',
-            chr(65)  => 'A',
-            chr(66)  => 'B',
-            chr(67)  => 'C',
-            chr(68)  => 'D',
-            chr(69)  => 'E',
-            chr(70)  => 'F',
-            chr(71)  => 'G',
-            chr(72)  => 'H',
-            chr(73)  => 'I',
-            chr(74)  => 'J',
-            chr(75)  => 'K',
-            chr(76)  => 'L',
-            chr(77)  => 'M',
-            chr(78)  => 'N',
-            chr(79)  => 'O',
-            chr(80)  => 'P',
-            chr(81)  => 'Q',
-            chr(82)  => 'R',
-            chr(83)  => 'S',
-            chr(84)  => 'T',
-            chr(85)  => 'U',
-            chr(86)  => 'V',
-            chr(87)  => 'W',
-            chr(88)  => 'X',
-            chr(89)  => 'Y',
-            chr(90)  => 'Z',
-            chr(91)  => '%K',
-            chr(92)  => '%L',
-            chr(93)  => '%M',
-            chr(94)  => '%N',
-            chr(95)  => '%O',
-            chr(96)  => '%W',
-            chr(97)  => '+A',
-            chr(98)  => '+B',
-            chr(99)  => '+C',
-            chr(100) => '+D',
-            chr(101) => '+E',
-            chr(102) => '+F',
-            chr(103) => '+G',
-            chr(104) => '+H',
-            chr(105) => '+I',
-            chr(106) => '+J',
-            chr(107) => '+K',
-            chr(108) => '+L',
-            chr(109) => '+M',
-            chr(110) => '+N',
-            chr(111) => '+O',
-            chr(112) => '+P',
-            chr(113) => '+Q',
-            chr(114) => '+R',
-            chr(115) => '+S',
-            chr(116) => '+T',
-            chr(117) => '+U',
-            chr(118) => '+V',
-            chr(119) => '+W',
-            chr(120) => '+X',
-            chr(121) => '+Y',
-            chr(122) => '+Z',
-            chr(123) => '%P',
-            chr(124) => '%Q',
-            chr(125) => '%R',
-            chr(126) => '%S',
-            chr(127) => '%T'
+            pack("i", 0)   => '%U',
+            pack("i", 1)   => '$A',
+            pack("i", 2)   => '$B',
+            pack("i", 3)   => '$C',
+            pack("i", 4)   => '$D',
+            pack("i", 5)   => '$E',
+            pack("i", 6)   => '$F',
+            pack("i", 7)   => '$G',
+            pack("i", 8)   => '$H',
+            pack("i", 9)   => '$I',
+            pack("i", 10)  => '$J',
+            pack("i", 11)  => '£K',
+            pack("i", 12)  => '$L',
+            pack("i", 13)  => '$M',
+            pack("i", 14)  => '$N',
+            pack("i", 15)  => '$O',
+            pack("i", 16)  => '$P',
+            pack("i", 17)  => '$Q',
+            pack("i", 18)  => '$R',
+            pack("i", 19)  => '$S',
+            pack("i", 20)  => '$T',
+            pack("i", 21)  => '$U',
+            pack("i", 22)  => '$V',
+            pack("i", 23)  => '$W',
+            pack("i", 24)  => '$X',
+            pack("i", 25)  => '$Y',
+            pack("i", 26)  => '$Z',
+            pack("i", 27)  => '%A',
+            pack("i", 28)  => '%B',
+            pack("i", 29)  => '%C',
+            pack("i", 30)  => '%D',
+            pack("i", 31)  => '%E',
+            pack("i", 32)  => ' ',
+            pack("i", 33)  => '/A',
+            pack("i", 34)  => '/B',
+            pack("i", 35)  => '/C',
+            pack("i", 36)  => '/D',
+            pack("i", 37)  => '/E',
+            pack("i", 38)  => '/F',
+            pack("i", 39)  => '/G',
+            pack("i", 40)  => '/H',
+            pack("i", 41)  => '/I',
+            pack("i", 42)  => '/J',
+            pack("i", 43)  => '/K',
+            pack("i", 44)  => '/L',
+            pack("i", 45)  => '-',
+            pack("i", 46)  => '.',
+            pack("i", 47)  => '/O',
+            pack("i", 48)  => '0',
+            pack("i", 49)  => '1',
+            pack("i", 50)  => '2',
+            pack("i", 51)  => '3',
+            pack("i", 52)  => '4',
+            pack("i", 53)  => '5',
+            pack("i", 54)  => '6',
+            pack("i", 55)  => '7',
+            pack("i", 56)  => '8',
+            pack("i", 57)  => '9',
+            pack("i", 58)  => '/Z',
+            pack("i", 59)  => '%F',
+            pack("i", 60)  => '%G',
+            pack("i", 61)  => '%H',
+            pack("i", 62)  => '%I',
+            pack("i", 63)  => '%J',
+            pack("i", 64)  => '%V',
+            pack("i", 65)  => 'A',
+            pack("i", 66)  => 'B',
+            pack("i", 67)  => 'C',
+            pack("i", 68)  => 'D',
+            pack("i", 69)  => 'E',
+            pack("i", 70)  => 'F',
+            pack("i", 71)  => 'G',
+            pack("i", 72)  => 'H',
+            pack("i", 73)  => 'I',
+            pack("i", 74)  => 'J',
+            pack("i", 75)  => 'K',
+            pack("i", 76)  => 'L',
+            pack("i", 77)  => 'M',
+            pack("i", 78)  => 'N',
+            pack("i", 79)  => 'O',
+            pack("i", 80)  => 'P',
+            pack("i", 81)  => 'Q',
+            pack("i", 82)  => 'R',
+            pack("i", 83)  => 'S',
+            pack("i", 84)  => 'T',
+            pack("i", 85)  => 'U',
+            pack("i", 86)  => 'V',
+            pack("i", 87)  => 'W',
+            pack("i", 88)  => 'X',
+            pack("i", 89)  => 'Y',
+            pack("i", 90)  => 'Z',
+            pack("i", 91)  => '%K',
+            pack("i", 92)  => '%L',
+            pack("i", 93)  => '%M',
+            pack("i", 94)  => '%N',
+            pack("i", 95)  => '%O',
+            pack("i", 96)  => '%W',
+            pack("i", 97)  => '+A',
+            pack("i", 98)  => '+B',
+            pack("i", 99)  => '+C',
+            pack("i", 100) => '+D',
+            pack("i", 101) => '+E',
+            pack("i", 102) => '+F',
+            pack("i", 103) => '+G',
+            pack("i", 104) => '+H',
+            pack("i", 105) => '+I',
+            pack("i", 106) => '+J',
+            pack("i", 107) => '+K',
+            pack("i", 108) => '+L',
+            pack("i", 109) => '+M',
+            pack("i", 110) => '+N',
+            pack("i", 111) => '+O',
+            pack("i", 112) => '+P',
+            pack("i", 113) => '+Q',
+            pack("i", 114) => '+R',
+            pack("i", 115) => '+S',
+            pack("i", 116) => '+T',
+            pack("i", 117) => '+U',
+            pack("i", 118) => '+V',
+            pack("i", 119) => '+W',
+            pack("i", 120) => '+X',
+            pack("i", 121) => '+Y',
+            pack("i", 122) => '+Z',
+            pack("i", 123) => '%P',
+            pack("i", 124) => '%Q',
+            pack("i", 125) => '%R',
+            pack("i", 126) => '%S',
+            pack("i", 127) => '%T'
         );
         $code_ext = '';
         $clen = strlen($code);
         for ($i = 0; $i < $clen; ++$i) {
-            if (ord($code{$i}) > 127) {
+            if (ord($code[$i]) > 127) {
                 throw new InvalidCharacterException('Only supports till char 127');
             }
-            $code_ext .= $encode[$code{$i}];
+            $code_ext .= $encode[$code[$i]];
         }
 
         return $code_ext;
@@ -522,7 +530,7 @@ abstract class BarcodeGenerator
         $sum = 0;
         $codelength = strlen($code);
         for ($i = 0; $i < $codelength; ++$i) {
-            $k = array_keys($chars, $code{$i});
+            $k = array_keys($chars, $code[$i]);
             $sum += $k[0];
         }
         $j = ($sum % 43);
@@ -537,6 +545,7 @@ abstract class BarcodeGenerator
      * @param $code (string) code to represent.
      * @return array barcode representation.
      * @protected
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function barcode_code93($code)
     {
@@ -591,142 +600,142 @@ abstract class BarcodeGenerator
         $chr[42] = '111141'; // start-stop
         $code = strtoupper($code);
         $encode = array(
-            chr(0)   => chr(131) . 'U',
-            chr(1)   => chr(128) . 'A',
-            chr(2)   => chr(128) . 'B',
-            chr(3)   => chr(128) . 'C',
-            chr(4)   => chr(128) . 'D',
-            chr(5)   => chr(128) . 'E',
-            chr(6)   => chr(128) . 'F',
-            chr(7)   => chr(128) . 'G',
-            chr(8)   => chr(128) . 'H',
-            chr(9)   => chr(128) . 'I',
-            chr(10)  => chr(128) . 'J',
-            chr(11)  => '£K',
-            chr(12)  => chr(128) . 'L',
-            chr(13)  => chr(128) . 'M',
-            chr(14)  => chr(128) . 'N',
-            chr(15)  => chr(128) . 'O',
-            chr(16)  => chr(128) . 'P',
-            chr(17)  => chr(128) . 'Q',
-            chr(18)  => chr(128) . 'R',
-            chr(19)  => chr(128) . 'S',
-            chr(20)  => chr(128) . 'T',
-            chr(21)  => chr(128) . 'U',
-            chr(22)  => chr(128) . 'V',
-            chr(23)  => chr(128) . 'W',
-            chr(24)  => chr(128) . 'X',
-            chr(25)  => chr(128) . 'Y',
-            chr(26)  => chr(128) . 'Z',
-            chr(27)  => chr(131) . 'A',
-            chr(28)  => chr(131) . 'B',
-            chr(29)  => chr(131) . 'C',
-            chr(30)  => chr(131) . 'D',
-            chr(31)  => chr(131) . 'E',
-            chr(32)  => ' ',
-            chr(33)  => chr(129) . 'A',
-            chr(34)  => chr(129) . 'B',
-            chr(35)  => chr(129) . 'C',
-            chr(36)  => chr(129) . 'D',
-            chr(37)  => chr(129) . 'E',
-            chr(38)  => chr(129) . 'F',
-            chr(39)  => chr(129) . 'G',
-            chr(40)  => chr(129) . 'H',
-            chr(41)  => chr(129) . 'I',
-            chr(42)  => chr(129) . 'J',
-            chr(43)  => chr(129) . 'K',
-            chr(44)  => chr(129) . 'L',
-            chr(45)  => '-',
-            chr(46)  => '.',
-            chr(47)  => chr(129) . 'O',
-            chr(48)  => '0',
-            chr(49)  => '1',
-            chr(50)  => '2',
-            chr(51)  => '3',
-            chr(52)  => '4',
-            chr(53)  => '5',
-            chr(54)  => '6',
-            chr(55)  => '7',
-            chr(56)  => '8',
-            chr(57)  => '9',
-            chr(58)  => chr(129) . 'Z',
-            chr(59)  => chr(131) . 'F',
-            chr(60)  => chr(131) . 'G',
-            chr(61)  => chr(131) . 'H',
-            chr(62)  => chr(131) . 'I',
-            chr(63)  => chr(131) . 'J',
-            chr(64)  => chr(131) . 'V',
-            chr(65)  => 'A',
-            chr(66)  => 'B',
-            chr(67)  => 'C',
-            chr(68)  => 'D',
-            chr(69)  => 'E',
-            chr(70)  => 'F',
-            chr(71)  => 'G',
-            chr(72)  => 'H',
-            chr(73)  => 'I',
-            chr(74)  => 'J',
-            chr(75)  => 'K',
-            chr(76)  => 'L',
-            chr(77)  => 'M',
-            chr(78)  => 'N',
-            chr(79)  => 'O',
-            chr(80)  => 'P',
-            chr(81)  => 'Q',
-            chr(82)  => 'R',
-            chr(83)  => 'S',
-            chr(84)  => 'T',
-            chr(85)  => 'U',
-            chr(86)  => 'V',
-            chr(87)  => 'W',
-            chr(88)  => 'X',
-            chr(89)  => 'Y',
-            chr(90)  => 'Z',
-            chr(91)  => chr(131) . 'K',
-            chr(92)  => chr(131) . 'L',
-            chr(93)  => chr(131) . 'M',
-            chr(94)  => chr(131) . 'N',
-            chr(95)  => chr(131) . 'O',
-            chr(96)  => chr(131) . 'W',
-            chr(97)  => chr(130) . 'A',
-            chr(98)  => chr(130) . 'B',
-            chr(99)  => chr(130) . 'C',
-            chr(100) => chr(130) . 'D',
-            chr(101) => chr(130) . 'E',
-            chr(102) => chr(130) . 'F',
-            chr(103) => chr(130) . 'G',
-            chr(104) => chr(130) . 'H',
-            chr(105) => chr(130) . 'I',
-            chr(106) => chr(130) . 'J',
-            chr(107) => chr(130) . 'K',
-            chr(108) => chr(130) . 'L',
-            chr(109) => chr(130) . 'M',
-            chr(110) => chr(130) . 'N',
-            chr(111) => chr(130) . 'O',
-            chr(112) => chr(130) . 'P',
-            chr(113) => chr(130) . 'Q',
-            chr(114) => chr(130) . 'R',
-            chr(115) => chr(130) . 'S',
-            chr(116) => chr(130) . 'T',
-            chr(117) => chr(130) . 'U',
-            chr(118) => chr(130) . 'V',
-            chr(119) => chr(130) . 'W',
-            chr(120) => chr(130) . 'X',
-            chr(121) => chr(130) . 'Y',
-            chr(122) => chr(130) . 'Z',
-            chr(123) => chr(131) . 'P',
-            chr(124) => chr(131) . 'Q',
-            chr(125) => chr(131) . 'R',
-            chr(126) => chr(131) . 'S',
-            chr(127) => chr(131) . 'T'
+            pack("i", 0)   => pack("i", 131) . 'U',
+            pack("i", 1)   => pack("i", 128) . 'A',
+            pack("i", 2)   => pack("i", 128) . 'B',
+            pack("i", 3)   => pack("i", 128) . 'C',
+            pack("i", 4)   => pack("i", 128) . 'D',
+            pack("i", 5)   => pack("i", 128) . 'E',
+            pack("i", 6)   => pack("i", 128) . 'F',
+            pack("i", 7)   => pack("i", 128) . 'G',
+            pack("i", 8)   => pack("i", 128) . 'H',
+            pack("i", 9)   => pack("i", 128) . 'I',
+            pack("i", 10)  => pack("i", 128) . 'J',
+            pack("i", 11)  => '£K',
+            pack("i", 12)  => pack("i", 128) . 'L',
+            pack("i", 13)  => pack("i", 128) . 'M',
+            pack("i", 14)  => pack("i", 128) . 'N',
+            pack("i", 15)  => pack("i", 128) . 'O',
+            pack("i", 16)  => pack("i", 128) . 'P',
+            pack("i", 17)  => pack("i", 128) . 'Q',
+            pack("i", 18)  => pack("i", 128) . 'R',
+            pack("i", 19)  => pack("i", 128) . 'S',
+            pack("i", 20)  => pack("i", 128) . 'T',
+            pack("i", 21)  => pack("i", 128) . 'U',
+            pack("i", 22)  => pack("i", 128) . 'V',
+            pack("i", 23)  => pack("i", 128) . 'W',
+            pack("i", 24)  => pack("i", 128) . 'X',
+            pack("i", 25)  => pack("i", 128) . 'Y',
+            pack("i", 26)  => pack("i", 128) . 'Z',
+            pack("i", 27)  => pack("i", 131) . 'A',
+            pack("i", 28)  => pack("i", 131) . 'B',
+            pack("i", 29)  => pack("i", 131) . 'C',
+            pack("i", 30)  => pack("i", 131) . 'D',
+            pack("i", 31)  => pack("i", 131) . 'E',
+            pack("i", 32)  => ' ',
+            pack("i", 33)  => pack("i", 129) . 'A',
+            pack("i", 34)  => pack("i", 129) . 'B',
+            pack("i", 35)  => pack("i", 129) . 'C',
+            pack("i", 36)  => pack("i", 129) . 'D',
+            pack("i", 37)  => pack("i", 129) . 'E',
+            pack("i", 38)  => pack("i", 129) . 'F',
+            pack("i", 39)  => pack("i", 129) . 'G',
+            pack("i", 40)  => pack("i", 129) . 'H',
+            pack("i", 41)  => pack("i", 129) . 'I',
+            pack("i", 42)  => pack("i", 129) . 'J',
+            pack("i", 43)  => pack("i", 129) . 'K',
+            pack("i", 44)  => pack("i", 129) . 'L',
+            pack("i", 45)  => '-',
+            pack("i", 46)  => '.',
+            pack("i", 47)  => pack("i", 129) . 'O',
+            pack("i", 48)  => '0',
+            pack("i", 49)  => '1',
+            pack("i", 50)  => '2',
+            pack("i", 51)  => '3',
+            pack("i", 52)  => '4',
+            pack("i", 53)  => '5',
+            pack("i", 54)  => '6',
+            pack("i", 55)  => '7',
+            pack("i", 56)  => '8',
+            pack("i", 57)  => '9',
+            pack("i", 58)  => pack("i", 129) . 'Z',
+            pack("i", 59)  => pack("i", 131) . 'F',
+            pack("i", 60)  => pack("i", 131) . 'G',
+            pack("i", 61)  => pack("i", 131) . 'H',
+            pack("i", 62)  => pack("i", 131) . 'I',
+            pack("i", 63)  => pack("i", 131) . 'J',
+            pack("i", 64)  => pack("i", 131) . 'V',
+            pack("i", 65)  => 'A',
+            pack("i", 66)  => 'B',
+            pack("i", 67)  => 'C',
+            pack("i", 68)  => 'D',
+            pack("i", 69)  => 'E',
+            pack("i", 70)  => 'F',
+            pack("i", 71)  => 'G',
+            pack("i", 72)  => 'H',
+            pack("i", 73)  => 'I',
+            pack("i", 74)  => 'J',
+            pack("i", 75)  => 'K',
+            pack("i", 76)  => 'L',
+            pack("i", 77)  => 'M',
+            pack("i", 78)  => 'N',
+            pack("i", 79)  => 'O',
+            pack("i", 80)  => 'P',
+            pack("i", 81)  => 'Q',
+            pack("i", 82)  => 'R',
+            pack("i", 83)  => 'S',
+            pack("i", 84)  => 'T',
+            pack("i", 85)  => 'U',
+            pack("i", 86)  => 'V',
+            pack("i", 87)  => 'W',
+            pack("i", 88)  => 'X',
+            pack("i", 89)  => 'Y',
+            pack("i", 90)  => 'Z',
+            pack("i", 91)  => pack("i", 131) . 'K',
+            pack("i", 92)  => pack("i", 131) . 'L',
+            pack("i", 93)  => pack("i", 131) . 'M',
+            pack("i", 94)  => pack("i", 131) . 'N',
+            pack("i", 95)  => pack("i", 131) . 'O',
+            pack("i", 96)  => pack("i", 131) . 'W',
+            pack("i", 97)  => pack("i", 130) . 'A',
+            pack("i", 98)  => pack("i", 130) . 'B',
+            pack("i", 99)  => pack("i", 130) . 'C',
+            pack("i", 100) => pack("i", 130) . 'D',
+            pack("i", 101) => pack("i", 130) . 'E',
+            pack("i", 102) => pack("i", 130) . 'F',
+            pack("i", 103) => pack("i", 130) . 'G',
+            pack("i", 104) => pack("i", 130) . 'H',
+            pack("i", 105) => pack("i", 130) . 'I',
+            pack("i", 106) => pack("i", 130) . 'J',
+            pack("i", 107) => pack("i", 130) . 'K',
+            pack("i", 108) => pack("i", 130) . 'L',
+            pack("i", 109) => pack("i", 130) . 'M',
+            pack("i", 110) => pack("i", 130) . 'N',
+            pack("i", 111) => pack("i", 130) . 'O',
+            pack("i", 112) => pack("i", 130) . 'P',
+            pack("i", 113) => pack("i", 130) . 'Q',
+            pack("i", 114) => pack("i", 130) . 'R',
+            pack("i", 115) => pack("i", 130) . 'S',
+            pack("i", 116) => pack("i", 130) . 'T',
+            pack("i", 117) => pack("i", 130) . 'U',
+            pack("i", 118) => pack("i", 130) . 'V',
+            pack("i", 119) => pack("i", 130) . 'W',
+            pack("i", 120) => pack("i", 130) . 'X',
+            pack("i", 121) => pack("i", 130) . 'Y',
+            pack("i", 122) => pack("i", 130) . 'Z',
+            pack("i", 123) => pack("i", 131) . 'P',
+            pack("i", 124) => pack("i", 131) . 'Q',
+            pack("i", 125) => pack("i", 131) . 'R',
+            pack("i", 126) => pack("i", 131) . 'S',
+            pack("i", 127) => pack("i", 131) . 'T'
         );
         $code_ext = '';
         $clen = strlen($code);
         for ($i = 0; $i < $clen; ++$i) {
-            if (ord($code{$i}) > 127) {
+            if (ord($code[$i]) > 127) {
                 throw new InvalidCharacterException('Only supports till char 127');
             }
-            $code_ext .= $encode[$code{$i}];
+            $code_ext .= $encode[$code[$i]];
         }
         // checksum
         $code_ext .= $this->checksum_code93($code_ext);
@@ -736,7 +745,7 @@ abstract class BarcodeGenerator
         $k = 0;
         $clen = strlen($code);
         for ($i = 0; $i < $clen; ++$i) {
-            $char = ord($code{$i});
+            $char = ord($code[$i]);
             if ( ! isset($chr[$char])) {
                 throw new InvalidCharacterException('Char ' . $char . ' is unsupported');
             }
@@ -746,7 +755,7 @@ abstract class BarcodeGenerator
                 } else {
                     $t = false; // space
                 }
-                $w = $chr[$char]{$j};
+                $w = $chr[$char][$j];
                 $bararray['bcode'][$k] = array('t' => $t, 'w' => $w, 'h' => 1, 'p' => 0);
                 $bararray['maxw'] += $w;
                 ++$k;
@@ -817,13 +826,13 @@ abstract class BarcodeGenerator
             '?'
         );
         // translate special characters
-        $code = strtr($code, chr(128) . chr(131) . chr(129) . chr(130), '<=>?');
+        $code = strtr($code, pack("i", 128) . pack("i", 131) . pack("i", 129) . pack("i", 130), '<=>?');
         $len = strlen($code);
         // calculate check digit C
         $p = 1;
         $check = 0;
         for ($i = ($len - 1); $i >= 0; --$i) {
-            $k = array_keys($chars, $code{$i});
+            $k = array_keys($chars, $code[$i]);
             $check += ($k[0] * $p);
             ++$p;
             if ($p > 20) {
@@ -837,7 +846,7 @@ abstract class BarcodeGenerator
         $p = 1;
         $check = 0;
         for ($i = $len; $i >= 0; --$i) {
-            $k = array_keys($chars, $code{$i});
+            $k = array_keys($chars, $code[$i]);
             $check += ($k[0] * $p);
             ++$p;
             if ($p > 15) {
@@ -848,7 +857,7 @@ abstract class BarcodeGenerator
         $k = $chars[$check];
         $checksum = $c . $k;
         // resto respecial characters
-        $checksum = strtr($checksum, '<=>?', chr(128) . chr(131) . chr(129) . chr(130));
+        $checksum = strtr($checksum, '<=>?', pack("i", 128) . pack("i", 131) . pack("i", 129) . pack("i", 130));
 
         return $checksum;
     }
@@ -865,11 +874,11 @@ abstract class BarcodeGenerator
         $len = strlen($code);
         $sum = 0;
         for ($i = 0; $i < $len; $i += 2) {
-            $sum += $code{$i};
+            $sum += $code[$i];
         }
         $sum *= 3;
         for ($i = 1; $i < $len; $i += 2) {
-            $sum += ($code{$i});
+            $sum += ($code[$i]);
         }
         $r = $sum % 10;
         if ($r > 0) {
@@ -913,7 +922,7 @@ abstract class BarcodeGenerator
             $p = 2;
             $check = 0;
             for ($i = ($clen - 1); $i >= 0; --$i) {
-                $check += (hexdec($code{$i}) * $p);
+                $check += (hexdec($code[$i]) * $p);
                 ++$p;
                 if ($p > 7) {
                     $p = 2;
@@ -928,7 +937,7 @@ abstract class BarcodeGenerator
         $seq = '110'; // left guard
         $clen = strlen($code);
         for ($i = 0; $i < $clen; ++$i) {
-            $digit = $code{$i};
+            $digit = $code[$i];
             if ( ! isset($chr[$digit])) {
                 throw new InvalidCharacterException('Char ' . $digit . ' is unsupported');
             }
@@ -973,7 +982,7 @@ abstract class BarcodeGenerator
         $seq = '11011010';
         $clen = strlen($code);
         for ($i = 0; $i < $clen; ++$i) {
-            $digit = $code{$i};
+            $digit = $code[$i];
             if ( ! isset($chr[$digit])) {
                 throw new InvalidCharacterException('Char ' . $digit . ' is unsupported');
             }
@@ -1001,8 +1010,8 @@ abstract class BarcodeGenerator
         $k = 0;
         for ($i = 0; $i < $len; ++$i) {
             $w += 1;
-            if (($i == ($len - 1)) OR (($i < ($len - 1)) AND ($seq{$i} != $seq{($i + 1)}))) {
-                if ($seq{$i} == '1') {
+            if (($i == ($len - 1)) OR (($i < ($len - 1)) AND ($seq[$i] != $seq[($i + 1)]))) {
+                if ($seq[$i] == '1') {
                     $t = true; // bar
                 } else {
                     $t = false; // space
@@ -1056,8 +1065,8 @@ abstract class BarcodeGenerator
         $k = 0;
         $clen = strlen($code);
         for ($i = 0; $i < $clen; $i = ($i + 2)) {
-            $char_bar = $code{$i};
-            $char_space = $code{$i + 1};
+            $char_bar = $code[$i];
+            $char_space = $code[$i + 1];
             if ( ! isset($chr[$char_bar]) || ! isset($chr[$char_space])) {
                 throw new InvalidCharacterException();
             }
@@ -1065,7 +1074,7 @@ abstract class BarcodeGenerator
             $seq = '';
             $chrlen = strlen($chr[$char_bar]);
             for ($s = 0; $s < $chrlen; $s++) {
-                $seq .= $chr[$char_bar]{$s} . $chr[$char_space]{$s};
+                $seq .= $chr[$char_bar][$s] . $chr[$char_space][$s];
             }
             $seqlen = strlen($seq);
             for ($j = 0; $j < $seqlen; ++$j) {
@@ -1074,7 +1083,7 @@ abstract class BarcodeGenerator
                 } else {
                     $t = false; // space
                 }
-                $w = $seq{$j};
+                $w = $seq[$j];
                 $bararray['bcode'][$k] = array('t' => $t, 'w' => $w, 'h' => 1, 'p' => 0);
                 $bararray['maxw'] += $w;
                 ++$k;
@@ -1092,6 +1101,9 @@ abstract class BarcodeGenerator
      * @param $type (string) barcode type: A, B, C or empty for automatic switch (AUTO mode)
      * @return array barcode representation.
      * @protected
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function barcode_c128($code, $type = '')
     {
@@ -1207,12 +1219,12 @@ abstract class BarcodeGenerator
         );
         // ASCII characters for code A (ASCII 00 - 95)
         $keys_a = ' !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_';
-        $keys_a .= chr(0) . chr(1) . chr(2) . chr(3) . chr(4) . chr(5) . chr(6) . chr(7) . chr(8) . chr(9);
-        $keys_a .= chr(10) . chr(11) . chr(12) . chr(13) . chr(14) . chr(15) . chr(16) . chr(17) . chr(18) . chr(19);
-        $keys_a .= chr(20) . chr(21) . chr(22) . chr(23) . chr(24) . chr(25) . chr(26) . chr(27) . chr(28) . chr(29);
-        $keys_a .= chr(30) . chr(31);
+        $keys_a .= pack("i", 0) . pack("i", 1) . pack("i", 2) . pack("i", 3) . pack("i", 4) . pack("i", 5) . pack("i", 6) . pack("i", 7) . pack("i", 8) . pack("i", 9);
+        $keys_a .= pack("i", 10) . pack("i", 11) . pack("i", 12) . pack("i", 13) . pack("i", 14) . pack("i", 15) . pack("i", 16) . pack("i", 17) . pack("i", 18) . pack("i", 19);
+        $keys_a .= pack("i", 20) . pack("i", 21) . pack("i", 22) . pack("i", 23) . pack("i", 24) . pack("i", 25) . pack("i", 26) . pack("i", 27) . pack("i", 28) . pack("i", 29);
+        $keys_a .= pack("i", 30) . pack("i", 31);
         // ASCII characters for code B (ASCII 32 - 127)
-        $keys_b = ' !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~' . chr(127);
+        $keys_b = ' !"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~' . pack("i", 127);
         // special codes
         $fnc_a = array(241 => 102, 242 => 97, 243 => 96, 244 => 101);
         $fnc_b = array(241 => 102, 242 => 97, 243 => 96, 244 => 100);
@@ -1224,7 +1236,7 @@ abstract class BarcodeGenerator
             case 'A': { // MODE A
                 $startid = 103;
                 for ($i = 0; $i < $len; ++$i) {
-                    $char = $code{$i};
+                    $char = $code[$i];
                     $char_id = ord($char);
                     if (($char_id >= 241) AND ($char_id <= 244)) {
                         $code_data[] = $fnc_a[$char_id];
@@ -1239,7 +1251,7 @@ abstract class BarcodeGenerator
             case 'B': { // MODE B
                 $startid = 104;
                 for ($i = 0; $i < $len; ++$i) {
-                    $char = $code{$i};
+                    $char = $code[$i];
                     $char_id = ord($char);
                     if (($char_id >= 241) AND ($char_id <= 244)) {
                         $code_data[] = $fnc_b[$char_id];
@@ -1262,9 +1274,9 @@ abstract class BarcodeGenerator
                     throw new InvalidLengthException('Length must be even');
                 }
                 for ($i = 0; $i < $len; $i += 2) {
-                    $chrnum = $code{$i} . $code{$i + 1};
+                    $chrnum = $code[$i] . $code[$i + 1];
                     if (preg_match('/([0-9]{2})/', $chrnum) > 0) {
-                        $code_data[] = intval($chrnum);
+                        $code_data[] = (int)($chrnum);
                     } else {
                         throw new InvalidCharacterException();
                     }
@@ -1281,7 +1293,7 @@ abstract class BarcodeGenerator
                     $end_offset = 0;
                     foreach ($numseq[1] as $val) {
                         $offset = $val[1];
-                        
+
                         // numeric sequence
                         $slen = strlen($val[0]);
                         if (($slen % 2) != 0) {
@@ -1289,7 +1301,7 @@ abstract class BarcodeGenerator
                             ++$offset;
                             $val[0] = substr($val[0],1);
                         }
-                        
+
                         if ($offset > $end_offset) {
                             // non numeric sequence
                             $sequence = array_merge($sequence,
@@ -1328,7 +1340,7 @@ abstract class BarcodeGenerator
                                 }
                             }
                             for ($i = 0; $i < $seq[2]; ++$i) {
-                                $char = $seq[1]{$i};
+                                $char = $seq[1][$i];
                                 $char_id = ord($char);
                                 if (($char_id >= 241) AND ($char_id <= 244)) {
                                     $code_data[] = $fnc_a[$char_id];
@@ -1371,7 +1383,7 @@ abstract class BarcodeGenerator
                                 }
                             }
                             for ($i = 0; $i < $seq[2]; ++$i) {
-                                $char = $seq[1]{$i};
+                                $char = $seq[1][$i];
                                 $char_id = ord($char);
                                 if (($char_id >= 241) AND ($char_id <= 244)) {
                                     $code_data[] = $fnc_b[$char_id];
@@ -1388,8 +1400,8 @@ abstract class BarcodeGenerator
                                 $code_data[] = 99;
                             }
                             for ($i = 0; $i < $seq[2]; $i += 2) {
-                                $chrnum = $seq[1]{$i} . $seq[1]{$i + 1};
-                                $code_data[] = intval($chrnum);
+                                $chrnum = $seq[1][$i] . $seq[1][$i + 1];
+                                $code_data[] = (int)($chrnum);
                             }
                             break;
                         }
@@ -1419,7 +1431,7 @@ abstract class BarcodeGenerator
                 } else {
                     $t = false; // space
                 }
-                $w = $seq{$j};
+                $w = $seq[$j];
                 $bararray['bcode'][] = array('t' => $t, 'w' => $w, 'h' => 1, 'p' => 0);
                 $bararray['maxw'] += $w;
             }
@@ -1480,6 +1492,9 @@ abstract class BarcodeGenerator
      * @param $len (string) barcode type: 6 = UPC-E, 8 = EAN8, 13 = EAN13, 12 = UPC-A
      * @return array barcode representation.
      * @protected
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function barcode_eanupc($code, $len = 13)
     {
@@ -1495,14 +1510,14 @@ abstract class BarcodeGenerator
         // calculate check digit
         $sum_a = 0;
         for ($i = 1; $i < $data_len; $i += 2) {
-            $sum_a += $code{$i};
+            $sum_a += $code[$i];
         }
         if ($len > 12) {
             $sum_a *= 3;
         }
         $sum_b = 0;
         for ($i = 0; $i < $data_len; $i += 2) {
-            $sum_b += ($code{$i});
+            $sum_b += ($code[$i]);
         }
         if ($len < 13) {
             $sum_b *= 3;
@@ -1514,7 +1529,7 @@ abstract class BarcodeGenerator
         if ($code_len == $data_len) {
             // add check digit
             $code .= $r;
-        } elseif ($r !== intval($code{$data_len})) {
+        } elseif ($r !== (int)($code[$data_len])) {
             throw new InvalidCheckDigitException();
         }
         if ($len == 12) {
@@ -1627,28 +1642,28 @@ abstract class BarcodeGenerator
             $bararray = array('code' => $upce_code, 'maxw' => 0, 'maxh' => 1, 'bcode' => array());
             $p = $upce_parities[$code[1]][$r];
             for ($i = 0; $i < 6; ++$i) {
-                $seq .= $codes[$p[$i]][$upce_code{$i}];
+                $seq .= $codes[$p[$i]][$upce_code[$i]];
             }
             $seq .= '010101'; // right guard bar
         } else {
             $bararray = array('code' => $code, 'maxw' => 0, 'maxh' => 1, 'bcode' => array());
-            $half_len = intval(ceil($len / 2));
+            $half_len = (int)(ceil($len / 2));
             if ($len == 8) {
                 for ($i = 0; $i < $half_len; ++$i) {
-                    $seq .= $codes['A'][$code{$i}];
+                    $seq .= $codes['A'][$code[$i]];
                 }
             } else {
                 $p = $parities[$code[0]];
                 for ($i = 1; $i < $half_len; ++$i) {
-                    $seq .= $codes[$p[$i - 1]][$code{$i}];
+                    $seq .= $codes[$p[$i - 1]][$code[$i]];
                 }
             }
             $seq .= '01010'; // center guard bar
             for ($i = $half_len; $i < $len; ++$i) {
-                if ( ! isset($codes['C'][$code{$i}])) {
-                    throw new InvalidCharacterException('Char ' . $code{$i} . ' not allowed');
+                if ( ! isset($codes['C'][$code[$i]])) {
+                    throw new InvalidCharacterException('Char ' . $code[$i] . ' not allowed');
                 }
-                $seq .= $codes['C'][$code{$i}];
+                $seq .= $codes['C'][$code[$i]];
             }
             $seq .= '101'; // right guard bar
         }
@@ -1656,8 +1671,8 @@ abstract class BarcodeGenerator
         $w = 0;
         for ($i = 0; $i < $clen; ++$i) {
             $w += 1;
-            if (($i == ($clen - 1)) OR (($i < ($clen - 1)) AND ($seq{$i} != $seq{($i + 1)}))) {
-                if ($seq{$i} == '1') {
+            if (($i == ($clen - 1)) OR (($i < ($clen - 1)) AND ($seq[$i] != $seq[($i + 1)]))) {
+                if ($seq[$i] == '1') {
                     $t = true; // bar
                 } else {
                     $t = false; // space
@@ -1746,7 +1761,7 @@ abstract class BarcodeGenerator
         $seq .= $codes[$p[0]][$code[0]];
         for ($i = 1; $i < $len; ++$i) {
             $seq .= '01'; // separator
-            $seq .= $codes[$p[$i]][$code{$i}];
+            $seq .= $codes[$p[$i]][$code[$i]];
         }
         $bararray = array('code' => $code, 'maxw' => 0, 'maxh' => 1, 'bcode' => array());
 
@@ -1801,7 +1816,7 @@ abstract class BarcodeGenerator
         // calculate checksum
         $sum = 0;
         for ($i = 0; $i < $len; ++$i) {
-            $sum += intval($code{$i});
+            $sum += (int)($code[$i]);
         }
         $chkd = ($sum % 10);
         if ($chkd > 0) {
@@ -1815,7 +1830,7 @@ abstract class BarcodeGenerator
         $bararray['maxw'] += 2;
         for ($i = 0; $i < $len; ++$i) {
             for ($j = 0; $j < 5; ++$j) {
-                $h = $barlen[$code{$i}][$j];
+                $h = $barlen[$code[$i]][$j];
                 $p = floor(1 / $h);
                 $bararray['bcode'][$k++] = array('t' => 1, 'w' => 1, 'h' => $h, 'p' => $p);
                 $bararray['bcode'][$k++] = array('t' => 0, 'w' => 1, 'h' => 2, 'p' => 0);
@@ -1839,6 +1854,8 @@ abstract class BarcodeGenerator
      *     - in this case the house number must be sufficed with an X and placed at the end of the code.
      * @return array barcode representation.
      * @protected
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function barcode_rms4cc($code, $kix = false)
     {
@@ -1932,8 +1949,8 @@ abstract class BarcodeGenerator
             $row = 0;
             $col = 0;
             for ($i = 0; $i < $len; ++$i) {
-                $row += $checktable[$code{$i}][0];
-                $col += $checktable[$code{$i}][1];
+                $row += $checktable[$code[$i]][0];
+                $col += $checktable[$code[$i]][1];
             }
             $row %= 6;
             $col %= 6;
@@ -1950,7 +1967,7 @@ abstract class BarcodeGenerator
         }
         for ($i = 0; $i < $len; ++$i) {
             for ($j = 0; $j < 4; ++$j) {
-                switch ($barmode[$code{$i}][$j]) {
+                switch ($barmode[$code[$i]][$j]) {
                     case 1: {
                         $p = 0;
                         $h = 2;
@@ -2025,17 +2042,17 @@ abstract class BarcodeGenerator
         $code = 'A' . strtoupper($code) . 'A';
         $len = strlen($code);
         for ($i = 0; $i < $len; ++$i) {
-            if ( ! isset($chr[$code{$i}])) {
-                throw new InvalidCharacterException('Char ' . $code{$i} . ' is unsupported');
+            if ( ! isset($chr[$code[$i]])) {
+                throw new InvalidCharacterException('Char ' . $code[$i] . ' is unsupported');
             }
-            $seq = $chr[$code{$i}];
+            $seq = $chr[$code[$i]];
             for ($j = 0; $j < 8; ++$j) {
                 if (($j % 2) == 0) {
                     $t = true; // bar
                 } else {
                     $t = false; // space
                 }
-                $w = $seq{$j};
+                $w = $seq[$j];
                 $bararray['bcode'][$k] = array('t' => $t, 'w' => $w, 'h' => 1, 'p' => 0);
                 $bararray['maxw'] += $w;
                 ++$k;
@@ -2052,6 +2069,8 @@ abstract class BarcodeGenerator
      * @param $code (string) code to represent.
      * @return array barcode representation.
      * @protected
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function barcode_code11($code)
     {
@@ -2078,11 +2097,11 @@ abstract class BarcodeGenerator
         $p = 1;
         $check = 0;
         for ($i = ($len - 1); $i >= 0; --$i) {
-            $digit = $code{$i};
+            $digit = $code[$i];
             if ($digit == '-') {
                 $dval = 10;
             } else {
-                $dval = intval($digit);
+                $dval = (int)($digit);
             }
             $check += ($dval * $p);
             ++$p;
@@ -2100,11 +2119,11 @@ abstract class BarcodeGenerator
             $p = 1;
             $check = 0;
             for ($i = $len; $i >= 0; --$i) {
-                $digit = $code{$i};
+                $digit = $code[$i];
                 if ($digit == '-') {
                     $dval = 10;
                 } else {
-                    $dval = intval($digit);
+                    $dval = (int)($digit);
                 }
                 $check += ($dval * $p);
                 ++$p;
@@ -2119,17 +2138,17 @@ abstract class BarcodeGenerator
         $code = 'S' . $code . 'S';
         $len += 3;
         for ($i = 0; $i < $len; ++$i) {
-            if ( ! isset($chr[$code{$i}])) {
-                throw new InvalidCharacterException('Char ' . $code{$i} . ' is unsupported');
+            if ( ! isset($chr[$code[$i]])) {
+                throw new InvalidCharacterException('Char ' . $code[$i] . ' is unsupported');
             }
-            $seq = $chr[$code{$i}];
+            $seq = $chr[$code[$i]];
             for ($j = 0; $j < 6; ++$j) {
                 if (($j % 2) == 0) {
                     $t = true; // bar
                 } else {
                     $t = false; // space
                 }
-                $w = $seq{$j};
+                $w = $seq[$j];
                 $bararray['bcode'][$k] = array('t' => $t, 'w' => $w, 'h' => 1, 'p' => 0);
                 $bararray['maxw'] += $w;
                 ++$k;
@@ -2150,7 +2169,7 @@ abstract class BarcodeGenerator
     public function barcode_pharmacode($code)
     {
         $seq = '';
-        $code = intval($code);
+        $code = (int)($code);
         while ($code > 0) {
             if (($code % 2) == 0) {
                 $seq .= '11100';
@@ -2179,7 +2198,7 @@ abstract class BarcodeGenerator
     public function barcode_pharmacode2t($code)
     {
         $seq = '';
-        $code = intval($code);
+        $code = (int)($code);
         do {
             switch ($code % 3) {
                 case 0: {
@@ -2204,7 +2223,7 @@ abstract class BarcodeGenerator
         $bararray = array('code' => $code, 'maxw' => 0, 'maxh' => 2, 'bcode' => array());
         $len = strlen($seq);
         for ($i = 0; $i < $len; ++$i) {
-            switch ($seq{$i}) {
+            switch ($seq[$i]) {
                 case '1': {
                     $p = 1;
                     $h = 1;
@@ -2257,6 +2276,9 @@ abstract class BarcodeGenerator
      *     (BarcodeID_ServiceTypeID_MailerID_SerialNumber-RoutingCode)
      * @return array barcode representation.
      * @protected
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function barcode_imb($code)
     {
@@ -2732,7 +2754,7 @@ abstract class BarcodeGenerator
         $bitval = 1;
         $len = strlen($hex);
         for ($pos = ($len - 1); $pos >= 0; --$pos) {
-            $dec = bcadd($dec, bcmul(hexdec($hex{$pos}), $bitval));
+            $dec = bcadd($dec, bcmul(hexdec($hex[$pos]), $bitval));
             $bitval = bcmul($bitval, 16);
         }
 
@@ -2813,7 +2835,7 @@ abstract class BarcodeGenerator
         for ($count = 0; $count < 8192; ++$count) {
             $bit_count = 0;
             for ($bit_index = 0; $bit_index < 13; ++$bit_index) {
-                $bit_count += intval(($count & (1 << $bit_index)) != 0);
+                $bit_count += (int)(($count & (1 << $bit_index)) != 0);
             }
             // if we don't have the right number of bits on, go on to the next value
             if ($bit_count == $n) {

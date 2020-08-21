@@ -451,4 +451,123 @@
         </arguments>
     </type>
     <!-- End: Magestore logger -->
+
+    <!-- Elastic search index data -->
+    <type name="Magento\Elasticsearch\Model\Adapter\BatchDataMapper\DataMapperFactory">
+        <arguments>
+            <argument name="dataMappers" xsi:type="array">
+                <item name="webpos_productsearch_fulltext" xsi:type="string">Magestore\Webpos\Model\Adapter\BatchDataMapper\ProductDataMapper</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magestore\Webpos\Model\Adapter\DataMapper\AdditionalFieldsProvider">
+        <arguments>
+            <argument name="fieldsProviders" xsi:type="array">
+                <item name="barcodes" xsi:type="object">Magestore\Webpos\Model\Adapter\BatchDataMapper\BarcodeFieldsProvider</item>
+                <item name="stock_id" xsi:type="object">Magestore\Webpos\Model\Adapter\BatchDataMapper\StockIdFieldsProvider</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Elasticsearch\Model\Adapter\FieldMapper\FieldMapperResolver">
+        <arguments>
+            <argument name="fieldMappers" xsi:type="array">
+                <item name="webpos_productsearch_fulltext" xsi:type="string">Magestore\Webpos\Model\Adapter\FieldMapper\ProductFieldMapperProxy</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magestore\Webpos\Model\Adapter\FieldMapper\ProductFieldMapperProxy">
+        <arguments>
+            <argument name="productFieldMappers" xsi:type="array">
+                <item name="elasticsearch7" xsi:type="object">Magestore\Webpos\Model\Adapter\FieldMapper\ProductFieldMapper</item>
+                <item name="elasticsearch6" xsi:type="object">Magestore\Webpos\Model\Adapter\FieldMapper\ProductFieldMapper</item>
+                <item name="elasticsearch5" xsi:type="object">Magestore\Webpos\Model\Adapter\FieldMapper\ProductFieldMapper</item>
+                <item name="elasticsearch" xsi:type="object">Magestore\Webpos\Model\Adapter\FieldMapper\ProductFieldMapper</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magestore\Webpos\Model\Adapter\FieldMapper\ProductFieldMapper">
+        <arguments>
+            <argument name="fieldProvider" xsi:type="object">elasticsearchPosProductFieldProvider</argument>
+            <argument name="fieldNameResolver" xsi:type="object">elasticsearch5FieldNameResolver</argument>
+        </arguments>
+    </type>
+    <virtualType name="elasticsearchPosProductFieldProvider" type="Magento\Elasticsearch\Model\Adapter\FieldMapper\Product\CompositeFieldProvider">
+        <arguments>
+            <argument name="providers" xsi:type="array">
+                <item name="static" xsi:type="object">Magestore\Webpos\Model\Adapter\FieldMapper\Product\FieldProvider\StaticField</item>
+                <item name="dynamic" xsi:type="object">Magestore\Webpos\Model\Adapter\FieldMapper\Product\FieldProvider\DynamicField</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Magestore\Webpos\Model\Adapter\FieldMapper\Product\FieldProvider\StaticField">
+        <arguments>
+            <argument name="fieldTypeConverter" xsi:type="object">Magento\Elasticsearch\Elasticsearch5\Model\Adapter\FieldMapper\Product\FieldProvider\FieldType\Converter</argument>
+            <argument name="indexTypeConverter" xsi:type="object">Magento\Elasticsearch\Elasticsearch5\Model\Adapter\FieldMapper\Product\FieldProvider\FieldIndex\Converter</argument>
+            <argument name="fieldIndexResolver" xsi:type="object">Magento\Elasticsearch\Elasticsearch5\Model\Adapter\FieldMapper\Product\FieldProvider\FieldIndex\IndexResolver</argument>
+            <argument name="fieldTypeResolver" xsi:type="object">Magento\Elasticsearch\Elasticsearch5\Model\Adapter\FieldMapper\Product\FieldProvider\FieldType\Resolver\CompositeResolver</argument>
+            <argument name="fieldNameResolver" xsi:type="object">elasticsearch5FieldNameResolver</argument>
+        </arguments>
+    </type>
+<!--    <type name="Magestore\Webpos\Model\Indexer\Fulltext">-->
+<!--        <arguments>-->
+<!--            <argument name="dimensionProvider" xsi:type="object" shared="false">Magento\Store\Model\StoreDimensionProvider</argument>-->
+<!--        </arguments>-->
+<!--    </type>-->
+    <!-- Init IndexerHandler by engine -->
+    <type name="Magestore\Webpos\Model\Indexer\IndexerHandlerFactory">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="elasticsearch7" xsi:type="string">Magestore\Webpos\Model\Indexer\IndexerHandler</item>
+                <item name="elasticsearch6" xsi:type="string">Magestore\Webpos\Model\Indexer\IndexerHandler</item>
+                <item name="elasticsearch5" xsi:type="string">Magestore\Webpos\Model\Indexer\IndexerHandler</item>
+                <item name="elasticsearch" xsi:type="string">Magestore\Webpos\Model\Indexer\IndexerHandler</item>
+            </argument>
+        </arguments>
+    </type>
+    <!-- Declare IndexStructure for elastic search -->
+    <type name="Magestore\Webpos\Model\Indexer\IndexStructureFactory">
+        <arguments>
+            <argument name="structures" xsi:type="array">
+                <item name="elasticsearch7" xsi:type="string">Magestore\Webpos\Model\Indexer\IndexStructure</item>
+                <item name="elasticsearch6" xsi:type="string">Magestore\Webpos\Model\Indexer\IndexStructure</item>
+                <item name="elasticsearch5" xsi:type="string">Magestore\Webpos\Model\Indexer\IndexStructure</item>
+                <item name="elasticsearch" xsi:type="string">Magestore\Webpos\Model\Indexer\IndexStructure</item>
+            </argument>
+        </arguments>
+    </type>
+    <!-- Plugin to change visibility allow for pos elastic search data -->
+    <type name="Magento\Elasticsearch\Model\ResourceModel\Engine">
+        <plugin name="change_visibility_allow_for_pos_elastic_search_data" type="Magestore\Webpos\Plugin\Elasticsearch\Model\ResourceModel\Engine" sortOrder="1" disabled="false"/>
+    </type>
+    <!-- End: Elastic search index data -->
+    <type name="Magento\Elasticsearch\SearchAdapter\Aggregation\Builder">
+        <arguments>
+            <argument name="dataProviderContainer" xsi:type="array">
+                <item name="webpos_productsearch_fulltext" xsi:type="object">Magento\Elasticsearch\SearchAdapter\Dynamic\DataProvider</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <preference for="Magento\Framework\Filesystem\DriverInterface" type="Magento\Framework\Filesystem\Driver\File" />
+    <preference for="Magestore\Webpos\Api\Sales\OrderManagement\AppendReservationsAfterOrderPlacementInterface" type="Magestore\Webpos\Model\Sales\OrderManagement\AppendReservationsAfterOrderPlacement" />
+
+    <type name="Magento\Catalog\Model\Indexer\Product\Price">
+        <plugin name="skip_hide_option_custom_sale" type="Magestore\Webpos\Plugin\Indexer\Product\Price" sortOrder="1" disabled="false"/>
+    </type>
+    <!-- Invalid webpos search index when source changes -->
+    <!-- Update webpos_search_product indexer -->
+    <type name="Magento\InventoryApi\Api\SourceRepositoryInterface">
+        <plugin name="invalidate_webpos_search_after_enabling_or_disabling_source" type="Magestore\Webpos\Plugin\InventoryApi\InvalidateAfterEnablingOrDisablingSourcePlugin"/>
+    </type>
+    <type name="Magento\InventoryApi\Api\StockSourceLinksDeleteInterface">
+        <plugin name="invalidate_webpos_search_after_stock_source_links_delete" type="Magestore\Webpos\Plugin\InventoryApi\InvalidateAfterStockSourceLinksDeletePlugin"/>
+    </type>
+    <type name="Magento\InventoryApi\Api\StockSourceLinksSaveInterface">
+        <plugin name="invalidate_webpos_search_after_stock_source_links_save" type="Magestore\Webpos\Plugin\InventoryApi\InvalidateAfterStockSourceLinksSavePlugin"/>
+    </type>
+    <type name="Magento\Inventory\Model\ResourceModel\SourceItem\SaveMultiple">
+        <plugin name="reindex_list_when_source_item_is_added_to_new_source" type="Magestore\Webpos\Plugin\Inventory\Model\ResourceModel\SourceItem\SaveMultiple" sortOrder="1" disabled="false"/>
+    </type>
+    <!-- End: Update webpos_search_product indexer -->
 </config>

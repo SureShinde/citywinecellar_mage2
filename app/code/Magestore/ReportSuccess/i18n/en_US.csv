@@ -3,7 +3,7 @@
 "View current stock levels, avg. cost and total stock value.","View current stock levels, avg. cost and total stock value."
 "Stock Details","Stock Details"
 "View Qty. on-hand, Qty. Available, Qty. to ship and Qty. on order","View Qty. on-hand, Qty. Available, Qty. to ship and Qty. on order"
-"Stock by Warehouse","Stock by Warehouse"
+"Stock by Source","Stock by Source"
 "Compare stock levels between warehouse","Compare stock levels between warehouse"
 "Incoming Stock","Incoming Stock"
 "View PO list of incoming stock and their cost","View PO list of incoming stock and their cost"
@@ -25,6 +25,7 @@ Customer,Customer
 "Stock Value Report","Stock Value Report"
 "Historical Stock Report","Historical Stock Report"
 "Stock by Warehouse Report","Stock by Warehouse Report"
+"Stock by Source Report","Stock by Source Report"
 "Stock Details Report","Stock Details Report"
 "Your request has been submitted","Your request has been submitted"
 Reports,Reports
@@ -94,5 +95,15 @@ Configuration,Configuration
 "Qty to Ship","Qty to Ship"
 "Cost (Moving Average Cost)","Cost (Moving Average Cost)"
 "Price","Price"
+"Location Breakdown","Location Breakdown"
+"Export stock levels, avg.cost and stock value from a past date","Export stock levels, avg.cost and stock value from a past date"
+"Incoming Stock","Incoming Stock"
+"View PO list of incoming stock and their cost","View PO list of incoming stock and their cost"
+"Stock by Warehouse","Stock by Warehouse"
+"Compare stock levels between warehouse","Compare stock levels between warehouse"
+"Stock Details","Stock Details"
+"View Qty. on-hand, Qty. Available, Qty. to ship and Qty. on order","View Qty. on-hand, Qty. Available, Qty. to ship and Qty. on order"
+"Stock Value","Stock Value"
+"View current stock levels, avg. cost and total stock value","View current stock levels, avg. cost and total stock value"
 
 

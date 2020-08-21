@@ -1,10 +1,9 @@
 <?php
-
 /**
  *
  */
-namespace Magestore\Webpos\Test\Api\SyncProducts;
 
+namespace Magestore\Webpos\Test\Api\SyncProducts;
 
 use Magento\Framework\Api\SearchCriteria;
 use Magento\Framework\Webapi\Rest\Request as RestRequest;
@@ -16,6 +15,9 @@ use Magento\Framework\Webapi\Exception;
 use Magestore\Webpos\Test\Api\GetSessionTrait;
 use Magestore\Webpos\Test\Constant\Product;
 
+/**
+ * Api test SyncProductsTest
+ */
 class SyncProductsTest extends WebapiAbstract
 {
     use GetSessionTrait;
@@ -26,21 +28,17 @@ class SyncProductsTest extends WebapiAbstract
     const RESOURCE_PATH = '/V1/webpos/products/sync';
     const SERVICE_NAME = 'productsSyncRepositoryV1';
 
-    /**
-     * @var
-     */
     protected $posSession;
 
     protected $apiName = "syncProducts";
 
     /**
-     * @return false|string
+     * Setup
      */
-    protected function setUp()
+    protected function setUp() : void // phpcs:ignore
     {
         $this->posSession = $this->loginAndAssignPos();
     }
-
 
     /**
      * Test Case SP1 - No items need to sync from sample data
@@ -48,7 +46,8 @@ class SyncProductsTest extends WebapiAbstract
     public function testCase6()
     {
         /* change conditions to get all*/
-        $listSkus  = array (Product::SKU_1,
+        $listSkus = [
+            Product::SKU_1,
             Product::SKU_2,
             Product::SKU_3,
             Product::SKU_4,
@@ -59,8 +58,9 @@ class SyncProductsTest extends WebapiAbstract
             Product::SKU_9,
             Product::SKU_10,
             Product::SKU_11,
-            Product::SKU_12);
-        $listSkus  = implode(',',$listSkus);
+            Product::SKU_12
+        ];
+        $listSkus = implode(',', $listSkus);
         $requestData = [
             'searchCriteria' => [
                 SearchCriteria::FILTER_GROUPS => [
@@ -90,10 +90,10 @@ class SyncProductsTest extends WebapiAbstract
         AssertArrayContains::assert($requestData['searchCriteria'], $response['search_criteria']);
 
         /* check totalcount = 0 */
-        self::assertEquals($expectedTotalCount, $response['total_count'] , $message);
+        self::assertEquals($expectedTotalCount, $response['total_count'], $message);
 
         /* check list_items is null or empty */
-        self::assertEmpty($response['items'] , $message);
+        self::assertEmpty($response['items'], $message);
     }
 
     /**
@@ -101,7 +101,8 @@ class SyncProductsTest extends WebapiAbstract
      */
     public function testCase7()
     {
-        $listSkus  = array (Product::SKU_1,
+        $listSkus = [
+            Product::SKU_1,
             Product::SKU_2,
             Product::SKU_3,
             Product::SKU_4,
@@ -115,8 +116,9 @@ class SyncProductsTest extends WebapiAbstract
             Product::SKU_12,
             Product::SKU_13,
             Product::SKU_14,
-            Product::SKU_15);
-        $listSkus  = implode(',',$listSkus);
+            Product::SKU_15
+        ];
+        $listSkus = implode(',', $listSkus);
         $requestData = [
             'searchCriteria' => [
                 SearchCriteria::FILTER_GROUPS => [
@@ -135,20 +137,19 @@ class SyncProductsTest extends WebapiAbstract
             ],
         ];
         $expectedTotalCount = 3;
-        $response =  $this->getResponseAPI($requestData);
+        $response = $this->getResponseAPI($requestData);
 
         $message = "API getSyncProduct fail at testcase SP7";
         $this->assertNotNull($response, $message);
-
 
         /* check search_criteria */
         AssertArrayContains::assert($requestData['searchCriteria'], $response['search_criteria']);
 
         /* check totalcount = 3 */
-        self::assertEquals($expectedTotalCount, $response['total_count'] , $message);
+        self::assertEquals($expectedTotalCount, $response['total_count'], $message);
 
         /* check list_items is not empty */
-        self::assertNotEmpty($response['items'] , $message);
+        self::assertNotEmpty($response['items'], $message);
 
         $expectedItemsData = [
             [
@@ -195,5 +196,4 @@ class SyncProductsTest extends WebapiAbstract
         $this->testCaseId = "SP10";
         $this->sessionCase3();
     }
-
 }

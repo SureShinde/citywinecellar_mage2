@@ -24,13 +24,15 @@ var config = {
         '*': {
             'productCredit': 'Magestore_Customercredit/js/product-credit',
             'sendCreditToFriend': 'Magestore_Customercredit/js/send-to-friend',
-            'shareCredit': 'Magestore_Customercredit/js/account/share-credit'
+            'shareCredit': 'Magestore_Customercredit/js/account/share-credit',
+            'cartCustomerCredit': 'Magestore_Customercredit/js/view/cart/customer-credit'
         }
     },
     paths: {
         'productCredit': 'Magestore_Customercredit/js/product-credit',
         'sendCreditToFriend': 'Magestore_Customercredit/js/send-to-friend',
-        'shareCredit': 'Magestore_Customercredit/js/account/share-credit'
+        'shareCredit': 'Magestore_Customercredit/js/account/share-credit',
+        'cartCustomerCredit': 'Magestore_Customercredit/js/view/cart/customer-credit'
     },
     shim: {
         // 'productCredit': {

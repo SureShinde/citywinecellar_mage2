@@ -8,19 +8,36 @@ namespace Magestore\BarcodeSuccess\Ui\Component\Options;
 
 use Magento\Framework\Data\OptionSourceInterface;
 
+/**
+ * Class AbstractOption
+ *
+ * To create abstract option
+ */
 class AbstractOption implements OptionSourceInterface
 {
-    public function toOptionHash() {
-        return array(
-        );
+    /**
+     * To option hash
+     *
+     * @return array
+     */
+    public function toOptionHash()
+    {
+        return [];
     }
-    public function toOptionArray() {
-        $options = array();
+
+    /**
+     * To option array
+     *
+     * @return array
+     */
+    public function toOptionArray()
+    {
+        $options = [];
         foreach ($this->toOptionHash() as $value => $label) {
-            $options[] = array(
+            $options[] = [
                 'value' => $value,
                 'label' => $label,
-            );
+            ];
         }
         return $options;
     }

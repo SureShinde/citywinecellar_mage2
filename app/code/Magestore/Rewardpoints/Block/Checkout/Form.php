@@ -23,8 +23,9 @@ namespace Magestore\Rewardpoints\Block\Checkout;
 use Magento\Framework\Pricing\PriceCurrencyInterface;
 
 /**
- * Class Form
- * @package Magestore\Rewardpoints\Block\Checkout
+ * Reward points - Checkout form block
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Form extends \Magento\Payment\Block\Form
 {
@@ -91,9 +92,10 @@ class Form extends \Magento\Payment\Block\Form
      * @var \Magento\Framework\Session\SessionManager
      */
     protected $_sessionManager;
+
     /**
      * Form constructor.
-     * @param \Magento\Framework\ObjectManagerInterface $objectManager
+     *
      * @param \Magento\Framework\View\Element\Template\Context $context
      * @param \Magestore\Rewardpoints\Helper\Point $helperPoint
      * @param \Magestore\Rewardpoints\Helper\Data $helperData
@@ -102,11 +104,12 @@ class Form extends \Magento\Payment\Block\Form
      * @param \Magestore\Rewardpoints\Helper\Calculation\Spending $helperSpending
      * @param \Magento\Checkout\Model\SessionFactory $checkoutSessionFactory
      * @param \Magento\Directory\Model\CurrencyFactory $currencyFactory
-     * @param \Magento\Framework\App\RequestInterface $request
      * @param \Magento\Customer\Model\SessionFactory $customerSessionFactory
      * @param PriceCurrencyInterface $priceCurrency
      * @param \Magestore\Rewardpoints\Helper\Block\Spend $blockSpend
+     * @param \Magento\Framework\Session\SessionManager $sessionManager
      * @param array $data
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
@@ -122,8 +125,7 @@ class Form extends \Magento\Payment\Block\Form
         \Magestore\Rewardpoints\Helper\Block\Spend $blockSpend,
         \Magento\Framework\Session\SessionManager $sessionManager,
         array $data = []
-    )
-    {
+    ) {
         parent::__construct($context, $data);
         $this->_helperPoint = $helperPoint;
         $this->_helperEarning = $helperEarning;
@@ -140,8 +142,11 @@ class Form extends \Magento\Payment\Block\Form
     }
 
     /**
-     * @param null $storeId
+     * Get Store
+     *
+     * @param null|string|int $storeId
      * @return \Magento\Store\Api\Data\StoreInterface
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getStore($storeId = null)
     {
@@ -149,7 +154,8 @@ class Form extends \Magento\Payment\Block\Form
     }
 
     /**
-     * @return \Magento\Framework\App\ActionFlag|
+     * Get Helper Earning
+     *
      * @return \Magestore\Rewardpoints\Helper\Calculation\Earning
      */
     public function getHelperEarning()
@@ -158,6 +164,8 @@ class Form extends \Magento\Payment\Block\Form
     }
 
     /**
+     * Get Reward points Data
+     *
      * @return array
      */
     public function getRewardpointsData()
@@ -169,23 +177,37 @@ class Form extends \Magento\Payment\Block\Form
             $earningLabel = __('Customer will earn');
             $spendingLabel = __('Customer will spend');
         } elseif (!$this->_customerSessionFactory->create()->isLoggedIn()) {
-            if ($this->_helperData->isModuleOutputEnabled('Magestore_Onestepcheckout') && $this->_request->getModuleName() == 'onestepcheckout') {
-                $earningLabel = "<a href='javascript:void(0);' onclick='login_popup.show();'>" . __('Login') . "</a> " . __('to earn');
+            if ($this->_helperData->isModuleOutputEnabled('Magestore_Onestepcheckout')
+                && $this->_request->getModuleName() == 'onestepcheckout'
+            ) {
+                $earningLabel = "<a href='javascript:void(0);' onclick='login_popup.show();'>"
+                    . __('Login')
+                    . "</a> "
+                    . __('to earn');
             } else {
                 $this->_sessionManager->setData('redirect', $this->_urlBuilder->getCurrentUrl());
-                $earningLabel = "<a href='" . $this->getUrl('rewardpoints/index/redirectLogin') . "'>" . __('Login') . "</a> " . __('to earn');
+                $earningLabel = "<a href='" . $this->getUrl('rewardpoints/index/redirectLogin') . "'>"
+                    . __('Login')
+                    . "</a> "
+                    . __('to earn');
             }
         }
-//        $this->_checkoutSessionFactory->create()->getQuote()->setTotalsCollectedFlag(false)->collectTotals()->save();
-        $rewardPointDiscount = strip_tags($this->_helperData->convertAndFormat(-$this->_checkoutSessionFactory->create()->getQuote()->getRewardpointsBaseDiscount()));
+        // $this->_checkoutSessionFactory->create()->getQuote()->setTotalsCollectedFlag(false)->collectTotals()->save();
+        $rewardPointDiscount = strip_tags(
+            $this->_helperData->convertAndFormat(
+                -$this->_checkoutSessionFactory->create()->getQuote()->getRewardpointsBaseDiscount()
+            )
+        );
 
-        $result = array();
+        $result = [];
         $result['enableReward'] = $this->_blockSpend->enableReward();
         $result['displayEarning'] = $this->getEarningPoint() > 0;
         $result['rewardpointsEarning'] = $this->_helperPoint->format($this->getEarningPoint());
         $result['displaySpending'] = $this->getSpendingPoint() > 0;
         $result['rewardpointsSpending'] = $this->_helperPoint->format($this->getSpendingPoint());
-        $result['displayUsePoint'] = $this->_checkoutSessionFactory->create()->getQuote()->getRewardpointsBaseDiscount() ? $this->_checkoutSessionFactory->create()->getQuote()->getRewardpointsBaseDiscount() : 0;
+        $result['displayUsePoint'] =
+            $this->_checkoutSessionFactory->create()->getQuote()->getRewardpointsBaseDiscount() ?
+                $this->_checkoutSessionFactory->create()->getQuote()->getRewardpointsBaseDiscount() : 0;
         $result['rewardpointsUsePoint'] = $rewardPointDiscount;
         $result['earningLabel'] = $earningLabel;
         $result['spendingLabel'] = $spendingLabel;
@@ -193,22 +215,27 @@ class Form extends \Magento\Payment\Block\Form
     }
 
     /**
+     * Get Earning Point
+     *
      * @return int
      */
     public function getEarningPoint()
     {
-        if ($this->_helperSpending->getTotalPointSpent() && !$this->_helperData->getEarningConfig('earn_when_spend', $this->_storeManager->getStore()->getId())) {
+        if ($this->_helperSpending->getTotalPointSpent()
+            && !$this->_helperData->getEarningConfig('earn_when_spend', $this->_storeManager->getStore()->getId())
+        ) {
             return 0;
         }
         return $this->_helperEarning->getTotalPointsEarning();
     }
 
     /**
+     * Get Spending Point
+     *
      * @return int
      */
     public function getSpendingPoint()
     {
-
         return $this->_helperSpending->getTotalPointSpent();
     }
 }

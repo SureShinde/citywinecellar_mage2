@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <!--Increase qty-->
+    <test name="AddVirtualProductWithoutCustomOptionToCartForIncreaseQtyTest">
+        <annotations>
+            <features value="Add product to cart"/>
+            <stories value="Add virtual product to cart"/>
+            <title value="Increase qty of virtual product without custom option in cart."/>
+            <description value="Add virtual product without custom option to cart, then qty of the same item in cart will increase."/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="AVP-02"/>
+            <group value="addVirtualProductWithoutOptionForIncreaseQty"/>
+            <group value="addVirtualProduct"/>
+            <group value="pwapos"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="ClearCart" stepKey="ClearCart">
+        </actionGroup>
+
+        <actionGroup ref="SearchAndClickProduct" stepKey="SearchAndClickProduct">
+            <argument name="dataProduct" value="pos_virtual_product"/>
+        </actionGroup>
+
+        <waitForElementVisible selector="{{CartSection.productFoundOnCartByName(pos_virtual_product.name)}}" time="120" stepKey="waitProductIsAddedToCartSuccessfully"/>
+
+        <click stepKey="clickOnProductFoundInListAgain" selector="{{ProductListSection.firstProduct}}"/>
+
+        <waitForElementVisible selector="{{CartSection.productQtyInCart(pos_virtual_product.name))}}" time="120" stepKey="waitProductIsAddedToCartSuccessfullySecondTime"/>
+
+        <grabTextFrom selector="{{CartSection.productQtyInCart(pos_virtual_product.name)}}" stepKey="grabQtyOfItem"/>
+        <assertEquals message="Product's qty is correct." stepKey="compareQty">
+            <expectedResult type="float">2</expectedResult>
+            <actualResult type="variable">grabQtyOfItem</actualResult>
+        </assertEquals>
+    </test>
+</tests>

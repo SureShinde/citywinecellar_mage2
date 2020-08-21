@@ -3,12 +3,14 @@
  *  Copyright © 2018 Magestore. All rights reserved.
  *  See COPYING.txt for license details.
  */
+
 namespace Magestore\PurchaseOrderSuccess\Model\ResourceModel\BackOrderProduct;
 
 use Magestore\PurchaseOrderSuccess\Api\Data\PurchaseOrderItemInterface;
+use Magento\Catalog\Model\Product\Attribute\Source\Status as ProductStatus;
+
 /**
- * Class Collection
- * @package Magestore\ReportSuccess\Model\ResourceModel\Product
+ * Backorder Product Collection
  */
 class Collection extends \Magento\Catalog\Model\ResourceModel\Product\Collection
 {
@@ -23,7 +25,10 @@ class Collection extends \Magento\Catalog\Model\ResourceModel\Product\Collection
         'product_supplier_sku' => 'supplier_product.product_supplier_sku',
         'cost' => 'supplier_product.cost',
     ];
+
     /**
+     * Init select
+     *
      * @return $this
      * @throws \Magento\Framework\Exception\LocalizedException
      */
@@ -54,27 +59,41 @@ class Collection extends \Magento\Catalog\Model\ResourceModel\Product\Collection
 
         $reservation = clone $this->getSelect();
 
-        $reservation->columns([
-            'reservation_qty' => new \Zend_Db_Expr('SUM(IFNULL(inventory_reservation.quantity,0))')])
-            ->joinInner(['inventory_reservation' => $this->getTable('inventory_reservation')],
+        $reservation->columns(
+            [
+                'reservation_qty' => new \Zend_Db_Expr('SUM(IFNULL(inventory_reservation.quantity,0))')
+            ]
+        )
+            ->joinInner(
+                ['inventory_reservation' => $this->getTable('inventory_reservation')],
                 'e.sku = inventory_reservation.sku',
-                null)->group('e.entity_id')->distinct(true);
+                null
+            )->group('e.entity_id')->distinct(true);
 
-        $this->getSelect()->columns([
-            'qty' => new \Zend_Db_Expr('SUM(IFNULL(inventory_source_item.quantity, 0)) + IFNULL(catalog_reservation.reservation_qty,0)')])
-            ->joinInner(['inventory_source_item' => $this->getTable('inventory_source_item')],
+        $this->getSelect()->columns(
+            [
+                'qty' => new \Zend_Db_Expr(
+                    'SUM(IFNULL(inventory_source_item.quantity, 0)) 
+                    + IFNULL(catalog_reservation.reservation_qty,0)'
+                )
+            ]
+        )
+            ->joinInner(
+                ['inventory_source_item' => $this->getTable('inventory_source_item')],
                 'e.sku = inventory_source_item.sku',
-                null)
-            ->joinLeft(['catalog_reservation' => $reservation],
+                null
+            )
+            ->joinLeft(
+                ['catalog_reservation' => $reservation],
                 'e.entity_id = catalog_reservation.entity_id',
-                null)
+                null
+            )
             ->group('e.entity_id')->distinct(true)
             ->having('qty < 0');
 
-
-        if($this->checkProductSource()) {
+        if ($this->checkProductSource()) {
             $this->getSelect()->joinInner(
-                array('supplier_product' => $this->getTable('os_supplier_product')),
+                ['supplier_product' => $this->getTable('os_supplier_product')],
                 'e.entity_id = supplier_product.product_id',
                 ['product_id', 'product_sku', 'product_supplier_sku', 'product_name', 'cost']
             );
@@ -84,24 +103,26 @@ class Collection extends \Magento\Catalog\Model\ResourceModel\Product\Collection
     }
 
     /**
-     * @param $supplierId
-     * @param $purchaseId
+     * Add Filter Supplier And Purchase
+     *
+     * @param int $supplierId
+     * @param int $purchaseId
      * @return $this
      */
     public function addFilterSupplierAndPurchase($supplierId, $purchaseId)
     {
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $purchaseItemService = $objectManager
-            ->get('Magestore\PurchaseOrderSuccess\Service\PurchaseOrder\Item\ItemService');
+            ->get(\Magestore\PurchaseOrderSuccess\Service\PurchaseOrder\Item\ItemService::class);
 
-        if($this->checkProductSource()) {
+        if ($this->checkProductSource()) {
             $this->getSelect()->where('supplier_product.supplier_id = ?', $supplierId);
         }
 
-        if($purchaseId){
+        if ($purchaseId) {
             $productIds = $purchaseItemService->getProductsByPurchaseOrderId($purchaseId)
                 ->getColumnValues(PurchaseOrderItemInterface::PRODUCT_ID);
-            if(!empty($productIds)){
+            if (!empty($productIds)) {
                 $this->getSelect()
                     ->where("e.entity_id NOT IN ('" . implode("','", $productIds) . "')");
             }
@@ -109,13 +130,17 @@ class Collection extends \Magento\Catalog\Model\ResourceModel\Product\Collection
 
         return $this;
     }
+
     /**
-     * @param null $key
+     * Get Mapping Field
+     *
      * @return array|mixed
      */
-    public function getMappingField(){
+    public function getMappingField()
+    {
         return $this->mappingField;
     }
+
     /**
      * Get collection size
      *
@@ -132,11 +157,14 @@ class Collection extends \Magento\Catalog\Model\ResourceModel\Product\Collection
             $result = $records->fetchAll();
             $this->_totalRecords = count($result);
         }
-        return intval($this->_totalRecords);
+        return (int)$this->_totalRecords;
     }
+
     /**
-     * @param mixed $field
-     * @param null $condition
+     * Add Field To Filter
+     *
+     * @param string $field
+     * @param string|array $condition
      * @return $this|\Magento\Framework\Data\Collection\AbstractDb
      */
     public function addFieldToFilter($field, $condition = null)
@@ -149,7 +177,10 @@ class Collection extends \Magento\Catalog\Model\ResourceModel\Product\Collection
         }
         return parent::addFieldToFilter($field, $condition);
     }
+
     /**
+     * AddOrder
+     *
      * @param string $field
      * @param string $direction
      * @return $this
@@ -157,32 +188,36 @@ class Collection extends \Magento\Catalog\Model\ResourceModel\Product\Collection
     public function addOrder($field, $direction = self::SORT_ORDER_DESC)
     {
         foreach ($this->getMappingField() as $key => $value) {
-            if($field == $key){
+            if ($field == $key) {
                 $field = $value;
-                $this->getSelect()->order( new \Zend_Db_Expr($field .' '. $direction));
+                $this->getSelect()->order(new \Zend_Db_Expr($field . ' ' . $direction));
                 return $this;
             }
         }
         return parent::addOrder($field, $direction);
     }
+
     /**
-     * @param mixed $field
-     * @param null $condition
+     * Add Field To Filter Call Back
+     *
+     * @param string $field
+     * @param string|array $condition
      */
-    public function addFieldToFilterCallBack($field ,$condition ){
-        foreach ($condition as $con => $value){
-            $conditionSql = $this->_getConditionSql($field, $condition);
-            $this->getSelect()->having($conditionSql);
-        }
+    public function addFieldToFilterCallBack($field, $condition)
+    {
+        $conditionSql = $this->_getConditionSql($field, $condition);
+        $this->getSelect()->having($conditionSql);
     }
 
     /**
+     * Check Product Source
+     *
      * @return bool
      */
     public function checkProductSource()
     {
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $productConfig = $objectManager->get('Magestore\PurchaseOrderSuccess\Service\Config\ProductConfig');
+        $productConfig = $objectManager->get(\Magestore\PurchaseOrderSuccess\Service\Config\ProductConfig::class);
         return (boolean)($productConfig->getProductSource() ==
             \Magestore\PurchaseOrderSuccess\Model\System\Config\ProductSource::TYPE_SUPPLIER);
     }

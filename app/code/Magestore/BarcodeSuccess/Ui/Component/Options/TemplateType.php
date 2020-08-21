@@ -6,13 +6,24 @@
 
 namespace Magestore\BarcodeSuccess\Ui\Component\Options;
 
+/**
+ * Class TemplateType
+ *
+ * Used to create template type
+ */
 class TemplateType extends AbstractOption
 {
-    public function toOptionHash() {
-        return array(
+    /**
+     * To option hash
+     *
+     * @return array
+     */
+    public function toOptionHash()
+    {
+        return [
             \Magestore\BarcodeSuccess\Model\Source\TemplateType::STANDARD => __('Standard'),
             \Magestore\BarcodeSuccess\Model\Source\TemplateType::A4 => __('A4'),
             \Magestore\BarcodeSuccess\Model\Source\TemplateType::JEWELRY => __('Jewelry')
-        );
+        ];
     }
 }

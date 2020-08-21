@@ -7,8 +7,7 @@
 namespace Magestore\OrderSuccess\Model\System\Config;
 
 /**
- * Class Tag
- * @package Magestore\OrderSuccess\Model\System\Config
+ * System config Tag
  */
 class Tag extends \Magento\Framework\App\Config\Value
 {
@@ -21,17 +20,24 @@ class Tag extends \Magento\Framework\App\Config\Value
      * @var \Magento\Store\Model\StoreManagerInterface
      */
     protected $_storeManager;
-    
+
     /**
-     * @param \Magento\Framework\Model\Context                             $context
-     * @param \Magento\Framework\Registry                                  $registry
-     * @param \Magento\Framework\App\Config\ScopeConfigInterface           $config
-     * @param \Magento\Framework\App\Cache\TypeListInterface               $cacheTypeList
-     * @param \Magento\Store\Model\StoreManagerInterface                   $storeManager
-     * @param \Magento\Directory\Helper\Data                               $directoryHelper
+     * @var \Magento\Framework\Serialize\SerializerInterface
+     */
+    protected $serialized;
+
+    /**
+     * Tag constructor.
+     *
+     * @param \Magento\Framework\Model\Context $context
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $config
+     * @param \Magento\Framework\App\Cache\TypeListInterface $cacheTypeList
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param \Magento\Directory\Helper\Data $directoryHelper
      * @param \Magento\Framework\Model\ResourceModel\AbstractResource|null $resource
-     * @param \Magento\Framework\Data\Collection\AbstractDb|null           $resourceCollection
-     * @param array                                                        $data
+     * @param \Magento\Framework\Data\Collection\AbstractDb|null $resourceCollection
+     * @param array $data
      */
     public function __construct(
         \Magento\Framework\Model\Context $context,
@@ -40,19 +46,21 @@ class Tag extends \Magento\Framework\App\Config\Value
         \Magento\Framework\App\Cache\TypeListInterface $cacheTypeList,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Directory\Helper\Data $directoryHelper,
-        \Magento\Framework\Model\ResourceModel\AbstractResource $resource = NULL,
-        \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = NULL,
+        \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
+        \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         array $data = []
-    )
-    {
+    ) {
         $this->directoryHelper = $directoryHelper;
         parent::__construct($context, $registry, $config, $cacheTypeList, $resource, $resourceCollection, $data);
         $this->_storeManager = $storeManager;
+        $this->serialized = \Magento\Framework\App\ObjectManager::getInstance()
+            ->create(\Magento\Framework\Serialize\Serializer\Serialize::class);
     }
 
-
     /**
+     * Before Save
      *
+     * @return Tag|void
      */
     public function beforeSave()
     {
@@ -62,21 +70,21 @@ class Tag extends \Magento\Framework\App\Config\Value
         }
         $this->setValue($value);
         if (is_array($this->getValue())) {
-            $this->setValue(serialize($this->getValue()));
+            $this->setValue($this->serialized->serialize($this->getValue()));
         }
         parent::beforeSave();
     }
 
     /**
+     * After Load
      *
+     * @return Tag|void
      */
     public function afterLoad()
     {
         if (!is_array($this->getValue())) {
             $value = $this->getValue();
-            $this->setValue(empty($value) ? FALSE : unserialize($value));
+            $this->setValue(empty($value) ? false : $this->serialized->unserialize($value));
         }
     }
 }
-
-

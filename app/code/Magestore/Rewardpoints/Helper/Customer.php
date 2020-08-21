@@ -2,8 +2,14 @@
 
 namespace Magestore\Rewardpoints\Helper;
 
-class Customer extends Config {
-
+/**
+ * Class Customer
+ *
+ * Customer helper
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
+class Customer extends Config
+{
     /**
      * reward account model Factory
      *
@@ -20,7 +26,7 @@ class Customer extends Config {
 
     /**
      * current customer ID
-     * 
+     *
      * @var int
      */
     protected $_customerId = null;
@@ -32,7 +38,7 @@ class Customer extends Config {
 
     /**
      * current working store ID
-     * 
+     *
      * @var int
      */
     protected $_storeId = null;
@@ -86,6 +92,7 @@ class Customer extends Config {
 
     /**
      * Customer constructor.
+     *
      * @param \Magento\Framework\App\Helper\Context $context
      * @param \Magento\Customer\Model\SessionFactory $customerSessionFactory
      * @param \Magento\Backend\Model\Session\QuoteFactory $adminQuoteSessionFactory
@@ -93,6 +100,7 @@ class Customer extends Config {
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param Config $globalConfig
      * @param Point $point
+     * @param \Magento\Framework\App\State $appState
      * @param Calculation\Spending $spending
      */
     public function __construct(
@@ -105,7 +113,6 @@ class Customer extends Config {
         \Magestore\Rewardpoints\Helper\Point $point,
         \Magento\Framework\App\State $appState,
         \Magestore\Rewardpoints\Helper\Calculation\Spending $spending
-
     ) {
         parent::__construct($context);
         $this->_customerSessionFactory = $customerSessionFactory;
@@ -118,8 +125,14 @@ class Customer extends Config {
         $this->spendingHelper = $spending;
     }
 
-
-    public function getCustomer() {
+    /**
+     * Get customer
+     *
+     * @return mixed
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function getCustomer()
+    {
         if ($this->_storeManager->getStore()->getCode() == \Magento\Store\Model\Store::ADMIN_CODE) {
             $this->_customer = $this->_adminQuoteSessionFactory->create()->getCustomer();
             return $this->_customer;
@@ -128,36 +141,38 @@ class Customer extends Config {
             $this->_customer = $this->_customerSessionFactory->create()->getCustomer();
             return $this->_customer;
         }
-        $sesion  = \Magento\Framework\App\ObjectManager::getInstance()->create(
-                    '\Magento\Checkout\Model\Session'
-                );
+        $sesion = \Magento\Framework\App\ObjectManager::getInstance()->create(
+            \Magento\Checkout\Model\Session::class
+        );
         $quoteId = $sesion->getQuoteId();
         if ($quoteId) {
             $quote = $sesion->getQuote();
             $customerId = $quote->getCustomerId();
-            if($customerId){
+            if ($customerId) {
                 $this->_customer = \Magento\Framework\App\ObjectManager::getInstance()->create(
-                                    '\Magento\Customer\Api\CustomerRepositoryInterface'
-                                )->getById($customerId);
+                    \Magento\Customer\Api\CustomerRepositoryInterface::class
+                )->getById($customerId);
             }
         }
         return $this->_customer;
     }
 
     /**
-     * get current customer ID
+     * Get current customer ID
      *
      * @return int
      */
-    public function getCustomerId() {
-        if (is_null($this->_customerId)) {
-			$customerId = 0;
-            if($this->_appState->getAreaCode() ==  \Magento\Backend\App\Area\FrontNameResolver::AREA_CODE){
+    public function getCustomerId()
+    {
+        if ($this->_customerId === null) {
+            $customerId = 0;
+            if ($this->_appState->getAreaCode() == \Magento\Backend\App\Area\FrontNameResolver::AREA_CODE) {
                 $this->_customerId = $this->_adminQuoteSessionFactory->create()->getCustomerId();
                 return $this->_customerId;
-            } else  {
-				if($this->_customerSessionFactory->create()->isLoggedIn())
-					$customerId = $this->_customerSessionFactory->create()->getCustomerId();
+            } else {
+                if ($this->_customerSessionFactory->create()->isLoggedIn()) {
+                    $customerId = $this->_customerSessionFactory->create()->getCustomerId();
+                }
             }
             if ($customerId) {
                 $this->_customerId = $customerId;
@@ -169,30 +184,33 @@ class Customer extends Config {
     }
 
     /**
-     * get current working store id, used when checkout
+     * Get current working store id, used when checkout
      *
      * @return int
      */
-    public function getStoreId() {
-        if (is_null($this->_storeId)) {
+    public function getStoreId()
+    {
+        if ($this->_storeId === null) {
             if ($this->_storeManager->isSingleStoreMode()) {
                 $this->_storeId = $this->_storeManager->getStore()->getId();
-            } else
-            if($this->_appState->getAreaCode() ==  \Magento\Backend\App\Area\FrontNameResolver::AREA_CODE){
-                $this->_storeId = $this->_adminQuoteSessionFactory->create()->getStoreId();
             } else {
-                $this->_storeId = $this->_storeManager->getStore()->getId();
+                if ($this->_appState->getAreaCode() == \Magento\Backend\App\Area\FrontNameResolver::AREA_CODE) {
+                    $this->_storeId = $this->_adminQuoteSessionFactory->create()->getStoreId();
+                } else {
+                    $this->_storeId = $this->_storeManager->getStore()->getId();
+                }
             }
         }
         return $this->_storeId;
     }
 
     /**
-     * get current reward points customer account
+     * Get current reward points customer account
      *
      * @return \Magestore\Rewardpoints\Model\Customer
      */
-    public function getAccount() {
+    public function getAccount()
+    {
         if (!$this->rewardAccount) {
             $rewardAccount = $this->_rewardAccountFactory->create();
             if ($this->getCustomerId()) {
@@ -200,11 +218,13 @@ class Customer extends Config {
                 $rewardAccount->setData('customer', $this->getCustomer());
             }
             $sesion = \Magento\Framework\App\ObjectManager::getInstance()->create(
-                '\Magento\Checkout\Model\Session'
+                \Magento\Checkout\Model\Session::class
             );
             $quoteId = $sesion->getQuoteId();
             if ($quoteId) {
-                $quote = $sesion->getQuote();
+                $quote = \Magento\Framework\App\ObjectManager::getInstance()->get(
+                    \Magento\Quote\Api\CartRepositoryInterface::class
+                )->get($quoteId);
                 $customerId = $quote->getCustomerId();
                 if ($customerId) {
                     $rewardAccount->load($customerId, 'customer_id');
@@ -217,12 +237,13 @@ class Customer extends Config {
     }
 
     /**
-     * get Reward Points Account by Customer
+     * Get Reward Points Account by Customer
      *
      * @param \Magento\Customer\Model\Customer $customer
      * @return \Magestore\Rewardpoints\Model\Customer
      */
-    public function getAccountByCustomer($customer) {
+    public function getAccountByCustomer($customer)
+    {
         $rewardAccount = $this->getAccountByCustomerId($customer->getId());
         if (!$rewardAccount->hasData('customer')) {
             $rewardAccount->setData('customer', $customer);
@@ -231,12 +252,13 @@ class Customer extends Config {
     }
 
     /**
-     * get Reward Points Account by Customer ID
+     * Get Reward Points Account by Customer ID
      *
      * @param int $customerId
      * @return \Magestore\Rewardpoints\Model\Customer
      */
-    public function getAccountByCustomerId($customerId = null) {
+    public function getAccountByCustomerId($customerId = null)
+    {
         if (empty($customerId) || $customerId == $this->getCustomerId()
         ) {
             return $this->getAccount();
@@ -245,56 +267,63 @@ class Customer extends Config {
     }
 
     /**
-     * get reward points balance of current customer
+     * Get reward points balance of current customer
      *
      * @return int
      */
-    public function getBalance() {
+    public function getBalance()
+    {
         return $this->getAccount()->getPointBalance();
     }
 
     /**
-     * get string of points balance formated
+     * Get string of points balance formated
      *
      * @return string
      */
-    public function getBalanceFormated() {
-
+    public function getBalanceFormated()
+    {
         return $this->pointHelper->format(
-            $this->getBalance(), $this->getStoreId()
+            $this->getBalance(),
+            $this->getStoreId()
         );
     }
 
     /**
-     * get string of points balance formated
+     * Get string of points balance formated
+     *
      * Balance is estimated after customer use point to spent
      *
      * @return string
      */
-    public function getBalanceAfterSpentFormated() {
+    public function getBalanceAfterSpentFormated()
+    {
         return $this->pointHelper->format(
-                        $this->getBalance() - $this->spendingHelper->getTotalPointSpent(), $this->getStoreId()
+            $this->getBalance() - $this->spendingHelper->getTotalPointSpent(),
+            $this->getStoreId()
         );
     }
 
     /**
-     * check show customer reward points on top link
+     * Check show customer reward points on top link
      *
      * @param type $store
      * @return boolean
      */
-    public function showOnToplink($store = null) {
+    public function showOnToplink($store = null)
+    {
         return $this->helper->getConfig(self::XML_PATH_DISPLAY_TOPLINK, $store);
     }
 
     /**
-     * check customer can use point to spend for order or not
+     * Check customer can use point to spend for order or not
      *
      * @param type $store
      * @return boolean
      */
-    public function isAllowSpend($store = null) {
-        $minPoint = (int) $this->getSpendingConfig('redeemable_points', $store);
+    public function isAllowSpend($store = null)
+    {
+        $minPoint = (int)$this->getSpendingConfig('redeemable_points', $store);
         if ($minPoint > $this->getBalance()) {
             return false;
         }

@@ -7,7 +7,6 @@
             <resource name="Magestore_Webpos::manage_pos" />
             <resource name="Magestore_Webpos::manage_session" />
             <resource name="Magestore_Webpos::make_adjustment" />
-            <resource name="Magestore_Webpos::view_sessions_created_by_other_staff" />
             <resource name="Magestore_Webpos::check_external_stock" />
             <resource name="Magestore_Webpos::refund" />
             <resource name="Magestore_Webpos::manage_order" />

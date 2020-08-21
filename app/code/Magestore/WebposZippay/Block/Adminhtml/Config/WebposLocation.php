@@ -4,7 +4,12 @@
  * Copyright © 2018 Magestore. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace Magestore\WebposZippay\Block\Adminhtml\Config;
+
+/**
+ * Config block WebposLocation
+ */
 class WebposLocation extends \Magento\Framework\View\Element\Html\Select
 {
     /**
@@ -16,20 +21,28 @@ class WebposLocation extends \Magento\Framework\View\Element\Html\Select
      */
     protected $registry;
 
+    /**
+     * WebposLocation constructor.
+     *
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magestore\Webpos\Api\Location\LocationRepositoryInterface $locationRepository
+     * @param \Magento\Backend\Block\Context $context
+     * @param array $data
+     */
     public function __construct(
         \Magento\Framework\Registry $registry,
         \Magestore\Webpos\Api\Location\LocationRepositoryInterface $locationRepository,
         \Magento\Backend\Block\Context $context,
-        array $data = array()
-    )
-    {
+        array $data = []
+    ) {
         $this->registry = $registry;
         $this->locationRepository = $locationRepository;
         parent::__construct($context, $data);
     }
 
-
     /**
+     * To Option Array
+     *
      * @return array
      */
     public function toOptionArray()
@@ -43,6 +56,8 @@ class WebposLocation extends \Magento\Framework\View\Element\Html\Select
     }
 
     /**
+     * Get Option Array
+     *
      * @return array
      */
     public function getOptionArray()
@@ -56,6 +71,8 @@ class WebposLocation extends \Magento\Framework\View\Element\Html\Select
     }
 
     /**
+     * Set Input Name
+     *
      * @param string $value
      * @return $this
      */
@@ -63,7 +80,6 @@ class WebposLocation extends \Magento\Framework\View\Element\Html\Select
     {
         return $this->setName($value);
     }
-
 
     /**
      * Render block HTML
@@ -81,11 +97,11 @@ class WebposLocation extends \Magento\Framework\View\Element\Html\Select
             }
 
             foreach ($options as $webposLocationId => $webposLocationName) {
+                // phpcs:ignore Magento2.Functions.DiscouragedFunction
                 $this->addOption($webposLocationId, addslashes($webposLocationName));
             }
 
         }
         return parent::_toHtml();
     }
-
 }

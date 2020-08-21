@@ -8,10 +8,4 @@
     <event name="catalog_product_save_after">
         <observer name="save_barcode" instance="Magestore\BarcodeSuccess\Observer\Catalog\Product\CatalogProductSaveAfter" />
     </event>
-    <event name="controller_action_predispatch_adminhtml_system_config_edit">
-        <observer name="barcodesuccess_controller_action_predispatch_adminhtml_system_config_edit" instance="Magestore\BarcodeSuccess\Observer\Controller\Action\Predispatch\AdminhtmlSystemConfigEdit"/>
-    </event>
-    <event name="admin_system_config_changed_section_barcodesuccess">
-        <observer name="barcodesuccess_admin_system_config_changed_section_barcodesuccess" instance="Magestore\BarcodeSuccess\Observer\Admin\System\Config\ChangeSectionBarcode"/>
-    </event>
 </config>

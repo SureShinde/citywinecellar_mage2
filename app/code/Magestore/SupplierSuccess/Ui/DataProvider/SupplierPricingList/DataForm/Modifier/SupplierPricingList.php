@@ -12,6 +12,8 @@ use Magento\Ui\Component;
 use Magento\Ui\Component\Container;
 
 /**
+ * Class SupplierPricingList
+ *
  * Data provider for Configurable panel
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
@@ -19,7 +21,7 @@ class SupplierPricingList extends AbstractModifier
 {
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function modifyData(array $data)
     {
@@ -27,7 +29,7 @@ class SupplierPricingList extends AbstractModifier
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function modifyMeta(array $meta)
     {
@@ -43,7 +45,6 @@ class SupplierPricingList extends AbstractModifier
                                     'config' => [
                                         'autoRender' => true,
                                         'componentType' => 'insertListing',
-//                                        'component' => 'Magestore_SupplierSuccess/js/form/components/insert-listing',
                                         'ns' => 'os_supplier_pricing_listing',
                                         'sortOrder' => '10',
                                         'params' => ['id' => $this->requestInterface->getParam('id', null)]
@@ -142,6 +143,8 @@ class SupplierPricingList extends AbstractModifier
     }
 
     /**
+     * GetSupplierProductListingAddModal
+     *
      * @param array $meta
      * @return array
      */
@@ -167,11 +170,9 @@ class SupplierPricingList extends AbstractModifier
                         'class' => 'action-primary',
                         'actions' => [
                             [
-//                                'targetName' => 'index = os_supplier_pricinglist_modal_add_listing',
-                                'targetName' => 'os_supplier_pricinglist_modal_add_listing.os_supplier_pricinglist_modal_add_listing',
+                                'targetName' => 'os_supplier_pricinglist_modal_add_listing.os_supplier_pricinglist_modal_add_listing', //phpcs:disable
                                 'actionName' => 'save'
                             ],
-//                            'closeModal'
                         ]
                     ]
                 ],
@@ -240,9 +241,15 @@ class SupplierPricingList extends AbstractModifier
                         'externalFilterMode' => true,
                         'imports' => [
                             'supplier_id' => '${ $.provider }:data.supplier_id',
+                            '__disableTmpl' => [
+                                'supplier_id' => false
+                            ]
                         ],
                         'exports' => [
                             'supplier_id' => '${ $.externalProvider }:params.supplier_id',
+                            '__disableTmpl' => [
+                                'supplier_id' => false
+                            ]
                         ],
                         'selectionsProvider' =>
                             'os_supplier_pricinglist_modal_add_listing'

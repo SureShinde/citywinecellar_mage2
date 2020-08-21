@@ -3,23 +3,19 @@
  * Copyright © 2017 Magestore. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace Magestore\Giftvoucher\Helper;
 
-use Magento\Catalog\Api\ProductRepositoryInterface;
-use Magento\Customer\Model\Session as CustomerSession;
-use Magento\Tax\Model\Config;
-use Magento\Store\Model\Store;
 use Magento\Framework\Pricing\PriceCurrencyInterface;
-use Magento\Framework\Locale\Bundle\CurrencyBundle;
-use Magento\Framework\App\Filesystem\DirectoryList;
+use Magestore\Giftvoucher\Model\Product\Type\Giftvoucher;
+use Magestore\Giftvoucher\Model\Source\GiftPriceType;
 
 /**
  * Giftvoucher product helper
  *
- * @category Magestore
- * @package  Magestore_Giftvoucher
  * @module   Giftvoucher
  * @author   Magestore Developer
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Giftproduct extends \Magento\Framework\App\Helper\AbstractHelper
 {
@@ -27,72 +23,71 @@ class Giftproduct extends \Magento\Framework\App\Helper\AbstractHelper
      * @var \Magento\Framework\ObjectManagerInterface
      */
     protected $_objectManager;
-    
+
     /**
      * @var PriceCurrencyInterface
      */
     protected $_priceCurrency;
-    
+
     /**
      * @var \Magento\Catalog\Model\ProductFactory
      */
     protected $_productFactory;
-    
+
     /**
      * @var \Magento\Catalog\Model\Product
      */
     protected $_product;
-    
+
     /**
      * @var \Magento\Customer\Model\Customer
      */
     protected $_customer;
-    
+
     /**
      * @var \Magento\Eav\Model\Entity\Attribute\Set
      */
     protected $_attributeSet;
-    
+
     /**
      * @var \Magento\Framework\Mail\Template\TransportBuilder
      */
     protected $_transportBuilder;
-    
+
     /**
      * @var \Magento\Framework\Translate\Inline\StateInterface
      */
     protected $_inlineTranslation;
-    
+
     /**
      * @var \Magento\Store\Model\StoreManagerInterface
      */
     protected $_storeManager;
-    
+
     /**
      * @var \Magento\Directory\Model\Currency
      */
     protected $_currencyModel;
-    
+
     /**
      * @var \Magento\Framework\Locale\ResolverInterface
      */
     protected $_locale;
-    
+
     /**
      * Giftvoucher data
      *
      * @var \Magento\Bundle\Helper\Giftvoucher
      */
     protected $_giftvoucherData = null;
-    
+
     /**
+     * Giftproduct constructor.
+     *
      * @param \Magento\Framework\App\Helper\Context $context
      * @param \Magento\Framework\ObjectManagerInterface $objectManager
-     * @param \Magento\Framework\Stdlib\StringUtils $string
-     * @param \Magento\Framework\Registry $coreRegistry
-     * @param \Magento\Tax\Api\Data\TaxClassKeyInterfaceFactory $taxClassKeyFactory
      * @param PriceCurrencyInterface $priceCurrency
-     * @param \Magestore\Giftvoucher\Helper\Data $helperData
+     * @param Data $helperData
      * @param \Magento\Eav\Model\Entity\Attribute\Set $attributeSet
      * @param \Magento\Catalog\Model\ProductFactory $productFactory
      * @param \Magento\Catalog\Model\Product $product
@@ -102,13 +97,11 @@ class Giftproduct extends \Magento\Framework\App\Helper\AbstractHelper
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param \Magento\Directory\Model\Currency $currencyModel
      * @param \Magento\Framework\Locale\ResolverInterface $locale
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         \Magento\Framework\App\Helper\Context $context,
         \Magento\Framework\ObjectManagerInterface $objectManager,
-        \Magento\Framework\Stdlib\StringUtils $string,
-        \Magento\Framework\Registry $coreRegistry,
-        \Magento\Tax\Api\Data\TaxClassKeyInterfaceFactory $taxClassKeyFactory,
         PriceCurrencyInterface $priceCurrency,
         \Magestore\Giftvoucher\Helper\Data $helperData,
         \Magento\Eav\Model\Entity\Attribute\Set $attributeSet,
@@ -127,7 +120,7 @@ class Giftproduct extends \Magento\Framework\App\Helper\AbstractHelper
         $this->_productFactory = $productFactory;
         $this->_product = $product;
         $this->_customer = $customer;
-        $this->_attributeSet= $attributeSet;
+        $this->_attributeSet = $attributeSet;
         $this->_transportBuilder = $transportBuilder;
         $this->_inlineTranslation = $inlineTranslation;
         $this->_storeManager = $storeManager;
@@ -135,31 +128,37 @@ class Giftproduct extends \Magento\Framework\App\Helper\AbstractHelper
         $this->_locale = $locale;
         parent::__construct($context);
     }
-    
+
     /**
      * Get the price information of Gift Card product
      *
      * @param \Magestore\Giftvoucher\Model\Product $product
      * @return array
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function getGiftValue($product)
     {
-        $giftType = $product->getGiftType();
-        switch ($giftType) {
+        if (!$product->getGiftType() && $product->getTypeId() == Giftvoucher::GIFT_CARD_TYPE) {
+            /** @var \Magento\Catalog\Model\Product $productModel */
+            $productModel = $this->_objectManager->create(\Magento\Catalog\Model\Product::class);
+            $productModel->load($product->getId());
+            $product = $productModel;
+        }
+        switch ($product->getGiftType()) {
             case \Magestore\Giftvoucher\Model\Source\GiftType::GIFT_TYPE_FIX:
-                return array(
+                return [
                     'type' => 'static',
                     'gift_price' => $this->getGiftPriceByStatic($product),
                     'value' => $product->getGiftValue()
-                );
+                ];
 
             case \Magestore\Giftvoucher\Model\Source\GiftType::GIFT_TYPE_RANGE:
-                $data = array('type' => 'range', 'from' => $product->getGiftFrom(), 'to' => $product->getGiftTo());
+                $data = ['type' => 'range', 'from' => $product->getGiftFrom(), 'to' => $product->getGiftTo()];
                 $priceType = $product->getGiftPriceType();
 
                 if ($priceType == \Magestore\Giftvoucher\Model\Source\GiftPriceType::GIFT_PRICE_TYPE_DEFAULT) {
                     $data['gift_price_type'] = 'default';
-                } else if ($priceType == \Magestore\Giftvoucher\Model\Source\GiftPriceType::GIFT_PRICE_TYPE_FIX) {
+                } elseif ($priceType == \Magestore\Giftvoucher\Model\Source\GiftPriceType::GIFT_PRICE_TYPE_FIX) {
                     $data['gift_price_type'] = 'fixed';
                     $data['gift_price'] = $product->getGiftPrice();
                 } else {
@@ -178,7 +177,7 @@ class Giftproduct extends \Magento\Framework\App\Helper\AbstractHelper
                     }
                 }
 
-                $data = array('type' => 'dropdown', 'options' => $options);
+                $data = ['type' => 'dropdown', 'options' => $options];
                 $priceType = $product->getGiftPriceType();
                 if ($priceType == \Magestore\Giftvoucher\Model\Source\GiftPriceType::GIFT_PRICE_TYPE_DEFAULT) {
                     $data['prices'] = $options;
@@ -187,7 +186,8 @@ class Giftproduct extends \Magento\Framework\App\Helper\AbstractHelper
                     $data['prices'] = $optionsPrice;
                 } else {
                     if (count($giftPrices) == count($options)) {
-                        for ($i = 0; $i < count($giftPrices); $i++) {
+                        $giftPricesLength = count($giftPrices);
+                        for ($i = 0; $i < $giftPricesLength; $i++) {
                             $data['prices'][] = $giftPrices[$i] * $options[$i] / 100;
                         }
                     } else {
@@ -201,7 +201,7 @@ class Giftproduct extends \Magento\Framework\App\Helper\AbstractHelper
             default:
                 $giftValue = $this->_giftvoucherData->getInterfaceConfig('amount');
                 $options = explode(',', $giftValue);
-                return array('type' => 'dropdown', 'options' => $options, 'prices' => $options);
+                return ['type' => 'dropdown', 'options' => $options, 'prices' => $options];
         }
     }
 
@@ -215,9 +215,9 @@ class Giftproduct extends \Magento\Framework\App\Helper\AbstractHelper
     {
         $giftValue = $product->getGiftValue();
         $giftPrice = $product->getGiftPrice();
-        if ($product->getGiftPriceType() == \Magestore\Giftvoucher\Model\Source\GiftPriceType::GIFT_PRICE_TYPE_DEFAULT) {
+        if ($product->getGiftPriceType() == GiftPriceType::GIFT_PRICE_TYPE_DEFAULT) {
             return $giftValue;
-        } elseif ($product->getGiftPriceType() == \Magestore\Giftvoucher\Model\Source\GiftPriceType::GIFT_PRICE_TYPE_FIX) {
+        } elseif ($product->getGiftPriceType() == GiftPriceType::GIFT_PRICE_TYPE_FIX) {
             return $giftPrice;
         } else {
             return $giftValue * $giftPrice / 100;

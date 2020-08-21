@@ -22,6 +22,11 @@
 
 namespace Magestore\Customercredit\Model\Source;
 
+/**
+ * Class Storecredittype
+ *
+ * Store credit type model
+ */
 class Storecredittype extends \Magento\Eav\Model\Entity\Attribute\Source\AbstractSource
 {
     const CREDIT_TYPE_NONE = 0;
@@ -29,31 +34,37 @@ class Storecredittype extends \Magento\Eav\Model\Entity\Attribute\Source\Abstrac
     const CREDIT_TYPE_RANGE = 2;
     const CREDIT_TYPE_DROPDOWN = 3;
 
+    /**
+     * @inheritDoc
+     */
     public function getAllOptions()
     {
-        if (is_null($this->_options)) {
-            $this->_options = array(
-                array(
+        if ($this->_options === null) {
+            $this->_options = [
+                [
                     'label' => __('Select'),
                     'value' => ''
-                ),
-                array(
+                ],
+                [
                     'label' => __('Fixed value'),
                     'value' => self::CREDIT_TYPE_FIX
-                ),
-                array(
+                ],
+                [
                     'label' => __('Range of values'),
                     'value' => self::CREDIT_TYPE_RANGE
-                ),
-                array(
+                ],
+                [
                     'label' => __('Dropdown values'),
                     'value' => self::CREDIT_TYPE_DROPDOWN
-                ),
-            );
+                ],
+            ];
         }
         return $this->_options;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function toOptionArray()
     {
         return $this->getAllOptions();

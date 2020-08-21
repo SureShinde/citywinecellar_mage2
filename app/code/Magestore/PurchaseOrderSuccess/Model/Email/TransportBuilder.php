@@ -8,20 +8,34 @@
 namespace Magestore\PurchaseOrderSuccess\Model\Email;
 
 /**
- * Class TransportBuilder
- * @package Magestore\PurchaseOrderSuccess\Model\Email
+ * Model Email TransportBuilder
  */
 class TransportBuilder extends \Magento\Framework\Mail\Template\TransportBuilder
 {
-    public function attachFile($file, $name) {
-        if (!empty($file) && file_exists($file)) {
+    /**
+     * Attach File
+     *
+     * @param string $file
+     * @param string $name
+     * @return $this
+     * @throws \Magento\Framework\Exception\FileSystemException
+     */
+    public function attachFile($file, $name)
+    {
+        $om = \Magento\Framework\App\ObjectManager::getInstance();
+        /** @var \Magento\Framework\Filesystem\DriverInterface $driverFile */
+        $driverFile = $om->get(\Magento\Framework\Filesystem\DriverInterface::class);
+        /** @var \Magento\Framework\Filesystem\Io\File $ioFile */
+        $ioFile = $om->get(\Magento\Framework\Filesystem\Io\File::class);
+        $fileInfo = $ioFile->getPathInfo($name);
+        if (!empty($file) && $driverFile->isExists($file)) {
             $this->message
                 ->createAttachment(
-                    file_get_contents($file),
+                    $driverFile->fileGetContents($file),
                     \Zend_Mime::TYPE_OCTETSTREAM,
                     \Zend_Mime::DISPOSITION_ATTACHMENT,
                     \Zend_Mime::ENCODING_BASE64,
-                    basename($name)
+                    $fileInfo['basename']
                 );
         }
         return $this;

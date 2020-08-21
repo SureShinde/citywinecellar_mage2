@@ -15,5 +15,8 @@
         <observer name="webpos_catalog_product_search_online" instance="Magestore\BarcodeSuccess\Observer\Webpos\Catalog\Product\WebposProductSearchOnline"/>
     </event>
     <!-- End integrate webpos -->
+    <event name="get_batch_data_mapper_barcode">
+        <observer name="get_batch_data_mapper_barcode" instance="Magestore\BarcodeSuccess\Observer\Webpos\BatchDataMapper\GetBarcodeDataMapper"/>
+    </event>
 
 </config>

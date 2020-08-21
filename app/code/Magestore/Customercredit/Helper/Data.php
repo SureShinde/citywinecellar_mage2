@@ -28,6 +28,13 @@ use Magento\Framework\View\Asset\Repository;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Pricing\PriceCurrencyInterface;
 
+/**
+ * Class Data
+ *
+ * Data helper
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.CookieAndSessionMisuse)
+ */
 class Data extends AbstractHelper
 {
     /**
@@ -83,19 +90,23 @@ class Data extends AbstractHelper
     protected $_priceCurrency;
 
     /**
+     * Data constructor.
+     *
      * @param \Magento\Framework\App\Helper\Context $context
      * @param \Magestore\Customercredit\Model\CustomercreditFactory $customercreditFactory
      * @param \Magento\Framework\Pricing\Helper\Data $pricingHelper
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
-     * @param \Magento\Framework\App\State $appState,
-     * @param \Magento\Backend\Model\Session\Quote $sessionQuote,
-     * @param \Magento\Customer\Model\CustomerFactory $customerFactory,
-     * @param \Magento\Customer\Model\Session $customerSession,
-     * @param \Magento\Framework\Math\Random $random,
-     * @param \Magento\Checkout\Model\Session $checkoutSession,
-     * @param \Magento\Sales\Model\OrderFactory $orderFactory,
-     * @param \Magento\Framework\View\Asset\Repository $assetRepo,
-     * @param \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency
+     * @param \Magento\Framework\App\State $appState
+     * @param \Magento\Backend\Model\Session\Quote $sessionQuote
+     * @param \Magento\Customer\Model\CustomerFactory $customerFactory
+     * @param \Magento\Customer\Model\Session $customerSession
+     * @param \Magento\Framework\Math\Random $random
+     * @param \Magento\Checkout\Model\Session $checkoutSession
+     * @param \Magento\Sales\Model\OrderFactory $orderFactory
+     * @param Repository $assetRepo
+     * @param PriceCurrencyInterface $priceCurrency
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         \Magento\Framework\App\Helper\Context $context,
@@ -111,8 +122,7 @@ class Data extends AbstractHelper
         \Magento\Sales\Model\OrderFactory $orderFactory,
         \Magento\Framework\View\Asset\Repository $assetRepo,
         \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency
-    )
-    {
+    ) {
         $this->_customercreditFactory = $customercreditFactory;
         $this->_pricingHelper = $pricingHelper;
         $this->_storeManager = $storeManager;
@@ -128,20 +138,37 @@ class Data extends AbstractHelper
         parent::__construct($context);
     }
 
-    function calc($a, $b)
+    /**
+     * Calc
+     *
+     * @param float $a
+     * @param float $b
+     * @return mixed
+     */
+    public function calc($a, $b)
     {
         return $a + $b;
     }
 
+    /**
+     * Top Five Customer Max Credit
+     *
+     * @return mixed
+     */
     public function topFiveCustomerMaxCredit()
     {
         $collection = $this->_customercreditFactory->create()->getCollection()
-            ->addFieldToFilter('credit_balance', array('gt' => 0.00))
+            ->addFieldToFilter('credit_balance', ['gt' => 0.00])
             ->setOrder('credit_balance', 'DESC');
         $collection->getSelect()->limit(5);
         return $collection->getData();
     }
 
+    /**
+     * Get Customer credit Label Account
+     *
+     * @return \Magento\Framework\Phrase
+     */
     public function getCustomercreditLabelAccount()
     {
         $customercredit = $this->getCreditBalanceByUser();
@@ -149,13 +176,26 @@ class Data extends AbstractHelper
         return __('My Credit %1 ', $moneyText);
     }
 
+    /**
+     * Get Customer credit Label
+     *
+     * @return \Magento\Framework\Phrase
+     */
     public function getCustomercreditLabel()
     {
-        $icon = '<img src="'.$this->_assetRepo->getUrlWithParams('Magestore_Customercredit::images/point.png', []).'" style="vertical-align: middle" />';
+        $icon = '<img src="'
+            . $this->_assetRepo->getUrlWithParams('Magestore_Customercredit::images/point.png', [])
+            . '" style="vertical-align: middle" />';
         $customercredit = $this->getCreditBalanceByUser();
         $moneyText = $this->_pricingHelper->currency($customercredit, true, false);
         return __('%2 My Credit %1', $moneyText, $icon);
     }
+
+    /**
+     * Send Credit
+     *
+     * @return int
+     */
     public function sendCredit()
     {
         $sendCredit = $this->scopeConfig->getValue('customercredit/general/enable_send_credit', 'store');
@@ -165,11 +205,24 @@ class Data extends AbstractHelper
         return 0;
     }
 
+    /**
+     * Get Style Config
+     *
+     * @param string $code
+     * @param null|int|string $store
+     * @return mixed
+     */
     public function getStyleConfig($code, $store = null)
     {
         return $this->scopeConfig->getValue('customercredit/style_management/' . $code, 'store', $store);
     }
 
+    /**
+     * Get Customer
+     *
+     * @return \Magento\Customer\Model\Customer
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
     public function getCustomer()
     {
         if ($this->_appState->getAreaCode() != Area::AREA_FRONTEND) {
@@ -180,25 +233,62 @@ class Data extends AbstractHelper
             return $this->_customerSession->getCustomer();
         }
     }
+
+    /**
+     * Get Customer Name
+     *
+     * @param int $customerId
+     * @return string
+     */
     public function getCustomerName($customerId)
     {
         $customer = $this->_customerFactory->create()->load($customerId);
         return $customer->getFirstname() . ' ' . $customer->getLastname();
     }
 
-
+    /**
+     * Get Report Config
+     *
+     * @param string $code
+     * @param null|int|string $store
+     * @return mixed
+     */
     public function getReportConfig($code, $store = null)
     {
         return $this->scopeConfig->getValue('customercredit/report/' . $code, $store);
     }
+
+    /**
+     * Get General Config
+     *
+     * @param string $code
+     * @param null|int|string $store
+     * @return mixed
+     */
     public function getGeneralConfig($code, $store = null)
     {
         return $this->scopeConfig->getValue('customercredit/general/' . $code, 'store', $store);
     }
+
+    /**
+     * Get Email Config
+     *
+     * @param string $code
+     * @param null|int|string $store
+     * @return mixed
+     */
     public function getEmailConfig($code, $store = null)
     {
         return $this->scopeConfig->getValue('customercredit/email/' . $code, 'store', $store);
     }
+
+    /**
+     * Get Spend Config
+     *
+     * @param string $code
+     * @param null|int|string $store
+     * @return mixed
+     */
     public function getSpendConfig($code, $store = null)
     {
         return $this->scopeConfig->getValue('customercredit/spend/' . $code, 'store', $store);
@@ -211,31 +301,53 @@ class Data extends AbstractHelper
      */
     public function getFullCreditProductOptions()
     {
-        return array(
+        return [
             'customer_name' => __('Sender Name'),
             'send_friend' => __('Send credit to friend'),
             'recipient_name' => __('Recipient name'),
             'recipient_email' => __('Recipient email'),
             'message' => __('Custom message'),
             'amount' => __('Amount')
-        );
+        ];
     }
 
-
+    /**
+     * Is Expression
+     *
+     * @param string $string
+     * @return false|int
+     */
     public function isExpression($string)
     {
         return preg_match('#\[([AN]{1,2})\.([0-9]+)\]#', $string);
     }
 
+    /**
+     * Calc Code
+     *
+     * @param string $expression
+     * @return string|string[]|null
+     */
     public function calcCode($expression)
     {
         if ($this->isExpression($expression)) {
-            return preg_replace_callback('#\[([AN]{1,2})\.([0-9]+)\]#', array($this, 'convertExpression'), $expression);
+            return preg_replace_callback(
+                '#\[([AN]{1,2})\.([0-9]+)\]#',
+                [$this, 'convertExpression'],
+                $expression
+            );
         } else {
             return $expression;
         }
     }
 
+    /**
+     * Convert Expression
+     *
+     * @param string $param
+     * @return string
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
     public function convertExpression($param)
     {
         $alphabet = (strpos($param[1], 'A')) === false ? '' : 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -243,6 +355,12 @@ class Data extends AbstractHelper
         return $this->random->getRandomString($param[2], $alphabet);
     }
 
+    /**
+     * Get Name Customer By Email
+     *
+     * @param string $email
+     * @return string
+     */
     public function getNameCustomerByEmail($email)
     {
         $collecions = $this->_customerFactory->create()->getCollection()
@@ -258,6 +376,12 @@ class Data extends AbstractHelper
         return $name;
     }
 
+    /**
+     * Get Hidden Code
+     *
+     * @param string $code
+     * @return string
+     */
     public function getHiddenCode($code)
     {
         $prefix = 4;
@@ -265,15 +389,23 @@ class Data extends AbstractHelper
         $suffixCode = substr($code, $prefix);
         if ($suffixCode) {
             $hiddenChar = 'X';
-            if (!$hiddenChar)
+            if (!$hiddenChar) {
                 $hiddenChar = 'X';
-            else
+            } else {
                 $hiddenChar = substr($hiddenChar, 0, 1);
+            }
             $suffixCode = preg_replace('#([A-Z,0-9]{1})#', $hiddenChar, $suffixCode);
         }
         return $prefixCode . $suffixCode;
     }
 
+    /**
+     * Has Customer Credit Item
+     *
+     * @return bool
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     public function hasCustomerCreditItem()
     {
         $quote = $this->_checkoutSession->getQuote();
@@ -285,6 +417,13 @@ class Data extends AbstractHelper
         return false;
     }
 
+    /**
+     * Has Customer Credit Item Only
+     *
+     * @return bool
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     public function hasCustomerCreditItemOnly()
     {
         $quote = $this->_checkoutSession->getQuote();
@@ -300,6 +439,12 @@ class Data extends AbstractHelper
         return $hasOnly;
     }
 
+    /**
+     * Is Buy Credit Product
+     *
+     * @param int $order_id
+     * @return bool
+     */
     public function isBuyCreditProduct($order_id)
     {
         $order = $this->_orderFactory->create();
@@ -312,30 +457,63 @@ class Data extends AbstractHelper
         return false;
     }
 
+    /**
+     * Get Converted To Base Customer Credit
+     *
+     * @param float $credit_amount
+     * @return float|int
+     */
     public function getConvertedToBaseCustomerCredit($credit_amount)
     {
         $rate = $this->_priceCurrency->convert(1);
         return $credit_amount / $rate;
     }
 
+    /**
+     * Get Converted From Base Customer Credit
+     *
+     * @param float $credit_amount
+     * @return float
+     */
     public function getConvertedFromBaseCustomerCredit($credit_amount)
     {
         return $this->_priceCurrency->convert($credit_amount);
     }
 
+    /**
+     * Get Credit Balance By User
+     *
+     * @return mixed
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
     public function getCreditBalanceByUser()
     {
         $customer = $this->getCustomer();
         $customerId = $customer->getId();
-        $baseCustomerCredit = $this->_customercreditFactory->create()->load($customerId, 'customer_id')->getCreditBalance();
+        $baseCustomerCredit = $this->_customercreditFactory->create()
+            ->load($customerId, 'customer_id')
+            ->getCreditBalance();
         return $baseCustomerCredit;
     }
 
+    /**
+     * Get Format Amount
+     *
+     * @param float $amount
+     * @return float|string
+     */
     public function getFormatAmount($amount)
     {
         return $this->_pricingHelper->currency($amount, true, false);
     }
 
+    /**
+     * Format Price
+     *
+     * @param float $value
+     * @return float
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     public function formatPrice($value)
     {
         return $this->_priceCurrency->format(
@@ -346,10 +524,15 @@ class Data extends AbstractHelper
         );
     }
 
-    function getCustomerCreditValueLabel()
+    /**
+     * Get Customer Credit Value Label
+     *
+     * @return float|string
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function getCustomerCreditValueLabel()
     {
         $balance = $this->getCreditBalanceByUser();
         return $this->getFormatAmount($balance);
     }
-
 }

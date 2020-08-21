@@ -1,0 +1,10 @@
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+ 	<!-- add price to select barcode template -->
+    <type name="Magestore\BarcodeSuccess\Model\Source\Attributes">
+        <plugin name="add_price_to_barcode_template"
+                type="Magestore\Customization\Plugin\BarcodeSuccess\Model\Source\Attributes"
+                sortOrder="10"
+                disabled="false"
+        />
+    </type>
+</config>

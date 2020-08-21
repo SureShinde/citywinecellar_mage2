@@ -11,18 +11,15 @@ use Magento\Framework\App\Filesystem\DirectoryList;
 /**
  * Giftvoucher Product Type Model
  *
- * @category Magestore
- * @package  Magestore_Giftvoucher
  * @module   Giftvoucher
  * @author   Magestore Developer
+ * @SuppressWarnings(PHPMD.TooManyFields)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Giftvoucher extends \Magento\Catalog\Model\Product\Type\AbstractType
 {
-
-    /**
-     *
-     */
     const GIFT_CARD_TYPE = 'giftvoucher';
+
     /**
      * If product can be configured
      *
@@ -135,7 +132,7 @@ class Giftvoucher extends \Magento\Catalog\Model\Product\Type\AbstractType
     protected $productModel;
 
     /**
-     * Construct
+     * Giftvoucher constructor.
      *
      * @param \Magento\Catalog\Model\Product\Option $catalogProductOption
      * @param \Magento\Eav\Model\Config $eavConfig
@@ -154,6 +151,8 @@ class Giftvoucher extends \Magento\Catalog\Model\Product\Type\AbstractType
      * @param \Magestore\Giftvoucher\Helper\Data $helperData
      * @param \Magestore\Giftvoucher\Helper\Giftproduct $giftproduct
      * @param \Magento\Catalog\Helper\Data $catalogData
+     * @param \Magento\Catalog\Model\ProductRepository $productModel
+     *
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -213,13 +212,12 @@ class Giftvoucher extends \Magento\Catalog\Model\Product\Type\AbstractType
      *
      * @param \Magento\Framework\DataObject $buyRequest
      * @param \Magestore\Giftvoucher\Model\Product $product
-     * @return array|string
+     *
+     * @return array|\Magento\Framework\Phrase|string
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function prepareForCart(\Magento\Framework\DataObject $buyRequest, $product)
     {
-        if (is_null($product)) {
-            $product = $this->getProduct();
-        }
         $result = parent::prepareForCart($buyRequest, $product);
         if (is_string($result)) {
             return $result;
@@ -232,24 +230,24 @@ class Giftvoucher extends \Magento\Catalog\Model\Product\Type\AbstractType
 
     /**
      * Prepare product and its configuration to be added to some products list.
+     *
      * Perform standard preparation process and then prepare options belonging to specific product type.
      *
      * @param  \Magento\Framework\DataObject $buyRequest
      * @param  \Magestore\Giftvoucher\Model\Product $product
      * @param  string $processMode
-     * @return array|string
+     *
+     * @return array|\Magento\Framework\Phrase|string
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function _prepareProduct(\Magento\Framework\DataObject $buyRequest, $product, $processMode)
     {
-        if (is_null($product)) {
-            $product = $this->getProduct();
-        }
         if ($product->getGiftCardType() == \Magestore\Giftvoucher\Model\Source\GiftCardTypeOptions::TYPE_PHYSICAL) {
             $buyRequest->unsetData('giftcard_template_id');
         }
         if (!$buyRequest->getData('send_friend')) {
-            $fields = array(
+            $fields = [
                 'recipient_name',
                 'recipient_email',
                 'message',
@@ -257,7 +255,7 @@ class Giftvoucher extends \Magento\Catalog\Model\Product\Type\AbstractType
                 'timezone_to_send',
                 'recipient_address',
                 'notify_success'
-            );
+            ];
             foreach ($fields as $field) {
                 if ($buyRequest->getData($field)) {
                     $buyRequest->unsetData($field);
@@ -276,10 +274,17 @@ class Giftvoucher extends \Magento\Catalog\Model\Product\Type\AbstractType
     }
 
     /**
+     * Prepare Gift Voucher
+     *
      * @param \Magento\Framework\DataObject $buyRequest
-     * @param $product
-     * @param null $processMode
-     * @return array
+     * @param \Magestore\Giftvoucher\Model\Product $product
+     * @param null|string $processMode
+     *
+     * @return array|\Magento\Framework\Phrase
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
+     * phpcs:disable Generic.Metrics.NestingLevel
      */
     public function _prepareGiftVoucher(\Magento\Framework\DataObject $buyRequest, $product, $processMode = null)
     {
@@ -289,7 +294,6 @@ class Giftvoucher extends \Magento\Catalog\Model\Product\Type\AbstractType
         $currentCurrencyCode = $store->getCurrentCurrencyCode();
         $baseCurrency = $this->currencyFactory->create()->load($baseCurrencyCode);
         $currentCurrency = $this->currencyFactory->create()->load($currentCurrencyCode);
-        $baseAmount = $baseCurrency->convert($amount, $currentCurrency);
         $baseValue = $amount;
         $fnPrice = 0;
         $giftAmount = $this->giftProductHelper->getGiftValue($product);
@@ -328,8 +332,9 @@ class Giftvoucher extends \Magento\Catalog\Model\Product\Type\AbstractType
                     case 'dropdown':
                         if (!empty($giftAmount['options'])) {
                             $check = false;
-                            $giftDropdown = array();
-                            for ($i = 0; $i < count($giftAmount['options']); $i++) {
+                            $giftDropdown = [];
+                            $giftAmountOptionsLength = count($giftAmount['options']);
+                            for ($i = 0; $i < $giftAmountOptionsLength; $i++) {
                                 $giftDropdown[$i] = $this->convertPrice($product, $giftAmount['options'][$i]);
                                 if ($amount == $giftDropdown[$i]) {
                                     $check = true;
@@ -339,7 +344,7 @@ class Giftvoucher extends \Magento\Catalog\Model\Product\Type\AbstractType
                             if (!$check) {
                                 $amount = $giftAmount['options'][0];
                                 $baseValue = $giftAmount['options'][0];
-                                $amount = round($baseCurrency->convert($amount, $currentCurrency),4);
+                                $amount = round($baseCurrency->convert($amount, $currentCurrency), 4);
                             }
                             $fnPrices = array_combine($giftDropdown, $giftAmount['prices']);
                             $fnPrice = $fnPrices[(string)$amount];
@@ -363,14 +368,14 @@ class Giftvoucher extends \Magento\Catalog\Model\Product\Type\AbstractType
             $amount = $product->getPrice();
             $baseValue = $product->getPrice();
         }
-        $buyRequest->setAmount(strval($amount));
-        $product->addCustomOption('base_gc_value', strval($baseValue));
+        $buyRequest->setAmount((string) $amount);
+        $product->addCustomOption('base_gc_value', (string) $baseValue);
         $product->addCustomOption('base_gc_currency', $store->getBaseCurrencyCode());
         $product->addCustomOption('gc_product_type', $giftAmount['type']);
         $product->addCustomOption('price_amount', $this->priceCurrency->round($fnPrice));
 
         $fullOptions = $this->helperData->getFullGiftVoucherOptions();
-        foreach ($fullOptions as $key => $label) {
+        foreach (array_keys($fullOptions) as $key) {
             if ($value = $buyRequest->getData($key)) {
                 $product->addCustomOption($key, $value);
             }
@@ -378,14 +383,16 @@ class Giftvoucher extends \Magento\Catalog\Model\Product\Type\AbstractType
         if (!$this->_coreRegistry->registry('giftvoucher_product_' . $product->getId())) {
             $this->_coreRegistry->register('giftvoucher_product_' . $product->getId(), $product);
         }
-        return array($product);
+        return [$product];
     }
 
     /**
      * Check is virtual product
      *
      * @param \Magestore\Giftvoucher\Model\Product $product
+     *
      * @return bool
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function isVirtual($product)
     {
@@ -411,6 +418,7 @@ class Giftvoucher extends \Magento\Catalog\Model\Product\Type\AbstractType
      *
      * @param \Magestore\Giftvoucher\Model\Product $product
      * @return bool
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function hasRequiredOptions($product)
     {
@@ -422,6 +430,7 @@ class Giftvoucher extends \Magento\Catalog\Model\Product\Type\AbstractType
      *
      * @param \Magestore\Giftvoucher\Model\Product $product
      * @return bool
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function canConfigure($product)
     {
@@ -429,8 +438,10 @@ class Giftvoucher extends \Magento\Catalog\Model\Product\Type\AbstractType
     }
 
     /**
-     * @param $product
-     * @param $price
+     * Convert Price
+     *
+     * @param \Magestore\Giftvoucher\Model\Product $product
+     * @param float $price
      * @return float
      */
     public function convertPrice($product, $price)
@@ -446,6 +457,7 @@ class Giftvoucher extends \Magento\Catalog\Model\Product\Type\AbstractType
      *
      * @param \Magento\Catalog\Model\Product $product
      * @return $this
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function deleteTypeSpecificData(\Magento\Catalog\Model\Product $product)
     {

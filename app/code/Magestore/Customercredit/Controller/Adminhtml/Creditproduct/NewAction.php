@@ -22,7 +22,14 @@
 
 namespace Magestore\Customercredit\Controller\Adminhtml\Creditproduct;
 
-class NewAction extends \Magento\Backend\App\Action
+use Magento\Framework\App\Action\HttpGetActionInterface;
+
+/**
+ * Class NewAction
+ *
+ * Credit product new action controller
+ */
+class NewAction extends \Magento\Backend\App\Action implements HttpGetActionInterface
 {
     /**
      * Check for is allowed
@@ -35,14 +42,12 @@ class NewAction extends \Magento\Backend\App\Action
     }
 
     /**
-     * Gift Card Product list page
-     *
-     * @return \Magento\Backend\Model\View\Result\Page
+     * @inheritDoc
      */
     public function execute()
     {
-        $set = $this->_objectManager->create('Magento\Catalog\Model\Product')->getDefaultAttributeSetId();
+        $set = $this->_objectManager->create(\Magento\Catalog\Model\Product::class)->getDefaultAttributeSetId();
         $this->_session->setCreditProductCreate(true);
-        $this->_redirect('catalog/product/new', array('type' => 'customercredit', 'set' => $set));
+        return $this->_redirect('catalog/product/new', ['type' => 'customercredit', 'set' => $set]);
     }
 }

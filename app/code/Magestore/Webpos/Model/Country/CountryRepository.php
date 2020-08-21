@@ -6,11 +6,15 @@
 
 namespace Magestore\Webpos\Model\Country;
 
+use Magento\Directory\Api\CountryInformationAcquirerInterfaceFactory;
+use Magento\Store\Model\ScopeInterface;
+use Magento\Store\Model\StoreManagerInterface;
+
 /**
- * Class CountryRepository
- * @package Magestore\Webpos\Model\Country
+ * Webpos Country Repository
  */
-class CountryRepository {
+class CountryRepository
+{
 
     /**
      * @var \Magento\Directory\Model\AllowedCountries
@@ -33,7 +37,7 @@ class CountryRepository {
     protected $countryInformationAcquirer;
 
     /**
-     * @var \Magento\Directory\Api\CountryInformationAcquirerInterfaceFactory
+     * @var CountryInformationAcquirerInterfaceFactory
      */
     protected $countryInformationAcquirerInterfaceFactory;
 
@@ -46,41 +50,52 @@ class CountryRepository {
      * @var \Magento\Directory\Helper\Data
      */
     protected $directoryHelper;
-
+    
+    /**
+     * @var \Magento\Store\Model\StoreManagerInterface
+     */
+    protected $storeManager;
+    
     /**
      * CountryRepository constructor.
+     *
      * @param \Magento\Directory\Model\AllowedCountries $allowedCountries
      * @param \Magento\Directory\Model\CountryFactory $countryFactory
      * @param \Magestore\Webpos\Api\Data\Country\CountryInterfaceFactory $countryInterfaceFactory
      * @param \Magestore\Webpos\Api\Data\Country\RegionInterfaceFactory $regionInterfaceFactory
-     * @param \Magento\Directory\Api\CountryInformationAcquirerInterfaceFactory $countryInformationAcquirerInterfaceFactory
+     * @param CountryInformationAcquirerInterfaceFactory $countryInformationAcquirerInterfaceFactory
      * @param \Magento\Directory\Helper\Data $directoryHelper
+     * @param StoreManagerInterface $storeManager
      */
     public function __construct(
         \Magento\Directory\Model\AllowedCountries $allowedCountries,
         \Magento\Directory\Model\CountryFactory $countryFactory,
         \Magestore\Webpos\Api\Data\Country\CountryInterfaceFactory $countryInterfaceFactory,
         \Magestore\Webpos\Api\Data\Country\RegionInterfaceFactory $regionInterfaceFactory,
-        \Magento\Directory\Api\CountryInformationAcquirerInterfaceFactory $countryInformationAcquirerInterfaceFactory,
-        \Magento\Directory\Helper\Data $directoryHelper
-    ){
+        CountryInformationAcquirerInterfaceFactory $countryInformationAcquirerInterfaceFactory,
+        \Magento\Directory\Helper\Data $directoryHelper,
+        StoreManagerInterface $storeManager
+    ) {
         $this->allowedCountries = $allowedCountries;
         $this->countryFactory = $countryFactory;
         $this->countryInterfaceFactory = $countryInterfaceFactory;
         $this->regionInterfaceFactory = $regionInterfaceFactory;
         $this->countryInformationAcquirerInterfaceFactory = $countryInformationAcquirerInterfaceFactory;
         $this->directoryHelper = $directoryHelper;
+        $this->storeManager = $storeManager;
     }
-
+    
     /**
-     * get list country
+     * Get list countries
      *
      * @return \Magestore\Webpos\Api\Data\Country\CountryInterface[]
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getList(){
+    public function getList()
+    {
         $countryArray = [];
-
-        $allowedCountries = $this->allowedCountries->getAllowedCountries();
+        $storeId = $this->storeManager->getStore()->getId();
+        $allowedCountries = $this->allowedCountries->getAllowedCountries(ScopeInterface::SCOPE_STORE, $storeId);
         $requiredStateCountry = $this->directoryHelper->getCountriesWithStatesRequired();
 
         foreach ($allowedCountries as $code) {
@@ -96,7 +111,7 @@ class CountryRepository {
             $regionCollectionArray = [];
             $regionCollection = $countryModel->getRegions();
             if ($regionCollection->getSize()) {
-                foreach($regionCollection as $region){
+                foreach ($regionCollection as $region) {
                     $regionModel = $this->regionInterfaceFactory->create();
                     $regionModel->setId($region->getId());
                     $regionModel->setName($region->getName());

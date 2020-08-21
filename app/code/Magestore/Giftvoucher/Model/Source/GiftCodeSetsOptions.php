@@ -8,17 +8,19 @@ namespace Magestore\Giftvoucher\Model\Source;
 
 /**
  * Class GiftCodeSetsOptions
- * @package Magestore\Giftvoucher\Model\Source
+ *
+ * Source - gift code sets options model
  */
 class GiftCodeSetsOptions extends \Magento\Eav\Model\Entity\Attribute\Source\AbstractSource
 {
     /**
-     * @var GiftCodeSets
+     * @var \Magestore\Giftvoucher\Model\GiftCodeSets|GiftCodeSets
      */
     protected $_giftcodeSets;
 
     /**
      * GiftCodeSetsOptions constructor.
+     *
      * @param \Magestore\Giftvoucher\Model\GiftCodeSets|GiftCodeSets $giftcodeSets
      */
     public function __construct(
@@ -28,34 +30,40 @@ class GiftCodeSetsOptions extends \Magento\Eav\Model\Entity\Attribute\Source\Abs
     }
 
     /**
+     * Get Available Giftcode Sets
+     *
      * @return array
      */
     public function getAvailableGiftcodeSets()
     {
         $giftcodeSets = $this->_giftcodeSets->getCollection();
-        $listGiftcodeSets = array();
+        $listGiftcodeSets = [];
         foreach ($giftcodeSets as $giftcodeSet) {
-            $listGiftcodeSets[] = array('label' => $giftcodeSet->getSetName(),
-                'value' => $giftcodeSet->getSetId());
+            $listGiftcodeSets[] = [
+                'label' => $giftcodeSet->getSetName(),
+                'value' => $giftcodeSet->getSetId()
+            ];
         }
         return  $listGiftcodeSets;
     }
 
     /**
+     * Get All Options
+     *
      * @param bool $withEmpty
      * @return array
      */
     public function getAllOptions($withEmpty = true)
     {
-        if (is_null($this->_options)) {
+        if ($this->_options === null) {
             $this->_options = $this->getAvailableGiftcodeSets();
         }
         $options = $this->_options;
         if ($withEmpty) {
-            array_unshift($options, array(
+            array_unshift($options, [
                 'value' => '',
                 'label' => __('-- Please Select --'),
-            ));
+            ]);
         }
         return $options;
     }

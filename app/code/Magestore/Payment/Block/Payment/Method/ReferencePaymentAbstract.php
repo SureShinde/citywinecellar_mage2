@@ -7,9 +7,10 @@
 
 namespace Magestore\Payment\Block\Payment\Method;
 
+use \Magento\Store\Model\ScopeInterface;
+
 /**
- * Class ReferencePaymentAbstract
- * @package Magestore\Payment\Block\Payment\Method
+ * Payment method ReferencePaymentAbstract
  */
 class ReferencePaymentAbstract extends \Magento\Payment\Block\Info
 {
@@ -23,9 +24,9 @@ class ReferencePaymentAbstract extends \Magento\Payment\Block\Info
      */
     protected $helperPricing;
 
-
     /**
-     * InfoAbstract constructor.
+     * ReferencePaymentAbstract constructor.
+     *
      * @param \Magento\Framework\View\Element\Template\Context $context
      * @param \Magento\Framework\Pricing\Helper\Data $helperPricing
      * @param \Magestore\Webpos\Model\ResourceModel\Sales\Order\Payment\Collection $orderPaymentCollection
@@ -47,7 +48,9 @@ class ReferencePaymentAbstract extends \Magento\Payment\Block\Info
     }
 
     /**
-     * @param null $transport
+     * Prepare Specific Information
+     *
+     * @param string $transport
      * @return $this|\Magento\Framework\DataObject
      * @throws \Magento\Framework\Exception\LocalizedException
      */
@@ -56,9 +59,9 @@ class ReferencePaymentAbstract extends \Magento\Payment\Block\Info
         if (null !== $this->_paymentSpecificInformation) {
             return $this->_paymentSpecificInformation;
         }
-        $data = array();
+        $data = [];
         $orderId = $this->getInfo()->getData('parent_id');
-        $code =  $this->getInfo()->getData('method');
+        $code = $this->getInfo()->getData('method');
         $amount = $this->getPaymentAmount($orderId, $code);
         if ($amount) {
             $referenceLabel = __('Reference No');
@@ -68,10 +71,11 @@ class ReferencePaymentAbstract extends \Magento\Payment\Block\Info
         return $transport->setData(array_merge($data, $transport->getData()));
     }
 
-
     /**
-     * @param $orderId
-     * @param $code
+     * Get Payment Amount
+     *
+     * @param int $orderId
+     * @param string $code
      * @return int
      * @throws \Magento\Framework\Exception\LocalizedException
      */
@@ -79,10 +83,9 @@ class ReferencePaymentAbstract extends \Magento\Payment\Block\Info
     {
         $payments = $this->orderPaymentCollection
             ->addFieldToFilter('order_id', $orderId)
-            ->addFieldToFilter('method', $code)
-        ;
+            ->addFieldToFilter('method', $code);
         $amount = 0;
-        if($payments->getSize() > 0){
+        if ($payments->getSize() > 0) {
             $payment = $payments->getFirstItem();
             $amount = $payment->getRealAmount();
         }
@@ -90,26 +93,24 @@ class ReferencePaymentAbstract extends \Magento\Payment\Block\Info
     }
 
     /**
-     * Construct function
-     */
-    protected function _construct()
-    {
-        parent::_construct();
-    }
-
-
-    /**
      * Get method title from setting
+     *
+     * @return \Magento\Framework\Phrase|mixed
      */
     public function getMethodTitle()
     {
-        $title = $this->_scopeConfig->getValue('payment/cashforpos/title', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $title = $this->_scopeConfig->getValue(
+            'payment/cashforpos/title',
+            ScopeInterface::SCOPE_STORE
+        );
         if ($title == '') {
             $title = __("Cash");
         }
         return $title;
     }
+
     /**
+     * Get Credit Card Method Title
      *
      * @return string
      */

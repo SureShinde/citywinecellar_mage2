@@ -6,9 +6,12 @@
 
 namespace Magestore\PurchaseOrderSuccess\Ui\DataProvider\Supplier\Form\Modifier;
 
+use Magestore\SupplierSuccess\Api\Data\SupplierInterface;
+
 /**
- * Class ReceivedProduct
- * @package Magestore\PurchaseOrderSuccess\Ui\DataProvider\PurchaseOrder\Form\Modifier
+ * Class PurchaseOrderList
+ *
+ * Used for purchased order list
  */
 class PurchaseOrderList extends \Magestore\PurchaseOrderSuccess\Ui\DataProvider\Modifier\AbstractModifier
 {
@@ -16,7 +19,7 @@ class PurchaseOrderList extends \Magestore\PurchaseOrderSuccess\Ui\DataProvider\
      * @var string
      */
     protected $scopeName = 'os_supplier_form.os_supplier_form';
-    
+
     /**
      * @var string
      */
@@ -31,7 +34,7 @@ class PurchaseOrderList extends \Magestore\PurchaseOrderSuccess\Ui\DataProvider\
      * @var int
      */
     protected $sortOrder = 100;
-    
+
     protected $supplier;
 
     /**
@@ -43,17 +46,22 @@ class PurchaseOrderList extends \Magestore\PurchaseOrderSuccess\Ui\DataProvider\
     ];
 
     /**
-     * @return \Magestore\SupplierSuccess\Api\Data\SupplierInterface;
+     * Get current supplier
+     *
+     * @return mixed|null
      */
-    public function getCurrentSupplier(){
-        if(!$this->supplier)
-            $this->supplier = $this->registry->registry(\Magestore\SupplierSuccess\Api\Data\SupplierInterface::CURRENT_SUPPLIER);
+    public function getCurrentSupplier()
+    {
+        if (!$this->supplier) {
+            $this->supplier = $this->registry->registry(SupplierInterface::CURRENT_SUPPLIER);
+        }
         return $this->supplier;
     }
-    
+
     /**
-     * modify data
+     * Modify data
      *
+     * @param array $data
      * @return array
      */
     public function modifyData(array $data)
@@ -63,21 +71,25 @@ class PurchaseOrderList extends \Magestore\PurchaseOrderSuccess\Ui\DataProvider\
 
     /**
      * Modify purchase order form meta
-     * 
+     *
      * @param array $meta
      * @return array
      */
-    public function modifyMeta(array $meta){
+    public function modifyMeta(array $meta)
+    {
         $supplier = $this->getCurrentSupplier();
-        if(!$supplier->getId()){
+        if (!$supplier->getId()) {
             return $meta;
         }
-        $totalOrder = $this->objectManager->create('Magestore\PurchaseOrderSuccess\Api\PurchaseOrderRepositoryInterface')
+        $totalOrder = $this->objectManager
+            ->create(\Magestore\PurchaseOrderSuccess\Api\PurchaseOrderRepositoryInterface::class)
             ->getListBySupplierId(
-                $supplier->getId(), \Magestore\PurchaseOrderSuccess\Model\PurchaseOrder\Option\Type::TYPE_PURCHASE_ORDER
+                $supplier->getId(),
+                \Magestore\PurchaseOrderSuccess\Model\PurchaseOrder\Option\Type::TYPE_PURCHASE_ORDER
             )->getSize();
-        if(empty($totalOrder))
+        if (empty($totalOrder)) {
             return $meta;
+        }
         $meta = array_replace_recursive(
             $meta,
             [
@@ -107,25 +119,27 @@ class PurchaseOrderList extends \Magestore\PurchaseOrderSuccess\Ui\DataProvider\
                 ],
             ]
         );
-        return $meta;   
+        return $meta;
     }
 
     /**
      * Add purchase order list form fields
-     * 
+     *
      * @return array
      */
-    public function getPurchaseOrderListChildren(){
+    public function getPurchaseOrderListChildren()
+    {
         $children[$this->children['purchase_order_container']] = $this->getPurchaseOrderList();
         return $children;
     }
-    
+
     /**
      * Get received product list.
-     * 
+     *
      * @return array
      */
-    public function getPurchaseOrderList(){
+    public function getPurchaseOrderList()
+    {
         $dataScope = 'purchase_order_listing';
         return [
             'arguments' => [
@@ -135,7 +149,7 @@ class PurchaseOrderList extends \Magestore\PurchaseOrderSuccess\Ui\DataProvider\
                         'autoRender' => false,
                         'componentType' => 'insertListing',
                         'dataScope' => $this->children[$dataScope],
-                        'externalProvider' => $this->children[$dataScope]. '.' . $this->children[$dataScope]
+                        'externalProvider' => $this->children[$dataScope] . '.' . $this->children[$dataScope]
                             . '_data_source',
                         'ns' => $this->children[$dataScope],
                         'render_url' => $this->urlBuilder->getUrl('mui/index/render'),
@@ -148,9 +162,15 @@ class PurchaseOrderList extends \Magestore\PurchaseOrderSuccess\Ui\DataProvider\
                         'externalFilterMode' => true,
                         'imports' => [
                             'supplier_id' => '${ $.provider }:data.supplier_id',
+                            '__disableTmpl' => [
+                                'supplier_id' => false
+                            ]
                         ],
                         'exports' => [
                             'supplier_id' => '${ $.externalProvider }:params.supplier_id',
+                            '__disableTmpl' => [
+                                'supplier_id' => false
+                            ]
                         ],
                         'selectionsProvider' =>
                             $this->children[$dataScope]

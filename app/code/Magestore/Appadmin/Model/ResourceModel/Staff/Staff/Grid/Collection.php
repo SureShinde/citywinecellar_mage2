@@ -13,17 +13,10 @@ use Magento\Framework\Event\ManagerInterface as EventManager;
 use Psr\Log\LoggerInterface as Logger;
 
 /**
- * Class Collection
- * @package Magestore\Appadmin\Model\ResourceModel\Staff\Staff\Grid
- * @category    Magestore
- * @package     Magestore_Appadmin
- * @module      Appadmin
- * @author      Magestore Developer
+ * Staff grid Collection
  */
 class Collection extends SearchResult
 {
-
-
     const STATUS_ENABLED = 1;
     const STATUS_DISABLED = 2;
     /**
@@ -41,6 +34,7 @@ class Collection extends SearchResult
 
     /**
      * Collection constructor.
+     *
      * @param EntityFactory $entityFactory
      * @param Logger $logger
      * @param FetchStrategy $fetchStrategy
@@ -62,32 +56,33 @@ class Collection extends SearchResult
         \Magestore\Appadmin\Model\Source\Adminhtml\Role $role,
         \Magestore\Webpos\Model\Source\Adminhtml\Location $location,
         \Magento\Framework\App\RequestInterface $request
-    )
-    {
+    ) {
         $this->role = $role;
         $this->location = $location;
         $this->request = $request;
         parent::__construct($entityFactory, $logger, $fetchStrategy, $eventManager, $mainTable, $resourceModel);
     }
 
-
+    /**
+     * Get data
+     *
+     * @return array
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
     public function getData()
     {
         $data = parent::getData();
         if (($this->request->getActionName() == 'gridToCsv') || ($this->request->getActionName() == 'gridToXml')) {
-            $options = array(
+            $options = [
                 self::STATUS_ENABLED => __('Enabled'),
                 self::STATUS_DISABLED => __('Disabled')
-            );
+            ];
             $locationOptions = $this->location->getOptionArray();
             $roleOptions = $this->role->getOptionArray();
             foreach ($data as &$item) {
-                if ($item['status']) {
-                    $item['status'] = $options[$item['status']];
-                }
                 if ($item['location_ids']) {
                     $locationArray = explode(',', $item['location_ids']);
-                    $locationNameArray = array();
+                    $locationNameArray = [];
                     foreach ($locationArray as $locationId) {
                         if (isset($locationOptions[$locationId])) {
                             $locationName = $locationOptions[$locationId];
@@ -96,8 +91,15 @@ class Collection extends SearchResult
                     }
                     $item['location_ids'] = implode(',', $locationNameArray);
                 }
-                if ($item['role_id']) {
-                    $item['role_id'] = $roleOptions[$item['role_id']];
+                $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+                $metadataProvider = $objectManager->get(\Magento\Ui\Model\Export\MetadataProvider::class);
+                if (!method_exists($metadataProvider, 'getColumnOptions')) {
+                    if ($item['status']) {
+                        $item['status'] = $options[$item['status']];
+                    }
+                    if ($item['role_id']) {
+                        $item['role_id'] = $roleOptions[$item['role_id']];
+                    }
                 }
             }
         }

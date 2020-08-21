@@ -4,18 +4,20 @@
  * See COPYING.txt for license details.
  */
 
-namespace Magestore\PurchaseOrderSuccess\Ui\DataProvider\ReturnOrder\Form\Modifier\ReturnSumary\Modifier\ScanBarcodeDataProvider;
+namespace Magestore\PurchaseOrderSuccess\Ui\DataProvider\ReturnOrder\Form\Modifier\ReturnSumary\Modifier\ScanBarcodeDataProvider; //phpcs:disable
 
 use Magento\Ui\Component\Container;
-use Magento\Ui\Component\Modal;
 use Magento\Ui\Component\Form;
 use Magento\Ui\Component\DynamicRows;
+use Magestore\PurchaseOrderSuccess\Ui\DataProvider\ReturnOrder\Form\Modifier\ReturnSumary\Modifier\AbstractModifier;
 
 /**
  * Class ProductList
- * @package Magestore\PurchaseOrderSuccess\Ui\DataProvider\ReturnOrder\Form\Modifier\ReturnSumary\Modifier\ScanBarcodeDataProvider
+ *
+ * Used for product list
  */
-class ProductList extends \Magestore\PurchaseOrderSuccess\Ui\DataProvider\ReturnOrder\Form\Modifier\ReturnSumary\Modifier\AbstractModifier {
+class ProductList extends AbstractModifier
+{
 
     /**
      * @var string
@@ -60,7 +62,8 @@ class ProductList extends \Magestore\PurchaseOrderSuccess\Ui\DataProvider\Return
      * @param array $meta
      * @return array
      */
-    public function modifyMeta(array $meta){
+    public function modifyMeta(array $meta)
+    {
         $meta = array_replace_recursive(
             $meta,
             [
@@ -89,7 +92,8 @@ class ProductList extends \Magestore\PurchaseOrderSuccess\Ui\DataProvider\Return
      *
      * @return array
      */
-    public function getProductListChildren(){
+    public function getProductListChildren()
+    {
         $children = [
             $this->children['dynamic_grid'] => $this->getDynamicGrid()
         ];
@@ -97,7 +101,8 @@ class ProductList extends \Magestore\PurchaseOrderSuccess\Ui\DataProvider\Return
         return $children;
     }
 
-    public function getReturnedProductScanBarcodeInput(){
+    public function getReturnedProductScanBarcodeInput()
+    {
         return [
             'arguments' => [
                 'data' => [
@@ -149,7 +154,12 @@ class ProductList extends \Magestore\PurchaseOrderSuccess\Ui\DataProvider\Return
                         'deleteButtonLabel' => __('Remove'),
                         'dataProvider' => $this->children['returned_product_modal_select_listing'],
                         'map' => $this->mapFields,
-                        'links' => ['insertData' => '${ $.provider }:${ $.dataProvider }'],
+                        'links' => [
+                            'insertData' => '${ $.provider }:${ $.dataProvider }',
+                            '__disableTmpl' => [
+                                'insertData' => false
+                            ]
+                        ],
                         'sortOrder' => 30,
                         'columnsHeader' => false,
                         'columnsHeaderAfterRender' => true,
@@ -196,8 +206,18 @@ class ProductList extends \Magestore\PurchaseOrderSuccess\Ui\DataProvider\Return
         return [
             'id' => $this->getTextColumn('id', false, 'Product ID', 10),
             'product_sku' => $this->getTextColumn('product_sku', false, 'Product SKU', 20),
-            'product_name' => $this->getTextColumn('product_name', false, 'Product Name', 30),
-            'product_supplier_sku' => $this->getTextColumn('product_supplier_sku', false, 'Supplier SKU', 40),
+            'product_name' => $this->getTextColumn(
+                'product_name',
+                false,
+                'Product Name',
+                30
+            ),
+            'product_supplier_sku' => $this->getTextColumn(
+                'product_supplier_sku',
+                false,
+                'Supplier SKU',
+                40
+            ),
             'returned_qty' => [
                 'arguments' => [
                     'data' => [
@@ -236,24 +256,36 @@ class ProductList extends \Magestore\PurchaseOrderSuccess\Ui\DataProvider\Return
         ];
     }
 
-    public function getReturnedProductBarcodeJson(){
+    /**
+     * Get returned product barcode json
+     *
+     * @return mixed
+     */
+    public function getReturnedProductBarcodeJson()
+    {
         $result = [];
         $collection = $this->getReturnedProductBarcodeCollection();
         foreach ($collection->getItems() as $item) {
             $result[$item->getBarcode()] = $item->getData();
         }
         return \Magento\Framework\App\ObjectManager::getInstance()
-            ->create('Magento\Framework\Json\EncoderInterface')->encode($result);
+            ->create(\Magento\Framework\Json\EncoderInterface::class)->encode($result);
     }
 
-    public function getReturnedProductBarcodeCollection(){
+    /**
+     * Get returned product barcode collection
+     *
+     * @return mixed
+     */
+    public function getReturnedProductBarcodeCollection()
+    {
         $warehouseId = $this->request->getParam('warehouse_id', null);
         $supplierId = $this->request->getParam('supplier_id', null);
         $collection = \Magento\Framework\App\ObjectManager::getInstance()
-            ->create('Magestore\BarcodeSuccess\Model\ResourceModel\Barcode\Collection');
+            ->create(\Magestore\BarcodeSuccess\Model\ResourceModel\Barcode\Collection::class);
         /** @var \Magestore\PurchaseOrderSuccess\Service\ReturnOrder\Item\ItemService $returnItemService */
         $returnItemService = \Magento\Framework\App\ObjectManager::getInstance()
-            ->create('Magestore\PurchaseOrderSuccess\Service\ReturnOrder\Item\ItemService');
+            ->create(\Magestore\PurchaseOrderSuccess\Service\ReturnOrder\Item\ItemService::class);
         $listProductsIdOnSource = $returnItemService->getProductIdOnCurrentWarehouse($warehouseId);
         $collection->addFieldToFilter('main_table.product_id', ['in' => $listProductsIdOnSource]);
         $collection->addFieldToSelect(['barcode']);

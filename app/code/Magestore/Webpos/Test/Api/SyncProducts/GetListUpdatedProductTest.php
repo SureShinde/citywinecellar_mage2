@@ -16,6 +16,9 @@ use Magento\Framework\Webapi\Exception;
 use Magestore\Webpos\Test\Api\GetSessionTrait;
 use Magestore\Webpos\Test\Constant\Product;
 
+/**
+ * Api Test GetListUpdatedProductTest
+ */
 class GetListUpdatedProductTest extends WebapiAbstract
 {
     use GetSessionTrait;
@@ -34,19 +37,19 @@ class GetListUpdatedProductTest extends WebapiAbstract
     protected $apiName = "getListUpdatedProducts";
 
     /**
-     * @return false|string
+     * Set Up
+     *
+     * @return void
      */
-    protected function setUp()
+    protected function setUp() : void // phpcs:ignore
     {
         $this->posSession = $this->loginAndAssignPos();
     }
 
-
-
     /**
      * Initialize fixture namespaces.
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass() : void // phpcs:ignore
     {
         include __DIR__. '/../../_files/update_product.php';
         parent::setUpBeforeClass();
@@ -57,7 +60,7 @@ class GetListUpdatedProductTest extends WebapiAbstract
      *
      * @return void
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass() : void // phpcs:ignore
     {
         include __DIR__. '/../../_files/update_product_rollback.php';
         parent::tearDownAfterClass();
@@ -102,8 +105,7 @@ class GetListUpdatedProductTest extends WebapiAbstract
         self::assertEquals($expectedTotalCount, $response['total_count'], $message);
 
         /* check list_items is empty */
-        self::assertEmpty($response['items'] , $message);
-
+        self::assertEmpty($response['items'], $message);
     }
 
     /**
@@ -143,7 +145,7 @@ class GetListUpdatedProductTest extends WebapiAbstract
         self::assertEquals($expectedTotalCount, $response['total_count'], $message);
 
         /* check list_items is not empty */
-        self::assertNotEmpty($response['items'] , $message);
+        self::assertNotEmpty($response['items'], $message);
 
         $expectedItemsData = [
             [
@@ -185,5 +187,4 @@ class GetListUpdatedProductTest extends WebapiAbstract
         $this->testCaseId = "SP5";
         $this->sessionCase3();
     }
-
 }

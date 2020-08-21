@@ -5,17 +5,18 @@
  */
 namespace Magestore\Giftvoucher\Block\Order;
 
+use \Magento\Sales\Model\Order\Item as OrderItem;
+use \Magento\Sales\Model\Order\Invoice\Item as InvoiceItem;
+use \Magento\Sales\Model\Order\Creditmemo\Item as CreditmemoItem;
+
 /**
  * Giftvoucher Order Escape Item Block
  *
- * @category Magestore
- * @package  Magestore_Giftvoucher
  * @module   Giftvoucher
  * @author   Magestore Developer
  */
 class Item extends \Magento\Sales\Block\Order\Item\Renderer\DefaultRenderer
 {
-
     /**
      * @var \Magento\Directory\Model\CurrencyFactory
      */
@@ -71,11 +72,14 @@ class Item extends \Magento\Sales\Block\Order\Item\Renderer\DefaultRenderer
         $this->_localeCurrency = $localeCurrency;
         parent::__construct($context, $string, $productOptionFactory, $data);
     }
-    
+
     /**
      * Get Gift Card item options in the order
      *
      * @return array
+     * @throws \Zend_Currency_Exception
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * phpcs:disable Generic.Metrics.NestingLevel
      */
     public function getItemOptions()
     {
@@ -86,10 +90,10 @@ class Item extends \Magento\Sales\Block\Order\Item\Renderer\DefaultRenderer
             return $result;
         }
 
-        $templates = $this->_objectManager->create('Magestore\Giftvoucher\Model\GiftTemplate')
+        $templates = $this->_objectManager->create(\Magestore\Giftvoucher\Model\GiftTemplate::class)
                         ->getCollection()
                         ->addFieldToFilter('status', '1');
-        
+
         if ($options = $item->getProductOptionByCode('info_buyRequest')) {
             foreach ($this->_helper->getGiftVoucherOptions() as $code => $label) {
                 if (isset($options[$code]) && $options[$code]) {
@@ -100,33 +104,33 @@ class Item extends \Magento\Sales\Block\Order\Item\Renderer\DefaultRenderer
                             }
                         }
                         if ($cartType !=1) {
-                            $result[] = array(
+                            $result[] = [
                                 'label' => $label,
                                 'value' => $this->_escaper->escapeHtml($valueTemplate->getTemplateName()),
                                 'option_value' => $this->_escaper->escapeHtml($valueTemplate->getTemplateName()),
-                            );
+                            ];
                         }
                     } else {
-                        $result[] = array(
+                        $result[] = [
                             'label' => $label,
                             'value' => $this->_escaper->escapeHtml($options[$code]),
                             'option_value' => $this->_escaper->escapeHtml($options[$code]),
-                        );
+                        ];
                     }
                 }
             }
         }
 
-        if($item->getQuoteItemId()) {
+        if ($item->getQuoteItemId()) {
             $giftVouchers = $this->_giftvoucher->getCollection()->addItemFilter($item->getQuoteItemId());
         } else {
             $giftVouchers = $this->_giftvoucher->getCollection()->addItemFilter($item->getId(), true);
         }
         if ($giftVouchers->getSize()) {
-            $giftVouchersCode = array();
+            $giftVouchersCode = [];
             foreach ($giftVouchers as $giftVoucher) {
                 $balance = $this->_localeCurrency->getCurrency($giftVoucher->getCurrency())
-                    ->toCurrency($giftVoucher->getBalance(), array());
+                    ->toCurrency($giftVoucher->getBalance(), []);
                 if ($giftVoucher->getSetId()>0) {
                     $giftVouchersCode[] = 'XXXXXXXXX'. ' (' . $balance . ') ';
                 } else {
@@ -134,20 +138,23 @@ class Item extends \Magento\Sales\Block\Order\Item\Renderer\DefaultRenderer
                 }
             }
             $codes = implode('<br />', $giftVouchersCode);
-            $result[] = array(
+            $result[] = [
                 'label' => __('Gift Card Code'),
                 'value' => $codes,
                 'option_value' => $codes,
-            );
+            ];
         }
 
         return $result;
     }
+
     /**
      * Get the html for item price
      *
      * @param OrderItem|InvoiceItem|CreditmemoItem $item
+     *
      * @return string
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function getItemPrice($item)
     {

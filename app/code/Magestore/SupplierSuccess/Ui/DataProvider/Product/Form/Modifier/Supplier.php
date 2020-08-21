@@ -1,15 +1,16 @@
 <?php
-
 /**
  * Copyright © 2016 Magestore. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace Magestore\SupplierSuccess\Ui\DataProvider\Product\Form\Modifier;
 
 use Magento\Ui\Component\Form;
 
 /**
- * Class Related
+ * Class define grid supplier in products' detail page
+ *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Supplier implements \Magento\Ui\DataProvider\Modifier\ModifierInterface
@@ -93,9 +94,9 @@ class Supplier implements \Magento\Ui\DataProvider\Modifier\ModifierInterface
         'tax' => 'tax'
     ];
 
-
     /**
      * Supplier constructor.
+     *
      * @param \Magento\Framework\UrlInterface $urlBuilder
      * @param \Magento\Framework\Registry $registry
      * @param \Magestore\SupplierSuccess\Model\ResourceModel\Product\Supplier\Collection $productSupplierCollection
@@ -104,8 +105,7 @@ class Supplier implements \Magento\Ui\DataProvider\Modifier\ModifierInterface
         \Magento\Framework\UrlInterface $urlBuilder,
         \Magento\Framework\Registry $registry,
         \Magestore\SupplierSuccess\Model\ResourceModel\Product\Supplier\Collection $productSupplierCollection
-    )
-    {
+    ) {
         $this->urlBuilder = $urlBuilder;
         $this->registry = $registry;
         $this->productSupplierCollection = $productSupplierCollection;
@@ -119,20 +119,23 @@ class Supplier implements \Magento\Ui\DataProvider\Modifier\ModifierInterface
      */
     public function getCurrentProduct()
     {
-        if (!$this->_currentProduct)
+        if (!$this->_currentProduct) {
             $this->_currentProduct = $this->registry->registry('current_product');
+        }
         return $this->_currentProduct;
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function modifyData(array $data)
     {
-        if (isset($data[array_keys($data)[0]]['product']))
+        if (isset($data[array_keys($data)[0]]['product'])) {
             $data = array_replace_recursive(
-                $data, [array_keys($data)[0] => ['product' => ['current_product_id' => array_keys($data)[0]]]]
+                $data,
+                [array_keys($data)[0] => ['product' => ['current_product_id' => array_keys($data)[0]]]]
             );
+        }
         $product = $this->getCurrentProduct();
         $data[$product->getId()]['add_supplier'] = 1;
         if ($product && $product->getId()) {
@@ -146,7 +149,7 @@ class Supplier implements \Magento\Ui\DataProvider\Modifier\ModifierInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function modifyMeta(array $meta)
     {
@@ -329,9 +332,15 @@ class Supplier implements \Magento\Ui\DataProvider\Modifier\ModifierInterface
                         'externalFilterMode' => true,
                         'imports' => [
                             'product_id' => '${ $.provider }:data.product.current_product_id',
+                            '__disableTmpl' => [
+                                'product_id' => false
+                            ]
                         ],
                         'exports' => [
                             'product_id' => '${ $.externalProvider }:params.product_id',
+                            '__disableTmpl' => [
+                                'product_id' => false
+                            ]
                         ],
                     ],
                 ],
@@ -362,7 +371,12 @@ class Supplier implements \Magento\Ui\DataProvider\Modifier\ModifierInterface
                         'deleteButtonLabel' => __('Remove'),
                         'dataProvider' => $this->_modifierConfig['listing'],
                         'map' => $this->_mapFields,
-                        'links' => ['insertData' => '${ $.provider }:${ $.dataProvider }'],
+                        'links' => [
+                            'insertData' => '${ $.provider }:${ $.dataProvider }',
+                            '__disableTmpl' => [
+                                'insertData' => false
+                            ]
+                        ],
                         'sortOrder' => 20,
                         'columnsHeader' => false,
                         'columnsHeaderAfterRender' => true,
@@ -408,7 +422,7 @@ class Supplier implements \Magento\Ui\DataProvider\Modifier\ModifierInterface
     {
         return [
             'id' => $this->getTextColumn('id', false, __('Supplier Id'), 10),
-            'supplier_code' => $this->getTextColumn('supplier_code', false, __('Supplier Name'), 20),
+            'supplier_code' => $this->getTextColumn('supplier_code', false, __('Supplier Code'), 20),
             'product_supplier_sku' => [
                 'arguments' => [
                     'data' => [
@@ -421,9 +435,7 @@ class Supplier implements \Magento\Ui\DataProvider\Modifier\ModifierInterface
                             'fit' => true,
                             'additionalClasses' => 'admin__field-small',
                             'sortOrder' => 30,
-                            'validation' => [
-//                                'required-entry' => true,
-                            ],
+                            'validation' => [],
                         ],
                     ],
                 ],
@@ -504,7 +516,7 @@ class Supplier implements \Magento\Ui\DataProvider\Modifier\ModifierInterface
      *
      * @param string $dataScope
      * @param bool $fit
-     * @param Phrase $label
+     * @param \Magento\Framework\Phrase $label
      * @param int $sortOrder
      * @return array
      */

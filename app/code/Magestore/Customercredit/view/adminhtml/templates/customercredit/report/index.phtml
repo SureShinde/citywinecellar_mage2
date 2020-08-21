@@ -29,7 +29,10 @@
     function changeDiagramsPeriod(periodObj) {
         periodParam = periodObj.value ? 'period/' + periodObj.value + '/' : '';
         ajaxBlockParam = 'block/adminhtml_report_customercredit/';
-        ajaxBlockUrl = '<?php echo $block->getUrl('*/*/ajaxBlock', array('_current' => true, 'block' => '', 'period' => '')) ?>' + ajaxBlockParam + periodParam;
+        ajaxBlockUrl =
+            '<?= /* @noEscape */$block->getUrl('*/*/ajaxBlock', ['_current' => true, 'block' => '', 'period' => '']) ?>'
+            + ajaxBlockParam
+            + periodParam;
         new Ajax.Request(ajaxBlockUrl, {
             parameters: {isAjax: 'true', form_key: FORM_KEY},
             onSuccess: function (transport) {
@@ -52,7 +55,9 @@
                 }
             }
         });
-        ajaxBlockUrl = '<?php echo $block->getUrl('*/*/ajaxBlock', array('_current' => true, 'block' => '', 'period' => '')) ?>' + periodParam;
+        ajaxBlockUrl = '<?= /* @noEscape */
+            $block->getUrl('*/*/ajaxBlock', ['_current' => true, 'block' => '', 'period' => '']) ?>'
+            + periodParam;
         new Ajax.Request(ajaxBlockUrl, {
             parameters: {isAjax: 'true', form_key: FORM_KEY},
             onSuccess: function (transport) {
@@ -88,19 +93,20 @@
     <div cellspacing="25" width="50%" style="border-top: 39px solid #cddddd; float:left">
 
         <div class="entry-edit">
-            <fieldset class="np"><?php echo $block->getChildHtml('statistics-credit'); ?></fieldset>
+            <fieldset class="np"><?= /* @noEscape */ $block->getChildHtml('statistics-credit'); ?></fieldset>
         </div>
         <div class="entry-edit">
             <fieldset class="np">
-                <div class="entry-edit-head"><h4><?php echo __('Top 5 Customers with The Greatest Credit Balances ') ?></h4>
+                <div class="entry-edit-head">
+                    <h4><?= /* @noEscape */ __('Top 5 Customers with The Greatest Credit Balances ') ?></h4>
                 </div>
-                <?php echo $block->getChildHtml('max-balance'); ?>
+                <?= /* @noEscape */ $block->getChildHtml('max-balance'); ?>
             </fieldset>
         </div>
     </div>
     <div class="chart" style="border-top: 39px solid #cddddd; float:right">
         <div class="entry-edit">
-            <?php echo $block->getChildHtml('customer-credit') ?>
+            <?= /* @noEscape */ $block->getChildHtml('customer-credit') ?>
         </div>
     </div>
 

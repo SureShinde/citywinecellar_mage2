@@ -21,9 +21,15 @@
  */
 
 namespace Magestore\Storepickup\Observer;
-use Magento\Framework\Event\ObserverInterface;
-use Exception;
 
+use Magento\Framework\Event\ObserverInterface;
+
+/**
+ * Class PaymentActive
+ *
+ * Used to observe payment active
+ * @SuppressWarnings(PHPMD.CookieAndSessionMisuse)
+ */
 class PaymentActive implements ObserverInterface
 {
 
@@ -34,12 +40,23 @@ class PaymentActive implements ObserverInterface
     protected $checkoutSession;
 
     /**
-     * @param \Magestore\Storepickup\Helper\Data
-     * @codeCoverageIgnore
+     * @var \Magestore\Storepickup\Helper\Data
      */
     protected $helperData;
 
-    public function __construct (
+    /**
+     * @var \Magento\Store\Model\StoreManagerInterface
+     */
+    protected $storeManager;
+
+    /**
+     * PaymentActive constructor.
+     *
+     * @param \Magento\Checkout\Model\Session $checkoutSession
+     * @param \Magestore\Storepickup\Helper\Data $helperData
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     */
+    public function __construct(
         \Magento\Checkout\Model\Session $checkoutSession,
         \Magestore\Storepickup\Helper\Data $helperData,
         \Magento\Store\Model\StoreManagerInterface $storeManager
@@ -48,21 +65,32 @@ class PaymentActive implements ObserverInterface
         $this->helperData = $helperData;
         $this->storeManager = $storeManager;
     }
-    public function execute(\Magento\Framework\Event\Observer $observer) {
-        $event           = $observer->getEvent();
-        $method          = $event->getMethodInstance();
-        $result          = $event->getResult();
+
+    /**
+     * Execute
+     *
+     * @param \Magento\Framework\Event\Observer $observer
+     * @return $this|void
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function execute(\Magento\Framework\Event\Observer $observer)
+    {
+        $event = $observer->getEvent();
+        $method = $event->getMethodInstance();
+        $result = $event->getResult();
         $quote = $this->checkoutSession->getQuote();
         $shippingMethod = $quote->getShippingAddress()->getShippingMethod();
         if ($shippingMethod && $shippingMethod == 'storepickup_storepickup') {
             $isAllMethods = $this->helperData->isAllowSpecificPayments();
-            if (intval($isAllMethods) == 1) {
+            if ((int)($isAllMethods) == 1) {
                 $allowMethodKeys = $this->helperData->getSelectpaymentmethod();
                 $allowMethodKeys = explode(',', $allowMethodKeys);
-                if (!count($allowMethodKeys))
+                if (!count($allowMethodKeys)) {
                     return $this;
+                }
                 if (!in_array($method->getCode(), $allowMethodKeys)) {
-                    $result->setData( 'is_available', false);
+                    $result->setData('is_available', false);
                 }
             }
         }

@@ -9,20 +9,21 @@ namespace Magestore\TransferStock\Block\Adminhtml\InventoryTransfer\Edit\Button;
 use Magento\Framework\View\Element\UiComponent\Control\ButtonProviderInterface;
 use Magestore\TransferStock\Model\InventoryTransfer\Option\Stage;
 use Magestore\TransferStock\Model\InventoryTransfer\Option\Status;
+use Magestore\TransferStock\Block\Adminhtml\InventoryTransfer\AbstractInventoryTransfer;
 
 /**
  * Class SaveButton
  */
-class MarkAsClose extends \Magestore\TransferStock\Block\Adminhtml\InventoryTransfer\AbstractInventoryTransfer
-    implements ButtonProviderInterface
+class MarkAsClose extends AbstractInventoryTransfer implements
+    ButtonProviderInterface
 {
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function getButtonData()
     {
-        if($this->request->getParam('id') && $this->getInventoryTransfer()->getStatus() == Status::STATUS_OPEN) {
-            $url = $this->getUrl('*/*/markAsClose', array('_secure' => true, 'id' => $this->request->getParam('id')));
+        if ($this->request->getParam('id') && $this->getInventoryTransfer()->getStatus() == Status::STATUS_OPEN) {
+            $url = $this->getUrl('*/*/markAsClose', ['_secure' => true, 'id' => $this->request->getParam('id')]);
 
             return [
                 'label' => __('Mark as Closed'),
@@ -36,5 +37,4 @@ class MarkAsClose extends \Magestore\TransferStock\Block\Adminhtml\InventoryTran
         }
         return [];
     }
-
 }

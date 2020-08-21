@@ -12,7 +12,9 @@ use Magestore\Giftvoucher\Api\Data\Redeem\ResponseInterface;
 
 /**
  * Class CheckoutService
- * @package Magestore\Giftvoucher\Service\Redeem
+ *
+ * Redeem checkout service
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class CheckoutService implements \Magestore\Giftvoucher\Api\Redeem\CheckoutServiceInterface
 {
@@ -82,7 +84,18 @@ class CheckoutService implements \Magestore\Giftvoucher\Api\Redeem\CheckoutServi
     protected $_objectManager;
 
     /**
+     * @var \Magento\Framework\Serialize\SerializerInterface
+     */
+    protected $serializer;
+
+    /**
+     * @var \Magestore\Giftvoucher\Api\GiftvoucherRepositoryInterface
+     */
+    protected $giftvoucherRepository;
+
+    /**
      * CheckoutService constructor.
+     *
      * @param \Magento\Quote\Api\CartRepositoryInterface $quoteRepository
      * @param \Magento\Directory\Model\CurrencyFactory $currencyFactory
      * @param \Magestore\Giftvoucher\Model\ResourceModel\CustomerVoucher\CollectionFactory $voucherCollectionFactory
@@ -95,7 +108,9 @@ class CheckoutService implements \Magestore\Giftvoucher\Api\Redeem\CheckoutServi
      * @param \Magestore\Giftvoucher\Model\CustomerVoucherFactory $customerVoucherFactory
      * @param \Magestore\Giftvoucher\Model\ResourceModel\CustomerVoucher\CollectionFactory $giftVoucherCollectionFactory
      * @param \Magestore\Giftvoucher\Api\GiftvoucherRepositoryInterface $giftvoucherRepository
-     * @param Magento\Framework\ObjectManagerInterface $objectmanager
+     * @param \Magento\Framework\ObjectManagerInterface $objectmanager
+     * @param \Magento\Framework\Serialize\SerializerInterface $serializer
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         \Magento\Quote\Api\CartRepositoryInterface $quoteRepository,
@@ -110,9 +125,9 @@ class CheckoutService implements \Magestore\Giftvoucher\Api\Redeem\CheckoutServi
         \Magestore\Giftvoucher\Model\CustomerVoucherFactory $customerVoucherFactory,
         \Magestore\Giftvoucher\Model\ResourceModel\CustomerVoucher\CollectionFactory $giftVoucherCollectionFactory,
         \Magestore\Giftvoucher\Api\GiftvoucherRepositoryInterface $giftvoucherRepository,
-        \Magento\Framework\ObjectManagerInterface $objectmanager
-    )
-    {
+        \Magento\Framework\ObjectManagerInterface $objectmanager,
+        \Magento\Framework\Serialize\SerializerInterface $serializer
+    ) {
         $this->quoteRepository = $quoteRepository;
         $this->currencyFactory = $currencyFactory;
         $this->voucherCollectionFactory = $voucherCollectionFactory;
@@ -126,6 +141,7 @@ class CheckoutService implements \Magestore\Giftvoucher\Api\Redeem\CheckoutServi
         $this->giftVoucherCollectionFactory = $giftVoucherCollectionFactory;
         $this->giftvoucherRepository = $giftvoucherRepository;
         $this->_objectManager = $objectmanager;
+        $this->serializer = $serializer;
     }
 
     /**
@@ -138,14 +154,15 @@ class CheckoutService implements \Magestore\Giftvoucher\Api\Redeem\CheckoutServi
     public function getUsingGiftCodes($cartId)
     {
         $quote = $this->getQuote($cartId);
-        $giftCards = array();
+        $giftCards = [];
         if ($codes = $quote->getGiftVoucherGiftCodes()) {
             $codesArray = explode(',', $codes);
             $codesDiscountArray = explode(',', $quote->getGiftVoucherGiftCodesDiscount());
             foreach ($codesArray as $key => $code) {
                 $giftCards[] = [
                     GiftcodeDiscountInterface::CODE => $code,
-                    GiftcodeDiscountInterface::DISCOUNT => (isset($codesDiscountArray[$key])) ? $codesDiscountArray[$key] : 0
+                    GiftcodeDiscountInterface::DISCOUNT =>
+                        (isset($codesDiscountArray[$key])) ? $codesDiscountArray[$key] : 0
                 ];
             }
         }
@@ -170,8 +187,8 @@ class CheckoutService implements \Magestore\Giftvoucher\Api\Redeem\CheckoutServi
             ->addFieldToFilter('main_table.customer_id', $customerId);
         $collection->getExistedGiftcodes($customerId, $customerEmail);
 
-        $giftCards = array();
-        $addedCodes = array();
+        $giftCards = [];
+        $addedCodes = [];
         if ($codes = $quote->getGiftVoucherGiftCodes()) {
             $addedCodes = explode(',', $codes);
         }
@@ -182,14 +199,10 @@ class CheckoutService implements \Magestore\Giftvoucher\Api\Redeem\CheckoutServi
                 continue;
             }
             if ($item->getConditionsSerialized()) {
-                if (class_exists('\Magento\Framework\Serialize\Serializer\Json')) {
-                    $conditionsArr = $this->_objectManager->create('\Magento\Framework\Serialize\Serializer\Json')->unserialize($item->getConditionsSerialized());
-                } else {
-                    $conditionsArr = unserialize($item->getConditionsSerialized());
-                }
+                $conditionsArr = $this->serializer->unserialize($item->getConditionsSerialized());
 
                 if (!empty($conditionsArr) && is_array($conditionsArr)) {
-                    $ruleModel->getConditions()->setConditions(array())->loadArray($conditionsArr);
+                    $ruleModel->getConditions()->setConditions([])->loadArray($conditionsArr);
                     if ($quote->isVirtual()) {
                         $address = $quote->getBillingAddress();
                     } else {
@@ -200,17 +213,19 @@ class CheckoutService implements \Magestore\Giftvoucher\Api\Redeem\CheckoutServi
                     }
                 }
             }
-            $giftCards[] = array(
+            $giftCards[] = [
                 GiftcodeInterface::GIFT_CODE => $item->getGiftCode(),
                 GiftcodeInterface::BALANCE => $this->_getGiftCardBalance($item, $store)
-            );
+            ];
         }
         return $giftCards;
     }
 
     /**
-     * @param $item
-     * @param $store
+     * Get Gift Card Balance
+     *
+     * @param \Magestore\Giftvoucher\Api\Data\GiftcodeInterface $item
+     * @param \Magento\Store\Api\Data\StoreInterface $store
      * @return mixed
      */
     public function _getGiftCardBalance($item, $store)
@@ -229,13 +244,13 @@ class CheckoutService implements \Magestore\Giftvoucher\Api\Redeem\CheckoutServi
                 / $baseCurrency->convert(100, $cardCurrency);
             return $this->formatPrice($store, $amount);
         }
-        return $cardCurrency->format($store, $item->getBalance(), array(), true);
+        return $cardCurrency->format($store, $item->getBalance(), [], true);
     }
 
     /**
      * Retrieve formated price
      *
-     * @param $store
+     * @param \Magento\Store\Api\Data\StoreInterface $store
      * @param float $value
      * @return string
      */
@@ -252,7 +267,7 @@ class CheckoutService implements \Magestore\Giftvoucher\Api\Redeem\CheckoutServi
     /**
      * Convert price
      *
-     * @param $store
+     * @param \Magento\Store\Api\Data\StoreInterface $store
      * @param float $value
      * @param bool $format
      * @return float
@@ -270,8 +285,7 @@ class CheckoutService implements \Magestore\Giftvoucher\Api\Redeem\CheckoutServi
     }
 
     /**
-     * @param int $cartId
-     * @return \Magento\Quote\Api\Data\CartInterface
+     * @inheritDoc
      */
     public function getQuote($cartId)
     {
@@ -280,7 +294,9 @@ class CheckoutService implements \Magestore\Giftvoucher\Api\Redeem\CheckoutServi
     }
 
     /**
-     * @param $cartId
+     * Clear Data
+     *
+     * @param int $cartId
      * @return $this
      */
     public function clearData($cartId)
@@ -300,6 +316,8 @@ class CheckoutService implements \Magestore\Giftvoucher\Api\Redeem\CheckoutServi
     }
 
     /**
+     * Validate Customer
+     *
      * @param \Magestore\Giftvoucher\Model\Giftvoucher $giftvoucher
      * @param int $customerId
      * @return bool
@@ -312,7 +330,7 @@ class CheckoutService implements \Magestore\Giftvoucher\Api\Redeem\CheckoutServi
         if (!$giftvoucher->getId()) {
             return false;
         }
-        $shareCard = intval($this->helper->getGeneralConfig('share_card'));
+        $shareCard = (int) $this->helper->getGeneralConfig('share_card');
         if ($shareCard < 1) {
             return true;
         }
@@ -325,11 +343,10 @@ class CheckoutService implements \Magestore\Giftvoucher\Api\Redeem\CheckoutServi
     }
 
     /**
-     * @param int $cartId
-     * @param array $addedCodes
-     * @param string $existedCode
-     * @param string $newCode
-     * @return \Magestore\Giftvoucher\Api\Data\Redeem\ResponseInterface
+     * @inheritDoc
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function applyCodes($cartId, $addedCodes = [], $existedCode = '', $newCode = '')
     {
@@ -341,17 +358,22 @@ class CheckoutService implements \Magestore\Giftvoucher\Api\Redeem\CheckoutServi
         $quote = $this->getQuote($cartId);
         if ($quote->getCouponCode() && !$this->helper->getGeneralConfig('use_with_coupon')) {
             $this->clearData($cartId);
-            $result[ResponseInterface::NOTICES][] = __('A coupon code has been used. You cannot apply gift codes with the coupon to get discount.');
+            $result[ResponseInterface::NOTICES][] = __(
+                'A coupon code has been used. You cannot apply gift codes with the coupon to get discount.'
+            );
         } else {
             if (count($addedCodes)) {
-                $giftMaxUseAmount = unserialize($quote->getGiftVoucherGiftCodesMaxDiscount());
-                if (!is_array($giftMaxUseAmount)) {
-                    $giftMaxUseAmount = array();
+                if ($quote->getGiftVoucherGiftCodesMaxDiscount()) {
+                    $giftMaxUseAmount = $this->serializer->unserialize($quote->getGiftVoucherGiftCodesMaxDiscount());
+                }
+                if (!isset($giftMaxUseAmount) || !is_array($giftMaxUseAmount)) {
+                    $giftMaxUseAmount = [];
                 }
                 foreach ($addedCodes as $addedCode) {
-                    $giftMaxUseAmount[$addedCode[GiftcodeDiscountInterface::CODE]] = $addedCode[GiftcodeDiscountInterface::DISCOUNT];
+                    $giftMaxUseAmount[$addedCode[GiftcodeDiscountInterface::CODE]] =
+                        $addedCode[GiftcodeDiscountInterface::DISCOUNT];
                 }
-                $quote->setGiftVoucherGiftCodesMaxDiscount(serialize($giftMaxUseAmount));
+                $quote->setGiftVoucherGiftCodesMaxDiscount($this->serializer->serialize($giftMaxUseAmount));
                 $quote->collectTotals();
                 $this->quoteRepository->save($quote);
             }
@@ -364,11 +386,14 @@ class CheckoutService implements \Magestore\Giftvoucher\Api\Redeem\CheckoutServi
             }
             if (count($giftCodes)) {
                 /** @var \Magento\Framework\App\State $state */
-                $state = $this->_objectManager->get('Magento\Framework\App\State');
+                $state = $this->_objectManager->get(\Magento\Framework\App\State::class);
                 if ('frontend' == $state->getAreaCode()) {
                     $max = $this->helper->getGeneralConfig('maximum');
                     if (!$this->helper->isAvailableToAddCode()) {
-                        $result[ResponseInterface::ERRORS][] = __('The maximum number of times to enter gift codes is %1!', $max);
+                        $result[ResponseInterface::ERRORS][] = __(
+                            'The maximum number of times to enter gift codes is %1!',
+                            $max
+                        );
                         return $result;
                     }
                 }
@@ -377,7 +402,7 @@ class CheckoutService implements \Magestore\Giftvoucher\Api\Redeem\CheckoutServi
                     if (!$giftVoucher->getGiftCode()) {
                         // Max times to enter gift code incorrectly
                         if ('frontend' == $state->getAreaCode()) {
-                            $session = $this->_objectManager->get('Magestore\Giftvoucher\Model\Session');
+                            $session = $this->_objectManager->get(\Magestore\Giftvoucher\Model\Session::class);
                             $codes = $session->getCodes();
                             $codes[] = $code;
                             $codes = array_unique($codes);
@@ -405,16 +430,27 @@ class CheckoutService implements \Magestore\Giftvoucher\Api\Redeem\CheckoutServi
                             && $giftVoucher->getRecipientName() && $giftVoucher->getRecipientEmail()
                             && $giftVoucher->getCustomerId()
                         ) {
-                            $result[ResponseInterface::NOTICES][] = __('Gift Card "%1" has been sent to the customer\'s friend.', $code);
+                            $result[ResponseInterface::NOTICES][] = __(
+                                'Gift Card "%1" has been sent to the customer\'s friend.',
+                                $code
+                            );
                         }
-                        $result[ResponseInterface::SUCCESS][] = __('Gift Card "%1" has been applied successfully.', $code);
+                        $result[ResponseInterface::SUCCESS][] = __(
+                            'Gift Card "%1" has been applied successfully.',
+                            $code
+                        );
                     } elseif ($giftVoucher->getStatus() == \Magestore\Giftvoucher\Model\Status::STATUS_ACTIVE
                         && $giftVoucher->isValidWebsite($this->helper->getStoreId($quote))
                     ) {
                         $this->addVoucherToQuote($cartId, $giftVoucher);
-                        $result[ResponseInterface::NOTICES][] = __('You can’t use this gift code since its conditions haven’t been met.');
+                        $result[ResponseInterface::NOTICES][] = __(
+                            'You can’t use this gift code since its conditions haven’t been met.'
+                        );
                     } else {
-                        $result[ResponseInterface::ERRORS][] = __('Gift Card "%1" is no longer available to use.', $code);
+                        $result[ResponseInterface::ERRORS][] = __(
+                            'Gift Card "%1" is no longer available to use.',
+                            $code
+                        );
                     }
                 }
             } else {
@@ -425,9 +461,8 @@ class CheckoutService implements \Magestore\Giftvoucher\Api\Redeem\CheckoutServi
     }
 
     /**
-     * @param int $cartId
-     * @param string $giftCode
-     * @return \Magestore\Giftvoucher\Api\Data\Redeem\ResponseInterface
+     * @inheritDoc
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function removeCode($cartId, $giftCode = '')
     {
@@ -446,10 +481,17 @@ class CheckoutService implements \Magestore\Giftvoucher\Api\Redeem\CheckoutServi
                 if ($value == $giftCode) {
                     unset($codesArray[$key]);
                     $success = true;
-                    $giftMaxUseAmount = unserialize($quote->getGiftVoucherGiftCodesMaxDiscount());
-                    if (is_array($giftMaxUseAmount) && array_key_exists($giftCode, $giftMaxUseAmount)) {
+                    if ($quote->getGiftVoucherGiftCodesMaxDiscount()) {
+                        $giftMaxUseAmount = $this->serializer->unserialize(
+                            $quote->getGiftVoucherGiftCodesMaxDiscount()
+                        );
+                    }
+                    if (isset($giftMaxUseAmount)
+                        && is_array($giftMaxUseAmount)
+                        && array_key_exists($giftCode, $giftMaxUseAmount)
+                    ) {
                         unset($giftMaxUseAmount[$giftCode]);
-                        $quote->setGiftVoucherGiftCodesMaxDiscount(serialize($giftMaxUseAmount));
+                        $quote->setGiftVoucherGiftCodesMaxDiscount($this->serializer->serialize($giftMaxUseAmount));
                     }
                     break;
                 }
@@ -470,8 +512,7 @@ class CheckoutService implements \Magestore\Giftvoucher\Api\Redeem\CheckoutServi
     }
 
     /**
-     * @param int $cartId
-     * @return \Magestore\Giftvoucher\Api\Data\Redeem\ResponseInterface
+     * @inheritDoc
      */
     public function removeCodes($cartId)
     {
@@ -486,9 +527,7 @@ class CheckoutService implements \Magestore\Giftvoucher\Api\Redeem\CheckoutServi
     }
 
     /**
-     * @param int $cartId
-     * @param \Magestore\Giftvoucher\Model\Giftvoucher $giftVoucher
-     * @return $this
+     * @inheritDoc
      */
     public function addVoucherToQuote($cartId, \Magestore\Giftvoucher\Model\Giftvoucher $giftVoucher)
     {
@@ -506,8 +545,10 @@ class CheckoutService implements \Magestore\Giftvoucher\Api\Redeem\CheckoutServi
     }
 
     /**
-     * @param $order
-     * @return $this
+     * @inheritDoc
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function processOrderPlaceAfter($order)
     {
@@ -551,24 +592,29 @@ class CheckoutService implements \Magestore\Giftvoucher\Api\Redeem\CheckoutServi
                 if ($order->getData('customer_id') == null) {
                     $customerName = __('Used by Guest');
                 } else {
-                    $customerName = __('Used by %1 %1', $order->getData('customer_firstname'),
-                        $order->getData('customer_lastname'));
+                    $customerName = __(
+                        'Used by %1 %1',
+                        $order->getData('customer_firstname'),
+                        $order->getData('customer_lastname')
+                    );
                 }
-                $this->historyFactory->create()->setData(array(
-                    'order_increment_id' => $order->getIncrementId(),
-                    'giftvoucher_id' => $giftVoucher->getId(),
-                    'created_at' => date("Y-m-d H:i:s"),
-                    'action' => \Magestore\Giftvoucher\Model\Actions::ACTIONS_SPEND_ORDER,
-                    'amount' => $codeCurrentDiscount,
-                    'balance' => $currentBalance,
-                    'currency' => $store->getCurrentCurrencyCode(),
-                    'status' => $giftVoucher->getStatus(),
-                    'order_amount' => $discount[$code],
-                    'comments' => __('Spent on order %1', $order->getIncrementId()),
-                    'extra_content' => $customerName,
-                    'customer_id' => $order->getData('customer_id'),
-                    'customer_email' => $order->getData('customer_email')
-                ))->save();
+                $this->historyFactory->create()->setData(
+                    [
+                        'order_increment_id' => $order->getIncrementId(),
+                        'giftvoucher_id' => $giftVoucher->getId(),
+                        'created_at' => date("Y-m-d H:i:s"),
+                        'action' => \Magestore\Giftvoucher\Model\Actions::ACTIONS_SPEND_ORDER,
+                        'amount' => $codeCurrentDiscount,
+                        'balance' => $currentBalance,
+                        'currency' => $store->getCurrentCurrencyCode(),
+                        'status' => $giftVoucher->getStatus(),
+                        'order_amount' => $discount[$code],
+                        'comments' => __('Spent on order %1', $order->getIncrementId()),
+                        'extra_content' => $customerName,
+                        'customer_id' => $order->getData('customer_id'),
+                        'customer_email' => $order->getData('customer_email')
+                    ]
+                )->save();
 
                 // add gift code to customer list
                 if ($order->getCustomerId() && ($balance > 0)) {
@@ -579,8 +625,8 @@ class CheckoutService implements \Magestore\Giftvoucher\Api\Redeem\CheckoutServi
                         try {
                             $timeSite = date(
                                 "Y-m-d",
-                                $this->helperData->getObjectManager()
-                                    ->get('Magento\Framework\Stdlib\DateTime\DateTime')->timestamp(time())
+                                $this->_objectManager
+                                    ->get(\Magento\Framework\Stdlib\DateTime\DateTime::class)->timestamp(time())
                             );
                             $this->customerVoucherFactory->create()
                                 ->setCustomerId($order->getCustomerId())
@@ -614,5 +660,6 @@ class CheckoutService implements \Magestore\Giftvoucher\Api\Redeem\CheckoutServi
                 return $this;
             }
         }
+        return $this;
     }
 }

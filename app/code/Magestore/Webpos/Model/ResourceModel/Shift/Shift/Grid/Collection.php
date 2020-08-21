@@ -16,7 +16,8 @@ use Magestore\Webpos\Api\Data\Shift\ShiftInterface;
 
 /**
  * Class Collection
- * @package Magestore\Webpos\Model\ResourceModel\Shift\Shift\Grid
+ *
+ * Grid collection
  */
 class Collection extends SearchResult
 {
@@ -42,7 +43,7 @@ class Collection extends SearchResult
         EventManager $eventManager,
         \Magento\Framework\App\RequestInterface $requestInterface,
         $mainTable = 'webpos_shift',
-        $resourceModel = 'Magestore\Webpos\Model\ResourceModel\Shift\Shift'
+        $resourceModel = \Magestore\Webpos\Model\ResourceModel\Shift\Shift::class
     ) {
         $this->requestInterface = $requestInterface;
         parent::__construct(
@@ -56,20 +57,22 @@ class Collection extends SearchResult
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     protected function _initSelect()
     {
         $posId = $this->requestInterface->getParam('pos_id', false);
         parent::_initSelect();
         $this->addFieldToFilter(ShiftInterface::STATUS, ShiftInterface::CLOSE_STATUS);
-        if($posId){
+        if ($posId) {
             $this->addFieldToFilter(ShiftInterface::POS_ID, $posId);
         }
         return $this;
     }
 
     /**
+     * Get data
+     *
      * @return array
      */
     public function getData()
@@ -77,12 +80,15 @@ class Collection extends SearchResult
         $om = \Magento\Framework\App\ObjectManager::getInstance();
         $data = parent::getData();
         /** @var \Magento\Framework\App\RequestInterface $request */
-        $request = $om->get('Magento\Framework\App\RequestInterface');
-        if($request->getParam('is_export')) {
-            $staffData = $om->get('Magestore\Webpos\Ui\Component\Listing\Column\Staff')
-                ->getOptionArray();
-            foreach ($data as &$item) {
-                $item['staff_id'] = $staffData[$item['staff_id']];
+        $request = $om->get(\Magento\Framework\App\RequestInterface::class);
+        $metadataProvider = $om->get(\Magento\Ui\Model\Export\MetadataProvider::class);
+        if (!method_exists($metadataProvider, 'getColumnOptions')) {
+            if ($request->getParam('is_export')) {
+                $staffData = $om->get(\Magestore\Webpos\Ui\Component\Listing\Column\Staff::class)
+                    ->getOptionArray();
+                foreach ($data as &$item) {
+                    $item['staff_id'] = $staffData[$item['staff_id']];
+                }
             }
         }
         return $data;

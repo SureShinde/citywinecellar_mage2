@@ -11,6 +11,7 @@ use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 
 /**
+ * Reward points - Upgrade data
  * @codeCoverageIgnore
  */
 class UpgradeData implements UpgradeDataInterface
@@ -39,36 +40,30 @@ class UpgradeData implements UpgradeDataInterface
 
     /**
      * UpgradeData constructor.
+     *
      * @param \Magento\Sales\Model\OrderFactory $orderFactory
      * @param \Magento\Framework\Math\CalculatorFactory $_calculatorFactory
+     * @param \Magento\Framework\App\ProductMetadataInterface $productMetadata
      * @param \Magento\Framework\App\State $appState
      */
     public function __construct(
         \Magento\Sales\Model\OrderFactory $orderFactory,
         \Magento\Framework\Math\CalculatorFactory $_calculatorFactory,
         \Magento\Framework\App\ProductMetadataInterface $productMetadata,
-        \Magento\Framework\App\State $appState,
-        \Magestore\Rewardpoints\Model\Service\IntegrateEE $integrateService
-    )
-    {
+        \Magento\Framework\App\State $appState
+    ) {
         $this->orderFactory = $orderFactory;
         $this->_calculatorFactory = $_calculatorFactory;
         $this->productMetadata = $productMetadata;
         $this->_appState = $appState;
-        $this->integrateService = $integrateService;
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function upgrade(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
     {
         if (version_compare($context->getVersion(), '1.2.0', '<')) {
-            $edition = $this->productMetadata->getEdition();
-            if($edition == 'Enterprise' && version_compare($context->getVersion(), '1.1.0', '<=')){
-                $this->integrateWithRewardPointsEE();
-            }
-            
             $version = $this->productMetadata->getVersion();
             try {
                 if (version_compare($version, '2.2.0', '>=')) {
@@ -83,10 +78,12 @@ class UpgradeData implements UpgradeDataInterface
         }
     }
 
-    public function integrateWithRewardPointsEE(){
-        $this->integrateService->conVertData();
-    }
-
+    /**
+     * Convert Order
+     *
+     * @param ModuleDataSetupInterface $setup
+     * @throws \Exception
+     */
     public function convertOrder(ModuleDataSetupInterface $setup)
     {
         $orderTable = $setup->getTable('sales_order');
@@ -111,7 +108,8 @@ class UpgradeData implements UpgradeDataInterface
                 $discountAmount = $orderItem->getDiscountAmount();
                 $baseDiscountInvoiced = $orderItem->getBaseDiscountInvoiced();
                 $discountInvoiced = $orderItem->getDiscountInvoiced();
-                $baseDiscountRefunded = $orderItem->getBaseDiscountRefunded() ? $orderItem->getBaseDiscountRefunded() : 0;
+                $baseDiscountRefunded = $orderItem->getBaseDiscountRefunded() ?
+                    $orderItem->getBaseDiscountRefunded() : 0;
                 $discountRefunded = $orderItem->getDiscountRefunded() ? $orderItem->getDiscountRefunded() : 0;
                 $baseRewardpointsDiscountInvoiced = $rewardpointsBaseDiscount / $qtyOrdered * $qtyInvoiced;
                 $rewardpointsDiscountInvoiced = $rewardpointsDiscount / $qtyOrdered * $qtyInvoiced;
@@ -135,7 +133,9 @@ class UpgradeData implements UpgradeDataInterface
                 $orderItem->setBaseDiscountRefunded(
                     $discountRefunded + $this->roundPrice($rewardpointsDiscountRefunded, true, $store)
                 );
-                $orderItem->setMagestoreBaseDiscount($orderItem->getMagestoreBaseDiscount() + $rewardpointsBaseDiscount);
+                $orderItem->setMagestoreBaseDiscount(
+                    $orderItem->getMagestoreBaseDiscount() + $rewardpointsBaseDiscount
+                );
                 $orderItem->setMagestoreDiscount($orderItem->getMagestoreDiscount() + $rewardpointsDiscount);
                 $totalItemsRewardpointsBaseDiscountInvoiced += $baseRewardpointsDiscountInvoiced;
                 $totalItemsRewardpointsDiscountInvoiced += $rewardpointsDiscountInvoiced;
@@ -153,24 +153,31 @@ class UpgradeData implements UpgradeDataInterface
             $rewardpointsDiscount = $order->getRewardpointsDiscount();
             $order->setBaseDiscountAmount($baseDiscountAmount - $rewardpointsBaseDiscount);
             $order->setDiscountAmount($discountAmount - $rewardpointsDiscount);
-            $order->setBaseDiscountInvoiced($baseDiscountInvoiced - $this->roundPrice($totalItemsRewardpointsBaseDiscountInvoiced, true, $store));
-            $order->setDiscountInvoiced($discountInvoiced - $this->roundPrice($totalItemsRewardpointsDiscountInvoiced, true, $store));
-            $order->setBaseDiscountRefunded($baseDiscountRefunded - $this->roundPrice($totalItemsRewardpointsBaseDiscountRefunded, true, $store));
-            $order->setDiscountRefunded($discountRefunded - $this->roundPrice($totalItemsRewardpointsDiscountRefunded, true, $store));
+            $order->setBaseDiscountInvoiced(
+                $baseDiscountInvoiced - $this->roundPrice($totalItemsRewardpointsBaseDiscountInvoiced, true, $store)
+            );
+            $order->setDiscountInvoiced(
+                $discountInvoiced - $this->roundPrice($totalItemsRewardpointsDiscountInvoiced, true, $store)
+            );
+            $order->setBaseDiscountRefunded(
+                $baseDiscountRefunded - $this->roundPrice($totalItemsRewardpointsBaseDiscountRefunded, true, $store)
+            );
+            $order->setDiscountRefunded(
+                $discountRefunded - $this->roundPrice($totalItemsRewardpointsDiscountRefunded, true, $store)
+            );
             $order->save();
         }
     }
-
 
     /**
      * Round price considering delta
      *
      * @param float $price
-     * @param string $type
      * @param bool $negative Indicates if we perform addition (true) or subtraction (false) of rounded value
+     * @param \Magento\Store\Model\Store $store
      * @return float
      */
-    public function roundPrice($price, $negative = false, $store)
+    public function roundPrice($price, $negative, $store)
     {
         $store->getStoreId();
         if ($price) {
@@ -181,5 +188,4 @@ class UpgradeData implements UpgradeDataInterface
         }
         return $price;
     }
-
 }

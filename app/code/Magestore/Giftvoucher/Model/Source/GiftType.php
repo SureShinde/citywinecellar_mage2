@@ -8,26 +8,16 @@ namespace Magestore\Giftvoucher\Model\Source;
 
 /**
  * Class GiftType
- * @package Magestore\Giftvoucher\Model\Source
+ *
+ * Source - Gift type model
  */
 class GiftType extends \Magento\Eav\Model\Entity\Attribute\Source\AbstractSource
 {
-    /**
-     *
-     */
     const GIFT_TYPE_NONE = '';
-    /**
-     *
-     */
     const GIFT_TYPE_FIX = 1;
-    /**
-     *
-     */
     const GIFT_TYPE_RANGE = 2;
-    /**
-     *
-     */
     const GIFT_TYPE_DROPDOWN = 3;
+
     /**
      * Get model option as array
      *
@@ -35,25 +25,25 @@ class GiftType extends \Magento\Eav\Model\Entity\Attribute\Source\AbstractSource
      */
     public function getAllOptions()
     {
-        if (is_null($this->_options)) {
-            $this->_options = array(
-                array(
+        if ($this->_options === null) {
+            $this->_options = [
+                [
                     'label' => __('-- Please Select --'),
                     'value' => self::GIFT_TYPE_NONE
-                ),
-                array(
+                ],
+                [
                     'label' => __('Fixed value'),
                     'value' => self::GIFT_TYPE_FIX
-                ),
-                array(
+                ],
+                [
                     'label' => __('Range of values'),
                     'value' => self::GIFT_TYPE_RANGE
-                ),
-                array(
+                ],
+                [
                     'label' => __('Dropdown values'),
                     'value' => self::GIFT_TYPE_DROPDOWN
-                ),
-            );
+                ],
+            ];
         }
         return $this->_options;
     }

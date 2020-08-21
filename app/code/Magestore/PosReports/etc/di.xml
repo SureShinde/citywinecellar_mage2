@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ Copyright © Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <!--
+      ~ Start: Define Statistic Items
+      -->
+    <virtualType name="PosSalesStatistic" type="Magestore\PosReports\Model\Statistics\PosStatistic">
+        <arguments>
+            <argument name="id" xsi:type="string">pos_sales</argument>
+            <argument name="title" xsi:type="string">POS Orders</argument>
+            <argument name="comment" xsi:type="string">Total POS Sales Report</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="PosSalesByPaymentStatistic" type="Magestore\PosReports\Model\Statistics\PosStatistic">
+        <arguments>
+            <argument name="id" xsi:type="string">pos_sales_by_payment</argument>
+            <argument name="title" xsi:type="string">POS Payments</argument>
+            <argument name="comment" xsi:type="string">Total POS Sales By Payment Report</argument>
+        </arguments>
+    </virtualType>
+    <!--
+      ~ End: Define Statistic Items
+      -->
+
+
+    <!--
+      ~ Start: Define POS Report Type
+      -->
+    <virtualType name="PosReportByLocation" type="Magestore\PosReports\Model\Reports\PosReport">
+        <arguments>
+            <argument name="id" xsi:type="string">locationBreakdown</argument>
+            <argument name="title" xsi:type="string">Location Breakdown</argument>
+            <argument name="exportCsvFileName" xsi:type="string">LocationBreakdown.csv</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="PosReportByAllLocation" type="Magestore\PosReports\Model\Reports\PosReport">
+        <arguments>
+            <argument name="id" xsi:type="string">locationOverview</argument>
+            <argument name="title" xsi:type="string">Location Overview</argument>
+            <argument name="exportCsvFileName" xsi:type="string">LocationOverview.csv</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="PosReportByPaymentMethod" type="Magestore\PosReports\Model\Reports\PosReport">
+        <arguments>
+            <argument name="id" xsi:type="string">salesByPaymentMethod</argument>
+            <argument name="title" xsi:type="string">Sales by Payment Method</argument>
+            <argument name="exportCsvFileName" xsi:type="string">SalesByPaymentMethod.csv</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="PosReportByStaff" type="Magestore\PosReports\Model\Reports\PosReport">
+        <arguments>
+            <argument name="id" xsi:type="string">salesByStaff</argument>
+            <argument name="title" xsi:type="string">Sales by Staff</argument>
+            <argument name="exportCsvFileName" xsi:type="string">SalesByStaff.csv</argument>
+        </arguments>
+    </virtualType>
+    <!--
+      ~ End: Define POS Report Type
+      -->
+
+
+    <!--
+      ~ Start: Inject POS statistic items to core reports statistics
+      -->
+    <type name="Magento\Reports\Model\ResourceModel\Refresh\Collection">
+        <plugin name="add_pos_reports_to_refresh_collection"
+                type="Magestore\PosReports\Plugin\Reports\RefreshCollectionPlugin"/>
+    </type>
+
+    <type name="Magestore\PosReports\Model\StatisticsManagement">
+        <arguments>
+            <argument name="posStatistics" xsi:type="array">
+                <item name="pos_sales" xsi:type="object">PosSalesStatistic</item>
+                <item name="pos_sales_by_payment" xsi:type="object">PosSalesByPaymentStatistic</item>
+            </argument>
+        </arguments>
+    </type>
+    <!--
+      ~ End: Inject POS statistic items to core reports statistics
+      -->
+
+
+    <!--
+      ~ Start: Define POS report collection data provider
+      -->
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="posreports_reports_bylocation_item_listing_data_source" xsi:type="string">
+                    Magestore\PosReports\Model\ResourceModel\Report\Grid\ByLocationCollection
+                </item>
+                <item name="posreports_reports_byalllocation_item_listing_data_source" xsi:type="string">
+                    Magestore\PosReports\Model\ResourceModel\Report\Grid\ByAllLocationCollection
+                </item>
+                <item name="posreports_reports_bystaff_item_listing_data_source" xsi:type="string">
+                    Magestore\PosReports\Model\ResourceModel\Report\Grid\ByStaffCollection
+                </item>
+                <item name="posreports_reports_bypaymentmethod_item_listing_data_source" xsi:type="string">
+                    Magestore\PosReports\Model\ResourceModel\Report\Grid\ByPaymentMethodCollection
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <!--
+      ~ End: Define POS report collection data provider
+      -->
+
+    <type name="Magestore\PosReports\Ui\Component\Listing\ExportButton">
+        <arguments>
+            <argument name="allowedFileTypes" xsi:type="array">
+                <item name="0" xsi:type="string">csv</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magestore\PosReports\Model\Export\MetadataProvider">
+        <arguments>
+            <argument name="posReportLocationSource" xsi:type="object">PosReportLocationFilterSource</argument>
+        </arguments>
+    </type>
+
+    <virtualType name="PosReportLocationFilterSource" type="Magestore\PosReports\Model\Source\Location">
+        <arguments>
+            <argument name="showAllOption" xsi:type="boolean">true</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="PosReportLocationResultSource" type="Magestore\PosReports\Model\Source\Location">
+        <arguments>
+            <argument name="showTotalOption" xsi:type="boolean">true</argument>
+        </arguments>
+    </virtualType>
+</config>

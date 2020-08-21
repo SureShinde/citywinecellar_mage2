@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:mftf:DataGenerator/etc/dataProfileSchema.xsd">
+    <entity name="default_report" type="report">
+        <data key="from">05/10/2020</data>
+        <data key="to">05/10/2020</data>
+
+        <!-- Sale By Staff -->
+
+        <data key="sale_by_staff_row_1_staff_name">admin</data>
+        <data key="sale_by_staff_row_1_order">3</data>
+        <data key="sale_by_staff_row_1_revenue">$333.00</data>
+        <data key="sale_by_staff_row_1_average_order">$111.00</data>
+        <data key="sale_by_staff_row_1_refund">$0.00</data>
+        <data key="sale_by_staff_row_1_tax">$33.30</data>
+        <data key="sale_by_staff_row_1_discount">$0.00</data>
+
+        <data key="sale_by_staff_row_2_staff_name">staffonepos</data>
+        <data key="sale_by_staff_row_2_order">2</data>
+        <data key="sale_by_staff_row_2_revenue">$222.00</data>
+        <data key="sale_by_staff_row_2_average_order">$111.00</data>
+        <data key="sale_by_staff_row_2_refund">$0.00</data>
+        <data key="sale_by_staff_row_2_tax">$22.20</data>
+        <data key="sale_by_staff_row_2_discount">$0.00</data>
+
+        <data key="sale_by_staff_total_staff_name">Total</data>
+        <data key="sale_by_staff_total_order">5</data>
+        <data key="sale_by_staff_total_revenue">$555.00</data>
+        <data key="sale_by_staff_total_average_order">$111.00</data>
+        <data key="sale_by_staff_total_refund">$0.00</data>
+        <data key="sale_by_staff_total_tax">$55.50</data>
+        <data key="sale_by_staff_total_discount">$0.00</data>
+
+        <!-- Sale By All Location -->
+
+        <data key="sale_by_all_location_row_1_location_name">Primary Location</data>
+        <data key="sale_by_all_location_row_1_order">3</data>
+        <data key="sale_by_all_location_row_1_tax">$33.30</data>
+        <data key="sale_by_all_location_row_1_discount">$0.00</data>
+        <data key="sale_by_all_location_row_1_refund">$0.00</data>
+        <data key="sale_by_all_location_row_1_revenue">$333.00</data>
+        <data key="sale_by_all_location_row_1_average_order">$111.00</data>
+        <data key="sale_by_all_location_row_1_cogs">$231.00</data>
+        <data key="sale_by_all_location_row_1_profit">$102.00</data>
+        <data key="sale_by_all_location_row_1_profit_margin">30.63%</data>
+
+        <data key="sale_by_all_location_row_2_location_name">Location_OnePOSOneLocation</data>
+        <data key="sale_by_all_location_row_2_order">2</data>
+        <data key="sale_by_all_location_row_2_tax">$22.20</data>
+        <data key="sale_by_all_location_row_2_discount">$0.00</data>
+        <data key="sale_by_all_location_row_2_refund">$0.00</data>
+        <data key="sale_by_all_location_row_2_revenue">$222.00</data>
+        <data key="sale_by_all_location_row_2_average_order">$111.00</data>
+        <data key="sale_by_all_location_row_2_cogs">$154.00</data>
+        <data key="sale_by_all_location_row_2_profit">$68.00</data>
+        <data key="sale_by_all_location_row_2_profit_margin">30.63%</data>
+
+        <data key="sale_by_all_location_total_location_name">Total</data>
+        <data key="sale_by_all_location_total_order">5</data>
+        <data key="sale_by_all_location_total_tax">$55.50</data>
+        <data key="sale_by_all_location_total_discount">$0.00</data>
+        <data key="sale_by_all_location_total_refund">$0.00</data>
+        <data key="sale_by_all_location_total_revenue">$555.00</data>
+        <data key="sale_by_all_location_total_average_order">$111.00</data>
+        <data key="sale_by_all_location_total_cogs">$385.00</data>
+        <data key="sale_by_all_location_total_profit">$170.00</data>
+        <data key="sale_by_all_location_total_profit_margin">30.63%</data>
+
+        <!-- Sale By Primary Location -->
+
+        <data key="sale_by_primary_location_row_1_interval">May 10, 2020</data>
+        <data key="sale_by_primary_location_row_1_order">3</data>
+        <data key="sale_by_primary_location_row_1_tax">$33.30</data>
+        <data key="sale_by_primary_location_row_1_discount">$0.00</data>
+        <data key="sale_by_primary_location_row_1_refund">$0.00</data>
+        <data key="sale_by_primary_location_row_1_revenue">$333.00</data>
+        <data key="sale_by_primary_location_row_1_average_order">$111.00</data>
+        <data key="sale_by_primary_location_row_1_cogs">$231.00</data>
+        <data key="sale_by_primary_location_row_1_profit">$102.00</data>
+        <data key="sale_by_primary_location_row_1_profit_margin">30.63%</data>
+
+        <data key="sale_by_primary_location_total_interval">Total</data>
+        <data key="sale_by_primary_location_total_order">3</data>
+        <data key="sale_by_primary_location_total_tax">$33.30</data>
+        <data key="sale_by_primary_location_total_discount">$0.00</data>
+        <data key="sale_by_primary_location_total_refund">$0.00</data>
+        <data key="sale_by_primary_location_total_revenue">$333.00</data>
+        <data key="sale_by_primary_location_total_average_order">$111.00</data>
+        <data key="sale_by_primary_location_total_cogs">$231.00</data>
+        <data key="sale_by_primary_location_total_profit">$102.00</data>
+        <data key="sale_by_primary_location_total_profit_margin">30.63%</data>
+
+        <!-- Sale By Payment Method -->
+
+        <data key="sale_by_payment_method_row_1_payment_name">Cash</data>
+        <data key="sale_by_payment_method_row_1_order">2</data>
+        <data key="sale_by_payment_method_row_1_total_paid">$244.20</data>
+        <data key="sale_by_payment_method_row_1_total_refund">$0.00</data>
+        <data key="sale_by_payment_method_row_1_net_amount">$244.20</data>
+
+        <data key="sale_by_payment_method_row_2_payment_name">Credit Card</data>
+        <data key="sale_by_payment_method_row_2_order">3</data>
+        <data key="sale_by_payment_method_row_2_total_paid">$366.30</data>
+        <data key="sale_by_payment_method_row_2_total_refund">$0.00</data>
+        <data key="sale_by_payment_method_row_2_net_amount">$366.30</data>
+
+        <data key="sale_by_payment_method_total_payment_name">Total</data>
+        <data key="sale_by_payment_method_total_order">5</data>
+        <data key="sale_by_payment_method_total_total_paid">$610.50</data>
+        <data key="sale_by_payment_method_total_total_refund">$0.00</data>
+        <data key="sale_by_payment_method_total_net_amount">$610.50</data>
+    </entity>
+</entities>

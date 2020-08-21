@@ -1,32 +1,29 @@
 <?php
 /**
  * Magestore
- * 
+ *
  * NOTICE OF LICENSE
- * 
+ *
  * This source file is subject to the Magestore.com license that is
  * available through the world-wide-web at this URL:
  * http://www.magestore.com/license-agreement.html
- * 
+ *
  * DISCLAIMER
- * 
+ *
  * Do not edit or add to this file if you wish to upgrade this extension to newer
  * version in the future.
- * 
+ *
  * @category    Magestore
  * @package     Magestore_RewardPoints
  * @copyright   Copyright (c) 2012 Magestore (http://www.magestore.com/)
  * @license     http://www.magestore.com/license-agreement.html
  */
 
+namespace Magestore\Rewardpoints\Block;
+
 /**
  * RewardPoints Image Block
- * 
- * @category    Magestore
- * @package     Magestore_RewardPoints
- * @author      Magestore Developer
  */
-namespace Magestore\Rewardpoints\Block;
 class Image extends \Magento\Framework\View\Element\Template
 {
     /**
@@ -51,26 +48,23 @@ class Image extends \Magento\Framework\View\Element\Template
 
     /**
      * Image constructor.
+     *
      * @param \Magento\Framework\View\Element\Template\Context $context
      * @param \Magestore\Rewardpoints\Helper\Point $helperPoint
      * @param \Magestore\Rewardpoints\Helper\Policy $globalConfig
      */
     public function __construct(
-       \Magento\Framework\View\Element\Template\Context $context,
-       \Magestore\Rewardpoints\Helper\Point $helperPoint,
-       \Magestore\Rewardpoints\Helper\Policy $globalConfig)
-    {
-
-       parent::__construct($context, []);
-       $this->helper = $globalConfig;
-       $this->_helperPoint = $helperPoint;
-
+        \Magento\Framework\View\Element\Template\Context $context,
+        \Magestore\Rewardpoints\Helper\Point $helperPoint,
+        \Magestore\Rewardpoints\Helper\Policy $globalConfig
+    ) {
+        parent::__construct($context, []);
+        $this->helper = $globalConfig;
+        $this->_helperPoint = $helperPoint;
     }
 
     /**
-     * prepare block's layout
-     *
-     * @return Magestore_RewardPoints_Block_Image
+     * @inheritDoc
      */
     public function _prepareLayout()
     {
@@ -86,7 +80,7 @@ class Image extends \Magento\Framework\View\Element\Template
     protected function _toHtml()
     {
         if ($this->getIsAnchorMode()) {
-            if (is_null($this->_rewardAnchorHtml)) {
+            if ($this->_rewardAnchorHtml === null) {
                 $html = parent::_toHtml();
                 if ($html) {
                     $this->_rewardAnchorHtml = $html;
@@ -96,7 +90,7 @@ class Image extends \Magento\Framework\View\Element\Template
             }
             return $this->_rewardAnchorHtml;
         } else {
-            if (is_null($this->_rewardPointsHtml)) {
+            if ($this->_rewardPointsHtml === null) {
                 $html = parent::_toHtml();
                 if ($html) {
                     $this->_rewardPointsHtml = $html;
@@ -109,8 +103,8 @@ class Image extends \Magento\Framework\View\Element\Template
     }
     
     /**
-     * get Policy Link for reward points system
-     * 
+     * Get Policy Link for reward points system
+     *
      * @return string
      */
     public function getPolicyUrl()
@@ -118,7 +112,13 @@ class Image extends \Magento\Framework\View\Element\Template
         return $this->helper->getPolicyUrl();
     }
 
-    public function getPointImage(){
+    /**
+     * Get Point Image
+     *
+     * @return string
+     */
+    public function getPointImage()
+    {
         return $this->_helperPoint->getImage();
     }
 }

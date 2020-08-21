@@ -4,12 +4,21 @@
  * See COPYING.txt for license details.
  */
 namespace Magestore\AdjustStock\Block\Adminhtml\AdjustStock\Import;
+
 /**
  * Class Form
- * @package Magestore\InventorySuccess\Block\Adminhtml\AdjustStock\Import
+ *
+ * Import form block
  */
-class Form  extends  \Magento\Backend\Block\Widget\Form\Generic {
-
+class Form extends \Magento\Backend\Block\Widget\Form\Generic
+{
+    /**
+     * Form constructor.
+     * @param \Magento\Backend\Block\Template\Context $context
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Framework\Data\FormFactory $formFactory
+     * @param array $data
+     */
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
         \Magento\Framework\Registry $registry,
@@ -25,12 +34,15 @@ class Form  extends  \Magento\Backend\Block\Widget\Form\Generic {
      *
      * @return mixed
      */
-    public function getCsvSampleLink() {
-        $url = $this->getUrl('adjuststock/adjuststock/downloadsample',
-                array(
-                    '_secure' => true,
-                    'id' => $this->getRequest()->getParam('id')
-                ));
+    public function getCsvSampleLink()
+    {
+        $url = $this->getUrl(
+            'adjuststock/adjuststock/downloadsample',
+            [
+                '_secure' => true,
+                'id' => $this->getRequest()->getParam('id')
+            ]
+        );
         return $url;
     }
 
@@ -39,7 +51,8 @@ class Form  extends  \Magento\Backend\Block\Widget\Form\Generic {
      *
      * @return string
      */
-    public function getContent() {
+    public function getContent()
+    {
         return 'Please choose a CSV file to import product adjust stock. You can download this sample CSV file';
     }
 
@@ -48,12 +61,15 @@ class Form  extends  \Magento\Backend\Block\Widget\Form\Generic {
      *
      * @return mixed
      */
-    public function getImportLink() {
-        return $this->getUrl('adjuststock/adjuststock/import',
-                array(
-                    '_secure' => true,
-                    'id' => $this->getRequest()->getParam('id')
-                ));
+    public function getImportLink()
+    {
+        return $this->getUrl(
+            'adjuststock/adjuststock/import',
+            [
+                '_secure' => true,
+                'id' => $this->getRequest()->getParam('id')
+            ]
+        );
     }
 
     /**
@@ -61,8 +77,8 @@ class Form  extends  \Magento\Backend\Block\Widget\Form\Generic {
      *
      * @return string
      */
-    public function getTitle() {
+    public function getTitle()
+    {
         return 'Import products';
     }
-
 }

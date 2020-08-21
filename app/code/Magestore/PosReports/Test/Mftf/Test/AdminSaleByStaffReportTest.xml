@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AdminSaleByStaffReportTest">
+        <annotations>
+            <features value="Pos Report"/>
+            <stories value="Pos Report - Sales By Staff"/>
+            <title value="Pos Report - Sales By Staff"/>
+            <description value="Pos Report - Sales By Staff"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="POSREPORT-01"/>
+            <group value="posreports"/>
+            <group value="pwapos"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosAdminLoginActionGroup" stepKey="loginAsAdmin"/>
+        </before>
+
+        <amOnPage url="{{ByStaffReportPage.url}}" stepKey="navigateToPosReport"/>
+        <waitForPageLoad time="60" stepKey="waitForPosReportPageToLoad"/>
+
+        <actionGroup ref="SelectTimeRangeReportActionGroup" stepKey="selectTimeRange">
+            <argument name="report" value="default_report" />
+        </actionGroup>
+
+        <actionGroup ref="ShowReportActionGroup" stepKey="showReport"/>
+
+        <see selector="{{PosOrderReportResultSection.firstRow}}" userInput="{{default_report.sale_by_staff_row_1_staff_name}}" stepKey="seeAssertStaffName1"/>
+        <see selector="{{PosOrderReportResultSection.firstRow}}" userInput="{{default_report.sale_by_staff_row_1_order}}" stepKey="seeAssertOrders1"/>
+        <see selector="{{PosOrderReportResultSection.firstRow}}" userInput="{{default_report.sale_by_staff_row_1_revenue}}" stepKey="seeRevenueValue1"/>
+        <see selector="{{PosOrderReportResultSection.firstRow}}" userInput="{{default_report.sale_by_staff_row_1_average_order}}" stepKey="seeAverageOrderValue1"/>
+        <see selector="{{PosOrderReportResultSection.firstRow}}" userInput="{{default_report.sale_by_staff_row_1_refund}}" stepKey="seeRefund1"/>
+        <see selector="{{PosOrderReportResultSection.firstRow}}" userInput="{{default_report.sale_by_staff_row_1_tax}}" stepKey="seeTax1"/>
+        <see selector="{{PosOrderReportResultSection.firstRow}}" userInput="{{default_report.sale_by_staff_row_1_discount}}" stepKey="seeDiscount1"/>
+
+        <see selector="{{PosOrderReportResultSection.secondRow}}" userInput="{{default_report.sale_by_staff_row_2_staff_name}}" stepKey="seeAssertStaffName2"/>
+        <see selector="{{PosOrderReportResultSection.secondRow}}" userInput="{{default_report.sale_by_staff_row_2_order}}" stepKey="seeAssertOrders2"/>
+        <see selector="{{PosOrderReportResultSection.secondRow}}" userInput="{{default_report.sale_by_staff_row_2_revenue}}" stepKey="seeRevenueValue2"/>
+        <see selector="{{PosOrderReportResultSection.secondRow}}" userInput="{{default_report.sale_by_staff_row_2_average_order}}" stepKey="seeAverageOrderValue2"/>
+        <see selector="{{PosOrderReportResultSection.secondRow}}" userInput="{{default_report.sale_by_staff_row_2_refund}}" stepKey="seeRefund2"/>
+        <see selector="{{PosOrderReportResultSection.secondRow}}" userInput="{{default_report.sale_by_staff_row_2_tax}}" stepKey="seeTax2"/>
+        <see selector="{{PosOrderReportResultSection.secondRow}}" userInput="{{default_report.sale_by_staff_row_2_discount}}" stepKey="seeDiscount2"/>
+
+        <see selector="{{PosOrderReportResultSection.totalRow}}" userInput="{{default_report.sale_by_staff_total_staff_name}}" stepKey="seeAssertStaffNameTotal"/>
+        <see selector="{{PosOrderReportResultSection.totalRow}}" userInput="{{default_report.sale_by_staff_total_order}}" stepKey="seeAssertOrdersTotal"/>
+        <see selector="{{PosOrderReportResultSection.totalRow}}" userInput="{{default_report.sale_by_staff_total_revenue}}" stepKey="seeRevenueValueTotal"/>
+        <see selector="{{PosOrderReportResultSection.totalRow}}" userInput="{{default_report.sale_by_staff_total_average_order}}" stepKey="seeAverageOrderValueTotal"/>
+        <see selector="{{PosOrderReportResultSection.totalRow}}" userInput="{{default_report.sale_by_staff_total_refund}}" stepKey="seeRefundTotal"/>
+        <see selector="{{PosOrderReportResultSection.totalRow}}" userInput="{{default_report.sale_by_staff_total_tax}}" stepKey="seeTaxTotal"/>
+        <see selector="{{PosOrderReportResultSection.totalRow}}" userInput="{{default_report.sale_by_staff_total_discount}}" stepKey="seeDiscountTotal"/>
+    </test>
+</tests>

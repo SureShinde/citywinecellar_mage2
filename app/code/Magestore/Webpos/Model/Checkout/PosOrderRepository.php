@@ -8,15 +8,14 @@ namespace Magestore\Webpos\Model\Checkout;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Webapi\ServiceInputProcessor;
-use Magestore\WebposIntegration\Controller\Rest\RequestProcessor;
-use Magento\InventorySales\Plugin\Sales\OrderManagement\AppendReservationsAfterOrderPlacementPlugin;
 use Magestore\Webpos\Api\Data\Checkout\Order\ItemInterface;
 use Magestore\Webpos\Model\Checkout\Order\Payment\Error as OrderPaymentError;
+use Magestore\Webpos\Api\Sales\OrderManagement\AppendReservationsAfterOrderPlacementInterface;
 
 /**
  * Class PosOrderRepository
  *
- * @package Magestore\Webpos\Model\Checkout
+ * Used for pos order repository
  * @SuppressWarnings(PHPMD.TooManyFields)
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -893,7 +892,9 @@ class PosOrderRepository implements \Magestore\Webpos\Api\Checkout\PosOrderRepos
                 $parentItem->setData($parentItemData);
             }
 
-            unset($dataItem['parent_item_id']);
+            if (isset($dataItem['parent_item_id'])) {
+                unset($dataItem['parent_item_id']);
+            }
 
             $orderItem->setData($dataItem);
 
@@ -1073,10 +1074,9 @@ class PosOrderRepository implements \Magestore\Webpos\Api\Checkout\PosOrderRepos
     public function appendReservationsAfterOrderPlacement(\Magento\Sales\Api\Data\OrderInterface $order)
     {
         if ($this->MSIStockManagement->getStockId()) {
-            /** @var AppendReservationsAfterOrderPlacementPlugin $appendReservations */
             $appendReservations = $this->objectManager
-                ->get(AppendReservationsAfterOrderPlacementPlugin::class);
-            $order = $appendReservations->afterPlace($this->orderManagement, $order);
+                ->get(AppendReservationsAfterOrderPlacementInterface::class);
+            $order = $appendReservations->execute($order);
         }
         return $order;
     }

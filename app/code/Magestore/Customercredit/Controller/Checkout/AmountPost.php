@@ -22,7 +22,14 @@
 
 namespace Magestore\Customercredit\Controller\Checkout;
 
-class AmountPost extends \Magento\Checkout\Controller\Cart
+use Magento\Framework\App\Action\HttpPostActionInterface;
+
+/**
+ * Class AmountPost
+ *
+ * Checkout Amount Post controller
+ */
+class AmountPost extends \Magento\Checkout\Controller\Cart implements HttpPostActionInterface
 {
     /**
      * @var \Magestore\Customercredit\Model\CustomercreditFactory
@@ -34,14 +41,16 @@ class AmountPost extends \Magento\Checkout\Controller\Cart
     protected $_customercreditHelper;
 
     /**
+     * AmountPost constructor.
+     *
      * @param \Magento\Framework\App\Action\Context $context
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
      * @param \Magento\Checkout\Model\Session $checkoutSession
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
-     * @param \Magento\Checkout\Model\Session $checkoutSession
      * @param \Magento\Framework\Data\Form\FormKey\Validator $formKeyValidator
      * @param \Magento\Checkout\Model\Cart $cart
      * @param \Magestore\Customercredit\Model\CustomercreditFactory $customercredit
+     * @param \Magestore\Customercredit\Helper\Data $customercreditHelper
      */
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
@@ -52,8 +61,7 @@ class AmountPost extends \Magento\Checkout\Controller\Cart
         \Magento\Checkout\Model\Cart $cart,
         \Magestore\Customercredit\Model\CustomercreditFactory $customercredit,
         \Magestore\Customercredit\Helper\Data $customercreditHelper
-    )
-    {
+    ) {
         parent::__construct(
             $context,
             $scopeConfig,
@@ -66,6 +74,9 @@ class AmountPost extends \Magento\Checkout\Controller\Cart
         $this->_customercreditHelper = $customercreditHelper;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function execute()
     {
         $request = $this->getRequest();
@@ -98,7 +109,7 @@ class AmountPost extends \Magento\Checkout\Controller\Cart
         if (is_numeric($request->getParam('credit_amount')) && $request->getParam('credit_amount') >= 0) {
             $session = $this->_checkoutSession;
             $quote = $session->getQuote();
-            $result = array();
+            $result = [];
             $creditAmount = $request->getParam('credit_amount');
             $baseCreditAmount = $this->_customercreditHelper->getConvertedToBaseCustomerCredit($creditAmount);
 
@@ -111,7 +122,8 @@ class AmountPost extends \Magento\Checkout\Controller\Cart
             $session->setCustomerCreditAmount($creditAmount);
             $session->setCreditdiscountAmount($creditAmount);
 
-            $result = $this->_objectManager->create('Magestore\Customercredit\Block\Payment\Form')->getCustomercreditData();
+            $result = $this->_objectManager->create(\Magestore\Customercredit\Block\Payment\Form::class)
+                ->getCustomercreditData();
             $quote->save();
             $result['credit_discount'] = $quote->getCreditdiscountAmount();
             return $this->getResponse()->setBody(\Zend_Json::encode($result));

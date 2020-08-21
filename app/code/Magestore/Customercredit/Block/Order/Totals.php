@@ -22,8 +22,16 @@
 
 namespace Magestore\Customercredit\Block\Order;
 
+/**
+ * Class Totals
+ *
+ * Order totals block
+ */
 class Totals extends \Magento\Sales\Block\Adminhtml\Totals
 {
+    /**
+     * Init totals
+     */
     public function initTotals()
     {
         parent::_initTotals();
@@ -31,13 +39,17 @@ class Totals extends \Magento\Sales\Block\Adminhtml\Totals
         $totalsBlock = $this->getParentBlock();
         $order = $totalsBlock->getOrder();
         if ($order->getCustomercreditDiscount() > 0) {
-            $totalsBlock->addTotal(new \Magento\Framework\DataObject(array(
-                'code' => 'customercredit',
-                'label' => __('Customer Credit'),
-                'value' => -$order->getCustomercreditDiscount(),
-                'base_value' => -$order->getBaseCustomercreditDiscount(),
-            )), 'subtotal');
-
+            $totalsBlock->addTotal(
+                new \Magento\Framework\DataObject(
+                    [
+                        'code' => 'customercredit',
+                        'label' => __('Customer Credit'),
+                        'value' => -$order->getCustomercreditDiscount(),
+                        'base_value' => -$order->getBaseCustomercreditDiscount(),
+                    ]
+                ),
+                'subtotal'
+            );
 
             /**
              * Get total discount and re-calculate discount value to showing

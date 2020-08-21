@@ -11,8 +11,7 @@ use Magento\Framework\Event\ObserverInterface;
 use Magestore\WebposStripeTerminal\Api\StripeTerminalServiceInterface;
 
 /**
- * Class GetPaymentAfter
- * @package Magestore\WebposStripeTerminal\Observer
+ * Observer GetPaymentAfter
  */
 class GetPaymentAfter implements ObserverInterface
 {
@@ -21,21 +20,24 @@ class GetPaymentAfter implements ObserverInterface
      */
     protected $helper;
 
+    /**
+     * GetPaymentAfter constructor.
+     */
     public function __construct()
     {
         $this->helper = \Magento\Framework\App\ObjectManager::getInstance()
-            ->create('Magestore\WebposStripeTerminal\Helper\Data');
+            ->create(\Magestore\WebposStripeTerminal\Helper\Data::class);
     }
 
-
     /**
+     * Execute
+     *
      * @param EventObserver $observer
      * @return void
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function execute(EventObserver $observer)
     {
-
         $payments = $observer->getData('payments');
         $paymentList = $payments->getList();
         $isEnabled = $this->helper->isEnabled();
@@ -47,6 +49,8 @@ class GetPaymentAfter implements ObserverInterface
     }
 
     /**
+     * Add
+     *
      * @return \Magestore\Webpos\Model\Payment\Payment
      * @throws \Magento\Framework\Exception\LocalizedException
      */
@@ -56,8 +60,8 @@ class GetPaymentAfter implements ObserverInterface
         /**
          * @var \Magestore\WebposStripeTerminal\Helper\Data $stripeterminalHelper
          */
-        $paymentModel = $objectManager->create('Magestore\Webpos\Model\Payment\Payment');
-        $config = $this->helper->getConfig(array('secret_key'));
+        $paymentModel = $objectManager->create(\Magestore\Webpos\Model\Payment\Payment::class);
+        $config = $this->helper->getConfig(['secret_key']);
         $sortOrder = !empty($config['sort_order']) ? (int)$config['sort_order'] : 0;
         $paymentModel->setData($config);
         $paymentModel->setSortOrder($sortOrder);

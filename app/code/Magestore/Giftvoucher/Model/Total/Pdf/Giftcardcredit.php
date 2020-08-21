@@ -8,8 +8,6 @@ namespace Magestore\Giftvoucher\Model\Total\Pdf;
 /**
  * Giftvoucher Total Pdf Giftcardcredit Model
  *
- * @category Magestore
- * @package  Magestore_Giftvoucher
  * @module   Giftvoucher
  * @author   Magestore Developer
  */
@@ -17,27 +15,28 @@ class Giftcardcredit extends \Magento\Sales\Model\Order\Pdf\Total\DefaultTotal
 {
 
     /**
-     * @return array
+     * @inheritDoc
      */
     public function getTotalsForDisplay()
     {
-        
+
         $amount = $this->getOrder()->formatPriceTxt($this->getAmount());
         $fontSize = $this->getFontSize() ? $this->getFontSize() : 7;
         if ($this->getAmountPrefix()) {
             $amount = $this->getAmountPrefix() . $amount;
         }
-        $totals = array(array(
+        $totals = [
+            [
                 'label' => __('Gift Card credit:'),
                 'amount' => $amount,
                 'font_size' => $fontSize,
-            )
-        );
+            ]
+        ];
         return $totals;
     }
 
     /**
-     * @return mixed
+     * @inheritDoc
      */
     public function getAmount()
     {

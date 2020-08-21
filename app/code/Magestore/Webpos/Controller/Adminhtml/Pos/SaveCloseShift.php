@@ -4,17 +4,27 @@
  * Copyright © 2018 Magestore. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace Magestore\Webpos\Controller\Adminhtml\Pos;
 
+use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\StateException;
+use Magento\Framework\App\Action\HttpPostActionInterface;
+use Magestore\Webpos\Controller\Adminhtml\Pos\AbstractAction;
 
-class SaveCloseShift extends \Magestore\Webpos\Controller\Adminhtml\Pos\AbstractAction
+/**
+ * Controller SaveCloseShift
+ */
+class SaveCloseShift extends AbstractAction implements HttpPostActionInterface
 {
     /**
+     * Execute
+     *
      * @return $this
      */
     public function execute()
     {
-        $result = array();
+        $result = [];
         $request = $this->getRequest();
         $contentData = $request->getContent();
         $contentData = \Zend_Json::decode($contentData);
@@ -26,13 +36,13 @@ class SaveCloseShift extends \Magestore\Webpos\Controller\Adminhtml\Pos\Abstract
         $shiftModel = $this->_shiftFactory->create();
 
         if (!$shiftIncrementId) {
-            throw new \StateException(__('Shift increment id is required'));
+            throw new StateException(__('Shift increment id is required'));
         }
         if (!$staffId) {
-            throw new \StateException(__('Staff id is required'));
+            throw new StateException(__('Staff id is required'));
         }
         if (!$posId) {
-            throw new \StateException(__('Pos id is required'));
+            throw new StateException(__('Pos id is required'));
         }
         $shiftModel->load($shiftIncrementId, "shift_increment_id");
         if ($shiftModel->getShiftIncrementId()) {
@@ -40,14 +50,14 @@ class SaveCloseShift extends \Magestore\Webpos\Controller\Adminhtml\Pos\Abstract
         } else {
             $shift->setId(null);
             if ($this->posIsOpened($posId)) {
-                throw new \StateException(__('Please close your session before opening a new one'));
+                throw new StateException(__('Please close your session before opening a new one'));
             }
         }
         try {
             $this->shiftResource->save($shift);
             $result['success'] = true;
         } catch (\Exception $exception) {
-            throw new \CouldNotSaveException(__($exception->getMessage()));
+            throw new CouldNotSaveException(__($exception->getMessage()));
         }
 
         $resultJson = $this->jsonFactory->create();
@@ -55,7 +65,9 @@ class SaveCloseShift extends \Magestore\Webpos\Controller\Adminhtml\Pos\Abstract
     }
 
     /**
-     * @param $posId
+     * Pos is Opened
+     *
+     * @param int $posId
      * @return bool
      */
     public function posIsOpened($posId)
@@ -63,13 +75,16 @@ class SaveCloseShift extends \Magestore\Webpos\Controller\Adminhtml\Pos\Abstract
         $collection = $this->_shiftCollectionFactory->create();
         $collection
             ->addFieldToFilter(\Magestore\Webpos\Api\Data\Shift\ShiftInterface::POS_ID, $posId)
-            ->addFieldToFilter(\Magestore\Webpos\Api\Data\Shift\ShiftInterface::STATUS,
-                                \Magestore\Webpos\Api\Data\Shift\ShiftInterface::OPEN_STATUS);
+            ->addFieldToFilter(
+                \Magestore\Webpos\Api\Data\Shift\ShiftInterface::STATUS,
+                \Magestore\Webpos\Api\Data\Shift\ShiftInterface::OPEN_STATUS
+            );
         return $collection->getSize() > 0;
     }
 
-
     /**
+     * Is Allow
+     *
      * @return bool
      */
     protected function _isAllowed()

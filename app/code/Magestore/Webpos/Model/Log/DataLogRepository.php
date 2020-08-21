@@ -5,9 +5,9 @@
  */
 
 namespace Magestore\Webpos\Model\Log;
+
 /**
- * Class DataLogRepository
- * @package Magestore\Webpos\Model\Log
+ * Model log DataLogRepository
  */
 class DataLogRepository implements \Magestore\Webpos\Api\Log\DataLogRepositoryInterface
 {
@@ -42,6 +42,7 @@ class DataLogRepository implements \Magestore\Webpos\Api\Log\DataLogRepositoryIn
 
     /**
      * DataLogRepository constructor.
+     *
      * @param \Magestore\Webpos\Model\ResourceModel\Log\ProductDeleted\CollectionFactory $productDeletedCollection
      * @param \Magestore\Webpos\Model\ResourceModel\Log\CustomerDeleted\CollectionFactory $customerDeletedCollection
      * @param \Magestore\Webpos\Model\ResourceModel\Log\CategoryDeleted\CollectionFactory $categoryDeletedCollection
@@ -56,8 +57,7 @@ class DataLogRepository implements \Magestore\Webpos\Api\Log\DataLogRepositoryIn
         \Magestore\Webpos\Model\ResourceModel\Log\OrderDeleted\CollectionFactory $orderDeletedCollection,
         \Magestore\Webpos\Api\Data\Log\DataLogResultsInterface $dataLogResults,
         \Magestore\Webpos\Api\MultiSourceInventory\StockManagementInterface $stockManagement
-    )
-    {
+    ) {
         $this->customerDeletedCollection = $customerDeletedCollection;
         $this->categoryDeletedCollection = $categoryDeletedCollection;
         $this->productDeletedCollection = $productDeletedCollection;
@@ -86,7 +86,7 @@ class DataLogRepository implements \Magestore\Webpos\Api\Log\DataLogRepositoryIn
             }
         }
 
-        $customerDeletedIds = array();
+        $customerDeletedIds = [];
         foreach ($customerDeletedCollection as $customer) {
             $customerDeletedIds[] = (int)$customer->getCustomerId();
         }
@@ -97,22 +97,26 @@ class DataLogRepository implements \Magestore\Webpos\Api\Log\DataLogRepositoryIn
     /**
      * @inheritdoc
      */
-    public function getListCategory(\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria){
+    public function getListCategory(\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria)
+    {
         $categoryDeletedCollection = $this->categoryDeletedCollection->create();
 
         foreach ($searchCriteria->getFilterGroups() as $filterGroup) {
             foreach ($filterGroup->getFilters() as $filter) {
                 $condition = $filter->getConditionType() ? $filter->getConditionType() : 'eq';
-                if ($filter->getField() == 'updated_at'){
+                if ($filter->getField() == 'updated_at') {
                     $categoryDeletedCollection->addFieldToFilter('deleted_at', [$condition => $filter->getValue()]);
                 } elseif ($filter->getField() == 'root_category_id') {
-                    $categoryDeletedCollection->addFieldToFilter('root_category_id', [$condition => $filter->getValue()]);
+                    $categoryDeletedCollection->addFieldToFilter(
+                        'root_category_id',
+                        [$condition => $filter->getValue()]
+                    );
                 }
             }
         }
 
-        $categoryDeletedIds = array();
-        foreach ($categoryDeletedCollection as $category){
+        $categoryDeletedIds = [];
+        foreach ($categoryDeletedCollection as $category) {
             $categoryDeletedIds[] = (int)$category->getCategoryId();
         }
         $this->dataLogResults->setIds($categoryDeletedIds);
@@ -139,7 +143,7 @@ class DataLogRepository implements \Magestore\Webpos\Api\Log\DataLogRepositoryIn
             }
         }
 
-        $productDeletedIds = array();
+        $productDeletedIds = [];
         foreach ($productDeletedCollection as $product) {
             $productDeletedIds[] = (int)$product->getProductId();
         }
@@ -167,7 +171,7 @@ class DataLogRepository implements \Magestore\Webpos\Api\Log\DataLogRepositoryIn
             }
         }
 
-        $orderDeletedIds = array();
+        $orderDeletedIds = [];
         foreach ($orderDeletedCollection as $order) {
             $orderDeletedIds[] = $order->getOrderIncrementId();
         }
@@ -176,6 +180,8 @@ class DataLogRepository implements \Magestore\Webpos\Api\Log\DataLogRepositoryIn
     }
 
     /**
+     * Filter by stock
+     *
      * @param \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection $collection
      * @return \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection
      */

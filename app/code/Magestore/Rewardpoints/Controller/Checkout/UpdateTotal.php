@@ -20,34 +20,33 @@
  */
 namespace Magestore\Rewardpoints\Controller\Checkout;
 
+use Magento\Framework\App\Action\HttpPostActionInterface;
+
 /**
- * @category Magestore
- * @package  Magestore_Affiliateplus
- * @module   Affiliateplus
- * @author   Magestore Developer
+ * Checkout - Update total controller
  */
-class UpdateTotal extends \Magestore\Rewardpoints\Controller\AbstractAction
+class UpdateTotal extends \Magestore\Rewardpoints\Controller\AbstractAction implements HttpPostActionInterface
 {
     /**
-     * @return mixed
+     * @inheritDoc
      */
     public function execute()
     {
         $this->_checkoutSessionFactory->create()->setData('use_point', true);
         $data = $this->getRequest()->getPostValue();
         $rulesData = $this->_helperSpend->getRulesData();
-        if(isset($data['reward_sales_rule']) && isset($data['reward_sales_point'])){
+        if (isset($data['reward_sales_rule']) && isset($data['reward_sales_point'])) {
             $usePoint = $data['reward_sales_point'];
-            if(isset($data['use_max_point'])){
-                if(isset($rulesData) && ($data['use_max_point'] == 1)){
+            if (isset($data['use_max_point'])) {
+                if (isset($rulesData) && ($data['use_max_point'] == 1)) {
                     $usePoint = $rulesData['rate']['sliderOption']['maxPoints'];
                 }
                 $this->_checkoutCartFactory->create()->getQuote()->setUseMaxPoint($data['use_max_point'])->save();
             }
-            $this->_checkoutSessionFactory->create()->setRewardSalesRules(array(
+            $this->_checkoutSessionFactory->create()->setRewardSalesRules([
                 'rule_id' => $data['reward_sales_rule'],
                 'use_point' => $usePoint,
-            ));
+            ]);
         }
         if ($this->_checkoutCartFactory->create()->getQuote()->getItemsCount()) {
             $this->_checkoutCartFactory->create()->save();
@@ -62,24 +61,28 @@ class UpdateTotal extends \Magestore\Rewardpoints\Controller\AbstractAction
             'rate' => $rulesData['rate']
         ];
         return $this->getResponse()->setBody(\Zend_Json::encode($result));
-
     }
 
-    public function checkUseDefault(){
+    /**
+     * Check Use Default
+     */
+    public function checkUseDefault()
+    {
         $this->_checkoutSessionFactory->create()->setData('use_max', 0);
         $rewardSalesRules = $this->_checkoutSessionFactory->create()->getRewardSalesRules();
         $arrayRules = $this->_helperSpend->getRulesArray();
-        if($this->_calculationSpending->isUseMaxPointsDefault()){
-            if(isset($rewardSalesRules['use_point']) &&
+        if ($this->_calculationSpending->isUseMaxPointsDefault()) {
+            if (isset($rewardSalesRules['use_point']) &&
                 isset($rewardSalesRules['rule_id']) &&
                 isset($arrayRules[$rewardSalesRules['rule_id']]) &&
-                isset($arrayRules[$rewardSalesRules['rule_id']]['sliderOption'])&&
-                isset($arrayRules[$rewardSalesRules['rule_id']]['sliderOption']['maxPoints']) && ($rewardSalesRules['use_point'] < $arrayRules[$rewardSalesRules['rule_id']]['sliderOption']['maxPoints'])){
+                isset($arrayRules[$rewardSalesRules['rule_id']]['sliderOption']) &&
+                isset($arrayRules[$rewardSalesRules['rule_id']]['sliderOption']['maxPoints']) &&
+                $rewardSalesRules['use_point'] < $arrayRules[$rewardSalesRules['rule_id']]['sliderOption']['maxPoints']
+            ) {
                 $this->_checkoutSessionFactory->create()->setData('use_max', 0);
-            }else{
+            } else {
                 $this->_checkoutSessionFactory->create()->setData('use_max', 1);
             }
         }
     }
-
 }

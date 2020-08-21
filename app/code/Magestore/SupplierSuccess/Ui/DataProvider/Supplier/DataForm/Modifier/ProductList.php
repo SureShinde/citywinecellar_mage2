@@ -179,9 +179,15 @@ class ProductList extends AbstractModifier
                                 ],
                                 'imports' => [
                                     'supplier_id' => '${ $.provider }:data.supplier_id',
+                                    '__disableTmpl' => [
+                                        'supplier_id' => false
+                                    ]
                                 ],
                                 'exports' => [
                                     'supplier_id' => '${ $.externalProvider }:params.supplier_id',
+                                    '__disableTmpl' => [
+                                        'supplier_id' => false
+                                    ]
                                 ],
                                 'title' => __('Delete Product'),
                                 'provider' => null,
@@ -236,9 +242,15 @@ class ProductList extends AbstractModifier
                         ],
                         'imports' => [
                             'supplier_id' => '${ $.provider }:data.supplier_id',
+                            '__disableTmpl' => [
+                                'supplier_id' => false
+                            ]
                         ],
                         'exports' => [
                             'supplier_id' => '${ $.externalProvider }:params.supplier_id',
+                            '__disableTmpl' => [
+                                'supplier_id' => false
+                            ]
                         ],
                         'title' => __('Add Product'),
                         'provider' => null,
@@ -463,9 +475,15 @@ class ProductList extends AbstractModifier
                         'externalFilterMode' => true,
                         'imports' => [
                             'supplier_id' => '${ $.provider }:data.supplier_id',
+                            '__disableTmpl' => [
+                                'supplier_id' => false
+                            ]
                         ],
                         'exports' => [
                             'supplier_id' => '${ $.externalProvider }:params.supplier_id',
+                            '__disableTmpl' => [
+                                'supplier_id' => false
+                            ]
                         ],
                         'selectionsProvider' =>
                             'os_supplier_product_modal_add_listing'
@@ -522,9 +540,15 @@ class ProductList extends AbstractModifier
                         'externalFilterMode' => true,
                         'imports' => [
                             'supplier_id' => '${ $.provider }:data.supplier_id',
+                            '__disableTmpl' => [
+                                'supplier_id' => false
+                            ]
                         ],
                         'exports' => [
                             'supplier_id' => '${ $.externalProvider }:params.supplier_id',
+                            '__disableTmpl' => [
+                                'supplier_id' => false
+                            ]
                         ],
                         'selectionsProvider' =>
                             'os_supplier_product_modal_delete_listing'

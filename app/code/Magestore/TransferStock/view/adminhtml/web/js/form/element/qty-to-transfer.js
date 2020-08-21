@@ -29,33 +29,35 @@ define([
          * @returns {Object} Validate information.
          */
         validate: function () {
-            var value = this.value(),
-                result = validator(this.validation, value, this.validationParams),
-                message = !this.disabled() && this.visible() ? result.message : '',
-                isValid = this.disabled() || !this.visible() || result.passed;
+            if (this.visible()) {
+                var value = this.value(),
+                    result = validator(this.validation, value, this.validationParams),
+                    message = !this.disabled() && this.visible() ? result.message : '',
+                    isValid = this.disabled() || !this.visible() || result.passed;
 
-            if(isValid && (message === null || message === '')) {
-                var qty = registry.get(this.parentName + '.' + 'qty');
-                var qtyToSend = registry.get(this.parentName + '.' + 'qty_to_transfer');
-                if(parseFloat(qtyToSend.value()) > parseFloat(qty.value())) {
-                    isValid = false;
-                    message = 'Quantity to send cannot be greater than Qty in source.';
+                if(isValid && (message === null || message === '')) {
+                    var qty = registry.get(this.parentName + '.' + 'qty');
+                    var qtyToSend = registry.get(this.parentName + '.' + 'qty_to_transfer');
+                    if(parseFloat(qtyToSend.value()) > parseFloat(qty.value())) {
+                        isValid = false;
+                        message = 'Quantity to send cannot be greater than Qty in source.';
+                    }
                 }
+
+                this.error(message);
+                this.error.valueHasMutated();
+                this.bubble('error', message);
+
+                //TODO: Implement proper result propagation for form
+                if (this.source && !isValid) {
+                    this.source.set('params.invalid', true);
+                }
+
+                return {
+                    valid: isValid,
+                    target: this
+                };
             }
-
-            this.error(message);
-            this.error.valueHasMutated();
-            this.bubble('error', message);
-
-            //TODO: Implement proper result propagation for form
-            if (this.source && !isValid) {
-                this.source.set('params.invalid', true);
-            }
-
-            return {
-                valid: isValid,
-                target: this
-            };
         }
     });
 });

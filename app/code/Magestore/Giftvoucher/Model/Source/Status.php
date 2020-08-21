@@ -9,8 +9,6 @@ namespace Magestore\Giftvoucher\Model\Source;
 /**
  * Giftvoucher Status Model
  *
- * @category    Magestore
- * @package     Magestore_Giftvoucher
  * @author      Magestore Developer
  */
 class Status extends \Magento\Framework\DataObject
@@ -32,16 +30,16 @@ class Status extends \Magento\Framework\DataObject
      *
      * @return array
      */
-    public static function getOptionArray()
+    public function getOptionArray()
     {
-        return array(
+        return [
             self::STATUS_PENDING => __('Pending'),
             self::STATUS_ACTIVE => __('Active'),
             self::STATUS_DISABLED => __('Disabled'),
             self::STATUS_USED => __('Used'),
             self::STATUS_EXPIRED => __('Expired'),
             self::STATUS_REFUNDED => __('Refunded'),
-        );
+        ];
     }
 
     /**
@@ -49,13 +47,13 @@ class Status extends \Magento\Framework\DataObject
      *
      * @return array
      */
-    public static function getOptionEmail()
+    public function getOptionEmail()
     {
-        return array(
+        return [
             self::STATUS_NOT_SEND => __('Not Send'),
             self::STATUS_SENT_EMAIL => __('Sent via Email'),
             self::STATUS_SENT_OFFICE => __('Send via Post Office'),
-        );
+        ];
     }
 
     /**
@@ -63,23 +61,25 @@ class Status extends \Magento\Framework\DataObject
      *
      * @return array
      */
-    public static function getOptions()
+    public function getOptions()
     {
-        $options = array();
-        foreach (self::getOptionArray() as $value => $label) {
-            $options[] = array(
+        $options = [];
+        foreach ($this->getOptionArray() as $value => $label) {
+            $options[] = [
                 'value' => $value,
                 'label' => $label
-            );
+            ];
         }
         return $options;
     }
 
     /**
+     * To Option Array
+     *
      * @return array
      */
     public function toOptionArray()
     {
-        return self::getOptions();
+        return $this->getOptions();
     }
 }

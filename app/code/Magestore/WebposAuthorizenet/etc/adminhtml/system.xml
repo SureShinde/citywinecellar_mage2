@@ -44,7 +44,7 @@
                     </field>
                     <field id="payment_action" translate="label" type="select" sortOrder="12" showInDefault="1" showInWebsite="0">
                         <label>Payment Action</label>
-                        <source_model>Magento\Authorizenet\Model\Source\PaymentAction</source_model>
+                        <source_model>Magestore\WebposAuthorizenet\Model\Source\PaymentAction</source_model>
                         <depends>
                             <field id="*/*/*/enable">1</field>
                         </depends>

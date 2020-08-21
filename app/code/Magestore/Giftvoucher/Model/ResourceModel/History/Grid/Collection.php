@@ -13,18 +13,21 @@ use Psr\Log\LoggerInterface as Logger;
 
 /**
  * Giftcode History Grid Collection
- * @package Magestore\Giftvoucher
  */
 class Collection extends \Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult
 {
     /**
+     * Collection constructor.
+     *
      * @param EntityFactory $entityFactory
      * @param Logger $logger
      * @param FetchStrategy $fetchStrategy
      * @param EventManager $eventManager
      * @param string $mainTable
      * @param string $resourceModel
+     *
      * @throws \Magento\Framework\Exception\LocalizedException
+     * phpcs:disable Generic.CodeAnalysis.UselessOverridingMethod
      */
     public function __construct(
         EntityFactory $entityFactory,
@@ -32,13 +35,13 @@ class Collection extends \Magento\Framework\View\Element\UiComponent\DataProvide
         FetchStrategy $fetchStrategy,
         EventManager $eventManager,
         $mainTable = 'giftvoucher_history',
-        $resourceModel = 'Magestore\Giftvoucher\Model\ResourceModel\History'
+        $resourceModel = \Magestore\Giftvoucher\Model\ResourceModel\History::class
     ) {
         parent::__construct($entityFactory, $logger, $fetchStrategy, $eventManager, $mainTable, $resourceModel);
     }
 
     /**
-     * @return void
+     * @inheritDoc
      */
     public function _construct()
     {
@@ -47,17 +50,18 @@ class Collection extends \Magento\Framework\View\Element\UiComponent\DataProvide
     }
 
     /**
-     * @return $this
+     * @inheritDoc
      */
     protected function _initSelect()
     {
         $this->getSelect()->joinLeft(
-            array('giftvoucher' => $this->getTable('giftvoucher')),
+            ['giftvoucher' => $this->getTable('giftvoucher')],
             'main_table.giftvoucher_id = giftvoucher.giftvoucher_id',
-            array(
+            [
                 'gift_code'
-            )
+            ]
         );
-        return parent::_initSelect();
+        parent::_initSelect();
+        return $this;
     }
 }

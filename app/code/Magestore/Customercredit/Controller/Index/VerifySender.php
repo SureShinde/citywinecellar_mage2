@@ -22,7 +22,14 @@
 
 namespace Magestore\Customercredit\Controller\Index;
 
-class VerifySender extends \Magento\Framework\App\Action\Action
+use Magento\Framework\App\Action\HttpPostActionInterface;
+
+/**
+ * Class VerifySender
+ *
+ * Verify sender controller
+ */
+class VerifySender extends \Magento\Framework\App\Action\Action implements HttpPostActionInterface
 {
     /**
      * @var \Magento\Customer\Model\Session
@@ -50,6 +57,8 @@ class VerifySender extends \Magento\Framework\App\Action\Action
     protected $_customercredit;
 
     /**
+     * VerifySender constructor.
+     *
      * @param \Magento\Framework\App\Action\Context $context
      * @param \Magento\Customer\Model\Session $customerSession
      * @param \Magento\Customer\Model\CustomerFactory $customer
@@ -66,8 +75,7 @@ class VerifySender extends \Magento\Framework\App\Action\Action
         \Magestore\Customercredit\Helper\Data $creditHelper,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magestore\Customercredit\Model\CustomercreditFactory $customercredit
-    )
-    {
+    ) {
         $this->_customerSession = $customerSession;
         $this->_customer = $customer;
         $this->_accountHelper = $accountHelper;
@@ -77,14 +85,17 @@ class VerifySender extends \Magento\Framework\App\Action\Action
         parent::__construct($context);
     }
 
+    /**
+     * @inheritDoc
+     */
     public function execute()
     {
         $session = $this->_customerSession;
         if (!$this->_accountHelper->isLoggedIn()) {
             return $this->_redirect('customer/account/login');
         }
-        
-        if ($validate_config = $this->_creditHelper->getGeneralConfig('validate', null) == 0) {
+
+        if ($this->_creditHelper->getGeneralConfig('validate', null) == 0) {
             $this->_redirect("customercredit/index/share");
         }
         $sender_id = $this->_customerSession->getCustomerId();
@@ -101,15 +112,18 @@ class VerifySender extends \Magento\Framework\App\Action\Action
         if (isset($id) && ($email) && isset($value)) {
             $session->setData("sentemail", 'yes');
             $ran_num = rand(1, 1000000);
-            $keycode = md5(md5(md5($ran_num)));
+            $keycode = sha1(sha1(sha1($ran_num)));
             $session->setData("emailcode", $keycode);
             $this->_customercredit->create()->sendVerifyEmail($email, $value, null, $keycode);
         }
         $session->setVerify(true);
-        $this->_redirect('*/*/share');
         $this->messageManager->addSuccess(
-            __("A verification code has been sent to <a href=\"mailto: %1\"><b>your email</b></a>. Now, please check your email and verify your credit sending!",$sender_email)
+            __(
+                "A verification code has been sent to <a href=\"mailto: %1\"><b>your email</b></a>."
+                . " Now, please check your email and verify your credit sending!",
+                $sender_email
+            )
         );
+        return $this->_redirect('*/*/share');
     }
 }
- 

@@ -4,25 +4,33 @@
  * Copyright © 2016 Magento. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace Magestore\DropshipSuccess\Controller\Supplier;
 
 use Magento\Framework\App\Filesystem\DirectoryList;
 
+/**
+ * Controller DownloadSample
+ *
+ * @SuppressWarnings(PHPMD.AllPurposeAction)
+ */
 class DownloadSample extends \Magestore\DropshipSuccess\Controller\AbstractSupplier
 {
-
     const SAMPLE_QTY = 1;
     const NUMBER_PRODUCT = 5;
 
     /**
-     * @return \Magento\Backend\Model\View\Result\Page
+     * Execute
+     *
+     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     public function execute()
     {
         $this->checkLogin();
-        $name = md5(microtime());
+        $name = hash('sha256', microtime());
         $this->filesystem->getDirectoryWrite(DirectoryList::VAR_DIR)->create('import');
-        $filename = DirectoryList::VAR_DIR.'/import/'.$name.'.csv';
+        $filename = DirectoryList::VAR_DIR . '/import/' . $name . '.csv';
 
         $stream = $this->filesystem->getDirectoryWrite(DirectoryList::VAR_DIR)->openFile($filename, 'w+');
         $stream->lock();
@@ -44,29 +52,29 @@ class DownloadSample extends \Magestore\DropshipSuccess\Controller\AbstractSuppl
 
         return $this->_fileFactory->create(
             'send_pricinglist_to_store_owner.csv',
-            array(
+            [
                 'type' => 'filename',
                 'value' => $filename,
                 'rm' => true  // can delete file after use
-            ),
+            ],
             DirectoryList::VAR_DIR
         );
     }
 
     /**
-     * get sample csv url
+     * Get sample csv url
      *
      * @return string
      */
     public function getCsvSampleLink()
     {
         $path = 'magestore/suppliersuccess/supplier/send_pricinglist_to_store_owner.csv';
-        $url =  $this->_url->getBaseUrl(['_type' => \Magento\Framework\UrlInterface::URL_TYPE_MEDIA]) . $path;
+        $url = $this->_url->getBaseUrl(['_type' => \Magento\Framework\UrlInterface::URL_TYPE_MEDIA]) . $path;
         return $url;
     }
 
     /**
-     * get base dir media
+     * Get base dir media
      *
      * @return string
      */
@@ -76,25 +84,24 @@ class DownloadSample extends \Magestore\DropshipSuccess\Controller\AbstractSuppl
     }
 
     /**
-     * generate sample data
+     * Generate sample data
      *
-     * @param int
+     * @param int $number
      * @return array
      */
     public function generateSampleData($number)
     {
         $data = [];
-        /** @var \Magestore\SupplierSuccess\Model\ResourceModel\Supplier\Collection $supplierCollection */
-        $supplierCollection = $this->supplierCollectionFactory->create();
         /** @var \Magestore\SupplierSuccess\Model\Supplier $supplier */
         $supplier = $this->supplierSession->getSupplier();
         $supplierCode = '';
-        if ($supplier->getSupplierCode())
+        if ($supplier->getSupplierCode()) {
             $supplierCode = $supplier->getSupplierCode();
+        }
         if ($supplierCode) {
             /** @var \Magento\Catalog\Model\ResourceModel\Product\Collection $productCollection */
             $productCollection = $this->_objectManager->get(
-                '\Magento\Catalog\Model\ResourceModel\Product\CollectionFactory'
+                \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory::class
             )->create();
             $productCollection->addAttributeToFilter('type_id', \Magento\Catalog\Model\Product\Type::TYPE_SIMPLE)
                 ->addAttributeToSelect('price')
@@ -109,7 +116,7 @@ class DownloadSample extends \Magestore\DropshipSuccess\Controller\AbstractSuppl
                     rand(10, 1000),
                     round(rand(0.5 * $product->getFinalPrice(), $product->getFinalPrice()), 2),
                     date('Y-m-d'),
-                    date('Y-m-d', strtotime('now') + rand(30, 355)*86400)
+                    date('Y-m-d', strtotime('now') + rand(30, 355) * 86400)
                 ];
             }
         }

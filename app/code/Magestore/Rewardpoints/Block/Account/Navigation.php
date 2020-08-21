@@ -19,21 +19,18 @@
  * @license     http://www.magestore.com/license-agreement.html
  */
 
-/**
- * Rewardpoints Navigation
- *
- * @category    Magestore
- * @package     Magestore_RewardPoints
- * @author      Magestore Developer
- */
+
 namespace Magestore\Rewardpoints\Block\Account;
 
+/**
+ * Rewardpoints Navigation
+ */
 class Navigation extends \Magento\Framework\View\Element\Template
 {
     /**
      * @var array
      */
-    protected $_links = array();
+    protected $_links = [];
 
     /**
      * @var bool
@@ -42,18 +39,15 @@ class Navigation extends \Magento\Framework\View\Element\Template
 
     /**
      * Navigation constructor.
+     *
      * @param \Magento\Framework\View\Element\Template\Context $context
-     * @param \Magestore\Rewardpoints\Helper\Policy $globalConfig
      */
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context
-    )
-    {
+    ) {
 
         parent::__construct($context, []);
-       
     }
-
 
     /**
      * Add link to navigation
@@ -63,7 +57,7 @@ class Navigation extends \Magento\Framework\View\Element\Template
      * @param string $label
      * @param boolean $enable
      * @param int $order
-     * @return Magestore_RewardPoints_Block_Account_Navigation
+     * @return $this
      */
     public function addLink($name, $path, $label, $enable = true, $order = 0)
     {
@@ -71,20 +65,22 @@ class Navigation extends \Magento\Framework\View\Element\Template
             $order++;
         }
 
-        $this->_links[$order] = new \Magento\Framework\DataObject(array(
-            'name'  => $name,
-            'path'  => $path,
-            'label' => $label,
-            'enable'    => $enable,
-            'order'     => $order,
-            'url'   => $this->getUrl($path)
-        ));
+        $this->_links[$order] = new \Magento\Framework\DataObject(
+            [
+                'name'  => $name,
+                'path'  => $path,
+                'label' => $label,
+                'enable'    => $enable,
+                'order'     => $order,
+                'url'   => $this->getUrl($path)
+            ]
+        );
 
         return $this;
     }
 
     /**
-     * get Sorted links (by order)
+     * Get Sorted links (by order)
      *
      * @return array
      */
@@ -98,7 +94,7 @@ class Navigation extends \Magento\Framework\View\Element\Template
      * Set active link on navigation
      *
      * @param string $path
-     * @return Magestore_RewardPoints_Block_Account_Navigation
+     * @return $this
      */
     public function setActive($path)
     {
@@ -109,7 +105,7 @@ class Navigation extends \Magento\Framework\View\Element\Template
     /**
      * Check activate link
      *
-     * @param string link
+     * @param string $link
      * @return boolean
      */
     public function isActive($link)
@@ -132,9 +128,8 @@ class Navigation extends \Magento\Framework\View\Element\Template
     public function _completePath($path)
     {
         $path = rtrim($path, '/');
-        switch (sizeof(explode('/', $path))) {
+        switch (count(explode('/', $path))) {
             case 1:
-                $path .= '/index';
             case 2:
                 $path .= '/index';
         }

@@ -1,8 +1,10 @@
 <?php
 namespace Magestore\Rewardpoints\Model;
 
-
-class Rate  extends \Magento\Framework\Model\AbstractModel
+/**
+ * Reward points rate model
+ */
+class Rate extends \Magento\Framework\Model\AbstractModel
 {
 
     const STATUS_INACTIVE = 0;
@@ -51,8 +53,8 @@ class Rate  extends \Magento\Framework\Model\AbstractModel
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
-        array $data = [])
-    {
+        array $data = []
+    ) {
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
         $this->_customerSessionFactory = $customerSessionFactory;
         $this->_storeManager = $storeManager;
@@ -65,27 +67,36 @@ class Rate  extends \Magento\Framework\Model\AbstractModel
      */
     protected function _construct()
     {
-        $this->_init('Magestore\Rewardpoints\Model\ResourceModel\Rate');
+        $this->_init(\Magestore\Rewardpoints\Model\ResourceModel\Rate::class);
     }
 
+    /**
+     * Get Rate
+     *
+     * @param int $direction
+     * @param int|null $customerGroupId
+     * @param int|null $websiteId
+     * @return bool|\Magento\Framework\DataObject
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     public function getRate($direction = 1, $customerGroupId = null, $websiteId = null)
     {
 
-        if (is_null($customerGroupId)) {
+        if ($customerGroupId === null) {
             $customerGroupId = $this->_customerSessionFactory->create()->getCustomerGroupId();
 
         }
-        if (is_null($websiteId)) {
+        if ($websiteId === null) {
             $websiteId = $this->_storeManager->getStore()->getWebsiteId();
         }
 
         $rateCollection = $this->getCollection()
             ->addFieldToFilter('direction', $direction)
-            ->addFieldToFilter('website_ids', array('finset' => $websiteId))
-            ->addFieldToFilter('customer_group_ids', array('finset' => $customerGroupId))
-            ->addFieldToFilter('points', array('gt' => 0))
-            ->addFieldToFilter('status', array('eq' => self::STATUS_ACTIVE))
-            ->addFieldToFilter('money', array('gt' => 0));
+            ->addFieldToFilter('website_ids', ['finset' => $websiteId])
+            ->addFieldToFilter('customer_group_ids', ['finset' => $customerGroupId])
+            ->addFieldToFilter('points', ['gt' => 0])
+            ->addFieldToFilter('status', ['eq' => self::STATUS_ACTIVE])
+            ->addFieldToFilter('money', ['gt' => 0]);
         $rateCollection->getSelect()->order('sort_order DESC');
         $rateCollection->getSelect()->order('rate_id DESC');
         $rate = $rateCollection->getFirstItem();
@@ -95,7 +106,4 @@ class Rate  extends \Magento\Framework\Model\AbstractModel
         }
         return false;
     }
-
-
-
 }

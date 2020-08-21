@@ -16,6 +16,8 @@ class View extends \Magestore\Giftvoucher\Block\Account
     protected $_loadCollection;
 
     /**
+     * Get Timezone
+     *
      * @return mixed
      */
     public function getTimezone()
@@ -24,17 +26,22 @@ class View extends \Magestore\Giftvoucher\Block\Account
     }
 
     /**
+     * Get Search String
+     *
      * @return mixed
      */
     public function getSearchString()
     {
         return $this->getRequest()->getParam('qgc');
     }
-    
+
+    /**
+     * Process Search
+     */
     public function _processSearch()
     {
         $q = $this->getSearchString();
-        $statusArray = \Magestore\Giftvoucher\Model\Status::getOptionArray();
+        $statusArray = $this->objectManager->get(\Magestore\Giftvoucher\Model\Status::class)->getOptionArray();
         if (in_array($q, $statusArray)) {
             $this->_loadCollection->addFieldToFilter('status', array_search($q, $statusArray));
         } else {
@@ -46,7 +53,7 @@ class View extends \Magestore\Giftvoucher\Block\Account
             ], array_fill(0, 4, ['like' => "%$q%"]));
         }
     }
-    
+
     /**
      * Get Customer Gift Codes
      *
@@ -67,14 +74,14 @@ class View extends \Magestore\Giftvoucher\Block\Account
     }
 
     /**
-     * @return $this
+     * @inheritDoc
      */
     public function _prepareLayout()
     {
         parent::_prepareLayout();
         if ($this->getGiftCodes()) {
             $pager = $this->getLayout()->createBlock(
-                'Magento\Theme\Block\Html\Pager',
+                \Magento\Theme\Block\Html\Pager::class,
                 'giftvoucher.index.index'
             )->setCollection(
                 $this->getGiftCodes()
@@ -85,15 +92,16 @@ class View extends \Magestore\Giftvoucher\Block\Account
         return $this;
     }
 
-
     /**
+     * Get Pager Html
+     *
      * @return string
      */
     public function getPagerHtml()
     {
         return $this->getChildHtml('pager');
     }
-    
+
     /**
      * Get Gift Voucher Model
      *
@@ -104,7 +112,7 @@ class View extends \Magestore\Giftvoucher\Block\Account
     {
         return $this->_giftvoucherFactory->create()->load($id);
     }
-    
+
     /**
      * Can print gift code
      *
@@ -115,7 +123,7 @@ class View extends \Magestore\Giftvoucher\Block\Account
     {
         return !$row->getSetId() || ($row->getStatus() == \Magestore\Giftvoucher\Model\Status::STATUS_ACTIVE);
     }
-    
+
     /**
      * Check gift code is available
      *

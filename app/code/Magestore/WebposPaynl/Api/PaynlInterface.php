@@ -4,25 +4,31 @@
  * Copyright © 2018 Magestore. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace Magestore\WebposPaynl\Api;
 
 /**
- * Interface PaypalInterface
- * @package Magestore\WebposPaynl\Api
+ * Service PaypalInterface
  */
 interface PaynlInterface
 {
     /**
+     * ValidateRequiredSDK
+     *
      * @return bool
      */
     public function validateRequiredSDK();
 
     /**
+     * GetApiContext
+     *
      * @return \PayPal\Rest\ApiContext
      */
     public function getApiContext();
 
     /**
+     * CreatePayment
+     *
      * @param string $successUrl
      * @param string $cancelUrl
      * @param \PayPal\Api\Transaction[] $transactions
@@ -32,6 +38,8 @@ interface PaynlInterface
     public function createPayment($successUrl, $cancelUrl, $transactions);
 
     /**
+     * CreateTransaction
+     *
      * @param string $subtotal
      * @param string $shipping
      * @param string $tax
@@ -43,6 +51,8 @@ interface PaynlInterface
     public function createTransaction($subtotal, $shipping, $tax, $total, $currencyCode, $description = '');
 
     /**
+     * CompletePayment
+     *
      * @param string $paymentId
      * @param string $payerId
      * @return string
@@ -51,6 +61,8 @@ interface PaynlInterface
     public function completePayment($paymentId, $payerId);
 
     /**
+     * CompleteAppPayment
+     *
      * @param string $paymentId
      * @return string
      * @throws \Exception
@@ -58,11 +70,15 @@ interface PaynlInterface
     public function completeAppPayment($paymentId);
 
     /**
+     * CanConnectToApi
+     *
      * @return bool
      */
     public function canConnectToApi();
 
     /**
+     * CreateInvoiceObject
+     *
      * @param \PayPal\Api\MerchantInfo $merchantInfo
      * @param \PayPal\Api\BillingInfo $billingInfo
      * @param \PayPal\Api\ShippingInfo $shippingInfo
@@ -75,6 +91,8 @@ interface PaynlInterface
     public function createInvoiceObject($merchantInfo, $billingInfo, $shippingInfo, $paymentTerm, $items, $note = '');
 
     /**
+     * CreateInvoice
+     *
      * @param \PayPal\Api\Invoice $invoice
      * @return mixed
      * @throws \Exception
@@ -82,6 +100,8 @@ interface PaynlInterface
     public function createInvoice($invoice);
 
     /**
+     * CreateInvoiceAndSend
+     *
      * @param \PayPal\Api\Invoice $invoice
      * @return mixed
      * @throws \Exception
@@ -89,6 +109,8 @@ interface PaynlInterface
     public function createInvoiceAndSend($invoice);
 
     /**
+     * SendInvoice
+     *
      * @param \PayPal\Api\Invoice $invoice
      * @return \Magestore\WebposPaynl\Model\Paypal
      * @throws \Exception
@@ -96,6 +118,8 @@ interface PaynlInterface
     public function sendInvoice($invoice);
 
     /**
+     * SendInvoiceById
+     *
      * @param string $invoiceId
      * @return \Magestore\WebposPaynl\Model\Paypal
      * @throws \Exception
@@ -103,6 +127,8 @@ interface PaynlInterface
     public function sendInvoiceById($invoiceId);
 
     /**
+     * GetInvoiceQrCode
+     *
      * @param \PayPal\Api\Invoice $invoice
      * @return \PayPal\Api\Image
      * @throws \Exception
@@ -110,6 +136,8 @@ interface PaynlInterface
     public function getInvoiceQrCode($invoice);
 
     /**
+     * CreateMerchantInfo
+     *
      * @param string $email
      * @param string $firstname
      * @param string $lastname
@@ -121,6 +149,8 @@ interface PaynlInterface
     public function createMerchantInfo($email, $firstname, $lastname, $businessName, $phone, $address);
 
     /**
+     * CreatePhone
+     *
      * @param string $countryCode
      * @param string $number
      * @return \PayPal\Api\Phone
@@ -128,6 +158,8 @@ interface PaynlInterface
     public function createPhone($countryCode, $number);
 
     /**
+     * CreateAddress
+     *
      * @param string $line1
      * @param string $line2
      * @param string $city
@@ -139,6 +171,8 @@ interface PaynlInterface
     public function createAddress($line1, $line2, $city, $state, $postalCode, $countryCode);
 
     /**
+     * CreateBillingInfo
+     *
      * @param string $email
      * @param string $firstname
      * @param string $lastname
@@ -148,9 +182,19 @@ interface PaynlInterface
      * @param \PayPal\Api\InvoiceAddress $invoiceAddress
      * @return \PayPal\Api\BillingInfo
      */
-    public function createBillingInfo($email, $firstname, $lastname, $businessName, $phone, $addtionalInfo = '', $invoiceAddress);
+    public function createBillingInfo(
+        $email,
+        $firstname,
+        $lastname,
+        $businessName,
+        $phone,
+        $addtionalInfo,
+        $invoiceAddress
+    );
 
-        /**
+    /**
+     * CreateInvoiceAddress
+     *
      * @param string $line1
      * @param string $line2
      * @param string $city
@@ -162,6 +206,8 @@ interface PaynlInterface
     public function createInvoiceAddress($line1, $line2, $city, $state, $postalCode, $countryCode);
 
     /**
+     * CreateShippingInfo
+     *
      * @param string $firstname
      * @param string $lastname
      * @param string $businessName
@@ -172,6 +218,8 @@ interface PaynlInterface
     public function createShippingInfo($firstname, $lastname, $businessName, $phone, $invoiceAddress);
 
     /**
+     * CreatePaymentTerm
+     *
      * @param string $termType
      * @param string $dueDate
      * @return \PayPal\Api\PaymentTerm
@@ -179,18 +227,24 @@ interface PaynlInterface
     public function createPaymentTerm($termType, $dueDate);
 
     /**
+     * CreatePercentCost
+     *
      * @param string $percent
      * @return \PayPal\Api\Cost
      */
     public function createPercentCost($percent);
 
     /**
+     * CreateFixedCost
+     *
      * @param \PayPal\Api\Currency $amount
      * @return \PayPal\Api\Cost
      */
     public function createFixedCost($amount);
 
     /**
+     * CreateCurrency
+     *
      * @param string $currencyCode
      * @param string|float $value
      * @return \PayPal\Api\Currency
@@ -198,6 +252,8 @@ interface PaynlInterface
     public function createCurrency($currencyCode, $value);
 
     /**
+     * CreatePercentTax
+     *
      * @param string $percent
      * @param string $name
      * @return \PayPal\Api\Tax
@@ -205,6 +261,8 @@ interface PaynlInterface
     public function createPercentTax($percent, $name = '');
 
     /**
+     * CreateFixedTax
+     *
      * @param \PayPal\Api\Currency $amount
      * @param string $name
      * @return \PayPal\Api\Tax
@@ -212,6 +270,8 @@ interface PaynlInterface
     public function createFixedTax($amount, $name = '');
 
     /**
+     * CreateInvoiceItem
+     *
      * @param string $name
      * @param string $qty
      * @param \PayPal\Api\Currency $unitPrice
@@ -220,12 +280,16 @@ interface PaynlInterface
     public function createInvoiceItem($name, $qty, $unitPrice);
 
     /**
+     * CreatePaymentSummary
+     *
      * @param \PayPal\Api\Currency $other
      * @return \PayPal\Api\PaymentSummary
      */
     public function createPaymentSummary($other);
 
     /**
+     * CreateShippingCost
+     *
      * @param \PayPal\Api\Currency $amount
      * @param \PayPal\Api\Tax $tax
      * @return \PayPal\Api\ShippingCost
@@ -233,6 +297,8 @@ interface PaynlInterface
     public function createShippingCost($amount, $tax);
 
     /**
+     * GetInvoice
+     *
      * @param string $invoiceId
      * @return \PayPal\Api\Invoice
      * @throws \Exception
@@ -240,6 +306,8 @@ interface PaynlInterface
     public function getInvoice($invoiceId);
 
     /**
+     * CreatePaymentDetail
+     *
      * @param \PayPal\Api\Currency $amount
      * @param string $note
      * @param string $method
@@ -248,6 +316,8 @@ interface PaynlInterface
     public function createPaymentDetail($amount, $note = "", $method = "OTHER");
 
     /**
+     * RecordPaymentForInvoice
+     *
      * @param \PayPal\Api\Invoice $invoice
      * @param \PayPal\Api\PaymentDetail $paymentDetail
      * @return $this
@@ -256,12 +326,10 @@ interface PaynlInterface
     public function recordPaymentForInvoice($invoice, $paymentDetail);
 
     /**
-     * get access token
+     * Get access token
      *
      * @return string
      * @throws \Exception
      */
     public function getAccessToken();
-
-
 }

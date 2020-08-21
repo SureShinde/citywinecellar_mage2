@@ -18,7 +18,7 @@ use Magestore\Customercredit\Model\Customercredit;
 /**
  * Class OrderRepository
  *
- * @package Magestore\Webpos\Model\Sales
+ * Used for order repository
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class OrderRepository implements \Magestore\Webpos\Api\Sales\OrderRepositoryInterface
@@ -169,9 +169,9 @@ class OrderRepository implements \Magestore\Webpos\Api\Sales\OrderRepositoryInte
     {
         $collection = $this->getOrderCollection($searchCriteria);
         $searchResult = $this->searchResultFactory->create();
+        $searchResult->setTotalCount($collection->getSize());
         $searchResult->setSearchCriteria($searchCriteria);
         $searchResult->setItems($collection->getItems());
-        $searchResult->setTotalCount($collection->getSize());
         return $searchResult;
     }
 
@@ -263,7 +263,7 @@ class OrderRepository implements \Magestore\Webpos\Api\Sales\OrderRepositoryInte
             '(main_table.state = "' . $holdState . '" AND main_table.pos_location_id = "' . $locationId . '") OR 
             (main_table.state != "' . $holdState . '" AND main_table.created_at >= "' . $lastTime . '")'
         );
-
+        $collection->addFieldToFilter('main_table.created_at', ['gt' => '2020-07-01']);
         foreach ($searchCriteria->getFilterGroups() as $filterGroup) {
             $this->addFilterGroupToCollection($filterGroup, $collection);
         }
@@ -740,6 +740,7 @@ class OrderRepository implements \Magestore\Webpos\Api\Sales\OrderRepositoryInte
                 $this->changeCustomerCredit($creditAmount, $order, $transactionDetail);
             }
         }
+        return $this;
     }
 
     /**

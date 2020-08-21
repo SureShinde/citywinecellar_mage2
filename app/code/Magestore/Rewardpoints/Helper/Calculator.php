@@ -19,17 +19,13 @@
  * @copyright   Copyright (c) 2012 Magestore (http://www.magestore.com/)
  * @license     http://www.magestore.com/license-agreement.html
  */
+namespace Magestore\Rewardpoints\Helper;
 
 /**
  * RewardPoints Calculator Helper
- *
- * @category    Magestore
- * @package     Magestore_RewardPoints
- * @author      Magestore Developer
  */
-namespace Magestore\Rewardpoints\Helper;
-class Calculator extends \Magento\Framework\App\Helper\AbstractHelper {
-
+class Calculator extends \Magento\Framework\App\Helper\AbstractHelper
+{
     /**
      * @var Config
      */
@@ -66,8 +62,7 @@ class Calculator extends \Magento\Framework\App\Helper\AbstractHelper {
         \Magento\Tax\Model\ConfigFactory $taxConfigFactory,
         \Magento\Tax\Model\CalculationFactory $taxCalculationFactory,
         \Magento\Store\Model\StoreManagerInterface $storeManager
-    )
-    {
+    ) {
         $this->helper = $globalConfig;
         $this->_taxConfigFactory = $taxConfigFactory;
         $this->_taxCalculationFactory = $taxCalculationFactory;
@@ -82,7 +77,8 @@ class Calculator extends \Magento\Framework\App\Helper\AbstractHelper {
      * @param mixed $store
      * @return int
      */
-    public function round($number, $store = null) {
+    public function round($number, $store = null)
+    {
         switch ($this->helper->getConfig(self::XML_PATH_ROUNDING_METHOD, $store)) {
             case 'floor':
                 return floor($number);
@@ -95,22 +91,27 @@ class Calculator extends \Magento\Framework\App\Helper\AbstractHelper {
     /**
      * Calculate price including tax or excluding tax
      *
-     * @param type $product
-     * @param type $price
-     * @param type $includingTax return type (includingTax of excludingTax)
-     * @param type $item
-     * @return type price
+     * @param \Magento\Catalog\Model\Product $product
+     * @param float $price
+     * @param null|boolean $includingTax
+     * @param bool $item
+     * @return float
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
-    public function getPrice($product, $price, $includingTax = null, $item = false) {
+    public function getPrice($product, $price, $includingTax = null, $item = false)
+    {
         if (!$price) {
             return $price;
         }
         $store = $this->_storeManager->getStore();
 
-        if ($item)
+        if ($item) {
             $priceIncludingTax = false;
-        else
+        } else {
             $priceIncludingTax = $this->_taxConfigFactory->create()->priceIncludesTax($store);
+        }
 
         if (($priceIncludingTax && $includingTax) || (!$priceIncludingTax && !$includingTax)) {
             return $price;
@@ -120,7 +121,7 @@ class Calculator extends \Magento\Framework\App\Helper\AbstractHelper {
         $includingPercent = null;
 
         $taxClassId = $product->getTaxClassId();
-        if (is_null($percent)) {
+        if ($percent === null) {
             if ($taxClassId) {
                 $request = $this->_taxCalculationFactory->create()
                     ->getRateRequest(null, null, null, $store);
@@ -133,7 +134,7 @@ class Calculator extends \Magento\Framework\App\Helper\AbstractHelper {
             $includingPercent = $this->_taxCalculationFactory->create()
                 ->getRate($request->setProductClassId($taxClassId));
         }
-        if ($percent === false || is_null($percent) || $percent == 0) {
+        if ($percent === false || $percent === null || $percent == 0) {
             if ($priceIncludingTax && !$includingPercent) {
                 return $price;
             }
@@ -148,13 +149,23 @@ class Calculator extends \Magento\Framework\App\Helper\AbstractHelper {
                     $price = $this->_taxCalculationFactory->create()->round($price);
                     $price = $this->_calculatePrice($price, $percent, true);
                 }
-            } else
+            } else {
                 $price = $this->_calculatePrice($price, $percent, false);
+            }
         }
         return $store->roundPrice($price);
     }
 
-    public function _calculatePrice($price, $percent, $type) {
+    /**
+     * Calculate Price
+     *
+     * @param float $price
+     * @param float $percent
+     * @param boolean $type
+     * @return mixed
+     */
+    public function _calculatePrice($price, $percent, $type)
+    {
         $calculator = $this->_taxCalculationFactory->create();
         if ($type) {
             $taxAmount = $calculator->calcTaxAmount($price, $percent, false, false);
@@ -164,5 +175,4 @@ class Calculator extends \Magento\Framework\App\Helper\AbstractHelper {
             return $price - $taxAmount;
         }
     }
-
 }

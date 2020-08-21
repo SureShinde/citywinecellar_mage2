@@ -24,7 +24,11 @@ namespace Magestore\Rewardpoints\Block\Adminhtml\Transaction\Widget;
 use Magento\Backend\Block\Widget\Grid;
 use Magento\Backend\Block\Widget\Grid\Column;
 
-class ChooserCustomer extends \Magento\Backend\Block\Widget\Grid\Extended {
+/**
+ * Transaction - Widget - ChooserCustomer
+ */
+class ChooserCustomer extends \Magento\Backend\Block\Widget\Grid\Extended
+{
 
     /**
      * @var \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory
@@ -42,11 +46,15 @@ class ChooserCustomer extends \Magento\Backend\Block\Widget\Grid\Extended {
     protected $_eavAttSetCollection;
 
     protected $_customerGroupCollection;
+
     /**
+     * ChooserCustomer constructor.
+     *
      * @param \Magento\Backend\Block\Template\Context $context
      * @param \Magento\Backend\Helper\Data $backendHelper
      * @param \Magento\Eav\Model\ResourceModel\Entity\Attribute\Set\CollectionFactory $eavAttSetCollection
-     * @param  \Magento\Customer\Model\ResourceModel\Customer\CollectionFactory $cpCollection,
+     * @param \Magento\Customer\Model\ResourceModel\Customer\CollectionFactory $cpCollection
+     * @param \Magento\Customer\Model\ResourceModel\Group\CollectionFactory $customerGroupCollection
      * @param array $data
      */
     public function __construct(
@@ -64,9 +72,10 @@ class ChooserCustomer extends \Magento\Backend\Block\Widget\Grid\Extended {
     }
 
     /**
-     * @return void
+     * @inheritDoc
      */
-    protected function _construct() {
+    protected function _construct()
+    {
         parent::_construct();
 
         if ($this->getRequest()->getParam('current_grid_id')) {
@@ -77,7 +86,6 @@ class ChooserCustomer extends \Magento\Backend\Block\Widget\Grid\Extended {
 
         $this->setDefaultSort('name');
         $this->setUseAjax(true);
-
     }
 
     /**
@@ -119,7 +127,14 @@ class ChooserCustomer extends \Magento\Backend\Block\Widget\Grid\Extended {
         ";
         return $js;
     }
-    public function getCheckboxCheckCallback(){
+
+    /**
+     * Get Checkbox Check Callback
+     *
+     * @return string
+     */
+    public function getCheckboxCheckCallback()
+    {
         $js = ' function (grid, element, checked) {
         var input = $("featured_products");
         if (checked) {
@@ -156,7 +171,14 @@ class ChooserCustomer extends \Magento\Backend\Block\Widget\Grid\Extended {
     } ';
         return $js;
     }
-    public function getRowInitCallback(){
+
+    /**
+     * Get Row Init Callback
+     *
+     * @return string
+     */
+    public function getRowInitCallback()
+    {
         $js =' function (grid, row) {
                 if($$(".input-text.admin__control-text.no-changes")[6].value!=""||
                         $$(".input-text.admin__control-text.no-changes")[7].value!="" ||
@@ -176,10 +198,10 @@ class ChooserCustomer extends \Magento\Backend\Block\Widget\Grid\Extended {
     }
 
     /**
-     * @param Column $column
-     * @return $this
+     * @inheritDoc
      */
-    protected function _addColumnFilterToCollection($column) {
+    protected function _addColumnFilterToCollection($column)
+    {
         // Set custom filter for in product flag
         if ($column->getId() == 'in_products') {
             $selected = $this->_getSelectedProducts();
@@ -202,7 +224,8 @@ class ChooserCustomer extends \Magento\Backend\Block\Widget\Grid\Extended {
      *
      * @return $this
      */
-    protected function _prepareCollection() {
+    protected function _prepareCollection()
+    {
         $collection = $this->_getCpCollectionInstance();
 
         $this->setCollection($collection);
@@ -215,7 +238,8 @@ class ChooserCustomer extends \Magento\Backend\Block\Widget\Grid\Extended {
      *
      * @return \Magento\Catalog\Model\ResourceModel\Product\Collection
      */
-    public function _getCpCollectionInstance() {
+    public function _getCpCollectionInstance()
+    {
         if (!$this->_cpCollectionInstance) {
             $this->_cpCollectionInstance = $this->_cpCollection->create();
         }
@@ -227,9 +251,10 @@ class ChooserCustomer extends \Magento\Backend\Block\Widget\Grid\Extended {
      *
      * @return $this
      */
-    protected function _prepareColumns() {
+    protected function _prepareColumns()
+    {
 
-        $this->addColumn('in_customers', array(
+        $this->addColumn('in_customers', [
             'header_css_class'  => 'a-center',
             'type'              => 'radio',
             'html_name'         => 'in_customers',
@@ -238,7 +263,7 @@ class ChooserCustomer extends \Magento\Backend\Block\Widget\Grid\Extended {
             'filter'            => false,
             'sortable'          => false,
             'html_class'=>      'radio_customer'
-        ));
+        ]);
 
         $this->addColumn(
             'entity_id',
@@ -299,19 +324,28 @@ class ChooserCustomer extends \Magento\Backend\Block\Widget\Grid\Extended {
         return parent::_prepareColumns();
     }
     /**
-     * @return string
+     * @inheritDoc
      */
-    public function getGridUrl() {
+    public function getGridUrl()
+    {
         return $this->getUrl(
             'rewardpoints/widget/chooserCustomer',
-            ['_current' => true, 'current_grid_id' => $this->getId(), 'collapse' => null,'selected'  => $this->getRequest()->getParam('selected')]
+            [
+                '_current' => true,
+                'current_grid_id' => $this->getId(),
+                'collapse' => null,
+                'selected'  => $this->getRequest()->getParam('selected')
+            ]
         );
     }
 
     /**
+     * Get Selected Products
+     *
      * @return mixed
      */
-    public function _getSelectedProducts() {
+    public function _getSelectedProducts()
+    {
         $products = $this->getRequest()->getPost('selected', []);
 
         return $products;

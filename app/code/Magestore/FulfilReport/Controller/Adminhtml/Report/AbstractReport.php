@@ -6,13 +6,25 @@
 
 namespace Magestore\FulfilReport\Controller\Adminhtml\Report;
 
+/**
+ * Class AbstractReport
+ *
+ * Use to create abstract report
+ */
 abstract class AbstractReport extends \Magento\Backend\App\Action
 {
+    /**
+     * Authorization level of a basic admin session
+     *
+     * @see _isAllowed()
+     */
+    const ADMIN_RESOURCE = 'Magestore_FulfilReport::reports';
+
     /**
      * @var \Magestore\FulfilSuccess\Api\FulfilManagementInterface
      */
     protected $fulfilManagement;
-    
+
     /**
      * @var \Magento\Framework\App\Response\Http\FileFactory
      */
@@ -29,10 +41,13 @@ abstract class AbstractReport extends \Magento\Backend\App\Action
     protected $_date;
 
     /**
+     * AbstractReport constructor.
+     *
      * @param \Magento\Backend\App\Action\Context $context
+     * @param \Magestore\FulfilSuccess\Api\FulfilManagementInterface $fulfilManagement
      * @param \Magento\Framework\App\Response\Http\FileFactory $fileFactory
      * @param \Magento\Framework\Stdlib\DateTime\Filter\Date $dateFilter
-     * @param \Magento\Framework\Stdlib\DateTime\DateTime
+     * @param \Magento\Framework\Stdlib\DateTime\DateTime $date
      */
     public function __construct(
         \Magento\Backend\App\Action\Context $context,
@@ -73,7 +88,7 @@ abstract class AbstractReport extends \Magento\Backend\App\Action
         }
 
         $requestData = $this->_objectManager->get(
-            'Magento\Backend\Helper\Data'
+            \Magento\Backend\Helper\Data::class
         )->prepareFilterString(
             $this->getRequest()->getParam('filter')
         );
@@ -103,25 +118,20 @@ abstract class AbstractReport extends \Magento\Backend\App\Action
     }
 
     /**
-     * Pseudo constructor
+     * Set default params
      *
-     * @return void
+     * @param \Magento\Framework\DataObject $reportParams
      */
     public function setDefaultParams($reportParams)
     {
         $timeTo = $this->_date->gmtDate('Y-m-d');
         $timeFrom = $this->_date->gmtDate('Y-m-d', strtotime("-1 months", strtotime($timeTo)));
-        if(!$reportParams->getData('from'))
+        if (!$reportParams->getData('from')) {
             $reportParams->setData('from', $timeFrom);
-        if(!$reportParams->getData('to'))
-            $reportParams->setData('to', $timeTo);
-    }
+        }
 
-    /**
-     * @return bool
-     */
-    protected function _isAllowed()
-    {
-        return $this->_authorization->isAllowed('Magestore_FulfilReport::fulfil_reports');
+        if (!$reportParams->getData('to')) {
+            $reportParams->setData('to', $timeTo);
+        }
     }
 }

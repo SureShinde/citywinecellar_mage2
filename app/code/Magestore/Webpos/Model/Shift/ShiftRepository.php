@@ -4,13 +4,6 @@
  * See COPYING.txt for license details.
  */
 
-/**
- * Created by PhpStorm.
- * User: steve
- * Date: 06/06/2016
- * Time: 13:42
- */
-
 namespace Magestore\Webpos\Model\Shift;
 
 use Magento\Framework\Exception\CouldNotSaveException;
@@ -19,33 +12,51 @@ use Magestore\Webpos\Api\Data\Shift\ShiftInterface;
 use Magestore\Webpos\Api\Data\Shift\ShiftSearchResultsInterfaceFactory as SearchResultFactory;
 use Magento\Framework\Api\SortOrder;
 
-
+/**
+ * Model Shift Repository
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class ShiftRepository implements \Magestore\Webpos\Api\Shift\ShiftRepositoryInterface
 {
-    /** @var $shiftResource  \Magestore\Webpos\Model\ResourceModel\Shift\Shift */
+    /**
+     * @var \Magestore\Webpos\Model\ResourceModel\Shift\Shift
+     */
     protected $shiftResource;
 
-    /** @var $shiftFactory  \Magestore\Webpos\Model\Shift\ShiftFactory */
+    /**
+     * @var ShiftFactory
+     */
     protected $_shiftFactory;
 
-    /** @var \Magestore\Webpos\Model\ResourceModel\Shift\Shift\CollectionFactory */
+    /**
+     * @var \Magestore\Webpos\Model\ResourceModel\Shift\Shift\CollectionFactory
+     */
     protected $_shiftCollectionFactory;
 
-    /** @var  \Magestore\Webpos\Helper\Shift */
+    /**
+     * @var \Magestore\Webpos\Helper\Shift
+     */
     protected $_shiftHelper;
 
-    /** @var  \Magestore\Webpos\Model\Pos\PosRepository */
+    /**
+     * @var \Magestore\Webpos\Model\Pos\PosRepository
+     */
     protected $posRepository;
 
-    /** @var  SearchResultFactory */
+    /**
+     * @var SearchResultFactory
+     */
     protected $searchResultFactory;
 
     /**
      * ShiftRepository constructor.
+     *
      * @param \Magestore\Webpos\Model\ResourceModel\Shift\Shift $shiftResource
      * @param ShiftFactory $shiftFactory
      * @param \Magestore\Webpos\Helper\Shift $shiftHelper
      * @param \Magestore\Webpos\Model\Pos\PosRepository $posRepository
+     * @param \Magestore\Webpos\Model\ResourceModel\Shift\Shift\CollectionFactory $shiftCollectionFactory
      * @param SearchResultFactory $searchResultFactory
      */
     public function __construct(
@@ -55,8 +66,7 @@ class ShiftRepository implements \Magestore\Webpos\Api\Shift\ShiftRepositoryInte
         \Magestore\Webpos\Model\Pos\PosRepository $posRepository,
         \Magestore\Webpos\Model\ResourceModel\Shift\Shift\CollectionFactory $shiftCollectionFactory,
         SearchResultFactory $searchResultFactory
-    )
-    {
+    ) {
         $this->shiftResource = $shiftResource;
         $this->_shiftFactory = $shiftFactory;
         $this->_shiftHelper = $shiftHelper;
@@ -65,11 +75,11 @@ class ShiftRepository implements \Magestore\Webpos\Api\Shift\ShiftRepositoryInte
         $this->_shiftCollectionFactory = $shiftCollectionFactory;
     }
 
-
     /**
-     * get a list of Shift for a specific staff_id.
-     * Because in the frontend we just need to show all shift for "this week"
-     * so we will return this week shift only.
+     * Get a list of Shift for a specific staff_id.
+     *
+     * Because in the frontend we just need to show all shift for "this week" so we will return this week shift only.
+     *
      * @param \Magento\Framework\Api\SearchCriteria $searchCriteria
      * @return \Magestore\Webpos\Api\Data\Shift\ShiftSearchResultsInterface
      * @throws \Magento\Framework\Exception\InputException
@@ -82,7 +92,6 @@ class ShiftRepository implements \Magestore\Webpos\Api\Shift\ShiftRepositoryInte
             $this->addFilterGroupToCollection($filterGroup, $searchResult);
         }
 
-
         $sortOrders = $searchCriteria->getSortOrders();
         if ($sortOrders === null) {
             $sortOrders = [];
@@ -92,7 +101,7 @@ class ShiftRepository implements \Magestore\Webpos\Api\Shift\ShiftRepositoryInte
             $field = $sortOrder->getField();
             $searchResult->addOrder(
                 $field,
-                ($sortOrder->getDirection() == SortOrder::SORT_ASC) ? 'ASC' : 'DESC'
+                ($sortOrder->getDirection() == SortOrder::SORT_ASC) ? SortOrder::SORT_ASC : SortOrder::SORT_DESC
             );
         }
 
@@ -106,7 +115,6 @@ class ShiftRepository implements \Magestore\Webpos\Api\Shift\ShiftRepositoryInte
         $searchResult->setSearchCriteria($searchCriteria);
 
         return $searchResult;
-
     }
 
     /**
@@ -118,8 +126,7 @@ class ShiftRepository implements \Magestore\Webpos\Api\Shift\ShiftRepositoryInte
     public function addFilterGroupToCollection(
         \Magento\Framework\Api\Search\FilterGroup $filterGroup,
         \Magestore\Webpos\Api\Data\Shift\ShiftSearchResultsInterface $searchResult
-    )
-    {
+    ) {
         $fields = [];
         $conditions = [];
         foreach ($filterGroup->getFilters() as $filter) {
@@ -133,8 +140,9 @@ class ShiftRepository implements \Magestore\Webpos\Api\Shift\ShiftRepositoryInte
     }
 
     /**
-     * create datetime range from, to
-     * @param $searchResult
+     * Create datetime range from, to
+     *
+     * @param \Magestore\Webpos\Api\Data\Shift\ShiftSearchResultsInterface $searchResult
      */
     public function addShiftTimeRangeFilter($searchResult)
     {
@@ -144,7 +152,8 @@ class ShiftRepository implements \Magestore\Webpos\Api\Shift\ShiftRepositoryInte
     }
 
     /**
-     * save a shift with its data in $shift (ShiftInterface)
+     * Save a shift with its data in $shift (ShiftInterface)
+     *
      * @param \Magestore\Webpos\Api\Data\Shift\ShiftInterface $shift
      * @return mixed
      * @throws StateException
@@ -186,14 +195,15 @@ class ShiftRepository implements \Magestore\Webpos\Api\Shift\ShiftRepositoryInte
             throw new CouldNotSaveException(__($exception->getMessage()));
         }
 
-        return array(
+        return [
             $this->_shiftHelper->getShiftDataByIncrementId($shift->getShiftIncrementId())
-        );
+        ];
     }
 
     /**
-     * get shit information
-     * @param $shiftId
+     * Get shit information
+     *
+     * @param int $shiftId
      * @return \Magestore\Webpos\Api\Data\Shift\ShiftInterface
      */
     public function get($shiftId)
@@ -203,8 +213,9 @@ class ShiftRepository implements \Magestore\Webpos\Api\Shift\ShiftRepositoryInte
     }
 
     /**
-     * check opened session/shift by staff id
-     * @param $posId
+     * Check opened session/shift by staff id
+     *
+     * @param int $posId
      * @return bool
      */
     public function posIsOpened($posId)

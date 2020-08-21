@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AddNewConfigurableProductTest">
+        <annotations>
+            <features value="Add product to cart"/>
+            <stories value="US12.02 - Add config product to cart"/>
+            <title value="Add new configurable product to cart"/>
+            <description value="Add a configurable product which is not added to cart before"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="ACP-01"/>
+            <group value="addConfigurableProductToCartAsNew"/>
+            <group value="addConfigurableProductToCart"/>
+            <group value="pwapos"/>
+        </annotations>
+
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart">
+        </actionGroup>
+
+        <actionGroup ref="SearchAndClickProductBySku" stepKey="SearchProduct">
+            <argument name="dataProduct" value="pos_config_product_MH09"/>
+        </actionGroup>
+
+        <actionGroup ref="ConfigurableProductSelectOptionsAndAddToCartActionGroup" stepKey="addProductToCart">
+            <argument name="product" value="pos_config_product_MH09"/>
+        </actionGroup>
+
+        <waitForElementNotVisible selector="{{PosCheckoutPopupAddConfigurableProductSection.configProductPopup}}" time="120" stepKey="waitForConfigurablePopupIsClosed"/>
+
+        <waitForElementVisible selector="{{CartSection.productFoundOnCartByName(pos_config_product_MH09.name)}}" time="120" stepKey="waitForItemVisibleInCart"/>
+        <seeElement selector="{{CartSection.productFoundOnCartByName(pos_config_product_MH09.name)}}" stepKey="seeItemInCart"/>
+    </test>
+</tests>

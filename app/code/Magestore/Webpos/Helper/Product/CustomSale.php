@@ -8,11 +8,15 @@
 
 namespace Magestore\Webpos\Helper\Product;
 
-
 use Magento\Catalog\Setup\CategorySetupFactory;
 use Magento\Eav\Model\Entity\Attribute\SetFactory as AttributeSetFactory;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 
+/**
+ * Product helper CustomSale
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class CustomSale extends \Magestore\Webpos\Helper\Data
 {
     const SKU = 'pos_custom_sale';
@@ -52,6 +56,7 @@ class CustomSale extends \Magestore\Webpos\Helper\Data
 
     /**
      * CustomSale constructor.
+     *
      * @param \Magento\Framework\App\Helper\Context $context
      * @param \Magento\Framework\ObjectManagerInterface $objectManager
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
@@ -63,6 +68,7 @@ class CustomSale extends \Magestore\Webpos\Helper\Data
      * @param CategorySetupFactory $categorySetupFactory
      * @param \Magestore\Webpos\Api\Catalog\Attribute\AttributesRepositoryInterface $attributesRepository
      * @param AttributeValue $attributeValueHelper
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         \Magento\Framework\App\Helper\Context $context,
@@ -76,8 +82,7 @@ class CustomSale extends \Magestore\Webpos\Helper\Data
         CategorySetupFactory $categorySetupFactory,
         \Magestore\Webpos\Api\Catalog\Attribute\AttributesRepositoryInterface $attributesRepository,
         AttributeValue $attributeValueHelper
-    )
-    {
+    ) {
         parent::__construct($context, $objectManager, $storeManager);
         $this->attributeSetFactory = $attributeSetFactory;
         $this->categorySetupFactory = $categorySetupFactory;
@@ -90,6 +95,8 @@ class CustomSale extends \Magestore\Webpos\Helper\Data
     }
 
     /**
+     * Get Product Model
+     *
      * @return \Magento\Catalog\Model\Product
      */
     public function getProductModel()
@@ -98,6 +105,8 @@ class CustomSale extends \Magestore\Webpos\Helper\Data
     }
 
     /**
+     * Get Product Id
+     *
      * @return int
      */
     public function getProductId()
@@ -105,31 +114,31 @@ class CustomSale extends \Magestore\Webpos\Helper\Data
         return $this->getProductModel()->getIdBySku(self::SKU);
     }
 
+    /**
+     * Delete Product
+     */
     public function deleteProduct()
     {
         try {
             $id = $this->getProductModel()->getIdBySku(self::SKU);
             $this->getProductModel()->load($id)->delete();
         } catch (\Exception $e) {
-            var_dump($e->getMessage(), $e->getTraceAsString());
-        }
-    }
-
-    public function updateProduct()
-    {
-        $id = $this->getProductModel()->getIdBySku(self::SKU);
-        $product = $this->getProductModel()->load($id);
-
-        if ($this->isEnabledInventory()) {
-            $this->registerWarehouse($product);
+            $logger = \Magento\Framework\App\ObjectManager::getInstance()
+                ->get(\Psr\Log\LoggerInterface::class);
+            $logger->info($e->getMessage());
+            $logger->info($e->getTraceAsString());
         }
     }
 
     /**
+     * Create Product
+     *
      * @param ModuleDataSetupInterface $setup
      * @return $this
      * @throws \Exception
      * @throws \Magento\Framework\Exception\LocalizedException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function createProduct($setup)
     {
@@ -146,7 +155,7 @@ class CustomSale extends \Magestore\Webpos\Helper\Data
         }
 
         $product = $this->getProductModel();
-        if ($productId = $product->getIdBySku(self::SKU)) {
+        if ($product->getIdBySku(self::SKU)) {
             return $this;
         } else {
             $product = $product->getCollection()->addAttributeToFilter('type_id', 'simple')->getFirstItem();
@@ -154,7 +163,7 @@ class CustomSale extends \Magestore\Webpos\Helper\Data
         }
 
         $websiteIds = $this->_websiteCollectionFactory->create()
-            ->addFieldToFilter('website_id', array('neq' => 0))
+            ->addFieldToFilter('website_id', ['neq' => 0])
             ->getAllIds();
 
         $attributeSet = $this->attributeSetFactory->create();
@@ -181,16 +190,17 @@ class CustomSale extends \Magestore\Webpos\Helper\Data
             $attributeSetId = $attributeSet->getId();
         }
 
-
         $product->setAttributeSetId($attributeSetId)
             ->setTypeId(self::TYPE)
             ->setStoreId(0)
             ->setSku(self::SKU)
             ->setWebsiteIds($websiteIds)
-            ->setStockData(array(
-                'manage_stock' => 0,
-                'use_config_manage_stock' => 0,
-            ));
+            ->setStockData(
+                [
+                    'manage_stock' => 0,
+                    'use_config_manage_stock' => 0,
+                ]
+            );
 
         if ($this->_moduleManager->isEnabled('Magestore_Giftvoucher')) {
             $product->setGiftCardType(1)
@@ -198,55 +208,56 @@ class CustomSale extends \Magestore\Webpos\Helper\Data
                 ->setGiftPriceType(1);
         }
 
-        $product->addData(array(
-            'name' => 'Custom Sale',
-            'weight' => 1,
-            'status' => 1,
-            'visibility' => 1,
-            'price' => 0,
-            'description' => 'Custom Sale for POS system',
-            'short_description' => 'Custom Sale for POS system',
-            'quantity_and_stock_status' => array(
-                'is_in_stock' => 1,
-                'qty' => 0
-            )
-        ));
+        $product->addData(
+            [
+                'name' => 'Custom Sale',
+                'weight' => 1,
+                'status' => 1,
+                'visibility' => 1,
+                'price' => 0,
+                'description' => 'Custom Sale for POS system',
+                'short_description' => 'Custom Sale for POS system',
+                'quantity_and_stock_status' => [
+                    'is_in_stock' => 1,
+                    'qty' => 0
+                ]
+            ]
+        );
 
         $product = $this->addRequireAttributes($product, $attributeSetId);
 
-        if (!is_array($errors = $product->validate())) {
+        if (!is_array($product->validate())) {
             try {
                 $product->save();
                 if (!$product->getId()) {
-                    $lastProduct = $this->getProductModel()->getCollection()->setOrder('entity_id', 'DESC')->getFirstItem();
+                    $lastProduct = $this->getProductModel()->getCollection()
+                        ->setOrder('entity_id', 'DESC')
+                        ->getFirstItem();
                     $lastProductId = $lastProduct->getId();
                     $product->setName('Custom Sale')->setId($lastProductId + 1)->save();
                     $this->getProductModel()->load(0)->delete();
                 }
-
-                if ($this->isEnabledInventory()) {
-                    $this->registerWarehouse($product);
-                }
-
             } catch (\Exception $e) {
                 return $this;
             }
         }
+        return $this;
     }
 
     /**
-     * add data for requiring attributes of custom sale product
+     * Add data for requiring attributes of custom sale product
      *
      * @param \Magento\Catalog\Model\Product $product
      * @param int $attributeSetId
-     * @throws \Magento\Framework\Exception\NoSuchEntityException If $attributeSetId is not found
      * @return \Magento\Catalog\Model\Product
+     * @throws \Magento\Framework\Exception\NoSuchEntityException If $attributeSetId is not found
      */
-    public function addRequireAttributes($product, $attributeSetId) {
+    public function addRequireAttributes($product, $attributeSetId)
+    {
         $listAttributes = $this->attributesRepository->getCustomSaleRequireAttributes($attributeSetId);
         /** @var \Magento\Catalog\Api\Data\ProductAttributeInterface $attribute */
-        foreach($listAttributes as $attribute) {
-            if($product->getData($attribute->getAttributeCode())) {
+        foreach ($listAttributes as $attribute) {
+            if ($product->getData($attribute->getAttributeCode())) {
                 continue;
             } elseif ($attribute['default_value'] != null) {
                 $value = $attribute['default_value'];
@@ -254,44 +265,11 @@ class CustomSale extends \Magestore\Webpos\Helper\Data
                 $value = $this->attributeValueHelper->getDefaultValueAttribute($attribute);
             }
 
-            if($value) {
+            if ($value) {
                 $product->setData($attribute->getAttributeCode(), $value);
             }
         }
 
         return $product;
-    }
-
-    /**
-     * @param $product
-     */
-    private function registerWarehouse($product)
-    {
-        /** @var \Magestore\InventorySuccess\Model\Warehouse\Options $warehouseOptions */
-        $warehouseOptions = $this->objectManager->get('\Magestore\InventorySuccess\Model\Warehouse\Options');
-        $adjustStockFactory = $this->objectManager
-            ->get('\Magestore\InventorySuccess\Model\AdjustStockFactory');
-
-        $adjustStockManagement = $this->objectManager
-            ->get('\Magestore\InventorySuccess\Api\AdjustStock\AdjustStockManagementInterface');
-        $warehouseProductCollectionFactory = $this->objectManager
-            ->get('\Magestore\InventorySuccess\Model\ResourceModel\Warehouse\Product\CollectionFactory');
-
-        $warehouses = $warehouseOptions->collectionFactory->create();
-
-        $warehouseProductCollection = $warehouseProductCollectionFactory->create()->selectAllStocks();
-        $warehouseProducts = $warehouseProductCollection
-            ->addFieldToFilter(
-                \Magestore\InventorySuccess\Api\Data\Warehouse\ProductInterface::WAREHOUSE_ID,
-                array(
-                    'in' => $warehouses->getColumnValues('warehouse_id')
-                )
-            )
-            ->addFieldToFilter(
-                \Magestore\InventorySuccess\Api\Data\Warehouse\ProductInterface::PRODUCT_ID,
-                $product->getId()
-            );
-
-        $registeredWarehouses = $warehouseProducts->getColumnValues('website_id');
     }
 }

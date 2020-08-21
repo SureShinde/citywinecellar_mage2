@@ -22,10 +22,6 @@ namespace Magestore\Rewardpoints\Block\Totals\Invoice;
 
 /**
  * Rewardpoints Total Label Block
- *
- * @category    Magestore
- * @package     Magestore_RewardPoints
- * @author      Magestore Developer
  */
 class Point extends \Magento\Sales\Block\Order\Totals
 {
@@ -46,15 +42,15 @@ class Point extends \Magento\Sales\Block\Order\Totals
         \Magento\Framework\Registry $registry,
         \Magestore\Rewardpoints\Helper\Point $helperPoint,
         array $data = []
-    )
-    {
+    ) {
         $this->helperPoint = $helperPoint;
         parent::__construct($context, $registry, $data);
     }
 
     /**
-     * add points value into invoice total
+     * Add points value into invoice total
      *
+     * @return $this
      */
     public function initTotals()
     {
@@ -66,30 +62,30 @@ class Point extends \Magento\Sales\Block\Order\Totals
         $invoice = $totalsBlock->getInvoice();
 
         if ($invoice->getRewardpointsEarn()) {
-            $totalsBlock->addTotal(new \Magento\Framework\DataObject(array(
+            $totalsBlock->addTotal(new \Magento\Framework\DataObject([
                 'code' => 'rewardpoints_earn_label',
                 'label' => __('Earn Points'),
                 'value' => $this->helperPoint->format($invoice->getRewardpointsEarn()),
                 'is_formated' => true,
-            )), 'subtotal');
+            ]), 'subtotal');
         }
 
         if ($invoice->getRewardpointsSpent()) {
-            $totalsBlock->addTotal(new \Magento\Framework\DataObject(array(
+            $totalsBlock->addTotal(new \Magento\Framework\DataObject([
                 'code' => 'rewardpoints_spent_label',
                 'label' => __('Spend Points'),
                 'value' => $this->helperPoint->format($invoice->getRewardpointsSpent()),
                 'is_formated' => true,
-            )), 'rewardpoints_earn_label');
+            ]), 'rewardpoints_earn_label');
         }
 
         if ($invoice->getRewardpointsDiscount() >= 0.0001) {
-            $totalsBlock->addTotal(new \Magento\Framework\DataObject(array(
+            $totalsBlock->addTotal(new \Magento\Framework\DataObject([
                 'code' => 'rewardpoints',
                 'label' => __('Use points on spend'),
                 'value' => -$invoice->getRewardpointsDiscount(),
                 'base_value' => -$invoice->getRewardpointsBaseDiscount(),
-            )), 'rewardpoints_spent_label');
+            ]), 'rewardpoints_spent_label');
 
             /**
              * Get total discount and re-calculate discount value to showing
@@ -104,5 +100,6 @@ class Point extends \Magento\Sales\Block\Order\Totals
                 }
             }
         }
+        return $this;
     }
 }

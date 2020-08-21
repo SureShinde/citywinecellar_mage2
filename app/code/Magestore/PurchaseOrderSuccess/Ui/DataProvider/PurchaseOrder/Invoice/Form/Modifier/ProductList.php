@@ -13,10 +13,11 @@ use Magento\Ui\Component\DynamicRows;
 
 /**
  * Class ProductList
- * @package Magestore\PurchaseOrderSuccess\Ui\DataProvider\PurchaseOrder\Invoice\Form\Modifier
+ *
+ * Used for product list
  */
 class ProductList extends AbstractModifier
-{    
+{
     /**
      * @var string
      */
@@ -31,7 +32,7 @@ class ProductList extends AbstractModifier
      * @var int
      */
     protected $sortOrder = 20;
-    
+
     protected $children = [
         'button_set' => 'button_set',
         'invoice_select_modal' => 'invoice_select_modal',
@@ -41,7 +42,7 @@ class ProductList extends AbstractModifier
         'invoice_item_list_listing' => 'os_purchase_order_invoice_item_listing',
         'invoice_sumary_total' => 'invoice_sumary_total'
     ];
-    
+
     protected $mapFields = [
         'id' => 'product_id',
         'product_sku' => 'product_sku',
@@ -54,10 +55,11 @@ class ProductList extends AbstractModifier
         'tax' => 'tax',
         'discount' => 'discount',
     ];
-    
+
     /**
-     * modify data
+     * Modify data
      *
+     * @param array $data
      * @return array
      */
     public function modifyData(array $data)
@@ -67,11 +69,12 @@ class ProductList extends AbstractModifier
 
     /**
      * Modify purchase order form meta
-     * 
+     *
      * @param array $meta
      * @return array
      */
-    public function modifyMeta(array $meta){
+    public function modifyMeta(array $meta)
+    {
         $meta = array_replace_recursive(
             $meta,
             [
@@ -92,21 +95,22 @@ class ProductList extends AbstractModifier
                 ],
             ]
         );
-        return $meta;   
+        return $meta;
     }
 
     /**
      * Add general form fields
-     * 
+     *
      * @return array
      */
-    public function getProductListChildren(){
-        if($this->getCurrentInvoice()){
+    public function getProductListChildren()
+    {
+        if ($this->getCurrentInvoice()) {
             $children = [
                 $this->children['invoice_item_list_container'] => $this->getInvoiceItemListing(),
                 $this->children['invoice_sumary_total'] => $this->getInvoiceSumaryTotal()
             ];
-        }else{
+        } else {
             $children = [
                 $this->children['button_set'] => $this->getInvoiceButtons(),
                 $this->children['invoice_select_modal'] => $this->getInvoiceSelectModal(),
@@ -118,10 +122,11 @@ class ProductList extends AbstractModifier
 
     /**
      * Get invoice item listing
-     * 
+     *
      * @return array
      */
-    public function getInvoiceItemListing(){
+    public function getInvoiceItemListing()
+    {
         $dataScope = 'invoice_item_list_listing';
         return [
             'arguments' => [
@@ -131,7 +136,7 @@ class ProductList extends AbstractModifier
                         'autoRender' => true,
                         'componentType' => 'insertListing',
                         'dataScope' => $this->children[$dataScope],
-                        'externalProvider' => $this->children[$dataScope]. '.' . $this->children[$dataScope]
+                        'externalProvider' => $this->children[$dataScope] . '.' . $this->children[$dataScope]
                             . '_data_source',
                         'ns' => $this->children[$dataScope],
                         'render_url' => $this->urlBuilder->getUrl('mui/index/render'),
@@ -144,11 +149,19 @@ class ProductList extends AbstractModifier
                         'externalFilterMode' => true,
                         'imports' => [
                             'invoice_id' => '${ $.provider }:data.purchase_order_invoice_id',
-                            'purchase_id' => '${ $.provider }:data.purchase_order_id'
+                            'purchase_id' => '${ $.provider }:data.purchase_order_id',
+                            '__disableTmpl' => [
+                                'invoice_id' => false,
+                                'purchase_id' => false
+                            ]
                         ],
                         'exports' => [
                             'invoice_id' => '${ $.externalProvider }:params.invoice_id',
-                            'purchase_id' => '${ $.externalProvider }:params.purchase_id'
+                            'purchase_id' => '${ $.externalProvider }:params.purchase_id',
+                            '__disableTmpl' => [
+                                'invoice_id' => false,
+                                'purchase_id' => false
+                            ]
                         ],
                         'selectionsProvider' =>
                             $this->children[$dataScope]
@@ -162,22 +175,24 @@ class ProductList extends AbstractModifier
 
     /**
      * Get invoice sumary total block
-     * 
+     *
      * @return array
      */
-    public function getInvoiceSumaryTotal(){
+    public function getInvoiceSumaryTotal()
+    {
         return $this->addHtmlContentContainer(
             'invoice_sumary_total_container',
-            'Magestore\PurchaseOrderSuccess\Block\Adminhtml\PurchaseOrder\Invoice\Edit\Fieldset\Total'
+            \Magestore\PurchaseOrderSuccess\Block\Adminhtml\PurchaseOrder\Invoice\Edit\Fieldset\Total::class
         );
     }
-    
+
     /**
      * Get invoice buttons
-     * 
+     *
      * @return array
      */
-    public function getInvoiceButtons(){
+    public function getInvoiceButtons()
+    {
         return [
             'arguments' => [
                 'data' => [
@@ -203,8 +218,14 @@ class ProductList extends AbstractModifier
             ]
         ];
     }
-    
-    public function getInvoiceSelectModal(){
+
+    /**
+     * Get invoice select modal
+     *
+     * @return array
+     */
+    public function getInvoiceSelectModal()
+    {
         return [
             'arguments' => [
                 'data' => [
@@ -224,7 +245,8 @@ class ProductList extends AbstractModifier
                                     'class' => 'action-primary',
                                     'actions' => [
                                         [
-                                            'targetName' => 'index = ' . $this->children['invoice_modal_select_listing'],
+                                            'targetName' => 'index = '
+                                                . $this->children['invoice_modal_select_listing'],
                                             'actionName' => 'save',
                                         ],
                                         'closeModal'
@@ -240,8 +262,14 @@ class ProductList extends AbstractModifier
             ]
         ];
     }
-    
-    public function getInvoiceModalSelectListing(){
+
+    /**
+     * Get invoice modal select listing
+     *
+     * @return array
+     */
+    public function getInvoiceModalSelectListing()
+    {
         $dataScope = 'invoice_modal_select_listing';
         return [
             'arguments' => [
@@ -251,7 +279,7 @@ class ProductList extends AbstractModifier
                         'autoRender' => true,
                         'componentType' => 'insertListing',
                         'dataScope' => $this->children[$dataScope],
-                        'externalProvider' => $this->children[$dataScope]. '.' . $this->children[$dataScope]
+                        'externalProvider' => $this->children[$dataScope] . '.' . $this->children[$dataScope]
                             . '_data_source',
                         'ns' => $this->children[$dataScope],
                         'render_url' => $this->urlBuilder->getUrl('mui/index/render'),
@@ -264,11 +292,19 @@ class ProductList extends AbstractModifier
                         'externalFilterMode' => true,
                         'imports' => [
                             'supplier_id' => '${ $.provider }:data.supplier_id',
-                            'purchase_id' => '${ $.provider }:data.purchase_order_id'
+                            'purchase_id' => '${ $.provider }:data.purchase_order_id',
+                            '__disableTmpl' => [
+                                'supplier_id' => false,
+                                'purchase_id' => false
+                            ]
                         ],
                         'exports' => [
                             'supplier_id' => '${ $.externalProvider }:params.supplier_id',
-                            'purchase_id' => '${ $.externalProvider }:params.purchase_id'
+                            'purchase_id' => '${ $.externalProvider }:params.purchase_id',
+                            '__disableTmpl' => [
+                                'supplier_id' => false,
+                                'purchase_id' => false
+                            ]
                         ],
                         'selectionsProvider' =>
                             $this->children[$dataScope]
@@ -279,7 +315,6 @@ class ProductList extends AbstractModifier
             ]
         ];
     }
-
 
     /**
      * Returns dynamic rows configuration
@@ -304,7 +339,12 @@ class ProductList extends AbstractModifier
                         'deleteButtonLabel' => __('Remove'),
                         'dataProvider' => $this->children['invoice_modal_select_listing'],
                         'map' => $this->mapFields,
-                        'links' => ['insertData' => '${ $.provider }:${ $.dataProvider }'],
+                        'links' => [
+                            'insertData' => '${ $.provider }:${ $.dataProvider }',
+                            '__disableTmpl' => [
+                                'insertData' => false
+                            ]
+                        ],
                         'sortOrder' => 20,
                         'columnsHeader' => false,
                         'columnsHeaderAfterRender' => true,

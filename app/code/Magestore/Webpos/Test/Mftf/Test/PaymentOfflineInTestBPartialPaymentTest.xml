@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="PaymentOfflineInTestBPartialPayment">
+        <annotations>
+            <features value="Payment"/>
+            <stories value="Offline payment method- Partial payment"/>
+            <title value="Offline payment method- Partial payment"/>
+            <description value="Offline payment method- Partial payment"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="PMO-02"/>
+            <group value="pwapos"/>
+        </annotations>
+
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+        <actionGroup ref="AddProductAndCharge" stepKey="AddProductAndCharge">
+            <argument name="dataProduct" value="pos_simple_product_2" />
+        </actionGroup>
+
+        <waitForElementVisible selector="{{PosCheckoutPaymentOfflineSection.iconFirstOfflinePayment}}" time="5" stepKey="waitPaymentOfflineVisible1"/>
+        <click selector="{{PosCheckoutPaymentOfflineSection.iconFirstOfflinePayment}}" stepKey="clickOfflinePayment1"/>
+        <click selector="{{PosCheckoutPaymentSection.accept}}" stepKey="clickAccept"/>
+
+        <!-- Check: Display Remaining amount = $34.64 -->
+        <grabTextFrom selector="{{PosCheckoutPaymentSection.totalLabel}}" stepKey="grabTotalPaymentLabel"/>
+        <grabTextFrom selector="{{PosCheckoutPaymentSection.totalValue}}" stepKey="grabTotalPaymentValue"/>
+        <assertEquals message="Remaining total label is correct." stepKey="compareRemainingTotalLabel">
+            <expectedResult type="string">Remaining</expectedResult>
+            <actualResult type="variable">grabTotalPaymentLabel</actualResult>
+        </assertEquals>
+        <assertEquals message="Remaining total value is correct." stepKey="compareRemainingTotalValue">
+            <expectedResult type="string">$34.64</expectedResult>
+            <actualResult type="variable">grabTotalPaymentValue</actualResult>
+        </assertEquals>
+        <!-- End Check: Display Remaining amount = $34.64-->
+
+        <!-- Add Offline Payment Method 2 -->
+        <waitForElementVisible selector="{{CheckoutSection.CompleteOrder}}" time="10" stepKey="waitCompleteOrderPageVisible"/>
+        <seeElement selector="{{CheckoutSection.addPaymentButton}}" stepKey="seeAddPaymentButton" />
+        <click selector="{{CheckoutSection.addPaymentButton}}" stepKey="clickAddPaymentButton"/>
+
+        <waitForElementVisible selector="{{PosCheckoutPaymentOfflineSection.iconSecondOfflinePayment}}" time="10" stepKey="waitPaymentOfflineVisible2"/>
+        <wait time="1" stepKey="waitBeforeClickSecondOfflinePayment" />
+        <click selector="{{PosCheckoutPaymentOfflineSection.iconSecondOfflinePayment}}" stepKey="clickOfflinePayment2"/>
+        <!-- End Add Offline Payment Method 2 -->
+
+        <!-- Check Message: You can select only one Pay Later method for an order. Please choose another payment method. -->
+        <waitForElementVisible selector="{{ToastSection.message}}" time="30" stepKey="waitForWarningMessage"/>
+        <grabTextFrom selector="{{ToastSection.message}}" stepKey="grabMessageText"/>
+        <assertContains message="Check message is correct." stepKey="checkMessageIsCorrect1">
+            <expectedResult type="string">You can select only one Pay Later method for an order. Please choose another payment method.</expectedResult>
+            <actualResult type="variable">grabMessageText</actualResult>
+        </assertContains>
+        <!-- End Check-->
+
+        <click selector="{{PosCheckoutPaymentSection.back}}" stepKey="clickBackButton"/>
+
+        <!-- Partial button and Complete Order -->
+        <waitForElementVisible selector="{{PosCheckoutPaymentSection.addPayment}}" time="120" stepKey="addPaymentCheck"/>
+        <seeElement selector="{{PosCheckoutPaymentSection.addPayment}}" stepKey="addPaymentSee" />
+        <click selector="{{PosCheckoutPaymentSection.partial}}" stepKey="clickPartial"/>
+
+
+        <waitForElementVisible selector="{{CheckoutSection.popupConfirmPartial}}" time="120" stepKey="waitPopupConfirmedPartial"/>
+        <waitForElementVisible selector="{{CheckoutSection.popupConfirmPartialButtonComplete}}" time="120" stepKey="waitButtonCompleteButtonVisible"/>
+        <actionGroup ref="DisablePrintPopup" stepKey="DisablePrintPopup1"/>
+        <wait time="1" stepKey="waitBeforeClickComplete"/>
+        <click selector="{{CheckoutSection.popupConfirmPartialButtonComplete}}" stepKey="clickToCompleteButton"/>
+        <!--End of partial button and confirm order-->
+        <waitForElementNotVisible selector="{{PosCheckoutPaymentSection.popupCompleteOrder}}" time="120" stepKey="popupCompleteWaitNotVisible"/>
+    </test>
+</tests>

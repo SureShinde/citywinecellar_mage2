@@ -10,31 +10,32 @@ use Magento\Store\Model\ScopeInterface;
 
 /**
  * Class ProcessorService
- * @package Magestore\Giftvoucher\Service\GiftTemplate
+ *
+ * Gift template processor service
  */
 class ProcessorService implements \Magestore\Giftvoucher\Api\GiftTemplate\ProcessorServiceInterface
 {
-    
+
     /**
      * @var \Magento\Email\Model\Template\FilterFactory
      */
     protected $filterFactory;
-    
+
     /**
      * @var \Magestore\Giftvoucher\Api\GiftTemplate\IOServiceInterface
      */
     protected $ioService;
-    
+
     /**
      * @var \Magestore\Giftvoucher\Api\GiftTemplate\SampleDataServiceInterface
      */
     protected $sampleDataService;
-    
+
     /**
      * @var \Magestore\Giftvoucher\Api\GiftTemplate\MediaServiceInterface
      */
     protected $mediaService;
-    
+
     /**
      * @var \Magestore\Giftvoucher\Api\GiftTemplate\TransferDataServiceInterface
      */
@@ -44,16 +45,21 @@ class ProcessorService implements \Magestore\Giftvoucher\Api\GiftTemplate\Proces
      * @var \Magestore\Giftvoucher\Api\GiftTemplateRepositoryInterface
      */
     protected $giftTemplateRepository;
-    
+
     /**
      * @var \Magento\Store\Model\StoreManagerInterface
      */
     protected $storeManager;
-    
+
     /**
      * @var \Magento\Framework\App\Config\ScopeConfigInterface
      */
     protected $config;
+
+    /**
+     * @var \Magento\Email\Model\Template\Filter
+     */
+    protected $templateFilter;
 
     /**
      * ProcessorService constructor.
@@ -76,7 +82,7 @@ class ProcessorService implements \Magestore\Giftvoucher\Api\GiftTemplate\Proces
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Framework\App\Config\ScopeConfigInterface $config
     ) {
-    
+
         $this->filterFactory = $filterFactor;
         $this->ioService = $ioService;
         $this->sampleDataService = $sampleDataService;
@@ -86,7 +92,6 @@ class ProcessorService implements \Magestore\Giftvoucher\Api\GiftTemplate\Proces
         $this->storeManager = $storeManager;
         $this->config = $config;
     }
-    
 
     /**
      * Process gift template to HTML
@@ -113,9 +118,8 @@ class ProcessorService implements \Magestore\Giftvoucher\Api\GiftTemplate\Proces
      */
     public function preview($giftCode, $giftTemplate)
     {
-        $variables = [];
         $storeId = 0;
-        if (is_null($giftCode) || !$giftCode->getId()) {
+        if ($giftCode === null || !$giftCode->getId()) {
             $variables = $this->sampleDataService->getSampleData();
             $variables[GiftTemplateInterface::IMAGE_URL_PRINT] = $this->mediaService->getFirstImageUrl($giftTemplate);
         } else {
@@ -126,10 +130,10 @@ class ProcessorService implements \Magestore\Giftvoucher\Api\GiftTemplate\Proces
         $variables[GiftTemplateInterface::TEXT_COLOR_PRINT] = $this->getTemplateTextColor($giftTemplate);
         $variables[GiftTemplateInterface::STYLE_COLOR_PRINT] = $this->getTemplateStyleColor($giftTemplate);
         $variables[GiftTemplateInterface::NOTES_PRINT] = $this->getProcessedNotes($giftTemplate->getNotes(), $storeId);
-        
+
         return $this->getProcessedTemplate($variables, $giftTemplate->getDesignPattern());
     }
-    
+
     /**
      * Print-out gift code to a gift card HTML
      *
@@ -143,6 +147,7 @@ class ProcessorService implements \Magestore\Giftvoucher\Api\GiftTemplate\Proces
     }
 
     /**
+     * Get Processed Notes
      *
      * @param string $note
      * @param int $storeId
@@ -151,17 +156,26 @@ class ProcessorService implements \Magestore\Giftvoucher\Api\GiftTemplate\Proces
     public function getProcessedNotes($note, $storeId = 0)
     {
         $store = $this->storeManager->getStore($storeId);
-        $storeName = $this->config->getValue('general/store_information/name', ScopeInterface::SCOPE_STORE, $store->getCode());
+        $storeName = $this->config->getValue(
+            'general/store_information/name',
+            ScopeInterface::SCOPE_STORE,
+            $store->getCode()
+        );
         $storeName = $storeName ? $storeName : $store->getName();
         $storeUrl = $store->getBaseUrl();
-        $storeAddress = $this->config->getValue('general/store_information/street_line1', ScopeInterface::SCOPE_STORE, $store->getCode());
+        $storeAddress = $this->config->getValue(
+            'general/store_information/street_line1',
+            ScopeInterface::SCOPE_STORE,
+            $store->getCode()
+        );
         $note = str_replace('{store_name}', $storeName, $note);
         $note = str_replace('{store_url}', $storeUrl, $note);
         $note = str_replace('{store_address}', $storeAddress, $note);
         return $note;
     }
-    
+
     /**
+     * Get Template Content
      *
      * @param string $giftTemplateId
      * @return string
@@ -170,8 +184,9 @@ class ProcessorService implements \Magestore\Giftvoucher\Api\GiftTemplate\Proces
     {
         return $this->preProcessTemplate($this->ioService->getTemplateContent($giftTemplateId));
     }
-    
+
     /**
+     * Pre Process Template
      *
      * @param string $content
      * @return string
@@ -181,7 +196,7 @@ class ProcessorService implements \Magestore\Giftvoucher\Api\GiftTemplate\Proces
         /* @TODO: remove HTML comments */
         return $content;
     }
-    
+
     /**
      * Get filter object for template processing
      *
@@ -194,7 +209,7 @@ class ProcessorService implements \Magestore\Giftvoucher\Api\GiftTemplate\Proces
         }
         return $this->templateFilter;
     }
-    
+
     /**
      * Get text color code of gifttemplate
      *
@@ -205,7 +220,7 @@ class ProcessorService implements \Magestore\Giftvoucher\Api\GiftTemplate\Proces
     {
         return str_replace('#', '', $giftTemplate->getTextColor());
     }
-    
+
     /**
      * Get style color code of gifttemplate
      *
@@ -215,5 +230,5 @@ class ProcessorService implements \Magestore\Giftvoucher\Api\GiftTemplate\Proces
     public function getTemplateStyleColor($giftTemplate)
     {
         return str_replace('#', '', $giftTemplate->getStyleColor());
-    }    
+    }
 }

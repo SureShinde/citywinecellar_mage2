@@ -8,21 +8,20 @@
 namespace Magestore\ReportSuccess\Model\Source\Adminhtml;
 
 /**
- * Class SupplierWithNone
- * @package Magestore\ReportSuccess\Model\Source\Adminhtml
+ * Supplier with none model
  */
 class SupplierWithNone extends Supplier
 {
     const NONE_VALUE = 'none-supplier';
+
     /**
-     * @return array
+     * @inheritDoc
      */
     public function toOptionArray()
     {
         $options = [];
-        $options[] = array('value' => self::NONE_VALUE, 'label' => __(' '));
+        $options[] = ['value' => self::NONE_VALUE, 'label' => __(' ')];
         $options = array_merge($options, parent::toOptionArray());
         return $options;
     }
-
 }

@@ -8,6 +8,11 @@ namespace Magestore\SupplierSuccess\Controller\Adminhtml\Supplier;
 
 use Magento\Framework\Exception\LocalizedException;
 
+/**
+ * Controller Save supplier
+ *
+ * @SuppressWarnings(PHPMD.AllPurposeAction)
+ */
 class Save extends \Magestore\SupplierSuccess\Controller\Adminhtml\AbstractSupplier
 {
     const ADMIN_RESOURCE = 'Magestore_SupplierSuccess::view_supplier';
@@ -15,8 +20,9 @@ class Save extends \Magestore\SupplierSuccess\Controller\Adminhtml\AbstractSuppl
     /**
      * Save action
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @return \Magento\Framework\Controller\ResultInterface
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function execute()
     {
@@ -31,7 +37,7 @@ class Save extends \Magestore\SupplierSuccess\Controller\Adminhtml\AbstractSuppl
             }
 
             /** @var \Magestore\SupplierSuccess\Model\Supplier $model */
-            $model = $this->_objectManager->create('Magestore\SupplierSuccess\Model\Supplier')->load($id);
+            $model = $this->_objectManager->create(\Magestore\SupplierSuccess\Model\Supplier::class)->load($id);
             if (!$model->getId() && $id) {
                 $this->messageManager->addErrorMessage(__('This supplier no longer exists.'));
                 return $resultRedirect->setPath('*/*/');
@@ -39,9 +45,12 @@ class Save extends \Magestore\SupplierSuccess\Controller\Adminhtml\AbstractSuppl
             /** add new password */
             $newPassword = null;
             if ((isset($data['new_password']) && $data['new_password'])
-                    || (isset($data['generated_password']) && $data['generated_password'])) {
-                $newPassword = $this->supplierService->setPasswordSupplier($data['new_password'], $data['generated_password']);
-                $data['password'] = md5($newPassword);
+                || (isset($data['generated_password']) && $data['generated_password'])) {
+                $newPassword = $this->supplierService->setPasswordSupplier(
+                    $data['new_password'],
+                    $data['generated_password']
+                );
+                $data['password'] = hash('md5', $newPassword);
             }
             $model->setData($data);
 
@@ -76,7 +85,9 @@ class Save extends \Magestore\SupplierSuccess\Controller\Adminhtml\AbstractSuppl
                     if (!empty($dataProductUpdate)) {
                         try {
                             $this->_supplierProductService->assignProductToSupplier($dataProductUpdate);
-                            $this->messageManager->addSuccessMessage(__('Products in this supplier have been updated.'));
+                            $this->messageManager->addSuccessMessage(
+                                __('Products in this supplier have been updated.')
+                            );
                         } catch (\Exception $e) {
                             $this->messageManager->addErrorMessage(__($e->getMessage()));
                         }
@@ -90,7 +101,10 @@ class Save extends \Magestore\SupplierSuccess\Controller\Adminhtml\AbstractSuppl
             } catch (LocalizedException $e) {
                 $this->messageManager->addError($e->getMessage());
             } catch (\Exception $e) {
-                $this->messageManager->addException($e, __('Something went wrong while saving the supplier information.'));
+                $this->messageManager->addException(
+                    $e,
+                    __('Something went wrong while saving the supplier information.')
+                );
             }
 
             return $resultRedirect->setPath('*/*/edit', ['id' => $this->getRequest()->getParam('id')]);

@@ -8,21 +8,13 @@ namespace Magestore\Giftvoucher\Model\Source;
 
 /**
  * Class Designpattern
- * @package Magestore\Giftvoucher\Model\Source
+ *
+ * Source - Design pattern model
  */
 class DesignPattern extends \Magento\Framework\DataObject
 {
-    /**
-     *
-     */
     const PATTERN_LEFT = 1;
-    /**
-     *
-     */
     const PATTERN_TOP = 2;
-    /**
-     *
-     */
     const PATTERN_CENTER = 3;
 
     /**
@@ -30,35 +22,39 @@ class DesignPattern extends \Magento\Framework\DataObject
      *
      * @return array
      */
-    public static function getOptionArray()
+    public function getOptionArray()
     {
-        return array(
+        return [
             self::PATTERN_LEFT => __('Left'),
             self::PATTERN_TOP => __('Top'),
             self::PATTERN_CENTER => __('Center'),
-        );
+        ];
     }
 
     /**
+     * Get Options
+     *
      * @return array
      */
-    public static function getOptions()
+    public function getOptions()
     {
-        $options = array();
-        foreach (self::getOptionArray() as $value => $label) {
-            $options[] = array(
+        $options = [];
+        foreach ($this->getOptionArray() as $value => $label) {
+            $options[] = [
                 'value' => $value,
                 'label' => $label
-            );
+            ];
         }
         return $options;
     }
 
     /**
+     * To Option Array
+     *
      * @return array
      */
     public function toOptionArray()
     {
-        return self::getOptions();
+        return $this->getOptions();
     }
 }

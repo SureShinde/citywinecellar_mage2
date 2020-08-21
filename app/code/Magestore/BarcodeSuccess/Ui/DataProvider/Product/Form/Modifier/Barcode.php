@@ -13,10 +13,11 @@ use Magento\Ui\Component\Form;
 /**
  * Class Barcode
  *
+ * Used to barcode modifier
  * @SuppressWarnings(PHPMD.NumberOfChildren)
  */
-class Barcode extends \Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\AbstractModifier
-    implements ModifierInterface
+class Barcode extends \Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\AbstractModifier implements
+    ModifierInterface
 {
     /**
      * @var string
@@ -59,11 +60,13 @@ class Barcode extends \Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\Abs
      */
     protected $scopeConfig;
 
-
     /**
+     * Construct
+     *
      * @param UrlInterface $urlBuilder
      * @param \Magento\Framework\App\RequestInterface $request
-     * @param array $_modifierConfig
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param array $modifierConfig
      */
     public function __construct(
         UrlInterface $urlBuilder,
@@ -78,7 +81,7 @@ class Barcode extends \Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\Abs
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function modifyData(array $data)
     {
@@ -86,12 +89,13 @@ class Barcode extends \Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\Abs
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function modifyMeta(array $meta)
     {
-        if($this->scopeConfig->getValue('barcodesuccess/general/one_barcode_per_sku'))
+        if ($this->scopeConfig->getValue('barcodesuccess/general/one_barcode_per_sku')) {
             return $meta;
+        }
         $meta = array_replace_recursive(
             $meta,
             [
@@ -155,6 +159,9 @@ class Barcode extends \Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\Abs
                             'externalFilterMode' => true,
                             'exports' => [
                                 'storeId' => '${ $.externalProvider }:params.current_store_id',
+                                '__disableTmpl' => [
+                                    'storeId' => false
+                                ]
                             ],
                             'params' => [
                                 'product_id' => $productId
@@ -166,6 +173,4 @@ class Barcode extends \Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\Abs
         ];
         return $children;
     }
-
 }
-

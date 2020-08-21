@@ -10,8 +10,7 @@ use Magento\Framework\UrlInterface;
 use Magento\Ui\Component\Form\Fieldset;
 
 /**
- * Class GiftCode
- * @package Magestore\Giftvoucher\Ui\DataProvider\GiftCodePattern\Modifier
+ * Gift code pattern modifier - GiftCode
  */
 class GiftCode implements ModifierInterface
 {
@@ -39,7 +38,7 @@ class GiftCode implements ModifierInterface
     }
     
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function modifyMeta(array $meta)
     {
@@ -55,17 +54,24 @@ class GiftCode implements ModifierInterface
                                 'autoRender' => true,
                                 'componentType' => 'insertListing',
                                 'dataScope' => 'giftcard_pattern_code_listing',
-                                'externalProvider' => 'giftcard_pattern_code_listing.giftcard_pattern_code_listing_data_source',
+                                'externalProvider' => 'giftcard_pattern_code_listing'
+                                    . '.' . 'giftcard_pattern_code_listing_data_source',
                                 'ns' => 'giftcard_pattern_code_listing',
                                 'render_url' => $this->urlBuilder->getUrl('mui/index/render'),
                                 'realTimeLink' => false,
                                 'behaviourType' => 'simple',
                                 'externalFilterMode' => true,
                                 'imports' => [
-                                    'templateId' => '${ $.provider }:data.current_template_id'
+                                    'templateId' => '${ $.provider }:data.current_template_id',
+                                    '__disableTmpl' => [
+                                        'templateId' => false
+                                    ]
                                 ],
                                 'exports' => [
-                                    'templateId' => '${ $.externalProvider }:params.current_template_id'
+                                    'templateId' => '${ $.externalProvider }:params.current_template_id',
+                                    '__disableTmpl' => [
+                                        'templateId' => false
+                                    ]
                                 ],
                             ],
                         ],
@@ -87,7 +93,7 @@ class GiftCode implements ModifierInterface
     }
     
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function modifyData(array $data)
     {

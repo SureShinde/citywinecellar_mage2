@@ -7,6 +7,7 @@
             <argument name="amount" defaultValue="1.00" type="string"/>
         </arguments>
         <waitForElementVisible selector="{{PosCheckoutPaymentSection.cash}}" time="120" stepKey="waitCashPaymentVisible"/>
+        <wait time="1" stepKey="waitBeforeClickCash"/>
         <click selector="{{PosCheckoutPaymentSection.cash}}" stepKey="clickCash"/>
         <click selector="{{PosCheckoutPaymentSection.amount}}" stepKey="clickCashAmount"/>
         <pressKey selector="{{PosCheckoutPaymentSection.numpad}}" userInput="{{amount}}" stepKey="enterAmount"/>

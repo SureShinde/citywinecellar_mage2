@@ -10,20 +10,26 @@ use Magento\Framework\View\Element\UiComponent\Control\ButtonProviderInterface;
 use Magestore\AdjustStock\Api\Data\AdjustStock\AdjustStockInterface;
 
 /**
- * Class SaveButton
+ * Class Delete
+ *
+ * Button delete block
  */
-class Delete extends \Magestore\AdjustStock\Block\Adminhtml\AdjustStock\AbstractAdjustStock
-    implements ButtonProviderInterface
+class Delete extends \Magestore\AdjustStock\Block\Adminhtml\AdjustStock\AbstractAdjustStock implements
+    ButtonProviderInterface
 {
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function getButtonData()
     {
-        if($this->getRequest()->getParam('id') &&
+        if ($this->getRequest()->getParam('id') &&
             $this->_authorization->isAllowed('Magestore_AdjustStock::delete_adjuststock') &&
-            $this->getAdjustStockStatus() != AdjustStockInterface::STATUS_COMPLETED) {
-            $url = $this->getUrl('*/*/delete', array('_secure' => true, 'id' => $this->getRequest()->getParam('id')));
+            $this->getAdjustStockStatus() != AdjustStockInterface::STATUS_COMPLETED
+        ) {
+            $url = $this->getUrl(
+                '*/*/delete',
+                ['_secure' => true, 'id' => $this->getRequest()->getParam('id')]
+            );
 
             return [
                 'label' => __('Delete'),
@@ -37,5 +43,4 @@ class Delete extends \Magestore\AdjustStock\Block\Adminhtml\AdjustStock\Abstract
         }
         return [];
     }
-
 }

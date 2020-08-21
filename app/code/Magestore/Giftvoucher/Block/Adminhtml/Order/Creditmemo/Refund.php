@@ -8,13 +8,25 @@ namespace Magestore\Giftvoucher\Block\Adminhtml\Order\Creditmemo;
 /**
  * Adminhtml Giftvoucher Creditmemo Refund Block
  *
- * @category Magestore
- * @package  Magestore_Giftvoucher
  * @module   Giftvoucher
  * @author   Magestore Developer
  */
 class Refund extends \Magento\Framework\View\Element\Template
 {
+    /**
+     * @var \Magento\Framework\Registry
+     */
+    protected $_coreRegistry;
+
+    /**
+     * @var \Magento\Framework\ObjectManagerInterface
+     */
+    protected $_objectManager;
+
+    /**
+     * @var \Magento\Framework\Pricing\PriceCurrencyInterface
+     */
+    protected $priceCurrency;
 
     /**
      * @param \Magento\Backend\Block\Template\Context|\Magento\Framework\View\Element\Template\Context $context
@@ -28,7 +40,7 @@ class Refund extends \Magento\Framework\View\Element\Template
         \Magento\Framework\Registry $registry,
         \Magento\Framework\ObjectManagerInterface $objectManager,
         \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency,
-        array $data = array()
+        array $data = []
     ) {
         $this->_coreRegistry = $registry;
         $this->_objectManager = $objectManager;
@@ -37,6 +49,7 @@ class Refund extends \Magento\Framework\View\Element\Template
     }
 
     /**
+     * Get Creditmemo
      *
      * @return \Magento\Sales\Model\Order\Creditmemo
      */
@@ -46,6 +59,7 @@ class Refund extends \Magento\Framework\View\Element\Template
     }
 
     /**
+     * Get Order
      *
      * @return \Magento\Sales\Model\Order
      */
@@ -55,6 +69,7 @@ class Refund extends \Magento\Framework\View\Element\Template
     }
 
     /**
+     * Get Customer
      *
      * @return boolean|\Magento\Customer\Model\Customer
      */
@@ -64,7 +79,7 @@ class Refund extends \Magento\Framework\View\Element\Template
         if ($order->getCustomerIsGuest()) {
             return false;
         }
-        $customer = $this->_objectManager->get('Magento\Customer\Model\Customer')->load($order->getCustomerId());
+        $customer = $this->_objectManager->get(\Magento\Customer\Model\Customer::class)->load($order->getCustomerId());
         if ($customer->getId()) {
             return $customer;
         }
@@ -72,8 +87,10 @@ class Refund extends \Magento\Framework\View\Element\Template
     }
 
     /**
+     * Get Is Show
      *
      * @return boolean
+     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
     public function getIsShow()
     {
@@ -81,6 +98,7 @@ class Refund extends \Magento\Framework\View\Element\Template
     }
 
     /**
+     * Get Max Amount
      *
      * @return float
      */
@@ -94,6 +112,7 @@ class Refund extends \Magento\Framework\View\Element\Template
     }
 
     /**
+     * Format Price
      *
      * @param float $price
      * @return string
@@ -102,15 +121,16 @@ class Refund extends \Magento\Framework\View\Element\Template
     {
         return $this->getOrder()->format($price);
     }
-    
+
     /**
+     * Is Enable Credit
      *
      * @return boolean
      */
     public function isEnableCredit()
     {
         /*@TODO: load from configuration */
-        
+
         return false;
     }
 }

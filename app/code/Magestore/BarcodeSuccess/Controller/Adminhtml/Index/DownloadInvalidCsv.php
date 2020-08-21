@@ -14,17 +14,23 @@ use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\App\Response\Http\FileFactory;
 use Magento\Framework\Filesystem;
 use Magento\Framework\File\Csv;
+use Magento\Framework\Filesystem\DriverInterface;
+use Magento\Framework\App\Action\HttpGetActionInterface;
+
 /**
  * Class Import
- * @package Magestore\BarcodeSuccess\Controller\Adminhtml\Index
+ *
+ * Used to create download invalid csv
  */
-class DownloadInvalidCsv extends \Magestore\BarcodeSuccess\Controller\Adminhtml\AbstractIndex
+class DownloadInvalidCsv extends \Magestore\BarcodeSuccess\Controller\Adminhtml\AbstractIndex implements
+    HttpGetActionInterface
 {
     const SAMPLE_QTY = 1;
+
     /**
      * @var array
      */
-    protected $generated = array();
+    protected $generated = [];
 
     /**
      * @var FileFactory
@@ -42,7 +48,13 @@ class DownloadInvalidCsv extends \Magestore\BarcodeSuccess\Controller\Adminhtml\
     protected $csvProcessor;
 
     /**
+     * @var DriverInterface
+     */
+    protected $driver;
+
+    /**
      * DownloadSample constructor.
+     *
      * @param Context $context
      * @param PageFactory $resultPageFactory
      * @param Data $data
@@ -50,6 +62,7 @@ class DownloadInvalidCsv extends \Magestore\BarcodeSuccess\Controller\Adminhtml\
      * @param FileFactory $fileFactory
      * @param Filesystem $filesystem
      * @param Csv $csvProcessor
+     * @param DriverInterface $driver
      */
     public function __construct(
         Context $context,
@@ -58,13 +71,22 @@ class DownloadInvalidCsv extends \Magestore\BarcodeSuccess\Controller\Adminhtml\
         LocatorInterface $locator,
         FileFactory $fileFactory,
         Filesystem $filesystem,
-        Csv $csvProcessor
+        Csv $csvProcessor,
+        DriverInterface $driver
     ) {
         parent::__construct($context, $resultPageFactory, $data, $locator);
         $this->fileFactory = $fileFactory;
         $this->filesystem = $filesystem;
         $this->csvProcessor = $csvProcessor;
+        $this->driver = $driver;
     }
+
+    /**
+     * Execute function
+     *
+     * @return \Magento\Backend\Model\View\Result\Page|\Magento\Framework\App\ResponseInterface
+     * @throws \Magento\Framework\Exception\FileSystemException
+     */
     public function execute()
     {
         $this->filesystem->getDirectoryWrite(DirectoryList::VAR_DIR)->create('import');
@@ -72,9 +94,8 @@ class DownloadInvalidCsv extends \Magestore\BarcodeSuccess\Controller\Adminhtml\
                         ->getAbsolutePath('import_product_invalid.csv');
         return $this->fileFactory->create(
             'import_product_invalid.csv',
-            file_get_contents($filename),
+            $this->driver->fileGetContents($filename),
             DirectoryList::VAR_DIR
         );
     }
-    
 }

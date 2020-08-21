@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <!--Increase qty-->
+    <test name="AddVirtualProductWithCustomOptionToCartForIncreaseQtyTest">
+        <annotations>
+            <features value="Add product to cart"/>
+            <stories value="Add virtual product to cart"/>
+            <title value="Increase qty of virtual product with custom option in cart."/>
+            <description value="Add virtual product with custom option to cart, then qty of the same item in cart will increase."/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="AVP-04"/>
+            <group value="addVirtualProductWithOptionForIncreaseQty"/>
+            <group value="addVirtualProduct"/>
+            <group value="pwapos"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart">
+        </actionGroup>
+
+        <actionGroup ref="SearchAndClickProduct" stepKey="SearchAndClickProduct">
+            <argument name="dataProduct" value="pos_virtual_product_with_custom_option"/>
+        </actionGroup>
+
+        <waitForElementVisible selector="{{PosCheckoutPopupVirtualProductSection.customOptionInputBox}}" time="120" stepKey="waitProductPopupCustomOptionShow"/>
+
+        <actionGroup ref="AddCustomOptionForVirtualProduct" stepKey="AddCustomOptionForVirtualProduct">
+            <argument name="dataProduct" value="pos_virtual_product_with_custom_option"/>
+        </actionGroup>
+
+        <waitForElementVisible selector="{{CartSection.productFoundOnCartByName(pos_virtual_product_with_custom_option.name)}}" time="120" stepKey="waitProductIsAddedToCartSuccessfully"/>
+
+        <!-- Click to add product second time -->
+        <click stepKey="clickOnProductFoundInListAgain" selector="{{ProductListSection.firstProduct}}"/>
+
+        <waitForElementVisible selector="{{PosCheckoutPopupVirtualProductSection.customOptionInputBox}}" time="120" stepKey="waitProductPopupCustomOptionShowAgain"/>
+
+        <actionGroup ref="AddCustomOptionForVirtualProduct" stepKey="AddCustomOptionForVirtualProductSecondTime">
+            <argument name="dataProduct" value="pos_virtual_product_with_custom_option"/>
+        </actionGroup>
+
+        <waitForElementVisible selector="{{CartSection.productFoundOnCartByName(pos_virtual_product_with_custom_option.name)}}" time="120" stepKey="waitProductIsAddedToCartSuccessfullySecondTime"/>
+
+        <grabTextFrom selector="{{CartSection.productQtyInCart(pos_virtual_product_with_custom_option.name)}}" stepKey="grabQtyOfItem"/>
+        <assertEquals message="Product's qty is correct." stepKey="compareQty">
+            <expectedResult type="float">2</expectedResult>
+            <actualResult type="variable">grabQtyOfItem</actualResult>
+        </assertEquals>
+    </test>
+</tests>

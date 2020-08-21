@@ -6,11 +6,11 @@
 
 namespace Magestore\PurchaseOrderSuccess\Block\Adminhtml\ReturnOrder\Edit\Fieldset\ReturnSumary;
 
-/***
- * Class ImportProduct
- * @package Magestore\PurchaseOrderSuccess\Block\Adminhtml\ReturnOrder\Edit\Fieldset\ReturnSumary
+/**
+ * Block ImportProduct
  */
-class ImportProduct extends  \Magento\Backend\Block\Widget\Form\Generic {
+class ImportProduct extends \Magento\Backend\Block\Widget\Form\Generic
+{
 
     protected $_template = 'Magestore_PurchaseOrderSuccess::returnorder/form/import.phtml';
 
@@ -26,6 +26,7 @@ class ImportProduct extends  \Magento\Backend\Block\Widget\Form\Generic {
 
     /**
      * ImportProduct constructor.
+     *
      * @param \Magento\Backend\Block\Template\Context $context
      * @param \Magento\Framework\Registry $registry
      * @param \Magento\Framework\Data\FormFactory $formFactory
@@ -41,11 +42,11 @@ class ImportProduct extends  \Magento\Backend\Block\Widget\Form\Generic {
         $this->setUseContainer(true);
     }
 
-
     /**
-     * Get html id
+     * Get Html Id
      *
-     * @return mixed
+     * @return array|mixed|string|null
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function getHtmlId()
     {
@@ -60,9 +61,11 @@ class ImportProduct extends  \Magento\Backend\Block\Widget\Form\Generic {
      *
      * @return int|mixed
      */
-    public function getPurchaseId(){
-        if(!$this->returnId)
+    public function getPurchaseId()
+    {
+        if (!$this->returnId) {
             $this->returnId = $this->getRequest()->getParam('return_id');
+        }
         return $this->returnId;
     }
 
@@ -71,9 +74,11 @@ class ImportProduct extends  \Magento\Backend\Block\Widget\Form\Generic {
      *
      * @return int|mixed
      */
-    public function getSupplierId(){
-        if(!$this->supplierId)
+    public function getSupplierId()
+    {
+        if (!$this->supplierId) {
             $this->supplierId = $this->getRequest()->getParam('supplier_id');
+        }
         return $this->supplierId;
     }
 
@@ -82,13 +87,14 @@ class ImportProduct extends  \Magento\Backend\Block\Widget\Form\Generic {
      *
      * @return string
      */
-    public function getCsvSampleLink() {
+    public function getCsvSampleLink()
+    {
         return $this->getUrl(
             'purchaseordersuccess/returnOrder_product/downloadSample',
-            array(
+            [
                 'return_id' => $this->getPurchaseId(),
                 'supplier_id' => $this->getSupplierId()
-            )
+            ]
         );
     }
 
@@ -97,14 +103,14 @@ class ImportProduct extends  \Magento\Backend\Block\Widget\Form\Generic {
      *
      * @return string
      */
-    public function getImportUrl(){
+    public function getImportUrl()
+    {
         return $this->getUrl(
             'purchaseordersuccess/returnOrder_product/import',
-            array(
+            [
                 'return_id' => $this->getPurchaseId(),
                 'supplier_id' => $this->getSupplierId()
-            )
+            ]
         );
     }
-
 }

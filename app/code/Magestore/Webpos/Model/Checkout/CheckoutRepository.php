@@ -5,15 +5,15 @@ namespace Magestore\Webpos\Model\Checkout;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Webapi\ServiceInputProcessor;
-use Magento\InventorySales\Plugin\Sales\OrderManagement\AppendReservationsAfterOrderPlacementPlugin;
 use Magestore\Webpos\Api\Data\Checkout\Order\ItemInterface;
 use Magestore\Webpos\Model\Checkout\Order\Payment\Error as OrderPaymentError;
 use Magestore\Webpos\Model\Request\Actions\TakePaymentAction;
+use Magestore\Webpos\Api\Sales\OrderManagement\AppendReservationsAfterOrderPlacementInterface;
 
 /**
  * Class CheckoutRepository
  *
- * @package Magestore\Webpos\Model\Checkout
+ * Used for checkout repository
  * @SuppressWarnings(PHPMD.TooManyFields)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
@@ -178,6 +178,11 @@ class CheckoutRepository implements \Magestore\Webpos\Api\Checkout\CheckoutRepos
     protected $actionLogFactory;
 
     /**
+     * @var AppendReservationsAfterOrderPlacementInterface
+     */
+    protected $appendReservation;
+
+    /**
      * CheckoutRepository constructor.
      *
      * @param \Magento\Quote\Model\QuoteFactory $quoteFactory
@@ -213,6 +218,7 @@ class CheckoutRepository implements \Magestore\Webpos\Api\Checkout\CheckoutRepos
      * @param \Magestore\Webpos\Log\Logger $logger
      * @param ServiceInputProcessor $serviceInputProcessor
      * @param \Magestore\Webpos\Model\Request\ActionLogFactory $actionLogFactory
+     * @param AppendReservationsAfterOrderPlacementInterface $appendReservation
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -248,7 +254,8 @@ class CheckoutRepository implements \Magestore\Webpos\Api\Checkout\CheckoutRepos
         PosOrderRepository $posOrderRepository,
         \Magestore\Webpos\Log\Logger $logger,
         ServiceInputProcessor $serviceInputProcessor,
-        \Magestore\Webpos\Model\Request\ActionLogFactory $actionLogFactory
+        \Magestore\Webpos\Model\Request\ActionLogFactory $actionLogFactory,
+        AppendReservationsAfterOrderPlacementInterface $appendReservation
     ) {
         $this->quoteFactory = $quoteFactory;
         $this->orderFactory = $orderFactory;
@@ -283,6 +290,7 @@ class CheckoutRepository implements \Magestore\Webpos\Api\Checkout\CheckoutRepos
         $this->logger = $logger;
         $this->serviceInputProcessor = $serviceInputProcessor;
         $this->actionLogFactory = $actionLogFactory;
+        $this->appendReservation = $appendReservation;
     }
 
     /**
@@ -614,7 +622,9 @@ class CheckoutRepository implements \Magestore\Webpos\Api\Checkout\CheckoutRepos
                 $parentItem->setData($parentItemData);
             }
 
-            unset($dataItem['parent_item_id']);
+            if (isset($dataItem['parent_item_id'])) {
+                unset($dataItem['parent_item_id']);
+            }
 
             $orderItem->setData($dataItem);
 
@@ -1004,10 +1014,7 @@ class CheckoutRepository implements \Magestore\Webpos\Api\Checkout\CheckoutRepos
     public function appendReservationsAfterOrderPlacement(\Magento\Sales\Api\Data\OrderInterface $order)
     {
         if ($this->MSIStockManagement->getStockId()) {
-            /** @var AppendReservationsAfterOrderPlacementPlugin $appendReservations */
-            $appendReservations = $this->objectManager
-                ->get(AppendReservationsAfterOrderPlacementPlugin::class);
-            $order = $appendReservations->afterPlace($this->orderManagement, $order);
+            $order = $this->appendReservation->execute($order);
         }
         return $order;
     }

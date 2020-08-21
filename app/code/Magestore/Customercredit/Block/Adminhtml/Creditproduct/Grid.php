@@ -31,6 +31,12 @@ namespace Magestore\Customercredit\Block\Adminhtml\Creditproduct;
 
 use Magento\Store\Model\Store;
 
+/**
+ * Class Grid
+ *
+ * Credit product grid block
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
 {
     /**
@@ -86,8 +92,7 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
         \Magento\Catalog\Model\Product\Visibility $visibility,
         \Magento\Framework\Module\Manager $moduleManager,
         array $data = []
-    )
-    {
+    ) {
         $this->_websiteFactory = $websiteFactory;
         $this->_productFactory = $productFactory;
         $this->_productStatus = $status;
@@ -98,7 +103,7 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
     }
 
     /**
-     * @return void
+     * @inheritDoc
      */
     protected function _construct()
     {
@@ -112,7 +117,10 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
     }
 
     /**
-     * @return Store
+     * Get store
+     *
+     * @return \Magento\Store\Api\Data\StoreInterface
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     protected function _getStore()
     {
@@ -121,7 +129,7 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
     }
 
     /**
-     * @return $this
+     * @inheritDoc
      */
     protected function _prepareCollection()
     {
@@ -216,6 +224,8 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
     }
 
     /**
+     * Add Column Filter To Collection
+     *
      * @param \Magento\Backend\Block\Widget\Grid\Column $column
      * @return $this
      */
@@ -237,8 +247,7 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
     }
 
     /**
-     * param type is important, please don't change it's value
-     * @return $this
+     * @inheritDoc
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     protected function _prepareColumns()
@@ -299,7 +308,8 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
                     'index' => 'quantity_per_source',
                     'filter' => false,
                     'sortable' => false,
-                    'renderer' => \Magestore\Customercredit\Block\Adminhtml\Creditproduct\Column\Renderer\QtyPerSource::class,
+                    'renderer' =>
+                        \Magestore\Customercredit\Block\Adminhtml\Creditproduct\Column\Renderer\QtyPerSource::class,
                 ]
             );
             $this->addColumn(
@@ -309,17 +319,21 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
                     'index' => 'salable_quantity',
                     'filter' => false,
                     'sortable' => false,
-                    'renderer' => \Magestore\Customercredit\Block\Adminhtml\Creditproduct\Column\Renderer\SalableQuantity::class,
+                    'renderer' =>
+                        \Magestore\Customercredit\Block\Adminhtml\Creditproduct\Column\Renderer\SalableQuantity::class,
                 ]
             );
         }
-        $this->addColumn('visibility', array(
-            'header' => __('Visibility'),
-            'width' => '70px',
-            'index' => 'visibility',
-            'type' => 'options',
-            'options' => $this->_productVisibility->getOptionArray(),
-        ));
+        $this->addColumn(
+            'visibility',
+            [
+                'header' => __('Visibility'),
+                'width' => '70px',
+                'index' => 'visibility',
+                'type' => 'options',
+                'options' => $this->_productVisibility->getOptionArray(),
+            ]
+        );
         $this->addColumn(
             'status',
             [
@@ -378,7 +392,7 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
     }
 
     /**
-     * @return $this
+     * @inheritDoc
      */
     protected function _prepareMassaction()
     {
@@ -418,7 +432,7 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
     }
 
     /**
-     * @return string
+     * @inheritDoc
      */
     public function getGridUrl()
     {
@@ -426,8 +440,7 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
     }
 
     /**
-     * @param \Magento\Catalog\Model\Product|\Magento\Framework\DataObject $row
-     * @return string
+     * @inheritDoc
      */
     public function getRowUrl($row)
     {
@@ -438,6 +451,8 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
     }
 
     /**
+     * Is MSI Enable
+     *
      * @return boolean
      */
     public function isMSIEnable()

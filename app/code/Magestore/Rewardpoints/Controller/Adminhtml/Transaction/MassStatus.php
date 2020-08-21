@@ -2,6 +2,7 @@
 namespace Magestore\Rewardpoints\Controller\Adminhtml\Transaction;
 
 use Magento\Backend\App\Action\Context;
+use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magestore\Rewardpoints\Model\ResourceModel\Transaction\CollectionFactory;
 use Magento\Ui\Component\MassAction\Filter;
 use Magento\Framework\Controller\ResultFactory;
@@ -10,14 +11,18 @@ use Magestore\Rewardpoints\Model\ResourceModel\Transaction\Collection;
 /**
  * Class MassDelete
  */
-class MassStatus extends AbstractMassAction
+class MassStatus extends AbstractMassAction implements HttpPostActionInterface
 {
     protected $_modelTransaction;
     protected $_collectionFactoryTransaction;
+
     /**
+     * MassStatus constructor.
+     *
      * @param Context $context
      * @param Filter $filter
      * @param CollectionFactory $collectionFactory
+     * @param \Magestore\Rewardpoints\Model\Transaction $transaction
      */
     public function __construct(
         Context $context,
@@ -31,22 +36,21 @@ class MassStatus extends AbstractMassAction
     }
 
     /**
-     * @param AbstractCollection $collection
-     * @return \Magento\Backend\Model\View\Result\Redirect
+     * @inheritDoc
      */
     public function massAction(Collection $collection)
     {
         $status = $this->getRequest()->getParam('status');
-        switch ($status){
+        switch ($status) {
             case $this->_modelTransaction->getConst('STATUS_COMPLETED')://complete
                 $this->massCompleteAction($collection);
-            break;
+                break;
             case $this->_modelTransaction->getConst('STATUS_CANCELED')://Canceled
                 $this->massCancelAction($collection);
-            break;
+                break;
             case $this->_modelTransaction->getConst('STATUS_EXPIRED')://Expired
                 $this->massExpireAction($collection);
-            break;
+                break;
         }
         /** @var \Magento\Backend\Model\View\Result\Redirect $resultRedirect */
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
@@ -54,19 +58,23 @@ class MassStatus extends AbstractMassAction
 
         return $resultRedirect;
     }
+
     /**
-     * mass complete transaction(s) action
+     * Mass complete transaction(s) action
+     *
+     * @param Collection $collection
      */
-    protected  function massCompleteAction($collection){
+    protected function massCompleteAction($collection)
+    {
         $collection
-            ->addFieldToFilter('point_amount', array('gt' => 0))
-            ->addFieldToFilter('status', array(
+            ->addFieldToFilter('point_amount', ['gt' => 0])
+            ->addFieldToFilter('status', [
                 'lt' => $this->_modelTransaction->getConst('STATUS_COMPLETED')
-            ));
+            ]);
         $total = 0;
-        foreach($collection as $model){
+        foreach ($collection as $model) {
             try {
-                if($model->completeTransaction()){
+                if ($model->completeTransaction()) {
                     $total++;
                 }
             } catch (\Exception $e) {
@@ -80,21 +88,24 @@ class MassStatus extends AbstractMassAction
                 __('No transaction was completed')
             );
         }
-
     }
+
     /**
-     * mass cancel transaction(s) action
+     * Mass cancel transaction(s) action
+     *
+     * @param Collection $collection
      */
-    protected  function massCancelAction($collection){
+    protected function massCancelAction($collection)
+    {
         $collection
-            ->addFieldToFilter('point_amount', array('gt' => 0))
-            ->addFieldToFilter('status', array(
+            ->addFieldToFilter('point_amount', ['gt' => 0])
+            ->addFieldToFilter('status', [
                 'lteq' => $this->_modelTransaction->getConst('STATUS_COMPLETED')
-            ));
+            ]);
         $total = 0;
-        foreach($collection as $transaction){
+        foreach ($collection as $transaction) {
             try {
-                if($transaction->cancelTransaction()){
+                if ($transaction->cancelTransaction()) {
                     $total++;
                 }
             } catch (\Exception $e) {
@@ -108,26 +119,27 @@ class MassStatus extends AbstractMassAction
                 __('No transaction was canceled')
             );
         }
-
     }
 
     /**
-     * mass expire selected transaction(s)
+     * Mass expire selected transaction(s)
+     *
+     * @param Collection $collection
      */
     public function massExpireAction($collection)
     {
         $collection
             ->addAvailableBalanceFilter()
-            ->addFieldToFilter('status', array(
+            ->addFieldToFilter('status', [
                 'lteq' => $this->_modelTransaction->getConst('STATUS_COMPLETED')
-            ))
-            ->addFieldToFilter('expiration_date', array('notnull' => true))
-            ->addFieldToFilter('expiration_date', array('to' => date('Y-m-d H:i:s') ) );
+            ])
+            ->addFieldToFilter('expiration_date', ['notnull' => true])
+            ->addFieldToFilter('expiration_date', ['to' => date('Y-m-d H:i:s')]);
 
         $total = 0;
         foreach ($collection as $transaction) {
             try {
-                if($transaction->expireTransaction()){
+                if ($transaction->expireTransaction()) {
                     $total++;
                 }
             } catch (\Exception $e) {
@@ -152,5 +164,4 @@ class MassStatus extends AbstractMassAction
     {
         return $this->_authorization->isAllowed('Magestore_Rewardpoints::Manage_transaction');
     }
-
 }

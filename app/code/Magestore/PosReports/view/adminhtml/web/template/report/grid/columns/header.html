@@ -1,0 +1,20 @@
+<!--
+/**
+ * Copyright © Magestore, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<th class="data-grid-th pos-report-column-header" click="sort"
+    css="
+        _sortable: sortable,
+        _draggable: draggable,
+        _ascend: sorting === 'asc',
+        _descend: sorting === 'desc'">
+    <span class="data-grid-cell-content" translate="label"/>
+    <div if="altField" class="pos-report-column-header-tooltip-container">
+        <div class="pos-report-column-header-tooltip-wrapper">
+            <div class="pos-report-column-header-tooltip"
+                 translate="altField"></div>
+        </div>
+    </div>
+</th>

@@ -12,6 +12,9 @@ use Magento\Framework\Locale\ResolverInterface;
 use Magento\Framework\DataObject\Factory as DataObjectFactory;
 
 /**
+ * Class MetadataProvider
+ *
+ * Used for metadata provider
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class MetadataProvider extends \Magento\Ui\Model\Export\MetadataProvider
@@ -20,8 +23,10 @@ class MetadataProvider extends \Magento\Ui\Model\Export\MetadataProvider
      * @var DataObjectFactory
      */
     protected $dataObjectFactory;
-    
+
     /**
+     * MetadataProvider constructor.
+     *
      * @param Filter $filter
      * @param TimezoneInterface $localeDate
      * @param ResolverInterface $localeResolver
@@ -42,12 +47,13 @@ class MetadataProvider extends \Magento\Ui\Model\Export\MetadataProvider
     }
 
     /**
-     * (non-PHPdoc)
+     * Get headers
+     *
      * @see \Magento\Ui\Model\Export\MetadataProvider::getHeaders()
      * @param UiComponentInterface $component
      * @return array|\string[]
      */
-    public function getHeaders(UiComponentInterface $component)
+    public function getHeaders(UiComponentInterface $component): array
     {
         $row = [];
         foreach ($this->getColumns($component) as $column) {
@@ -57,12 +63,13 @@ class MetadataProvider extends \Magento\Ui\Model\Export\MetadataProvider
     }
 
     /**
-     * (non-PHPdoc)
+     * Get columns
+     *
      * @see \Magento\Ui\Model\Export\MetadataProvider::getColumns()
      * @param UiComponentInterface $component
      * @return UiComponentInterface[]
      */
-    protected function getColumns(UiComponentInterface $component)
+    protected function getColumns(UiComponentInterface $component): array
     {
         if (!isset($this->columns[$component->getName()])) {
             $columns = $this->getColumnsComponent($component);

@@ -8,17 +8,12 @@ namespace Magestore\Giftvoucher\Model\Source\GiftTemplate;
 
 /**
  * Class StatusOptions
- * @package Magestore\Giftvoucher\Model\Source\GiftTemplate
+ *
+ * Gift template status options model
  */
 class StatusOptions extends \Magento\Eav\Model\Entity\Attribute\Source\AbstractSource
 {
-    /**
-     *
-     */
     const STATUS_ENABLE = 1;
-    /**
-     *
-     */
     const STATUS_DISABLE = 2;
 
     /**
@@ -26,7 +21,7 @@ class StatusOptions extends \Magento\Eav\Model\Entity\Attribute\Source\AbstractS
      *
      * @return array
      */
-    public static function getOptionArray()
+    public function getOptionArray()
     {
         return [
             self::STATUS_ENABLE => __('Enable'),
@@ -35,12 +30,14 @@ class StatusOptions extends \Magento\Eav\Model\Entity\Attribute\Source\AbstractS
     }
 
     /**
+     * Get All Options
+     *
      * @param bool $withEmpty
      * @return array
      */
     public function getAllOptions($withEmpty = true)
     {
-        if (is_null($this->_options)) {
+        if ($this->_options === null) {
             $this->_options = [];
             foreach ($this->getOptionArray() as $value => $label) {
                 $this->_options[] = [

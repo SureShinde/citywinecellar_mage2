@@ -6,12 +6,11 @@ use Magento\TestFramework\TestCase\WebapiAbstract;
 use Magento\TestFramework\Helper\Bootstrap;
 
 /**
- * Class LoginTest
- * @package Magestore\Webpos\Test\Api\Staff
+ * Api Test LoginTest
  */
 class LoginTest extends WebapiAbstract
 {
-	const RESOURCE_PATH = '/V1/webpos/staff/login';
+    const RESOURCE_PATH = '/V1/webpos/staff/login';
 
     /**
      * @var $username
@@ -22,7 +21,9 @@ class LoginTest extends WebapiAbstract
      */
     protected $password = 'admin123';
 
-
+    /**
+     * Get Login Response
+     */
     public function getLoginResponse()
     {
         $serviceInfo = [
@@ -45,18 +46,23 @@ class LoginTest extends WebapiAbstract
      */
     protected $staff;
 
-    protected function setUp()
+    protected function setUp() : void // phpcs:ignore
     {
         $this->staff = Bootstrap::getObjectManager()->get('\Magestore\Webpos\Test\Api\Staff\Expected\LoginResult');
     }
 
-	public function testStaffLogin()
-	{
-		$result = $this->getLoginResponse();
-		$this->assertNotNull($result);
+    /**
+     * Test Staff Login
+     *
+     * @return void
+     */
+    public function testStaffLogin()
+    {
+        $result = $this->getLoginResponse();
+        $this->assertNotNull($result);
 
         foreach ($this->staff->getSchema() as $key) {
             $this->assertArrayHasKey($key, $result);
         }
-	}
+    }
 }

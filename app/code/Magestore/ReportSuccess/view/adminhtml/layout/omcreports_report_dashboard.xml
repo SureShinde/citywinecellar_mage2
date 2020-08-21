@@ -10,7 +10,11 @@
     </head>
     <body>
         <referenceContainer name="content">
-            <block class="Magestore\ReportSuccess\Block\Adminhtml\Dashboard" template="Magestore_ReportSuccess::dashboard.phtml" name="dashboard"/>
+            <block class="Magestore\ReportSuccess\Block\Adminhtml\Dashboard" template="Magestore_ReportSuccess::dashboard.phtml" name="reportDashboard" as="reportDashboard">
+                <block class="Magestore\ReportSuccess\Block\Adminhtml\Report\Panel\InventoryReportPanel"
+                       name="dashboard.report.inventory.report.panel"
+                       as="inventoryReportPanel"/>
+            </block>
         </referenceContainer>
     </body>
 </page>

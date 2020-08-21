@@ -5,12 +5,12 @@
  */
 
 namespace Magestore\Appadmin\Block\Adminhtml\Staff\Role\Edit\Tab;
-/**
- * Class Staff
- * @package Magestore\Appadmin\Block\Adminhtml\Staff\Role\Edit\Tab
- */
-class Staff extends \Magento\Backend\Block\Widget\Grid\Extended {
 
+/**
+ * Edit rold Staff
+ */
+class Staff extends \Magento\Backend\Block\Widget\Grid\Extended
+{
     /**
      * @var \Magestore\Appadmin\Model\ResourceModel\Staff\Staff\CollectionFactory
      */
@@ -18,6 +18,7 @@ class Staff extends \Magento\Backend\Block\Widget\Grid\Extended {
 
     /**
      * Staff constructor.
+     *
      * @param \Magento\Backend\Block\Template\Context $context
      * @param \Magento\Backend\Helper\Data $backendHelper
      * @param \Magestore\Appadmin\Model\ResourceModel\Staff\Staff\CollectionFactory $staffCollectionFactory
@@ -27,17 +28,17 @@ class Staff extends \Magento\Backend\Block\Widget\Grid\Extended {
         \Magento\Backend\Block\Template\Context $context,
         \Magento\Backend\Helper\Data $backendHelper,
         \Magestore\Appadmin\Model\ResourceModel\Staff\Staff\CollectionFactory $staffCollectionFactory,
-        array $data = array()
-    )
-    {
+        array $data = []
+    ) {
         $this->_staffCollectionFactory = $staffCollectionFactory;
         parent::__construct($context, $backendHelper, $data);
     }
 
     /**
-     *
+     * Construct
      */
-    public function _construct() {
+    public function _construct()
+    {
         parent::_construct();
         $this->setId('staff_grid');
         $this->setDefaultSort('staff_id');
@@ -45,14 +46,17 @@ class Staff extends \Magento\Backend\Block\Widget\Grid\Extended {
         $this->setSaveParametersInSession(false);
         $this->setUseAjax(true);
         if ($this->getRequest()->getParam('id')) {
-            $this->setDefaultFilter(array('in_staff' => 1));
+            $this->setDefaultFilter(['in_staff' => 1]);
         }
     }
 
     /**
+     * Prepare Collection
+     *
      * @return $this
      */
-    protected function _prepareCollection() {
+    protected function _prepareCollection()
+    {
         $collection = $this->_staffCollectionFactory->create();
         $roleId = (int)$this->getRequest()->getParam('id');
         $collection->addFieldToFilter('role_id', $roleId);
@@ -62,59 +66,84 @@ class Staff extends \Magento\Backend\Block\Widget\Grid\Extended {
     }
 
     /**
+     * Prepare Columns
+     *
      * @return $this
      * @throws \Exception
      */
-    protected function _prepareColumns() {
-        $this->addColumn('staff_id', array(
-            'header' => __('ID'),
-            'width' => '50px',
-            'index' => 'staff_id',
-            'type' => 'number',
-        ));
+    protected function _prepareColumns()
+    {
+        $this->addColumn(
+            'staff_id',
+            [
+                'header' => __('ID'),
+                'width' => '50px',
+                'index' => 'staff_id',
+                'type' => 'number',
+            ]
+        );
 
-        $this->addColumn('username', array(
-            'header' => __('User Name'),
-            'index' => 'username'
-        ));
+        $this->addColumn(
+            'username',
+            [
+                'header' => __('User Name'),
+                'index' => 'username'
+            ]
+        );
 
-        $this->addColumn('staff_name', array(
-            'header' => __('Display Name'),
-            'index' => 'name'
-        ));
+        $this->addColumn(
+            'staff_name',
+            [
+                'header' => __('Display Name'),
+                'index' => 'name'
+            ]
+        );
 
-        $this->addColumn('email', array(
-            'header' => __('Email'),
-            'index' => 'email'
-        ));
+        $this->addColumn(
+            'email',
+            [
+                'header' => __('Email'),
+                'index' => 'email'
+            ]
+        );
 
-        $this->addColumn('status', array(
-            'header' => __('Status'),
-            'index' => 'status',
-            'type' => 'options',
-            'options' => array(
-                1 => 'Enable',
-                2 => 'Disable',
-            ),
-
-        ));
+        $this->addColumn(
+            'status',
+            [
+                'header' => __('Status'),
+                'index' => 'status',
+                'type' => 'options',
+                'options' => [
+                    1 => 'Enable',
+                    2 => 'Disable',
+                ]
+            ]
+        );
 
         return parent::_prepareColumns();
     }
 
     /**
+     * Get Grid Url
+     *
      * @return mixed|string
      */
-    public function getGridUrl() {
-        return $this->getData('grid_url') ? $this->getData('grid_url') :
-            $this->getUrl('*/*/staffgrid', array('_current' => true, 'id' => $this->getRequest()->getParam('id')));
+    public function getGridUrl()
+    {
+        return $this->getData('grid_url')
+            ? $this->getData('grid_url') :
+            $this->getUrl('*/*/staffgrid', ['_current' => true, 'id' => $this->getRequest()->getParam('id')]);
     }
 
     /**
+     * Get Row Url
+     *
      * @param \Magento\Framework\DataObject $row
      * @return string
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function getRowUrl($row) {
+    public function getRowUrl($row)
+    {
         return '';
     }
 }

@@ -22,25 +22,40 @@
 
 namespace Magestore\Customercredit\Model\Source;
 
+/**
+ * Class Aftertax
+ *
+ * Source after tax model
+ */
 class Aftertax
 {
-    static public function getOptionArray()
+    /**
+     * Get Option Array
+     *
+     * @return array
+     */
+    public function getOptionArray()
     {
-        return array(
+        return [
             0 => __('Before tax'),
             1 => __('After tax'),
-        );
+        ];
     }
 
+    /**
+     * To Option Array
+     *
+     * @return array
+     */
     public function toOptionArray()
     {
-        $options = array();
-        foreach (self::getOptionArray() as $value => $label)
-            $options[] = array(
+        $options = [];
+        foreach ($this->getOptionArray() as $value => $label) {
+            $options[] = [
                 'value' => $value,
                 'label' => $label
-            );
+            ];
+        }
         return $options;
     }
-
 }

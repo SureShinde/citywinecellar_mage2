@@ -7,23 +7,26 @@
 namespace Magestore\FulfilReport\Block\Adminhtml\Report;
 
 use Magestore\FulfilSuccess\Api\Data\PackRequestInterface;
+use Magestore\FulfilSuccess\Model\ResourceModel\PackRequest\PackRequest\CollectionFactory as PackCollectionFactory;
 
+/**
+ * Block Report Pack
+ */
 class Pack extends \Magestore\FulfilReport\Block\Adminhtml\Report\Dashboard
 {
     /**
-     * @var \Magestore\FulfilSuccess\Model\ResourceModel\PackRequest\PackRequest\CollectionFactory
+     * @var PackCollectionFactory
      */
     protected $packRequestCollectionFactory;
 
     /**
      * Pack constructor.
+     *
      * @param \Magento\Framework\View\Element\Template\Context $context
      * @param \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $orderCollectionFactory
-     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
-     * @param \Magento\Framework\UrlInterface $urlBuilder
      * @param \Magento\Framework\App\Request\Http $request
      * @param \Magento\Framework\Stdlib\DateTime\DateTime $date
-     * @param \Magestore\FulfilSuccess\Model\ResourceModel\PackRequest\PackRequest\CollectionFactory $packRequestCollectionFactory
+     * @param PackCollectionFactory $packRequestCollectionFactory
      * @param array $data
      */
     public function __construct(
@@ -31,15 +34,16 @@ class Pack extends \Magestore\FulfilReport\Block\Adminhtml\Report\Dashboard
         \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $orderCollectionFactory,
         \Magento\Framework\App\Request\Http $request,
         \Magento\Framework\Stdlib\DateTime\DateTime $date,
-        \Magestore\FulfilSuccess\Model\ResourceModel\PackRequest\PackRequest\CollectionFactory $packRequestCollectionFactory,
+        PackCollectionFactory $packRequestCollectionFactory,
         array $data = []
-    )
-    {
-        parent::__construct($context, $orderCollectionFactory,$request, $date, $data);
+    ) {
+        parent::__construct($context, $orderCollectionFactory, $request, $date, $data);
         $this->packRequestCollectionFactory = $packRequestCollectionFactory;
     }
 
     /**
+     * Get pack request collection
+     *
      * @return \Magestore\FulfilSuccess\Model\ResourceModel\PackRequest\PackRequest\Collection
      */
     public function getPackRequestCollection()
@@ -50,7 +54,8 @@ class Pack extends \Magestore\FulfilReport\Block\Adminhtml\Report\Dashboard
     }
 
     /**
-     * 
+     * Get Pack Request Collection Per Day
+     *
      * @return array
      */
     public function getPackRequestCollectionPerDay()
@@ -59,13 +64,14 @@ class Pack extends \Magestore\FulfilReport\Block\Adminhtml\Report\Dashboard
         $timeRange = $dataPost['time'];
         $totalPackRequests = [];
 
-        if(!isset($dataPost['type']) || !$dataPost['type']) {
+        if (!isset($dataPost['type']) || !$dataPost['type']) {
             $totalPackRequests = $this->getPackRequestsInPeriod('last7days');
         }
-        
+
         if (isset($dataPost['type']) && $dataPost['type'] == 'perday') {
             $totalPackRequests = $this->getPackRequestsInPeriod($timeRange);
         }
+
         if ($dataPost['type'] == 'customweek') {
             $orderCustomWeek = $this->getPackRequestsPerDayCustomRange($dataPost['datefrom'], $dataPost['dateto']);
             return $orderCustomWeek;
@@ -75,13 +81,15 @@ class Pack extends \Magestore\FulfilReport\Block\Adminhtml\Report\Dashboard
     }
 
     /**
+     * Get Pack Requests In Period
+     *
+     * @param string $timeRange
      * @return array
      */
     public function getPackRequestsInPeriod($timeRange)
     {
         $totalPackRequests = [];
-        $lastIndex = 0;
-        switch ($timeRange){
+        switch ($timeRange) {
             case 'last7days':
                 $lastIndex = 6;
                 break;
@@ -94,27 +102,33 @@ class Pack extends \Magestore\FulfilReport\Block\Adminhtml\Report\Dashboard
             default:
                 $lastIndex = 6;
         }
-        if($lastIndex) {
+        if ($lastIndex) {
             for ($i = $lastIndex; $i >= 0; $i--) {
                 $toDate = date('Y-m-d 23:59:59', strtotime("-{$i} days"));
                 $fromDate = date('Y-m-d 00:00:00', strtotime("-{$i} days"));
                 $date = date('d/m', strtotime("-{$i} days"));
                 $packRequestsPerDay = $this->getPackRequestCollection()
                     ->addFieldToFilter(
-                        'status', ['eq' => PackRequestInterface::STATUS_PACKED]
+                        'status',
+                        ['eq' => PackRequestInterface::STATUS_PACKED]
                     )
                     ->addFieldToFilter(
-                        'updated_at', ['from' => $fromDate, 'to' => $toDate]
+                        'updated_at',
+                        ['from' => $fromDate, 'to' => $toDate]
                     )
                     ->getSize();
                 $totalPackRequests[$date] = $packRequestsPerDay;
-            };            
+            }
         }
-        
+
         return $totalPackRequests;
     }
 
     /**
+     * Get Pack Requests Per Day Custom Range
+     *
+     * @param string $dateFrom
+     * @param string $dateTo
      * @return array
      */
     public function getPackRequestsPerDayCustomRange($dateFrom, $dateTo)
@@ -126,7 +140,7 @@ class Pack extends \Magestore\FulfilReport\Block\Adminhtml\Report\Dashboard
         $dateDiffCustomRange = strtotime($toDate) - strtotime($fromDate);
         $dayToday = floor(($dateDiffToday) / (60 * 60 * 24));
         $toDateFromNow = floor(($dateDiffCustomRange) / (60 * 60 * 24));
-        $totalPackRequests = array();
+        $totalPackRequests = [];
         for ($i = $toDateFromNow; $i >= 0; $i--) {
             $j = $dayToday + $i;
             $toDate = date('Y-m-d 23:59:59', strtotime("-{$j} days"));
@@ -134,10 +148,12 @@ class Pack extends \Magestore\FulfilReport\Block\Adminhtml\Report\Dashboard
             $date = date('d/m', strtotime("-{$j} days"));
             $packRequestsPerDay = $this->getPackRequestCollection()
                 ->addFieldToFilter(
-                    'status', ['eq' => PackRequestInterface::STATUS_PACKED]
+                    'status',
+                    ['eq' => PackRequestInterface::STATUS_PACKED]
                 )
                 ->addFieldToFilter(
-                    'updated_at', ['from' => $fromDate, 'to' => $toDate]
+                    'updated_at',
+                    ['from' => $fromDate, 'to' => $toDate]
                 )
                 ->getSize();
             $totalPackRequests[$date] = $packRequestsPerDay;

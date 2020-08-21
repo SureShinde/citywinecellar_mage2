@@ -6,12 +6,12 @@
 namespace Magestore\Giftvoucher\Service\GiftTemplate;
 
 use Magento\Framework\App\Filesystem\DirectoryList;
-use Magento\Store\Model\StoreManagerInterface;
 use Magento\Framework\Exception\FileSystemException;
 
 /**
  * Class MediaService
- * @package Magestore\Giftvoucher\Service\GiftTemplate
+ *
+ * Media service
  */
 class MediaService implements \Magestore\Giftvoucher\Api\GiftTemplate\MediaServiceInterface
 {
@@ -39,6 +39,7 @@ class MediaService implements \Magestore\Giftvoucher\Api\GiftTemplate\MediaServi
 
     /**
      * MediaService constructor.
+     *
      * @param \Magento\Framework\Image\AdapterFactory $adapterFactory
      * @param \Magento\Framework\Filesystem $fileSystem
      * @param \Magento\Framework\UrlInterface $url
@@ -55,15 +56,17 @@ class MediaService implements \Magestore\Giftvoucher\Api\GiftTemplate\MediaServi
     }
 
     /**
+     * Update media
      *
      * @param \Magestore\Giftvoucher\Model\GiftTemplate $giftTemplate
      * @return $this
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function updateMedia(\Magestore\Giftvoucher\Model\GiftTemplate $giftTemplate)
     {
         $images = $giftTemplate->getData('media_gallery/images');
         $mediaFiles = [];
-        if (count($images)) {
+        if (is_array($images) && count($images)) {
             foreach ($images as $image) {
                 if (!isset($image['file']) || !$image['file']) {
                     continue;
@@ -73,7 +76,6 @@ class MediaService implements \Magestore\Giftvoucher\Api\GiftTemplate\MediaServi
                     if ($mediaDirectory->isExist(self::MEDIA_PATH .'/'. $image['file'])) {
                         $mediaDirectory->delete(self::MEDIA_PATH .'/'. $image['file']);
                     }
-                    //$removeFiles[] = $image['file'];
                     continue;
                 }
                 if ($mediaDirectory->isExist(self::MEDIA_PATH .'/'. $image['file'])) {
@@ -112,7 +114,6 @@ class MediaService implements \Magestore\Giftvoucher\Api\GiftTemplate\MediaServi
                     $fileHandler = $mediaDirectory->stat(self::MEDIA_PATH .'/'. $image);
                     $imageSize = $fileHandler['size'];
                 } catch (FileSystemException $e) {
-                    //$imageUrl = '';
                     $imageSize= 0;
                 }
                 $imageData[] = [
@@ -127,6 +128,7 @@ class MediaService implements \Magestore\Giftvoucher\Api\GiftTemplate\MediaServi
     }
     
     /**
+     * Get image url
      *
      * @param string $image
      * @return string

@@ -22,6 +22,11 @@
 
 namespace Magestore\Customercredit\Block\Adminhtml;
 
+/**
+ * Class Statisticscredit
+ *
+ * Statistics credit block
+ */
 class Statisticscredit extends \Magento\Backend\Block\Template
 {
     /**
@@ -56,8 +61,7 @@ class Statisticscredit extends \Magento\Backend\Block\Template
         \Magento\Customer\Model\CustomerFactory $customerFactory,
         \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency,
         array $data = []
-    )
-    {
+    ) {
         $this->_customercreditFactory = $customercreditFactory;
         $this->_transactionFactory = $transactionFactory;
         $this->_customerFactory = $customerFactory;
@@ -66,7 +70,7 @@ class Statisticscredit extends \Magento\Backend\Block\Template
     }
 
     /**
-     * @return void
+     * @inheritDoc
      */
     public function _construct()
     {
@@ -74,11 +78,11 @@ class Statisticscredit extends \Magento\Backend\Block\Template
         $this->setTemplate('Magestore_Customercredit::customercredit/statisticscredit.phtml');
     }
 
-    public function _prepareLayout()
-    {
-        return parent::_prepareLayout();
-    }
-
+    /**
+     * Get Total Credit
+     *
+     * @return string
+     */
     public function getTotalCredit()
     {
         $collections = $this->_customercreditFactory->create()->getCollection();
@@ -91,18 +95,34 @@ class Statisticscredit extends \Magento\Backend\Block\Template
         return $this->_priceCurrency->convertAndFormat($totalCredit);
     }
 
+    /**
+     * Get Credit Used
+     *
+     * @return mixed
+     */
     public function getCreditUsed()
     {
         return $this->_transactionFactory->create()->getCreditUsed();
     }
 
+    /**
+     * Get Customer With Credit
+     *
+     * @return int|void
+     */
     public function getCustomerWithCredit()
     {
-        $collections = $this->_customercreditFactory->create()->getCollection()->addFieldToFilter('credit_balance', array('gt' => 0.00));
+        $collections = $this->_customercreditFactory->create()->getCollection()
+            ->addFieldToFilter('credit_balance', ['gt' => 0.00]);
         $numCustomer = count($collections);
         return $numCustomer;
     }
 
+    /**
+     * Percent Credit
+     *
+     * @return float
+     */
     public function percentCredit()
     {
         $collections = $this->_customerFactory->create()->getCollection();

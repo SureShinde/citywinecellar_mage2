@@ -4,15 +4,18 @@
  * Copyright © 2018 Magestore. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace Magestore\Webpos\Model\Catalog;
 
-
 /**
+ * Class CategoryRepository
+ *
+ * Used for category repository
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @SuppressWarnings(PHPMD.TooManyFields)
  */
-class CategoryRepository extends \Magento\Catalog\Model\CategoryRepository
-    implements \Magestore\Webpos\Api\Catalog\CategoryRepositoryInterface
+class CategoryRepository extends \Magento\Catalog\Model\CategoryRepository implements
+    \Magestore\Webpos\Api\Catalog\CategoryRepositoryInterface
 {
     /**
      * @var \Magento\Catalog\Block\Adminhtml\Category\Tree
@@ -24,14 +27,22 @@ class CategoryRepository extends \Magento\Catalog\Model\CategoryRepository
      */
     protected $helper;
 
+    /**
+     * CategoryRepository constructor.
+     *
+     * @param \Magento\Catalog\Model\CategoryFactory $categoryFactory
+     * @param \Magento\Catalog\Model\ResourceModel\Category $categoryResource
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param \Magento\Catalog\Block\Adminhtml\Category\Tree $treeCategory
+     * @param \Magestore\Webpos\Helper\Data $helper
+     */
     public function __construct(
         \Magento\Catalog\Model\CategoryFactory $categoryFactory,
         \Magento\Catalog\Model\ResourceModel\Category $categoryResource,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Catalog\Block\Adminhtml\Category\Tree $treeCategory,
         \Magestore\Webpos\Helper\Data $helper
-    )
-    {
+    ) {
         parent::__construct($categoryFactory, $categoryResource, $storeManager);
         $this->treeCategory = $treeCategory;
         $this->helper = $helper;
@@ -42,6 +53,7 @@ class CategoryRepository extends \Magento\Catalog\Model\CategoryRepository
      *
      * @param \Magento\Framework\Api\SearchCriteriaInterface $searchCriteria
      * @return \Magestore\Webpos\Api\Data\Catalog\CategorySearchResultsInterface
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function getList(\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria)
     {
@@ -49,7 +61,7 @@ class CategoryRepository extends \Magento\Catalog\Model\CategoryRepository
         $storeId = $store->getId();
         $rootCategory = $store->getRootCategoryId();
         $collection = \Magento\Framework\App\ObjectManager::getInstance()->create(
-            '\Magestore\Webpos\Model\ResourceModel\Catalog\Category\Collection'
+            \Magestore\Webpos\Model\ResourceModel\Catalog\Category\Collection::class
         );
         $isShowFirstCats = false;
         foreach ($searchCriteria->getFilterGroups() as $group) {
@@ -88,13 +100,14 @@ class CategoryRepository extends \Magento\Catalog\Model\CategoryRepository
         $collection->setStoreId($storeId);
         $collection->setCurPage($searchCriteria->getCurrentPage());
         $collection->setPageSize($searchCriteria->getPageSize());
+        $collectionSize = $collection->getSize();
         $collection->load();
         $searchResult = \Magento\Framework\App\ObjectManager::getInstance()->get(
-            '\Magestore\Webpos\Api\Data\Catalog\CategorySearchResultsInterface'
+            \Magestore\Webpos\Api\Data\Catalog\CategorySearchResultsInterface::class
         );
         $searchResult->setSearchCriteria($searchCriteria);
         $searchResult->setItems($collection->getItems());
-        $searchResult->setTotalCount($collection->getSize());
+        $searchResult->setTotalCount($collectionSize);
         return $searchResult;
     }
 }

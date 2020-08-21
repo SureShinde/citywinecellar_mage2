@@ -9,8 +9,9 @@ namespace Magestore\PurchaseOrderSuccess\Controller\Adminhtml\ReturnOrder\Produc
 use Magento\Framework\App\Filesystem\DirectoryList;
 
 /**
- * Class Save
- * @package Magestore\PurchaseOrderSuccess\Controller\Adminhtml\ReturnOrder\Product
+ * Controller DownloadSample
+ *
+ * @SuppressWarnings(PHPMD.AllPurposeAction)
  */
 class DownloadSample extends \Magestore\PurchaseOrderSuccess\Controller\Adminhtml\ReturnOrder\AbstractAction
 {
@@ -20,14 +21,20 @@ class DownloadSample extends \Magestore\PurchaseOrderSuccess\Controller\Adminhtm
     protected $fileWriteFactory;
     protected $driverFile;
 
-    public function execute() {
+    /**
+     * Execute
+     *
+     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
+     */
+    public function execute()
+    {
         $this->initFileVariable();
 
         $params = $this->getRequest()->getParams();
 
-        $name = md5(microtime());
+        $name = hash('md5', microtime());
         $this->filesystem->getDirectoryWrite(DirectoryList::VAR_DIR)->create('import');
-        $filename = DirectoryList::VAR_DIR.'/import-return-order/'.$name.'.csv';
+        $filename = DirectoryList::VAR_DIR . '/import-return-order/' . $name . '.csv';
 
         $stream = $this->filesystem->getDirectoryWrite(DirectoryList::VAR_DIR)->openFile($filename, 'w+');
         $stream->lock();
@@ -45,20 +52,24 @@ class DownloadSample extends \Magestore\PurchaseOrderSuccess\Controller\Adminhtm
 
         return $this->fileFactory->create(
             'import_product_to_return_order.csv',
-            array(
+            [
                 'type' => 'filename',
                 'value' => $filename,
                 'rm' => true  // can delete file after use
-            ),
+            ],
             DirectoryList::VAR_DIR
         );
     }
 
-    private function initFileVariable() {
-        $this->csvProcessor = $this->_objectManager->get('Magento\Framework\File\Csv');
-        $this->fileFactory = $this->_objectManager->get('Magento\Framework\App\Response\Http\FileFactory');
-        $this->filesystem = $this->_objectManager->get('Magento\Framework\Filesystem');
-        $this->fileWriteFactory = $this->_objectManager->get('Magento\Framework\Filesystem\File\WriteFactory');
-        $this->driverFile = $this->_objectManager->get('Magento\Framework\Filesystem\Driver\File');
+    /**
+     * Init File Variable
+     */
+    private function initFileVariable()
+    {
+        $this->csvProcessor = $this->_objectManager->get(\Magento\Framework\File\Csv::class);
+        $this->fileFactory = $this->_objectManager->get(\Magento\Framework\App\Response\Http\FileFactory::class);
+        $this->filesystem = $this->_objectManager->get(\Magento\Framework\Filesystem::class);
+        $this->fileWriteFactory = $this->_objectManager->get(\Magento\Framework\Filesystem\File\WriteFactory::class);
+        $this->driverFile = $this->_objectManager->get(\Magento\Framework\Filesystem\Driver\File::class);
     }
 }

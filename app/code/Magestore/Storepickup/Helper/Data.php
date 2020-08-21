@@ -23,11 +23,11 @@
 namespace Magestore\Storepickup\Helper;
 
 /**
- * Helper Data.
- * @category Magestore
- * @package  Magestore_Storepickup
- * @module   Storepickup
- * @author   Magestore Developer
+ * Class Data
+ *
+ * Used to create helper
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.CookieAndSessionMisuse)
  */
 class Data extends \Magento\Framework\App\Helper\AbstractHelper
 {
@@ -77,9 +77,19 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      */
     protected $_checkoutSession;
 
+    /**
+     * @var \Magento\Framework\HTTP\Adapter\Curl
+     */
+    protected $curl;
+
+    /**
+     * @var \Magento\Framework\Filesystem\DriverInterface
+     */
+    protected $driver;
 
     /**
      * Data constructor.
+     *
      * @param \Magento\Framework\App\Helper\Context $context
      * @param \Magestore\Storepickup\Model\Factory $factory
      * @param \Magento\Backend\Block\Widget\Grid\Column\Renderer\Options\Converter $converter
@@ -89,6 +99,9 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      * @param \Magestore\Storepickup\Model\ResourceModel\Store\CollectionFactory $storeCollectionFactory
      * @param \Magestore\Storepickup\Model\StoreFactory $storeFactory
      * @param \Magento\Checkout\Model\Session $checkoutSession
+     * @param \Magento\Framework\HTTP\Adapter\Curl $curl
+     * @param \Magento\Framework\Filesystem\DriverInterface $driver
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         \Magento\Framework\App\Helper\Context $context,
@@ -99,9 +112,10 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         \Magento\Backend\Model\Session $backendSession,
         \Magestore\Storepickup\Model\ResourceModel\Store\CollectionFactory $storeCollectionFactory,
         \Magestore\Storepickup\Model\StoreFactory $storeFactory,
-        \Magento\Checkout\Model\Session $checkoutSession
-    )
-    {
+        \Magento\Checkout\Model\Session $checkoutSession,
+        \Magento\Framework\HTTP\Adapter\Curl $curl,
+        \Magento\Framework\Filesystem\DriverInterface $driver
+    ) {
         parent::__construct($context);
         $this->_factory = $factory;
         $this->_converter = $converter;
@@ -111,24 +125,38 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         $this->_storeCollectionFactory = $storeCollectionFactory;
         $this->_storeFactory = $storeFactory;
         $this->_checkoutSession = $checkoutSession;
-    }
-
-    public function filterStoreByItemInCart(\Magestore\Storepickup\Model\ResourceModel\Store\Collection $collection)
-    {
-        if ($quote_id = $this->_checkoutSession->getQuote()->getId()) {
-            $collection->getSelect()->joinLeft(['stock_item' => $collection->getTable('cataloginventory_stock_item')],
-                'main_table.warehouse_id = stock_item.website_id', ['avaiable_qty' => 'stock_item.qty'])
-                ->joinLeft(['quote_item' => $collection->getTable('quote_item')],
-                    'quote_item.product_id = stock_item.product_id', ['selected_qty' => 'quote_item.qty'])
-                ->group('quote_item.product_id')
-                ->group('main_table.storepickup_id')
-                ->where('quote_item.quote_id = ' . $quote_id);
-        }
-
+        $this->curl = $curl;
+        $this->driver = $driver;
     }
 
     /**
-     * get selected stores in serilaze grid store.
+     * Filter store by item in cart
+     *
+     * @param \Magestore\Storepickup\Model\ResourceModel\Store\Collection $collection
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function filterStoreByItemInCart(\Magestore\Storepickup\Model\ResourceModel\Store\Collection $collection)
+    {
+        if ($quote_id = $this->_checkoutSession->getQuote()->getId()) {
+            $collection->getSelect()->joinLeft(
+                [
+                    'stock_item' => $collection->getTable('cataloginventory_stock_item')
+                ],
+                'main_table.warehouse_id = stock_item.website_id',
+                ['avaiable_qty' => 'stock_item.qty']
+            )->joinLeft(
+                ['quote_item' => $collection->getTable('quote_item')],
+                'quote_item.product_id = stock_item.product_id',
+                ['selected_qty' => 'quote_item.qty']
+            )->group('quote_item.product_id')
+                ->group('main_table.storepickup_id')
+                ->where('quote_item.quote_id = ' . $quote_id);
+        }
+    }
+
+    /**
+     * Get selected stores in serilaze grid store.
      *
      * @return array
      */
@@ -152,8 +180,9 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
-     * get selected rows in serilaze grid of tag, holiday, specialday.
+     * Get selected rows in serilaze grid of tag, holiday, specialday.
      *
+     * @return array
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function getTreeSelectedValues()
@@ -191,63 +220,108 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         return $this->_sessionData;
     }
 
+    /**
+     * Get default store
+     *
+     * @return mixed
+     */
     public function getDefaultStore()
     {
-        return $this->scopeConfig->getValue('carriers/storepickup/default_store', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        return $this->scopeConfig->getValue(
+            'carriers/storepickup/default_store',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
     }
 
+    /**
+     * Is display pickup time
+     *
+     * @return mixed
+     */
     public function isDisplayPickuptime()
     {
-        return $this->scopeConfig->getValue('carriers/storepickup/display_pickuptime', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        return $this->scopeConfig->getValue(
+            'carriers/storepickup/display_pickuptime',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
     }
 
+    /**
+     * Is allow specific payments
+     *
+     * @return mixed
+     */
     public function isAllowSpecificPayments()
     {
-        return $this->scopeConfig->getValue('carriers/storepickup/sallowspecific', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        return $this->scopeConfig->getValue(
+            'carriers/storepickup/sallowspecific',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
     }
 
+    /**
+     * Get select payment method
+     *
+     * @return mixed
+     */
     public function getSelectpaymentmethod()
     {
-        return $this->scopeConfig->getValue('carriers/storepickup/selectpaymentmethod', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        return $this->scopeConfig->getValue(
+            'carriers/storepickup/selectpaymentmethod',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
     }
 
+    /**
+     * Get list store
+     *
+     * @return mixed
+     */
     public function getListStore()
     {
-        /** @var \Magestore\Storepickup\Model\ResourceModel\Store\Collection $collection */
         $collection = $this->_storeCollectionFactory->create();
         $collection->addFieldToFilter('status', '1')
-            ->addFieldToSelect([
+            ->addFieldToSelect(
+                [
                 'storepickup_id',
                 'store_name',
                 'address',
                 'phone',
                 'latitude',
                 'longitude'
-            ]);
+                ]
+            );
 
         $this->filterStoreByWebsite($collection);
-        
+
         return $collection->getData();
     }
 
+    /**
+     * Get list store json
+     *
+     * @return string
+     */
     public function getListStoreJson()
     {
         /** @var \Magestore\Storepickup\Model\ResourceModel\Store\Collection $collection */
         $collection = $this->_storeCollectionFactory->create();
         $collection->addFieldToFilter('status', '1')
-            ->addFieldToSelect([
-                'storepickup_id',
-                'store_name',
-                'address',
-                'phone',
-                'latitude',
-                'longitude',
-                'city',
-                'state',
-                'zipcode',
-                'country_id',
-                'fax'
-            ]);
+            ->addFieldToSelect(
+                [
+                    'storepickup_id',
+                    'store_name',
+                    'address',
+                    'phone',
+                    'latitude',
+                    'longitude',
+                    'city',
+                    'state',
+                    'zipcode',
+                    'country_id',
+                    'fax'
+                ]
+            );
 
         $this->filterStoreByWebsite($collection);
 
@@ -255,6 +329,8 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
+     * Filter store by website
+     *
      * @param \Magestore\Storepickup\Model\ResourceModel\Store\Collection $collection
      * @return \Magestore\Storepickup\Model\ResourceModel\Store\Collection
      */
@@ -262,14 +338,13 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     {
         if ($this->isMSISourceEnable()) {
             $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-            /** @var \Magento\InventoryCatalog\Model\GetStockIdForCurrentWebsite $getStockIdForCurrentWebsite */
-            $getStockIdForCurrentWebsite = $objectManager->get('Magento\InventoryCatalog\Model\GetStockIdForCurrentWebsite');
+            $getStockIdForCurrentWebsite = $objectManager->get(
+                \Magento\InventoryCatalog\Model\GetStockIdForCurrentWebsite::class
+            );
             $stockId = $getStockIdForCurrentWebsite->execute();
-            /** @var \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder */
-            $searchCriteriaBuilder = $objectManager->create('Magento\Framework\Api\SearchCriteriaBuilder');
+            $searchCriteriaBuilder = $objectManager->create(\Magento\Framework\Api\SearchCriteriaBuilder::class);
             $searchCriteria = $searchCriteriaBuilder->addFilter('stock_id', $stockId)->create();
-            /** @var \Magento\InventoryApi\Api\GetStockSourceLinksInterface $getStockSourceLinks */
-            $getStockSourceLinks = $objectManager->get('Magento\InventoryApi\Api\GetStockSourceLinksInterface');
+            $getStockSourceLinks = $objectManager->get(\Magento\InventoryApi\Api\GetStockSourceLinksInterface::class);
             $searchResult = $getStockSourceLinks->execute($searchCriteria);
             if ($searchResult->getTotalCount() > 0) {
                 $sourceCodes = [];
@@ -285,16 +360,22 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         return $collection;
     }
 
-    public function getChangeTimeURL()
-    {
-        return $this->getURL('storepickup/checkout/changedate');
-    }
-
+    /**
+     * Generate times
+     *
+     * @param string $mintime
+     * @param string $maxtime
+     * @param string $sys_min_time
+     * @return string
+     */
     public function generateTimes($mintime, $maxtime, $sys_min_time = '0:0')
     {
 
         //$sys_min_time = strtotime(date('H:i:s',$sys_min_time));
-        $interval_time = $this->scopeConfig->getValue('carriers/storepickup/time_interval', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $interval_time = $this->scopeConfig->getValue(
+            'carriers/storepickup/time_interval',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
         $timeHI = explode(':', $mintime);
         $mintime = mktime($timeHI[0], $timeHI[1], 0, '01', '01', '2000');
         $timeHI = explode(':', $maxtime);
@@ -318,46 +399,71 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         return $listTime;
     }
 
+    /**
+     * Get response body
+     *
+     * @param string $url
+     * @return string
+     */
     public function getResponseBody($url)
     {
-        if (ini_get('allow_url_fopen') != 1) {
-            @ini_set('allow_url_fopen', '1');
-        }
-
-        if (ini_get('allow_url_fopen') != 1) {
-            $ch = curl_init();
-            if (preg_match('/^https:/i', $url)) {
-                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+        $this->curl->setConfig(['header' => false]);
+        $this->curl->write('get', $url);
+        $contents = $this->curl->read();
+        $this->curl->close();
+        if (empty($contents)) {
+            try {
+                $contents = $this->driver->fileGetContents($url);
+            } catch (\Exception $exception) {
+                $contents = '';
             }
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_FAILONERROR, 1);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 3);
-            $contents = curl_exec($ch);
-            curl_close($ch);
-        } else {
-            $contents = @file_get_contents($url);
         }
-
         return $contents;
     }
 
+    /**
+     * Get google api key
+     *
+     * @return mixed
+     */
     public function getGoogleApiKey()
     {
-        return $this->scopeConfig->getValue('storepickup/service/google_api_key', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        return $this->scopeConfig->getValue(
+            'storepickup/service/google_api_key',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
     }
 
+    /**
+     * Get base dir media
+     *
+     * @return \Magento\Framework\Filesystem\Directory\ReadInterface
+     */
     public function getBaseDirMedia()
     {
         return $this->_filesystem->getDirectoryRead('media');
     }
 
+    /**
+     * Get special country
+     *
+     * @return string
+     */
     public function getSpecialCountry()
     {
-        return strtolower($this->scopeConfig->getValue('storepickup/service/country_suggest_specificcountry', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
+        return strtolower(
+            $this->scopeConfig->getValue(
+                'storepickup/service/country_suggest_specificcountry',
+                \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+            )
+        );
     }
 
+    /**
+     * Is MSI source enable
+     *
+     * @return bool
+     */
     public function isMSISourceEnable()
     {
         return $this->_moduleManager->isEnabled('Magento_InventoryAdminUi');

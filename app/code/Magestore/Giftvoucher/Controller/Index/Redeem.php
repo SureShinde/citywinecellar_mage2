@@ -7,44 +7,43 @@
 namespace Magestore\Giftvoucher\Controller\Index;
 
 use Magento\Customer\Model\Session;
+use Magento\Framework\App\Action\HttpPostActionInterface;
 
 /**
  * Giftvoucher Index Redeem Action
  *
- * @category Magestore
- * @package  Magestore_Giftvoucher
  * @module   Giftvoucher
  * @author   Magestore Developer
  */
-class Redeem extends \Magestore\Giftvoucher\Controller\Action
+class Redeem extends \Magestore\Giftvoucher\Controller\Action implements HttpPostActionInterface
 {
 
     /**
-     *
+     * @inheritDoc
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function execute()
     {
         if (!$this->customerLoggedIn()) {
-            $this->_redirect("customer/account/login");
-            return;
+            return $this->_redirect("customer/account/login");
         }
         if (!$this->getHelper()->getGeneralConfig('enablecredit')) {
-            $this->_redirect("giftvoucher/index/index");
-            return;
+            return $this->_redirect("giftvoucher/index/index");
         }
         $code = $this->getRequest()->getParam('giftvouchercode');
 
         $max             = $this->getHelper()->getGeneralConfig('maximum');
-        $giftCardSession = $this->_objectManager->create('Magestore\Giftvoucher\Model\Session');
+        $giftCardSession = $this->_objectManager->create(\Magestore\Giftvoucher\Model\Session::class);
 
         if ($code) {
-            $giftVoucher = $this->getModel('Magestore\Giftvoucher\Model\Giftvoucher')->loadByCode($code);
+            $giftVoucher = $this->getModel(\Magestore\Giftvoucher\Model\Giftvoucher::class)->loadByCode($code);
 
             $codes = $giftCardSession->getCodes();
             if (!$this->getHelper()->isAvailableToAddCode()) {
                 $this->messageManager->addError(__('The maximum number of times to enter gift codes is %1!', $max));
-                $this->_redirect("giftvoucher/index/index");
-                return;
+                return $this->_redirect("giftvoucher/index/index");
             }
             if (!$giftVoucher->getId()) {
                 $codes[] = $code;
@@ -52,62 +51,68 @@ class Redeem extends \Magestore\Giftvoucher\Controller\Action
                 $giftCardSession->setCodes($codes);
                 $errorMessage = __('Gift card "%1" is invalid.', $code);
                 if ($max) {
-                    $errorMessage .= __('You have %1 time(s) remaining to re-enter Gift Card code.', $max - count($codes));
+                    $errorMessage .= __(
+                        'You have %1 time(s) remaining to re-enter Gift Card code.',
+                        $max - count($codes)
+                    );
                 }
                 $this->messageManager->addError($errorMessage);
-                $this->_redirect("giftvoucher/index/addredeem");
-                return;
+                return $this->_redirect("giftvoucher/index/addredeem");
             } else {
                 //Hai.Tran
                 $conditions = $giftVoucher->getConditionsSerialized();
+                $serializer = $this->_objectManager->get(\Magento\Framework\Serialize\SerializerInterface::class);
                 if (!empty($conditions)) {
-                    $conditions = unserialize($conditions);
+                    $conditions = $serializer->unserialize($conditions);
                     if (is_array($conditions) && !empty($conditions)) {
                         if (!$this->getHelper()->getGeneralConfig('credit_condition')
                             && isset($conditions['conditions']) && $conditions['conditions']
                         ) {
-                            $this->messageManager->addError(__('Gift code "%1" has usage conditions, you cannot redeem it to Gift Card credit', $code));
-                            $this->_redirect("giftvoucher/index/addredeem");
-                            return;
+                            $this->messageManager->addError(__(
+                                'Gift code "%1" has usage conditions, you cannot redeem it to Gift Card credit',
+                                $code
+                            ));
+                            return $this->_redirect("giftvoucher/index/addredeem");
                         }
                     }
                 }
                 $actions = $giftVoucher->getActionsSerialized();
                 if (!empty($actions)) {
-                    $actions = unserialize($actions);
+                    $actions = $serializer->unserialize($actions);
                     if (is_array($actions) && !empty($actions)) {
                         if (!$this->getHelper()->getGeneralConfig('credit_condition')
                             && isset($actions['conditions']) && $actions['conditions']
                         ) {
-                            $this->messageManager->addError(__('Gift code "%1" has usage conditions, you cannot redeem it to Gift Card credit', $code));
-                            $this->_redirect("giftvoucher/index/addredeem");
-                            return;
+                            $this->messageManager->addError(__(
+                                'Gift code "%1" has usage conditions, you cannot redeem it to Gift Card credit',
+                                $code
+                            ));
+                            return $this->_redirect("giftvoucher/index/addredeem");
                         }
                     }
                 }
                 if (!$this->getHelper()->canUseCode($giftVoucher)) {
-                    $this->messageManager->addError(__('The gift code usage has exceeded the number of users allowed.'));
+                    $this->messageManager->addError(
+                        __('The gift code usage has exceeded the number of users allowed.')
+                    );
                     return $this->_redirect("giftvoucher/index/index");
                 }
-                $customer = $this->getModel('Magento\Customer\Model\Session')->getCustomer();
+                $customer = $this->getModel(\Magento\Customer\Model\Session::class)->getCustomer();
                 if ($giftVoucher->getBalance() == 0) {
                     $this->messageManager->addError(__('%1 - The current balance of this gift code is 0.', $code));
-                    $this->_redirect("giftvoucher/index/addredeem");
-                    return;
+                    return $this->_redirect("giftvoucher/index/addredeem");
                 }
                 if ($giftVoucher->getStatus() != 2 && $giftVoucher->getStatus() != 4) {
                     $this->messageManager->addError(__('Gift code "%1" is not avaliable', $code));
-                    $this->_redirect("giftvoucher/index/addredeem");
-                    return;
+                    return $this->_redirect("giftvoucher/index/addredeem");
                 }
                 if ($giftVoucher->getData('set_id')) {
                     $this->messageManager->addError(__('Gift code "%1" is not avaliable', $code));
-                    $this->_redirect("giftvoucher/index/addredeem");
-                    return;
+                    return $this->_redirect("giftvoucher/index/addredeem");
                 } else {
                     $balance = $giftVoucher->getBalance();
 
-                    $credit             = $this->getModel('Magestore\Giftvoucher\Model\Credit')->getCreditAccountLogin();
+                    $credit = $this->getModel(\Magestore\Giftvoucher\Model\Credit::class)->getCreditAccountLogin();
                     $creditCurrencyCode = $credit->getCurrency();
                     $baseCurrencyCode   = $this->_storeManager->getStore()->getBaseCurrencyCode();
                     if (!$creditCurrencyCode) {
@@ -116,14 +121,12 @@ class Redeem extends \Magestore\Giftvoucher\Controller\Action
                         $credit->setCustomerId($customer->getId());
                     }
 
-                    $voucherCurrency = $this->getModel('Magento\Directory\Model\Currency')
+                    $voucherCurrency = $this->getModel(\Magento\Directory\Model\Currency::class)
                         ->load($giftVoucher->getCurrency());
-                    $baseCurrency    = $this->getModel('Magento\Directory\Model\Currency')->load($baseCurrencyCode);
-                    $creditCurrency  = $this->getModel('Magento\Directory\Model\Currency')->load($creditCurrencyCode);
+                    $creditCurrency = $this->getModel(\Magento\Directory\Model\Currency::class)
+                        ->load($creditCurrencyCode);
 
                     if ($creditCurrencyCode != $giftVoucher->getCurrency()) {
-                        //$amount_temp = $balance * $balance / $baseCurrency->convert($balance, $voucherCurrency);
-                        //$amount = $baseCurrency->convert($amount_temp, $creditCurrency);
                         $rate   = $this->getHelper()->getRateToCurrentCurrency($voucherCurrency, $creditCurrency);
                         $amount = $balance * $rate;
                     } else {
@@ -131,7 +134,7 @@ class Redeem extends \Magestore\Giftvoucher\Controller\Action
                     }
                     $credit->setBalance($credit->getBalance() + $amount);
                     $nowTime       = date(\Magento\Framework\Stdlib\DateTime::DATETIME_PHP_FORMAT);
-                    $credithistory = $this->getModel('Magestore\Giftvoucher\Model\Credithistory')
+                    $credithistory = $this->getModel(\Magestore\Giftvoucher\Model\CreditHistory::class)
                         ->setCustomerId($customer->getId())
                         ->setAction('Redeem')
                         ->setCurrencyBalance($credit->getBalance())
@@ -139,7 +142,7 @@ class Redeem extends \Magestore\Giftvoucher\Controller\Action
                         ->setBalanceChange($amount)
                         ->setCurrency($credit->getCurrency())
                         ->setCreatedDate($nowTime);
-                    $history       = $this->getModel('Magestore\Giftvoucher\Model\History')->setData(array(
+                    $history = $this->getModel(\Magestore\Giftvoucher\Model\History::class)->setData([
                         'order_increment_id' => '',
                         'giftvoucher_id' => $giftVoucher->getId(),
                         'created_at' => $nowTime,
@@ -153,7 +156,7 @@ class Redeem extends \Magestore\Giftvoucher\Controller\Action
                         'extra_content' => __('Redeemed by %1', $customer->getName()),
                         'customer_id' => $customer->getId(),
                         'customer_email' => $customer->getEmail(),
-                    ));
+                    ]);
 
                     try {
                         $giftVoucher->setBalance(0)
@@ -161,8 +164,7 @@ class Redeem extends \Magestore\Giftvoucher\Controller\Action
                             ->save();
                     } catch (\Exception $e) {
                         $this->messageManager->addError($e->getMessage());
-                        $this->_redirect("giftvoucher/index/addredeem");
-                        return;
+                        return $this->_redirect("giftvoucher/index/addredeem");
                     }
 
                     try {
@@ -172,28 +174,25 @@ class Redeem extends \Magestore\Giftvoucher\Controller\Action
                             ->setStatus(\Magestore\Giftvoucher\Model\Status::STATUS_ACTIVE)
                             ->save();
                         $this->messageManager->addError($e->getMessage());
-                        $this->_redirect("giftvoucher/index/addredeem");
-                        return;
+                        return $this->_redirect("giftvoucher/index/addredeem");
                     }
                     try {
                         $history->save();
                         $credithistory->save();
                         $this->messageManager->addSuccess(__('Gift card "%1" was successfully redeemed', $code));
-                        $this->_redirect("giftvoucher/index/index");
-                        return;
+                        return $this->_redirect("giftvoucher/index/index");
                     } catch (\Exception $e) {
                         $giftVoucher->setBalance($balance)
                             ->setStatus(\Magestore\Giftvoucher\Model\Status::STATUS_ACTIVE)
                             ->save();
                         $credit->setBalance($credit->getBalance() - $amount)->save();
                         $this->messageManager->addError($e->getMessage());
-                        $this->_redirect("giftvoucher/index/addredeem");
-                        return;
+                        return $this->_redirect("giftvoucher/index/addredeem");
                     }
                 }
             }
         }
 
-        $this->_redirect("giftvoucher/index/index");
+        return $this->_redirect("giftvoucher/index/index");
     }
 }

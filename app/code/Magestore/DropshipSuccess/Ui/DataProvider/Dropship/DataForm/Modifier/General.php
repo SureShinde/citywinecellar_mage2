@@ -15,7 +15,6 @@ use Magento\Catalog\Model\Locator\LocatorInterface;
 use Magento\Ui\DataProvider\Modifier\ModifierInterface;
 use Magento\Framework\Phrase;
 
-
 /**
  * Data provider for Configurable panel
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -40,7 +39,7 @@ class General implements ModifierInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function modifyData(array $data)
     {
@@ -48,7 +47,7 @@ class General implements ModifierInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function modifyMeta(array $meta)
     {
@@ -132,12 +131,18 @@ class General implements ModifierInterface
                                         ],
                                         [
                                             'targetName' =>
-                                                'os_dropship_form.os_dropship_form.add_test1_modal.test1_product_listing',
+                                                'os_dropship_form'
+                                                . '.' . 'os_dropship_form'
+                                                . '.' . 'add_test1_modal'
+                                                . '.' . 'test1_product_listing',
                                             'actionName' => 'destroyInserted',
                                         ],
                                         [
                                             'targetName' =>
-                                                'os_dropship_form.os_dropship_form.add_test1_modal.test1_product_listing',
+                                                'os_dropship_form'
+                                                . '.' . 'os_dropship_form'
+                                                . '.' . 'add_test1_modal'
+                                                . '.' . 'test1_product_listing',
                                             'actionName' => 'render',
                                         ],
 //                                        [
@@ -159,6 +164,8 @@ class General implements ModifierInterface
     }
 
     /**
+     * Get Test 1 Modal
+     *
      * @param array $meta
      * @return array
      */
@@ -170,7 +177,10 @@ class General implements ModifierInterface
             'dataScope' => '',
             'provider' => 'os_dropship_form.os_dropship_form_data_source',
             'imports' => [
-                'state' => '!index=product_attribute_add_form:responseStatus'
+                'state' => '!index=product_attribute_add_form:responseStatus',
+                '__disableTmpl' => [
+                    'state' => false
+                ]
             ],
             'options' => [
                 'title' => __('Add test 1'),
@@ -229,8 +239,11 @@ class General implements ModifierInterface
                                             'actionName' => 'toggleModal',
                                         ],
                                         [
-                                            'targetName'
-                                            => 'os_dropship_form.os_dropship_form.add_test2_modal.test2_product_listing',
+                                            'targetName' =>
+                                                'os_dropship_form'
+                                                . '.' . 'os_dropship_form'
+                                                . '.' . 'add_test2_modal'
+                                                . '.' . 'test2_product_listing',
                                             'actionName' => 'render'
                                         ]
                                     ],
@@ -245,7 +258,6 @@ class General implements ModifierInterface
             'test1_product_listing' => $this->getModalListingTest1(),
             'test1_dynamic' => $this->getTest1Dynamic()
         ];
-//        \Zend_Debug::dump($meta);die();
         return $meta;
     }
 
@@ -281,11 +293,15 @@ class General implements ModifierInterface
                         'externalFilterMode' => true,
                         'imports' => [
                             'entity_id' => '${ $.provider }:data.'.'entity_id',
-//                            $this->_modalDataColumn => '${ $.provider }:data.'.$this->_modalDataColumn ,
+                            '__disableTmpl' => [
+                                'entity_id' => false
+                            ]
                         ],
                         'exports' => [
                             'entity_id' => '${ $.externalProvider }:params.'.'entity_id',
-//                            $this->_modalDataColumn => '${ $.externalProvider }:params.'.$this->_modalDataColumn,
+                            '__disableTmpl' => [
+                                'entity_id' => false
+                            ]
                         ],
                     ],
                 ],
@@ -325,11 +341,15 @@ class General implements ModifierInterface
                         'externalFilterMode' => true,
                         'imports' => [
                             'entity_id' => '${ $.provider }:data.'.'entity_id',
-//                            $this->_modalDataColumn => '${ $.provider }:data.'.$this->_modalDataColumn ,
+                            '__disableTmpl' => [
+                                'entity_id' => false
+                            ]
                         ],
                         'exports' => [
                             'entity_id' => '${ $.externalProvider }:params.'.'entity_id',
-//                            $this->_modalDataColumn => '${ $.externalProvider }:params.'.$this->_modalDataColumn,
+                            '__disableTmpl' => [
+                                'entity_id' => false
+                            ]
                         ],
                     ],
                 ],
@@ -337,8 +357,9 @@ class General implements ModifierInterface
         ];
     }
 
-
     /**
+     * Get Test 2 Modal
+     *
      * @param array $meta
      * @return array
      */
@@ -350,7 +371,10 @@ class General implements ModifierInterface
             'dataScope' => '',
             'provider' => 'os_dropship_form.os_dropship_form_data_source',
             'imports' => [
-                'state' => '!index=product_attribute_add_form:responseStatus'
+                'state' => '!index=product_attribute_add_form:responseStatus',
+                '__disableTmpl' => [
+                    'state' => false
+                ]
             ],
             'options' => [
                 'title' => __('Add Attribute'),
@@ -433,8 +457,9 @@ class General implements ModifierInterface
         return $meta;
     }
 
-
     /**
+     * Get Test3 Modal
+     *
      * @param array $meta
      * @return array
      */
@@ -446,7 +471,10 @@ class General implements ModifierInterface
             'dataScope' => '',
             'provider' => 'os_dropship_form.os_dropship_form_data_source',
             'imports' => [
-                'state' => '!index=product_attribute_add_form:responseStatus'
+                'state' => '!index=product_attribute_add_form:responseStatus',
+                '__disableTmpl' => [
+                    'state' => false
+                ]
             ],
             'options' => [
                 'title' => __('Add Attribute'),
@@ -548,7 +576,12 @@ class General implements ModifierInterface
                         'deleteButtonLabel' => __('Remove'),
                         'dataProvider' => 'os_adjuststock_product_listing',
                         'map' => $this->_mapFields,
-                        'links' => ['insertData' => '${ $.provider }:${ $.dataProvider }'],
+                        'links' => [
+                            'insertData' => '${ $.provider }:${ $.dataProvider }',
+                            '__disableTmpl' => [
+                                'insertData' => false
+                            ]
+                        ],
                         'sortOrder' => 20,
                         'columnsHeader' => false,
                         'columnsHeaderAfterRender' => true,
@@ -558,7 +591,6 @@ class General implements ModifierInterface
             'children' => $this->getRows(),
         ];
 
-//        \Zend_Debug::dump($test);die();
         return $test;
     }
 
@@ -585,7 +617,12 @@ class General implements ModifierInterface
                         'deleteButtonLabel' => __('Remove'),
                         'dataProvider' => 'os_adjuststock_product_listing',
                         'map' => $this->_mapFields,
-                        'links' => ['insertData' => '${ $.provider }:${ $.dataProvider }'],
+                        'links' => [
+                            'insertData' => '${ $.provider }:${ $.dataProvider }',
+                            '__disableTmpl' => [
+                                'insertData' => false
+                            ]
+                        ],
                         'sortOrder' => 20,
                         'columnsHeader' => false,
                         'columnsHeaderAfterRender' => true,
@@ -594,7 +631,6 @@ class General implements ModifierInterface
             ],
             'children' => $this->getRows(),
         ];
-//        \Zend_Debug::dump($test);die();
         return $test;
     }
 
@@ -681,12 +717,18 @@ class General implements ModifierInterface
                                         ],
                                         [
                                             'targetName' =>
-                                                'os_dropship_form.os_dropship_form.add_test1_modal.test1_product_listing',
+                                                'os_dropship_form'
+                                                . '.' . 'os_dropship_form'
+                                                . '.' . 'add_test1_modal'
+                                                . '.' . 'test1_product_listing',
                                             'actionName' => 'destroyInserted',
                                         ],
                                         [
                                             'targetName' =>
-                                                'os_dropship_form.os_dropship_form.add_test1_modal.test1_product_listing',
+                                                'os_dropship_form'
+                                                . '.' . 'os_dropship_form'
+                                                . '.' . 'add_test1_modal'
+                                                . '.' . 'test1_product_listing',
                                             'actionName' => 'render',
                                             'params' => [
                                                 true,
@@ -760,7 +802,10 @@ class General implements ModifierInterface
             'fit' => true,
             'visibleIfCanEdit' => true,
             'imports' => [
-                'visible' => '${$.provider}:${$.parentScope}.canEdit'
+                'visible' => '${$.provider}:${$.parentScope}.canEdit',
+                '__disableTmpl' => [
+                    'visible' => false
+                ]
             ],
         ];
         $fieldText['arguments']['data']['config'] = [
@@ -771,7 +816,10 @@ class General implements ModifierInterface
             'dataScope' => $name,
             'visibleIfCanEdit' => false,
             'imports' => [
-                'visible' => '!${$.provider}:${$.parentScope}.canEdit'
+                'visible' => '!${$.provider}:${$.parentScope}.canEdit',
+                '__disableTmpl' => [
+                    'visible' => false
+                ]
             ],
         ];
         $fieldEdit['arguments']['data']['config'] = array_replace_recursive(

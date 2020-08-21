@@ -8,7 +8,8 @@ namespace Magestore\AdjustStock\Model\ResourceModel\AdjustStock\GlobalStock;
 
 /**
  * Class Collection
- * @package Magestore\AdjustStock\Model\ResourceModel\TransferStock\GlobalStock
+ *
+ * Global stock collection
  */
 class Collection extends \Magento\Catalog\Model\ResourceModel\Product\Collection
 {
@@ -19,16 +20,18 @@ class Collection extends \Magento\Catalog\Model\ResourceModel\Product\Collection
     ];
 
     /**
-     * @return $this|\Magento\Catalog\Model\ResourceModel\Product\Collection
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @inheritDoc
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     protected function _initSelect()
     {
         $om = \Magento\Framework\App\ObjectManager::getInstance();
         /** @var \Magento\Framework\App\RequestInterface $request */
-        $request = $om->get('Magento\Framework\App\RequestInterface');
+        $request = $om->get(\Magento\Framework\App\RequestInterface::class);
         /** @var \Magento\Framework\Module\Manager $moduleManager */
-        $moduleManager = $om->get('Magento\Framework\Module\Manager');
+        $moduleManager = $om->get(\Magento\Framework\Module\Manager::class);
 
         $this->getSelect()->from(['e' => $this->getEntity()->getEntityTable()]);
         $entity = $this->getEntity();
@@ -56,14 +59,15 @@ class Collection extends \Magento\Catalog\Model\ResourceModel\Product\Collection
         if (!$currentAdjustmentSource) {
             $currentAdjustId = $request->getParam('adjuststock_id');
             if ($currentAdjustId) {
-                $adjustModel = $om->create('Magestore\AdjustStock\Model\AdjustStock')->load($currentAdjustId);
+                $adjustModel = $om->create(\Magestore\AdjustStock\Model\AdjustStock::class)
+                    ->load($currentAdjustId);
                 if ($adjustModel->getId()) {
                     $currentAdjustmentSource = $adjustModel->getData('source_code');
                 }
             }
         }
 
-        if($currentAdjustmentSource) {
+        if ($currentAdjustmentSource) {
             $this->getSelect()->joinLeft(
                 ['current_inventory_source_item' => $sourceItemTable],
                 "e.sku = current_inventory_source_item.sku AND
@@ -74,7 +78,7 @@ class Collection extends \Magento\Catalog\Model\ResourceModel\Product\Collection
 
         // add barcode
         $barcodeTable = $resource->getTable('os_barcode');
-        if($moduleManager->isEnabled('Magestore_BarcodeSuccess')) {
+        if ($moduleManager->isEnabled('Magestore_BarcodeSuccess')) {
             $this->getSelect()->joinLeft(
                 ['barcode' => $barcodeTable],
                 "e.sku = barcode.product_sku",
@@ -88,7 +92,7 @@ class Collection extends \Magento\Catalog\Model\ResourceModel\Product\Collection
             'new_qty' => new \Zend_Db_Expr('0')
         ]);
 
-        if($currentAdjustmentSource) {
+        if ($currentAdjustmentSource) {
             $this->getSelect()->columns([
                 'source_code' => new \Zend_Db_Expr(self::MAPPING_FIELD['source_code']),
                 'change_qty' => new \Zend_Db_Expr('0'),
@@ -102,7 +106,7 @@ class Collection extends \Magento\Catalog\Model\ResourceModel\Product\Collection
             ]);
         }
 
-        if($currentAdjustmentSource) {
+        if ($currentAdjustmentSource) {
             $this->getSelect()->columns([
                 'total_qty' => new \Zend_Db_Expr(self::MAPPING_FIELD['total_qty'])
             ]);
@@ -112,7 +116,7 @@ class Collection extends \Magento\Catalog\Model\ResourceModel\Product\Collection
             ]);
         }
 
-        if($moduleManager->isEnabled('Magestore_BarcodeSuccess')) {
+        if ($moduleManager->isEnabled('Magestore_BarcodeSuccess')) {
             $this->getSelect()->columns([
                 'barcode' => new \Zend_Db_Expr(self::MAPPING_FIELD['barcode']),
                 'barcode_original_data' => new \Zend_Db_Expr(self::MAPPING_FIELD['barcode'])
@@ -125,8 +129,7 @@ class Collection extends \Magento\Catalog\Model\ResourceModel\Product\Collection
     }
 
     /**
-     * @return \Magento\Framework\DB\Select
-     * @throws \Zend_Db_Select_Exception
+     * @inheritDoc
      */
     public function getSelectCountSql()
     {
@@ -150,8 +153,7 @@ class Collection extends \Magento\Catalog\Model\ResourceModel\Product\Collection
     }
 
     /**
-     * @return int
-     * @throws \Zend_Db_Statement_Exception
+     * @inheritDoc
      */
     public function getSize()
     {
@@ -164,18 +166,16 @@ class Collection extends \Magento\Catalog\Model\ResourceModel\Product\Collection
             $result = $records->fetchAll();
             $this->_totalRecords = count($result);
         }
-        return intval($this->_totalRecords);
+        return (int)$this->_totalRecords;
     }
 
     /**
-     * @param mixed $field
-     * @param null $condition
-     * @return $this|\Magento\Framework\Data\Collection\AbstractDb
+     * @inheritDoc
      */
     public function addFieldToFilter($field, $condition = null)
     {
         foreach (self::MAPPING_FIELD as $key => $value) {
-            if($field == $key){
+            if ($field == $key) {
                 $field = $value;
                 return $this->addFieldToFilterCallBack($field, $condition);
             }
@@ -184,45 +184,60 @@ class Collection extends \Magento\Catalog\Model\ResourceModel\Product\Collection
     }
 
     /**
-     * @param mixed $field
-     * @param null $condition
+     * @inheritDoc
      */
-    public function addFieldToFilterCallBack($field ,$condition ){
-        foreach ($condition as $con => $value){
+    public function addFieldToFilterCallBack($field, $condition)
+    {
+        $length = count($condition);
+        for ($i = 0; $i < $length; $i++) {
             $conditionSql = $this->_getConditionSql($field, $condition);
             $this->getSelect()->having($conditionSql);
         }
     }
 
     /**
-     * @param $sourceCode
+     * Add Source Code To Filter
+     *
+     * @param string $sourceCode
      * @return $this
      */
-    public function addSourceCodeToFilter($sourceCode) {
-        $this->getSelect()->where($this->getConnection()->prepareSqlCondition('inventory_source_item.source_code' , ['eq' => $sourceCode]));
+    public function addSourceCodeToFilter($sourceCode)
+    {
+        $this->getSelect()->where(
+            $this->getConnection()->prepareSqlCondition(
+                'inventory_source_item.source_code',
+                ['eq' => $sourceCode]
+            )
+        );
         return $this;
     }
 
     /**
-     * @param $barcode
+     * Add Barcode To Filter
+     *
+     * @param string $barcode
      * @return $this
      */
-    public function addBarcodeToFilter($barcode) {
-        $this->getSelect()->where($this->getConnection()->prepareSqlCondition('barcode.barcode' , ['like' => $barcode]));
+    public function addBarcodeToFilter($barcode)
+    {
+        $this->getSelect()->where(
+            $this->getConnection()->prepareSqlCondition(
+                'barcode.barcode',
+                ['like' => $barcode]
+            )
+        );
         return $this;
     }
 
     /**
-     * @param string $field
-     * @param string $direction
-     * @return $this
+     * @inheritDoc
      */
     public function addOrder($field, $direction = self::SORT_ORDER_DESC)
     {
         foreach (self::MAPPING_FIELD as $key => $value) {
-            if($field == $key){
+            if ($field == $key) {
                 $field = $value;
-                $this->getSelect()->order( new \Zend_Db_Expr($field .' '. $direction));
+                $this->getSelect()->order(new \Zend_Db_Expr($field .' '. $direction));
                 return $this;
             }
         }
@@ -230,16 +245,12 @@ class Collection extends \Magento\Catalog\Model\ResourceModel\Product\Collection
     }
 
     /**
-     * Add select order
-     *
-     * @param   string $field
-     * @param   string $direction
-     * @return  $this
+     * @inheritDoc
      */
     public function setOrder($field, $direction = self::SORT_ORDER_DESC)
     {
         foreach (self::MAPPING_FIELD as $key => $value) {
-            if($field == $key){
+            if ($field == $key) {
                 $field = $value;
             }
         }

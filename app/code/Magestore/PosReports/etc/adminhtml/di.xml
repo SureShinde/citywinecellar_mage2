@@ -1,0 +1,134 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magestore, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+
+    <!--
+      ~ Start: Inject the POS statistics processor into the core refresh statistics action
+      -->
+    <type name="Magento\Reports\Controller\Adminhtml\Report\Statistics">
+        <arguments>
+            <argument name="reportTypes" xsi:type="array">
+                <item name="pos_sales" xsi:type="string">Magestore\PosReports\Model\ResourceModel\Report\PosOrder</item>
+                <item name="pos_sales_by_payment" xsi:type="string">
+                    Magestore\PosReports\Model\ResourceModel\Report\PosPayment
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <!--
+      ~ End: Inject the POS statistics processor into the core refresh statistics action
+      -->
+
+    <!--
+      ~ Start: Inject the POS reports into the report dashboard
+      -->
+    <type name="Magestore\PosReports\Block\Adminhtml\Report\PosReportPanel">
+        <arguments>
+            <argument name="panelItems" xsi:type="array">
+                <item name="locationBreakdown" xsi:type="object">LocationBreakdownReportPanelItem</item>
+                <item name="locationOverview" xsi:type="object">LocationOverviewReportPanelItem</item>
+                <item name="salesByPaymentMethod" xsi:type="object">SalesByPaymentMethodReportPanelItem</item>
+                <item name="salesByStaff" xsi:type="object">SalesByStaffReportPanelItem</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <virtualType name="LocationBreakdownReportPanelItem"
+                 type="Magestore\ReportSuccess\Model\Report\PanelItems\AbstractItem">
+        <arguments>
+            <argument name="id" xsi:type="string">locationBreakdown</argument>
+            <argument name="title" xsi:type="string">Location Breakdown</argument>
+            <argument name="description" xsi:type="string">View detailed performance of each store</argument>
+            <argument name="action" xsi:type="string">posreports/reports/byLocation</argument>
+            <argument name="sortOrder" xsi:type="string">0</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="LocationOverviewReportPanelItem"
+                 type="Magestore\ReportSuccess\Model\Report\PanelItems\AbstractItem">
+        <arguments>
+            <argument name="id" xsi:type="string">locationOverview</argument>
+            <argument name="title" xsi:type="string">Location Overview</argument>
+            <argument name="description" xsi:type="string">View and compare performance between stores</argument>
+            <argument name="action" xsi:type="string">posreports/reports/byAllLocation</argument>
+            <argument name="sortOrder" xsi:type="string">1</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SalesByPaymentMethodReportPanelItem"
+                 type="Magestore\ReportSuccess\Model\Report\PanelItems\AbstractItem">
+        <arguments>
+            <argument name="id" xsi:type="string">salesByPaymentMethod</argument>
+            <argument name="title" xsi:type="string">Sales by Payment Method</argument>
+            <argument name="description" xsi:type="string">View number of orders and amount paid by payment methods
+            </argument>
+            <argument name="action" xsi:type="string">posreports/reports/byPaymentMethod</argument>
+            <argument name="sortOrder" xsi:type="string">2</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="SalesByStaffReportPanelItem" type="Magestore\ReportSuccess\Model\Report\PanelItems\AbstractItem">
+        <arguments>
+            <argument name="id" xsi:type="string">salesByStaff</argument>
+            <argument name="title" xsi:type="string">Sales by Staff</argument>
+            <argument name="description" xsi:type="string">View and compare staff performance</argument>
+            <argument name="action" xsi:type="string">posreports/reports/byStaff</argument>
+            <argument name="sortOrder" xsi:type="string">3</argument>
+        </arguments>
+    </virtualType>
+    <!--
+      ~ End: Inject the POS reports into the report dashboard
+      -->
+
+
+    <!--
+      ~ Start: Define report listing type
+      -->
+    <virtualType name="ReportLocationBreakdownListing"
+                 type="Magestore\PosReports\Ui\Component\Listing">
+        <arguments>
+            <argument name="posReport" xsi:type="object">PosReportByLocation</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="ReportLocationOverviewListing"
+                 type="Magestore\PosReports\Ui\Component\Listing">
+        <arguments>
+            <argument name="posReport" xsi:type="object">PosReportByAllLocation</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="ReportSalesByPaymentMethodListing"
+                 type="Magestore\PosReports\Ui\Component\Listing">
+        <arguments>
+            <argument name="posReport" xsi:type="object">PosReportByPaymentMethod</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="ReportSalesByStaffListing"
+                 type="Magestore\PosReports\Ui\Component\Listing">
+        <arguments>
+            <argument name="posReport" xsi:type="object">PosReportByStaff</argument>
+        </arguments>
+    </virtualType>
+    <!--
+      ~ End:  Define report listing type
+      -->
+
+
+    <type name="Magestore\PosReports\Controller\Adminhtml\Reports\AbstractAction">
+        <arguments>
+            <argument name="statistic" xsi:type="object">PosSalesStatistic</argument>
+        </arguments>
+    </type>
+
+    <type name="Magestore\PosReports\Controller\Adminhtml\Reports\ByPaymentMethod">
+        <arguments>
+            <argument name="statistic" xsi:type="object">PosSalesByPaymentStatistic</argument>
+        </arguments>
+    </type>
+</config>

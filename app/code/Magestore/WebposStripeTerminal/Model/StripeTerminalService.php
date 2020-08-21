@@ -17,7 +17,7 @@ use Magestore\WebposStripeTerminal\Api\ConnectedReaderRepositoryInterface;
 /**
  * Class StripeTerminalService
  *
- * @package Magestore\WebposStripeTerminal\Model
+ * Used to connect to stripe terminal
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class StripeTerminalService implements \Magestore\WebposStripeTerminal\Api\StripeTerminalServiceInterface
@@ -69,7 +69,9 @@ class StripeTerminalService implements \Magestore\WebposStripeTerminal\Api\Strip
     public function connectionToken()
     {
         try {
+            // phpstan:ignore
             \Stripe\Stripe::setApiKey($this->helper->getSecretKey());
+            // phpstan:ignore
             $response = \Stripe\Terminal\ConnectionToken::create();
             /**
              * @var \Magestore\WebposStripeTerminal\Api\Data\ConnectionTokenResponseInterface $responseData
@@ -78,6 +80,7 @@ class StripeTerminalService implements \Magestore\WebposStripeTerminal\Api\Strip
                 \Magestore\WebposStripeTerminal\Api\Data\ConnectionTokenResponseInterface::class
             );
 
+            // phpstan:ignore
             if ($response instanceof \Stripe\StripeObject) {
                 $responseData->setData($response->toArray());
 
@@ -102,12 +105,14 @@ class StripeTerminalService implements \Magestore\WebposStripeTerminal\Api\Strip
     public function createPaymentIntent($request)
     {
         try {
+            // phpstan:ignore
             \Stripe\Stripe::setApiKey($this->helper->getSecretKey());
 
             $data = $request->getData();
             $data['payment_method_types'] = ['card_present'];
             $data['capture_method'] = 'manual';
 
+            // phpstan:ignore
             $response = \Stripe\PaymentIntent::create($data);
 
             if (empty($response)) {
@@ -123,6 +128,7 @@ class StripeTerminalService implements \Magestore\WebposStripeTerminal\Api\Strip
                 \Magestore\WebposStripeTerminal\Api\Data\CreatePaymentIntentResponseInterface::class
             );
 
+            // phpstan:ignore
             if ($response instanceof \Stripe\StripeObject) {
                 $response = $response->toArray();
                 $responseData->setIntent($response['id']);
@@ -149,9 +155,11 @@ class StripeTerminalService implements \Magestore\WebposStripeTerminal\Api\Strip
     public function capturePaymentIntent($request)
     {
         try {
+            // phpstan:ignore
             \Stripe\Stripe::setApiKey($this->helper->getSecretKey());
 
             /** @var \Stripe\PaymentIntent $paymentIntent */
+            // phpstan:ignore
             $paymentIntent = \Stripe\PaymentIntent::retrieve(
                 $request->getPaymentIntentId()
             );
@@ -171,6 +179,7 @@ class StripeTerminalService implements \Magestore\WebposStripeTerminal\Api\Strip
                 \Magestore\WebposStripeTerminal\Api\Data\CapturePaymentIntentResponseInterface::class
             );
 
+            // phpstan:ignore
             if ($response instanceof \Stripe\StripeObject) {
                 $response = $response->toArray();
                 $responseData->setIntent($response['id']);
@@ -204,9 +213,11 @@ class StripeTerminalService implements \Magestore\WebposStripeTerminal\Api\Strip
                     __('Not Found Location!')
                 );
             }
+            // phpstan:ignore
             \Stripe\Stripe::setApiKey($secret);
             $data = $request->getData();
             $data['location'] = $stripeLocationId;
+            // phpstan:ignore
             $response = \Stripe\Terminal\Reader::create($data);
             /**
              * @var \Magestore\WebposStripeTerminal\Api\Data\RegisterReaderResponseInterface $responseData
@@ -215,6 +226,7 @@ class StripeTerminalService implements \Magestore\WebposStripeTerminal\Api\Strip
                 \Magestore\WebposStripeTerminal\Api\Data\RegisterReaderResponseInterface::class
             );
 
+            // phpstan:ignore
             if ($response instanceof \Stripe\StripeObject) {
                 $responseData->setData($response->toArray());
 
@@ -239,8 +251,10 @@ class StripeTerminalService implements \Magestore\WebposStripeTerminal\Api\Strip
     public function refundPaymentIntent($request)
     {
         try {
+            // phpstan:ignore
             \Stripe\Stripe::setApiKey($this->helper->getSecretKey());
             /** @var \Stripe\PaymentIntent $paymentIntent */
+            // phpstan:ignore
             $paymentIntent = \Stripe\PaymentIntent::retrieve(
                 $request->getPaymentIntentId()
             );
@@ -261,6 +275,7 @@ class StripeTerminalService implements \Magestore\WebposStripeTerminal\Api\Strip
             unset($data['payment_intent_id']);
             $data['charge'] = $charge->id;
 
+            // phpstan:ignore
             $response = \Stripe\Refund::create($data);
             /**
              * @var \Magestore\WebposStripeTerminal\Api\Data\RefundPaymentIntentResponseInterface $responseData
@@ -269,6 +284,7 @@ class StripeTerminalService implements \Magestore\WebposStripeTerminal\Api\Strip
                 \Magestore\WebposStripeTerminal\Api\Data\RefundPaymentIntentResponseInterface::class
             );
 
+            // phpstan:ignore
             if ($response instanceof \Stripe\StripeObject) {
                 $responseData->setData($response->toArray());
 
@@ -386,8 +402,10 @@ class StripeTerminalService implements \Magestore\WebposStripeTerminal\Api\Strip
      */
     public function connectToApi()
     {
+        // phpstan:ignore
         \Stripe\Stripe::setApiKey($this->helper->getSecretKey());
         try {
+            // phpstan:ignore
             if ($this->testCreate() instanceof \Stripe\Charge) {
                 return true;
             }
@@ -412,6 +430,7 @@ class StripeTerminalService implements \Magestore\WebposStripeTerminal\Api\Strip
             'exp_year'  => date('Y') + 1,
         ];
 
+        // phpstan:ignore
         return \Stripe\Charge::create(
             [
                 'amount'   => 100,
@@ -456,7 +475,7 @@ class StripeTerminalService implements \Magestore\WebposStripeTerminal\Api\Strip
 
         $secret = $secret ?: $this->helper->getSecretKey();
 
-        if (empty($secret)) {
+        if (!$this->helper->isEnabled() || empty($secret)) {
             return false;
         }
 
@@ -464,9 +483,11 @@ class StripeTerminalService implements \Magestore\WebposStripeTerminal\Api\Strip
             return $stripeLocation->id;
         }
 
-        $stripeLocation = $this->createLocation($location, $secret);
+        if ($stripeLocation = $this->createLocation($location, $secret)) {
+            return $stripeLocation->id;
+        }
 
-        return $stripeLocation->id;
+        return false;
     }
 
     /**
@@ -475,22 +496,27 @@ class StripeTerminalService implements \Magestore\WebposStripeTerminal\Api\Strip
      * @param LocationInterface $location
      * @param string $secret
      * @return \Stripe\Terminal\Location|bool
-     * @throws \Stripe\Exception\ApiErrorException
      */
     public function getStripeLocation($location, $secret = null)
     {
-        $secret = $secret ?: $this->helper->getSecretKey();
-        \Stripe\Stripe::setApiKey($secret);
-        $registeredLocations = \Stripe\Terminal\Location::all();
-        $stripeLocation = false;
-        foreach ($registeredLocations as $registeredLocation) {
-            if ($registeredLocation->display_name === $location->getName()) {
-                $stripeLocation = $registeredLocation;
-                break;
+        try {
+            $secret = $secret ?: $this->helper->getSecretKey();
+            // phpstan:ignore
+            \Stripe\Stripe::setApiKey($secret);
+            // phpstan:ignore
+            $registeredLocations = \Stripe\Terminal\Location::all();
+            $stripeLocation = false;
+            foreach ($registeredLocations as $registeredLocation) {
+                if ($registeredLocation->display_name === $location->getName()) {
+                    $stripeLocation = $registeredLocation;
+                    break;
+                }
             }
-        }
 
-        return $stripeLocation;
+            return $stripeLocation;
+        } catch (\Exception $exception) {
+            return false;
+        }
     }
 
     /**
@@ -498,14 +524,15 @@ class StripeTerminalService implements \Magestore\WebposStripeTerminal\Api\Strip
      *
      * @param LocationInterface $location
      * @param string $secret
-     * @return \Stripe\Terminal\Location
-     * @throws \Magento\Framework\Exception\StateException
+     * @return \Stripe\Terminal\Location|bool
      */
     public function createLocation($location, $secret = null)
     {
         try {
             $secret = $secret ?: $this->helper->getSecretKey();
+            // phpstan:ignore
             \Stripe\Stripe::setApiKey($secret);
+            // phpstan:ignore
             $response = \Stripe\Terminal\Location::create(
                 [
                     'display_name' => $location->getName(),
@@ -520,9 +547,7 @@ class StripeTerminalService implements \Magestore\WebposStripeTerminal\Api\Strip
 
             return $response;
         } catch (\Exception $e) {
-            throw new \Magento\Framework\Exception\StateException(
-                __($e->getMessage())
-            );
+            return false;
         }
     }
 }

@@ -22,7 +22,14 @@
 
 namespace Magestore\Customercredit\Controller\Index;
 
-class Sendemail extends \Magento\Framework\App\Action\Action
+use Magento\Framework\App\Action\HttpPostActionInterface;
+
+/**
+ * Class Sendemail
+ *
+ * Send email controller
+ */
+class Sendemail extends \Magento\Framework\App\Action\Action implements HttpPostActionInterface
 {
     /**
      * @var \Magestore\Customercredit\Helper\Account
@@ -39,6 +46,8 @@ class Sendemail extends \Magento\Framework\App\Action\Action
     protected $_customersession;
 
     /**
+     * Sendemail constructor.
+     *
      * @param \Magento\Framework\App\Action\Context $context
      * @param \Magestore\Customercredit\Helper\Account $accountHelper
      * @param \Magestore\Customercredit\Model\CustomercreditFactory $customercreditFactory
@@ -49,31 +58,32 @@ class Sendemail extends \Magento\Framework\App\Action\Action
         \Magestore\Customercredit\Helper\Account $accountHelper,
         \Magestore\Customercredit\Model\CustomercreditFactory $customercreditFactory,
         \Magento\Customer\Model\Session $customersesion
-    )
-    {
+    ) {
         $this->_accountHelper = $accountHelper;
         $this->_customercreditFactory = $customercreditFactory;
         $this->_customersession = $customersesion;
         parent::__construct($context);
     }
 
-
+    /**
+     * @inheritDoc
+     */
     public function execute()
     {
-        if (!$this->_accountHelper->isLoggedIn())
+        if (!$this->_accountHelper->isLoggedIn()) {
             return $this->_redirect('customer/account/login');
+        }
         $this->_customersession->setData("sentemail", 'yes');
         $this->_customersession->setData("is_credit_code", 'yes');
         $email = $this->getRequest()->getParam('email');
         $value = $this->getRequest()->getParam('value');
         $message = $this->getRequest()->getParam('message');
         $ran_num = rand(1, 1000000);
-        $keycode = md5(md5(md5($ran_num)));
+        $keycode = sha1(sha1(sha1($ran_num)));
         $this->_customersession->setData("emailcode", $keycode);
         $this->_customercreditFactory->create()->sendVerifyEmail($email, $value, $message, $keycode);
-        $result = array();
+        $result = [];
         $result['success'] = 1;
         return $this->getResponse()->setBody(\Zend_Json::encode($result));
     }
 }
- 

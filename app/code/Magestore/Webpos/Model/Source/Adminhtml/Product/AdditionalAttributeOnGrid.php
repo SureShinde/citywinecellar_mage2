@@ -8,30 +8,19 @@
 namespace Magestore\Webpos\Model\Source\Adminhtml\Product;
 
 /**
- * class \Magestore\Webpos\Model\Source\Adminhtml\Product\AdditionalAttributeOnGrid
- * 
- * AdditionalAttributeOnGrid source model
- * Methods:
- *  toOptionArray
- * 
- * @category    Magestore
- * @package     Magestore_Webpos
- * @module      Webpos
- * @author      Magestore Developer
+ * Source option AdditionalAttributeOnGrid
  */
 class AdditionalAttributeOnGrid implements \Magento\Framework\Option\ArrayInterface
 {
     /**
-     *
-     *  Add needed attributes to show on catalog product grid pos
+     * Add needed attributes to show on catalog product grid pos
      *
      * @return array
      */
     public function toOptionArray()
     {
-        return array(
-            array('value' => 'sku', 'label' => 'SKU'),
-        );
+        return [
+            ['value' => 'sku', 'label' => 'SKU'],
+        ];
     }
-
 }

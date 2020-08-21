@@ -12,10 +12,10 @@ use Magento\Framework\Pricing\PriceCurrencyInterface;
 /**
  * Giftvoucher Product Price Model
  *
- * @category Magestore
- * @package  Magestore_Giftvoucher
  * @module   Giftvoucher
  * @author   Magestore Developer
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.CookieAndSessionMisuse)
  */
 class Price extends \Magento\Catalog\Model\Product\Type\Price
 {
@@ -87,6 +87,7 @@ class Price extends \Magento\Catalog\Model\Product\Type\Price
      * @param \Magento\Tax\Helper\Data $taxHelper
      * @param \Magestore\Giftvoucher\Helper\Giftproduct $helperData
      * @param \Magestore\Giftvoucher\Helper\Data $giftvoucherData
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         \Magento\CatalogRule\Model\ResourceModel\RuleFactory $ruleFactory,
@@ -171,10 +172,7 @@ class Price extends \Magento\Catalog\Model\Product\Type\Price
     }
 
     /**
-     * Default action to get price of product
-     *
-     * @param \Magento\Catalog\Model\Product $product
-     * @return decimal
+     * @inheritDoc
      */
     public function getPrice($product)
     {
@@ -183,12 +181,7 @@ class Price extends \Magento\Catalog\Model\Product\Type\Price
     }
 
     /**
-     * Apply options price
-     *
-     * @param \Magento\Catalog\Model\Product $product
-     * @param int $qty
-     * @param float $finalPrice
-     * @return float
+     * @inheritDoc
      */
     public function _applyOptionsPrice($product, $qty, $finalPrice)
     {
@@ -200,11 +193,11 @@ class Price extends \Magento\Catalog\Model\Product\Type\Price
     }
 
     /**
-     * Get product's price
+     * Get product's prices
      *
      * @param \Magento\Catalog\Model\Product $product
      * @param string $which
-     * @return array
+     * @return array|float
      */
     public function getPrices($product, $which = null)
     {
@@ -217,7 +210,7 @@ class Price extends \Magento\Catalog\Model\Product\Type\Price
      * @param \Magento\Catalog\Model\Product $product
      * @param string $which
      * @param bool $includeTax
-     * @return array
+     * @return array|float
      */
     public function getPricesDependingOnTax($product, $which = null, $includeTax = null)
     {
@@ -235,7 +228,7 @@ class Price extends \Magento\Catalog\Model\Product\Type\Price
         } elseif ($which == 'min') {
             return $minimalPrice;
         }
-        return array($minimalPrice, $maximalPrice);
+        return [$minimalPrice, $maximalPrice];
     }
 
     /**
@@ -261,11 +254,7 @@ class Price extends \Magento\Catalog\Model\Product\Type\Price
     }
 
     /**
-     * Retrieve product final price
-     *
-     * @param float|null $qty
-     * @param Product $product
-     * @return float
+     * @inheritDoc
      */
     public function getFinalPrice($qty, $product)
     {
@@ -281,12 +270,16 @@ class Price extends \Magento\Catalog\Model\Product\Type\Price
 
     /**
      * Set default value for Gift card product
-     * @param $product
-     * @return
+     *
+     * @param \Magento\Catalog\Model\Product $product
+     *
+     * @return \Magento\Framework\Phrase
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function setDefaultValues($product)
     {
-        $result = array();
+        $result = [];
         $giftAmount = $this->getGiftAmount($product);
         if ($giftAmount['type'] == 'static') {
             $result['amount'] = $giftAmount['value'];
@@ -295,20 +288,21 @@ class Price extends \Magento\Catalog\Model\Product\Type\Price
             $result['amount'] = $giftAmount['options'][0];
             $result['price_amount'] = $giftAmount['min_price'];
         } else {
-            $result['amount'] = strval($giftAmount['from']);
-            $result['price_amount'] = strval($giftAmount['min_price']);
+            $result['amount'] = (string) $giftAmount['from'];
+            $result['price_amount'] = (string) $giftAmount['min_price'];
         }
         if ($product->getGiftTemplateIds()) {
             $productTemplate = $product->getGiftTemplateIds();
             if ($productTemplate) {
                 $productTemplate = explode(',', $productTemplate);
             } else {
-                $productTemplate = array();
+                $productTemplate = [];
             }
 
-            $templates = $this->_objectManager->create('Magestore\Giftvoucher\Model\GiftTemplate')->getCollection()
+            $templates = $this->_objectManager->create(\Magestore\Giftvoucher\Model\GiftTemplate::class)
+                ->getCollection()
                 ->addFieldToFilter('status', '1')
-                ->addFieldToFilter('giftcard_template_id', array('in' => $productTemplate));
+                ->addFieldToFilter('giftcard_template_id', ['in' => $productTemplate]);
             if (count($templates)) {
                 foreach ($templates as $template) {
                     $result['giftcard_template_id'] = $template['giftcard_template_id'];
@@ -327,12 +321,6 @@ class Price extends \Magento\Catalog\Model\Product\Type\Price
 
         $result['giftcard_use_custom_image'] = 0;
         $result['recipient_address'] = '';
-        if ($this->_giftvoucherData->getCustomerSession()->isLoggedIn()) {
-            $customerName = $this->_objectManager->create('Magento\Customer\Helper\View')
-                ->getCustomerName($this->_giftvoucherData->getCustomerSession()->getCustomerData());
-        } else {
-            $customerName = '';
-        }
         $result['customer_name'] = '';
         $result['recipient_name'] = '';
         $result['recipient_email'] = '';
@@ -341,10 +329,12 @@ class Price extends \Magento\Catalog\Model\Product\Type\Price
         $result['day_to_send'] = '';
         $result['timezone_to_send'] = $this->_storeManager->getStore()->getConfig('general/locale/timezone');
 
-        return $this->_objectManager->create('Magento\Framework\Json\Helper\Data')->jsonEncode($result);
+        return $this->_objectManager->create(\Magento\Framework\Json\Helper\Data::class)->jsonEncode($result);
     }
 
     /**
+     * Get Object Manager
+     *
      * @return \Magento\Framework\ObjectManagerInterface
      */
     public function getObjectManager()

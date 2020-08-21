@@ -4,7 +4,9 @@ namespace Magestore\Rewardpoints\Block\Adminhtml\Customer\Tab;
 
 use Magento\Customer\Controller\RegistryConstants;
 
-
+/**
+ * Customer tab - Rewardpoint
+ */
 class Rewardpoint extends \Magento\Backend\Block\Widget\Form\Generic implements
     \Magento\Backend\Block\Widget\Tab\TabInterface
 {
@@ -14,19 +16,38 @@ class Rewardpoint extends \Magento\Backend\Block\Widget\Form\Generic implements
      * @var \Magento\Framework\Registry
      */
     protected $_coreRegistry;
-
+    /**
+     * @var \Magestore\Rewardpoints\Model\Customer
+     */
     protected $_rewardAccount;
+    /**
+     * @var \Magento\Store\Model\System\Store
+     */
+    protected $_systemStore;
+    /**
+     * @var \Magento\Directory\Model\CurrencyFactory
+     */
+    protected $_currencyFactory;
+    /**
+     * @var \Magestore\Rewardpoints\Helper\Point
+     */
+    protected $_helperRewardPoint;
+    /**
+     * @var \Magento\Framework\ObjectManagerInterface
+     */
+    protected $_objectManager;
 
     /**
-     * Credit constructor.
+     * Rewardpoint constructor.
+     *
      * @param \Magento\Backend\Block\Template\Context $context
      * @param \Magento\Framework\Registry $registry
      * @param \Magento\Framework\Data\FormFactory $formFactory
      * @param \Magento\Store\Model\System\Store $systemStore
      * @param \Magento\Directory\Model\CurrencyFactory $currencyFactory
-     * @param \Magestore\Rewardpoints\Helper\Customer $helperRewardCustomer
+     * @param \Magestore\Rewardpoints\Helper\Point $helperRewardPoint
      * @param \Magento\Framework\ObjectManagerInterface $objectManager
-     * @param \Magestore\Rewardpoints\Model\Customer $rewardCustomer
+     * @param \Magestore\Rewardpoints\Model\Customer $rewardAccount
      * @param array $data
      */
     public function __construct(
@@ -38,7 +59,7 @@ class Rewardpoint extends \Magento\Backend\Block\Widget\Form\Generic implements
         \Magestore\Rewardpoints\Helper\Point $helperRewardPoint,
         \Magento\Framework\ObjectManagerInterface $objectManager,
         \Magestore\Rewardpoints\Model\Customer $rewardAccount,
-        array $data = array()
+        array $data = []
     ) {
         $this->_systemStore = $systemStore;
         $this->_currencyFactory = $currencyFactory;
@@ -49,7 +70,7 @@ class Rewardpoint extends \Magento\Backend\Block\Widget\Form\Generic implements
     }
 
     /**
-     * get Current Reward Account Model
+     * Get Current Reward Account Model
      *
      * @return \Magestore\Rewardpoints\Model\Customer
      */
@@ -62,64 +83,70 @@ class Rewardpoint extends \Magento\Backend\Block\Widget\Form\Generic implements
         return $this->_rewardAccount;
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function _prepareForm()
     {
         $form = $this->_formFactory->create();
         $form->setHtmlIdPrefix('rewardpoints_');
 
-        $fieldset = $form->addFieldset('rewardpoints_form', array('legend' =>__('Reward Points Information')));
+        $fieldset = $form->addFieldset('rewardpoints_form', ['legend' =>__('Reward Points Information')]);
 
-        $fieldset->addField('point_balance', 'note', array(
+        $fieldset->addField('point_balance', 'note', [
             'label' => __('Available Points Balance'),
             'title' => __('Available Points Balance'),
-            'text' => '<strong>' . $this->_helperRewardPoint->format(
-                    $this->getRewardAccount()->getPointBalance()) . '</strong>',
-        ));
+            'text' => '<strong>'
+                . $this->_helperRewardPoint->format($this->getRewardAccount()->getPointBalance())
+                . '</strong>',
+        ]);
 
-        $fieldset->addField('holding_balance', 'note', array(
+        $fieldset->addField('holding_balance', 'note', [
             'label' => __('On Hold Points Balance'),
             'title' => __('On Hold Points Balance'),
-            'text' => '<strong>' . $this->_helperRewardPoint->format(
-                    $this->getRewardAccount()->getHoldingBalance()) . '</strong>',
-        ));
-        $fieldset->addField('spent_balance', 'note', array(
+            'text' => '<strong>'
+                . $this->_helperRewardPoint->format($this->getRewardAccount()->getHoldingBalance())
+                . '</strong>',
+        ]);
+        $fieldset->addField('spent_balance', 'note', [
             'label' => __('Spent Points'),
             'title' => __('Spent Points'),
-            'text' => '<strong>' . $this->_helperRewardPoint->format(
-                    $this->getRewardAccount()->getSpentBalance()) . '</strong>',
-        ));
+            'text' => '<strong>'
+                . $this->_helperRewardPoint->format($this->getRewardAccount()->getSpentBalance())
+                . '</strong>',
+        ]);
 
-        $fieldset->addField('reward_change_balance', 'text', array(
+        $fieldset->addField('reward_change_balance', 'text', [
             'label' => __('Change Balance'),
             'title' => __('Change Balance'),
             'name' => 'rewardpoints[change_balance]',
             'data-form-part' => $this->getData('target_form'),
             'note' => __('Add or subtract customer\'s balance. For ex: 99 or -99 points.'),
-        ));
+        ]);
 
-        $fieldset->addField('change_title', 'textarea', array(
+        $fieldset->addField('change_title', 'textarea', [
             'label' => __('Change Title'),
             'title' => __('Change Title'),
             'name'  => 'rewardpoints[change_title]',
             'data-form-part' => $this->getData('target_form'),
             'style' => 'height: 5em;'
-        ));
+        ]);
 
-        $fieldset->addField('expiration_day', 'text', array(
+        $fieldset->addField('expiration_day', 'text', [
             'label' => __('Points Expire On'),
             'title' => __('Points Expire On'),
             'name'  => 'rewardpoints[expiration_day]',
             'data-form-part' => $this->getData('target_form'),
             'note'  => __('day(s) since the transaction date. If empty or zero, there is no limitation.')
-        ));
+        ]);
 
-        $fieldset->addField('admin_editing', 'hidden', array(
+        $fieldset->addField('admin_editing', 'hidden', [
             'name'  => 'rewardpoints[admin_editing]',
             'data-form-part' => $this->getData('target_form'),
             'value' => 1,
-        ));
+        ]);
 
-        $fieldset->addField('is_notification', 'checkbox', array(
+        $fieldset->addField('is_notification', 'checkbox', [
             'label' => __('Update Points Subscription'),
             'title' => __('Update Points Subscription'),
             'name'  => 'rewardpoints[is_notification]',
@@ -127,9 +154,9 @@ class Rewardpoint extends \Magento\Backend\Block\Widget\Form\Generic implements
             'checked'   => $this->getRewardAccount()->getIsNotification(),
             'value' => 1,
             'onclick' => 'this.value = this.checked ? 1 : 0;'
-        ));
+        ]);
 
-        $fieldset->addField('expire_notification', 'checkbox', array(
+        $fieldset->addField('expire_notification', 'checkbox', [
             'label' => __('Expire Transaction Subscription'),
             'title' => __('Expire Transaction Subscription'),
             'name'  => 'rewardpoints[expire_notification]',
@@ -137,13 +164,13 @@ class Rewardpoint extends \Magento\Backend\Block\Widget\Form\Generic implements
             'checked'   => $this->getRewardAccount()->getExpireNotification(),
             'value' => 1,
             'onclick' => 'this.value = this.checked ? 1 : 0;'
-        ));
+        ]);
 
-        $form->addFieldset('balance_history_fieldset', array(
-        'legend' =>__('Balance History')))->setRenderer($this->_layout
-            ->getBlockSingleton('Magento\Backend\Block\Widget\Form\Renderer\Fieldset')
-            ->setTemplate('Magestore_Rewardpoints::customer/balancehistory.phtml'));
-
+        $form->addFieldset('balance_history_fieldset', ['legend' =>__('Balance History')])
+            ->setRenderer(
+                $this->_layout->getBlockSingleton(\Magento\Backend\Block\Widget\Form\Renderer\Fieldset::class)
+                    ->setTemplate('Magestore_Rewardpoints::customer/balancehistory.phtml')
+            );
 
         $this->setForm($form);
         return parent::_prepareForm();
@@ -194,7 +221,6 @@ class Rewardpoint extends \Magento\Backend\Block\Widget\Form\Generic implements
         }
         return true;
     }
-
 
     /**
      * Tab should be loaded trough Ajax call

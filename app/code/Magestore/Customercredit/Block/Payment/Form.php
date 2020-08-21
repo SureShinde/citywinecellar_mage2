@@ -24,6 +24,11 @@ namespace Magestore\Customercredit\Block\Payment;
 
 use Magento\Framework\Pricing\PriceCurrencyInterface;
 
+/**
+ * Class Form
+ *
+ * Payment form block
+ */
 class Form extends \Magento\Payment\Block\Form
 {
     /**
@@ -60,6 +65,8 @@ class Form extends \Magento\Payment\Block\Form
     protected $_customerCredit;
 
     /**
+     * Form constructor.
+     *
      * @param \Magento\Framework\ObjectManagerInterface $objectManager
      * @param \Magento\Framework\View\Element\Template\Context $context
      * @param \Magestore\Customercredit\Helper\Data $helperData
@@ -80,8 +87,7 @@ class Form extends \Magento\Payment\Block\Form
         \Magestore\Customercredit\Helper\Account $helperAccount,
         \Magestore\Customercredit\Model\CustomercreditFactory $customerCredit,
         array $data = []
-    )
-    {
+    ) {
         parent::__construct($context, $data);
         $this->_objectManager = $objectManager;
         $this->_helperData = $helperData;
@@ -93,10 +99,17 @@ class Form extends \Magento\Payment\Block\Form
         $this->_customerCredit = $customerCredit;
     }
 
+    /**
+     * Get Customer credit Data
+     *
+     * @return array
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     public function getCustomercreditData()
     {
         $quote = $this->_checkoutSession->getQuote()->setTotalsCollectedFlag(false)->collectTotals();
-        $result = array();
+        $result = [];
         $result['isEnable'] = $this->_helperData->getGeneralConfig('enable');
         $result['credit_amount'] = $quote->getCustomercreditDiscount();
         $result['has_credit_item'] = $this->_helperData->hasCustomerCreditItem();
@@ -110,6 +123,13 @@ class Form extends \Magento\Payment\Block\Form
         return $result;
     }
 
+    /**
+     * Get Formated Balance
+     *
+     * @return float
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     public function getFormatedBalance()
     {
         $balance = $this->_helperData->getCreditBalanceByUser();
@@ -121,6 +141,13 @@ class Form extends \Magento\Payment\Block\Form
         return $this->priceCurrency->format($balance, false);
     }
 
+    /**
+     * Get Store Credit
+     *
+     * @return float
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     public function getStoreCredit()
     {
         return $this->priceCurrency->round($this->_checkoutSession->getQuote()->getCreditdiscountAmount(), 2);

@@ -6,6 +6,11 @@
 
 namespace Magestore\AdjustStock\Model\ResourceModel;
 
+/**
+ * Class AdjustStock
+ *
+ * Adjust stock resource model
+ */
 class AdjustStock extends AbstractResource
 {
     /**
@@ -19,11 +24,7 @@ class AdjustStock extends AbstractResource
     }
 
     /**
-     * Process post data before saving
-     *
-     * @param \Magento\Framework\Model\AbstractModel $object
-     * @return $this
-     * @throws \Magento\Framework\Exception\ValidatorException
+     * @inheritDoc
      */
     protected function _beforeSave(\Magento\Framework\Model\AbstractModel $object)
     {
@@ -45,7 +46,7 @@ class AdjustStock extends AbstractResource
      */
     public function isValidPostData(\Magento\Framework\Model\AbstractModel $object)
     {
-        if (is_null($object->getData('source_code')) || is_null($object->getData('adjuststock_code'))) {
+        if ($object->getData('source_code') === null || $object->getData('adjuststock_code') === null) {
             return false;
         }
         return true;

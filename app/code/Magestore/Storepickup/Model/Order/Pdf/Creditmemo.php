@@ -3,12 +3,15 @@
  * Copyright © 2015 Magento. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace Magestore\Storepickup\Model\Order\Pdf;
 
 use Magento\Sales\Model\ResourceModel\Order\Invoice\Collection;
 
 /**
  * Sales Order Invoice PDF model
+ *
+ * Used to create creditmemo pdf
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Creditmemo extends \Magento\Sales\Model\Order\Pdf\Creditmemo
@@ -18,6 +21,31 @@ class Creditmemo extends \Magento\Sales\Model\Order\Pdf\Creditmemo
      */
     protected $_storepickupHelper;
 
+    /**
+     * @var \Magento\Framework\Filesystem\DriverInterface
+     */
+    protected $driver;
+
+    /**
+     * Creditmemo constructor.
+     *
+     * @param \Magento\Payment\Helper\Data $paymentData
+     * @param \Magento\Framework\Stdlib\StringUtils $string
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param \Magento\Framework\Filesystem $filesystem
+     * @param \Magento\Sales\Model\Order\Pdf\Config $pdfConfig
+     * @param \Magento\Sales\Model\Order\Pdf\Total\Factory $pdfTotalFactory
+     * @param \Magento\Sales\Model\Order\Pdf\ItemsFactory $pdfItemsFactory
+     * @param \Magento\Framework\Stdlib\DateTime\TimezoneInterface $localeDate
+     * @param \Magento\Framework\Translate\Inline\StateInterface $inlineTranslation
+     * @param \Magento\Sales\Model\Order\Address\Renderer $addressRenderer
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param \Magento\Framework\Locale\ResolverInterface $localeResolver
+     * @param \Magestore\Storepickup\Helper\Data $storepickupHelper
+     * @param \Magento\Framework\Filesystem\DriverInterface $driver
+     * @param array $data
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     */
     public function __construct(
         \Magento\Payment\Helper\Data $paymentData,
         \Magento\Framework\Stdlib\StringUtils $string,
@@ -32,9 +60,11 @@ class Creditmemo extends \Magento\Sales\Model\Order\Pdf\Creditmemo
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Framework\Locale\ResolverInterface $localeResolver,
         \Magestore\Storepickup\Helper\Data $storepickupHelper,
+        \Magento\Framework\Filesystem\DriverInterface $driver,
         array $data = []
     ) {
         $this->_storepickupHelper = $storepickupHelper;
+        $this->driver = $driver;
         parent::__construct(
             $paymentData,
             $string,
@@ -51,6 +81,18 @@ class Creditmemo extends \Magento\Sales\Model\Order\Pdf\Creditmemo
             $data
         );
     }
+
+    /**
+     * Insert order
+     *
+     * @param \Zend_Pdf_Page $page
+     * @param \Magento\Sales\Model\Order $obj
+     * @param bool $putOrderId
+     * @throws \Zend_Pdf_Exception
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     */
     public function insertOrder(&$page, $obj, $putOrderId = true)
     {
         if ($obj instanceof \Magento\Sales\Model\Order) {
@@ -116,7 +158,9 @@ class Creditmemo extends \Magento\Sales\Model\Order\Pdf\Creditmemo
         /* Shipping Address and Method */
         if (!$order->getIsVirtual()) {
             /* Shipping Address */
-            $shippingAddress = $this->_formatAddress($this->addressRenderer->format($order->getShippingAddress(), 'pdf'));
+            $shippingAddress = $this->_formatAddress(
+                $this->addressRenderer->format($order->getShippingAddress(), 'pdf')
+            );
             $shippingMethod = $order->getShippingDescription();
         }
 
@@ -223,50 +267,48 @@ class Creditmemo extends \Magento\Sales\Model\Order\Pdf\Creditmemo
             $methodStartY = $this->y;
             $this->y -= 15;
 
-            if($order->getShippingMethod()!="storepickup_storepickup") foreach ($this->string->split($shippingMethod, 45, true, true) as $_value) {
-                $page->drawText(strip_tags(trim($_value)), 285, $this->y, 'UTF-8');
-                $this->y -= 15;
+            if ($order->getShippingMethod() != "storepickup_storepickup") {
+                foreach ($this->string->split($shippingMethod, 45, true, true) as $_value) {
+                    $page->drawText(strip_tags(trim($_value)), 285, $this->y, 'UTF-8');
+                    $this->y -= 15;
+                }
             } else {
                 //start change
                 $shiipingInfo = explode("<br>", $shippingMethod);
-                $fix_i=0;
-                foreach($shiipingInfo as $value){
-                    if(strpos($value, '<img')===false){
-                        if($value){
-                            $page->drawText($value, 285, $this->y-$fix_i*10 , 'UTF-8');
+                $fix_i = 0;
+                foreach ($shiipingInfo as $value) {
+                    if (strpos($value, '<img') === false) {
+                        if ($value) {
+                            $page->drawText($value, 285, $this->y - $fix_i * 10, 'UTF-8');
                             $fix_i++;
                         }
-                    }else{
+                    } else {
                         $url = strpbrk($value, "http");
                         $url = explode('/>', $url);
                         $url = rtrim($url[0]);
                         $fix_i++;
                     }
                 }
-                $this->y-=$fix_i*10;
-                try{
+                $this->y -= $fix_i * 10;
+                try {
                     $image = $this->_storepickupHelper->getResponseBody($url);
                     $baseImage = $this->_storepickupHelper->getBaseDirMedia()->getAbsolutePath('storepickup/map.png');
-                    file_put_contents($baseImage, $image);
-                    if (is_file($baseImage)) {
+                    $this->driver->filePutContents($baseImage, $image);
+                    if ($this->driver->isFile($baseImage)) {
                         $image = \Zend_Pdf_Image::imageWithPath($baseImage);
                         $page->drawImage($image, 285, $this->y - 100, 400, $this->y + 15);
-                        $this->y-=100;
+                        $this->y -= 100;
                     }
-                }catch(\Exception $e){
+                } catch (\Exception $e) {
                     $textDisconecnt = __('Disconnect to Server . Please try againt');
-                    $page->drawText($textDisconecnt, 285, $this->y - 100,'UTF-8');
-                    $this->y-=10;
+                    $page->drawText($textDisconecnt, 285, $this->y - 100, 'UTF-8');
+                    $this->y -= 10;
                 }
-                //endchange
             }
 
             $yShipments = $this->y;
-            $totalShippingChargesText = "(" . __(
-                    'Total Shipping Charges'
-                ) . " " . $order->formatPriceTxt(
-                    $order->getShippingAmount()
-                ) . ")";
+            $totalShippingChargesText = "(" . __('Total Shipping Charges') . " "
+                . $order->formatPriceTxt($order->getShippingAmount()) . ")";
 
             $page->drawText($totalShippingChargesText, 285, $yShipments - $topMargin, 'UTF-8');
             $yShipments -= $topMargin + 10;

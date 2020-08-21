@@ -6,12 +6,23 @@
 
 namespace Magestore\BarcodeSuccess\Ui\Component\Options;
 
+/**
+ * Class Status
+ *
+ * Used to create status option
+ */
 class Status extends AbstractOption
 {
-    public function toOptionHash() {
-        return array(
+    /**
+     * To option hash
+     *
+     * @return array
+     */
+    public function toOptionHash()
+    {
+        return [
             \Magestore\BarcodeSuccess\Model\Source\Status::ACTIVE => __('Active'),
             \Magestore\BarcodeSuccess\Model\Source\Status::INACTIVE => __('Inactive')
-        );
+        ];
     }
 }

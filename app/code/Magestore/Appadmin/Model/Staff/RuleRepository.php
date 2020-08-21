@@ -7,8 +7,7 @@
 namespace Magestore\Appadmin\Model\Staff;
 
 /**
- * Class StaffManagement
- * @package Magestore\Appadmin\Model\Staff
+ * Staff RuleRepository
  */
 class RuleRepository implements \Magestore\Appadmin\Api\Staff\RuleRepositoryInterface
 {
@@ -21,6 +20,12 @@ class RuleRepository implements \Magestore\Appadmin\Api\Staff\RuleRepositoryInte
      */
     protected $collectionFactory;
 
+    /**
+     * RuleRepository constructor.
+     *
+     * @param \Magestore\Appadmin\Api\Staff\StaffRepositoryInterface $staffRepository
+     * @param \Magestore\Appadmin\Model\ResourceModel\Staff\AuthorizationRule\CollectionFactory $collectionFactory
+     */
     public function __construct(
         \Magestore\Appadmin\Api\Staff\StaffRepositoryInterface $staffRepository,
         \Magestore\Appadmin\Model\ResourceModel\Staff\AuthorizationRule\CollectionFactory $collectionFactory
@@ -32,7 +37,8 @@ class RuleRepository implements \Magestore\Appadmin\Api\Staff\RuleRepositoryInte
     /**
      * @inheritdoc
      */
-    public function isAllowPermission($aclResource, $staffId){
+    public function isAllowPermission($aclResource, $staffId)
+    {
         $permissions = $this->getAllPermissionByStaffId($staffId);
         if (in_array('Magestore_Appadmin::all', $permissions) || in_array($aclResource, $permissions)) {
             return true;
@@ -41,13 +47,16 @@ class RuleRepository implements \Magestore\Appadmin\Api\Staff\RuleRepositoryInte
     }
 
     /**
+     * Get All Permission By Staff Id
+     *
      * @param int $staffId
      * @return array
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function getAllPermissionByStaffId($staffId) {
+    public function getAllPermissionByStaffId($staffId)
+    {
         $staffModel = $this->staffRepository->getById($staffId);
-        $resourceAccess = array();
+        $resourceAccess = [];
         if ($staffModel->getId()) {
             $roleId = $staffModel->getRoleId();
             $resourceAccess = $this->getAllPermissionByRoleId($roleId);
@@ -56,11 +65,14 @@ class RuleRepository implements \Magestore\Appadmin\Api\Staff\RuleRepositoryInte
     }
 
     /**
+     * Get All Permission By Role Id
+     *
      * @param int $roleId
      * @return array
      */
-    public function getAllPermissionByRoleId($roleId) {
-        $resourceAccess = array();
+    public function getAllPermissionByRoleId($roleId)
+    {
+        $resourceAccess = [];
         $authorizationCollection = $this->collectionFactory->create()->addFieldToFilter('role_id', $roleId);
         foreach ($authorizationCollection as $resource) {
             $resourceAccess[] = $resource->getResourceId();

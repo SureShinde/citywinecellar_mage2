@@ -6,10 +6,13 @@
 namespace Magestore\Giftvoucher\Block\Product;
 
 use Magento\Framework\Pricing\PriceCurrencyInterface;
+use Magestore\Giftvoucher\Model\Source\GiftCardTypeOptions;
 
 /**
  * Class View
- * @package Magestore\Giftvoucher\Block\Product
+ *
+ * Product view block
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class View extends \Magento\Catalog\Block\Product\View\AbstractView
 {
@@ -47,24 +50,24 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
      * @var \Magento\Bundle\Helper\Giftproduct
      */
     protected $_giftproductData = null;
-    
+
     /**
      * @var \Magento\Catalog\Helper\Data
      */
     protected $_catalogHelper;
-    
+
     /**
      * @var PriceCurrencyInterface
      */
     protected $_priceCurrency;
-    
+
     /**
      * Giftvoucher data
      *
      * @var \Magento\Bundle\Helper\Giftvoucher
      */
     protected $_giftvoucherData = null;
-    
+
     /**
      * @var \Magento\Framework\ObjectManagerInterface
      */
@@ -94,6 +97,8 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
      * @param \Magento\Framework\DataObject $dataObject
      * @param \Magestore\Giftvoucher\Model\GiftvoucherConfigProvider\CompositeConfigProvider $configModel
      * @param array $data
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         \Magento\Catalog\Block\Product\Context $context,
@@ -139,35 +144,41 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
     }
 
     /**
-     *
+     * @inheritDoc
      */
     protected function _prepareLayout()
     {
         parent::_prepareLayout();
 
         $product = $this->getProduct();
-        if($product){
+        if ($product) {
             $media = $this->getLayout()->getBlock('product.info.media.image');
 
-            if ($media && $product->getTypeId() == 'giftvoucher'
-                && $product->getGiftCardType()!= \Magestore\Giftvoucher\Model\Source\GiftCardTypeOptions::TYPE_PHYSICAL ) {
+            if ($media
+                && $product->getTypeId() == 'giftvoucher'
+                && $product->getGiftCardType() != GiftCardTypeOptions::TYPE_PHYSICAL
+            ) {
                 $media->setTemplate('Magestore_Giftvoucher::giftvoucher/product/media.phtml');
             }
         }
+        return $this;
     }
-    
 
     /**
-     * @return $this
+     * Get Form Config Data
+     *
+     * @return \Magento\Framework\DataObject
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function getFormConfigData()
     {
         $store = $this->_storeManager->getStore();
         $request = $this->_request;
-        $formData = array();
-        $result = array();
+        $formData = [];
+        $result = [];
         if ($this->isInConfigurePage()) {
-            $options = $this->_objectManager->create('Magento\Quote\Model\Quote\Item\Option')->getCollection()
+            $options = $this->_objectManager->create(\Magento\Quote\Model\Quote\Item\Option::class)->getCollection()
                 ->addItemFilter($request->getParam('id'));
 
             foreach ($options as $option) {
@@ -180,9 +191,9 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
                     $baseCurrencyCode = $store->getBaseCurrencyCode();
 
                     if ($currency != $baseCurrencyCode) {
-                        $currentCurrency = $this->_objectManager->create('Magento\Directory\Model\Currency')
+                        $currentCurrency = $this->_objectManager->create(\Magento\Directory\Model\Currency::class)
                             ->load($currency);
-                        $baseCurrency = $this->_objectManager->create('Magento\Directory\Model\Currency')
+                        $baseCurrency = $this->_objectManager->create(\Magento\Directory\Model\Currency::class)
                             ->load($baseCurrencyCode);
 
                         $value = $this->_priceCurrency
@@ -211,13 +222,15 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
     }
 
     /**
+     * Is In Configure Page
+     *
      * @return bool
      */
     public function isInConfigurePage()
     {
         $request = $this->_request;
         $action = $request->getFullActionName();
-        
+
         if ($action == 'checkout_cart_configure' && $request->getParam('id')) {
             return true;
         }
@@ -225,11 +238,13 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
     }
 
     /**
+     * Content Condition
+     *
      * @return bool
      */
     public function contentCondition()
     {
-        $giftProduct = $this->_objectManager->create('Magestore\Giftvoucher\Model\Product')
+        $giftProduct = $this->_objectManager->create(\Magestore\Giftvoucher\Model\Product::class)
             ->loadByProduct($this->getProduct());
         if ($giftProduct->getGiftcardDescription()) {
             return $giftProduct->getGiftcardDescription();
@@ -238,7 +253,9 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
     }
 
     /**
-     * @return \Magento\Bundle\Helper\Giftvoucher|\Magestore\Giftvoucher\Helper\Data
+     * Get Giftvoucher Helper
+     *
+     * @return \Magestore\Giftvoucher\Helper\Data
      */
     public function getGiftvoucherHelper()
     {
@@ -246,6 +263,8 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
     }
 
     /**
+     * Get Request Interface
+     *
      * @return \Magento\Framework\App\RequestInterface
      */
     public function getRequestInterface()
@@ -254,6 +273,8 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
     }
 
     /**
+     * Get Store Manager
+     *
      * @return \Magento\Store\Model\StoreManagerInterface
      */
     public function getStoreManager()
@@ -262,6 +283,8 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
     }
 
     /**
+     * Get Json Encode
+     *
      * @return \Magento\Framework\Json\EncoderInterface
      */
     public function getJsonEncode()
@@ -270,6 +293,8 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
     }
 
     /**
+     * Get Tax Helper
+     *
      * @return \Magento\Tax\Helper\Data
      */
     public function getTaxHelper()
@@ -278,6 +303,8 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
     }
 
     /**
+     * Get Catalog Helper
+     *
      * @return \Magento\Catalog\Helper\Data
      */
     public function getCatalogHelper()
@@ -286,6 +313,8 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
     }
 
     /**
+     * Get Object Manager
+     *
      * @return \Magento\Framework\ObjectManagerInterface
      */
     public function getObjectManager()

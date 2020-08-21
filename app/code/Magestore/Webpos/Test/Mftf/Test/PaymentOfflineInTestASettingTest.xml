@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="PaymentOfflineInTestASetting">
+        <annotations>
+            <features value="Payment"/>
+            <stories value="Setup Offline Payment"/>
+            <title value="Setup Offline Payment"/>
+            <description value="Setup Offline Payment"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="PMO-01"/>
+            <group value="pwapos"/>
+        </annotations>
+
+        <before>
+            <wait time="10" stepKey="waitBeforeLoginBackend" />
+            <actionGroup ref="PosAdminLoginActionGroup" stepKey="loginAsAdmin"/>
+            <actionGroup ref="CreateNewOfflinePaymentMethod" stepKey="CreateNewOfflinePaymentMethod"/>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <after>
+            <amOnPage url="admin/admin/auth/logout/" stepKey="amOnLogoutPage"/>
+            <wait time="10" stepKey="wait10SecondsBeforeFinish" />
+        </after>
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+        <actionGroup ref="AddProductAndCharge" stepKey="AddProductAndCharge">
+            <argument name="dataProduct" value="pos_simple_product_2" />
+        </actionGroup>
+        <waitForElementVisible selector="{{PosCheckoutPaymentOfflineSection.iconFirstOfflinePayment}}" time="5" stepKey="waitPaymentOfflineVisible1"/>
+        <seeElement selector="{{PosCheckoutPaymentOfflineSection.iconFirstOfflinePayment}}" stepKey="seeIconOfflinePayment1" />
+        <seeElement selector="{{PosCheckoutPaymentOfflineSection.iconSecondOfflinePayment}}" stepKey="seeIconOfflinePayment2" />
+        <seeElement selector="{{PosCheckoutPaymentOfflineSection.iconThirdOfflinePayment}}" stepKey="seeIconOfflinePayment3" />
+        <wait time="3" stepKey="waitBeforeFinishActionGroup1"/>
+    </test>
+</tests>

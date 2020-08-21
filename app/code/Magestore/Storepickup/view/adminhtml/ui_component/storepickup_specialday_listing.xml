@@ -192,7 +192,7 @@
                             <item name="dataScope" xsi:type="string">from</item>
                             <item name="label" xsi:type="string" translate="true">From</item>
                             <item name="placeholder" xsi:type="string" translate="true">From</item>
-                            <item name="dateFormat" xsi:type="string" translate="true">MM/dd/YYYY</item>
+                            <item name="dateFormat" xsi:type="string" translate="true">MM/dd/yyyy</item>
                         </item>
                     </argument>
                 </filterDate>
@@ -202,7 +202,7 @@
                             <item name="dataScope" xsi:type="string">to</item>
                             <item name="label" xsi:type="string" translate="true">To</item>
                             <item name="placeholder" xsi:type="string" translate="true">To</item>
-                            <item name="dateFormat" xsi:type="string" translate="true">MM/dd/YYYY</item>
+                            <item name="dateFormat" xsi:type="string" translate="true">MM/dd/yyyy</item>
                         </item>
                     </argument>
                 </filterDate>
@@ -223,7 +223,7 @@
                             <item name="dataScope" xsi:type="string">from</item>
                             <item name="label" xsi:type="string" translate="true">From</item>
                             <item name="placeholder" xsi:type="string" translate="true">From</item>
-                            <item name="dateFormat" xsi:type="string" translate="true">MM/dd/YYYY</item>
+                            <item name="dateFormat" xsi:type="string" translate="true">MM/dd/yyyy</item>
                         </item>
                     </argument>
                 </filterDate>
@@ -233,7 +233,7 @@
                             <item name="dataScope" xsi:type="string">to</item>
                             <item name="label" xsi:type="string" translate="true">To</item>
                             <item name="placeholder" xsi:type="string" translate="true">To</item>
-                            <item name="dateFormat" xsi:type="string" translate="true">MM/dd/YYYY</item>
+                            <item name="dateFormat" xsi:type="string" translate="true">MM/dd/yyyy</item>
                         </item>
                     </argument>
                 </filterDate>
@@ -380,7 +380,7 @@
                     <item name="dataType" xsi:type="string">date</item>
                     <item name="align" xsi:type="string">left</item>
                     <item name="label" xsi:type="string" translate="true">Date Start</item>
-                    <item name="dateFormat" xsi:type="string" translate="true">MM/dd/YYYY</item>
+                    <item name="dateFormat" xsi:type="string" translate="true">MM/dd/yyyy</item>
                 </item>
             </argument>
         </column>
@@ -398,7 +398,7 @@
                     <item name="dataType" xsi:type="string">date</item>
                     <item name="align" xsi:type="string">left</item>
                     <item name="label" xsi:type="string" translate="true">Date End</item>
-                    <item name="dateFormat" xsi:type="string" translate="true">MM/dd/YYYY</item>
+                    <item name="dateFormat" xsi:type="string" translate="true">MM/dd/yyyy</item>
                 </item>
             </argument>
         </column>

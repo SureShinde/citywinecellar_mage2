@@ -1,37 +1,51 @@
 <?php
+
 namespace Magestore\Storepickup\Model\Config\Source;
 
+/**
+ * Class DefaultStore
+ *
+ * Used to create default store source
+ */
 class DefaultStore implements \Magento\Framework\Option\ArrayInterface
 {
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     protected $_collectionFactory;
+
+    /**
+     * DefaultStore constructor.
+     *
+     * @param \Magestore\Storepickup\Model\ResourceModel\Store\CollectionFactory $collectoryFactory
+     */
     public function __construct(
         \Magestore\Storepickup\Model\ResourceModel\Store\CollectionFactory $collectoryFactory
-    )
-    {
+    ) {
         $this->_collectionFactory = $collectoryFactory;
     }
 
+    /**
+     * To option array
+     *
+     * @return array
+     */
     public function toOptionArray()
     {
         $storeCollection = $this->_collectionFactory->create();
-        $storeCollection = $storeCollection->addFieldToFilter('status','1');
-        $arr = array();
-        if($storeCollection->count()=='1') {
+        $storeCollection = $storeCollection->addFieldToFilter('status', '1');
+        $arr = [];
+        if ($storeCollection->count() == '1') {
             foreach ($storeCollection as $item) {
-                $arr[] = array('value' => $item->getId(), 'label' => $item->getStoreName());
+                $arr[] = ['value' => $item->getId(), 'label' => $item->getStoreName()];
             }
-
             return $arr;
         }
 
-        $arr [] = array('value' => 0, 'label' => '---Choose Default Store---');
+        $arr [] = ['value' => 0, 'label' => '---Choose Default Store---'];
         foreach ($storeCollection as $item) {
-            $arr[] = array('value' => $item->getId(), 'label' => $item->getStoreName());
+            $arr[] = ['value' => $item->getId(), 'label' => $item->getStoreName()];
         }
-        //Zend_debug::dump($arr);die();
         return $arr;
     }
 }

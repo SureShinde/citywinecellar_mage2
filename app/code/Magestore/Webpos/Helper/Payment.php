@@ -9,48 +9,26 @@ namespace Magestore\Webpos\Helper;
 use \Magento\Store\Model\ScopeInterface;
 
 /**
- * class \Magestore\Webpos\Helper\Payment
- * 
- * Web POS Payment helper
- * Methods:
- *  getCasgMethodTitle
- *  getCcMethodTitle
- *  getCodMethodTitle
- *  getCp1MethodTitle
- *  getCp2MethodTitle
- *  getDefaultPaymentMethod
- *  getMultipaymentActiveMethodTitle
- *  getMultipaymentMethodTitle
- *  isAllowOnWebPOS
- *  isCashPaymentEnabled
- *  isCcPaymentEnabled
- *  isCodPaymentEnabled
- *  isCp1PaymentEnabled
- *  isCp2PaymentEnabled
- *  isMultiPaymentEnabled
- *  isWebposShippingEnabled
- *  updateCashTransactionFromOrder
- * 
- * @category    Magestore
- * @package     Magestore_Webpos
- * @module      Webpos
- * @author      Magestore Developer
+ * Helper Payment
  */
 class Payment extends Data
 {
 
     /**
+     * Payment title
      *
+     * @param string $code
      * @return string
      */
     public function getPaymentTitle($code)
     {
-        $title = $this->scopeConfig->getValue('payment/'.$code.'/title', ScopeInterface::SCOPE_STORE);
+        $title = $this->scopeConfig->getValue('payment/' . $code . '/title', ScopeInterface::SCOPE_STORE);
         return $title;
     }
 
     /**
-     * get title of Cash payment method
+     * Get title of Cash payment method
+     *
      * @return string
      */
     public function getCashMethodTitle()
@@ -61,18 +39,25 @@ class Payment extends Data
         }
         return $title;
     }
-    
+
     /**
-     * 
+     * Is Cash Payment Enabled
+     *
      * @return boolean
      */
     public function isCashPaymentEnabled()
     {
-        return ($this->scopeConfig->getValue('payment/cashforpos/active', ScopeInterface::SCOPE_STORE) && $this->isAllowOnWebPOS('cashforpos'));
+        return (
+            $this->scopeConfig->getValue(
+                'payment/cashforpos/active',
+                ScopeInterface::SCOPE_STORE
+            ) && $this->isAllowOnWebPOS('cashforpos')
+        );
     }
-    
+
     /**
-     * 
+     * Get Cc Method Title
+     *
      * @return string
      */
     public function getCcMethodTitle()
@@ -83,18 +68,25 @@ class Payment extends Data
         }
         return $title;
     }
-    
+
     /**
-     * 
+     * Is Cc Payment Enabled
+     *
      * @return boolean
      */
     public function isCcPaymentEnabled()
     {
-        return ($this->scopeConfig->getValue('payment/ccforpos/active', ScopeInterface::SCOPE_STORE) && $this->isAllowOnWebPOS('ccforpos'));
+        return (
+            $this->scopeConfig->getValue(
+                'payment/ccforpos/active',
+                ScopeInterface::SCOPE_STORE
+            ) && $this->isAllowOnWebPOS('ccforpos')
+        );
     }
-    
+
     /**
-     * 
+     * Is Webpos Shipping Enabled
+     *
      * @return string
      */
     public function isWebposShippingEnabled()
@@ -103,7 +95,8 @@ class Payment extends Data
     }
 
     /**
-     * 
+     * Get Cod Method Title
+     *
      * @return string
      */
     public function getCodMethodTitle()
@@ -114,18 +107,25 @@ class Payment extends Data
         }
         return $title;
     }
-    
+
     /**
-     * 
+     * Is Cod Payment Enabled
+     *
      * @return boolean
      */
     public function isCodPaymentEnabled()
     {
-        return ($this->scopeConfig->getValue('payment/codforpos/active', ScopeInterface::SCOPE_STORE) && $this->isAllowOnWebPOS('codforpos'));
+        return (
+            $this->scopeConfig->getValue(
+                'payment/codforpos/active',
+                ScopeInterface::SCOPE_STORE
+            ) && $this->isAllowOnWebPOS('codforpos')
+        );
     }
 
     /**
-     * 
+     * Get Multipayment Method Title
+     *
      * @return string
      */
     public function getMultipaymentMethodTitle()
@@ -138,7 +138,8 @@ class Payment extends Data
     }
 
     /**
-     * 
+     * Get Multipayment Active Method Title
+     *
      * @return array
      */
     public function getMultipaymentActiveMethodTitle()
@@ -149,25 +150,35 @@ class Payment extends Data
         }
         return explode(',', $payments);
     }
-    
+
     /**
-     * 
+     * Is Multi Payment Enabled
+     *
      * @return boolean
      */
     public function isMultiPaymentEnabled()
     {
-        return ($this->scopeConfig->getValue('payment/multipaymentforpos/active', ScopeInterface::SCOPE_STORE) && $this->isAllowOnWebPOS('multipaymentforpos'));
+        return (
+            $this->scopeConfig->getValue(
+                'payment/multipaymentforpos/active',
+                ScopeInterface::SCOPE_STORE
+            ) && $this->isAllowOnWebPOS('multipaymentforpos')
+        );
     }
-    
+
     /**
-     * 
+     * Is Allow On WebPOS
+     *
      * @param string $code
      * @return boolean
      */
     public function isAllowOnWebPOS($code)
     {
         if ($this->scopeConfig->getValue('webpos/payment/allowspecific_payment', ScopeInterface::SCOPE_STORE) == '1') {
-            $specificpayment = $this->scopeConfig->getValue('webpos/payment/specificpayment', ScopeInterface::SCOPE_STORE);
+            $specificpayment = $this->scopeConfig->getValue(
+                'webpos/payment/specificpayment',
+                ScopeInterface::SCOPE_STORE
+            );
             $specificpayment = explode(',', $specificpayment);
             if (in_array($code, $specificpayment)) {
                 return true;
@@ -177,50 +188,53 @@ class Payment extends Data
         }
         return true;
     }
-    
+
     /**
-     * 
+     * Get Default Payment Method
+     *
      * @return string
      */
     public function getDefaultPaymentMethod()
     {
         return $this->scopeConfig->getValue('webpos/payment/defaultpayment', ScopeInterface::SCOPE_STORE);
     }
-    
 
     /**
      * Check webpos payment
      *
-     * @param string
+     * @param string $code
      * @return boolean
      */
     public function isWebposPayment($code)
     {
-        $payments = array('multipaymentforpos','cashforpos','ccforpos','codforpos');
+        $payments = ['multipaymentforpos', 'cashforpos', 'ccforpos', 'codforpos'];
         return in_array($code, $payments);
     }
 
     /**
      * Check webpos payment is pay later
      *
-     * @param string
+     * @param string $code
      * @return boolean
      */
     public function isPayLater($code)
     {
-        $isPayLater = $this->scopeConfig->getValue('payment/'.$code.'/pay_later', ScopeInterface::SCOPE_STORE);
+        $isPayLater = $this->scopeConfig->getValue('payment/' . $code . '/pay_later', ScopeInterface::SCOPE_STORE);
         return $isPayLater;
     }
 
     /**
      * Check webpos payment is pay later
      *
-     * @param string
+     * @param string $code
      * @return boolean
      */
     public function isReferenceNumber($code)
     {
-        $isReferenceNumber = $this->scopeConfig->getValue('payment/'.$code.'/use_reference_number', ScopeInterface::SCOPE_STORE);
+        $isReferenceNumber = $this->scopeConfig->getValue(
+            'payment/' . $code . '/use_reference_number',
+            ScopeInterface::SCOPE_STORE
+        );
         return $isReferenceNumber;
     }
 
@@ -237,29 +251,36 @@ class Payment extends Data
     }
 
     /**
-     * get use cvv
-     * @return string
+     * Get use cvv
+     *
+     * @param string $code
+     * @return mixed
      */
     public function useCvv($code)
     {
-        $useCvv = $this->scopeConfig->getValue('payment/'.$code.'/useccv', ScopeInterface::SCOPE_STORE);
+        $useCvv = $this->scopeConfig->getValue('payment/' . $code . '/useccv', ScopeInterface::SCOPE_STORE);
         return $useCvv;
     }
 
     /**
+     * Is Retailer Pos
+     *
      * @return bool
      */
     public function isRetailerPos()
     {
-        if(isset($_SERVER['HTTP_USER_AGENT'])) {
-            $userAgent = $_SERVER['HTTP_USER_AGENT'];
-            if ((strpos(strtolower($userAgent), 'ipad')!==false || strpos(strtolower($userAgent), 'android')!==false)
-                && (!strpos(strtolower($userAgent), 'mozilla')!==false)
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        /** @var \Magento\Framework\App\RequestInterface $request */
+        $request = $objectManager->get(\Magento\Framework\App\RequestInterface::class);
+        if ($request->getServer('HTTP_USER_AGENT') !== null) {
+            $userAgent = $request->getServer('HTTP_USER_AGENT');
+            if ((strpos(strtolower($userAgent), 'ipad') !== false
+                    || strpos(strtolower($userAgent), 'android') !== false)
+                && (!strpos(strtolower($userAgent), 'mozilla') !== false)
             ) {
                 return true;
             }
         }
         return false;
     }
-
 }

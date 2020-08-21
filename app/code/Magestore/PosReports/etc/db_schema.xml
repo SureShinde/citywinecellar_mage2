@@ -1,0 +1,196 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magestore, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+
+    <table name="pos_order_aggregated_created" resource="default" engine="innodb"
+           comment="POS Order Aggregated Created">
+        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="Id"/>
+        <column xsi:type="date" name="period" comment="Period"/>
+        <column xsi:type="int" name="yearweek" padding="11" unsigned="true" nullable="false"
+                comment="Year Week"/>
+        <column xsi:type="int" name="location_id" padding="11" unsigned="true" nullable="false" identity="false"
+                comment="Location Id"/>
+        <column xsi:type="int" name="staff_id" padding="11" unsigned="true" nullable="false" identity="false"
+                comment="POS Staff Id"/>
+        <column xsi:type="varchar" name="order_status" nullable="false" length="50" comment="Order Status"/>
+        <column xsi:type="int" name="orders_count" padding="11" unsigned="false" nullable="false" identity="false"
+                default="0" comment="Orders Count"/>
+        <column xsi:type="decimal" name="total_qty_ordered" scale="4" precision="12" unsigned="false" nullable="false"
+                default="0" comment="Total Qty Ordered"/>
+        <column xsi:type="decimal" name="total_qty_invoiced" scale="4" precision="12" unsigned="false" nullable="false"
+                default="0" comment="Total Qty Invoiced"/>
+        <column xsi:type="decimal" name="total_income_amount" scale="4" precision="20" unsigned="false"
+                nullable="false" default="0" comment="Total Income Amount"/>
+        <column xsi:type="decimal" name="total_revenue_amount" scale="4" precision="20" unsigned="false"
+                nullable="false" default="0" comment="Total Revenue Amount"/>
+        <column xsi:type="decimal" name="total_profit_amount" scale="4" precision="20" unsigned="false"
+                nullable="false" default="0" comment="Total Profit Amount"/>
+        <column xsi:type="decimal" name="total_invoiced_cost_amount" scale="4" precision="20" unsigned="false"
+                nullable="false" default="0" comment="Total Invoiced Cost Amount"/>
+        <column xsi:type="decimal" name="total_invoiced_amount" scale="4" precision="20" unsigned="false"
+                nullable="false" default="0" comment="Total Invoiced Amount"/>
+        <column xsi:type="decimal" name="total_canceled_amount" scale="4" precision="20" unsigned="false"
+                nullable="false" default="0" comment="Total Canceled Amount"/>
+        <column xsi:type="decimal" name="total_paid_amount" scale="4" precision="20" unsigned="false" nullable="false"
+                default="0" comment="Total Paid Amount"/>
+        <column xsi:type="decimal" name="total_refunded_amount" scale="4" precision="20" unsigned="false"
+                nullable="false" default="0" comment="Total Refunded Amount"/>
+        <column xsi:type="decimal" name="total_tax_amount" scale="4" precision="20" unsigned="false" nullable="false"
+                default="0" comment="Total Tax Amount"/>
+        <column xsi:type="decimal" name="total_tax_amount_actual" scale="4" precision="20" unsigned="false"
+                nullable="false" default="0" comment="Total Tax Amount Actual"/>
+        <column xsi:type="decimal" name="total_shipping_amount" scale="4" precision="20" unsigned="false"
+                nullable="false" default="0" comment="Total Shipping Amount"/>
+        <column xsi:type="decimal" name="total_shipping_amount_actual" scale="4" precision="20" unsigned="false"
+                nullable="false" default="0" comment="Total Shipping Amount Actual"/>
+        <column xsi:type="decimal" name="total_discount_amount" scale="4" precision="20" unsigned="false"
+                nullable="false" default="0" comment="Total Discount Amount"/>
+        <column xsi:type="decimal" name="total_discount_amount_actual" scale="4" precision="20" unsigned="false"
+                nullable="false" default="0" comment="Total Discount Amount Actual"/>
+        <column xsi:type="decimal" name="total_profit_margin_amount" scale="4" precision="20" unsigned="false"
+                nullable="false" default="0" comment="Total Profit Margin Amount"/>
+        <column xsi:type="decimal" name="average_order_value" scale="4" precision="20" unsigned="false"
+                nullable="false" default="0" comment="Average Order Value"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+        <!--<constraint xsi:type="foreign"-->
+        <!--referenceId="POS_ORDER_AGGREGATED_CREATED_LOCATION_ID_WEBPOS_LOCATION_LOCATION_ID"-->
+        <!--table="pos_order_aggregated_created" column="location_id" referenceTable="webpos_location"-->
+        <!--referenceColumn="location_id" onDelete="SET NULL"/>-->
+        <!--<constraint xsi:type="foreign" referenceId="POS_ORDER_AGGREGATED_CREATED_STAFF_ID_WEBPOS_STAFF_STAFF_ID"-->
+        <!--table="pos_order_aggregated_created" column="staff_id" referenceTable="webpos_staff"-->
+        <!--referenceColumn="staff_id" onDelete="SET NULL"/>-->
+
+        <constraint xsi:type="unique"
+                    referenceId="POS_ORDER_AGGREGATED_CREATED_PERIOD_LOCATION_ID_POS_STAFF_ID_ORDER_STATUS">
+            <column name="period"/>
+            <column name="yearweek"/>
+            <column name="location_id"/>
+            <column name="staff_id"/>
+            <column name="order_status"/>
+        </constraint>
+        <index referenceId="POS_ORDER_AGGREGATED_CREATED_LOCATION_ID" indexType="btree">
+            <column name="location_id"/>
+        </index>
+    </table>
+    <table name="pos_order_aggregated_updated" resource="default" engine="innodb"
+           comment="POS Order Aggregated Updated">
+        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="Id"/>
+        <column xsi:type="date" name="period" comment="Period"/>
+        <column xsi:type="int" name="yearweek" padding="11" unsigned="true" nullable="false"
+                comment="Year Week"/>
+        <column xsi:type="int" name="location_id" padding="11" unsigned="true" nullable="false" identity="false"
+                comment="Location Id"/>
+        <column xsi:type="int" name="staff_id" padding="11" unsigned="true" nullable="false" identity="false"
+                comment="POS Staff Id"/>
+        <column xsi:type="varchar" name="order_status" nullable="false" length="50" comment="Order Status"/>
+        <column xsi:type="int" name="orders_count" padding="11" unsigned="false" nullable="false" identity="false"
+                default="0" comment="Orders Count"/>
+        <column xsi:type="decimal" name="total_qty_ordered" scale="4" precision="12" unsigned="false" nullable="false"
+                default="0" comment="Total Qty Ordered"/>
+        <column xsi:type="decimal" name="total_qty_invoiced" scale="4" precision="12" unsigned="false" nullable="false"
+                default="0" comment="Total Qty Invoiced"/>
+        <column xsi:type="decimal" name="total_income_amount" scale="4" precision="20" unsigned="false"
+                nullable="false" default="0" comment="Total Income Amount"/>
+        <column xsi:type="decimal" name="total_invoiced_cost_amount" scale="4" precision="20" unsigned="false"
+                nullable="false" default="0" comment="Total Invoiced Cost Amount"/>
+        <column xsi:type="decimal" name="total_revenue_amount" scale="4" precision="20" unsigned="false"
+                nullable="false" default="0" comment="Total Revenue Amount"/>
+        <column xsi:type="decimal" name="total_profit_amount" scale="4" precision="20" unsigned="false"
+                nullable="false" default="0" comment="Total Profit Amount"/>
+        <column xsi:type="decimal" name="total_invoiced_amount" scale="4" precision="20" unsigned="false"
+                nullable="false" default="0" comment="Total Invoiced Amount"/>
+        <column xsi:type="decimal" name="total_canceled_amount" scale="4" precision="20" unsigned="false"
+                nullable="false" default="0" comment="Total Canceled Amount"/>
+        <column xsi:type="decimal" name="total_paid_amount" scale="4" precision="20" unsigned="false" nullable="false"
+                default="0" comment="Total Paid Amount"/>
+        <column xsi:type="decimal" name="total_refunded_amount" scale="4" precision="20" unsigned="false"
+                nullable="false" default="0" comment="Total Refunded Amount"/>
+        <column xsi:type="decimal" name="total_tax_amount" scale="4" precision="20" unsigned="false" nullable="false"
+                default="0" comment="Total Tax Amount"/>
+        <column xsi:type="decimal" name="total_tax_amount_actual" scale="4" precision="20" unsigned="false"
+                nullable="false" default="0" comment="Total Tax Amount Actual"/>
+        <column xsi:type="decimal" name="total_shipping_amount" scale="4" precision="20" unsigned="false"
+                nullable="false" default="0" comment="Total Shipping Amount"/>
+        <column xsi:type="decimal" name="total_shipping_amount_actual" scale="4" precision="20" unsigned="false"
+                nullable="false" default="0" comment="Total Shipping Amount Actual"/>
+        <column xsi:type="decimal" name="total_discount_amount" scale="4" precision="20" unsigned="false"
+                nullable="false" default="0" comment="Total Discount Amount"/>
+        <column xsi:type="decimal" name="total_discount_amount_actual" scale="4" precision="20" unsigned="false"
+                nullable="false" default="0" comment="Total Discount Amount Actual"/>
+        <column xsi:type="decimal" name="total_profit_margin_amount" scale="4" precision="20" unsigned="false"
+                nullable="false" default="0" comment="Total Profit Margin Amount"/>
+        <column xsi:type="decimal" name="average_order_value" scale="4" precision="20" unsigned="false"
+                nullable="false" default="0" comment="Average Order Value"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+        <!--<constraint xsi:type="foreign"-->
+        <!--referenceId="POS_ORDER_AGGREGATED_UPDATED_LOCATION_ID_WEBPOS_LOCATION_LOCATION_ID"-->
+        <!--table="pos_order_aggregated_updated" column="location_id" referenceTable="webpos_location"-->
+        <!--referenceColumn="location_id" onDelete="SET NULL"/>-->
+        <!--<constraint xsi:type="foreign" referenceId="POS_ORDER_AGGREGATED_UPDATED_STAFF_ID_WEBPOS_STAFF_STAFF_ID"-->
+        <!--table="pos_order_aggregated_updated" column="staff_id" referenceTable="webpos_staff"-->
+        <!--referenceColumn="staff_id" onDelete="SET NULL"/>-->
+
+        <constraint xsi:type="unique"
+                    referenceId="POS_ORDER_AGGREGATED_UPDATED_PERIOD_LOCATION_ID_POS_STAFF_ID_ORDER_STATUS">
+            <column name="period"/>
+            <column name="yearweek"/>
+            <column name="location_id"/>
+            <column name="staff_id"/>
+            <column name="order_status"/>
+        </constraint>
+        <index referenceId="POS_ORDER_AGGREGATED_UPDATED_LOCATION_ID" indexType="btree">
+            <column name="location_id"/>
+        </index>
+    </table>
+
+    <table name="pos_order_payment_aggregated" resource="default" engine="innodb"
+           comment="POS Order Payment Aggregated">
+        <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="Id"/>
+        <column xsi:type="date" name="period" comment="Period"/>
+        <column xsi:type="int" name="location_id" padding="11" unsigned="true" nullable="false" identity="false"
+                comment="Location Id"/>
+        <column xsi:type="varchar" name="method" nullable="false" length="255" comment="Payment Code"/>
+        <column xsi:type="varchar" name="method_title" nullable="false" length="255" comment="Payment Name"/>
+        <column xsi:type="varchar" name="order_status" nullable="false" length="50" comment="Order Status"/>
+        <column xsi:type="int" name="orders_count" padding="11" unsigned="false" nullable="false" identity="false"
+                default="0" comment="Orders Count"/>
+
+        <column xsi:type="decimal" name="total_paid" scale="4" precision="20" unsigned="false"
+                nullable="false" default="0" comment="Total Paid"/>
+        <column xsi:type="decimal" name="total_refunded" scale="4" precision="20" unsigned="false"
+                nullable="false" default="0" comment="Total Refunded"/>
+        <column xsi:type="decimal" name="net_amount" scale="4" precision="20" unsigned="false"
+                nullable="false" default="0" comment="Net Amount"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+        <!--<constraint xsi:type="foreign"-->
+        <!--referenceId="POS_ORDER_AGGREGATED_CREATED_LOCATION_ID_WEBPOS_LOCATION_LOCATION_ID"-->
+        <!--table="pos_order_aggregated_created" column="location_id" referenceTable="webpos_location"-->
+        <!--referenceColumn="location_id" onDelete="SET NULL"/>-->
+        <!--<constraint xsi:type="foreign" referenceId="POS_ORDER_AGGREGATED_CREATED_STAFF_ID_WEBPOS_STAFF_STAFF_ID"-->
+        <!--table="pos_order_aggregated_created" column="staff_id" referenceTable="webpos_staff"-->
+        <!--referenceColumn="staff_id" onDelete="SET NULL"/>-->
+
+        <constraint xsi:type="unique"
+                    referenceId="POS_ORDER_PAYMENT_AGGREGATED_PERIOD_LOCATION_ID_METHOD_ORDER_STATUS">
+            <column name="period"/>
+            <column name="location_id"/>
+            <column name="method"/>
+            <column name="order_status"/>
+        </constraint>
+        <index referenceId="POS_ORDER_PAYMENT_AGGREGATED_LOCATION_ID" indexType="btree">
+            <column name="location_id"/>
+        </index>
+    </table>
+</schema>

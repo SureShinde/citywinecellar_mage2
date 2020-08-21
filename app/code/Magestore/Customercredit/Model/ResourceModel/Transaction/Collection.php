@@ -22,6 +22,12 @@
 
 namespace Magestore\Customercredit\Model\ResourceModel\Transaction;
 
+/**
+ * Class Collection
+ *
+ * Transaction collection
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection
 {
     /**
@@ -40,6 +46,8 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
     protected $storeManager;
 
     /**
+     * Collection constructor.
+     *
      * @param \Magento\Framework\Data\Collection\EntityFactoryInterface $entityFactory
      * @param \Psr\Log\LoggerInterface $logger
      * @param \Magento\Framework\Data\Collection\Db\FetchStrategyInterface $fetchStrategy
@@ -47,11 +55,10 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
      * @param \Magento\Eav\Model\Config $eavConfig
      * @param \Magestore\Customercredit\Helper\Data $dataHelper
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
-     * @param \Magento\Framework\DB\Adapter\AdapterInterface $connection
-     * @param \Magento\Framework\Model\ResourceModel\Db\AbstractDb $resource
-     * @param null $connectionName
+     * @param \Magento\Framework\DB\Adapter\AdapterInterface|null $connection
+     * @param \Magento\Framework\Model\ResourceModel\Db\AbstractDb|null $resource
      */
-     public function __construct(
+    public function __construct(
         \Magento\Framework\Data\Collection\EntityFactoryInterface $entityFactory,
         \Psr\Log\LoggerInterface $logger,
         \Magento\Framework\Data\Collection\Db\FetchStrategyInterface $fetchStrategy,
@@ -76,11 +83,23 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
     protected function _construct()
     {
         $this->_init(
-            'Magestore\Customercredit\Model\Transaction',
-            'Magestore\Customercredit\Model\ResourceModel\Transaction'
+            \Magestore\Customercredit\Model\Transaction::class,
+            \Magestore\Customercredit\Model\ResourceModel\Transaction::class
         );
     }
 
+    /**
+     * Get Date Range
+     *
+     * @param string $range
+     * @param \DateTime $customStart
+     * @param \DateTime $customEnd
+     * @param bool $returnObjects
+     * @return array
+     * @throws \Exception
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
     public function getDateRange($range, $customStart, $customEnd, $returnObjects = false)
     {
         $dateStart = new \DateTime();
@@ -105,8 +124,14 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
                 break;
 
             case '1m':
-                $dateStart->setDate($dateStart->format('Y'), $dateStart->format('m'), $this->_dataHelper->getReportConfig('mtd_start',\Magento\Store\Model\ScopeInterface::SCOPE_STORE));
-                //$dateEnd->modify('+1 month');
+                $dateStart->setDate(
+                    $dateStart->format('Y'),
+                    $dateStart->format('m'),
+                    $this->_dataHelper->getReportConfig(
+                        'mtd_start',
+                        \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+                    )
+                );
                 break;
 
             case 'custom':
@@ -116,7 +141,10 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
 
             case '1y':
             case '2y':
-                $startMonthDay = explode(',', $this->_dataHelper->getReportConfig('ytd_start', \Magento\Store\Model\ScopeInterface::SCOPE_STORE));
+                $startMonthDay = explode(
+                    ',',
+                    $this->_dataHelper->getReportConfig('ytd_start', \Magento\Store\Model\ScopeInterface::SCOPE_STORE)
+                );
                 $startMonth = isset($startMonthDay[0]) ? (int) $startMonthDay[0] : 1;
                 $startDay = isset($startMonthDay[1]) ? (int) $startMonthDay[1] : 1;
                 $dateStart->setDate($dateStart->format('Y'), $startMonth, $startDay);
@@ -132,33 +160,57 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
         // $dateEnd->setTimezone('Etc/UTC');
 
         if ($returnObjects) {
-            return array($dateStart, $dateEnd);
+            return [$dateStart, $dateEnd];
         } else {
-            return array('from' => $dateStart, 'to' => $dateEnd, 'datetime' => true);
+            return ['from' => $dateStart, 'to' => $dateEnd, 'datetime' => true];
         }
     }
 
+    /**
+     * Prepare Customer credit
+     *
+     * @param string $range
+     * @param \DateTime $customStart
+     * @param \DateTime $customEnd
+     * @return $this
+     * @throws \Exception
+     */
     public function prepareCustomercredit($range, $customStart, $customEnd)
     {
         $this->getSelect()->reset(\Magento\Framework\DB\Select::COLUMNS);
-        $this->getSelect()->columns(array(
-            'spent_credit' => 'SUM(spent_credit)',
-            'received_credit' => 'SUM(received_credit)',
-        ));
+        $this->getSelect()->columns(
+            [
+                'spent_credit' => 'SUM(spent_credit)',
+                'received_credit' => 'SUM(received_credit)',
+            ]
+        );
         $dateRange = $this->getDateRange($range, $customStart, $customEnd);
-        $this->getSelect()->columns(array('range' => $this->_getRangeExpressionForAttribute($range, 'transaction_time')))
+        $this->getSelect()->columns(['range' => $this->_getRangeExpressionForAttribute($range, 'transaction_time')])
             ->order('range', \Magento\Framework\DB\Select::SQL_ASC)
             ->group('range');
         $this->addFieldToFilter('transaction_time', $dateRange);
         return $this;
     }
 
+    /**
+     * Get Range Expression For Attribute
+     *
+     * @param string $range
+     * @param string $attribute
+     * @return mixed
+     */
     public function _getRangeExpressionForAttribute($range, $attribute)
     {
         $expression = $this->_getRangeExpression($range);
         return str_replace('{{attribute}}', $this->getConnection()->quoteIdentifier($attribute), $expression);
     }
 
+    /**
+     * Get Range Expression
+     *
+     * @param string $range
+     * @return string
+     */
     public function _getRangeExpression($range)
     {
         switch ($range) {
@@ -179,5 +231,4 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
 
         return $expression;
     }
-
 }

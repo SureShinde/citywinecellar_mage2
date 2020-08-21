@@ -12,7 +12,7 @@ use Magento\Framework\UrlInterface;
 /**
  * Class Data
  *
- * @package Magestore\Webpos\Helper
+ * Used for helper data
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Data extends \Magento\Framework\App\Helper\AbstractHelper
@@ -261,5 +261,49 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         $baseUrl = $this->_storeManager->getStore()->getBaseUrl();
         $relativeUrl = str_replace($baseUrl, '', $posUrl);
         return $relativeUrl;
+    }
+
+    /**
+     * Is Enabled Elastic Search Engine
+     *
+     * @return boolean
+     */
+    public function isEnableElasticSearch()
+    {
+        if (strpos($this->scopeConfig->getValue('catalog/search/engine'), 'elasticsearch') !== false) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Get product type ids to support
+     *
+     * @return array
+     */
+    public function getProductTypeIds()
+    {
+        $types = [
+            \Magento\Catalog\Model\Product\Type::TYPE_VIRTUAL,
+            \Magento\Catalog\Model\Product\Type::TYPE_SIMPLE,
+            \Magento\GroupedProduct\Model\Product\Type\Grouped::TYPE_CODE,
+            \Magento\Catalog\Model\Product\Type::TYPE_BUNDLE,
+            \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE
+        ];
+        if ($this->isEnabledGiftCard()) {
+            $types[] = \Magestore\Giftvoucher\Model\Product\Type\Giftvoucher::GIFT_CARD_TYPE;
+        }
+        return $types;
+    }
+
+    /**
+     * Check if barcode management enable
+     *
+     * @return bool
+     */
+    public function isEnabledBarcodeManagement()
+    {
+        return $this->_moduleManager->isEnabled('Magestore_BarcodeSuccess');
     }
 }

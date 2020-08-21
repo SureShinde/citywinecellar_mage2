@@ -25,6 +25,12 @@ namespace Magestore\Customercredit\Block\Adminhtml\Product;
 use Magento\Catalog\Model\Product;
 use Magento\Framework\Pricing\PriceCurrencyInterface;
 
+/**
+ * Class View
+ *
+ * Product view block
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class View extends \Magento\Catalog\Block\Product\View\AbstractView
 {
     /**
@@ -40,7 +46,7 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
      */
     protected $_customercreditData;
     /**
-     * @var \Magestore\Customercredit\Helper\Data
+     * @var \Magento\Catalog\Helper\Data
      */
     protected $_catalogHelper;
     /**
@@ -73,15 +79,20 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
     protected $priceCurrency;
 
     /**
+     * View constructor.
+     *
      * @param \Magento\Catalog\Block\Product\Context $context
      * @param \Magento\Framework\Stdlib\ArrayUtils $arrayUtils
-     * @param  \Magestore\Customercredit\Helper\Creditproduct $helperData
+     * @param \Magestore\Customercredit\Helper\Creditproduct $helperData
      * @param \Magestore\Customercredit\Helper\Data $customercreditData
      * @param \Magento\Framework\ObjectManagerInterface $objectManager
      * @param \Magento\Framework\Json\EncoderInterface $jsonEncoder
      * @param \Magento\Framework\Locale\FormatInterface $localeFormat
      * @param \Magento\Backend\Model\Session\Quote $sessionQuote
      * @param PriceCurrencyInterface $priceCurrency
+     * @param array $data
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         \Magento\Catalog\Block\Product\Context $context,
@@ -94,8 +105,7 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
         \Magento\Backend\Model\Session\Quote $sessionQuote,
         PriceCurrencyInterface $priceCurrency,
         array $data = []
-    )
-    {
+    ) {
         $this->_request = $context->getRequest();
         $this->_objectManager = $objectManager;
         $this->_customercreditData = $customercreditData;
@@ -114,19 +124,25 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
         );
     }
 
-    protected function _prepareLayout()
-    {
-        parent::_prepareLayout();
-    }
+    /**
+     * Get Helper Data
+     *
+     * @return \Magestore\Customercredit\Helper\Data
+     */
     public function getHelperData()
     {
         return $this->_customercreditData;
     }
 
+    /**
+     * Get Credit Amount
+     *
+     * @param Product $product
+     * @return array
+     */
     public function getCreditAmount($product)
     {
         $creditValue = $this->_helperData->getCreditDataByProduct($product);
-        $store = $this->_sessionQuote->getStore();
         switch ($creditValue['type']) {
             case 'range':
                 $creditValue['from'] = $this->convertPrice($product, $creditValue['from']);
@@ -152,6 +168,13 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
         return $creditValue;
     }
 
+    /**
+     * Convert Prices
+     *
+     * @param Product $product
+     * @param array $basePrices
+     * @return array
+     */
     public function _convertPrices($product, $basePrices)
     {
         foreach ($basePrices as $key => $price) {
@@ -160,6 +183,13 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
         return $basePrices;
     }
 
+    /**
+     * Convert Price
+     *
+     * @param Product $product
+     * @param float $price
+     * @return float
+     */
     public function convertPrice($product, $price)
     {
         $includeTax = ($this->_taxData->getPriceDisplayType() != 1);
@@ -167,24 +197,36 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
         return $this->priceCurrency->convert($priceWithTax);
     }
 
+    /**
+     * Format prices
+     *
+     * @param array $prices
+     * @return array
+     */
     public function _formatPrices($prices)
     {
-        $store = $this->_sessionQuote->getStore();
         foreach ($prices as $key => $price) {
             $prices[$key] = $this->priceCurrency->format($price, false);
         }
         return $prices;
     }
 
+    /**
+     * Get Form Config Data
+     *
+     * @return \Magento\Framework\DataObject
+     */
     public function getFormConfigData()
     {
         $request = $this->_request;
-        $action = $request->getFullActionName();//$request->getRouteName() . '_' . $request->getControllerName() . '_' . $request->getActionName();
-        if (($action == 'checkout_cart_configure' || $action == 'sales_order_create_configureQuoteItems') && $request->getParam('id')) {
-            $options = $this->_objectManager->create('Magento\Quote\Model\Quote\Item\Option')
+        $action = $request->getFullActionName();
+        if (($action == 'checkout_cart_configure' || $action == 'sales_order_create_configureQuoteItems')
+            && $request->getParam('id')
+        ) {
+            $options = $this->_objectManager->create(\Magento\Quote\Model\Quote\Item\Option::class)
                 ->getCollection()
                 ->addItemFilter($request->getParam('id'));
-            $formData = array();
+            $formData = [];
             foreach ($options as $option) {
                 $formData[$option->getCode()] = $option->getValue();
             }
@@ -193,27 +235,44 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
         return new \Magento\Framework\DataObject();
     }
 
+    /**
+     * Get Price Format Js
+     *
+     * @return string
+     */
     public function getPriceFormatJs()
     {
         $priceFormat = $this->_localeFormat->getPriceFormat();
         return $this->jsonEncoder->encode($priceFormat);
     }
 
+    /**
+     * Get Tax Helper
+     *
+     * @return \Magento\Tax\Helper\Data
+     */
     public function getTaxHelper()
     {
         return $this->_taxData;
     }
 
+    /**
+     * Get Catalog Helper
+     *
+     * @return \Magento\Catalog\Helper\Data
+     */
     public function getCatalogHelper()
     {
         return $this->_catalogHelper;
     }
 
+    /**
+     * Get Object Manager
+     *
+     * @return \Magento\Framework\ObjectManagerInterface
+     */
     public function getObjectManager()
     {
         return $this->_objectManager;
     }
-
-
-
 }

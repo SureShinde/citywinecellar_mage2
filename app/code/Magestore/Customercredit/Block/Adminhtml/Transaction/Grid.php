@@ -22,6 +22,11 @@
 
 namespace Magestore\Customercredit\Block\Adminhtml\Transaction;
 
+/**
+ * Class Grid
+ *
+ * Transaction grid block
+ */
 class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
 {
     /**
@@ -38,11 +43,12 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
     protected $_transactionTypeFactory;
 
     /**
+     * Grid constructor.
+     *
      * @param \Magento\Backend\Block\Template\Context $context
      * @param \Magento\Backend\Helper\Data $backendHelper
-     * @param \Magestore\Customercredit\Model\TransactionFactory $transactionFactory,
-     * @param \Magestore\Customercredit\Model\TransactionTypeFactory $transactionTypeFactory,
-     * @param \Magento\Framework\App\ResourceConnection $resource,
+     * @param \Magestore\Customercredit\Model\TransactionFactory $transactionFactory
+     * @param \Magestore\Customercredit\Model\TransactionTypeFactory $transactionTypeFactory
      * @param array $data
      *
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
@@ -53,14 +59,16 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
         \Magestore\Customercredit\Model\TransactionFactory $transactionFactory,
         \Magestore\Customercredit\Model\TransactionTypeFactory $transactionTypeFactory,
         array $data = []
-    )
-    {
+    ) {
         $this->_storeManager = $context->getStoreManager();
         $this->_transactionFactory = $transactionFactory;
         $this->_transactionTypeFactory = $transactionTypeFactory;
         parent::__construct($context, $backendHelper, $data);
     }
 
+    /**
+     * @inheritDoc
+     */
     public function _construct()
     {
         parent::_construct();
@@ -71,29 +79,44 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
         $this->setUseAjax(true);
     }
 
-
+    /**
+     * @inheritDoc
+     */
     protected function _prepareCollection()
     {
         $collection = $this->_transactionFactory->create()->getCollection();
-        $collection->getSelect()->joinLeft(array(
-            'table_type_transaction' => $collection->getTable('type_transaction')),
+        $collection->getSelect()->joinLeft(
+            ['table_type_transaction' => $collection->getTable('type_transaction')],
             'table_type_transaction.type_transaction_id = main_table.type_transaction_id',
-            array('type_transaction' => 'table_type_transaction.transaction_name')
+            ['type_transaction' => 'table_type_transaction.transaction_name']
         );
          $collection->getSelect()
-             ->joinLeft(array(
-                 'table_customer' => $collection->getTable('customer_entity')),
+             ->joinLeft(
+                 ['table_customer' => $collection->getTable('customer_entity')],
                  'table_customer.entity_id = main_table.customer_id',
-                 array(
+                 [
                      'customer_email' => 'table_customer.email',
                      'firstname' => 'table_customer.firstname',
                      'lastname' => 'table_customer.lastname'
+                 ]
+             )->columns(
+                 new \Zend_Db_Expr(
+                     "CONCAT(`table_customer`.`firstname`, ' ',`table_customer`.`lastname`) AS customer_name"
                  )
-             )->columns(new \Zend_Db_Expr("CONCAT(`table_customer`.`firstname`, ' ',`table_customer`.`lastname`) AS customer_name"));
+             );
         $this->setCollection($collection);
         return parent::_prepareCollection();
     }
 
+    /**
+     * Customer Email Filter
+     *
+     * @param \Magento\Framework\Data\Collection $collection
+     * @param \Magento\Backend\Block\Widget\Grid\Column $column
+     * @return $this
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function _customerEmailFilter($collection, $column)
     {
         if (!$value = $column->getFilter()->getValue()) {
@@ -101,11 +124,20 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
         }
 
         $this->getCollection()->getSelect()->where(
-            "`table_customer`.`email` LIKE ?"
-            , "%$value%");
+            "`table_customer`.`email` LIKE ?",
+            "%$value%"
+        );
         return $this;
     }
 
+    /**
+     * Customer Name Filter
+     *
+     * @param \Magento\Framework\Data\Collection $collection
+     * @param \Magento\Backend\Block\Widget\Grid\Column $column
+     * @return $this
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function _customerNameFilter($collection, $column)
     {
         if (!$value = $column->getFilter()->getValue()) {
@@ -113,22 +145,30 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
         }
 
         $this->getCollection()->getSelect()->where(
-            "CONCAT(`table_customer`.`firstname`, ' ',`table_customer`.`lastname`) LIKE ?"
-            , "%$value%");
+            "CONCAT(`table_customer`.`firstname`, ' ',`table_customer`.`lastname`) LIKE ?",
+            "%$value%"
+        );
         return $this;
     }
 
+    /**
+     * @inheritDoc
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
     protected function _prepareColumns()
     {
-        $this->addColumn('transaction_id', array(
-            'header' => __('Transaction_Id'),
-            'align' => 'left',
-            'width' => '10px',
-            'type' => 'number',
-            'index' => 'transaction_id',
-        ));
+        $this->addColumn(
+            'transaction_id',
+            [
+                'header' => __('Transaction_Id'),
+                'align' => 'left',
+                'width' => '10px',
+                'type' => 'number',
+                'index' => 'transaction_id',
+            ]
+        );
 
-        $typeArr = array();
+        $typeArr = [];
         $collTrans = $this->_transactionTypeFactory->create()->getCollection();
         $count = 0;
         foreach ($collTrans as $item) {
@@ -136,65 +176,93 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
             $typeArr[$count] = $item->getTransactionName();
         }
 
-        $this->addColumn('type_transaction_id', array(
-            'header' => __('Transaction Type'),
-            'align' => 'left',
-            'filter_index' => 'table_type_transaction.type_transaction_id',
-            'index' => 'type_transaction_id',
-            'type' => 'options',
-            'options' => $typeArr,
-        ));
+        $this->addColumn(
+            'type_transaction_id',
+            [
+                'header' => __('Transaction Type'),
+                'align' => 'left',
+                'filter_index' => 'table_type_transaction.type_transaction_id',
+                'index' => 'type_transaction_id',
+                'type' => 'options',
+                'options' => $typeArr,
+            ]
+        );
 
-        $this->addColumn('detail_transaction', array(
-            'header' => __('Transaction Detail'),
-            'align' => 'left',
-            'index' => 'detail_transaction',
-        ));
+        $this->addColumn(
+            'detail_transaction',
+            [
+                'header' => __('Transaction Detail'),
+                'align' => 'left',
+                'index' => 'detail_transaction',
+            ]
+        );
 
-         $this->addColumn('customer_name', array(
-             'header' => __('Name'),
-             'index' => 'customer_name',
-             'filter_condition_callback' => array($this, '_customerNameFilter'),
-         ));
-        $this->addColumn('customer_email', array(
-            'header' => __('Email'),
-            'width' => '150px',
-            'index' => 'customer_email',
-            'renderer' => 'Magestore\Customercredit\Block\Adminhtml\Customer\Renderer\Customeremail',
-            'filter_condition_callback' => array($this, '_customerEmailFilter'),
-        ));
+         $this->addColumn(
+             'customer_name',
+             [
+                 'header' => __('Name'),
+                 'index' => 'customer_name',
+                 'filter_condition_callback' => [$this, '_customerNameFilter'],
+             ]
+         );
+        $this->addColumn(
+            'customer_email',
+            [
+                'header' => __('Email'),
+                'width' => '150px',
+                'index' => 'customer_email',
+                'renderer' => \Magestore\Customercredit\Block\Adminhtml\Customer\Renderer\Customeremail::class,
+                'filter_condition_callback' => [$this, '_customerEmailFilter'],
+            ]
+        );
         $currency = $this->_storeManager->getStore()->getBaseCurrencyCode();
-        $this->addColumn('amount_credit', array(
-            'header' => __('Added/Deducted'),
-            'align' => 'left',
-            'index' => 'amount_credit',
-            'currency_code' => $currency,
-            'type' => 'price',
-        ));
-        $this->addColumn('end_balance', array(
-            'header' => __('Credit Balance'),
-            'align' => 'left',
-            'index' => 'end_balance',
-            'currency_code' => $currency,
-            'type' => 'price',
-        ));
-        $this->addColumn('transaction_time', array(
-            'header' => __('Transaction Time'),
-            'align' => 'left',
-            'index' => 'transaction_time',
-            'type' => 'datetime',
-        ));
-        $this->addColumn('status', array(
-            'header' => __('Status'),
-            'align' => 'left',
-            'width' => '80px',
-            'index' => 'status',
-            'filter' => false,
-        ));
+        $this->addColumn(
+            'amount_credit',
+            [
+                'header' => __('Added/Deducted'),
+                'align' => 'left',
+                'index' => 'amount_credit',
+                'currency_code' => $currency,
+                'type' => 'price',
+            ]
+        );
+        $this->addColumn(
+            'end_balance',
+            [
+                'header' => __('Credit Balance'),
+                'align' => 'left',
+                'index' => 'end_balance',
+                'currency_code' => $currency,
+                'type' => 'price',
+            ]
+        );
+        $this->addColumn(
+            'transaction_time',
+            [
+                'header' => __('Transaction Time'),
+                'align' => 'left',
+                'index' => 'transaction_time',
+                'type' => 'datetime',
+            ]
+        );
+        $this->addColumn(
+            'status',
+            [
+                'header' => __('Status'),
+                'align' => 'left',
+                'width' => '80px',
+                'index' => 'status',
+                'filter' => false,
+            ]
+        );
+        return $this;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getGridUrl()
     {
-        return $this->getUrl('*/*/index', array('_current' => true));
+        return $this->getUrl('*/*/index', ['_current' => true]);
     }
 }

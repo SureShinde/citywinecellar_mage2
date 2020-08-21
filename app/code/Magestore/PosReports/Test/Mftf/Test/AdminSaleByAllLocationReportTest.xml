@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AdminSaleByAllLocationReportTest">
+        <annotations>
+            <features value="Pos Report"/>
+            <stories value="Pos Report - Sales By All Location"/>
+            <title value="Pos Report - Sales By All Location"/>
+            <description value="Pos Report - Sales By All Location"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="POSREPORT-02"/>
+            <group value="posreports"/>
+            <group value="pwapos"/>
+        </annotations>
+        <before>
+            <magentoCLI command="webpos:report:generatesample" stepKey="generateSample"/>
+            <actionGroup ref="PosAdminLoginActionGroup" stepKey="loginAsAdmin"/>
+        </before>
+        <amOnPage url="{{AllLocationReportPage.url}}" stepKey="navigateToPosReport"/>
+        <waitForPageLoad time="60" stepKey="waitForPosReportPageToLoad"/>
+
+        <actionGroup ref="SelectTimeRangeReportActionGroup" stepKey="selectTimeRange">
+            <argument name="report" value="default_report" />
+        </actionGroup>
+
+        <actionGroup ref="ShowReportActionGroup" stepKey="showReport"/>
+
+        <see selector="{{PosOrderReportResultSection.firstRow}}" userInput="{{default_report.sale_by_all_location_row_1_location_name}}" stepKey="seeAssertLocationName1"/>
+        <see selector="{{PosOrderReportResultSection.firstRow}}" userInput="{{default_report.sale_by_all_location_row_1_order}}" stepKey="seeAssertOrders1"/>
+        <see selector="{{PosOrderReportResultSection.firstRow}}" userInput="{{default_report.sale_by_all_location_row_1_tax}}" stepKey="seeTax1"/>
+        <see selector="{{PosOrderReportResultSection.firstRow}}" userInput="{{default_report.sale_by_all_location_row_1_discount}}" stepKey="seeDiscount1"/>
+        <see selector="{{PosOrderReportResultSection.firstRow}}" userInput="{{default_report.sale_by_all_location_row_1_refund}}" stepKey="seeRefund1"/>
+        <see selector="{{PosOrderReportResultSection.firstRow}}" userInput="{{default_report.sale_by_all_location_row_1_revenue}}" stepKey="seeRevenue1"/>
+        <see selector="{{PosOrderReportResultSection.firstRow}}" userInput="{{default_report.sale_by_all_location_row_1_average_order}}" stepKey="seeAverageValue1"/>
+        <see selector="{{PosOrderReportResultSection.firstRow}}" userInput="{{default_report.sale_by_all_location_row_1_cogs}}" stepKey="seeCogs1"/>
+        <see selector="{{PosOrderReportResultSection.firstRow}}" userInput="{{default_report.sale_by_all_location_row_1_profit}}" stepKey="seeProfit1"/>
+        <see selector="{{PosOrderReportResultSection.firstRow}}" userInput="{{default_report.sale_by_all_location_row_1_profit_margin}}" stepKey="seeProfitMargin1"/>
+
+        <see selector="{{PosOrderReportResultSection.secondRow}}" userInput="{{default_report.sale_by_all_location_row_2_location_name}}" stepKey="seeAssertLocationName2"/>
+        <see selector="{{PosOrderReportResultSection.secondRow}}" userInput="{{default_report.sale_by_all_location_row_2_order}}" stepKey="seeAssertOrders2"/>
+        <see selector="{{PosOrderReportResultSection.secondRow}}" userInput="{{default_report.sale_by_all_location_row_2_tax}}" stepKey="seeTax2"/>
+        <see selector="{{PosOrderReportResultSection.secondRow}}" userInput="{{default_report.sale_by_all_location_row_2_discount}}" stepKey="seeDiscount2"/>
+        <see selector="{{PosOrderReportResultSection.secondRow}}" userInput="{{default_report.sale_by_all_location_row_2_refund}}" stepKey="seeRefund2"/>
+        <see selector="{{PosOrderReportResultSection.secondRow}}" userInput="{{default_report.sale_by_all_location_row_2_revenue}}" stepKey="seeRevenue2"/>
+        <see selector="{{PosOrderReportResultSection.secondRow}}" userInput="{{default_report.sale_by_all_location_row_2_average_order}}" stepKey="seeAverageValue2"/>
+        <see selector="{{PosOrderReportResultSection.secondRow}}" userInput="{{default_report.sale_by_all_location_row_2_cogs}}" stepKey="seeCogs2"/>
+        <see selector="{{PosOrderReportResultSection.secondRow}}" userInput="{{default_report.sale_by_all_location_row_2_profit}}" stepKey="seeProfit2"/>
+        <see selector="{{PosOrderReportResultSection.secondRow}}" userInput="{{default_report.sale_by_all_location_row_2_profit_margin}}" stepKey="seeProfitMargin2"/>
+
+        <see selector="{{PosOrderReportResultSection.totalRow}}" userInput="{{default_report.sale_by_all_location_total_location_name}}" stepKey="seeAssertLocationNameTotal"/>
+        <see selector="{{PosOrderReportResultSection.totalRow}}" userInput="{{default_report.sale_by_all_location_total_order}}" stepKey="seeAssertOrdersTotal"/>
+        <see selector="{{PosOrderReportResultSection.totalRow}}" userInput="{{default_report.sale_by_all_location_total_tax}}" stepKey="seeTaxTotal"/>
+        <see selector="{{PosOrderReportResultSection.totalRow}}" userInput="{{default_report.sale_by_all_location_total_discount}}" stepKey="seeDiscountTotal"/>
+        <see selector="{{PosOrderReportResultSection.totalRow}}" userInput="{{default_report.sale_by_all_location_total_refund}}" stepKey="seeRefundTotal"/>
+        <see selector="{{PosOrderReportResultSection.totalRow}}" userInput="{{default_report.sale_by_all_location_total_revenue}}" stepKey="seeRevenueTotal"/>
+        <see selector="{{PosOrderReportResultSection.totalRow}}" userInput="{{default_report.sale_by_all_location_total_average_order}}" stepKey="seeAverageValueTotal"/>
+        <see selector="{{PosOrderReportResultSection.totalRow}}" userInput="{{default_report.sale_by_all_location_total_cogs}}" stepKey="seeCogsTotal"/>
+        <see selector="{{PosOrderReportResultSection.totalRow}}" userInput="{{default_report.sale_by_all_location_total_profit}}" stepKey="seeProfitTotal"/>
+        <see selector="{{PosOrderReportResultSection.totalRow}}" userInput="{{default_report.sale_by_all_location_total_profit_margin}}" stepKey="seeProfitMarginTotal"/>
+    </test>
+</tests>

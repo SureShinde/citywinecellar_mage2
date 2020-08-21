@@ -1,12 +1,15 @@
-<link href="http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,300,600,700,800"
-      rel="stylesheet" type="text/css"/>
 <?php
 /**
  *  Copyright © 2016 Magestore. All rights reserved.
  *  See COPYING.txt for license details.
  *
  */
-/* @var $block \Magestore\ReportSuccess\Block\Adminhtml\Dashboard */ ?>
+// @codingStandardsIgnoreFile
+
+/* @var $block \Magestore\ReportSuccess\Block\Adminhtml\Dashboard */
+?>
+<link href="http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,300,600,700,800"
+      rel="stylesheet" type="text/css"/>
 <?php if ($block->isEnableModule('Magestore_StockManagementSuccess')): ?>
     <div id="messages">
         <div class="messages">
@@ -20,55 +23,8 @@
         </div>
     </div>
 <?php endif; ?>
-<?php $inventoryReports = $block->getInventoryReportList() ?>
 <div class="admin-report-webpos">
     <div class="wrap-report">
-        <?php if ($block->isAllowed('Magestore_ReportSuccess::inventory')): ?>
-            <div class="panel panel-default">
-                <div class="panel-heading"><?php echo __('Inventory Reports') ?></div>
-                <div class="panel-body">
-                    <div class="row">
-                        <?php foreach ($inventoryReports as $reportId => $report): ?>
-                            <?php $reportLink = $block->getReportLink($reportId) ?>
-                            <div class="col-sm-3">
-                                <div class="item-staff">
-                                    <a class="actions" href="<?php echo $reportLink ?>">
-                                        <span class="<?php echo 'icon-icon-Back-end-omc-report-' . $reportId ?>"></span>
-                                        <div class="details">
-                                            <label><?php echo $report['title'] ?></label>
-                                            <p><?php echo $report['description'] ?></p>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                        <?php endforeach ?>
-                    </div>
-                </div>
-            </div>
-        <?php endif; ?>
-        <?php if (0 && $block->isAllowed('Magestore_ReportSuccess::sales')): ?>
-            <div class="panel panel-default">
-                <div class="panel-heading"><?php echo __('Sales Reports') ?></div>
-                <div class="panel-body">
-                    <div class="row">
-                        <?php foreach ($salesReports as $reportId => $report): ?>
-                            <?php $reportLink = $block->getReportLink($reportId, 'sales') ?>
-                            <div class="col-sm-3">
-                                <div class="item-staff">
-                                    <div class="actions">
-                                        <a href="<?php echo $reportLink ?>"><span
-                                                    class="<?php echo 'icon-icon-Back-end-omc-report-' . $reportId ?>"></span></a>
-                                        <div class="details">
-                                            <a href="<?php echo $reportLink ?>"><label><?php echo $report['title'] ?></label></a>
-                                            <p><?php echo $report['description'] ?></p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        <?php endforeach ?>
-                    </div>
-                </div>
-            </div>
-        <?php endif; ?>
+        <?= $block->getChildHtml(); ?>
     </div>
 </div>

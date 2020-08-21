@@ -11,9 +11,8 @@ use Magento\Framework\Pricing\PriceCurrencyInterface;
 /**
  * Adminhtml Giftvoucher Product View Block
  *
- * @category    Magestore
- * @package     Magestore_Giftvoucher
  * @author      Magestore Developer
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class View extends \Magento\Catalog\Block\Product\View\AbstractView
 {
@@ -55,19 +54,19 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
      * @var \Magento\Catalog\Helper\Data
      */
     protected $_catalogHelper;
-    
+
     /**
      * @var PriceCurrencyInterface
      */
     protected $priceCurrency;
-    
+
     /**
      * Giftvoucher data
      *
      * @var \Magestore\Giftvoucher\Helper\Data
      */
     protected $_giftvoucherData = null;
-    
+
     /**
      * @var \Magento\Framework\ObjectManagerInterface
      */
@@ -89,6 +88,7 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
 
     /**
      * View constructor.
+     *
      * @param \Magento\Catalog\Block\Product\Context $context
      * @param \Magento\Framework\Stdlib\ArrayUtils $arrayUtils
      * @param \Magento\Catalog\Helper\Product $catalogProduct
@@ -98,10 +98,11 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
      * @param \Magestore\Giftvoucher\Model\Product\PriceFactory $productPrice
      * @param \Magento\Framework\Json\EncoderInterface $jsonEncoder
      * @param PriceCurrencyInterface $priceCurrency
-     * @param \Magento\Framework\Locale\FormatInterface $localeFormat
      * @param \Magento\Framework\DataObject $dataObject
      * @param \Magento\Config\Model\Config\Source\Locale\Timezone $timezone
      * @param array $data
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         \Magento\Catalog\Block\Product\Context $context,
@@ -113,7 +114,6 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
         \Magestore\Giftvoucher\Model\Product\PriceFactory $productPrice,
         \Magento\Framework\Json\EncoderInterface $jsonEncoder,
         PriceCurrencyInterface $priceCurrency,
-        \Magento\Framework\Locale\FormatInterface $localeFormat,
         \Magento\Framework\DataObject $dataObject,
         \Magento\Config\Model\Config\Source\Locale\Timezone $timezone,
         array $data = []
@@ -136,6 +136,8 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
     }
 
     /**
+     * Get Locale Format
+     *
      * @return \Magento\Framework\Locale\FormatInterface
      */
     public function getLocaleFormat()
@@ -144,29 +146,44 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
     }
 
     /**
+     * Get Tax Rate
+     *
      * @return float|int
      */
     public function getTaxRate()
     {
         $product = $this->getProduct();
-        $includeTax = ($this->getTaxHelper()->getPriceDisplayType() != \Magento\Tax\Model\Config::DISPLAY_TYPE_EXCLUDING_TAX);
+        $includeTax = (
+            $this->getTaxHelper()->getPriceDisplayType() != \Magento\Tax\Model\Config::DISPLAY_TYPE_EXCLUDING_TAX
+        );
         $rateTax = $this->getCatalogHelper()->getTaxPrice($product, 100, $includeTax) / 100;
         return $rateTax;
     }
 
     /**
+     * Get Recipient Ship Desc
+     *
      * @return \Magento\Framework\Phrase
      */
     public function getRecipientShipDesc()
     {
         if ($this->getGiftvoucherHelper()->getInterfaceConfig('postoffice_date')) {
-            return __("You need to fill in your friend's address as the shipping address on checkout page. We will send this Gift Card to that address after at least %1 day(s).", $block->getGiftvoucherHelper()->getInterfaceConfig('postoffice_date'));
+            return __(
+                "You need to fill in your friend's address as the shipping address on checkout page. "
+                . "We will send this Gift Card to that address after at least %1 day(s).",
+                $this->getGiftvoucherHelper()->getInterfaceConfig('postoffice_date')
+            );
         } else {
-            return __("You need to fill in your friend's address as the shipping address on checkout page. We will send this Gift Card to that address.");
+            return __(
+                "You need to fill in your friend's address as the shipping address on checkout page. "
+                . "We will send this Gift Card to that address."
+            );
         }
     }
 
     /**
+     * Get Time Zones
+     *
      * @return array
      */
     public function getTimeZones()
@@ -174,7 +191,7 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
         return $this->timezone->toOptionArray();
     }
 
-        /**
+    /**
      * Get the price information of Gift Card product
      *
      * @param \Magestore\Giftvoucher\Model\Product $product
@@ -206,13 +223,13 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
         }
         return $giftValue;
     }
-    
+
     /**
-     * Convert Gift Card base price
+     * Convert Gift Card base prices
      *
      * @param \Magestore\Giftvoucher\Model\Product $product
-     * @param float $basePrices
-     * @return float
+     * @param array $basePrices
+     * @return array
      */
     protected function _convertPrices($product, $basePrices)
     {
@@ -221,7 +238,7 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
         }
         return $basePrices;
     }
-    
+
     /**
      * Get Gift Card product price with all tax settings processing
      *
@@ -236,7 +253,7 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
         $priceWithTax = $this->_catalogHelper->getTaxPrice($product, $price, $includeTax);
         return $this->priceCurrency->convert($priceWithTax);
     }
-    
+
     /**
      * Formatted Gift Card price
      *
@@ -252,6 +269,8 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
     }
 
     /**
+     * Message Max Len
+     *
      * @return int
      */
     public function messageMaxLen()
@@ -260,6 +279,8 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
     }
 
     /**
+     * Enable Physical Mail
+     *
      * @return bool
      */
     public function enablePhysicalMail()
@@ -268,15 +289,17 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
     }
 
     /**
-     * @return $this
+     * Get Form Config Data
+     *
+     * @return \Magento\Framework\DataObject
      */
     public function getFormConfigData()
     {
         $request = $this->_request;
         $action = $request->getFullActionName();
-        $formData = array();
+        $formData = [];
         if ($action == 'checkout_cart_configure' && $request->getParam('id')) {
-            $options = $this->_objectManager->create('Magento\Quote\Model\Quote\Item\Option')
+            $options = $this->_objectManager->create(\Magento\Quote\Model\Quote\Item\Option::class)
                 ->getCollection()
                 ->addItemFilter($request->getParam('id'));
 
@@ -289,6 +312,8 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
     }
 
     /**
+     * Enable Schedule Send
+     *
      * @return bool
      */
     public function enableScheduleSend()
@@ -297,6 +322,8 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
     }
 
     /**
+     * Get Gift Amount Description
+     *
      * @return mixed
      */
     public function getGiftAmountDescription()
@@ -319,16 +346,20 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
     }
 
     /**
+     * Get Available Template
+     *
      * @return mixed
      */
     public function getAvailableTemplate()
     {
-        $templates = $this->_objectManager->create('Magestore\Giftvoucher\Model\GiftTemplate')->getCollection()
+        $templates = $this->_objectManager->create(\Magestore\Giftvoucher\Model\GiftTemplate::class)->getCollection()
                 ->addFieldToFilter('status', '1');
         return $templates;
     }
 
     /**
+     * Get Available Template Admin
+     *
      * @return mixed
      */
     public function getAvailableTemplateAdmin()
@@ -338,17 +369,19 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
         if ($productTemplate) {
             $productTemplate = explode(',', $productTemplate);
         } else {
-            $productTemplate = array();
+            $productTemplate = [];
         }
 
-        $templates = $this->_objectManager->create('Magestore\Giftvoucher\Model\GiftTemplate')->getCollection()
+        $templates = $this->_objectManager->create(\Magestore\Giftvoucher\Model\GiftTemplate::class)->getCollection()
                 ->addFieldToFilter('status', '1')
-                ->addFieldToFilter('giftcard_template_id', array('in' => $productTemplate));
+                ->addFieldToFilter('giftcard_template_id', ['in' => $productTemplate]);
 
         return $templates->getData();
     }
 
     /**
+     * Get Price Format Js
+     *
      * @return string
      */
     public function getPriceFormatJs()
@@ -356,11 +389,12 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
         $priceFormat = $this->_localeFormat->getPriceFormat();
         return $this->jsonEncoder->encode($priceFormat);
     }
-    
+
     /**
      * Retrieve product
      *
-     * @return \Magento\Catalog\Model\Product
+     * @return Product|mixed
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getProduct()
     {
@@ -368,7 +402,7 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
             $this->setData('product', $this->_coreRegistry->registry('current_product'));
         }
         $product = $this->getData('product');
-        if (is_null($product->getTypeInstance(true)->getStoreFilter($product))) {
+        if ($product->getTypeInstance(true)->getStoreFilter($product) === null) {
             $product->getTypeInstance(true)
                 ->setStoreFilter($this->_storeManager->getStore($product->getStoreId()), $product);
         }
@@ -381,6 +415,7 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
      *
      * @param mixed $val
      * @return string
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getOptionProduct($val)
     {
@@ -397,6 +432,8 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
     }
 
     /**
+     * Get Allow Attributes
+     *
      * @return array
      */
     public function getAllowAttributes()
@@ -405,6 +442,8 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
     }
 
     /**
+     * Get Giftvoucher Helper
+     *
      * @return \Magestore\Giftvoucher\Helper\Data
      */
     public function getGiftvoucherHelper()
@@ -413,6 +452,8 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
     }
 
     /**
+     * Get Request Interface
+     *
      * @return \Magento\Framework\App\RequestInterface
      */
     public function getRequestInterface()
@@ -421,6 +462,8 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
     }
 
     /**
+     * Get Store Manager
+     *
      * @return \Magento\Store\Model\StoreManagerInterface
      */
     public function getStoreManager()
@@ -429,6 +472,8 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
     }
 
     /**
+     * Get Json Encode
+     *
      * @return \Magento\Framework\Json\EncoderInterface
      */
     public function getJsonEncode()
@@ -437,6 +482,8 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
     }
 
     /**
+     * Get Tax Helper
+     *
      * @return \Magento\Tax\Helper\Data
      */
     public function getTaxHelper()
@@ -445,6 +492,8 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
     }
 
     /**
+     * Get Catalog Helper
+     *
      * @return \Magento\Catalog\Helper\Data
      */
     public function getCatalogHelper()
@@ -453,6 +502,8 @@ class View extends \Magento\Catalog\Block\Product\View\AbstractView
     }
 
     /**
+     * Get Object Manager
+     *
      * @return \Magento\Framework\ObjectManagerInterface
      */
     public function getObjectManager()

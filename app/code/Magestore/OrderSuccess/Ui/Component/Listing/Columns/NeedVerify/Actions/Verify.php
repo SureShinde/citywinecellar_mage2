@@ -13,24 +13,28 @@ use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use Magento\Framework\View\Element\UiComponentFactory;
 use Magento\Ui\Component\Listing\Columns\Column;
 
+/**
+ * Actiry Verify
+ */
 class Verify extends Column
 {
     /**
      * @var UrlInterface
      */
     protected $urlBuilder;
-    
+
     /**
      * @var PermissionManagementInterface
      */
     protected $permissionManagement;
 
     /**
-     * Constructor
+     * Verify constructor.
      *
      * @param ContextInterface $context
      * @param UiComponentFactory $uiComponentFactory
      * @param UrlInterface $urlBuilder
+     * @param PermissionManagementInterface $permissionManagement
      * @param array $components
      * @param array $data
      */
@@ -46,7 +50,7 @@ class Verify extends Column
         $this->permissionManagement = $permissionManagement;
         parent::__construct($context, $uiComponentFactory, $components, $data);
     }
-    
+
     /**
      * Get component configuration
      *
@@ -55,11 +59,11 @@ class Verify extends Column
     public function getConfiguration()
     {
         $config = (array)$this->getData('config');
-        if(!$this->permissionManagement->checkPermission(PermissionManagementInterface::VERIFY_ORDER)) {
+        if (!$this->permissionManagement->checkPermission(PermissionManagementInterface::VERIFY_ORDER)) {
             $config['visible'] = false;
         }
         return $config;
-    }    
+    }
 
     /**
      * Prepare Data Source
@@ -72,11 +76,13 @@ class Verify extends Column
         if (isset($dataSource['data']['items'])) {
             $fieldName = $this->getData('name');
             foreach ($dataSource['data']['items'] as & $item) {
-                $item[$fieldName . '_html'] = "<button class='button'><span>".__('Process Verify')."</span></button>";
+                $item[$fieldName . '_html'] = "<button class='button'><span>"
+                    . __('Process Verify')
+                    . "</span></button>";
                 $item[$fieldName . '_title'] = __('Process verifying Sales');
                 $item[$fieldName . '_entity_id'] = $item['entity_id'];
 
-                $url = $this->urlBuilder->getUrl('ordersuccess/needVerify/orderDetail', $params = array());
+                $url = $this->urlBuilder->getUrl('ordersuccess/needVerify/orderDetail', []);
                 $item[$fieldName . '_url'] = $url;
             }
         }

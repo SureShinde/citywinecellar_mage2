@@ -1,0 +1,8 @@
+.icon-icon-Back-end-omc-report-locationOverview:before{background: url(../svg/all-locations.svg);}
+.icon-icon-Back-end-omc-report-locationBreakdown:before{background: url(../svg/location.svg);}
+.icon-icon-Back-end-omc-report-salesByStaff:before{background: url(../svg/staff.svg);}
+.icon-icon-Back-end-omc-report-salesByPaymentMethod:before{background: url(../svg/payment.svg);}
+
+.admin-report-webpos .panel-default > .panel-body .item-staff label{
+    width: 100%;
+}

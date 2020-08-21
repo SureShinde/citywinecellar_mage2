@@ -3,18 +3,34 @@
 namespace Magestore\Webpos\Model\Integration;
 
 use Magento\Framework\Exception\LocalizedException;
+use Magestore\Webpos\Api\Integration\GiftcardManagementInterface;
+use Magestore\Webpos\Model\Checkout\CouponManagement;
 
-class GiftcardManagement extends \Magestore\Webpos\Model\Checkout\CouponManagement
-    implements \Magestore\Webpos\Api\Integration\GiftcardManagementInterface
+/**
+ * Model GiftcardManagement
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
+class GiftcardManagement extends CouponManagement implements GiftcardManagementInterface
 {
     /**
+     * Apply
+     *
      * @param \Magestore\Webpos\Api\Data\Checkout\QuoteInterface $quote
      * @param string $giftcode
-     * @param string[] $existed_codes
+     * @param array $existed_codes
      * @return \Magestore\Webpos\Api\Data\Integration\Giftcard\GiftcardResponseInterface
+     * @throws LocalizedException
+     * @throws \Magento\Framework\Exception\CouldNotSaveException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    public function apply(\Magestore\Webpos\Api\Data\Checkout\QuoteInterface $quote, $giftcode = null, $existed_codes = [])
-    {
+    public function apply(
+        \Magestore\Webpos\Api\Data\Checkout\QuoteInterface $quote,
+        $giftcode = null,
+        $existed_codes = []
+    ) {
         $newQuote = $this->createQuote($quote);
         $newQuote->save();
         $newQuote->collectTotals();
@@ -32,7 +48,9 @@ class GiftcardManagement extends \Magestore\Webpos\Model\Checkout\CouponManageme
         }
 
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $calculatorService = $objectManager->create('Magestore\Giftvoucher\Service\Redeem\CalculationService');
+        $calculatorService = $objectManager->create(
+            \Magestore\Giftvoucher\Service\Redeem\CalculationService::class
+        );
 
         $appliedCodes = [];
 
@@ -44,14 +62,15 @@ class GiftcardManagement extends \Magestore\Webpos\Model\Checkout\CouponManageme
                 continue;
             }
             $giftCodeManagementService = $objectManager
-                ->create('Magestore\Giftvoucher\Api\GiftCode\GiftCodeManagementServiceInterface');
+                ->create(\Magestore\Giftvoucher\Api\GiftCode\GiftCodeManagementServiceInterface::class);
             $usableGiftCodes = $giftCodeManagementService->getUsableGiftCodeCollection($giftcodes);
             foreach ($usableGiftCodes as $code) {
-                if ($calculatorService->validateGiftCode($code, $newQuote, $address) &&
-                    $calculatorService->validateCustomer($code, $newQuote->getCustomerId())
-                ) {
+                if ($calculatorService->validateGiftCode($code, $newQuote, $address)
+                    && $calculatorService->validateCustomer($code, $newQuote->getCustomerId())) {
                     /** @var \Magestore\Webpos\Api\Data\Integration\Giftcard\GiftcardInterface $appliedCode */
-                    $appliedCode = $objectManager->create('Magestore\Webpos\Api\Data\Integration\Giftcard\GiftcardInterface');
+                    $appliedCode = $objectManager->create(
+                        \Magestore\Webpos\Api\Data\Integration\Giftcard\GiftcardInterface::class
+                    );
                     $appliedCode->setCode($code->getGiftCode());
                     $appliedCode->setBalance($code->getBalance());
                     $appliedCode->setCurrency($code->getCurrency());
@@ -61,10 +80,9 @@ class GiftcardManagement extends \Magestore\Webpos\Model\Checkout\CouponManageme
                         if ($item->getParentItemId()) {
                             continue;
                         }
-                        if ($item->isDeleted() ||
-                            $item->getProduct()->getTypeId() == 'giftvoucher' ||
-                            !$code->getActions()->validate($item)
-                        ) {
+                        if ($item->isDeleted()
+                            || $item->getProduct()->getTypeId() == 'giftvoucher'
+                            || !$code->getActions()->validate($item)) {
                             continue;
                         }
                         $validItemIds[] = $item->getTmpItemId();
@@ -76,11 +94,12 @@ class GiftcardManagement extends \Magestore\Webpos\Model\Checkout\CouponManageme
         }
 
         if (!$error && $giftcode) {
-            $giftVoucher = $objectManager->create('Magestore\Giftvoucher\Model\Giftvoucher')->loadByCode($giftcode);
+            $giftVoucher = $objectManager->create(\Magestore\Giftvoucher\Model\Giftvoucher::class)
+                ->loadByCode($giftcode);
             if ($giftVoucher->getId()) {
                 if (!$this->validateCustomer($giftVoucher, $newQuote)) {
                     $error = __('Gift code "%1" limits the number of users', $giftcode);
-                } else if ($giftVoucher->getStatus() == 2 && $giftVoucher->isValidWebsite($newQuote->getStoreId())) {
+                } elseif ($giftVoucher->getStatus() == 2 && $giftVoucher->isValidWebsite($newQuote->getStoreId())) {
                     $error = __('You can’t use this gift code "%1" since its conditions haven’t been met.', $giftcode);
                 } else {
                     $error = __('Gift Card "%1" is no longer available to use', $giftcode);
@@ -106,17 +125,23 @@ class GiftcardManagement extends \Magestore\Webpos\Model\Checkout\CouponManageme
         $this->deleteQuote($newQuote);
 
         /** @var \Magestore\Webpos\Api\Data\Integration\Giftcard\GiftcardResponseInterface $response */
-        $response = $objectManager->create('Magestore\Webpos\Api\Data\Integration\Giftcard\GiftcardResponseInterface');
+        $response = $objectManager->create(
+            \Magestore\Webpos\Api\Data\Integration\Giftcard\GiftcardResponseInterface::class
+        );
         $response->setAppliedCodes($newAppliedCodes);
 
         $customerId = $newQuote->getCustomerId();
         $customerEmail = $newQuote->getCustomerEmail();
-        $giftcodeCollection = $objectManager->create('Magestore\Giftvoucher\Model\ResourceModel\CustomerVoucher\Collection');
+        $giftcodeCollection = $objectManager->create(
+            \Magestore\Giftvoucher\Model\ResourceModel\CustomerVoucher\Collection::class
+        );
         $giftcodeCollection->addFieldToFilter('main_table.customer_id', $newQuote->getCustomerId());
         $giftcodeCollection->getExistedGiftcodes($customerId, $customerEmail);
         $existingCodes = [];
         foreach ($giftcodeCollection as $code) {
-            $existingCode = $objectManager->create('Magestore\Webpos\Api\Data\Integration\Giftcard\GiftcardInterface');
+            $existingCode = $objectManager->create(
+                \Magestore\Webpos\Api\Data\Integration\Giftcard\GiftcardInterface::class
+            );
             $existingCode->setCode($code->getGiftCode());
             $existingCode->setBalance($code->getBalance());
             $existingCode->setCurrency($code->getCurrency());
@@ -128,33 +153,39 @@ class GiftcardManagement extends \Magestore\Webpos\Model\Checkout\CouponManageme
     }
 
     /**
-     * @param  $giftvoucher
-     * @param $quote
+     * Validate Customer
+     *
+     * @param string $giftvoucher
+     * @param \Magento\Quote\Model\Quote $quote
      * @return bool
      */
     public function validateCustomer($giftvoucher, \Magento\Quote\Model\Quote $quote)
     {
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         /** @var \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig */
-        $scopeConfig = $objectManager->create('Magento\Framework\App\Config\ScopeConfigInterface');
+        $scopeConfig = $objectManager->create(\Magento\Framework\App\Config\ScopeConfigInterface::class);
         $shareCard = $scopeConfig->getValue(
-            'giftvoucher/general/share_card', \Magento\Store\Model\ScopeInterface::SCOPE_STORES, $quote->getStoreId()
+            'giftvoucher/general/share_card',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORES,
+            $quote->getStoreId()
         );
-        $shareCard = intval($shareCard);
+        $shareCard = (int)$shareCard;
         if ($shareCard < 1) {
             return true;
         }
         $customersUsed = $giftvoucher->getCustomerIdsUsed();
-        if ($shareCard > count($customersUsed) || in_array($quote->getCustomerId(), $customersUsed)
-        ) {
+        if ($shareCard > count($customersUsed) || in_array($quote->getCustomerId(), $customersUsed)) {
             return true;
         }
         return false;
     }
 
     /**
+     * Get Giftcard By Customer
+     *
      * @param int $customer_id
      * @return \Magestore\Webpos\Api\Data\Integration\Giftcard\GiftcardResponseInterface
+     * @throws LocalizedException
      */
     public function getGiftcardByCustomer($customer_id = null)
     {
@@ -163,20 +194,26 @@ class GiftcardManagement extends \Magestore\Webpos\Model\Checkout\CouponManageme
         }
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         /** @var \Magento\Customer\Model\CustomerRegistry $customerRegistry */
-        $customerRegistry = $objectManager->create('Magento\Customer\Model\CustomerRegistry');
+        $customerRegistry = $objectManager->create(\Magento\Customer\Model\CustomerRegistry::class);
         try {
             $customer = $customerRegistry->retrieve($customer_id);
             $customerEmail = $customer->getEmail();
 
             /** @var \Magestore\Webpos\Api\Data\Integration\Giftcard\GiftcardResponseInterface $response */
-            $response = $objectManager->create('Magestore\Webpos\Api\Data\Integration\Giftcard\GiftcardResponseInterface');
+            $response = $objectManager->create(
+                \Magestore\Webpos\Api\Data\Integration\Giftcard\GiftcardResponseInterface::class
+            );
 
-            $giftcodeCollection = $objectManager->create('Magestore\Giftvoucher\Model\ResourceModel\CustomerVoucher\Collection');
+            $giftcodeCollection = $objectManager->create(
+                \Magestore\Giftvoucher\Model\ResourceModel\CustomerVoucher\Collection::class
+            );
             $giftcodeCollection->addFieldToFilter('main_table.customer_id', $customer_id);
             $giftcodeCollection->getExistedGiftcodes($customer_id, $customerEmail);
             $existingCodes = [];
             foreach ($giftcodeCollection as $code) {
-                $existingCode = $objectManager->create('Magestore\Webpos\Api\Data\Integration\Giftcard\GiftcardInterface');
+                $existingCode = $objectManager->create(
+                    \Magestore\Webpos\Api\Data\Integration\Giftcard\GiftcardInterface::class
+                );
                 $existingCode->setCode($code->getGiftCode());
                 $existingCode->setBalance($code->getBalance());
                 $existingCode->setCurrency($code->getCurrency());

@@ -3,18 +3,14 @@
  * Copyright © 2017 Magestore. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace Magestore\PaymentOffline\Helper;
 
 /**
- * Class Data
- * @package Magestore\PaymentOffline\Helper
+ * Helper Data
  */
 class Data extends \Magento\Framework\App\Helper\AbstractHelper
 {
-
-    /**
-     * @var
-     */
     protected $context;
 
     /**
@@ -44,6 +40,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
 
     /**
      * Data constructor.
+     *
      * @param \Magento\Framework\App\Helper\Context $context
      * @param \Magento\Framework\Filesystem $filesystem
      * @param \Magestore\PaymentOffline\Model\Source\Adminhtml\Enable $enableOption
@@ -58,8 +55,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         \Magestore\PaymentOffline\Model\Source\Adminhtml\UseReferenceNumber $useReferenceNumberOption,
         \Magestore\PaymentOffline\Model\Source\Adminhtml\UsePayLater $usePayLaterOption,
         \Magento\Store\Model\StoreManagerInterface $storeManager
-    )
-    {
+    ) {
         parent::__construct($context);
         $this->filesystem = $filesystem;
         $this->enableOption = $enableOption;
@@ -69,37 +65,48 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
-     * @param null $icon
+     * Get Icon Path
+     *
+     * @param string $icon
      * @return string
      */
     public function getIconPath($icon = null)
     {
-        $iconPath = $this->filesystem->getDirectoryRead('media')->getAbsolutePath('webpos/paymentoffline/icon/');
+        $iconPath = $this->filesystem->getDirectoryRead('media')
+            ->getAbsolutePath('webpos/paymentoffline/icon/');
         if ($icon) {
             return $iconPath . $icon;
         } else {
-            $iconPaymentOfflinePath = $this->filesystem->getDirectoryRead('media')->getAbsolutePath('webpos/paymentoffline/');
-            if (!is_dir($iconPaymentOfflinePath)) {
-                mkdir($iconPaymentOfflinePath, 0777);
+            $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+            /** @var \Magento\Framework\Filesystem\DriverInterface $driverInterface */
+            $driverInterface = $objectManager->get(\Magento\Framework\Filesystem\DriverInterface::class);
+            $iconPaymentOfflinePath = $this->filesystem->getDirectoryRead('media')
+                ->getAbsolutePath('webpos/paymentoffline/');
+            if (!$driverInterface->isDirectory($iconPaymentOfflinePath)) {
+                $driverInterface->createDirectory($iconPaymentOfflinePath, 0777);
             }
-            if (!is_dir($iconPath)) {
-                mkdir($iconPath, 0777);
+            if (!$driverInterface->isDirectory($iconPath)) {
+                $driverInterface->createDirectory($iconPath, 0777);
             }
             return $iconPath;
         }
     }
 
     /**
-     * @param null $icon
+     * Get Icon Url
+     *
+     * @param string $icon
      * @return string
      */
     public function getIconUrl($icon = null)
     {
         $mediaUrl = $this->storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
-        return $mediaUrl.'webpos/paymentoffline/icon/'.$icon;
+        return $mediaUrl . 'webpos/paymentoffline/icon/' . $icon;
     }
 
     /**
+     * Get Enable Option
+     *
      * @return array
      */
     public function getEnableOption()
@@ -108,6 +115,8 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
+     * Get Use Reference Number Option
+     *
      * @return array
      */
     public function getUseReferenceNumberOption()
@@ -116,6 +125,8 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
+     * Get Pay Later Option
+     *
      * @return array
      */
     public function getPayLaterOption()

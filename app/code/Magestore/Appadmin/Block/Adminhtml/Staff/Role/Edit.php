@@ -5,9 +5,9 @@
  */
 
 namespace Magestore\Appadmin\Block\Adminhtml\Staff\Role;
+
 /**
- * Class Edit
- * @package Magestore\Appadmin\Block\Adminhtml\Staff\Role
+ * Block role Edit
  */
 class Edit extends \Magento\Backend\Block\Widget\Form\Container
 {
@@ -18,6 +18,7 @@ class Edit extends \Magento\Backend\Block\Widget\Form\Container
 
     /**
      * Edit constructor.
+     *
      * @param \Magento\Backend\Block\Widget\Context $context
      * @param \Magento\Framework\Registry $registry
      * @param array $data
@@ -32,7 +33,7 @@ class Edit extends \Magento\Backend\Block\Widget\Form\Container
     }
 
     /**
-     *
+     * Construct
      */
     protected function _construct()
     {
@@ -46,25 +47,29 @@ class Edit extends \Magento\Backend\Block\Widget\Form\Container
         $this->buttonList->update('delete', 'label', __('Delete'));
         $this->buttonList->add(
             'saveandcontinue',
-            array(
+            [
                 'label' => __('Save and Continue Edit'),
                 'class' => 'save',
-                'data_attribute' => array(
-                    'mage-init' => array('button' => array('event' => 'saveAndContinueEdit', 'target' => '#edit_form'))
-                )
-            ),
+                'data_attribute' => [
+                    'mage-init' => ['button' => ['event' => 'saveAndContinueEdit', 'target' => '#edit_form']]
+                ]
+            ],
             -100
         );
-
     }
 
     /**
+     * Get Header Text
+     *
      * @return mixed
      */
     public function getHeaderText()
     {
         if ($this->_coreRegistry->registry('current_role')->getId()) {
-            return __("Edit Role '%1'", $this->escapeHtml($this->_coreRegistry->registry('current_role')->getData('display_name')));
+            return __(
+                "Edit Role '%1'",
+                $this->escapeHtml($this->_coreRegistry->registry('current_role')->getData('display_name'))
+            );
         } else {
             return __('New Role');
         }

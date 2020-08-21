@@ -7,8 +7,12 @@
  */
 
 namespace Magestore\Rewardpoints\Observer;
+
 use Magento\Framework\Event\ObserverInterface;
 
+/**
+ * Observer - Sales Model Service Quote Submit Success
+ */
 class SalesModelServiceQuoteSubmitSuccess implements ObserverInterface
 {
 
@@ -31,12 +35,13 @@ class SalesModelServiceQuoteSubmitSuccess implements ObserverInterface
     public function __construct(
         \Magento\Checkout\Model\SessionFactory $sessionFactory,
         \Magestore\Rewardpoints\Helper\Action $action
-    ){
+    ) {
         $this->_checkOutSessionFactory = $sessionFactory;
         $this->_action = $action;
     }
     /**
      * Set Final Price to product in product list
+     *
      * @param \Magento\Framework\Event\Observer $observer
      * @return $this
      */
@@ -51,7 +56,8 @@ class SalesModelServiceQuoteSubmitSuccess implements ObserverInterface
 
         // Process spending points for order
         if ($order->getRewardpointsSpent() > 0) {
-            $this->_action->addTransaction('spending_order',
+            $this->_action->addTransaction(
+                'spending_order',
                 $quote->getCustomer(),
                 $order
             );
@@ -59,10 +65,10 @@ class SalesModelServiceQuoteSubmitSuccess implements ObserverInterface
 
         // Clear reward points checkout session
         $session = $this->_checkOutSessionFactory->create();
-        $session->setCatalogRules(array());
+        $session->setCatalogRules([]);
         $session->setData('use_point', 0);
-        $session->setRewardSalesRules(array());
-        $session->setRewardCheckedRules(array());
+        $session->setRewardSalesRules([]);
+        $session->setRewardCheckedRules([]);
 
         return $this;
     }

@@ -11,13 +11,13 @@ use Magestore\TransferStock\Model\InventoryTransfer\Option\Stage;
 use Magestore\TransferStock\Model\InventoryTransfer\Option\Status;
 
 /**
- * Class SaveButton
+ * Button Receive all
  */
-class ReceiveAll extends \Magestore\TransferStock\Block\Adminhtml\InventoryTransfer\AbstractInventoryTransfer
-    implements ButtonProviderInterface
+class ReceiveAll extends \Magestore\TransferStock\Block\Adminhtml\InventoryTransfer\AbstractInventoryTransfer implements
+    ButtonProviderInterface
 {
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function getButtonData()
     {
@@ -28,7 +28,10 @@ class ReceiveAll extends \Magestore\TransferStock\Block\Adminhtml\InventoryTrans
                 || $inventoryTransfer->getStage() == Stage::STAGE_RECEIVING
             )
             && $inventoryTransfer->getStatus() == Status::STATUS_OPEN) {
-            $url = $this->getUrl('*/*/receiveAll', array('_secure' => true, 'id' => $this->request->getParam('id')));
+            $url = $this->getUrl(
+                '*/*/receiveAll',
+                ['_secure' => true, 'id' => $this->request->getParam('id')]
+            );
 
             return [
                 'label' => __('Receive All'),
@@ -42,5 +45,4 @@ class ReceiveAll extends \Magestore\TransferStock\Block\Adminhtml\InventoryTrans
         }
         return [];
     }
-
 }

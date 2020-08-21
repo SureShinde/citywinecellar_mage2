@@ -6,22 +6,17 @@
 
 namespace Magestore\Appadmin\Setup;
 
-
 use Magento\Framework\Setup\InstallDataInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 
+/**
+ * Setup InstallData
+ */
 class InstallData implements InstallDataInterface
 {
-    /**
-     *
-     */
     const IS_ACTIVE = 1;
-    /**
-     *
-     */
     const NOT_ENCODE_PASSWORD = 1;
-
     const DEFAULT_RESOURCE_ACCESS = 'Magestore_Appadmin::all';
 
     /**
@@ -55,10 +50,12 @@ class InstallData implements InstallDataInterface
 
     /**
      * InstallData constructor.
+     *
      * @param \Magento\User\Model\ResourceModel\User\CollectionFactory $userCollectionFactory
      * @param \Magestore\Appadmin\Model\Staff\RoleFactory $roleFactory
      * @param \Magestore\Appadmin\Model\Staff\AuthorizationRuleFactory $authorizationRuleFactory
      * @param \Magestore\Appadmin\Model\Staff\StaffFactory $staffFactory
+     * @param \Magestore\Webpos\Model\ResourceModel\Location\Location\CollectionFactory $locationCollectionFactory
      * @param \Magento\Framework\Module\Manager $moduleManager
      */
     public function __construct(
@@ -68,8 +65,7 @@ class InstallData implements InstallDataInterface
         \Magestore\Appadmin\Model\Staff\StaffFactory $staffFactory,
         \Magestore\Webpos\Model\ResourceModel\Location\Location\CollectionFactory $locationCollectionFactory,
         \Magento\Framework\Module\Manager $moduleManager
-    )
-    {
+    ) {
         $this->_userCollectionFactory = $userCollectionFactory;
         $this->_roleFactory = $roleFactory;
         $this->_authorizationRuleFactory = $authorizationRuleFactory;
@@ -79,30 +75,34 @@ class InstallData implements InstallDataInterface
     }
 
     /**
+     * Install
+     *
      * @param ModuleDataSetupInterface $setup
      * @param ModuleContextInterface $context
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function install(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
     {
         $setup->startSetup();
-        /*
+        /**
          * Setup Role Data
          */
-        $roleData = array(
+        $roleData = [
             'name' => 'Cashier'
-        );
+        ];
         $role = $this->_roleFactory->create()->setData($roleData)->save();
 
-        $authorizeRule = array(
+        $authorizeRule = [
             'role_id' => $role->getId(),
             'resource_id' => self::DEFAULT_RESOURCE_ACCESS
-        );
+        ];
         $this->_authorizationRuleFactory->create()->setData($authorizeRule)->save();
 
-        /*
+        /**
          * Setup Staff Data
          */
-        $userModel = $this->_userCollectionFactory->create()->addFieldToFilter('is_active', self::IS_ACTIVE)->getFirstItem();
+        $userModel = $this->_userCollectionFactory->create()
+            ->addFieldToFilter('is_active', self::IS_ACTIVE)->getFirstItem();
         /** @var \Magestore\Webpos\Model\Location\Location $locationModel */
         $locationModel = $this->_locationCollectionFactory->create()
             ->getFirstItem();
@@ -115,7 +115,7 @@ class InstallData implements InstallDataInterface
             }
         }
         if ($userModel->getId()) {
-            $staffData = array(
+            $staffData = [
                 'role_id' => $role->getId(),
                 'username' => $userModel->getUsername(),
                 'password' => $userModel->getPassword(),
@@ -124,7 +124,7 @@ class InstallData implements InstallDataInterface
                 'location_ids' => $locationId,
                 'not_encode' => self::NOT_ENCODE_PASSWORD,
                 'status' => self::IS_ACTIVE
-            );
+            ];
             $this->_staffFactory->create()->setData($staffData)->save();
         }
 

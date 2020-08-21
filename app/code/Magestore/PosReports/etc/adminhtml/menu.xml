@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!--
+  ~  Copyright © Magestore. All rights reserved.
+  ~  See COPYING.txt for license details.
+  -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Magestore_PosReports::report_listing" title="POS" translate="title" module="Magestore_PosReports"
+             sortOrder="30"
+             parent="Magestore_ReportSuccess::report"
+             resource="Magestore_PosReports::report_listing"/>
+        <add id="Magestore_PosReports::location_overview" title="Location Overview" translate="title"
+             module="Magestore_PosReports" sortOrder="10"
+             parent="Magestore_PosReports::report_listing"
+             action="posreports/reports/byAllLocation"
+             resource="Magestore_PosReports::location_overview"/>
+        <add id="Magestore_PosReports::location_breakdown" title="Location Breakdown" translate="title"
+             module="Magestore_PosReports" sortOrder="20"
+             parent="Magestore_PosReports::report_listing"
+             action="posreports/reports/byLocation"
+             resource="Magestore_PosReports::location_breakdown"/>
+        <add id="Magestore_PosReports::sales_by_staff" title="Sales by Staff" translate="title"
+             module="Magestore_PosReports" sortOrder="30"
+             parent="Magestore_PosReports::report_listing"
+             action="posreports/reports/byStaff"
+             resource="Magestore_PosReports::sales_by_staff"/>
+        <add id="Magestore_PosReports::sales_by_payment_method" title="Sales by Payment Method" translate="title"
+             module="Magestore_PosReports" sortOrder="40"
+             parent="Magestore_PosReports::report_listing"
+             action="posreports/reports/byPaymentMethod"
+             resource="Magestore_PosReports::sales_by_payment_method"/>
+    </menu>
+</config>

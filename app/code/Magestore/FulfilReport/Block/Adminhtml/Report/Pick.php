@@ -7,23 +7,26 @@
 namespace Magestore\FulfilReport\Block\Adminhtml\Report;
 
 use Magestore\FulfilSuccess\Api\Data\PickRequestInterface;
+use Magestore\FulfilSuccess\Model\ResourceModel\PickRequest\PickRequest\CollectionFactory as PickCollectionFactory;
 
+/**
+ * Block Report Pick
+ */
 class Pick extends Dashboard
 {
     /**
-     * @var \Magestore\FulfilSuccess\Model\ResourceModel\PickRequest\PickRequest\CollectionFactory
+     * @var PickCollectionFactory
      */
     protected $pickRequestCollectionFactory;
 
     /**
      * Pick constructor.
+     *
      * @param \Magento\Framework\View\Element\Template\Context $context
      * @param \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $orderCollectionFactory
-     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
-     * @param \Magento\Framework\UrlInterface $urlBuilder
      * @param \Magento\Framework\App\Request\Http $request
      * @param \Magento\Framework\Stdlib\DateTime\DateTime $date
-     * @param \Magestore\FulfilSuccess\Model\ResourceModel\PickRequest\PickRequest\CollectionFactory $pickRequestCollectionFactory
+     * @param PickCollectionFactory $pickRequestCollectionFactory
      * @param array $data
      */
     public function __construct(
@@ -31,15 +34,16 @@ class Pick extends Dashboard
         \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $orderCollectionFactory,
         \Magento\Framework\App\Request\Http $request,
         \Magento\Framework\Stdlib\DateTime\DateTime $date,
-        \Magestore\FulfilSuccess\Model\ResourceModel\PickRequest\PickRequest\CollectionFactory $pickRequestCollectionFactory,
+        PickCollectionFactory $pickRequestCollectionFactory,
         array $data = []
-    )
-    {
-        parent::__construct($context, $orderCollectionFactory,$request, $date, $data);
+    ) {
+        parent::__construct($context, $orderCollectionFactory, $request, $date, $data);
         $this->pickRequestCollectionFactory = $pickRequestCollectionFactory;
     }
-    
+
     /**
+     * Get Pick Request Collection
+     *
      * @return \Magestore\FulfilSuccess\Model\ResourceModel\PickRequest\PickRequest\Collection
      */
     public function getPickRequestCollection()
@@ -50,7 +54,8 @@ class Pick extends Dashboard
     }
 
     /**
-     * 
+     * Get Pick Request Collection Per Day
+     *
      * @return array
      */
     public function getPickRequestCollectionPerDay()
@@ -60,7 +65,7 @@ class Pick extends Dashboard
         $totalPickRequests = [];
         if (!isset($dataPost['type']) || !$dataPost['type']) {
             $totalPickRequests = $this->getPickRequestsInPeriod('last7days');
-        }        
+        }
         if (isset($dataPost['type']) && $dataPost['type'] == 'perday') {
             $totalPickRequests = $this->getPickRequestsInPeriod($timeRange);
         }
@@ -73,13 +78,15 @@ class Pick extends Dashboard
     }
 
     /**
+     * Get Pick Requests In Period
+     *
+     * @param string $timeRange
      * @return array
      */
     public function getPickRequestsInPeriod($timeRange)
     {
         $totalPickRequests = [];
-        $lastIndex = 0;
-        switch ($timeRange){
+        switch ($timeRange) {
             case 'last7days':
                 $lastIndex = 6;
                 break;
@@ -91,29 +98,35 @@ class Pick extends Dashboard
                 break;
             default:
                 $lastIndex = 6;
-        }        
-        if($lastIndex) {
-            $totalPickRequests = array();
+        }
+        if ($lastIndex) {
+            $totalPickRequests = [];
             for ($i = $lastIndex; $i >= 0; $i--) {
                 $toDate = date('Y-m-d 23:59:59', strtotime("-{$i} days"));
                 $fromDate = date('Y-m-d 00:00:00', strtotime("-{$i} days"));
                 $date = date('d/m', strtotime("-{$i} days"));
                 $pickRequestsPerDay = $this->getPickRequestCollection()
                     ->addFieldToFilter(
-                        'status', ['eq' => PickRequestInterface::STATUS_PICKED]
+                        'status',
+                        ['eq' => PickRequestInterface::STATUS_PICKED]
                     )
                     ->addFieldToFilter(
-                        'updated_at', ['from' => $fromDate, 'to' => $toDate]
+                        'updated_at',
+                        ['from' => $fromDate, 'to' => $toDate]
                     )
                     ->getSize();
                 $totalPickRequests[$date] = $pickRequestsPerDay;
-            };            
+            };
         }
-       
+
         return $totalPickRequests;
     }
 
     /**
+     * Get Pick Requests Per Day Custom Range
+     *
+     * @param string $dateFrom
+     * @param string $dateTo
      * @return array
      */
     public function getPickRequestsPerDayCustomRange($dateFrom, $dateTo)
@@ -125,7 +138,7 @@ class Pick extends Dashboard
         $dateDiffCustomRange = strtotime($toDate) - strtotime($fromDate);
         $dayToday = floor(($dateDiffToday) / (60 * 60 * 24));
         $toDateFromNow = floor(($dateDiffCustomRange) / (60 * 60 * 24));
-        $totalPickRequests = array();
+        $totalPickRequests = [];
         for ($i = $toDateFromNow; $i >= 0; $i--) {
             $j = $dayToday + $i;
             $toDate = date('Y-m-d 23:59:59', strtotime("-{$j} days"));
@@ -133,10 +146,12 @@ class Pick extends Dashboard
             $date = date('d/m', strtotime("-{$j} days"));
             $pickRequestsPerDay = $this->getPickRequestCollection()
                 ->addFieldToFilter(
-                    'status', ['eq' => PickRequestInterface::STATUS_PICKED]
+                    'status',
+                    ['eq' => PickRequestInterface::STATUS_PICKED]
                 )
                 ->addFieldToFilter(
-                    'updated_at', ['from' => $fromDate, 'to' => $toDate]
+                    'updated_at',
+                    ['from' => $fromDate, 'to' => $toDate]
                 )
                 ->getSize();
             $totalPickRequests[$date] = $pickRequestsPerDay;

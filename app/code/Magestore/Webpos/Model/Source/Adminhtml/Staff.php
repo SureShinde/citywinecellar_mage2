@@ -1,10 +1,14 @@
 <?php
-
 /**
  * Copyright © 2018 Magestore. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace Magestore\Webpos\Model\Source\Adminhtml;
+
+/**
+ * Source option Staff
+ */
 class Staff implements \Magento\Framework\Option\ArrayInterface
 {
     /**
@@ -14,16 +18,18 @@ class Staff implements \Magento\Framework\Option\ArrayInterface
 
     /**
      * Pos constructor.
+     *
      * @param \Magestore\Webpos\Api\Pos\PosRepositoryInterface $staffRepository
      */
     public function __construct(
         \Magestore\Appadmin\Api\Staff\StaffRepositoryInterface $staffRepository
-    ){
+    ) {
         $this->staffRepository = $staffRepository;
     }
 
-
     /**
+     * To option array
+     *
      * @return array
      */
     public function toOptionArray()
@@ -37,6 +43,8 @@ class Staff implements \Magento\Framework\Option\ArrayInterface
     }
 
     /**
+     * Get options array
+     *
      * @return array
      */
     public function getOptionArray()
@@ -48,13 +56,18 @@ class Staff implements \Magento\Framework\Option\ArrayInterface
         }
         return $allStaffArray;
     }
-    
-    public function optionArrayToShow(){
-        $options = array();
-        $options[] = array('value' => null, 'label' => ' ');
+
+    /**
+     * OptionArrayToShow
+     *
+     * @return array
+     */
+    public function optionArrayToShow()
+    {
+        $options = [];
+        $options[] = ['value' => null, 'label' => ' '];
         $optionsArr = $this->toOptionArray();
         $options = array_merge($options, $optionsArr);
         return $options;
     }
-
 }

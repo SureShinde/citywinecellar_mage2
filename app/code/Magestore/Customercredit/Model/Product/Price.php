@@ -22,9 +22,16 @@
 
 namespace Magestore\Customercredit\Model\Product;
 
+use Magento\Catalog\Model\Product;
 use Magento\Customer\Api\GroupManagementInterface;
 use Magento\Framework\Pricing\PriceCurrencyInterface;
 
+/**
+ * Class Price
+ *
+ * Product price model
+ * @SuppressWarnings(PHPMD.CookieAndSessionMisuse)
+ */
 class Price extends \Magento\Catalog\Model\Product\Type\Price
 {
     const PRICE_TYPE_FIXED = 1;
@@ -70,7 +77,17 @@ class Price extends \Magento\Catalog\Model\Product\Type\Price
     ) {
         $this->_creditproductData = $helperData;
         $this->_catalogData = $catalogData;
-        parent::__construct($ruleFactory, $storeManager, $localeDate, $customerSession, $eventManager, $priceCurrency, $groupManagement, $tierPriceFactory, $config);
+        parent::__construct(
+            $ruleFactory,
+            $storeManager,
+            $localeDate,
+            $customerSession,
+            $eventManager,
+            $priceCurrency,
+            $groupManagement,
+            $tierPriceFactory,
+            $config
+        );
     }
 
     /**
@@ -85,6 +102,9 @@ class Price extends \Magento\Catalog\Model\Product\Type\Price
         return $creditData['price'];
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function _applyOptionsPrice($product, $qty, $finalPrice)
     {
         if ($amount = $product->getCustomOption('credit_price_amount')) {
@@ -93,16 +113,36 @@ class Price extends \Magento\Catalog\Model\Product\Type\Price
         return parent::_applyOptionsPrice($product, $qty, $finalPrice);
     }
 
+    /**
+     * Get Minimal Price
+     *
+     * @param Product $product
+     * @return array|float
+     */
     public function getMinimalPrice($product)
     {
         return $this->getPricesDependingOnTax($product, 'min');
     }
 
+    /**
+     * Get Maximal Price
+     *
+     * @param Product $product
+     * @return array|float
+     */
     public function getMaximalPrice($product)
     {
         return $this->getPricesDependingOnTax($product, 'max');
     }
 
+    /**
+     * Get Prices Depending On Tax
+     *
+     * @param Product $product
+     * @param null|string $which
+     * @param null|bool $includeTax
+     * @return array|float
+     */
     public function getPricesDependingOnTax($product, $which = null, $includeTax = null)
     {
         $creditData = $this->getCreditData($product);
@@ -110,16 +150,27 @@ class Price extends \Magento\Catalog\Model\Product\Type\Price
             $minimalPrice = $this->_catalogData->getTaxPrice($product, $creditData['min_price'], $includeTax);
             $maximalPrice = $this->_catalogData->getTaxPrice($product, $creditData['max_price'], $includeTax);
         } else {
-            $minimalPrice = $maximalPrice = $this->_catalogData->getTaxPrice($product, $creditData['price'], $includeTax);
+            $minimalPrice = $maximalPrice = $this->_catalogData->getTaxPrice(
+                $product,
+                $creditData['price'],
+                $includeTax
+            );
         }
 
-        if ($which == 'max')
+        if ($which == 'max') {
             return $maximalPrice;
-        elseif ($which == 'min')
+        } elseif ($which == 'min') {
             return $minimalPrice;
-        return array($minimalPrice, $maximalPrice);
+        }
+        return [$minimalPrice, $maximalPrice];
     }
 
+    /**
+     * Get Credit Data
+     *
+     * @param null|Product $product
+     * @return array
+     */
     public function getCreditData($product = null)
     {
         $data = $this->_creditproductData->getCreditDataByProduct($product);
@@ -135,19 +186,21 @@ class Price extends \Magento\Catalog\Model\Product\Type\Price
                     $data['max_price'] = $data['to'] * $data['storecredit_rate'];
                 }
 
-                if ($data['min_price'] == $data['max_price'])
+                if ($data['min_price'] == $data['max_price']) {
                     $data['price_type'] = self::PRICE_TYPE_FIXED;
-                else
+                } else {
                     $data['price_type'] = self::PRICE_TYPE_DYNAMIC;
+                }
                 break;
             case 'dropdown':
                 $data['min_price'] = min($data['prices']);
                 $data['max_price'] = max($data['prices']);
                 $data['price'] = $data['prices'][0];
-                if ($data['min_price'] == $data['max_price'])
+                if ($data['min_price'] == $data['max_price']) {
                     $data['price_type'] = self::PRICE_TYPE_FIXED;
-                else
+                } else {
                     $data['price_type'] = self::PRICE_TYPE_DYNAMIC;
+                }
                 break;
             case 'static':
                 $data['price'] = $data['credit_price'];
@@ -160,5 +213,4 @@ class Price extends \Magento\Catalog\Model\Product\Type\Price
         }
         return $data;
     }
-
 }

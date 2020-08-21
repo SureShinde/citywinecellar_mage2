@@ -17,7 +17,7 @@ class Collection extends SearchResult
     protected function _initSelect()
     {
         parent::_initSelect();
-        $this->addFieldToFilter('direction',\Magestore\Rewardpoints\Model\Rate::POINT_TO_MONEY);
+        $this->addFieldToFilter('direction', \Magestore\Rewardpoints\Model\Rate::POINT_TO_MONEY);
         return $this;
     }
 
@@ -32,8 +32,8 @@ class Collection extends SearchResult
     {
 
         if ($field == 'customer_group_ids') {
-            if(isset($condition['eq']) && $condition['eq']) {
-                $condition = array('finset' => $condition['eq']);
+            if (isset($condition['eq']) && $condition['eq']) {
+                $condition = ['finset' => $condition['eq']];
             }
         }
         return parent::addFieldToFilter($field, $condition);

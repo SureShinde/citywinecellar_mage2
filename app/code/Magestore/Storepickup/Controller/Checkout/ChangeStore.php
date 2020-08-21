@@ -21,7 +21,14 @@
 
 namespace Magestore\Storepickup\Controller\Checkout;
 
-class ChangeStore extends \Magento\Framework\App\Action\Action
+use Magento\Framework\App\Action\HttpPostActionInterface;
+
+/**
+ * Class ChangeStore
+ *
+ * Used to change store
+ */
+class ChangeStore extends \Magento\Framework\App\Action\Action implements HttpPostActionInterface
 {
     /**
      * @var \Magento\Framework\Controller\Result\JsonFactory
@@ -44,11 +51,20 @@ class ChangeStore extends \Magento\Framework\App\Action\Action
     protected $regionFactory;
 
     /**
-     * CheckShipping constructor.
-     * @param \Magento\Framework\App\Action\Context $context
-     * @param \Magento\Framework\Controller\Result\JsonFactory $resultJsonFactory
+     * @var \Magento\Checkout\Model\Session
      */
     protected $_checkoutSession;
+
+    /**
+     * ChangeStore constructor.
+     *
+     * @param \Magento\Framework\App\Action\Context $context
+     * @param \Magento\Framework\Controller\Result\JsonFactory $resultJsonFactory
+     * @param \Magento\Checkout\Model\Session $checkoutSession
+     * @param \Magestore\Storepickup\Model\StoreFactory $storeFactory
+     * @param \Magestore\Storepickup\Helper\Region $regionHelper
+     * @param \Magento\Directory\Model\RegionFactory $regionFactory
+     */
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
         \Magento\Framework\Controller\Result\JsonFactory $resultJsonFactory,
@@ -56,8 +72,7 @@ class ChangeStore extends \Magento\Framework\App\Action\Action
         \Magestore\Storepickup\Model\StoreFactory $storeFactory,
         \Magestore\Storepickup\Helper\Region $regionHelper,
         \Magento\Directory\Model\RegionFactory $regionFactory
-    )
-    {
+    ) {
         parent::__construct($context);
         $this->_resultJsonFactory = $resultJsonFactory;
         $this->_checkoutSession = $checkoutSession;
@@ -65,10 +80,16 @@ class ChangeStore extends \Magento\Framework\App\Action\Action
         $this->regionHelper = $regionHelper;
         $this->regionFactory = $regionFactory;
     }
+
+    /**
+     * Execute
+     *
+     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
+     */
     public function execute()
     {
-        $storepickup_session = array('store_id' => $this->getRequest()->getParam('store_id'));
-        $this->_checkoutSession->setData('storepickup_session',$storepickup_session);
+        $storepickup_session = ['store_id' => $this->getRequest()->getParam('store_id')];
+        $this->_checkoutSession->setData('storepickup_session', $storepickup_session);
 
         $store = $this->storeFactory->create()
             ->load($this->getRequest()->getParam('store_id'), 'storepickup_id');

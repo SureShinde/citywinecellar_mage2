@@ -12,13 +12,14 @@ use Magento\Framework\Setup\SchemaSetupInterface;
 
 /**
  * Class InstallSchema
- * @package Magestore\Giftvoucher\Setup
+ *
+ * Gift voucher install schema
  */
 class InstallSchema implements InstallSchemaInterface
 {
     /**
-     * @param SchemaSetupInterface $setup
-     * @param ModuleContextInterface $context
+     * @inheritDoc
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function install(SchemaSetupInterface $setup, ModuleContextInterface $context)
     {
@@ -227,7 +228,6 @@ class InstallSchema implements InstallSchemaInterface
             ]
         );
 
-
         $setup->getConnection()->dropTable($setup->getTable('giftvoucher_history'));
         $setup->getConnection()->dropTable($setup->getTable('giftvoucher'));
         $setup->getConnection()->dropTable($setup->getTable('giftvoucher_credit'));
@@ -236,7 +236,6 @@ class InstallSchema implements InstallSchemaInterface
         $setup->getConnection()->dropTable($setup->getTable('giftvoucher_template'));
         $setup->getConnection()->dropTable($setup->getTable('giftvoucher_product'));
         $setup->getConnection()->dropTable($setup->getTable('giftcard_template'));
-
 
         $table = $setup->getConnection()->newTable(
             $setup->getTable('giftvoucher')
@@ -431,7 +430,6 @@ class InstallSchema implements InstallSchemaInterface
         );
         $setup->getConnection()->createTable($table);
 
-
         $table = $setup->getConnection()->newTable(
             $setup->getTable('giftvoucher_history')
         )->addColumn(
@@ -544,7 +542,6 @@ class InstallSchema implements InstallSchemaInterface
         );
         $setup->getConnection()->createTable($table);
 
-
         $table = $setup->getConnection()->newTable(
             $setup->getTable('giftvoucher_credit')
         )->addColumn(
@@ -582,7 +579,6 @@ class InstallSchema implements InstallSchemaInterface
             \Magento\Framework\DB\Ddl\Table::ACTION_CASCADE
         );
         $setup->getConnection()->createTable($table);
-
 
         $table = $setup->getConnection()->newTable(
             $setup->getTable('giftvoucher_credit_history')
@@ -670,7 +666,6 @@ class InstallSchema implements InstallSchemaInterface
         );
         $setup->getConnection()->createTable($table);
 
-
         $table = $setup->getConnection()->newTable(
             $setup->getTable('giftvoucher_customer_voucher')
         )->addColumn(
@@ -717,7 +712,6 @@ class InstallSchema implements InstallSchemaInterface
             \Magento\Framework\DB\Ddl\Table::ACTION_CASCADE
         );
         $setup->getConnection()->createTable($table);
-
 
         $table = $setup->getConnection()->newTable(
             $setup->getTable('giftvoucher_template')
@@ -811,7 +805,6 @@ class InstallSchema implements InstallSchemaInterface
         );
         $setup->getConnection()->createTable($table);
 
-
         $table = $setup->getConnection()->newTable(
             $setup->getTable('giftvoucher_product')
         )->addColumn(
@@ -846,7 +839,6 @@ class InstallSchema implements InstallSchemaInterface
             'Actions Serialized'
         );
         $setup->getConnection()->createTable($table);
-
 
         $table = $setup->getConnection()->newTable(
             $setup->getTable('giftcard_template')
@@ -916,8 +908,7 @@ class InstallSchema implements InstallSchemaInterface
         );
         $setup->getConnection()->createTable($table);
 
-
-        $data = array();
+        $data = [];
         $data[0]['template_name'] = __('Default Template 1');
         $data[0]['style_color'] = '#DC8C71';
         $data[0]['text_color'] = '#949392';
@@ -936,9 +927,7 @@ class InstallSchema implements InstallSchemaInterface
         $data[1]['background_img'] = 'default.png';
         $data[1]['design_pattern'] = "left-image-giftcard-240x360px";
 
-
         $setup->getConnection()->insertMultiple($setup->getTable('giftcard_template'), $data);
-
 
         $setup->getConnection()->addColumn(
             $setup->getTable('sales_order'),

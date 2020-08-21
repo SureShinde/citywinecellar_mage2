@@ -13,7 +13,9 @@ use Magento\Ui\Component\DynamicRows;
 
 /**
  * Class ProductList
- * @package Magestore\PurchaseOrderSuccess\Ui\DataProvider\ReturnOrder\TransferredProduct\Form\Modifier
+ *
+ * Used for product list
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ProductList extends AbstractModifier
 {
@@ -48,8 +50,9 @@ class ProductList extends AbstractModifier
     ];
 
     /**
-     * modify data
+     * Modify data
      *
+     * @param array $data
      * @return array
      */
     public function modifyData(array $data)
@@ -63,7 +66,8 @@ class ProductList extends AbstractModifier
      * @param array $meta
      * @return array
      */
-    public function modifyMeta(array $meta){
+    public function modifyMeta(array $meta)
+    {
         $meta = array_replace_recursive(
             $meta,
             [
@@ -92,26 +96,30 @@ class ProductList extends AbstractModifier
      *
      * @return array
      */
-    public function getProductListChildren(){
+    public function getProductListChildren()
+    {
         $children = [
             $this->children['button_set'] => $this->getTransferredProductButtons(),
             $this->children['transferred_product_select_modal'] => $this->getTransferredProductSelectModal(),
             $this->children['dynamic_grid'] => $this->getDynamicGrid()
         ];
-        /**
-         * @var \Magento\Framework\Module\Manager $moduleManager
-         */
         $moduleManager = \Magento\Framework\App\ObjectManager::getInstance()
-            ->create('Magento\Framework\Module\Manager');
-        if($moduleManager->isEnabled('Magestore_BarcodeSuccess')){
+            ->create(\Magento\Framework\Module\Manager::class);
+        if ($moduleManager->isEnabled('Magestore_BarcodeSuccess')) {
             $children['transferred_product_barcode_scan_input'] = $this->getTranferredProductScanBarcodeInput();
         }
         return $children;
     }
 
-    public function getTransferredProductButtons(){
+    /**
+     * Get transferred product buttons
+     *
+     * @return array
+     */
+    public function getTransferredProductButtons()
+    {
         $moduleManager = \Magento\Framework\App\ObjectManager::getInstance()
-            ->get('Magento\Framework\Module\Manager');
+            ->get(\Magento\Framework\Module\Manager::class);
         $showScanBarcodeButton = $moduleManager->isEnabled('Magestore_BarcodeSuccess') ? true : false;
         return [
             'arguments' => [
@@ -158,7 +166,13 @@ class ProductList extends AbstractModifier
         ];
     }
 
-    public function getTranferredProductScanBarcodeInput(){
+    /**
+     * Get transferred product scan barcode input
+     *
+     * @return array
+     */
+    public function getTranferredProductScanBarcodeInput()
+    {
         return [
             'arguments' => [
                 'data' => [
@@ -186,7 +200,13 @@ class ProductList extends AbstractModifier
         ];
     }
 
-    public function getTransferredProductSelectModal(){
+    /**
+     * Get transferred product select modal
+     *
+     * @return array
+     */
+    public function getTransferredProductSelectModal()
+    {
         return [
             'arguments' => [
                 'data' => [
@@ -206,7 +226,8 @@ class ProductList extends AbstractModifier
                                     'class' => 'action-primary',
                                     'actions' => [
                                         [
-                                            'targetName' => 'index = ' . $this->children['transferred_product_modal_select_listing'],
+                                            'targetName' => 'index = '
+                                                . $this->children['transferred_product_modal_select_listing'],
                                             'actionName' => 'save',
                                         ],
                                         'closeModal'
@@ -218,12 +239,19 @@ class ProductList extends AbstractModifier
                 ],
             ],
             'children' => [
-                $this->children['transferred_product_modal_select_listing'] => $this->getReceiveProductModalSelectListing()
+                $this->children['transferred_product_modal_select_listing'] => $this
+                    ->getReceiveProductModalSelectListing()
             ]
         ];
     }
 
-    public function getReceiveProductModalSelectListing(){
+    /**
+     * Get Receive Product Modal Select Listing
+     *
+     * @return array
+     */
+    public function getReceiveProductModalSelectListing()
+    {
         $dataScope = 'transferred_product_modal_select_listing';
         return [
             'arguments' => [
@@ -233,7 +261,7 @@ class ProductList extends AbstractModifier
                         'autoRender' => false,
                         'componentType' => 'insertListing',
                         'dataScope' => $this->children[$dataScope],
-                        'externalProvider' => $this->children[$dataScope]. '.' . $this->children[$dataScope]
+                        'externalProvider' => $this->children[$dataScope] . '.' . $this->children[$dataScope]
                             . '_data_source',
                         'ns' => $this->children[$dataScope],
                         'render_url' => $this->urlBuilder->getUrl('mui/index/render'),
@@ -246,11 +274,19 @@ class ProductList extends AbstractModifier
                         'externalFilterMode' => true,
                         'imports' => [
                             'supplier_id' => '${ $.provider }:data.supplier_id',
-                            'return_id' => '${ $.provider }:data.return_id'
+                            'return_id' => '${ $.provider }:data.return_id',
+                            '__disableTmpl' => [
+                                'supplier_id' => false,
+                                'return_id' => false
+                            ]
                         ],
                         'exports' => [
                             'supplier_id' => '${ $.externalProvider }:params.supplier_id',
-                            'return_id' => '${ $.externalProvider }:params.return_id'
+                            'return_id' => '${ $.externalProvider }:params.return_id',
+                            '__disableTmpl' => [
+                                'supplier_id' => false,
+                                'return_id' => false
+                            ]
                         ],
                         'selectionsProvider' =>
                             $this->children[$dataScope]
@@ -261,7 +297,6 @@ class ProductList extends AbstractModifier
             ]
         ];
     }
-
 
     /**
      * Returns dynamic rows configuration
@@ -286,7 +321,12 @@ class ProductList extends AbstractModifier
                         'deleteButtonLabel' => __('Remove'),
                         'dataProvider' => $this->children['transferred_product_modal_select_listing'],
                         'map' => $this->mapFields,
-                        'links' => ['insertData' => '${ $.provider }:${ $.dataProvider }'],
+                        'links' => [
+                            'insertData' => '${ $.provider }:${ $.dataProvider }',
+                            '__disableTmpl' => [
+                                'insertData' => false
+                            ]
+                        ],
                         'sortOrder' => 30,
                         'columnsHeader' => false,
                         'columnsHeaderAfterRender' => true,
@@ -374,19 +414,31 @@ class ProductList extends AbstractModifier
         ];
     }
 
-    public function getTransferredProductBarcodeJson(){
+    /**
+     * Get Transferred Product Barcode Json
+     *
+     * @return mixed
+     */
+    public function getTransferredProductBarcodeJson()
+    {
         $result = [];
         $collection = $this->getTransferredProductBarcodeCollection();
         foreach ($collection->getItems() as $item) {
             $result[$item->getBarcode()] = $item->getData();
         }
         return \Magento\Framework\App\ObjectManager::getInstance()
-            ->create('Magento\Framework\Json\EncoderInterface')->encode($result);
+            ->create(\Magento\Framework\Json\EncoderInterface::class)->encode($result);
     }
 
-    public function getTransferredProductBarcodeCollection(){
+    /**
+     * Get Transferred Product Barcode Collection
+     *
+     * @return mixed
+     */
+    public function getTransferredProductBarcodeCollection()
+    {
         $collection = \Magento\Framework\App\ObjectManager::getInstance()
-            ->create('Magestore\BarcodeSuccess\Model\ResourceModel\Barcode\Collection');
+            ->create(\Magestore\BarcodeSuccess\Model\ResourceModel\Barcode\Collection::class);
         $condition = 'item.qty_returned - item.qty_transferred';
         $returnId = $this->request->getParam('return_id', null);
         $collection->addFieldToSelect(['barcode']);
@@ -397,10 +449,12 @@ class ProductList extends AbstractModifier
         );
         $collection->getSelect()
             ->columns(['available_qty' => new \Zend_Db_Expr($condition)]);
-        if($condition)
+        if ($condition) {
             $collection->getSelect()->where(new \Zend_Db_Expr($condition) . ' > 0');
-        if($returnId)
+        }
+        if ($returnId) {
             $collection->getSelect()->where('item.return_id = ?', $returnId);
+        }
         return $collection;
     }
 }

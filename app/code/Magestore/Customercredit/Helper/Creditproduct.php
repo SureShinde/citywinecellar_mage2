@@ -22,6 +22,11 @@
 
 namespace Magestore\Customercredit\Helper;
 
+/**
+ * Class Creditproduct
+ *
+ * Credit product helper
+ */
 class Creditproduct extends \Magento\Framework\App\Helper\AbstractHelper
 {
     /**
@@ -40,6 +45,7 @@ class Creditproduct extends \Magento\Framework\App\Helper\AbstractHelper
 
     /**
      * Creditproduct constructor.
+     *
      * @param \Magento\Framework\App\Helper\Context $context
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param \Magento\Catalog\Model\ProductRepository $productRepo
@@ -48,13 +54,19 @@ class Creditproduct extends \Magento\Framework\App\Helper\AbstractHelper
         \Magento\Framework\App\Helper\Context $context,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Catalog\Model\ProductRepository $productRepo
-    )
-    {
+    ) {
         $this->_storeManager = $storeManager;
         $this->_productRepo = $productRepo;
         parent::__construct($context);
     }
 
+    /**
+     * Get General Config
+     *
+     * @param string $code
+     * @param null|int|string $store
+     * @return mixed
+     */
     public function getGeneralConfig($code, $store = null)
     {
         return $this->scopeConfig->getValue('customercredit/general/' . $code, 'store', $store);
@@ -65,6 +77,8 @@ class Creditproduct extends \Magento\Framework\App\Helper\AbstractHelper
      *
      * @param \Magento\Catalog\Model\Product $product
      * @return array
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function getCreditDataByProduct($product)
     {
@@ -75,7 +89,7 @@ class Creditproduct extends \Magento\Framework\App\Helper\AbstractHelper
         // convert Credit value from the old version
         if (!$credit_type) {
             $amountStr = $currentProduct->getCreditAmount();
-            $amountStr = trim(str_replace(array(' ', "\r", "\t"), '', $amountStr));
+            $amountStr = trim(str_replace([' ', "\r", "\t"], '', $amountStr));
             $creditAmount = $this->getDataForOldVersion($amountStr);
 
             switch ($creditAmount['type']) {
@@ -88,7 +102,9 @@ class Creditproduct extends \Magento\Framework\App\Helper\AbstractHelper
                     break;
                 case 'dropdown':
                     $product->setStorecreditDropdown($amountStr)
-                        ->setStorecreditType(\Magestore\Customercredit\Model\Source\Storecredittype::CREDIT_TYPE_DROPDOWN)
+                        ->setStorecreditType(
+                            \Magestore\Customercredit\Model\Source\Storecredittype::CREDIT_TYPE_DROPDOWN
+                        )
                         ->save();
                     $credit_type = \Magestore\Customercredit\Model\Source\Storecredittype::CREDIT_TYPE_DROPDOWN;
                     break;
@@ -104,19 +120,28 @@ class Creditproduct extends \Magento\Framework\App\Helper\AbstractHelper
 
         switch ($credit_type) {
             case \Magestore\Customercredit\Model\Source\Storecredittype::CREDIT_TYPE_FIX:
-                $data = array('type' => 'static', 'credit_price' => $currentProduct->getStorecreditValue() * $currentProduct->getStorecreditRate(), 'value' => $currentProduct->getStorecreditValue());
+                $data = [
+                    'type' => 'static',
+                    'credit_price' => $currentProduct->getStorecreditValue() * $currentProduct->getStorecreditRate(),
+                    'value' => $currentProduct->getStorecreditValue()
+                ];
                 return $data;
             case \Magestore\Customercredit\Model\Source\Storecredittype::CREDIT_TYPE_RANGE:
-                $data = array('type' => 'range', 'from' => $currentProduct->getStorecreditFrom(), 'to' => $currentProduct->getStorecreditTo(), 'storecredit_rate' => $currentProduct->getStorecreditRate());
+                $data = [
+                    'type' => 'range',
+                    'from' => $currentProduct->getStorecreditFrom(),
+                    'to' => $currentProduct->getStorecreditTo(),
+                    'storecredit_rate' => $currentProduct->getStorecreditRate()
+                ];
                 return $data;
             case \Magestore\Customercredit\Model\Source\Storecredittype::CREDIT_TYPE_DROPDOWN:
-                $options = explode(',',$currentProduct->getStorecreditDropdown());
+                $options = explode(',', $currentProduct->getStorecreditDropdown());
                 foreach ($options as $key => $option) {
                     if (!is_numeric($option) || $option <= 0) {
                         unset($options[$key]);
                     }
                 }
-                $data = array('type' => 'dropdown', 'options' => $options);
+                $data = ['type' => 'dropdown', 'options' => $options];
                 foreach ($options as $value) {
                     $data['prices'][] = $value * $currentProduct->getStorecreditRate();
                 }
@@ -125,28 +150,34 @@ class Creditproduct extends \Magento\Framework\App\Helper\AbstractHelper
             default:
                 $creditAmount = $this->getGeneralConfig('amount');
                 $options = explode(',', $creditAmount);
-                return array('type' => 'dropdown', 'options' => $options, 'prices' => $options);
+                return ['type' => 'dropdown', 'options' => $options, 'prices' => $options];
         }
     }
 
+    /**
+     * Get Data For Old Version
+     *
+     * @param string $amountStr
+     * @return array
+     */
     public function getDataForOldVersion($amountStr)
     {
-        $amountStr = trim(str_replace(array(' ', "\r", "\t"), '', $amountStr));
+        $amountStr = trim(str_replace([' ', "\r", "\t"], '', $amountStr));
         if ($amountStr == '' || $amountStr == '-') {
-            return array('type' => 'any');
+            return ['type' => 'any'];
         }
 
         $values = explode('-', $amountStr);
         if (count($values) == 2) {
-            return array('type' => 'range', 'from' => $values[0], 'to' => $values[1]);
+            return ['type' => 'range', 'from' => $values[0], 'to' => $values[1]];
         }
 
         $values = explode(',', $amountStr);
         if (count($values) > 1) {
-            return array('type' => 'dropdown', 'options' => $values);
+            return ['type' => 'dropdown', 'options' => $values];
         }
 
         $value = floatval($amountStr);
-        return array('type' => 'static', 'value' => $value);
+        return ['type' => 'static', 'value' => $value];
     }
 }

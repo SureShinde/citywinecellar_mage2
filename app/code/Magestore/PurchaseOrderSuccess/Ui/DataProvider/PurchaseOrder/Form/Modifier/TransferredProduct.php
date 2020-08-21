@@ -13,7 +13,8 @@ use Magestore\PurchaseOrderSuccess\Model\PurchaseOrder\Option\Type;
 
 /**
  * Class TransferredProduct
- * @package Magestore\PurchaseOrderSuccess\Ui\DataProvider\PurchaseOrder\Form\Modifier
+ *
+ * Used for transfered product
  */
 class TransferredProduct extends AbstractModifier
 {
@@ -44,8 +45,9 @@ class TransferredProduct extends AbstractModifier
     ];
 
     /**
-     * modify data
+     * Modify data
      *
+     * @param array $data
      * @return array
      */
     public function modifyData(array $data)
@@ -62,8 +64,9 @@ class TransferredProduct extends AbstractModifier
     public function modifyMeta(array $meta)
     {
         if (!$this->getPurchaseOrderId() || $this->getCurrentPurchaseOrder()->getStatus() == Status::STATUS_PENDING ||
-            ($this->getCurrentPurchaseOrder()->getType() == Type::TYPE_QUOTATION))
+            ($this->getCurrentPurchaseOrder()->getType() == Type::TYPE_QUOTATION)) {
             return $meta;
+        }
         $transferredProductMeta = $this->getTransferredProductMeta();
         $meta = array_replace_recursive(
             $meta,
@@ -72,6 +75,11 @@ class TransferredProduct extends AbstractModifier
         return $meta;
     }
 
+    /**
+     * Get transferred product meta
+     *
+     * @return array
+     */
     public function getTransferredProductMeta()
     {
         $purchaseOrder = $this->getCurrentPurchaseOrder();
@@ -170,8 +178,9 @@ class TransferredProduct extends AbstractModifier
         if ($purchaseOrder->getStatus() != Status::STATUS_CANCELED
             && $purchaseOrder->getTotalQtyReceived() >
             $purchaseOrder->getTotalQtyTransferred() + $purchaseOrder->getTotalQtyReturned()
-        )
+        ) {
             $children[$this->children['transferred_product_buttons']] = $this->getTransferredProductButton();
+        }
         $children[$this->children['transferred_product_container']] = $this->getTransferredProductList();
         return $children;
     }
@@ -202,12 +211,13 @@ class TransferredProduct extends AbstractModifier
                             'targetName' => $this->scopeName
                                 . '.' . $this->children['transferred_product_modal'],
                             'actionName' => 'openModal'
-                        ], [
+                        ],
+                        [
                         'targetName' => $this->scopeName
                             . '.' . $this->children['transferred_product_modal']
                             . '.' . $this->children['transferred_product_modal_form'],
                         'actionName' => 'render'
-                    ]
+                        ]
                     ]
                 )
             ],
@@ -215,7 +225,7 @@ class TransferredProduct extends AbstractModifier
     }
 
     /**
-     * get transferred product list
+     * Get transferred product list
      *
      * @return array
      */
@@ -243,11 +253,19 @@ class TransferredProduct extends AbstractModifier
                         'externalFilterMode' => true,
                         'imports' => [
                             'supplier_id' => '${ $.provider }:data.supplier_id',
-                            'purchase_id' => '${ $.provider }:data.purchase_order_id'
+                            'purchase_id' => '${ $.provider }:data.purchase_order_id',
+                            '__disableTmpl' => [
+                                'supplier_id' => false,
+                                'purchase_id' => false
+                            ]
                         ],
                         'exports' => [
                             'supplier_id' => '${ $.externalProvider }:params.supplier_id',
-                            'purchase_id' => '${ $.externalProvider }:params.purchase_id'
+                            'purchase_id' => '${ $.externalProvider }:params.purchase_id',
+                            '__disableTmpl' => [
+                                'supplier_id' => false,
+                                'purchase_id' => false
+                            ]
                         ],
                         'selectionsProvider' =>
                             $this->children[$dataScope]

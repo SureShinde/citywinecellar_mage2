@@ -10,8 +10,7 @@ use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\Api\SortOrder;
 
 /**
- * Customer repository.
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * Model Loyalty Repository
  */
 class LoyaltyRepository implements \Magestore\Webpos\Api\Integration\LoyaltyRepositoryInterface
 {
@@ -36,17 +35,18 @@ class LoyaltyRepository implements \Magestore\Webpos\Api\Integration\LoyaltyRepo
 
     /**
      * LoyaltyRepository constructor.
+     *
      * @param \Magestore\Webpos\Model\Customer\CustomerRepository $customerRepository
      * @param \Magestore\Webpos\Api\Data\Sales\OrderSearchResultInterfaceFactory $searchResultsFactory
      * @param \Magestore\Webpos\Helper\Data $helper
+     * @param \Magento\Framework\Event\ManagerInterface $eventManager
      */
     public function __construct(
         \Magestore\Webpos\Model\Customer\CustomerRepository $customerRepository,
         \Magestore\Webpos\Api\Data\Sales\OrderSearchResultInterfaceFactory $searchResultsFactory,
         \Magestore\Webpos\Helper\Data $helper,
         \Magento\Framework\Event\ManagerInterface $eventManager
-    )
-    {
+    ) {
         $this->customerRepository = $customerRepository;
         $this->searchResultsFactory = $searchResultsFactory;
         $this->helper = $helper;
@@ -54,7 +54,7 @@ class LoyaltyRepository implements \Magestore\Webpos\Api\Integration\LoyaltyRepo
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getList(SearchCriteriaInterface $searchCriteria)
     {
@@ -81,7 +81,9 @@ class LoyaltyRepository implements \Magestore\Webpos\Api\Integration\LoyaltyRepo
     }
 
     /**
-     * @param $collection
+     * Get Loyalty Collection
+     *
+     * @param \Magento\Customer\Model\ResourceModel\Customer\Collection $collection
      * @return mixed
      */
     public function getLoyaltyCollection($collection)
@@ -90,12 +92,13 @@ class LoyaltyRepository implements \Magestore\Webpos\Api\Integration\LoyaltyRepo
 
         if ($this->helper->isStoreCreditEnable()) {
             $collection->getSelect()->joinLeft(
-                array('customer_credit' => $collection->getTable('customer_credit')),
+                ['customer_credit' => $collection->getTable('customer_credit')],
                 'e.entity_id = customer_credit.customer_id',
-                array(
+                [
                     'customer_credit_updated_at' => 'customer_credit.updated_at',
                     'credit_balance' => 'customer_credit.credit_balance'
-                ));
+                ]
+            );
         }
         return $collection;
     }
@@ -110,8 +113,7 @@ class LoyaltyRepository implements \Magestore\Webpos\Api\Integration\LoyaltyRepo
     public function addFilterGroupToCollection(
         \Magento\Framework\Api\Search\FilterGroup $filterGroup,
         \Magento\Customer\Model\ResourceModel\Customer\Collection $collection
-    )
-    {
+    ) {
         $checkProcess = new \Magento\Framework\DataObject();
         $updatedAt = '';
         foreach ($filterGroup->getFilters() as $filter) {
@@ -120,13 +122,13 @@ class LoyaltyRepository implements \Magestore\Webpos\Api\Integration\LoyaltyRepo
                 break;
             }
         }
-        $this->eventManager->dispatch('loyalty_add_filter_group',
-            ['collection' => $collection, 'updated_at' => $updatedAt, 'check_process' => $checkProcess]);
+        $this->eventManager->dispatch(
+            'loyalty_add_filter_group',
+            ['collection' => $collection, 'updated_at' => $updatedAt, 'check_process' => $checkProcess]
+        );
         if ($updatedAt && !$checkProcess->getData('process_store_credit')) {
             if ($this->helper->isStoreCreditEnable()) {
-                $collection->getSelect()->where('
-                    customer_credit.updated_at >= "' . $updatedAt . '"
-                ');
+                $collection->getSelect()->where('customer_credit.updated_at >= "' . $updatedAt . '"');
             }
         }
     }

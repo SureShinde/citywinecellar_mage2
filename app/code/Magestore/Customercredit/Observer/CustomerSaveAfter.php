@@ -17,13 +17,15 @@
  * @package     Magestore_Customercredit
  * @copyright   Copyright (c) 2017 Magestore (http://www.magestore.com/)
  * @license     http://www.magestore.com/license-agreement.html
- *
  */
 
 namespace Magestore\Customercredit\Observer;
 
 use Magento\Framework\Event\ObserverInterface;
 
+/**
+ * Customer save after observer
+ */
 class CustomerSaveAfter implements ObserverInterface
 {
     /**
@@ -57,8 +59,20 @@ class CustomerSaveAfter implements ObserverInterface
     protected $_responseFactory;
 
     /**
-     * @param \Magento\AdminNotification\Model\FeedFactory $feedFactory
-     * @param \Magento\Backend\Model\Auth\Session $backendAuthSession
+     * @var \Magento\Framework\ObjectManagerInterface
+     */
+    protected $_objectManager;
+
+    /**
+     * CustomerSaveAfter Construct
+     *
+     * @param \Magento\Framework\App\RequestInterface $request
+     * @param \Magento\Framework\Message\ManagerInterface $messageManager
+     * @param \Magestore\Customercredit\Model\CustomercreditFactory $customercreditFactory
+     * @param \Magento\Framework\ObjectManagerInterface $objectManager
+     * @param \Magestore\Customercredit\Model\TransactionFactory $transactionFactory
+     * @param \Magento\Framework\UrlInterface $url
+     * @param \Magento\Framework\App\ResponseFactory $responseFactory
      */
     public function __construct(
         \Magento\Framework\App\RequestInterface $request,
@@ -68,8 +82,7 @@ class CustomerSaveAfter implements ObserverInterface
         \Magestore\Customercredit\Model\TransactionFactory $transactionFactory,
         \Magento\Framework\UrlInterface $url,
         \Magento\Framework\App\ResponseFactory $responseFactory
-    )
-    {
+    ) {
         $this->_request = $request;
         $this->messageManager = $messageManager;
         $this->_customercreditFactory = $customercreditFactory;
@@ -89,8 +102,9 @@ class CustomerSaveAfter implements ObserverInterface
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
         $customer = $observer->getEvent()->getCustomer();
-        if (!$customer->getId())
+        if (!$customer->getId()) {
             return $this;
+        }
 
         $customer_id = $customer->getId();
 
@@ -99,13 +113,13 @@ class CustomerSaveAfter implements ObserverInterface
             $credit_value = str_replace(',', '.', $credit_value);
         }
         $description = $this->_request->getParam('description');
-        $group = $this->_request->getParam('account');
-        $customer_group = $group['group_id'];
+        $customerData = $this->_request->getParam('customer');
+        $customer_group = $customerData['group_id'];
         $sign = substr($credit_value, 0, 1);
-
-        if (!$credit_value)
+        
+        if (!$credit_value) {
             return $this->getReturn();
-
+        }
         $transaction = $this->_transactionFactory->create();
         $customercredit = $this->_customercreditFactory->create()->load($customer_id, 'customer_id');
 
@@ -118,7 +132,7 @@ class CustomerSaveAfter implements ObserverInterface
         } else {
             $end_credit = $customercredit->getCreditBalance() + $credit_value;
         }
-
+        
         $transactionCreditData = [
             'customer_id' => $customer_id,
             'type_transaction_id' => 1,
@@ -132,8 +146,7 @@ class CustomerSaveAfter implements ObserverInterface
         $transaction->setData($transactionCreditData);
 
         try {
-
-            if(!$customercredit->getCustomerId()){
+            if (!$customercredit->getCustomerId()) {
                 $customercredit->setCustomerId($customer_id);
             }
 
@@ -155,14 +168,18 @@ class CustomerSaveAfter implements ObserverInterface
         return $this->getReturn();
     }
 
-    /* @@TODO fix param to return customer credit page */
-    public function getReturn(){
+    /**
+     * Fix param to return customer credit page
+     *
+     * @return $this
+     */
+    public function getReturn()
+    {
         $type = $this->_request->getParam('type');
         $redirectBack = $this->_request->getParam('back', false);
-        if($type == 'customercredit' && $redirectBack == false) {
+        if ($type == 'customercredit' && $redirectBack == false) {
             $RedirectUrl = $this->_url->getUrl('customercreditadmin/creditproduct/');
             $this->_responseFactory->create()->setRedirect($RedirectUrl)->sendResponse();
-//            die();
         }
         return $this;
     }

@@ -8,13 +8,15 @@
 namespace Magestore\WebposAuthorizenet\Model;
 
 use Magento\Framework\Exception\StateException;
-use \net\authorize\api\contract\v1 AS apiContract;
-use \net\authorize\api\controller AS apiController;
-use \net\authorize\api\constants AS apiConstants;
+use \net\authorize\api\contract\v1 as apiContract;
+use \net\authorize\api\controller as apiController;
+use \net\authorize\api\constants as apiConstants;
 
 /**
  * Class Authorizenet
- * @package Magestore\WebposAuthorizenet\Model
+ *
+ * Used for authorize net model
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Authorizenet implements \Magestore\WebposAuthorizenet\Api\AuthorizenetInterface
 {
@@ -38,21 +40,25 @@ class Authorizenet implements \Magestore\WebposAuthorizenet\Api\AuthorizenetInte
     public function __construct(
         \Magestore\WebposAuthorizenet\Helper\Data $helper,
         \Magento\Quote\Model\QuoteRepository $quoteRepository
-    )
-    {
+    ) {
         $this->helper = $helper;
         $this->quoteRepository = $quoteRepository;
     }
 
     /**
+     * Validate Required SDK
+     *
      * @return bool
      */
     public function validateRequiredSDK()
     {
-        return (class_exists("\\net\\authorize\\api\\contract\\v1\\MerchantAuthenticationType")) ? true : false;
+        return (class_exists("\\net\\authorize\\api\\contract\\v1\\MerchantAuthenticationType")) ? true
+            : false;
     }
 
     /**
+     * Get Config
+     *
      * @param string $key
      * @return array
      */
@@ -63,7 +69,8 @@ class Authorizenet implements \Magestore\WebposAuthorizenet\Api\AuthorizenetInte
     }
 
     /**
-     * get quote by id
+     * Get quote by id
+     *
      * @param string $quoteId
      * @return \Magento\Quote\Api\Data\CartInterface
      */
@@ -74,16 +81,20 @@ class Authorizenet implements \Magestore\WebposAuthorizenet\Api\AuthorizenetInte
     }
 
     /**
+     * Complete Payment
+     *
      * @param string $token
      * @param string $amount
-     *
      * @return string
      * @throws \Exception
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function completePayment($token, $amount)
     {
         /* Create a merchantAuthenticationType object with authentication details
        retrieved from the constants file */
+        // phpstan:ignore
         $merchantAuthentication = new apiContract\MerchantAuthenticationType();
         $merchantAuthentication->setName($this->getConfig('api_login'));
         $merchantAuthentication->setTransactionKey($this->getConfig('transaction_key'));
@@ -91,27 +102,32 @@ class Authorizenet implements \Magestore\WebposAuthorizenet\Api\AuthorizenetInte
         // Set the transaction's refId
         $refId = 'ref' . time();
         // Create the payment object for a payment nonce
+        // phpstan:ignore
         $opaqueData = new apiContract\OpaqueDataType();
         $opaqueData->setDataDescriptor("COMMON.ACCEPT.INAPP.PAYMENT");
         $opaqueData->setDataValue($token);
 
         // Add the payment data to a paymentType object
+        // phpstan:ignore
         $paymentOne = new apiContract\PaymentType();
         $paymentOne->setOpaqueData($opaqueData);
         // Create order information
+        // phpstan:ignore
         $order = new apiContract\OrderType();
         $order->setInvoiceNumber('POS-' . time());
         $order->setDescription(__('Payment for POS'));
 
         //Add values for transaction settings
+        // phpstan:ignore
         $duplicateWindowSetting = new apiContract\SettingType();
         $duplicateWindowSetting->setSettingName("duplicateWindow");
         $duplicateWindowSetting->setSettingValue("600");
         // Create a transactionRequestType object and add the previous objects to it
         $type = 'authOnlyTransaction';
-        if ($this->getConfig('payment_action') == \Magento\Authorizenet\Model\Authorizenet::ACTION_AUTHORIZE_CAPTURE) {
+        if ($this->getConfig('payment_action') == \Magento\Payment\Model\MethodInterface::ACTION_AUTHORIZE_CAPTURE) {
             $type = 'authCaptureTransaction';
         }
+        // phpstan:ignore
         $transactionRequestType = new apiContract\TransactionRequestType();
         $transactionRequestType->setTransactionType($type);
         $transactionRequestType->setAmount($amount);
@@ -119,15 +135,19 @@ class Authorizenet implements \Magestore\WebposAuthorizenet\Api\AuthorizenetInte
         $transactionRequestType->setPayment($paymentOne);
         $transactionRequestType->addToTransactionSettings($duplicateWindowSetting);
         // Assemble the complete transaction request
+        // phpstan:ignore
         $request = new apiContract\CreateTransactionRequest();
         $request->setMerchantAuthentication($merchantAuthentication);
         $request->setRefId($refId);
         $request->setTransactionRequest($transactionRequestType);
         // Create the controller and get the response
+        // phpstan:ignore
         $controller = new apiController\CreateTransactionController($request);
         if ($this->getConfig('is_sandbox') == "1") {
+            // phpstan:ignore
             $apiUrl = apiConstants\ANetEnvironment::SANDBOX;
         } else {
+            // phpstan:ignore
             $apiUrl = apiConstants\ANetEnvironment::PRODUCTION;
         }
         $response = $controller->executeWithApiResponse($apiUrl);
@@ -144,7 +164,9 @@ class Authorizenet implements \Magestore\WebposAuthorizenet\Api\AuthorizenetInte
                 } else {
                     if ($tresponse != null && $tresponse->getErrors() != null) {
                         if ($tresponse->getErrors()[0]->getErrorCode() == 'E00007') {
-                            throw new StateException(__('Connection failed. Please contact admin to check the configuration of API.'));
+                            throw new StateException(
+                                __('Connection failed. Please contact admin to check the configuration of API.')
+                            );
                         }
                     }
                     throw new StateException(__('Transaction is failed'));
@@ -154,11 +176,15 @@ class Authorizenet implements \Magestore\WebposAuthorizenet\Api\AuthorizenetInte
                 $tresponse = $response->getTransactionResponse();
                 if ($tresponse != null && $tresponse->getErrors() != null) {
                     if ($tresponse->getErrors()[0]->getErrorCode() == 'E00007') {
-                        throw new StateException(__('Connection failed. Please contact admin to check the configuration of API.'));
+                        throw new StateException(
+                            __('Connection failed. Please contact admin to check the configuration of API.')
+                        );
                     }
-                } else if ($response != null && $response->getMessages() != null) {
+                } elseif ($response != null && $response->getMessages() != null) {
                     if ($response->getMessages()->getMessage()[0]->getCode() == 'E00003') {
-                        throw new StateException(__('Connection failed. Please contact admin to check the configuration of API.'));
+                        throw new StateException(
+                            __('Connection failed. Please contact admin to check the configuration of API.')
+                        );
                     }
                 }
                 throw new StateException(__('Transaction is failed'));
@@ -170,7 +196,7 @@ class Authorizenet implements \Magestore\WebposAuthorizenet\Api\AuthorizenetInte
     }
 
     /**
-     * test connect authorizenet API
+     * Test connect authorizenet API
      *
      * @return bool
      * @throws \Exception
@@ -184,16 +210,19 @@ class Authorizenet implements \Magestore\WebposAuthorizenet\Api\AuthorizenetInte
     }
 
     /**
-     * test create authorizenet payment
+     * Test create authorizenet payment
      *
      * @throws \Exception
-     *
+     * phpcs:disable Generic.Metrics.NestingLevel
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function testCreate()
     {
         try {
             /* Create a merchantAuthenticationType object with authentication details
            retrieved from the constants file */
+            // phpstan:ignore
             $merchantAuthentication = new apiContract\MerchantAuthenticationType();
 //            $merchantAuthentication->setName('5KP3u95bQpv');
 //            $merchantAuthentication->setTransactionKey('346HZ32z3fP4hTG2');
@@ -203,15 +232,19 @@ class Authorizenet implements \Magestore\WebposAuthorizenet\Api\AuthorizenetInte
             // Set the transaction's refId
             $refId = 'ref' . time();
             // Create the payment data for a credit card
+            // phpstan:ignore
             $creditCard = new apiContract\CreditCardType();
             $creditCard->setCardNumber("4111111111111111");
             $creditCard->setExpirationDate("1226");
             $creditCard->setCardCode("123");
+            // phpstan:ignore
             $paymentOne = new apiContract\PaymentType();
             $paymentOne->setCreditCard($creditCard);
+            // phpstan:ignore
             $order = new apiContract\OrderType();
             $order->setDescription("New Item");
             // Set the customer's Bill To address
+            // phpstan:ignore
             $customerAddress = new apiContract\CustomerAddressType();
             $customerAddress->setFirstName("Ellen");
             $customerAddress->setLastName("Johnson");
@@ -222,15 +255,18 @@ class Authorizenet implements \Magestore\WebposAuthorizenet\Api\AuthorizenetInte
             $customerAddress->setZip("44628");
             $customerAddress->setCountry("USA");
             // Set the customer's identifying information
+            // phpstan:ignore
             $customerData = new apiContract\CustomerDataType();
             $customerData->setType("individual");
             $customerData->setId(time());
             $customerData->setEmail("EllenJohnson@example.com");
             //Add values for transaction settings
+            // phpstan:ignore
             $duplicateWindowSetting = new apiContract\SettingType();
             $duplicateWindowSetting->setSettingName("duplicateWindow");
             $duplicateWindowSetting->setSettingValue("600");
             // Create a TransactionRequestType object
+            // phpstan:ignore
             $transactionRequestType = new apiContract\TransactionRequestType();
             $transactionRequestType->setTransactionType("authOnlyTransaction");
             $transactionRequestType->setAmount(100);
@@ -239,15 +275,19 @@ class Authorizenet implements \Magestore\WebposAuthorizenet\Api\AuthorizenetInte
             $transactionRequestType->setBillTo($customerAddress);
             $transactionRequestType->setCustomer($customerData);
             $transactionRequestType->addToTransactionSettings($duplicateWindowSetting);
+            // phpstan:ignore
             $request = new apiContract\CreateTransactionRequest();
             $request->setMerchantAuthentication($merchantAuthentication);
             $request->setRefId($refId);
             $request->setTransactionRequest($transactionRequestType);
+            // phpstan:ignore
             $controller = new apiController\CreateTransactionController($request);
             $apiUrl = "";
             if ($this->getConfig('is_sandbox') == "1") {
+                // phpstan:ignore
                 $apiUrl = apiConstants\ANetEnvironment::SANDBOX;
             } else {
+                // phpstan:ignore
                 $apiUrl = apiConstants\ANetEnvironment::PRODUCTION;
             }
             $response = $controller->executeWithApiResponse($apiUrl);
@@ -260,7 +300,9 @@ class Authorizenet implements \Magestore\WebposAuthorizenet\Api\AuthorizenetInte
                     } else {
                         if ($tresponse != null && $tresponse->getErrors() != null) {
                             if ($tresponse->getErrors()[0]->getErrorCode() == 'E00007') {
-                                throw new StateException(__('Connection failed. Please contact admin to check the configuration of API.'));
+                                throw new StateException(
+                                    __('Connection failed. Please contact admin to check the configuration of API.')
+                                );
                             }
                         }
                         return false;
@@ -269,7 +311,9 @@ class Authorizenet implements \Magestore\WebposAuthorizenet\Api\AuthorizenetInte
                     $tresponse = $response->getTransactionResponse();
                     if ($tresponse != null && $tresponse->getErrors() != null) {
                         if ($tresponse->getErrors()[0]->getErrorCode() == 'E00007') {
-                            throw new StateException(__('Connection failed. Please contact admin to check the configuration of API.'));
+                            throw new StateException(
+                                __('Connection failed. Please contact admin to check the configuration of API.')
+                            );
                         }
                     }
                     return false;
@@ -277,7 +321,7 @@ class Authorizenet implements \Magestore\WebposAuthorizenet\Api\AuthorizenetInte
             }
             return false;
         } catch (\Exception $e) {
-            throw new \Exception($e->getMessage());
+            throw new \Magento\Framework\Exception\LocalizedException($e->getMessage());
         }
     }
 }

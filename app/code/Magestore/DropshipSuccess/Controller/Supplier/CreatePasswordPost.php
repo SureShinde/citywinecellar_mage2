@@ -3,18 +3,22 @@
  * Copyright © 2016 Magestore. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace Magestore\DropshipSuccess\Controller\Supplier;
 
 use Magento\Customer\Model\Session;
 use Magestore\SupplierSuccess\Api\Data\SupplierInterface;
 
 /**
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * Controller CreatePasswordPost
+ *
+ * @SuppressWarnings(PHPMD.AllPurposeAction)
  */
 class CreatePasswordPost extends \Magestore\DropshipSuccess\Controller\AbstractSupplier
 {
-
     /**
+     * Execute
+     *
      * @return \Magento\Framework\Controller\Result\Redirect
      */
     public function execute()
@@ -53,7 +57,7 @@ class CreatePasswordPost extends \Magestore\DropshipSuccess\Controller\AbstractS
             ->setCurPage(1)
             ->getFirstItem();
         if ($supplier->getId()) {
-            $supplier->setPassword(md5($password));
+            $supplier->setPassword(hash('md5', $password));
             $this->supplierRepository->save($supplier);
             $this->messageManager->addSuccessMessage(__('You updated your password.'));
             $resultRedirect->setPath('dropship/supplier/login');

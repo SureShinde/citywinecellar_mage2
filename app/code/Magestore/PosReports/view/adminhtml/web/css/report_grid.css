@@ -1,0 +1,66 @@
+table.data-grid .data-row:last-child td {
+    background-color: #514943;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: larger;
+}
+
+table.data-grid .data-row:last-child td .action-menu-item,
+table.data-grid .data-row:last-child td label.data-grid-checkbox-cell-inner {
+    display: none;
+}
+
+table.data-grid thead tr:hover .pos-report-column-header:hover .pos-report-column-header-tooltip-container {
+    height: 300px;
+    transition: all .2s;
+    transition-delay: 1s;
+}
+
+.pos-report-column-header .pos-report-column-header-tooltip-wrapper{
+    position: absolute;
+    bottom: 0;
+}
+
+.pos-report-column-header .pos-report-column-header-tooltip-container {
+    height: 0px;
+    overflow: hidden;
+    position: absolute;
+    bottom: 100%;
+    left: 0px;
+    width: 100%;
+}
+
+.pos-report-column-header .pos-report-column-header-tooltip {
+    background: #facd7f;
+    color: #514943;
+    padding: 10px;
+    border-radius: 5px;
+    position: relative;
+    margin-bottom: 15px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.pos-report-column-header .pos-report-column-header-tooltip:before {
+    content: "";
+    width: 16px;
+    height: 16px;
+    bottom: -8px;
+    border: 1px #facd7f solid;
+    background: #facd7f;
+    position: absolute;
+    left: calc(50% - 8px);
+    transform: rotate(45deg);
+    transition: all .3s;
+}
+
+.data-grid thead tr:hover .data-grid-th._sortable {
+    z-index: 500;
+}
+.data-grid thead tr .data-grid-th._sortable {
+    min-width: 100px;
+}
+
+.admin__data-grid-wrap:hover {
+    overflow-x: visible;
+}

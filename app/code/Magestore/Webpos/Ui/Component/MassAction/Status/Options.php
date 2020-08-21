@@ -4,23 +4,14 @@
  * Copyright © 2018 Magestore. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace Magestore\Webpos\Ui\Component\MassAction\Status;
 
 use Magento\Framework\UrlInterface;
 use Zend\Stdlib\JsonSerializable;
 
 /**
- * class \Magestore\Webpos\Ui\Component\MassAction\Status\Options
- * 
- * Web POS MassAction Status Options
- * Methods:
- *  jsonSerialize
- *  prepareData
- * 
- * @category    Magestore
- * @package     Magestore\Webpos\Ui\Component\MassAction\Status
- * @module      Webpos
- * @author      Magestore Developer
+ * Massaction Options
  */
 class Options implements JsonSerializable
 {
@@ -63,7 +54,8 @@ class Options implements JsonSerializable
     protected $_additionalData = [];
 
     /**
-     * 
+     * Options constructor.
+     *
      * @param UrlInterface $urlBuilder
      * @param array $data
      */
@@ -83,16 +75,16 @@ class Options implements JsonSerializable
     public function jsonSerialize()
     {
         if ($this->_options === null) {
-            $options = array(
-                array(
+            $options = [
+                [
                     "value" => "1",
                     "label" => ('Enabled'),
-                ),
-                array(
+                ],
+                [
                     "value" => "2",
                     "label" => ('Disabled'),
-                )
-            );
+                ]
+            ];
             $this->prepareData();
             foreach ($options as $optionCode) {
                 $this->_options[$optionCode['value']] = [

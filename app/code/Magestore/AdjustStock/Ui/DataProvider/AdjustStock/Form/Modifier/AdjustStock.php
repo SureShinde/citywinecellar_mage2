@@ -7,15 +7,14 @@
 namespace Magestore\AdjustStock\Ui\DataProvider\AdjustStock\Form\Modifier;
 
 use Magento\Framework\UrlInterface;
-use Magento\Framework\Phrase;
-use Magento\Ui\Component\Form;
 use Magestore\AdjustStock\Api\Data\AdjustStock\AdjustStockInterface;
+use Magestore\AdjustStock\Ui\DataProvider\Form\Modifier\AbstractModifier;
 
 /**
- * Class Related
+ * Modifier Adjust Stock
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class AdjustStock extends \Magestore\AdjustStock\Ui\DataProvider\Form\Modifier\Dynamic
+class AdjustStock extends AbstractModifier
 {
     /**
      * @var \Magestore\AdjustStock\Model\ResourceModel\AdjustStock\Product\CollectionFactory
@@ -55,17 +54,19 @@ class AdjustStock extends \Magestore\AdjustStock\Ui\DataProvider\Form\Modifier\D
     protected $coreRegistry;
 
     /**
-     * Generate constructor.
+     * AdjustStock constructor.
+     *
      * @param \Magestore\AdjustStock\Model\ResourceModel\AdjustStock\Product\CollectionFactory $collectionFactory
      * @param \Magestore\AdjustStock\Model\AdjustStockFactory $adjustStockFactory
-     * @param \Magestore\AdjustStock\Api\AdjustStock\AdjustStockManagementInterface $adjustStockManagement
      * @param \Magestore\AdjustStock\Model\ResourceModel\AdjustStock $adjustStockResource
      * @param UrlInterface $urlBuilder
      * @param \Magento\Framework\App\RequestInterface $request
+     * @param \Magestore\AdjustStock\Api\AdjustStock\AdjustStockManagementInterface $adjustStockManagement
      * @param \Magento\Framework\Registry $coreRegistry
      * @param \Magestore\AdjustStock\Model\Source\Adminhtml\Source $sourceSelect
      * @param \Magestore\AdjustStock\Model\AdjustStock\Options\Status $adjustStockStatus
      * @param array $_modifierConfig
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         \Magestore\AdjustStock\Model\ResourceModel\AdjustStock\Product\CollectionFactory $collectionFactory,
@@ -92,8 +93,7 @@ class AdjustStock extends \Magestore\AdjustStock\Ui\DataProvider\Form\Modifier\D
     /**
      * Get current Adjustment
      *
-     * @return Adjustment
-     * @throws NoSuchEntityException
+     * @return \Magestore\AdjustStock\Model\AdjustStock
      */
     public function getCurrentAdjustment()
     {
@@ -109,75 +109,67 @@ class AdjustStock extends \Magestore\AdjustStock\Ui\DataProvider\Form\Modifier\D
     public function getAdjustStockStatus()
     {
         $adjustStock = $this->getCurrentAdjustment();
-        if($adjustStock->getId()){
+        if ($adjustStock->getId()) {
             return $adjustStock->getData('status');
         }
         return null;
     }
 
     /**
-     * is disabled element
+     * Is disabled element
      *
-     * @param
-     * @return
+     * @return bool|string
      */
     public function isDisabledElement()
     {
-        if ($this->request->getParam('id'))
+        if ($this->request->getParam('id')) {
             return 'disabled';
+        }
         return false;
     }
 
     /**
-     * get collapsible
-     *
-     * @param
-     * @return boolean
+     * @inheritDoc
      */
-    public function getCollapsible(){
-        if ($this->getAdjustStockStatus() != '1')
+    public function getCollapsible()
+    {
+        if ($this->getAdjustStockStatus() != '1') {
             return $this->_collapsible;
+        }
         return false;
     }
 
     /**
-     * get group label
-     *
-     * @param
-     * @return boolean
+     * @inheritDoc
      */
-    public function getGroupLabel(){
-        if ($this->getAdjustStockStatus() != '1')
+    public function getGroupLabel()
+    {
+        if ($this->getAdjustStockStatus() != '1') {
             return $this->_groupLabel;
+        }
         return '';
     }
 
     /**
-     * get modify tmpl
-     *
-     * @param
-     * @return
+     * @inheritDoc
      */
     public function getModifyTmpl($type)
     {
         if ($this->getAdjustStockStatus() == AdjustStockInterface::STATUS_COMPLETED) {
-            switch ($type){
+            switch ($type) {
                 case 'input':
                     return static::TMPL_TEXT_LABEL;
-                    break;
                 case 'textarea':
                     return static::TMPL_TEXTAREA_LABEL;
-                    break;
                 case 'select':
                     return static::TMPL_SELECT_LABEL;
-                    break;
                 default:
                     return static::TMPL_TEXT_LABEL;
             }
         }
 
         if ($this->getAdjustStockStatus() != null) {
-            if ($type == 'select'){
+            if ($type == 'select') {
                 return static::TMPL_SELECT_LABEL;
             }
         }

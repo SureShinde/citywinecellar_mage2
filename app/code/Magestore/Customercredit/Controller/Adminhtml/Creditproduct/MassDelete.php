@@ -22,7 +22,14 @@
 
 namespace Magestore\Customercredit\Controller\Adminhtml\Creditproduct;
 
-class MassDelete extends \Magento\Backend\App\Action
+use Magento\Framework\App\Action\HttpPostActionInterface;
+
+/**
+ * Class MassDelete
+ *
+ * Credit product mass delete controller
+ */
+class MassDelete extends \Magento\Backend\App\Action implements HttpPostActionInterface
 {
     /**
      * Check for is allowed
@@ -35,7 +42,7 @@ class MassDelete extends \Magento\Backend\App\Action
     }
 
     /**
-     * @return \Magento\Backend\Model\View\Result\Redirect
+     * @inheritDoc
      */
     public function execute()
     {
@@ -47,7 +54,7 @@ class MassDelete extends \Magento\Backend\App\Action
         } else {
             try {
                 foreach ($productIds as $productId) {
-                    $product = $this->_objectManager->get('Magento\Catalog\Model\Product')->load($productId);
+                    $product = $this->_objectManager->get(\Magento\Catalog\Model\Product::class)->load($productId);
                     $product->delete();
                 }
                 $this->messageManager->addSuccess(
@@ -57,6 +64,6 @@ class MassDelete extends \Magento\Backend\App\Action
                 $this->messageManager->addError($e->getMessage());
             }
         }
-        $this->_redirect('*/*/', array('store' => $storeId));
+        return $this->_redirect('*/*/', ['store' => $storeId]);
     }
 }

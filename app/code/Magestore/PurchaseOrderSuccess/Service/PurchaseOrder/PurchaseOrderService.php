@@ -6,11 +6,20 @@
 
 namespace Magestore\PurchaseOrderSuccess\Service\PurchaseOrder;
 
+use Magento\Framework\Exception\LocalizedException;
 use Magestore\PurchaseOrderSuccess\Api\Data\PurchaseOrderInterface;
 use Magestore\PurchaseOrderSuccess\Api\Data\PurchaseOrderItemInterface;
 use Magestore\PurchaseOrderSuccess\Api\PurchaseOrderRepositoryInterface;
 use Magestore\PurchaseOrderSuccess\Model\PurchaseOrder;
+use Magestore\PurchaseOrderSuccess\Block\Adminhtml\Email\EmailToSupplier\Header as EmailToSupplierHeader;
+use Magestore\PurchaseOrderSuccess\Block\Adminhtml\Email\EmailToSupplier\ItemsEmail as EmailToSupplierItem;
+use Magestore\PurchaseOrderSuccess\Service\PurchaseOrderCode\PurchaseOrderCodeService;
 
+/**
+ * Service PurchaseOrder
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class PurchaseOrderService
 {
     const DEFAULT_ID = 1;
@@ -41,6 +50,10 @@ class PurchaseOrderService
      * @var Item\Returned\ReturnedService
      */
     protected $returnedService;
+    /**
+     * @var Item\Transferred\TransferredService
+     */
+    protected $transferredService;
 
     /**
      * @var Invoice\InvoiceService
@@ -63,7 +76,7 @@ class PurchaseOrderService
     protected $purchaseOrderCodeFactory;
 
     /**
-     * @var \Magestore\PurchaseOrderSuccess\Service\PurchaseOrderCode\PurchaseOrderCodeService
+     * @var PurchaseOrderCodeService
      */
     protected $purchaseOrderCodeService;
 
@@ -81,6 +94,7 @@ class PurchaseOrderService
 
     /**
      * PurchaseOrderService constructor.
+     *
      * @param \Magento\Directory\Helper\Data $directoryHelper
      * @param PurchaseOrderRepositoryInterface $purchaseOrderRepository
      * @param Item\ItemService $purchaseItemService
@@ -91,7 +105,10 @@ class PurchaseOrderService
      * @param \Magestore\PurchaseOrderSuccess\Service\Config\TaxAndShipping $taxShippingService
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
      * @param \Magestore\PurchaseOrderSuccess\Model\PurchaseOrderCodeFactory $purchaseOrderCodeFactory
-     * @param \Magestore\PurchaseOrderSuccess\Service\PurchaseOrderCode\PurchaseOrderCodeService $purchaseOrderCodeService
+     * @param PurchaseOrderCodeService $purchaseOrderCodeService
+     * @param \Magento\Framework\ObjectManagerInterface $objectManager
+     * @param \Magento\Framework\Registry $registry
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         \Magento\Directory\Helper\Data $directoryHelper,
@@ -104,10 +121,10 @@ class PurchaseOrderService
         \Magestore\PurchaseOrderSuccess\Service\Config\TaxAndShipping $taxShippingService,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magestore\PurchaseOrderSuccess\Model\PurchaseOrderCodeFactory $purchaseOrderCodeFactory,
-        \Magestore\PurchaseOrderSuccess\Service\PurchaseOrderCode\PurchaseOrderCodeService $purchaseOrderCodeService,
+        PurchaseOrderCodeService $purchaseOrderCodeService,
         \Magento\Framework\ObjectManagerInterface $objectManager,
         \Magento\Framework\Registry $registry
-    ){
+    ) {
         $this->directoryHelper = $directoryHelper;
         $this->purchaseOrderRepository = $purchaseOrderRepository;
         $this->purchaseItemService = $purchaseItemService;
@@ -124,15 +141,17 @@ class PurchaseOrderService
     }
 
     /**
-     * @param PurchaseOrderInterface $purchaseOrderInterface
-     * @return $this
+     * Get Currency Code
+     *
+     * @param PurchaseOrderInterface $purchaseOrder
+     * @return PurchaseOrderInterface
      */
-    public function getCurrencyCode(PurchaseOrderInterface $purchaseOrder){
+    public function getCurrencyCode(PurchaseOrderInterface $purchaseOrder)
+    {
         $baseCurrencyCode = $this->directoryHelper->getBaseCurrencyCode();
         $purchaseOrder->setCurrencyCode($baseCurrencyCode);
         return $purchaseOrder;
     }
-
 
     /**
      * Get purchase code
@@ -140,17 +159,22 @@ class PurchaseOrderService
      * @param PurchaseOrderInterface $purchaseOrder
      * @return PurchaseOrderInterface
      */
-    public function getPurchaseCode(PurchaseOrderInterface $purchaseOrder){
+    public function getPurchaseCode(PurchaseOrderInterface $purchaseOrder)
+    {
         $type = $purchaseOrder->getType();
         $code = $purchaseOrder->getPurchaseCode();
-        if($type==PurchaseOrder\Option\Type::TYPE_QUOTATION){
-            if(!$code){
-                $code = $this->purchaseOrderCodeService->generateCode(PurchaseOrder\Option\Code::QUOTATION_CODE_PREFIX);
+        if ($type == PurchaseOrder\Option\Type::TYPE_QUOTATION) {
+            if (!$code) {
+                $code = $this->purchaseOrderCodeService->generateCode(
+                    PurchaseOrder\Option\Code::QUOTATION_CODE_PREFIX
+                );
             }
         }
-        if($type==PurchaseOrder\Option\Type::TYPE_PURCHASE_ORDER){
+        if ($type == PurchaseOrder\Option\Type::TYPE_PURCHASE_ORDER) {
             if (strpos($code, PurchaseOrder\Option\Code::PURCHASE_ORDER_CODE_PREFIX) === false) {
-                $code = $this->purchaseOrderCodeService->generateCode(PurchaseOrder\Option\Code::PURCHASE_ORDER_CODE_PREFIX);
+                $code = $this->purchaseOrderCodeService->generateCode(
+                    PurchaseOrder\Option\Code::PURCHASE_ORDER_CODE_PREFIX
+                );
             }
         }
         $purchaseOrder->setPurchaseCode($code);
@@ -158,74 +182,78 @@ class PurchaseOrderService
     }
 
     /**
+     * Update Purchase Total
+     *
      * @param PurchaseOrderInterface $purchaseOrder
      * @throws \Exception
      */
-    public function updatePurchaseTotal(PurchaseOrderInterface $purchaseOrder){
+    public function updatePurchaseTotal(PurchaseOrderInterface $purchaseOrder)
+    {
         $taxType = $this->taxShippingService->getTaxType();
-//        $defaulShippingCost = $this->taxShippingService->getDefaultShippingCost() * $purchaseOrder->getCurrencyRate();
         $purchaseItems = $this->purchaseItemService
             ->getProductsByPurchaseOrderId($purchaseOrder->getId())->getData();
         $totalQty = $subtotal = $discount = $tax = $grandTotalExclTax = $grandTotalInclTax = 0;
         $shippingCost = $purchaseOrder->getShippingCost();
-//        if($shippingCost == 0 && $defaulShippingCost !== '' && $defaulShippingCost>0){
-//            $purchaseOrder->setShippingCost($defaulShippingCost);
-//            $shippingCost = $defaulShippingCost;
-//        }
-        foreach ($purchaseItems as $item){
+
+        foreach ($purchaseItems as $item) {
             $itemQty = $item[PurchaseOrderItemInterface::QTY_ORDERRED];
-            if(!$itemQty)
+            if (!$itemQty) {
                 continue;
+            }
             $totalQty += $itemQty;
             $itemTotal = ($itemQty * $item[PurchaseOrderItemInterface::COST]);
             $subtotal += $itemTotal;
-            $itemDiscount = $itemTotal*$item[PurchaseOrderItemInterface::DISCOUNT]/100;
+            $itemDiscount = $itemTotal * $item[PurchaseOrderItemInterface::DISCOUNT] / 100;
             $discount += $itemDiscount;
-            if($taxType == 0){
-                $taxItem = $itemTotal*$item[PurchaseOrderItemInterface::TAX]/100;
-            }else{
-                $taxItem = ($itemTotal-$itemDiscount)*$item[PurchaseOrderItemInterface::TAX]/100;
+            if ($taxType == 0) {
+                $taxItem = $itemTotal * $item[PurchaseOrderItemInterface::TAX] / 100;
+            } else {
+                $taxItem = ($itemTotal - $itemDiscount) * $item[PurchaseOrderItemInterface::TAX] / 100;
             }
             $tax += $taxItem;
         }
-        if($totalQty==0){
+        if ($totalQty == 0) {
             $purchaseOrder->setShippingCost(0);
         }
-        $grandTotalExclTax = $subtotal-$discount+$shippingCost;
-        $grandTotalInclTax = $grandTotalExclTax+$tax;
+        $grandTotalExclTax = $subtotal - $discount + $shippingCost;
+        $grandTotalInclTax = $grandTotalExclTax + $tax;
         $purchaseOrder->setTotalQtyOrderred($totalQty);
         $purchaseOrder->setSubtotal($subtotal);
         $purchaseOrder->setTotalDiscount(-$discount);
         $purchaseOrder->setTotalTax($tax);
         $purchaseOrder->setGrandTotalExclTax($grandTotalExclTax);
         $purchaseOrder->setGrandTotalInclTax($grandTotalInclTax);
-        try{
+        try {
             $this->purchaseOrderRepository->save($purchaseOrder);
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             throw $e;
         }
     }
 
     /**
+     * Send Email To Supplier
+     *
      * @param \Magestore\PurchaseOrderSuccess\Api\Data\PurchaseOrderInterface $purchaseOrder
      * @param \Magestore\SupplierSuccess\Api\Data\SupplierInterface $supplier
      * @return bool
      */
-    public function sendEmailToSupplier($purchaseOrder, $supplier){
+    public function sendEmailToSupplier($purchaseOrder, $supplier)
+    {
         /** @var \Magestore\PurchaseOrderSuccess\Model\Email\TransportBuilder $transportBuilder */
         $transportBuilder = \Magento\Framework\App\ObjectManager::getInstance()->create(
-            '\Magestore\PurchaseOrderSuccess\Model\Email\TransportBuilder'
+            \Magestore\PurchaseOrderSuccess\Model\Email\TransportBuilder::class
         );
         try {
-            if(class_exists('mPDF')) {
+            if (class_exists('mPDF')) {
                 $fileName = 'pub/media/PurchaseOrder.pdf';
                 $html = $this->objectManager
-                    ->create('Magestore\PurchaseOrderSuccess\Block\Adminhtml\Email\EmailToSupplier\Header')->toHtml();
+                    ->create(EmailToSupplierHeader::class)->toHtml();
                 $html .= $this->objectManager
-                    ->create('Magestore\PurchaseOrderSuccess\Block\Adminhtml\Email\EmailToSupplier\ItemsEmail')->toHtml();
+                    ->create(EmailToSupplierItem::class)->toHtml();
                 $html .= $this->objectManager
-                    ->create('Magestore\PurchaseOrderSuccess\Block\Adminhtml\Email\EmailToSupplier\Total')
-                    ->setWidth('44%')->toHtml();
+                    ->create(\Magestore\PurchaseOrderSuccess\Block\Adminhtml\Email\EmailToSupplier\Total::class)
+                    ->setWidth('44%')
+                    ->toHtml();
 
                 $mPDF = $this->objectManager->create('mPDF');
                 $mPDF->WriteHTML($html);
@@ -235,7 +263,7 @@ class PurchaseOrderService
                 'name' => $this->scopeConfig->getValue('trans_email/ident_general/name'),
                 'email' => $this->scopeConfig->getValue('trans_email/ident_general/email'),
             ];
-            if(class_exists('mPDF')) {
+            if (class_exists('mPDF')) {
                 /* attach PDF */
                 $transport = $transportBuilder
                     ->setTemplateIdentifier($this->scopeConfig->getValue(self::EMAIL_SEND_TO_SUPPLIER_TEMPLATE))
@@ -245,16 +273,18 @@ class PurchaseOrderService
                             'store' => \Magento\Store\Model\Store::DEFAULT_STORE_ID,
                         ]
                     )
-                    ->setTemplateVars([
-                        'purchase_order' => $purchaseOrder,
-                        'supplier' => $supplier
-                    ])
+                    ->setTemplateVars(
+                        [
+                            'purchase_order' => $purchaseOrder,
+                            'supplier' => $supplier
+                        ]
+                    )
                     ->setFrom($sender)
                     ->addTo(trim($supplier->getContactEmail()))
                     ->attachFile($fileName, 'PurchaseOrder.pdf')
                     ->getTransport();
                 $transport->sendMessage();
-            }else{
+            } else {
                 /* not attach PDF */
                 $transport = $transportBuilder
                     ->setTemplateIdentifier($this->scopeConfig->getValue(self::EMAIL_SEND_TO_SUPPLIER_TEMPLATE))
@@ -264,10 +294,12 @@ class PurchaseOrderService
                             'store' => \Magento\Store\Model\Store::DEFAULT_STORE_ID,
                         ]
                     )
-                    ->setTemplateVars([
-                        'purchase_order' => $purchaseOrder,
-                        'supplier' => $supplier
-                    ])
+                    ->setTemplateVars(
+                        [
+                            'purchase_order' => $purchaseOrder,
+                            'supplier' => $supplier
+                        ]
+                    )
                     ->setFrom($sender)
                     ->addTo(trim($supplier->getContactEmail()))
                     ->getTransport();
@@ -288,64 +320,90 @@ class PurchaseOrderService
      * @return $this
      * @throws \Exception
      */
-    public function receiveAllProduct($purchaseId, $receivedTime = null, $createdBy = null){
+    public function receiveAllProduct($purchaseId, $receivedTime = null, $createdBy = null)
+    {
         $productSkus = [];
         $purchaseOrder = $this->purchaseOrderRepository->get($purchaseId);
-        if(!$purchaseOrder || !$purchaseOrder->getPurchaseOrderId())
-            throw new \Exception(__('Can not find this purchase order'));
+        if (!$purchaseOrder || !$purchaseOrder->getPurchaseOrderId()) {
+            throw new LocalizedException(__('Can not find this purchase order'));
+        }
         $purchaseItems = $purchaseOrder->getItems();
-        foreach ($purchaseItems as $id => $item) {
+        foreach ($purchaseItems as $item) {
             $result = $this->receivedService->receiveItem($purchaseOrder, $item, null, $receivedTime, $createdBy);
-            if(!$result) {
+            if (!$result) {
                 $productSkus[] = $item->getProductSku();
             } else {
                 $this->addProductToSupplier($purchaseId, $purchaseOrder->getSupplierId(), $item->getProductId());
             }
         }
         $this->purchaseOrderRepository->save($purchaseOrder);
-        if(!empty($productSkus))
-            throw new \Exception(__('Can not receive products: %1', implode(', ',$productSkus)));
+        if (!empty($productSkus)) {
+            throw new LocalizedException(__('Can not receive products: %1', implode(', ', $productSkus)));
+        }
         return $this;
     }
 
     /**
-     * @param $purchaseId
+     * Receive Products
+     *
+     * @param int $purchaseId
      * @param array $receivedData
      * @param string $receivedTime
-     * @param null $createdBy
+     * @param string $createdBy
      * @return $this
      * @throws \Exception
      */
-    public function receiveProducts($purchaseId, $receivedData = [], $receivedTime = null, $createdBy = null){
+    public function receiveProducts($purchaseId, $receivedData = [], $receivedTime = null, $createdBy = null)
+    {
         $purchaseOrder = $this->purchaseOrderRepository->get($purchaseId);
-        if(!$purchaseOrder || !$purchaseOrder->getPurchaseOrderId())
-            throw new \Exception(__('Can not find this purchase order'));
-        $purchaseItems = $this->purchaseItemService->getProductsByPurchaseOrderId($purchaseId, array_keys($receivedData));
+        if (!$purchaseOrder || !$purchaseOrder->getPurchaseOrderId()) {
+            throw new LocalizedException(__('Can not find this purchase order'));
+        }
+        $purchaseItems = $this->purchaseItemService->getProductsByPurchaseOrderId(
+            $purchaseId,
+            array_keys($receivedData)
+        );
 
         foreach ($purchaseItems as $item) {
             $productId = $item->getProductId();
-            if(!in_array($productId, array_keys($receivedData)))
+            if (!in_array($productId, array_keys($receivedData))) {
                 continue;
+            }
             $result = $this->receivedService->receiveItem(
-                $purchaseOrder, $item, $receivedData[$productId], $receivedTime, $createdBy
+                $purchaseOrder,
+                $item,
+                $receivedData[$productId],
+                $receivedTime,
+                $createdBy
             );
-            if(!$result) {
+            if (!$result) {
                 $productSkus[] = $item->getProductSku();
             } else {
                 $this->addProductToSupplier($purchaseId, $purchaseOrder->getSupplierId(), $productId);
             }
         }
         $this->purchaseOrderRepository->save($purchaseOrder);
-        if(!empty($productSkus))
-            throw new \Exception(__('Can not receive products: %1', implode(', ',$productSkus)));
+        if (!empty($productSkus)) {
+            throw new LocalizedException(__('Can not receive products: %1', implode(', ', $productSkus)));
+        }
         return $this;
     }
 
-    public function addProductToSupplier($purchaseId, $supplierId, $productId) {
+    /**
+     * Add Product To Supplier
+     *
+     * @param int $purchaseId
+     * @param int $supplierId
+     * @param int $productId
+     */
+    public function addProductToSupplier($purchaseId, $supplierId, $productId)
+    {
         /** @var \Magestore\SupplierSuccess\Service\Supplier\ProductService $supplierProductService */
-        $supplierProductService = $this->objectManager->get('Magestore\SupplierSuccess\Service\Supplier\ProductService');
+        $supplierProductService = $this->objectManager->get(
+            \Magestore\SupplierSuccess\Service\Supplier\ProductService::class
+        );
         $listPrdSupplier = $supplierProductService->getProductsBySupplierId($supplierId, [$productId]);
-        if(!$listPrdSupplier->getSize()) {
+        if (!$listPrdSupplier->getSize()) {
             $collection = $this->purchaseItemService->getProductsByPurchaseOrderId($purchaseId, [$productId]);
             $collection->setPageSize(1)->setCurPage(1);
             $purchaseItems = $collection->getFirstItem();
@@ -363,84 +421,116 @@ class PurchaseOrderService
     }
 
     /**
-     * @param $purchaseId
+     * Return Products
+     *
+     * @param int $purchaseId
      * @param array $returnedData
-     * @param null $returnedTime
-     * @param null $createdBy
+     * @param string $returnedTime
+     * @param string $createdBy
      * @return $this
      * @throws \Magento\Framework\Exception\CouldNotSaveException
      * @throws \Magento\Framework\Exception\InputException
      * @throws \Magento\Framework\Exception\NotFoundException
      */
-    public function returnProducts($purchaseId, $returnedData = [], $returnedTime = null, $createdBy = null){
+    public function returnProducts($purchaseId, $returnedData = [], $returnedTime = null, $createdBy = null)
+    {
         $purchaseOrder = $this->purchaseOrderRepository->get($purchaseId);
-        if(!$purchaseOrder || !$purchaseOrder->getPurchaseOrderId())
-            throw new \Exception(__('Can not find this purchase order'));
-        $purchaseItems = $this->purchaseItemService->getProductsByPurchaseOrderId($purchaseId, array_keys($returnedData));
+        if (!$purchaseOrder || !$purchaseOrder->getPurchaseOrderId()) {
+            throw new LocalizedException(__('Can not find this purchase order'));
+        }
+        $purchaseItems = $this->purchaseItemService->getProductsByPurchaseOrderId(
+            $purchaseId,
+            array_keys($returnedData)
+        );
         foreach ($purchaseItems as $item) {
             $productId = $item->getProductId();
-            if(!in_array($productId, array_keys($returnedData)))
+            if (!in_array($productId, array_keys($returnedData))) {
                 continue;
+            }
             $result = $this->returnedService->returnItem(
-                $purchaseOrder, $item, $returnedData[$productId], $returnedTime, $createdBy
+                $purchaseOrder,
+                $item,
+                $returnedData[$productId],
+                $returnedTime,
+                $createdBy
             );
-            if(!$result)
+            if (!$result) {
                 $productSkus[] = $item->getProductSku();
+            }
         }
         $this->purchaseOrderRepository->save($purchaseOrder);
-        if(!empty($productSkus))
-            throw new \Exception(__('Can not receive products: %1', implode(', ',$productSkus)));
+        if (!empty($productSkus)) {
+            throw new LocalizedException(__('Can not receive products: %1', implode(', ', $productSkus)));
+        }
         return $this;
     }
 
     /**
+     * Transfer Products
+     *
      * @param array $transferredData
      * @param array $params
-     * @param null $createdBy
+     * @param string $createdBy
      * @return array
      * @throws \Exception
      */
-    public function transferProducts(
-        $transferredData = [], $params = [], $createdBy = null
-    ){
+    public function transferProducts($transferredData = [], $params = [], $createdBy = null)
+    {
         $purchaseOrder = $this->purchaseOrderRepository->get($params['purchase_order_id']);
-        if(!$purchaseOrder || !$purchaseOrder->getPurchaseOrderId())
-            throw new \Exception(__('Can not find this purchase order'));
+        if (!$purchaseOrder || !$purchaseOrder->getPurchaseOrderId()) {
+            throw new LocalizedException(__('Can not find this purchase order'));
+        }
         $transferStockItemData = [];
-        $purchaseItems = $this->purchaseItemService->getProductsByPurchaseOrderId($params['purchase_order_id'], array_keys($transferredData));
+        $purchaseItems = $this->purchaseItemService->getProductsByPurchaseOrderId(
+            $params['purchase_order_id'],
+            array_keys($transferredData)
+        );
         foreach ($purchaseItems as $item) {
             $productId = $item->getProductId();
-            if(!in_array($productId, array_keys($transferredData)))
+            if (!in_array($productId, array_keys($transferredData))) {
                 continue;
+            }
             $transferData = $this->transferredService->transferItem(
-                $purchaseOrder, $item, $transferredData[$productId], $params, $createdBy
+                $purchaseOrder,
+                $item,
+                $transferredData[$productId],
+                $params,
+                $createdBy
             );
-            if($transferData)
+            if ($transferData) {
                 $transferStockItemData[] = $transferData;
+            }
         }
         $this->purchaseOrderRepository->save($purchaseOrder);
-        if(empty($transferStockItemData))
-            throw new \Exception(__('Can not transfer product.'));
+        if (empty($transferStockItemData)) {
+            throw new LocalizedException(__('Can not transfer product.'));
+        }
         return $transferStockItemData;
     }
 
     /**
      * Create an invoice
      *
-     * @param $purchaseId
+     * @param int $purchaseId
      * @param array $invoiceData
-     * @param null $invoiceTime
-     * @param null $createdBy
+     * @param string $invoiceTime
+     * @param string $createdBy
      * @return $this
      * @throws \Exception
      */
-    public function createInvoice($purchaseId, $invoiceData = [], $invoiceTime = null, $createdBy = null){
+    public function createInvoice($purchaseId, $invoiceData = [], $invoiceTime = null, $createdBy = null)
+    {
         $purchaseOrder = $this->purchaseOrderRepository->get($purchaseId);
-        if(!$purchaseOrder || !$purchaseOrder->getPurchaseOrderId())
-            throw new \Exception(__('Can not find this purchase order'));
-        $purchaseItems = $this->purchaseItemService->getProductsByPurchaseOrderId($purchaseId, array_keys($invoiceData));
-        if(empty($purchaseItems))
-            throw new \Exception(__('Please create invoice for at least one product.'));
+        if (!$purchaseOrder || !$purchaseOrder->getPurchaseOrderId()) {
+            throw new LocalizedException(__('Can not find this purchase order'));
+        }
+        $purchaseItems = $this->purchaseItemService->getProductsByPurchaseOrderId(
+            $purchaseId,
+            array_keys($invoiceData)
+        );
+        if (empty($purchaseItems)) {
+            throw new LocalizedException(__('Please create invoice for at least one product.'));
+        }
         $this->invoiceService->createInvoice($purchaseOrder, $purchaseItems, $invoiceData, $invoiceTime, $createdBy);
         return $this;
     }
@@ -451,11 +541,13 @@ class PurchaseOrderService
      * @param int $purchaseId
      * @param int $supplierId
      * @return array
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function generateImportData($purchaseId, $supplierId){
-        $data = array();
+    public function generateImportData($purchaseId, $supplierId)
+    {
+        $data = [];
         $productCollection = \Magento\Framework\App\ObjectManager::getInstance()
-            ->create('Magestore\SupplierSuccess\Service\Supplier\ProductService')
+            ->create(\Magestore\SupplierSuccess\Service\Supplier\ProductService::class)
             ->getProductsBySupplierId($supplierId)
             ->setPageSize(3)
             ->setCurPage(1);
@@ -463,7 +555,7 @@ class PurchaseOrderService
          * @var \Magestore\SupplierSuccess\Api\Data\SupplierProductInterface $product
          */
         foreach ($productCollection as $product) {
-            $data[]= array($product->getProductSku(), $product->getCost(), $product->getTax(), 0, 1);
+            $data[] = [$product->getProductSku(), $product->getCost(), $product->getTax(), 0, 1];
         }
         return $data;
     }

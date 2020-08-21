@@ -5,12 +5,15 @@ namespace Magestore\Webpos\Test\Data\CreateData;
 use Magento\TestFramework\TestCase\WebapiAbstract;
 use Magento\TestFramework\Assert\AssertArrayContains;
 
+/**
+ * Api Test SampleData
+ */
 class SampleData extends WebapiAbstract
 {
     /**
      * Initialize fixture namespaces.
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass() : void // phpcs:ignore
     {
         /* create sample Data2 */
         include __DIR__. '/../../_files/product.php';
@@ -24,8 +27,9 @@ class SampleData extends WebapiAbstract
     /**
      * Test Case
      */
-    public function testCase(){
+    public function testCase()
+    {
         $expected = true;
-        self::assertEquals($expected,$expected);
+        self::assertEquals($expected, $expected);
     }
 }

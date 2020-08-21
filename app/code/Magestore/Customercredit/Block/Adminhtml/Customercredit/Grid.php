@@ -22,6 +22,11 @@
 
 namespace Magestore\Customercredit\Block\Adminhtml\Customercredit;
 
+/**
+ * Class Grid
+ *
+ * Customer credit grid block
+ */
 class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
 {
     /**
@@ -46,6 +51,8 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
     protected $creditHelper;
 
     /**
+     * Grid constructor.
+     *
      * @param \Magento\Backend\Block\Template\Context $context
      * @param \Magento\Backend\Helper\Data $backendHelper
      * @param \Magento\Customer\Model\CustomerFactory $customerFactory
@@ -63,9 +70,8 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
         \Magento\Customer\Model\GroupFactory $groupFactory,
         \Magento\Store\Model\System\Store $systemStore,
         \Magestore\Customercredit\Helper\Data $creditHelper,
-        array $data = array()
-    )
-    {
+        array $data = []
+    ) {
         $this->_customerFactory = $customerFactory;
         $this->_storeManager = $context->getStoreManager();
         $this->_groupFactory = $groupFactory;
@@ -74,6 +80,9 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
         parent::__construct($context, $backendHelper, $data);
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function _construct()
     {
         parent::_construct();
@@ -84,6 +93,9 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
         $this->setUseAjax(true);
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function _prepareCollection()
     {
         $collection = $this->_customerFactory->create()->getCollection()
@@ -104,8 +116,8 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
         $collection->joinTable(
             ['table_customer_credit' =>  $collection->getTable('customer_credit')],
             'customer_id = entity_id',
-            array('credit_value'=>'credit_balance'),
-            null ,
+            ['credit_value'=>'credit_balance'],
+            null,
             'left'
         );
 
@@ -113,133 +125,148 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
         return parent::_prepareCollection();
     }
 
+    /**
+     * @inheritDoc
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
     protected function _prepareColumns()
     {
-        $this->addColumn('entity_id', array(
+        $this->addColumn('entity_id', [
             'header' => __('ID'),
             'width' => '50px',
             'index' => 'entity_id',
             'type' => 'number',
-        ));
-        $this->addColumn('name', array(
+        ]);
+        $this->addColumn('name', [
             'header' => __('Name'),
             'index' => 'name'
-        ));
-        $this->addColumn('email', array(
+        ]);
+        $this->addColumn('email', [
             'header' => __('Email'),
             'width' => '150',
             'index' => 'email',
-            'renderer' => 'Magestore\Customercredit\Block\Adminhtml\Customer\Renderer\Customer'
-        ));
+            'renderer' => \Magestore\Customercredit\Block\Adminhtml\Customer\Renderer\Customer::class
+        ]);
 
         $currency = $this->_storeManager->getStore()->getCurrentCurrencyCode();
-        $this->addColumn('credit_value', array(
+        $this->addColumn('credit_value', [
             'header' => __('Credit Balance'),
             'width' => '100',
             'align' => 'right',
             'currency_code' => $currency,
             'index' => 'credit_value',
             'type' => 'price',
-            'renderer' => 'Magestore\Customercredit\Block\Adminhtml\Customer\Renderer\Customerprice',
+            'renderer' => \Magestore\Customercredit\Block\Adminhtml\Customer\Renderer\Customerprice::class,
             'filter_condition_callback' => [$this,'filterCreditValue'],
-        ));
+        ]);
         $groups = $this->_groupFactory->create()->getCollection()
-            ->addFieldToFilter('customer_group_id', array('gt' => 0))
+            ->addFieldToFilter('customer_group_id', ['gt' => 0])
             ->load()
             ->toOptionHash();
 
-        $this->addColumn('group', array(
+        $this->addColumn('group', [
             'header' => __('Group'),
             'width' => '100',
             'index' => 'group_id',
             'type' => 'options',
             'options' => $groups,
-        ));
+        ]);
 
-        $this->addColumn('Telephone', array(
+        $this->addColumn('Telephone', [
             'header' => __('Telephone'),
             'width' => '100',
             'index' => 'billing_telephone'
-        ));
+        ]);
 
-        $this->addColumn('billing_postcode', array(
+        $this->addColumn('billing_postcode', [
             'header' => __('ZIP'),
             'width' => '90',
             'index' => 'billing_postcode',
-        ));
+        ]);
 
-        $this->addColumn('billing_country_id', array(
+        $this->addColumn('billing_country_id', [
             'header' => __('Country'),
             'width' => '100',
             'type' => 'country',
             'index' => 'billing_country_id',
-        ));
+        ]);
 
-        $this->addColumn('billing_region', array(
+        $this->addColumn('billing_region', [
             'header' => __('State/Province'),
             'width' => '100',
             'index' => 'billing_region',
-        ));
+        ]);
 
-        $this->addColumn('customer_since', array(
+        $this->addColumn('customer_since', [
             'header' => __('Customer Since'),
             'type' => 'datetime',
             'align' => 'center',
             'index' => 'created_at',
             'gmtoffset' => true
-        ));
+        ]);
 
         if (!$this->_storeManager->isSingleStoreMode()) {
-            $this->addColumn('website_id', array(
+            $this->addColumn('website_id', [
                 'header' => __('Website'),
                 'align' => 'center',
                 'width' => '80px',
                 'type' => 'options',
                 'options' => $this->_systemStore->getWebsiteOptionHash(true),
                 'index' => 'website_id',
-            ));
+            ]);
         }
 
-        $this->addColumn('action', array(
+        $this->addColumn('action', [
             'header' => __('Action'),
             'width' => '100',
             'type' => 'action',
             'getter' => 'getId',
-            'actions' => array(
-                array(
+            'actions' => [
+                [
                     'caption' => __('Edit'),
-                    'url' => array(
+                    'url' => [
                         'base' => 'customer/index/edit/',
                         'params' => ['store' => $this->getRequest()->getParam('store'), 'type' => 'customercredit']
-                    ),
+                    ],
                     'field' => 'id'
-                )
-            ),
+                ]
+            ],
             'filter' => false,
             'sortable' => false,
             'index' => 'stores',
             'is_system' => true,
-        ));
+        ]);
 
         $this->addExportType('*/*/exportCsv', __('CSV'));
         $this->addExportType('*/*/exportXml', __('Excel XML'));
         return parent::_prepareColumns();
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getGridUrl()
     {
-        return $this->getUrl('*/*/index', array('_current' => true));
+        return $this->getUrl('*/*/index', ['_current' => true]);
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getRowUrl($row)
     {
-        return $this->getUrl('customer/index/edit/', array(
+        return $this->getUrl(
+            'customer/index/edit/',
+            [
                 'id' => $row->getId(),
                 'type' => 'customercredit'
-            )
+            ]
         );
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getCsv()
     {
         $csv = '';
@@ -250,7 +277,7 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
         $this->getCollection()->load();
         $this->_afterLoadCollection();
 
-        $data = array();
+        $data = [];
         $data[] = '"' . __('ID') . '"';
         $data[] = '"' . __('Name') . '"';
         $data[] = '"' . __('Email') . '"';
@@ -271,7 +298,13 @@ class Grid extends \Magento\Backend\Block\Widget\Grid\Extended
         return $csv;
     }
 
-    function filterCreditValue($collection, $column)
+    /**
+     * Filter Credit Value
+     *
+     * @param \Magento\Customer\Model\ResourceModel\Customer\Collection $collection
+     * @param \Magento\Backend\Block\Widget\Grid\Column $column
+     */
+    public function filterCreditValue($collection, $column)
     {
         if (!$column->getFilter()->getCondition()) {
             return;

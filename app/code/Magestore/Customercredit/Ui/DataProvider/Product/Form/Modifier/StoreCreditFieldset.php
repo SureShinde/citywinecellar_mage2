@@ -36,6 +36,12 @@ use Magento\Framework\Pricing\PriceCurrencyInterface;
 use Magento\Ui\DataProvider\Modifier\ModifierInterface;
 use Magestore\Customercredit\Model\Product\Type as StoreCreditProductType;
 
+/**
+ * Class StoreCreditFieldset
+ *
+ * Used for store credit field set
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class StoreCreditFieldset implements ModifierInterface
 {
 
@@ -58,9 +64,6 @@ class StoreCreditFieldset implements ModifierInterface
      */
     const CONTAINER_PREFIX = 'container_';
 
-    /**
-     * Meta config path
-     */
     const META_CONFIG_PATH = '/arguments/data/config';
     // Components indexes
     const CUSTOM_FIELDSET_INDEX = 'storecredit_fieldset';
@@ -119,9 +122,14 @@ class StoreCreditFieldset implements ModifierInterface
     protected $meta = [];
 
     /**
+     * StoreCreditFieldset constructor.
+     *
+     * @param \Magento\Framework\ObjectManagerInterface $objectManager
      * @param LocatorInterface $locator
      * @param ArrayManager $arrayManager
      * @param UrlInterface $urlBuilder
+     * @param \Magento\Framework\App\RequestInterface $request
+     * @param \Magento\Framework\Module\Manager $moduleManager
      */
     public function __construct(
         \Magento\Framework\ObjectManagerInterface $objectManager,
@@ -173,7 +181,7 @@ class StoreCreditFieldset implements ModifierInterface
             if ($this->moduleManager->isEnabled('Magento_InventoryCatalogApi')) {
                 /** @var \Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface $isSingleSourceMode */
                 $isSingleSourceMode = $this->objectManager->get(
-                    'Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface'
+                    \Magento\InventoryCatalogApi\Model\IsSingleSourceModeInterface::class
                 );
                 if (!$isSingleSourceMode->execute()) {
                     $this->meta = array_replace_recursive(
@@ -211,8 +219,9 @@ class StoreCreditFieldset implements ModifierInterface
      */
     public function addCustomFieldset()
     {
-        if(array_key_exists('credit-prices-settings', $this->meta))
+        if (array_key_exists('credit-prices-settings', $this->meta)) {
             unset($this->meta['credit-prices-settings']);
+        }
 
         $this->meta = array_merge_recursive(
             $this->meta,
@@ -284,7 +293,7 @@ class StoreCreditFieldset implements ModifierInterface
     /**
      * Example select field config
      *
-     * @param $sortOrder
+     * @param int $sortOrder
      * @return array
      */
     public function getSelectFieldConfig($sortOrder)
@@ -313,7 +322,7 @@ class StoreCreditFieldset implements ModifierInterface
     /**
      * Example text field config
      *
-     * @param $sortOrder
+     * @param int $sortOrder
      * @return array
      */
     public function getRateFieldConfig($sortOrder)
@@ -341,7 +350,7 @@ class StoreCreditFieldset implements ModifierInterface
                             '3' => '3'
                         ],
                         'imports' => [
-                            'toggleDisable' => '${$.parentName}.' . static::FIELD_PRICE_TYPE . ':value'
+                            'toggleDisable' => 'index = ' . static::FIELD_PRICE_TYPE . ':value'
                         ],
                         'notice' => __('For example: 1.5'),
                     ],
@@ -353,7 +362,7 @@ class StoreCreditFieldset implements ModifierInterface
     /**
      * Example text field config
      *
-     * @param $sortOrder
+     * @param int $sortOrder
      * @return array
      */
     public function getValueFieldConfig($sortOrder)
@@ -378,7 +387,7 @@ class StoreCreditFieldset implements ModifierInterface
                             '1' => '1'
                         ],
                         'imports' => [
-                            'toggleDisable' => '${$.parentName}.' . static::FIELD_PRICE_TYPE . ':value',
+                            'toggleDisable' => 'index = ' . static::FIELD_PRICE_TYPE . ':value',
                         ],
                         'addbefore' => '$'
                     ],
@@ -390,7 +399,7 @@ class StoreCreditFieldset implements ModifierInterface
     /**
      * Example text field config
      *
-     * @param $sortOrder
+     * @param int $sortOrder
      * @return array
      */
     public function getValuesFieldConfig($sortOrder)
@@ -414,7 +423,7 @@ class StoreCreditFieldset implements ModifierInterface
                             '3' => '3'
                         ],
                         'imports' => [
-                            'toggleDisable' => '${$.parentName}.' . static::FIELD_PRICE_TYPE . ':value',
+                            'toggleDisable' => 'index = ' . static::FIELD_PRICE_TYPE . ':value',
                         ],
                         'addbefore' => '$',
                         'notice' => __('Seperated by comma, e.g. 10,20,30'),
@@ -427,7 +436,7 @@ class StoreCreditFieldset implements ModifierInterface
     /**
      * Example text field config
      *
-     * @param $sortOrder
+     * @param int $sortOrder
      * @return array
      */
     public function getValueFromFieldConfig($sortOrder)
@@ -452,8 +461,8 @@ class StoreCreditFieldset implements ModifierInterface
                             '2' => '2'
                         ],
                         'imports' => [
-                            'toggleDisable' => '${$.parentName}.' . static::FIELD_PRICE_TYPE . ':value',
-                            'handleChangeMin' => '${$.parentName}.' . static::FIELD_PRICE_VALUE_TO . ':value'
+                            'toggleDisable' => 'index = ' . static::FIELD_PRICE_TYPE . ':value',
+                            'handleChangeMin' => 'index = ' . static::FIELD_PRICE_VALUE_TO . ':value'
                         ],
                         'addbefore' => '$'
                     ],
@@ -465,7 +474,7 @@ class StoreCreditFieldset implements ModifierInterface
     /**
      * Example text field config
      *
-     * @param $sortOrder
+     * @param int $sortOrder
      * @return array
      */
     public function getValueToFieldConfig($sortOrder)
@@ -490,8 +499,8 @@ class StoreCreditFieldset implements ModifierInterface
                             '2' => '2'
                         ],
                         'imports' => [
-                            'toggleDisable' => '${$.parentName}.' . static::FIELD_PRICE_TYPE . ':value',
-                            'handleChangeMax' => '${$.parentName}.' . static::FIELD_PRICE_VALUE_FROM . ':value'
+                            'toggleDisable' => 'index = ' . static::FIELD_PRICE_TYPE . ':value',
+                            'handleChangeMax' => 'index = ' . static::FIELD_PRICE_VALUE_FROM . ':value'
                         ],
                         'addbefore' => '$'
                     ],

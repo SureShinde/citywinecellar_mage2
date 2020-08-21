@@ -4,6 +4,7 @@
  * Copyright © 2016 Magestore. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace Magestore\SupplierSuccess\Model;
 
 use Magento\Backend\Model\Auth\StorageInterface;
@@ -15,9 +16,10 @@ use Magestore\SupplierSuccess\Api\SupplierRepositoryInterface;
 use Magestore\SupplierSuccess\Model\SupplierFactory;
 
 /**
- * Customer session model
- * @method string getNoReferer()
+ * Supplier frontend Session
+ *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.CookieAndSessionMisuse)
  */
 class Session extends \Magento\Framework\Session\SessionManager
 {
@@ -51,6 +53,25 @@ class Session extends \Magento\Framework\Session\SessionManager
      */
     protected $supplierCollectionFactory;
 
+    /**
+     * Session constructor.
+     *
+     * @param \Magento\Framework\App\Request\Http $request
+     * @param SidResolverInterface $sidResolver
+     * @param ConfigInterface $sessionConfig
+     * @param SaveHandlerInterface $saveHandler
+     * @param ValidatorInterface $validator
+     * @param \Magento\Framework\Session\StorageInterface $storage
+     * @param \Magento\Framework\Stdlib\CookieManagerInterface $cookieManager
+     * @param \Magento\Framework\Stdlib\Cookie\CookieMetadataFactory $cookieMetadataFactory
+     * @param \Magento\Framework\App\State $appState
+     * @param SupplierRepositoryInterface $supplierRepository
+     * @param \Magento\Framework\App\Http\Context $httpContext
+     * @param \Magestore\SupplierSuccess\Model\SupplierFactory $supplierFactory
+     * @param ResourceModel\Supplier\CollectionFactory $supplierCollectionFactory
+     * @throws \Magento\Framework\Exception\SessionException
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     */
     public function __construct(
         \Magento\Framework\App\Request\Http $request,
         \Magento\Framework\Session\SidResolverInterface $sidResolver,
@@ -86,13 +107,12 @@ class Session extends \Magento\Framework\Session\SessionManager
     /**
      * Checking customer login status
      *
-     * @api
      * @return bool
+     * @api
      */
     public function isLoggedIn()
     {
-        return (bool)$this->getSupplierId()
-        && (bool)$this->checkSupplierId($this->getId());
+        return (bool)$this->getSupplierId() && (bool)$this->checkSupplierId($this->getId());
     }
 
     /**
@@ -131,8 +151,8 @@ class Session extends \Magento\Framework\Session\SessionManager
     /**
      * Retrieve supplier id from current session
      *
-     * @api
      * @return int|null
+     * @api
      */
     public function getSupplierId()
     {
@@ -159,7 +179,6 @@ class Session extends \Magento\Framework\Session\SessionManager
      * Retrieve supplier model object
      *
      * @return Supplier
-     * use getSupplierId() instead
      */
     public function getSupplier()
     {
@@ -191,8 +210,10 @@ class Session extends \Magento\Framework\Session\SessionManager
     }
 
     /**
-     * @param $username
-     * @param $password
+     * Function supplier login
+     *
+     * @param string $username
+     * @param string $password
      * @return bool
      */
     public function login($username, $password)
@@ -205,7 +226,9 @@ class Session extends \Magento\Framework\Session\SessionManager
     }
 
     /**
-     * @param $supplier
+     * Set Supplier As Logged In
+     *
+     * @param \Magestore\SupplierSuccess\Model\Supplier $supplier
      * @return $this
      */
     public function setSupplierAsLoggedIn($supplier)
@@ -216,9 +239,11 @@ class Session extends \Magento\Framework\Session\SessionManager
     }
 
     /**
-     * @param $username
-     * @param $password
-     * @return null
+     * Authenticate
+     *
+     * @param string $username
+     * @param string $password
+     * @return null|\Magestore\SupplierSuccess\Model\Supplier
      */
     public function authenticate($username, $password)
     {
@@ -235,9 +260,9 @@ class Session extends \Magento\Framework\Session\SessionManager
             ->setPageSize(1)
             ->setCurPage(1)
             ->getFirstItem();
-        if ($supplier->getId() && md5($password) == $supplier->getPassword()){
+        if ($supplier->getId() && hash('md5', $password) == $supplier->getPassword()) {
             return $supplier;
-        }else{
+        } else {
             return null;
         }
     }

@@ -10,8 +10,13 @@ use Magestore\PurchaseOrderSuccess\Api\Data\PurchaseOrderInterface;
 use Magestore\PurchaseOrderSuccess\Model\PurchaseOrder\Option\Type as PurchaseOrderType;
 use Magestore\PurchaseOrderSuccess\Service\PurchaseOrder\PurchaseOrderService;
 
-class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
-    implements PurchaseOrderInterface
+/**
+ * Model PurchaseOrder
+ *
+ * @SuppressWarnings(PHPMD.ExcessivePublicCount)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
+class PurchaseOrder extends \Magento\Framework\Model\AbstractModel implements PurchaseOrderInterface
 {
     /**
      * Prefix of model events names
@@ -52,13 +57,28 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
 
     /**
      * Parameter name in event
-     *
      * In observe method you can use $observer->getEvent()->getObject() in this case
      *
      * @var string
      */
     protected $_eventObject = 'purchaseorder';
-    
+
+    /**
+     * PurchaseOrder constructor.
+     *
+     * @param Context $context
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magestore\PurchaseOrderSuccess\Service\Config\ShippingMethod $shippingMethodService
+     * @param \Magestore\PurchaseOrderSuccess\Service\Config\TaxAndShipping $taxAndShippingService
+     * @param \Magestore\PurchaseOrderSuccess\Service\Config\PaymentTerm $paymentTermService
+     * @param PurchaseOrderService $purchaseOrderService
+     * @param \Magestore\PurchaseOrderSuccess\Service\PurchaseOrder\Item\ItemService $purchaseItemService
+     * @param \Magento\Backend\Model\Auth $auth
+     * @param \Magento\Framework\Model\ResourceModel\AbstractResource|null $resource
+     * @param \Magento\Framework\Data\Collection\AbstractDb|null $resourceCollection
+     * @param array $data
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     */
     public function __construct(
         \Magestore\PurchaseOrderSuccess\Model\Context $context,
         \Magento\Framework\Registry $registry,
@@ -71,7 +91,7 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         array $data = []
-    ){
+    ) {
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
         $this->shippingMethodService = $shippingMethodService;
         $this->taxAndShippingService = $taxAndShippingService;
@@ -89,7 +109,7 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
     protected function _construct()
     {
         parent::_construct();
-        $this->_init('Magestore\PurchaseOrderSuccess\Model\ResourceModel\PurchaseOrder');
+        $this->_init(\Magestore\PurchaseOrderSuccess\Model\ResourceModel\PurchaseOrder::class);
     }
 
     /**
@@ -97,7 +117,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      *
      * @return int
      */
-    public function getPurchaseOrderId(){
+    public function getPurchaseOrderId()
+    {
         return $this->_getData(self::PURCHASE_ORDER_ID);
     }
 
@@ -107,7 +128,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      * @param int $purchaseOrderId
      * @return $this
      */
-    public function setPurchaseOrderId($purchaseOrderId){
+    public function setPurchaseOrderId($purchaseOrderId)
+    {
         return $this->setData(self::PURCHASE_ORDER_ID, $purchaseOrderId);
     }
 
@@ -116,7 +138,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      *
      * @return string|null
      */
-    public function getPurchaseCode(){
+    public function getPurchaseCode()
+    {
         return $this->_getData(self::PURCHASE_CODE);
     }
 
@@ -126,7 +149,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      * @param string $purchaseCode
      * @return $this
      */
-    public function setPurchaseCode($purchaseCode){
+    public function setPurchaseCode($purchaseCode)
+    {
         return $this->setData(self::PURCHASE_CODE, $purchaseCode);
     }
 
@@ -135,7 +159,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      *
      * @return int
      */
-    public function getSupplierId(){
+    public function getSupplierId()
+    {
         return $this->_getData(self::SUPPLIER_ID);
     }
 
@@ -145,7 +170,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      * @param int $supplierId
      * @return $this
      */
-    public function setSupplierId($supplierId){
+    public function setSupplierId($supplierId)
+    {
         return $this->setData(self::SUPPLIER_ID, $supplierId);
     }
 
@@ -154,7 +180,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      *
      * @return int
      */
-    public function getType(){
+    public function getType()
+    {
         return $this->_getData(self::TYPE);
     }
 
@@ -164,7 +191,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      * @param int $type
      * @return $this
      */
-    public function setType($type){
+    public function setType($type)
+    {
         return $this->setData(self::TYPE, $type);
     }
 
@@ -173,7 +201,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      *
      * @return int
      */
-    public function getStatus(){
+    public function getStatus()
+    {
         return $this->_getData(self::STATUS);
     }
 
@@ -183,7 +212,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      * @param int $status
      * @return $this
      */
-    public function setStatus($status){
+    public function setStatus($status)
+    {
         return $this->setData(self::STATUS, $status);
     }
 
@@ -192,7 +222,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      *
      * @return int
      */
-    public function getSendEmail(){
+    public function getSendEmail()
+    {
         return $this->_getData(self::SEND_EMAIL);
     }
 
@@ -202,16 +233,18 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      * @param int $sendEmail
      * @return $this
      */
-    public function setSendEmail($sendEmail){
+    public function setSendEmail($sendEmail)
+    {
         return $this->setData(self::SEND_EMAIL, $sendEmail);
     }
 
     /**
      * Get is sent email
      *
-     * @return boolean
+     * @return int|boolean
      */
-    public function getIsSent(){
+    public function getIsSent()
+    {
         return $this->_getData(self::IS_SENT);
     }
 
@@ -221,7 +254,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      * @param int $isSent
      * @return $this
      */
-    public function setIsSent($isSent){
+    public function setIsSent($isSent)
+    {
         return $this->setData(self::IS_SENT, $isSent);
     }
 
@@ -230,7 +264,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      *
      * @return string
      */
-    public function getComment(){
+    public function getComment()
+    {
         return $this->_getData(self::COMMENT);
     }
 
@@ -240,7 +275,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      * @param string $comment
      * @return $this
      */
-    public function setComment($comment){
+    public function setComment($comment)
+    {
         return $this->setData(self::COMMENT, $comment);
     }
 
@@ -249,7 +285,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      *
      * @return string
      */
-    public function getShippingAddress(){
+    public function getShippingAddress()
+    {
         return $this->_getData(self::SHIPPING_ADDRESS);
     }
 
@@ -259,7 +296,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      * @param string $shippingAddress
      * @return $this
      */
-    public function setShippingAddress($shippingAddress){
+    public function setShippingAddress($shippingAddress)
+    {
         return $this->setData(self::SHIPPING_ADDRESS, $shippingAddress);
     }
 
@@ -268,7 +306,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      *
      * @return string
      */
-    public function getShippingMethod(){
+    public function getShippingMethod()
+    {
         return $this->_getData(self::SHIPPING_METHOD);
     }
 
@@ -278,7 +317,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      * @param string $shippingMethod
      * @return $this
      */
-    public function setShippingMethod($shippingMethod){
+    public function setShippingMethod($shippingMethod)
+    {
         return $this->setData(self::SHIPPING_METHOD, $shippingMethod);
     }
 
@@ -287,7 +327,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      *
      * @return float
      */
-    public function getShippingCost(){
+    public function getShippingCost()
+    {
         return $this->_getData(self::SHIPPING_COST);
     }
 
@@ -297,7 +338,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      * @param float $shippingCost
      * @return $this
      */
-    public function setShippingCost($shippingCost){
+    public function setShippingCost($shippingCost)
+    {
         return $this->setData(self::SHIPPING_COST, $shippingCost);
     }
 
@@ -306,7 +348,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      *
      * @return string
      */
-    public function getPaymentTerm(){
+    public function getPaymentTerm()
+    {
         return $this->_getData(self::PAYMENT_TERM);
     }
 
@@ -316,7 +359,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      * @param string $paymentTerm
      * @return $this
      */
-    public function setPaymentTerm($paymentTerm){
+    public function setPaymentTerm($paymentTerm)
+    {
         return $this->setData(self::PAYMENT_TERM, $paymentTerm);
     }
 
@@ -325,7 +369,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      *
      * @return string
      */
-    public function getPlacedVia(){
+    public function getPlacedVia()
+    {
         return $this->_getData(self::PLACED_VIA);
     }
 
@@ -335,7 +380,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      * @param string $placedVia
      * @return $this
      */
-    public function setPlacedVia($placedVia){
+    public function setPlacedVia($placedVia)
+    {
         return $this->setData(self::PLACED_VIA, $placedVia);
     }
 
@@ -344,7 +390,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      *
      * @return int
      */
-    public function getUserId(){
+    public function getUserId()
+    {
         return $this->_getData(self::USER_ID);
     }
 
@@ -354,7 +401,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      * @param string $userId
      * @return $this
      */
-    public function setUserId($userId){
+    public function setUserId($userId)
+    {
         return $this->setData(self::USER_ID, $userId);
     }
 
@@ -363,7 +411,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      *
      * @return string
      */
-    public function getCreatedBy(){
+    public function getCreatedBy()
+    {
         return $this->_getData(self::CREATED_BY);
     }
 
@@ -373,7 +422,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      * @param string $createdBy
      * @return $this
      */
-    public function setCreatedBy($createdBy){
+    public function setCreatedBy($createdBy)
+    {
         return $this->setData(self::CREATED_BY, $createdBy);
     }
 
@@ -382,17 +432,19 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      *
      * @return float
      */
-    public function getTotalQtyOrderred(){
+    public function getTotalQtyOrderred()
+    {
         return $this->_getData(self::TOTAL_QTY_ORDERRED);
     }
 
     /**
      * Set total qty orderred
      *
-     * @param float $subtotal
+     * @param float $totalQtyOrderred
      * @return $this
      */
-    public function setTotalQtyOrderred($totalQtyOrderred){
+    public function setTotalQtyOrderred($totalQtyOrderred)
+    {
         return $this->setData(self::TOTAL_QTY_ORDERRED, $totalQtyOrderred);
     }
 
@@ -401,7 +453,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      *
      * @return float
      */
-    public function getTotalQtyReceived(){
+    public function getTotalQtyReceived()
+    {
         return $this->_getData(self::TOTAL_QTY_RECEIVED);
     }
 
@@ -411,7 +464,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      * @param float $totalQtyReceived
      * @return $this
      */
-    public function setTotalQtyReceived($totalQtyReceived){
+    public function setTotalQtyReceived($totalQtyReceived)
+    {
         return $this->setData(self::TOTAL_QTY_RECEIVED, $totalQtyReceived);
     }
 
@@ -420,7 +474,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      *
      * @return float
      */
-    public function getTotalQtyBilled(){
+    public function getTotalQtyBilled()
+    {
         return $this->_getData(self::TOTAL_QTY_BILLED);
     }
 
@@ -430,7 +485,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      * @param float $totalQtyBilled
      * @return $this
      */
-    public function setTotalQtyBilled($totalQtyBilled){
+    public function setTotalQtyBilled($totalQtyBilled)
+    {
         return $this->setData(self::TOTAL_QTY_BILLED, $totalQtyBilled);
     }
 
@@ -439,7 +495,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      *
      * @return float
      */
-    public function getTotalQtyTransferred(){
+    public function getTotalQtyTransferred()
+    {
         return $this->_getData(self::TOTAL_QTY_TRANSFERRED);
     }
 
@@ -449,7 +506,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      * @param float $totalQtyTransferred
      * @return $this
      */
-    public function setTotalQtyTransferred($totalQtyTransferred){
+    public function setTotalQtyTransferred($totalQtyTransferred)
+    {
         return $this->setData(self::TOTAL_QTY_TRANSFERRED, $totalQtyTransferred);
     }
 
@@ -458,17 +516,19 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      *
      * @return float
      */
-    public function getTotalQtyReturned(){
+    public function getTotalQtyReturned()
+    {
         return $this->_getData(self::TOTAL_QTY_RETURNED);
     }
 
     /**
      * Set total qty transferred
      *
-     * @param float $totalQtyTransferred
+     * @param float $totalQtyReturned
      * @return $this
      */
-    public function setTotalQtyReturned($totalQtyReturned){
+    public function setTotalQtyReturned($totalQtyReturned)
+    {
         return $this->setData(self::TOTAL_QTY_RETURNED, $totalQtyReturned);
     }
 
@@ -477,7 +537,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      *
      * @return float
      */
-    public function getSubtotal(){
+    public function getSubtotal()
+    {
         return $this->_getData(self::SUBTOTAL);
     }
 
@@ -487,7 +548,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      * @param float $subtotal
      * @return $this
      */
-    public function setSubtotal($subtotal){
+    public function setSubtotal($subtotal)
+    {
         return $this->setData(self::SUBTOTAL, $subtotal);
     }
 
@@ -496,7 +558,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      *
      * @return float
      */
-    public function getTotalTax(){
+    public function getTotalTax()
+    {
         return $this->_getData(self::TOTAL_TAX);
     }
 
@@ -506,7 +569,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      * @param float $totalTax
      * @return $this
      */
-    public function setTotalTax($totalTax){
+    public function setTotalTax($totalTax)
+    {
         return $this->setData(self::TOTAL_TAX, $totalTax);
     }
 
@@ -515,7 +579,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      *
      * @return float
      */
-    public function getTotalDiscount(){
+    public function getTotalDiscount()
+    {
         return $this->_getData(self::TOTAL_DISCOUNT);
     }
 
@@ -525,7 +590,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      * @param float $totalDiscount
      * @return $this
      */
-    public function setTotalDiscount($totalDiscount){
+    public function setTotalDiscount($totalDiscount)
+    {
         return $this->setData(self::TOTAL_DISCOUNT, $totalDiscount);
     }
 
@@ -534,7 +600,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      *
      * @return float
      */
-    public function getGrandTotalExclTax(){
+    public function getGrandTotalExclTax()
+    {
         return $this->_getData(self::GRAND_TOTAL_EXCL_TAX);
     }
 
@@ -544,7 +611,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      * @param float $grandTotalExclTax
      * @return $this
      */
-    public function setGrandTotalExclTax($grandTotalExclTax){
+    public function setGrandTotalExclTax($grandTotalExclTax)
+    {
         return $this->setData(self::GRAND_TOTAL_EXCL_TAX, $grandTotalExclTax);
     }
 
@@ -553,7 +621,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      *
      * @return float
      */
-    public function getGrandTotalInclTax(){
+    public function getGrandTotalInclTax()
+    {
         return $this->_getData(self::GRAND_TOTAL_INCL_TAX);
     }
 
@@ -563,7 +632,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      * @param float $grandTotalInclTax
      * @return $this
      */
-    public function setGrandTotalInclTax($grandTotalInclTax){
+    public function setGrandTotalInclTax($grandTotalInclTax)
+    {
         return $this->setData(self::GRAND_TOTAL_INCL_TAX, $grandTotalInclTax);
     }
 
@@ -572,7 +642,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      *
      * @return float
      */
-    public function getTotalBilled(){
+    public function getTotalBilled()
+    {
         return $this->_getData(self::TOTAL_BILLED);
     }
 
@@ -582,7 +653,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      * @param float $totalBilled
      * @return $this
      */
-    public function setTotalBilled($totalBilled){
+    public function setTotalBilled($totalBilled)
+    {
         return $this->setData(self::TOTAL_BILLED, $totalBilled);
     }
 
@@ -591,7 +663,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      *
      * @return float
      */
-    public function getTotalDue(){
+    public function getTotalDue()
+    {
         return $this->_getData(self::TOTAL_DUE);
     }
 
@@ -601,7 +674,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      * @param float $totalDue
      * @return $this
      */
-    public function setTotalDue($totalDue){
+    public function setTotalDue($totalDue)
+    {
         return $this->setData(self::TOTAL_DUE, $totalDue);
     }
 
@@ -610,7 +684,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      *
      * @return string
      */
-    public function getCurrencyCode(){
+    public function getCurrencyCode()
+    {
         return $this->_getData(self::CURRENCY_CODE);
     }
 
@@ -620,7 +695,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      * @param string $currencyCode
      * @return $this
      */
-    public function setCurrencyCode($currencyCode){
+    public function setCurrencyCode($currencyCode)
+    {
         return $this->setData(self::CURRENCY_CODE, $currencyCode);
     }
 
@@ -629,7 +705,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      *
      * @return string
      */
-    public function getCurrencyRate(){
+    public function getCurrencyRate()
+    {
         return $this->_getData(self::CURRENCY_RATE);
     }
 
@@ -639,7 +716,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      * @param string $currencyRate
      * @return $this
      */
-    public function setCurrencyRate($currencyRate){
+    public function setCurrencyRate($currencyRate)
+    {
         return $this->setData(self::CURRENCY_RATE, $currencyRate);
     }
 
@@ -648,7 +726,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      *
      * @return string
      */
-    public function getPurchasedAt(){
+    public function getPurchasedAt()
+    {
         return $this->_getData(self::PURCHASED_AT);
     }
 
@@ -658,7 +737,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      * @param string $purchasedAt
      * @return $this
      */
-    public function setPurchasedAt($purchasedAt){
+    public function setPurchasedAt($purchasedAt)
+    {
         return $this->setData(self::PURCHASED_AT, $purchasedAt);
     }
 
@@ -667,7 +747,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      *
      * @return string
      */
-    public function getStartedAt(){
+    public function getStartedAt()
+    {
         return $this->_getData(self::STARTED_AT);
     }
 
@@ -677,7 +758,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      * @param string $startedAt
      * @return $this
      */
-    public function setStartedAt($startedAt){
+    public function setStartedAt($startedAt)
+    {
         return $this->setData(self::STARTED_AT, $startedAt);
     }
 
@@ -686,7 +768,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      *
      * @return string
      */
-    public function getExpectedAt(){
+    public function getExpectedAt()
+    {
         return $this->_getData(self::EXPECTED_AT);
     }
 
@@ -696,7 +779,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      * @param string $expectedAt
      * @return $this
      */
-    public function setExpectedAt($expectedAt){
+    public function setExpectedAt($expectedAt)
+    {
         return $this->setData(self::EXPECTED_AT, $expectedAt);
     }
 
@@ -705,7 +789,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      *
      * @return string
      */
-    public function getCanceledAt(){
+    public function getCanceledAt()
+    {
         return $this->_getData(self::CANCELED_AT);
     }
 
@@ -715,7 +800,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      * @param string $canceledAt
      * @return $this
      */
-    public function setCanceledAt($canceledAt){
+    public function setCanceledAt($canceledAt)
+    {
         return $this->setData(self::CANCELED_AT, $canceledAt);
     }
 
@@ -724,7 +810,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      *
      * @return string
      */
-    public function getCreatedAt(){
+    public function getCreatedAt()
+    {
         return $this->_getData(self::CREATED_AT);
     }
 
@@ -734,7 +821,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      * @param string|null $createdAt
      * @return $this
      */
-    public function setCreatedAt($createdAt){
+    public function setCreatedAt($createdAt)
+    {
         return $this->setData(self::CREATED_AT, $createdAt);
     }
 
@@ -743,7 +831,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      *
      * @return string
      */
-    public function getUpdatedAt(){
+    public function getUpdatedAt()
+    {
         return $this->_getData(self::UPDATED_AT);
     }
 
@@ -753,7 +842,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      * @param string $updatedAt
      * @return $this
      */
-    public function setUpdatedAt($updatedAt){
+    public function setUpdatedAt($updatedAt)
+    {
         return $this->setData(self::UPDATED_AT, $updatedAt);
     }
 
@@ -762,7 +852,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      *
      * @return string
      */
-    public function getPurchaseKey(){
+    public function getPurchaseKey()
+    {
         return $this->_getData(self::PURCHASE_KEY);
     }
 
@@ -772,16 +863,18 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      * @param string $purchaseKey
      * @return $this
      */
-    public function setPurchaseKey($purchaseKey){
+    public function setPurchaseKey($purchaseKey)
+    {
         return $this->setData(self::PURCHASE_KEY, $purchaseKey);
     }
-    
+
     /**
      * Get purchase order item
      *
      * @return \Magestore\PurchaseOrderSuccess\Api\Data\PurchaseOrderItemInterface[]
      */
-    public function getItems(){
+    public function getItems()
+    {
         return $this->purchaseItemService->getProductsByPurchaseOrderId($this->getId())->getItems();
     }
 
@@ -791,7 +884,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      * @param \Magestore\PurchaseOrderSuccess\Api\Data\PurchaseOrderItemInterface[] $item
      * @return $this
      */
-    public function setItems($item){
+    public function setItems($item)
+    {
         return $this->setData(self::ITEMS, $item);
     }
 
@@ -800,7 +894,8 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
      *
      * @return bool
      */
-    public function isQuotation(){
+    public function isQuotation()
+    {
         return $this->getType() == PurchaseOrderType::TYPE_QUOTATION;
     }
 
@@ -817,29 +912,30 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
             $user = $this->_auth->getUser();
             $this->setUserId($user->getUserId());
             $this->setCreatedBy($user->getUserName());
-//            $this->purchaseOrderService->getCurrencyCode($this);
-//            $this->setShippingCost($this->taxAndShippingService->getDefaultShippingCost());
-        }else{
+        } else {
             $this->shippingMethodService->saveConfig($this);
             $this->paymentTermService->saveConfig($this);
             $countItems = $this->purchaseItemService->getProductsByPurchaseOrderId($this->getId())->getSize();
-            if($countItems==0){
+            if ($countItems == 0) {
                 $this->setShippingCost(0);
             }
         }
         $this->setGrandTotalExclTax(
-            $this->getSubtotal()+$this->getShippingCost()+$this->getTotalDiscount()
+            $this->getSubtotal() + $this->getShippingCost() + $this->getTotalDiscount()
         );
         $this->setGrandTotalInclTax(
-            $this->getGrandTotalExclTax()+$this->getTotalTax()
+            $this->getGrandTotalExclTax() + $this->getTotalTax()
         );
         // add purchase key
-        if($this->getPurchaseKey() == null) {
+        if ($this->getPurchaseKey() == null) {
             $tmp = [
                 'id' => $this->getId(),
                 'supplier_id' => $this->getSupplierId()
             ];
-            $key = hash('sha256', serialize($tmp));
+            /** @var \Magento\Framework\Serialize\SerializerInterface $serializer */
+            $serializer = \Magento\Framework\App\ObjectManager::getInstance()
+                ->get(\Magento\Framework\Serialize\SerializerInterface::class);
+            $key = hash('sha256', $serializer->serialize($tmp));
             $this->setPurchaseKey($key);
         }
         $this->purchaseOrderService->getPurchaseCode($this);
@@ -847,13 +943,21 @@ class PurchaseOrder extends \Magento\Framework\Model\AbstractModel
         $this->_eventManager->dispatch($this->_eventPrefix . '_save_before', $this->_getEventData());
         return $this;
     }
-    
-    public function canSendEmail(){
+
+    /**
+     * Can Send Email
+     *
+     * @return bool
+     */
+    public function canSendEmail()
+    {
         $status = $this->getStatus();
-        if(!$status || !$this->getSendEmail() || !$this->getId())
+        if (!$status || !$this->getSendEmail() || !$this->getId()) {
             return false;
-        if($status == PurchaseOrder\Option\Status::STATUS_CANCELED)
+        }
+        if ($status == PurchaseOrder\Option\Status::STATUS_CANCELED) {
             return false;
+        }
         return true;
     }
 }

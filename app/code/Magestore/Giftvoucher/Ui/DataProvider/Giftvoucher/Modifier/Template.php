@@ -10,8 +10,7 @@ use Magento\Framework\UrlInterface;
 use Magento\Ui\Component\Form\Field;
 
 /**
- * Class Template
- * @package Magestore\Giftvoucher\Ui\DataProvider\Giftvoucher\Modifier
+ * Gift voucher modifier - Template
  */
 class Template implements ModifierInterface
 {
@@ -55,7 +54,7 @@ class Template implements ModifierInterface
     }
     
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function modifyMeta(array $meta)
     {
@@ -116,6 +115,9 @@ class Template implements ModifierInterface
                             'templateImages' => $this->getTemplateImages(),
                             'imports' => [
                                 'templateId' => '${ $.parentName }.giftcard_template_id:value',
+                                '__disableTmpl' => [
+                                    'templateId' => false
+                                ]
                             ],
                             'sortOrder' => 430,
                         ],
@@ -124,11 +126,14 @@ class Template implements ModifierInterface
             ];
         }
         
-        $meta = array_merge_recursive($meta, [
-            'general' => [
-                'children' => $fields,
-            ],
-        ]);
+        $meta = array_merge_recursive(
+            $meta,
+            [
+                'general' => [
+                    'children' => $fields,
+                ],
+            ]
+        );
         return $meta;
     }
     
@@ -147,7 +152,7 @@ class Template implements ModifierInterface
     }
     
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function modifyData(array $data)
     {

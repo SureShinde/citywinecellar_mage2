@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright © Magestore. All rights reserved.
+See COPYING.txt for license details.
+-->
+
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd"
+         class="ReportSalesByStaffListing">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">
+                posreports_reports_bystaff_item_listing.posreports_reports_bystaff_item_listing_data_source
+            </item>
+        </item>
+    </argument>
+    <settings>
+        <spinner>posreports_reports_bystaff_item_listing_columns</spinner>
+        <deps>
+            <dep>
+                posreports_reports_bystaff_item_listing.posreports_reports_bystaff_item_listing_data_source
+            </dep>
+        </deps>
+    </settings>
+    <dataSource name="posreports_reports_bystaff_item_listing_data_source"
+                component="Magestore_PosReports/js/report/data-provider">
+        <settings>
+            <updateUrl path="mui/index/render"/>
+            <storageConfig>
+                <param name="indexField" xsi:type="string">id</param>
+                <param name="cacheRequests" xsi:type="boolean">false</param>
+            </storageConfig>
+        </settings>
+        <dataProvider class="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider"
+                      name="posreports_reports_bystaff_item_listing_data_source">
+            <settings>
+                <requestFieldName>id</requestFieldName>
+                <primaryFieldName>id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+    <listingToolbar name="listing_top">
+        <columnsControls name="columns_controls"/>
+        <paging name="listing_paging"/>
+        <bookmark name="bookmarks"/>
+        <exportButton name="export_button" class="Magestore\PosReports\Ui\Component\Listing\ExportButton">
+            <settings>
+                <additionalParams>
+                    <param xsi:type="string" name="reportFilters">${ $.provider}:params.reportFilters</param>
+                </additionalParams>
+                <options>
+                    <option name="csv" xsi:type="array">
+                        <item name="url" xsi:type="string">posreports/reports_export/reportToCsv</item>
+                    </option>
+                </options>
+            </settings>
+        </exportButton>
+        <filters name="listing_filters">
+            <settings>
+                <templates>
+                    <filters>
+                        <select>
+                            <param name="template" xsi:type="string">Magestore_PosReports/report/filters/elements/ui-select</param>
+                            <param name="component" xsi:type="string">Magento_Ui/js/form/element/ui-select</param>
+                            <param name="filterOptions" xsi:type="boolean">true</param>
+                            <param name="chipsEnabled" xsi:type="boolean">true</param>
+                        </select>
+                    </filters>
+                </templates>
+            </settings>
+        </filters>
+    </listingToolbar>
+    <columns name="posreports_reports_bystaff_item_listing_columns">
+        <selectionsColumn name="ids">
+            <settings>
+                <indexField>id</indexField>
+                <preserveSelectionsOnFilter>true</preserveSelectionsOnFilter>
+                <visible>false</visible>
+            </settings>
+        </selectionsColumn>
+        <column name="staff_id" component="Magento_Ui/js/grid/columns/select">
+            <settings>
+                <options class="Magestore\PosReports\Model\Source\PosStaff"/>
+                <filter>select</filter>
+                <dataType>select</dataType>
+                <label translate="true">Staff Name</label>
+            </settings>
+        </column>
+        <column name="orders_count">
+            <settings>
+                <label translate="true">Orders</label>
+                <filter>textRange</filter>
+                <headerTmpl>Magestore_PosReports/report/grid/columns/header</headerTmpl>
+                <altField>Number of orders with the selected status during the defined period.
+                </altField>
+            </settings>
+        </column>
+        <column name="total_revenue_amount" class="Magestore\PosReports\Ui\Component\Listing\Column\Price">
+            <settings>
+                <label translate="true">Revenue</label>
+                <filter>textRange</filter>
+                <headerTmpl>Magestore_PosReports/report/grid/columns/header</headerTmpl>
+                <altField>Equals total invoiced minus tax, shipping, and refunded.</altField>
+            </settings>
+        </column>
+        <column name="average_order_value" class="Magestore\PosReports\Ui\Component\Listing\Column\Price">
+            <settings>
+                <label translate="true">Average Order Value</label>
+                <filter>textRange</filter>
+                <headerTmpl>Magestore_PosReports/report/grid/columns/header</headerTmpl>
+                <altField>Equals total revenue divided by the number of orders.</altField>
+            </settings>
+        </column>
+        <column name="total_refunded_amount" class="Magestore\PosReports\Ui\Component\Listing\Column\Price">
+            <settings>
+                <label translate="true">Refund</label>
+                <filter>textRange</filter>
+                <headerTmpl>Magestore_PosReports/report/grid/columns/header</headerTmpl>
+                <altField>All refund amount during the defined time period.</altField>
+            </settings>
+        </column>
+        <column name="total_tax_amount_actual" class="Magestore\PosReports\Ui\Component\Listing\Column\Price">
+            <settings>
+                <label translate="true">Tax</label>
+                <filter>textRange</filter>
+                <headerTmpl>Magestore_PosReports/report/grid/columns/header</headerTmpl>
+                <altField>All tax amount during the defined time range. Equals tax invoiced minus tax
+                    refunded.
+                </altField>
+            </settings>
+        </column>
+        <column name="total_discount_amount_actual" class="Magestore\PosReports\Ui\Component\Listing\Column\Discount">
+            <settings>
+                <label translate="true">Discount</label>
+                <filter>textRange</filter>
+                <headerTmpl>Magestore_PosReports/report/grid/columns/header</headerTmpl>
+                <altField>All discount amount during the defined time period. Equals discount invoiced
+                    minus discount refunded.
+                </altField>
+            </settings>
+        </column>
+
+    </columns>
+
+</listing>

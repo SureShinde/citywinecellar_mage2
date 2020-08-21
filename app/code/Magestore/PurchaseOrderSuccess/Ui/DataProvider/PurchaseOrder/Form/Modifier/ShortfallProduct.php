@@ -12,10 +12,11 @@ use Magestore\PurchaseOrderSuccess\Model\PurchaseOrder\Option\Type;
 
 /**
  * Class ShortfallProduct
- * @package Magestore\PurchaseOrderSuccess\Ui\DataProvider\PurchaseOrder\Form\Modifier
+ *
+ * Used for short fall product
  */
 class ShortfallProduct extends AbstractModifier
-{    
+{
     /**
      * @var string
      */
@@ -38,10 +39,11 @@ class ShortfallProduct extends AbstractModifier
         'shortfall_product_container' => 'shortfall_product_container',
         'shortfall_product_listing' => 'os_purchase_order_shortfall_product_listing'
     ];
-    
+
     /**
-     * modify data
+     * Modify data
      *
+     * @param array $data
      * @return array
      */
     public function modifyData(array $data)
@@ -51,14 +53,15 @@ class ShortfallProduct extends AbstractModifier
 
     /**
      * Modify purchase order form meta
-     * 
+     *
      * @param array $meta
      * @return array
      */
-    public function modifyMeta(array $meta){
-        if(!$this->getPurchaseOrderId()
+    public function modifyMeta(array $meta)
+    {
+        if (!$this->getPurchaseOrderId()
             || $this->getCurrentPurchaseOrder()->getType() == Type::TYPE_QUOTATION
-            || !in_array($this->getCurrentPurchaseOrder()->getStatus(), [Status::STATUS_COMPLETED])){
+            || !in_array($this->getCurrentPurchaseOrder()->getStatus(), [Status::STATUS_COMPLETED])) {
             return $meta;
         }
         $meta = array_replace_recursive(
@@ -90,15 +93,16 @@ class ShortfallProduct extends AbstractModifier
                 ],
             ]
         );
-        return $meta;   
+        return $meta;
     }
 
     /**
      * Add shortfall product form fields
-     * 
+     *
      * @return array
      */
-    public function getShortfallProductChildren(){
+    public function getShortfallProductChildren()
+    {
         $children[$this->children['shortfall_product_container']] = $this->getShortfallProductList();
         return $children;
     }
@@ -108,7 +112,8 @@ class ShortfallProduct extends AbstractModifier
      *
      * @return array
      */
-    public function getShortfallProductButton(){
+    public function getShortfallProductButton()
+    {
         return [
             'arguments' => [
                 'data' => [
@@ -130,11 +135,12 @@ class ShortfallProduct extends AbstractModifier
     }
 
     /**
-     * get shortfall product list
-     * 
+     * Get shortfall product list
+     *
      * @return array
      */
-    public function getShortfallProductList(){
+    public function getShortfallProductList()
+    {
         $dataScope = 'shortfall_product_listing';
         return [
             'arguments' => [
@@ -144,7 +150,7 @@ class ShortfallProduct extends AbstractModifier
                         'autoRender' => false,
                         'componentType' => 'insertListing',
                         'dataScope' => $this->children[$dataScope],
-                        'externalProvider' => $this->children[$dataScope]. '.' . $this->children[$dataScope]
+                        'externalProvider' => $this->children[$dataScope] . '.' . $this->children[$dataScope]
                             . '_data_source',
                         'ns' => $this->children[$dataScope],
                         'render_url' => $this->urlBuilder->getUrl('mui/index/render'),
@@ -157,11 +163,19 @@ class ShortfallProduct extends AbstractModifier
                         'externalFilterMode' => true,
                         'imports' => [
                             'supplier_id' => '${ $.provider }:data.supplier_id',
-                            'purchase_id' => '${ $.provider }:data.purchase_order_id'
+                            'purchase_id' => '${ $.provider }:data.purchase_order_id',
+                            '__disableTmpl' => [
+                                'supplier_id' => false,
+                                'purchase_id' => false
+                            ]
                         ],
                         'exports' => [
                             'supplier_id' => '${ $.externalProvider }:params.supplier_id',
-                            'purchase_id' => '${ $.externalProvider }:params.purchase_id'
+                            'purchase_id' => '${ $.externalProvider }:params.purchase_id',
+                            '__disableTmpl' => [
+                                'supplier_id' => false,
+                                'purchase_id' => false
+                            ]
                         ],
                         'selectionsProvider' =>
                             $this->children[$dataScope]

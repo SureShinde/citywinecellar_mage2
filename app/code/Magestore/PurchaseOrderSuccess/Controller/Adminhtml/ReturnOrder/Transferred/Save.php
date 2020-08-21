@@ -9,12 +9,12 @@ namespace Magestore\PurchaseOrderSuccess\Controller\Adminhtml\ReturnOrder\Transf
 use Magento\Framework\Message\MessageInterface;
 
 /**
- * Class DownloadSample
- * @package Magestore\PurchaseOrderSuccess\Controller\Adminhtml\ReturnOrder\Product
+ * Controller transfer returnorder
+ *
+ * @SuppressWarnings(PHPMD.AllPurposeAction)
  */
 class Save extends \Magestore\PurchaseOrderSuccess\Controller\Adminhtml\ReturnOrder\AbstractAction
 {
-
     /**
      * @var \Magestore\PurchaseOrderSuccess\Service\ReturnOrder\Item\Transferred\TransferredService
      */
@@ -23,10 +23,20 @@ class Save extends \Magestore\PurchaseOrderSuccess\Controller\Adminhtml\ReturnOr
      * @var \Magestore\PurchaseOrderSuccess\Api\MultiSourceInventory\SourceManagementInterface
      */
     protected $sourceManagement;
+    /**
+     * @var array
+     */
+    protected $transferred_items = [];
 
-    protected $transferred_items = array();
-
-    public function execute() {
+    /**
+     * Execute
+     *
+     * @return \Magento\Framework\Controller\Result\Redirect
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
+    public function execute()
+    {
         $this->initVariable();
 
         $params = $this->getRequest()->getParams();
@@ -40,43 +50,53 @@ class Save extends \Magestore\PurchaseOrderSuccess\Controller\Adminhtml\ReturnOr
             $params = $inputFilter->getUnescaped();
         }
         $resultRedirect = $this->resultRedirectFactory->create();
-        if(!$params['return_id']){
+        if (!$params['return_id']) {
             $this->messageManager->addErrorMessage(__('Please select a return order to transfer received product'));
             return $resultRedirect->setPath('*/returnOrder/');
         }
-        if(!isset($params['dynamic_grid'])){
+        if (!isset($params['dynamic_grid'])) {
             $this->messageManager->addErrorMessage(__('Please transfer at least one product.'));
-            return $resultRedirect->setPath('*/returnOrder/view',['id'=>$params['return_id']]);
+            return $resultRedirect->setPath('*/returnOrder/view', ['id' => $params['return_id']]);
         }
         $transferredData = $this->transferredService->processTransferredData($params['dynamic_grid']);
 
-        if(!empty($transferredData)){
+        if (!empty($transferredData)) {
             $dataError = $this->modifyTransferredData($transferredData, $params);
-            if(count($dataError['gt_available_qty'])) {
+            if (count($dataError['gt_available_qty'])) {
                 $arrProductName = implode(', ', $dataError['gt_available_qty']);
-                $this->messageManager->addErrorMessage(__('Quantity transferred must be less or equal than available quantity.'));
-                $this->messageManager->addErrorMessage(__('Have '.count($dataError['gt_available_qty']).' products are not valid: '.$arrProductName));
+                $this->messageManager->addErrorMessage(
+                    __('Quantity transferred must be less or equal than available quantity.')
+                );
+                $this->messageManager->addErrorMessage(
+                    __('Have ' . count($dataError['gt_available_qty']) . ' products are not valid: ' . $arrProductName)
+                );
                 return $resultRedirect->setPath('*/returnOrder/view', ['id' => $params['return_id']]);
             }
-            if(count($dataError['gt_warehouse_qty'])) {
+            if (count($dataError['gt_warehouse_qty'])) {
                 $arrProductName = implode(', ', $dataError['gt_warehouse_qty']);
-                $this->messageManager->addErrorMessage(__('Quantity transferred must be less or equal than quantity on source.'));
-                $this->messageManager->addErrorMessage(__('Have '.count($dataError['gt_warehouse_qty']).' products are not valid: '.$arrProductName));
+                $this->messageManager->addErrorMessage(
+                    __('Quantity transferred must be less or equal than quantity on source.')
+                );
+                $this->messageManager->addErrorMessage(
+                    __('Have ' . count($dataError['gt_warehouse_qty']) . ' products are not valid: ' . $arrProductName)
+                );
                 return $resultRedirect->setPath('*/returnOrder/view', ['id' => $params['return_id']]);
             }
         }
 
-        if(empty($transferredData)){
+        if (empty($transferredData)) {
             $this->messageManager->addErrorMessage(__('Please transfer at least one product qty.'));
-        }else {
+        } else {
             try {
                 $user = $this->_auth->getUser();
                 $transferStockItemData = $this->returnService->transferProducts(
-                    $transferredData, $params, $user->getUserName()
+                    $transferredData,
+                    $params,
+                    $user->getUserName()
                 );
 
-                if(!empty($transferStockItemData)){
-                    if(isset($params['is_decrease_stock']) && $params['is_decrease_stock'] == 1) {
+                if (!empty($transferStockItemData)) {
+                    if (isset($params['is_decrease_stock']) && $params['is_decrease_stock'] == 1) {
                         $this->transferredService->subtractStockFromCatalog($this->transferred_items, $params);
                     }
                 }
@@ -89,25 +109,45 @@ class Save extends \Magestore\PurchaseOrderSuccess\Controller\Adminhtml\ReturnOr
         return $resultRedirect->setPath('*/returnOrder/view', ['id' => $params['return_id']]);
     }
 
-    private function initVariable() {
-        $this->transferredService = $this->_objectManager->get('Magestore\PurchaseOrderSuccess\Service\ReturnOrder\Item\Transferred\TransferredService');
-        $this->sourceManagement = $this->_objectManager->get('Magestore\PurchaseOrderSuccess\Api\MultiSourceInventory\SourceManagementInterface');
+    /**
+     * Init Variable
+     */
+    private function initVariable()
+    {
+        $this->transferredService = $this->_objectManager->get(
+            \Magestore\PurchaseOrderSuccess\Service\ReturnOrder\Item\Transferred\TransferredService::class
+        );
+        $this->sourceManagement = $this->_objectManager->get(
+            \Magestore\PurchaseOrderSuccess\Api\MultiSourceInventory\SourceManagementInterface::class
+        );
     }
 
-    public function modifyTransferredData($transferredData, $params) {
+    /**
+     * Modify Transferred Data
+     *
+     * @param array $transferredData
+     * @param array $params
+     * @return array[]
+     */
+    public function modifyTransferredData($transferredData, $params)
+    {
         $dataError = [
             'gt_available_qty' => [],
             'gt_warehouse_qty' => []
         ];
-        if(count($transferredData)) {
+        if (count($transferredData)) {
             foreach ($transferredData as $item) {
-                if((int)$item['available_qty'] < (int)$item['transferred_qty']) {
+                if ((int)$item['available_qty'] < (int)$item['transferred_qty']) {
                     $dataError['gt_available_qty'][] = $item['product_name'];
                     continue;
                 }
 
-                if(isset($params['is_decrease_stock']) && $params['is_decrease_stock'] == 1) {
-                    if ($this->itemService->getTotalQtyProductInSource($params['warehouse_id'], $item['product_sku']) < $item['transferred_qty']) {
+                if (isset($params['is_decrease_stock']) && $params['is_decrease_stock'] == 1) {
+                    $totalQtyInSource = $this->itemService->getTotalQtyProductInSource(
+                        $params['warehouse_id'],
+                        $item['product_sku']
+                    );
+                    if ($totalQtyInSource < $item['transferred_qty']) {
                         $dataError['gt_warehouse_qty'][] = $item['product_name'];
                         continue;
                     }

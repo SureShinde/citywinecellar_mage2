@@ -7,17 +7,20 @@
 
 namespace Magestore\FulfilSuccess\Ui\Component\Listing\Columns\PickRequest\Renderer;
 
+/**
+ * Pick render IncrementId
+ */
 class OrderIncrementId extends \Magestore\FulfilSuccess\Ui\Component\Listing\Columns\Actions
 {
 
     protected $_editUrl = 'sales/order/view';
-    
+
     /**
      * Prepare Data Source
      *
      * @param array $dataSource
      * @return array
-     */    
+     */
     public function prepareDataSource(array $dataSource)
     {
         if (isset($dataSource['data']['items'])) {
@@ -26,7 +29,7 @@ class OrderIncrementId extends \Magestore\FulfilSuccess\Ui\Component\Listing\Col
                 $name = $this->getData('name');
                 if (isset($item[$indexField])) {
                     $title = $item[$name];
-                    $item[$name] = array();
+                    $item[$name] = [];
                     $item[$name]['edit'] = [
                         'href' => $this->urlBuilder->getUrl($this->_editUrl, ['order_id' => $item[$indexField]]),
                         'label' => __($title)
@@ -34,7 +37,6 @@ class OrderIncrementId extends \Magestore\FulfilSuccess\Ui\Component\Listing\Col
                 }
             }
         }
-
         return $dataSource;
-    }    
+    }
 }

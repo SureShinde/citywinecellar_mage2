@@ -6,6 +6,11 @@
 
 namespace Magestore\AdjustStock\Model\ResourceModel\IncrementId;
 
+/**
+ * Class IncrementId
+ *
+ * Increment id resource model
+ */
 class IncrementId extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
 {
     /**

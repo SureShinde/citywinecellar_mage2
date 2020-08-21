@@ -23,7 +23,10 @@ namespace Magestore\Rewardpoints\Model\Total\Quote;
 
 /**
  * Class Point
- * @package Magestore\Rewardpoints\Model\Total\Quote
+ *
+ * Reward Point Total quote
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.CookieAndSessionMisuse)
  */
 class Point extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal
 {
@@ -62,16 +65,39 @@ class Point extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal
      * @var \Magestore\Rewardpoints\Helper\Block\Spend
      */
     protected $helperSpend;
-    
+
+    /**
+     * @var
+     */
     protected $baseTotalItems;
 
     /**
+     * @var \Magento\Quote\Api\CartRepositoryInterface
+     */
+    protected $quoteRepository;
+
+    /**
+     * @var \Magento\Framework\App\State
+     */
+    protected $appState;
+
+    /**
+     * @var \Magento\Backend\Model\Session\QuoteFactory
+     */
+    protected $quoteSessionBackendFactory;
+
+    /**
      * Point constructor.
+     *
      * @param \Magestore\Rewardpoints\Helper\Data $helperData
      * @param \Magestore\Rewardpoints\Helper\Customer $helperCustomer
      * @param \Magento\Checkout\Model\Session $checkoutSession
+     * @param \Magestore\Rewardpoints\Helper\Block\Spend $helperSpent
      * @param \Magestore\Rewardpoints\Helper\Calculation\Spending $calculationSpending
      * @param \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency
+     * @param \Magento\Framework\App\State $appState
+     * @param \Magento\Backend\Model\Session\QuoteFactory $quoteSessionBackendFactory
+     * @param \Magento\Quote\Api\CartRepositoryInterface $quoteRepository
      */
     public function __construct(
         \Magestore\Rewardpoints\Helper\Data $helperData,
@@ -79,18 +105,25 @@ class Point extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal
         \Magento\Checkout\Model\Session $checkoutSession,
         \Magestore\Rewardpoints\Helper\Block\Spend $helperSpent,
         \Magestore\Rewardpoints\Helper\Calculation\Spending $calculationSpending,
-        \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency
-    )
-    {
+        \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency,
+        \Magento\Framework\App\State $appState,
+        \Magento\Backend\Model\Session\QuoteFactory $quoteSessionBackendFactory,
+        \Magento\Quote\Api\CartRepositoryInterface $quoteRepository
+    ) {
         $this->helperData = $helperData;
         $this->helperCustomer = $helperCustomer;
         $this->helperSpend = $helperSpent;
         $this->checkoutSession = $checkoutSession;
         $this->calculationSpending = $calculationSpending;
         $this->priceCurrency = $priceCurrency;
+        $this->quoteRepository = $quoteRepository;
+        $this->appState = $appState;
+        $this->quoteSessionBackendFactory = $quoteSessionBackendFactory;
     }
 
     /**
+     * Check Output
+     *
      * @param \Magento\Quote\Model\Quote $quote
      * @param \Magento\Quote\Model\Quote\Address $address
      * @return bool
@@ -113,19 +146,21 @@ class Point extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal
     }
 
     /**
-     * collect reward points total
+     * Collect reward points total
      *
      * @param \Magento\Quote\Model\Quote $quote
      * @param \Magento\Quote\Api\Data\ShippingAssignmentInterface $shippingAssignment
      * @param \Magento\Quote\Model\Quote\Address\Total $total
-     * @return $this
+     * @return $this|Point
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function collect(
         \Magento\Quote\Model\Quote $quote,
         \Magento\Quote\Api\Data\ShippingAssignmentInterface $shippingAssignment,
         \Magento\Quote\Model\Quote\Address\Total $total
-    )
-    {
+    ) {
         parent::collect($quote, $shippingAssignment, $total);
         $address = $shippingAssignment->getShipping()->getAddress();
         if ($this->checkOutput($quote, $address)) {
@@ -144,7 +179,7 @@ class Point extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal
         }
         $maxPoints -= $this->calculationSpending->getPointItemSpent();
         if ($maxPoints <= 0 || !$this->helperCustomer->isAllowSpend($quote->getStoreId())) {
-            $this->checkoutSession->setRewardSalesRules(array());
+            $this->checkoutSession->setRewardSalesRules([]);
             return $this;
         }
         $baseDiscount = 0;
@@ -152,20 +187,24 @@ class Point extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal
 
         // Sales Rule (slider) discount Last
         if (is_array($rewardSalesRules)) {
-            $newRewardSalesRules = array();
             if ($baseTotal > 0.0 && isset($rewardSalesRules['rule_id'])) {
                 $rule = $this->calculationSpending->getQuoteRule($rewardSalesRules['rule_id']);
-                if ($rule && $rule->getId() && $rule->getSimpleAction() == 'by_price') {                   
+                if ($rule && $rule->getId() && $rule->getSimpleAction() == 'by_price') {
                     $rulesData = $this->helperSpend->getRulesData($this->helperSpend->getSliderRules());
-                    if(isset($rulesData) && $this->checkoutSession->getQuote()->getUseMaxPoint()){                        
+                    if ($this->appState->getAreaCode() == \Magento\Backend\App\Area\FrontNameResolver::AREA_CODE) {
+                        $quote = $this->quoteSessionBackendFactory->create()->getQuote();
+                    } else {
+                        $quoteId = $this->checkoutSession->getQuoteId();
+                        $quote = $this->quoteRepository->get($quoteId);
+                    }
+                    if (isset($rulesData) && $quote->getUseMaxPoint()) {
                         $usePoint = $rulesData['rate']['sliderOption']['maxPoints'];
-                        $rewardSalesRules['use_point'] = max($rewardSalesRules['use_point'],$usePoint);                        
+                        $rewardSalesRules['use_point'] = max($rewardSalesRules['use_point'], $usePoint);
                     }
                     $points = min($rewardSalesRules['use_point'], $maxPoints);
                     $ruleDiscount = $this->calculationSpending->getQuoteRuleDiscount($quote, $rule, $points);
                     if ($ruleDiscount > 0.0) {
                         $baseTotal -= $ruleDiscount;
-                        $maxPoints -= $points;
                         $baseDiscount += $ruleDiscount;
                         $pointUsed += $points;
                         $newRewardSalesRules = [
@@ -181,7 +220,6 @@ class Point extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal
         }
         // verify quote total data
         if ($baseTotal < 0.0001) {
-            $baseTotal = 0.0;
             $baseDiscount = $this->calculationSpending->getQuoteBaseTotal($quote, $address);
         }
         if ($baseDiscount) {
@@ -196,8 +234,8 @@ class Point extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal
      * @param \Magento\Quote\Model\Quote $quote
      * @param \Magento\Quote\Model\Quote\Address $address
      * @param \Magento\Quote\Model\Quote\Address\Total $total
-     * @param $ruleDiscount
-     * @param $points
+     * @param float $ruleDiscount
+     * @param string $points
      */
     public function processDiscount(
         \Magento\Quote\Model\Quote $quote,
@@ -205,8 +243,7 @@ class Point extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal
         \Magento\Quote\Model\Quote\Address\Total $total,
         $ruleDiscount,
         $points
-    )
-    {
+    ) {
         $baseTotalWithoutShipping = $this->calculationSpending->getQuoteBaseTotalWithoutShippingFee($quote, $address);
         $maxDiscountItems = min($ruleDiscount, $baseTotalWithoutShipping);
         // Fix round issue
@@ -233,12 +270,14 @@ class Point extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal
     }
 
     /**
-     * Calculate item discount      *
+     * Calculate item discount
      *
      * @param \Magento\Quote\Model\Quote\Address\Total $total ,
      * @param \Magento\Quote\Model\Quote\Item $item
-     * @param $baseTotalWithoutShipping
-     * @param $maxDiscountItems
+     * @param float $baseTotalWithoutShipping
+     * @param float $maxDiscountItems
+     * @param int $points
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function calculateDiscountItem($total, $item, $baseTotalWithoutShipping, $maxDiscountItems, $points)
     {
@@ -275,16 +314,18 @@ class Point extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal
     }
 
     /**
-     * @param \Magento\Quote\Model\Quote\Address $address ,
-     * @param \Magento\Quote\Model\Quote\Address\Total $total ,
-     * @param $total
-     * @param $ruleDiscount
-     * @param $maxDiscountItems
+     * Calculate discount shipping
+     *
+     * @param \Magento\Quote\Model\Quote\Address $address
+     * @param \Magento\Quote\Model\Quote\Address\Total $total
+     * @param float $ruleDiscount
+     * @param float $maxDiscountItems
      */
     public function calculateDiscountShipping($address, $total, $ruleDiscount, $maxDiscountItems)
     {
-        if ($ruleDiscount <= $maxDiscountItems)
+        if ($ruleDiscount <= $maxDiscountItems) {
             return $this;
+        }
         $shippingAmount = $address->getShippingAmountForDiscount();
         if ($shippingAmount !== null) {
             $baseShippingAmount = $address->getBaseShippingAmountForDiscount();
@@ -296,16 +337,25 @@ class Point extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal
         $baseDiscountShipping = min($baseDiscountShipping, $baseShippingAmount);
         $discountShipping = $this->priceCurrency->convert($baseDiscountShipping);
 
-        $total->setRewardpointsBaseDiscountForShipping($total->getRewardpointsBaseDiscountForShipping() + $baseDiscountShipping);
-        $total->setRewardpointsDiscountForShipping($total->getRewardpointsDiscountForShipping() + $discountShipping);
-        $total->setMagestoreBaseDiscountForShipping($total->getMagestoreBaseDiscountForShipping() + $baseDiscountShipping);
-        $total->setMagestoreDiscountForShipping($total->getMagestoreDiscountForShipping() + $discountShipping);
-        $total->setBaseShippingDiscountAmount(max(0, $total->getBaseShippingDiscountAmount() + $baseDiscountShipping));
+        $total->setRewardpointsBaseDiscountForShipping(
+            $total->getRewardpointsBaseDiscountForShipping() + $baseDiscountShipping
+        );
+        $total->setRewardpointsDiscountForShipping(
+            $total->getRewardpointsDiscountForShipping() + $discountShipping
+        );
+        $total->setMagestoreBaseDiscountForShipping(
+            $total->getMagestoreBaseDiscountForShipping() + $baseDiscountShipping
+        );
+        $total->setMagestoreDiscountForShipping(
+            $total->getMagestoreDiscountForShipping() + $discountShipping
+        );
+        $total->setBaseShippingDiscountAmount(
+            max(0, $total->getBaseShippingDiscountAmount() + $baseDiscountShipping)
+        );
         $total->setShippingDiscountAmount(max(0, $total->getShippingDiscountAmount() + $discountShipping));
         $total->addTotalAmount($this->getCode(), -$baseDiscountShipping);
         $total->addBaseTotalAmount($this->getCode(), -$discountShipping);
     }
-
 
     /**
      * Aggregate item discount information to total data and related properties
@@ -317,8 +367,7 @@ class Point extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal
     public function aggregateItemDiscount(
         \Magento\Quote\Model\Quote\Item\AbstractItem $item,
         \Magento\Quote\Model\Quote\Address\Total $total
-    )
-    {
+    ) {
         $total->addTotalAmount($this->getCode(), -$item->getRewardpointsDiscount());
         $total->addBaseTotalAmount($this->getCode(), -$item->getRewardpointsBaseDiscount());
         return $this;
@@ -368,10 +417,12 @@ class Point extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal
     }
 
     /**
-     * @param $baseDiscount
+     * Set base discount
+     *
+     * @param float $baseDiscount
      * @param \Magento\Quote\Model\Quote\Address\Total $total
-     * @param $quote
-     * @param $pointUsed
+     * @param \Magento\Quote\Model\Quote $quote
+     * @param int $pointUsed
      */
     public function setBaseDiscount($baseDiscount, $total, $quote, $pointUsed)
     {
@@ -397,30 +448,37 @@ class Point extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal
     }
 
     /**
-     * add point label
+     * Add point label
      *
-     * @param Mage_Sales_Model_Quote_Address $address
-     * @return Magestore_RewardPoints_Model_Total_Quote_Label
+     * @param \Magento\Quote\Model\Quote $quote
+     * @param \Magento\Quote\Model\Quote\Address\Total $total
+     * @return array
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function fetch(
         \Magento\Quote\Model\Quote $quote,
         \Magento\Quote\Model\Quote\Address\Total $total
-    )
-    {
+    ) {
         $arrayRewardInformation = [];
         if ($quote->getRewardpointsDiscount() != 0) {
-            array_push($arrayRewardInformation, [
-                'code' => $this->getCode(),
-                'title' => __('Use Point'),
-                'value' => -$quote->getRewardpointsDiscount(),
-            ]);
+            array_push(
+                $arrayRewardInformation,
+                [
+                    'code' => $this->getCode(),
+                    'title' => __('Use Point'),
+                    'value' => -$quote->getRewardpointsDiscount(),
+                ]
+            );
         }
         if ($quote->getData('rewardpoints_spent') != 0) {
-            array_push($arrayRewardInformation, [
-                'code' => 'rewardpoints_spent',
-                'title' => __('You will spend'),
-                'value' => $quote->getData('rewardpoints_spent'),
-            ]);
+            array_push(
+                $arrayRewardInformation,
+                [
+                    'code' => 'rewardpoints_spent',
+                    'title' => __('You will spend'),
+                    'value' => $quote->getData('rewardpoints_spent'),
+                ]
+            );
         }
         return $arrayRewardInformation;
     }

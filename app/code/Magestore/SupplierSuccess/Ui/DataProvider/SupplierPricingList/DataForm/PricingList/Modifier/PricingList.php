@@ -14,7 +14,8 @@ use Magestore\SupplierSuccess\Ui\DataProvider\Supplier\DataForm\Modifier\Abstrac
 
 /**
  * Class PricingList
- * @package Magestore\SupplierSuccess\Ui\DataProvider\SupplierPricingList\DataForm\PricingList\Modifier
+ *
+ * Used for pricing list
  */
 class PricingList extends AbstractModifier
 {
@@ -47,8 +48,9 @@ class PricingList extends AbstractModifier
     ];
 
     /**
-     * modify data
+     * Modify data
      *
+     * @param array $data
      * @return array
      */
     public function modifyData(array $data)
@@ -62,7 +64,8 @@ class PricingList extends AbstractModifier
      * @param array $meta
      * @return array
      */
-    public function modifyMeta(array $meta){
+    public function modifyMeta(array $meta)
+    {
         $meta = array_replace_recursive(
             $meta,
             [
@@ -90,7 +93,8 @@ class PricingList extends AbstractModifier
      *
      * @return array
      */
-    public function getProductListChildren(){
+    public function getProductListChildren()
+    {
         $children = [
             $this->children['button_set'] => $this->getReceivedProductButtons(),
             $this->children['pricing_list_product_select_modal'] => $this->getReceivedProductSelectModal(),
@@ -99,7 +103,13 @@ class PricingList extends AbstractModifier
         return $children;
     }
 
-    public function getReceivedProductButtons(){
+    /**
+     * GetReceivedProductButtons
+     *
+     * @return array
+     */
+    public function getReceivedProductButtons()
+    {
         return [
             'arguments' => [
                 'data' => [
@@ -116,7 +126,9 @@ class PricingList extends AbstractModifier
                     __('Select Products'),
                     [
                         [
-                            'targetName' => 'os_supplier_pricinglist_modal_add_listing.os_supplier_pricinglist_modal_add_listing' . '.' . $this->groupContainer
+                            'targetName' => 'os_supplier_pricinglist_modal_add_listing.os_supplier_pricinglist_modal_add_listing' //phpcs:disable
+                                . '.'
+                                . $this->groupContainer
                                 . '.' . $this->children['pricing_list_product_select_modal'],
                             'actionName' => 'openModal',
                             'params' => [
@@ -130,7 +142,13 @@ class PricingList extends AbstractModifier
         ];
     }
 
-    public function getReceivedProductSelectModal(){
+    /**
+     * GetReceivedProductSelectModal
+     *
+     * @return array
+     */
+    public function getReceivedProductSelectModal()
+    {
         return [
             'arguments' => [
                 'data' => [
@@ -167,7 +185,13 @@ class PricingList extends AbstractModifier
         ];
     }
 
-    public function getPricingListProductModalSelectListing(){
+    /**
+     * GetPricingListProductModalSelectListing
+     *
+     * @return array
+     */
+    public function getPricingListProductModalSelectListing()
+    {
         $dataScope = 'pricing_list_product_modal_select_listing';
         return [
             'arguments' => [
@@ -176,7 +200,7 @@ class PricingList extends AbstractModifier
                         'autoRender' => true,
                         'componentType' => 'insertListing',
                         'dataScope' => $this->children['pricing_list_product_modal_select_listing'],
-                        'externalProvider' => $this->children[$dataScope]. '.' . $this->children[$dataScope]
+                        'externalProvider' => $this->children[$dataScope] . '.' . $this->children[$dataScope]
                             . '_data_source',
                         'selectionsProvider' =>
                             $this->children[$dataScope]
@@ -197,12 +221,16 @@ class PricingList extends AbstractModifier
                         'behaviourType' => 'simple',
                         'externalFilterMode' => true,
                         'imports' => [
-                            'entity_id' => '${ $.provider }:data.'.'entity_id',
-//                            $this->_modalDataColumn => '${ $.provider }:data.'.$this->_modalDataColumn ,
+                            'entity_id' => '${ $.provider }:data.' . 'entity_id',
+                            '__disableTmpl' => [
+                                'entity_id' => false
+                            ]
                         ],
                         'exports' => [
-                            'entity_id' => '${ $.externalProvider }:params.'.'entity_id',
-//                            $this->_modalDataColumn => '${ $.externalProvider }:params.'.$this->_modalDataColumn,
+                            'entity_id' => '${ $.externalProvider }:params.' . 'entity_id',
+                            '__disableTmpl' => [
+                                'entity_id' => false
+                            ]
                         ]
                     ]
                 ]
@@ -234,7 +262,12 @@ class PricingList extends AbstractModifier
                         'deleteButtonLabel' => __('Remove'),
                         'dataProvider' => $this->children['pricing_list_product_modal_select_listing'],
                         'map' => $this->mapFields,
-                        'links' => ['insertData' => '${ $.provider }:${ $.dataProvider }'],
+                        'links' => [
+                            'insertData' => '${ $.provider }:${ $.dataProvider }',
+                            '__disableTmpl' => [
+                                'insertData' => false
+                            ]
+                        ],
                         'sortOrder' => 20,
                         'columnsHeader' => false,
                         'columnsHeaderAfterRender' => true,

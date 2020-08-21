@@ -13,10 +13,11 @@ use Magestore\PurchaseOrderSuccess\Model\PurchaseOrder\Option\Type;
 
 /**
  * Class ReturnedProduct
- * @package Magestore\PurchaseOrderSuccess\Ui\DataProvider\PurchaseOrder\Form\Modifier
+ *
+ * Used for returned product
  */
 class ReturnedProduct extends AbstractModifier
-{    
+{
     /**
      * @var string
      */
@@ -42,10 +43,11 @@ class ReturnedProduct extends AbstractModifier
         'returned_product_modal' => 'returned_product_modal',
         'returned_product_modal_form' => 'os_purchase_order_returned_product_form'
     ];
-    
+
     /**
-     * modify data
+     * Modify data
      *
+     * @param array $data
      * @return array
      */
     public function modifyData(array $data)
@@ -55,13 +57,14 @@ class ReturnedProduct extends AbstractModifier
 
     /**
      * Modify purchase order form meta
-     * 
+     *
      * @param array $meta
      * @return array
      */
-    public function modifyMeta(array $meta){
-        if(!$this->getPurchaseOrderId() || $this->getCurrentPurchaseOrder()->getStatus() == Status::STATUS_PENDING ||
-            ($this->getCurrentPurchaseOrder()->getType() == Type::TYPE_QUOTATION)){
+    public function modifyMeta(array $meta)
+    {
+        if (!$this->getPurchaseOrderId() || $this->getCurrentPurchaseOrder()->getStatus() == Status::STATUS_PENDING ||
+            ($this->getCurrentPurchaseOrder()->getType() == Type::TYPE_QUOTATION)) {
             return $meta;
         }
         $meta = array_replace_recursive(
@@ -93,19 +96,21 @@ class ReturnedProduct extends AbstractModifier
                 ],
             ]
         );
-        return $meta;   
+        return $meta;
     }
 
     /**
      * Add returned form fields
-     * 
+     *
      * @return array
      */
-    public function getReturnedProductChildren(){
+    public function getReturnedProductChildren()
+    {
         $purchaseOrder = $this->getCurrentPurchaseOrder();
-        if($purchaseOrder->getStatus() != Status::STATUS_CANCELED
-            && $purchaseOrder->getTotalQtyReceived()>$purchaseOrder->getTotalQtyReturned()+$purchaseOrder->getTotalQtyTransferred())
+        if ($purchaseOrder->getStatus() != Status::STATUS_CANCELED
+            && $purchaseOrder->getTotalQtyReceived() > $purchaseOrder->getTotalQtyReturned() + $purchaseOrder->getTotalQtyTransferred()) { //phpcs:disable
             $children[$this->children['returned_product_buttons']] = $this->getReturnedProductButton();
+        }
         $children[$this->children['returned_product_container']] = $this->getReturnedProductList();
         return $children;
     }
@@ -115,7 +120,8 @@ class ReturnedProduct extends AbstractModifier
      *
      * @return array
      */
-    public function getReturnedProductButton(){
+    public function getReturnedProductButton()
+    {
         return [
             'arguments' => [
                 'data' => [
@@ -136,13 +142,13 @@ class ReturnedProduct extends AbstractModifier
                                 . '.' . $this->children['returned_product_buttons']
                                 . '.' . $this->children['returned_product_modal'],
                             'actionName' => 'openModal'
-                        ],[
-                            'targetName' => $this->scopeName . '.' . $this->groupContainer
-                                . '.' . $this->children['returned_product_buttons']
-                                . '.' . $this->children['returned_product_modal']
-                                . '.' . $this->children['returned_product_modal_form'],
-                            'actionName' => 'render'
-                        ]
+                        ], [
+                        'targetName' => $this->scopeName . '.' . $this->groupContainer
+                            . '.' . $this->children['returned_product_buttons']
+                            . '.' . $this->children['returned_product_modal']
+                            . '.' . $this->children['returned_product_modal_form'],
+                        'actionName' => 'render'
+                    ]
                     ]
                 ),
                 $this->children['returned_product_modal'] => [
@@ -198,9 +204,14 @@ class ReturnedProduct extends AbstractModifier
             ],
         ];
     }
-    
-    
-    public function getReturnedProductList(){
+
+    /**
+     * Get returned product list
+     *
+     * @return array
+     */
+    public function getReturnedProductList()
+    {
         $dataScope = 'returned_product_listing';
         return [
             'arguments' => [
@@ -210,7 +221,7 @@ class ReturnedProduct extends AbstractModifier
                         'autoRender' => false,
                         'componentType' => 'insertListing',
                         'dataScope' => $this->children[$dataScope],
-                        'externalProvider' => $this->children[$dataScope]. '.' . $this->children[$dataScope]
+                        'externalProvider' => $this->children[$dataScope] . '.' . $this->children[$dataScope]
                             . '_data_source',
                         'ns' => $this->children[$dataScope],
                         'render_url' => $this->urlBuilder->getUrl('mui/index/render'),
@@ -223,11 +234,19 @@ class ReturnedProduct extends AbstractModifier
                         'externalFilterMode' => true,
                         'imports' => [
                             'supplier_id' => '${ $.provider }:data.supplier_id',
-                            'purchase_id' => '${ $.provider }:data.purchase_order_id'
+                            'purchase_id' => '${ $.provider }:data.purchase_order_id',
+                            '__disableTmpl' => [
+                                'supplier_id' => false,
+                                'purchase_id' => false
+                            ]
                         ],
                         'exports' => [
                             'supplier_id' => '${ $.externalProvider }:params.supplier_id',
-                            'purchase_id' => '${ $.externalProvider }:params.purchase_id'
+                            'purchase_id' => '${ $.externalProvider }:params.purchase_id',
+                            '__disableTmpl' => [
+                                'supplier_id' => false,
+                                'purchase_id' => false
+                            ]
                         ],
                         'selectionsProvider' =>
                             $this->children[$dataScope]

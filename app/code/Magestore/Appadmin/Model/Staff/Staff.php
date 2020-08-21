@@ -6,11 +6,13 @@
  */
 
 namespace Magestore\Appadmin\Model\Staff;
+
 use Magestore\Appadmin\Api\Data\Staff\StaffInterface;
 
 /**
- * Class Staff
- * @package Magestore\Appadmin\Model\Staff
+ * Model Staff
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Staff extends \Magento\Framework\Model\AbstractModel implements \Magestore\Appadmin\Api\Data\Staff\StaffInterface
 {
@@ -47,6 +49,7 @@ class Staff extends \Magento\Framework\Model\AbstractModel implements \Magestore
 
     /**
      * Staff constructor.
+     *
      * @param \Magento\Framework\Model\Context $context
      * @param \Magento\Framework\Registry $registry
      * @param \Magento\Framework\Encryption\EncryptorInterface $encryptor
@@ -58,6 +61,7 @@ class Staff extends \Magento\Framework\Model\AbstractModel implements \Magestore
      * @param \Magestore\Appadmin\Api\Staff\StaffRepositoryInterface $staffRepository
      * @param \Magestore\Webpos\Model\ResourceModel\Location\Location $locationResource
      * @param array $data
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         \Magento\Framework\Model\Context $context,
@@ -72,9 +76,8 @@ class Staff extends \Magento\Framework\Model\AbstractModel implements \Magestore
         \Magestore\Webpos\Model\ResourceModel\Location\Location $locationResource,
         array $data = []
     ) {
-        $this->encryptor = $encryptor;
-
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
+        $this->encryptor = $encryptor;
         $this->staffCollectionFactory = $staffCollectionFactory;
         $this->staffResource = $resource;
         $this->dispatchService = $dispatchService;
@@ -82,8 +85,11 @@ class Staff extends \Magento\Framework\Model\AbstractModel implements \Magestore
         $this->staffRepository = $staffRepository;
         $this->locationResource = $locationResource;
     }
+
     /**
-     * @param $password
+     * Get Encoded Password
+     *
+     * @param string $password
      * @return string
      */
     public function getEncodedPassword($password)
@@ -91,18 +97,20 @@ class Staff extends \Magento\Framework\Model\AbstractModel implements \Magestore
         return $this->encryptor->getHash($password, true);
     }
 
-
     /**
+     * Before Save
+     *
      * @return $this
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function beforeSave() {
+    public function beforeSave()
+    {
         $data = [];
         if ($this->getNewPassword()) {
             $data['password'] = $this->getEncodedPassword($this->getNewPassword());
 
             // dispatch event force sign out when change password
-            if(!$this->isObjectNew()) {
+            if (!$this->isObjectNew()) {
                 $this->dispatchService->dispatchEventForceSignOut($this->getStaffId());
             }
         } elseif ($this->getPassword() && !$this->getId() && !$this->getNotEncode()) {
@@ -111,7 +119,7 @@ class Staff extends \Magento\Framework\Model\AbstractModel implements \Magestore
         $this->addData($data);
 
         // set data object before save
-        if(!$this->isObjectNew()) {
+        if (!$this->isObjectNew()) {
             $currentObject = $this->staffRepository->getById($this->getStaffId());
             $this->currentData = $currentObject->getData();
         }
@@ -119,24 +127,30 @@ class Staff extends \Magento\Framework\Model\AbstractModel implements \Magestore
         return parent::beforeSave();
     }
 
+    /**
+     * After Save
+     *
+     * @return Staff
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
     public function afterSave()
     {
-        if(!$this->isObjectNew()) {
+        if (!$this->isObjectNew()) {
             // dispatch event force sign out when not have permission
             // or disable staff
-            if((!$this->ruleRepository->isAllowPermission('Magestore_Webpos::manage_pos', $this->getStaffId())
+            if ((!$this->ruleRepository->isAllowPermission('Magestore_Webpos::manage_pos', $this->getStaffId())
                 || $this->getStatus() == \Magestore\Appadmin\Model\Source\Adminhtml\Status::STATUS_DISABLED)) {
                 $this->dispatchService->dispatchEventForceSignOut($this->getStaffId());
             }
 
             // dispatch event force change pos when remove some location assigned
-            if($this->hasDataChangeForField('location_ids')) {
+            if ($this->hasDataChangeForField('location_ids')) {
                 // get list location id which has been deleted
                 $oldLocationIds = explode(',', $this->currentData['location_ids']);
                 $newLocationIds = explode(',', $this->getData('location_ids'));
                 $locationDeleted = [];
                 foreach ($oldLocationIds as $locationId) {
-                    if(!in_array($locationId, $newLocationIds)) {
+                    if (!in_array($locationId, $newLocationIds)) {
                         $locationDeleted[] = $locationId;
                     }
                 }
@@ -147,19 +161,26 @@ class Staff extends \Magento\Framework\Model\AbstractModel implements \Magestore
         return parent::afterSave();
     }
 
-    public function forceChangePosForStaff($locationDeleted) {
+    /**
+     * Force Change Pos For Staff
+     *
+     * @param array $locationDeleted
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function forceChangePosForStaff($locationDeleted)
+    {
         foreach ($locationDeleted as $locationId) {
             /** @var \Magestore\Webpos\Model\ResourceModel\Location\Location $resourceLocation */
             $resourceLocation = $this->locationResource;
             $select = $resourceLocation->getConnection()->select();
             $select->from(['e' => $resourceLocation->getMainTable()]);
             $select->join(
-                array('pos' => $resourceLocation->getTable('webpos_pos')),
+                ['pos' => $resourceLocation->getTable('webpos_pos')],
                 'pos.location_id = e.' . $resourceLocation->getIdFieldName(),
                 []
             );
-            $select->where('staff_id = '. $this->getStaffId());
-            $select->where('pos.location_id = '. $locationId);
+            $select->where('staff_id = ' . $this->getStaffId());
+            $select->where('pos.location_id = ' . $locationId);
             $select->columns('pos.pos_id');
 
             $data = $resourceLocation->getConnection()->fetchAll($select);
@@ -170,35 +191,55 @@ class Staff extends \Magento\Framework\Model\AbstractModel implements \Magestore
         }
     }
 
+    /**
+     * Before Delete
+     *
+     * @return Staff
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
     public function beforeDelete()
     {
         $this->dispatchService->dispatchEventForceSignOut($this->getStaffId());
         return parent::beforeDelete();
     }
 
-    // check if data has change for field
-    public function hasDataChangeForField($fieldName) {
+    /**
+     * Check if data has change for field
+     *
+     * @param string $fieldName
+     * @return bool
+     */
+    public function hasDataChangeForField($fieldName)
+    {
         return !($this->currentData[$fieldName] == $this->getData($fieldName));
     }
 
     /**
+     * LoadByUsername
      *
+     * @param string $username
+     * @return $this
      */
-    public function loadByUsername($username) {
+    public function loadByUsername($username)
+    {
         $staffCollection = $this->staffCollectionFactory->create()->addFieldToFilter(self::USER_NAME, $username)
-            ->addFieldToFilter(self::STATUS,self::STATUS_ENABLED);
-        if ($id = $staffCollection->getFirstItem()->getId())
+            ->addFieldToFilter(self::STATUS, self::STATUS_ENABLED);
+        if ($id = $staffCollection->getFirstItem()->getId()) {
             $this->staffResource->load($this, $id);
+        }
         return $this;
     }
 
     /**
-     * @param $username
-     * @param $password
+     * Authenticate
+     *
+     * @param string $username
+     * @param string $password
      * @return $this|bool
      * @throws \Exception
      */
-    public function authenticate($username, $password) {
+    public function authenticate($username, $password)
+    {
         $this->loadByUsername($username);
         if (!$this->validatePassword($password)) {
             return false;
@@ -207,17 +248,20 @@ class Staff extends \Magento\Framework\Model\AbstractModel implements \Magestore
     }
 
     /**
+     * Validate
+     *
      * @return array|bool
      */
-    public function validate() {
-        $errors = array();
+    public function validate()
+    {
+        $errors = [];
         if ($this->hasNewPassword()) {
             if (strlen($this->getNewPassword()) < self::MIN_PASSWORD_LENGTH) {
                 $errors[] = __('Password must be at least of %1 characters.', self::MIN_PASSWORD_LENGTH);
             }
 
-            if (!preg_match('/[a-z]/iu', $this->getNewPassword()) || !preg_match('/[0-9]/u', $this->getNewPassword())
-            ) {
+            if (!preg_match('/[a-z]/iu', $this->getNewPassword())
+                || !preg_match('/[0-9]/u', $this->getNewPassword())) {
                 $errors[] = __('Password must include both numeric and alphabetic characters.');
             }
 
@@ -235,22 +279,26 @@ class Staff extends \Magento\Framework\Model\AbstractModel implements \Magestore
     }
 
     /**
-     * @param $password
+     * Validate Password
+     *
+     * @param string $password
      * @return bool
      * @throws \Exception
      */
-    public function validatePassword($password) {
+    public function validatePassword($password)
+    {
         $hash = $this->getPassword();
-        if (!$hash)
+        if (!$hash) {
             return false;
+        }
         return $this->encryptor->validateHash($password, $hash);
     }
-    /**
+
     /**
      * Get staff id
      *
-     * @api
      * @return string|null
+     * @api
      */
     public function getStaffId()
     {
@@ -260,54 +308,60 @@ class Staff extends \Magento\Framework\Model\AbstractModel implements \Magestore
     /**
      * Set staff id
      *
-     * @api
      * @param string $staffId
      * @return $this
+     * @api
      */
     public function setStaffId($staffId)
     {
         $this->setData(self::STAFF_ID, $staffId);
         return $this;
     }
+
     /**
      * Get user name
      *
-     * @api
      * @return string|null
+     * @api
      */
-    public function getUsername() {
+    public function getUsername()
+    {
         return $this->getData(self::USER_NAME);
     }
 
     /**
      * Set user name
      *
-     * @api
      * @param string $username
      * @return $this
+     * @api
      */
-    public function setUsername($username) {
+    public function setUsername($username)
+    {
         $this->setData(self::USER_NAME, $username);
         return $this;
     }
+
     /**
      * Get password params
      *
-     * @api
      * @return string|null
+     * @api
      */
-    public function getPassword() {
+    public function getPassword()
+    {
         return $this->getData(self::PASSWORD);
     }
 
     /**
      * Set password
      *
-     * @api
      * @param string $password
      * @return $this
+     * @api
      */
-    public function setPassword($password) {
+    public function setPassword($password)
+    {
         $this->setData(self::PASSWORD, $password);
         return $this;
     }
@@ -315,126 +369,143 @@ class Staff extends \Magento\Framework\Model\AbstractModel implements \Magestore
     /**
      * Get display name
      *
-     * @api
      * @return string|null
+     * @api
      */
-    public function getName() {
+    public function getName()
+    {
         return $this->getData(self::NAME);
     }
 
     /**
      * Set display name
      *
-     * @api
      * @param string $name
      * @return $this
+     * @api
      */
-    public function setName($name) {
+    public function setName($name)
+    {
         $this->setData(self::NAME, $name);
         return $this;
     }
+
     /**
      * Get email
      *
-     * @api
      * @return string|null
+     * @api
      */
-    public function getEmail() {
+    public function getEmail()
+    {
         return $this->getData(self::EMAIL);
     }
 
     /**
      * Set display name
      *
-     * @api
      * @param string $email
      * @return $this
+     * @api
      */
-    public function setEmail($email) {
+    public function setEmail($email)
+    {
         $this->setData(self::EMAIL, $email);
         return $this;
     }
+
     /**
      * Get customer group
      *
-     * @api
      * @return string|null
+     * @api
      */
-    public function getCustomerGroups() {
+    public function getCustomerGroups()
+    {
         return $this->getData(self::CUSTOMER_GROUPS);
     }
 
     /**
      * Set customer group
      *
-     * @api
      * @param string $customerGroups
      * @return $this
+     * @api
      */
-    public function setCustomerGroups($customerGroups) {
+    public function setCustomerGroups($customerGroups)
+    {
         $this->setData(self::CUSTOMER_GROUPS, $customerGroups);
         return $this;
     }
+
     /**
      * Get location ids
      *
-     * @api
      * @return string|null
+     * @api
      */
-    public function getLocationIds() {
+    public function getLocationIds()
+    {
         return $this->getData(self::LOCATION_IDS);
     }
 
     /**
      * Set location ids
      *
-     * @api
      * @param string $locationIds
      * @return $this
+     * @api
      */
-    public function setLocationIds($locationIds) {
+    public function setLocationIds($locationIds)
+    {
         $this->setData(self::LOCATION_IDS, $locationIds);
         return $this;
     }
+
     /**
      * Get role id
      *
-     * @api
      * @return string|null
+     * @api
      */
-    public function getRoleId() {
+    public function getRoleId()
+    {
         return $this->getData(self::ROLE_ID);
     }
 
     /**
      * Set role id
      *
-     * @api
      * @param string $roleId
      * @return $this
+     * @api
      */
-    public function setRoleId($roleId) {
+    public function setRoleId($roleId)
+    {
         $this->setData(self::ROLE_ID, $roleId);
         return $this;
     }
+
     /**
      * Get status
      *
-     * @api
      * @return string|null
+     * @api
      */
-    public function getStatus() {
+    public function getStatus()
+    {
         return $this->getData(self::STATUS);
     }
 
     /**
      * Set status
      *
-     * @api
      * @param string $status
      * @return $this
+     * @api
      */
-    public function setStatus($status) {
+    public function setStatus($status)
+    {
         $this->setData(self::STATUS, $status);
         return $this;
     }
@@ -442,31 +513,36 @@ class Staff extends \Magento\Framework\Model\AbstractModel implements \Magestore
     /**
      * Get pos id
      *
-     * @api
      * @return string|null
+     * @api
      */
-    public function getPosIds() {
+    public function getPosIds()
+    {
         return $this->getData(self::POS_IDS);
     }
 
     /**
      * Set pos id
      *
-     * @api
      * @param string $posIds
      * @return $this
+     * @api
      */
-    public function setPosIds($posIds) {
+    public function setPosIds($posIds)
+    {
         $this->setData(self::POS_IDS, $posIds);
         return $this;
     }
 
     /**
+     * User Exists
+     *
      * @return bool
      */
-    public function userExists() {
+    public function userExists()
+    {
         $username = $this->getUsername();
-        $check = $this->staffCollectionFactory->create()->addFieldToFilter(self::USER_NAME,$username);
+        $check = $this->staffCollectionFactory->create()->addFieldToFilter(self::USER_NAME, $username);
         if ($check->getFirstItem()->getId() && $this->getId() != $check->getFirstItem()->getId()) {
             return true;
         }

@@ -4,21 +4,28 @@
  * See COPYING.txt for license details.
  */
 
-
 namespace Magestore\SupplierSuccess\Block\Adminhtml\Supplier\Import;
 
 /**
- * Class Form
- * @package Magestore\SupplierSuccess\Block\Adminhtml\Supplier\Import
+ * Supplier Form import
  */
-class Form extends  \Magento\Backend\Block\Template
+class Form extends \Magento\Backend\Block\Template
 {
-
+    /**
+     * @var \Magento\Framework\UrlInterface
+     */
+    protected $urlBuilder;
+    /**
+     * Form constructor.
+     *
+     * @param \Magento\Backend\Block\Template\Context $context
+     * @param array $data
+     */
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
         array $data = []
     ) {
-        parent::__construct($context,  $data);
+        parent::__construct($context, $data);
         $this->urlBuilder = $context->getUrlBuilder();
         $this->setUseContainer(true);
     }
@@ -28,12 +35,15 @@ class Form extends  \Magento\Backend\Block\Template
      *
      * @return mixed
      */
-    public function getCsvSampleLink() {
-        $url = $this->getUrl('suppliersuccess/supplier/downloadsample',
-                array(
-                    '_secure' => true,
-                    'id' => $this->getRequest()->getParam('id')
-                ));
+    public function getCsvSampleLink()
+    {
+        $url = $this->getUrl(
+            'suppliersuccess/supplier/downloadsample',
+            [
+                '_secure' => true,
+                'id' => $this->getRequest()->getParam('id')
+            ]
+        );
         return $url;
     }
 
@@ -42,8 +52,10 @@ class Form extends  \Magento\Backend\Block\Template
      *
      * @return string
      */
-    public function getContent() {
-        return __('Please choose a CSV file to import products for the supplier. You can download this sample CSV file');
+    public function getContent()
+    {
+        return __('Please choose a CSV file to import products for the supplier.'
+            . ' You can download this sample CSV file');
     }
 
     /**
@@ -51,12 +63,15 @@ class Form extends  \Magento\Backend\Block\Template
      *
      * @return mixed
      */
-    public function getImportLink() {
-        return $this->getUrl('suppliersuccess/supplier/import',
-                array(
-                    '_secure' => true,
-                    'id' => $this->getRequest()->getParam('id')
-                ));
+    public function getImportLink()
+    {
+        return $this->getUrl(
+            'suppliersuccess/supplier/import',
+            [
+                '_secure' => true,
+                'id' => $this->getRequest()->getParam('id')
+            ]
+        );
     }
 
     /**
@@ -64,7 +79,8 @@ class Form extends  \Magento\Backend\Block\Template
      *
      * @return string
      */
-    public function getTitle() {
+    public function getTitle()
+    {
         return __('Import products');
     }
 

@@ -3,22 +3,24 @@
  * Copyright © 2016 Magestore. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace Magestore\OrderSuccess\Model\ResourceModel\Order\NeedShip;
 
 /**
- * Class Collection
- * @package Magestore\OrderSuccess\Model\ResourceModel\Order\NeedShip
+ * Order need ship Collection
  */
 class Collection extends \Magestore\OrderSuccess\Model\ResourceModel\Order\Collection
 {
     protected $qtyOrdered = 'SUM(sales_order_item.qty_ordered
-                - sales_order_item.qty_shipped
-                - sales_order_item.qty_refunded
-                - sales_order_item.qty_canceled
-                - COALESCE(sales_order_item.qty_backordered, 0)
-                - COALESCE(sales_order_item.qty_prepareship, 0))';
+        - sales_order_item.qty_shipped
+        - sales_order_item.qty_refunded
+        - sales_order_item.qty_canceled
+        - COALESCE(sales_order_item.qty_backordered, 0)
+        - COALESCE(sales_order_item.qty_prepareship, 0))';
 
     /**
+     * Init select
+     *
      * @return $this
      */
     protected function _initSelect()
@@ -32,10 +34,9 @@ class Collection extends \Magestore\OrderSuccess\Model\ResourceModel\Order\Colle
     }
 
     /**
-     * add condition.
+     * Add Condition
      *
-     * @param
-     * @return $this
+     * @return Collection|void
      */
     public function addCondition()
     {
@@ -43,15 +44,18 @@ class Collection extends \Magestore\OrderSuccess\Model\ResourceModel\Order\Colle
             $this->addFieldToFilter('is_verified', 1);
         }
         $this->addFieldToFilter('sales_order.is_virtual', 0);
-        $this->addFieldToFilter('main_table.status', array(
-            'nin' => array(
-                'holded',
-                'canceled',
-                'closed',
-                'payment_review',
-                'complete'
-            )
-        ));
+        $this->addFieldToFilter(
+            'main_table.status',
+            [
+                'nin' => [
+                    'holded',
+                    'canceled',
+                    'closed',
+                    'payment_review',
+                    'complete'
+                ]
+            ]
+        );
         $salesOrderItemJoinCondition = 'main_table.entity_id = sales_order_item.order_id 
              && sales_order_item.parent_item_id IS NULL
              && ( sales_order_item.is_virtual IS NULL || sales_order_item.is_virtual = 0)
@@ -59,13 +63,14 @@ class Collection extends \Magestore\OrderSuccess\Model\ResourceModel\Order\Colle
             ';
         // Special case when order item is a bundle product with separately shipping type
         // Do not calculate prepare qty of bundle parent product with separately shipping type
-        if($this->getListBundleSeparateNeedShip()) {
+        if ($this->getListBundleSeparateNeedShip()) {
             $salesOrderItemJoinCondition = 'main_table.entity_id = sales_order_item.order_id 
-             && (sales_order_item.parent_item_id IS NULL || sales_order_item.parent_item_id IN ' . '(' . implode(',', $this->getListBundleSeparateNeedShip()) . '))
-             && ( sales_order_item.is_virtual IS NULL || sales_order_item.is_virtual = 0)
-             && sales_order_item.locked_do_ship IS NULL
-             && sales_order_item.item_id NOT IN ' . '(' . implode(',', $this->getListBundleSeparateNeedShip()) . ')'
-            ;
+                && (sales_order_item.parent_item_id IS NULL || sales_order_item.parent_item_id IN '
+                . '(' . implode(',', $this->getListBundleSeparateNeedShip()) . '))
+                && ( sales_order_item.is_virtual IS NULL || sales_order_item.is_virtual = 0)
+                && sales_order_item.locked_do_ship IS NULL
+                && sales_order_item.item_id NOT IN '
+                . '(' . implode(',', $this->getListBundleSeparateNeedShip()) . ')';
         }
         $this->getSelect()->join(
             ['sales_order_item' => $this->getTable('sales_order_item')],
@@ -73,11 +78,11 @@ class Collection extends \Magestore\OrderSuccess\Model\ResourceModel\Order\Colle
             ['qty_ordered' => new \Zend_Db_Expr($this->qtyOrdered)]
         );
 
-        $this->getSelect()->having(new \Zend_Db_Expr($this->qtyOrdered).' > ?', 0);
+        $this->getSelect()->having(new \Zend_Db_Expr($this->qtyOrdered) . ' > ?', 0);
 
         $invalidOrderId = $this->getListOrderWithBundleDoNotNeedShip();
 
-        if($invalidOrderId) {
+        if ($invalidOrderId) {
             $this->getSelect()->where(new \Zend_Db_Expr('main_table.entity_id') . ' NOT IN (?)', $invalidOrderId);
         }
     }
@@ -87,7 +92,8 @@ class Collection extends \Magestore\OrderSuccess\Model\ResourceModel\Order\Colle
      *
      * @return array
      */
-    public function getListBundleSeparateNeedShip() {
+    public function getListBundleSeparateNeedShip()
+    {
         $connection = $this->getConnection();
         $sql = clone $this->getSelect();
         $sql->reset();
@@ -104,14 +110,22 @@ class Collection extends \Magestore\OrderSuccess\Model\ResourceModel\Order\Colle
         return $bundleParentIdsValid;
     }
 
-    public function getListOrderWithBundleDoNotNeedShip() {
+    /**
+     * Get List Order With Bundle Do Not Need Ship
+     *
+     * @return array
+     */
+    public function getListOrderWithBundleDoNotNeedShip()
+    {
         $connection = $this->getConnection();
         $sql = clone $this->getSelect();
 
-        $sql->join(['sales_order_item_type' => $this->getTable('sales_order_item')],
+        $sql->join(
+            ['sales_order_item_type' => $this->getTable('sales_order_item')],
             'main_table.entity_id = sales_order_item_type.order_id 
-             && sales_order_item_type.product_type = "' . \Magento\Bundle\Model\Product\Type::TYPE_CODE . '"',
-            []);
+                && sales_order_item_type.product_type = "' . \Magento\Bundle\Model\Product\Type::TYPE_CODE . '"',
+            []
+        );
 
         $dataResult = $connection->fetchAll($sql);
         $orderIds = [];
@@ -121,11 +135,11 @@ class Collection extends \Magestore\OrderSuccess\Model\ResourceModel\Order\Colle
 
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         /** @var \Magento\Framework\Api\SearchCriteriaInterface $searchCriteria */
-        $searchCriteria = $objectManager->get('Magento\Framework\Api\SearchCriteriaInterface');
+        $searchCriteria = $objectManager->get(\Magento\Framework\Api\SearchCriteriaInterface::class);
         /** @var \Magento\Framework\Api\Search\FilterGroup $filterGroup */
-        $filterGroup = $objectManager->get('Magento\Framework\Api\Search\FilterGroup');
+        $filterGroup = $objectManager->get(\Magento\Framework\Api\Search\FilterGroup::class);
         /** @var \Magento\Framework\Api\Filter $filter */
-        $filter = $objectManager->get('Magento\Framework\Api\Filter');
+        $filter = $objectManager->get(\Magento\Framework\Api\Filter::class);
         $filter->setField('entity_id');
         $filter->setValue($orderIds);
         $filter->setConditionType('in');
@@ -134,12 +148,12 @@ class Collection extends \Magestore\OrderSuccess\Model\ResourceModel\Order\Colle
         $searchCriteria->setFilterGroups([$filterGroup]);
 
         /** @var \Magento\Sales\Api\OrderRepositoryInterface $orderRepository */
-        $orderRepository = $objectManager->get('Magento\Sales\Api\OrderRepositoryInterface');
+        $orderRepository = $objectManager->get(\Magento\Sales\Api\OrderRepositoryInterface::class);
         $listOrder = $orderRepository->getList($searchCriteria);
 
         $invalidOrdersId = [];
         foreach ($listOrder->getItems() as $item) {
-            if($item->canShip() && !$item->getForcedShipmentWithInvoice()) {
+            if ($item->canShip() && !$item->getForcedShipmentWithInvoice()) {
                 continue;
             }
             $invalidOrdersId[] = $item->getEntityId();
@@ -147,25 +161,4 @@ class Collection extends \Magestore\OrderSuccess\Model\ResourceModel\Order\Colle
 
         return $invalidOrdersId;
     }
-
-    /**
-     * rewrite add field to filters from collection
-     *
-     * @return array
-     */
-//    public function addFieldToFilter($field, $condition = null)
-//    {
-//        if ($field == 'qty_ordered') {
-//            $field = new \Zend_Db_Expr('
-//                sales_order_item.qty_ordered
-//                - sales_order_item.qty_shipped
-//                - sales_order_item.qty_refunded
-//                - sales_order_item.qty_canceled
-//                - COALESCE(sales_order_item.qty_backordered, 0)
-//                - COALESCE(sales_order_item.qty_prepareship, 0)
-//            ');
-//        }
-//        return parent::addFieldToFilter($field, $condition);
-//    }
-
 }

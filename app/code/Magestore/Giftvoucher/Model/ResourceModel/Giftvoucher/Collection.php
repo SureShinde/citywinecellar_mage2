@@ -8,8 +8,6 @@ namespace Magestore\Giftvoucher\Model\ResourceModel\Giftvoucher;
 /**
  * Giftvoucher resource collection
  *
- * @category Magestore
- * @package  Magestore_Giftvoucher
  * @module   Giftvoucher
  * @author   Magestore Developer
  */
@@ -19,20 +17,22 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
      * @var string
      */
     protected $_idFieldName = 'giftvoucher_id';
-    
+
     /**
      * @var \Magento\Framework\Stdlib\DateTime\DateTime
      */
     protected $_date;
-    
+
     /**
+     * Collection constructor.
+     *
      * @param \Magento\Framework\Data\Collection\EntityFactory $entityFactory
      * @param \Psr\Log\LoggerInterface $logger
      * @param \Magento\Framework\Data\Collection\Db\FetchStrategyInterface $fetchStrategy
      * @param \Magento\Framework\Event\ManagerInterface $eventManager
      * @param \Magestore\Giftvoucher\Model\ResourceModel\Giftvoucher $resource
      * @param \Magento\Framework\Stdlib\DateTime\DateTime $date
-     * @param \Zend_Db_Adapter_Abstract $connection
+     * @param \Magento\Framework\DB\Adapter\AdapterInterface|null $connection
      */
     public function __construct(
         \Magento\Framework\Data\Collection\EntityFactory $entityFactory,
@@ -46,21 +46,30 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
         $this->_date = $date;
         parent::__construct($entityFactory, $logger, $fetchStrategy, $eventManager, $connection, $resource);
     }
-    
+
+    /**
+     * @inheritDoc
+     */
     protected function _construct()
     {
-        $this->_init('Magestore\Giftvoucher\Model\Giftvoucher', 'Magestore\Giftvoucher\Model\ResourceModel\Giftvoucher');
+        $this->_init(
+            \Magestore\Giftvoucher\Model\Giftvoucher::class,
+            \Magestore\Giftvoucher\Model\ResourceModel\Giftvoucher::class
+        );
     }
 
     /**
-     * @param $quoteItemId
-     * @param $isUseItemId
+     * Add Item Filter
+     *
+     * @param int $quoteItemId
+     * @param bool $isUseItemId
+     *
      * @return $this
      */
     public function addItemFilter($quoteItemId, $isUseItemId = false)
     {
         $filterField = 'quote_item_id';
-        if($isUseItemId) {
+        if ($isUseItemId) {
             $filterField = 'order_item_id';
         }
         if ($this->hasFlag('add_item_filer') && $this->getFlag('add_item_filer')) {
@@ -69,9 +78,9 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
         $this->setFlag('add_item_filer', true);
 
         $this->getSelect()->joinLeft(
-           array('history' => $this->getTable('giftvoucher_history')),
-           'main_table.giftvoucher_id = history.giftvoucher_id',
-           array($filterField)
+            ['history' => $this->getTable('giftvoucher_history')],
+            'main_table.giftvoucher_id = history.giftvoucher_id',
+            [$filterField]
         )->where('history.'. $filterField .' = ?', $quoteItemId)
         ->where('history.action = ?', \Magestore\Giftvoucher\Model\Actions::ACTIONS_CREATE);
 
@@ -79,8 +88,12 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
     }
 
     /**
-     * @param $dayBefore
+     * Add Expire After Days Filter
+     *
+     * @param int|string $dayBefore
+     *
      * @return $this
+     * @throws \Zend_Date_Exception
      */
     public function addExpireAfterDaysFilter($dayBefore)
     {

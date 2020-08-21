@@ -28,12 +28,13 @@ use Magento\UrlRewrite\Model\UrlPersistInterface;
 use Magento\Framework\Model\AbstractModel;
 
 /**
- * Model Store.
- * @method \Magestore\Storepickup\Model\ResourceModel\Store _getResource()
- * @category Magestore
- * @package  Magestore_Storepickup
- * @module   Storepickup
- * @author   Magestore Developer
+ * Class Store
+ *
+ * Used to create model store
+ * @SuppressWarnings(PHPMD.TooManyFields)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @SuppressWarnings(PHPMD.ExcessivePublicCount)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Store extends AbstractModel
 {
@@ -162,8 +163,13 @@ class Store extends AbstractModel
     protected $objectManager;
 
     /**
-     *
+     * @var \Magento\Framework\Filesystem\DriverInterface
+     */
+    protected $driver;
+
+    /**
      * Store constructor.
+     *
      * @param \Magento\Framework\Model\Context $context
      * @param \Magento\Framework\Registry $registry
      * @param \Magento\Directory\Model\RegionFactory $regionFactory
@@ -182,9 +188,12 @@ class Store extends AbstractModel
      * @param \Magestore\Storepickup\Helper\Url $storepickupHelperUrl
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
      * @param \Magestore\Storepickup\Helper\Data $storePickupHelper
-     * @param \Magento\Framework\Model\ResourceModel\AbstractResource|NULL $resource
-     * @param \Magento\Framework\Data\Collection\AbstractDb|NULL $resourceCollection
+     * @param \Magento\Framework\ObjectManagerInterface $objectManager
+     * @param \Magento\Framework\Filesystem\DriverInterface $driver
+     * @param \Magento\Framework\Model\ResourceModel\AbstractResource|null $resource
+     * @param \Magento\Framework\Data\Collection\AbstractDb|null $resourceCollection
      * @param array $data
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         \Magento\Framework\Model\Context $context,
@@ -206,11 +215,11 @@ class Store extends AbstractModel
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magestore\Storepickup\Helper\Data $storePickupHelper,
         \Magento\Framework\ObjectManagerInterface $objectManager,
-        \Magento\Framework\Model\ResourceModel\AbstractResource $resource = NULL,
-        \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = NULL,
+        \Magento\Framework\Filesystem\DriverInterface $driver,
+        \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
+        \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         array $data = []
-    )
-    {
+    ) {
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
         $this->_regionFactory = $regionFactory;
         $this->_jsonHelper = $jsonHelper;
@@ -232,6 +241,7 @@ class Store extends AbstractModel
         $this->_scopeConfig = $scopeConfig;
         $this->storePickupHelper = $storePickupHelper;
         $this->objectManager = $objectManager;
+        $this->driver = $driver;
     }
 
     /**
@@ -239,7 +249,9 @@ class Store extends AbstractModel
      */
     protected function _construct()
     {
-        $this->_init('Magestore\Storepickup\Model\ResourceModel\Store');
+        $this->_init(
+            \Magestore\Storepickup\Model\ResourceModel\Store::class
+        );
     }
 
     /**
@@ -256,22 +268,26 @@ class Store extends AbstractModel
     }
 
     /**
+     * Prepare rewrite request path
+     *
      * @return $this
      * @throws LocalizedException
      */
     public function _prepareRewriteRequestPath()
     {
         $urlKey = $this->getData('rewrite_request_path');
-        if ($urlKey === '' || $urlKey === NULL) {
-            $this->setData('rewrite_request_path', $this->_storeUrlPathGenerator->generateUrlKey($this));
+        if ($urlKey === '' || $urlKey === null) {
+            $this->setData(
+                'rewrite_request_path',
+                $this->_storeUrlPathGenerator->generateUrlKey($this)
+            );
         }
 
         /**
          * check exists rewrite request path with limit the time by MAX_COUNT_TIME_CHECK_URL_REWRITE
          */
         $checkNth = 0;
-        while (
-            $this->_checkExistsRewriteRequestPath($this->getData('rewrite_request_path'))
+        while ($this->_checkExistsRewriteRequestPath($this->getData('rewrite_request_path'))
             && $checkNth++ < self::MAX_COUNT_TIME_CHECK_URL_REWRITE
         ) {
             $this->setData('rewrite_request_path', $this->getData('rewrite_request_path') . '-' . $this->getId());
@@ -279,7 +295,10 @@ class Store extends AbstractModel
 
         if ($checkNth > self::MAX_COUNT_TIME_CHECK_URL_REWRITE) {
             throw new \Magento\Framework\Exception\LocalizedException(
-                __('The url key is already exists and system can not generate it automatic. You need to specified an other url key!')
+                __(
+                    'The url key is already exists and system can not generate it automatic. '
+                    .'You need to specified an other url key!'
+                )
             );
         }
 
@@ -311,7 +330,7 @@ class Store extends AbstractModel
     }
 
     /**
-     * prepare schedule value before save.
+     * Prepare schedule value before save.
      *
      * @return $this
      */
@@ -325,7 +344,7 @@ class Store extends AbstractModel
     }
 
     /**
-     * prepare state value before save.
+     * Prepare state value before save.
      *
      * @return $this
      */
@@ -342,7 +361,7 @@ class Store extends AbstractModel
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function afterSave()
     {
@@ -356,7 +375,7 @@ class Store extends AbstractModel
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function afterDelete()
     {
@@ -383,7 +402,7 @@ class Store extends AbstractModel
     }
 
     /**
-     * prepare data image.
+     * Prepare data image.
      *
      * @return $this
      */
@@ -400,10 +419,9 @@ class Store extends AbstractModel
     }
 
     /**
-     * decode image json data.
+     * Decode image json data.
      *
      * @param array $imagesJsonData
-     *
      * @return array
      */
     public function decodeImageJsonData(array $imagesJsonData = [])
@@ -413,7 +431,7 @@ class Store extends AbstractModel
         }
 
         $deleteImages = [];
-        $baseImage = NULL;
+        $baseImage = null;
         $insertImages = [];
 
         foreach ($imagesJsonData as $imageJson) {
@@ -473,9 +491,11 @@ class Store extends AbstractModel
     }
 
     /**
-     * assign Tags to Store.
+     * Assign Tags to Store.
      *
      * @param array $tagIds
+     * @return $this
+     * @throws LocalizedException
      */
     public function assignTags(array $tagIds = [])
     {
@@ -485,9 +505,11 @@ class Store extends AbstractModel
     }
 
     /**
-     * assign Holidays to Store.
+     * Assign Holidays to Store.
      *
      * @param array $holidayIds
+     * @return $this
+     * @throws LocalizedException
      */
     public function assignHolidays(array $holidayIds = [])
     {
@@ -497,9 +519,11 @@ class Store extends AbstractModel
     }
 
     /**
-     * assign Specialdays to Store.
+     * Assign Specialdays to Store.
      *
      * @param array $specialdayIds
+     * @return $this
+     * @throws LocalizedException
      */
     public function assignSpecialdays(array $specialdayIds = [])
     {
@@ -509,7 +533,7 @@ class Store extends AbstractModel
     }
 
     /**
-     * get state id by name.
+     * Get state id by name.
      *
      * @return mixed
      */
@@ -534,9 +558,11 @@ class Store extends AbstractModel
     }
 
     /**
-     * run build method.
+     * Run build method.
      *
-     * @param $methodId
+     * @param int $methodId
+     * @return mixed
+     * @throws LocalizedException
      */
     public function runGetterMethod($methodId)
     {
@@ -550,7 +576,7 @@ class Store extends AbstractModel
     }
 
     /**
-     * get tag ids in Store.
+     * Get tag ids in Store.
      */
     public function getTagIds()
     {
@@ -561,7 +587,6 @@ class Store extends AbstractModel
      * Load base image of store.
      *
      * @return $this
-     *
      * @throws LocalizedException
      */
     public function loadBaseImage()
@@ -572,7 +597,7 @@ class Store extends AbstractModel
     }
 
     /**
-     * get specialday data.
+     * Get specialday data.
      *
      * @return array
      */
@@ -604,7 +629,7 @@ class Store extends AbstractModel
     }
 
     /**
-     * filter specialdays, holidays.
+     * Filter specialdays, holidays.
      *
      * @param \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection $collection
      */
@@ -646,7 +671,7 @@ class Store extends AbstractModel
     }
 
     /**
-     * get holidays data.
+     * Get holidays data.
      *
      * @return array
      */
@@ -690,7 +715,7 @@ class Store extends AbstractModel
     }
 
     /**
-     * get holiday ids of store.
+     * Get holiday ids of store.
      *
      * @param \Magento\Framework\Model\AbstractModel $object
      */
@@ -700,8 +725,9 @@ class Store extends AbstractModel
     }
 
     /**
-     * @param $day
+     * Has break time
      *
+     * @param string $day
      * @return bool
      */
     public function hasBreakTime($day)
@@ -715,8 +741,7 @@ class Store extends AbstractModel
     /**
      * Check store is open in a day.
      *
-     * @param $day
-     *
+     * @param string $day
      * @return bool
      */
     public function isOpenday($day)
@@ -728,17 +753,17 @@ class Store extends AbstractModel
     }
 
     /**
-     * check store is enabled.
+     * Check store is enabled.
      *
      * @return bool
      */
     public function isEnabled()
     {
-        return $this->getStatus() == \Magestore\Storepickup\Model\Status::STATUS_ENABLED ? TRUE : FALSE;
+        return $this->getStatus() == \Magestore\Storepickup\Model\Status::STATUS_ENABLED ? true : false;
     }
 
     /**
-     * check store has holiday.
+     * Check store has holiday.
      *
      * @return int
      */
@@ -748,7 +773,7 @@ class Store extends AbstractModel
     }
 
     /**
-     * check store has specialday.
+     * Check store has specialday.
      *
      * @return int
      */
@@ -811,6 +836,14 @@ class Store extends AbstractModel
         return $this->getData('meta_keywords') ? $this->getData('meta_keywords') : $this->getStoreName();
     }
 
+    /**
+     * Import
+     *
+     * @return bool|mixed
+     * @throws \Exception
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     */
     public function import()
     {
         $data = $this->getData();
@@ -822,20 +855,25 @@ class Store extends AbstractModel
             ->addFieldToFilter('store_name', $data['store_name'])
             ->addFieldToFilter('address', $data['address']);
 
+        if (count($collection)) {
+            return false;
+        }
 
-        if (count($collection))
+        if (!isset($data['store_name']) || $data['store_name'] == '') {
             return false;
-
-        if (!isset($data['store_name']) || $data['store_name'] == '')
+        }
+        if (!isset($data['address']) || $data['address'] == '') {
             return false;
-        if (!isset($data['address']) || $data['address'] == '')
+        }
+        if (!isset($data['city']) || $data['city'] == '') {
             return false;
-        if (!isset($data['city']) || $data['city'] == '')
+        }
+        if (!isset($data['country_id']) || $data['country_id'] == '') {
             return false;
-        if (!isset($data['country_id']) || $data['country_id'] == '')
+        }
+        if (!isset($data['zipcode']) || $data['zipcode'] == '') {
             return false;
-        if (!isset($data['zipcode']) || $data['zipcode'] == '')
-            return false;
+        }
 
         $storeName = strtolower(trim($data['store_name'], ' '));
 
@@ -867,17 +905,34 @@ class Store extends AbstractModel
         return $this->getId();
     }
 
+    /**
+     * Set store id
+     *
+     * @param int $value
+     * @return $this
+     */
     public function setStoreId($value)
     {
         $this->_storeId = $value;
         return $this;
     }
 
+    /**
+     * Get store id
+     *
+     * @return Support|null
+     */
     public function getStoreId()
     {
         return $this->_storeId;
     }
 
+    /**
+     * Update url key
+     *
+     * @param string $rewriteRequestPath
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     public function updateUrlKey($rewriteRequestPath = '')
     {
         $id = $this->getId();
@@ -901,24 +956,38 @@ class Store extends AbstractModel
 
         try {
             $urlrewrite->save();
-        } catch (Exception $e) {
-
+        } catch (\Exception $e) {
+            return $this;
         }
     }
 
+    /**
+     * Load by id path
+     *
+     * @param string $idPath
+     * @param int $storeId
+     * @return mixed
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function loadByIdpath($idPath, $storeId)
     {
         $model = $this->_urlRewriteCollectionFactory->create()
-            // ->addFieldToFilter('id_path', $idPath)
             ->addFieldToFilter('store_id', $storeId)
             ->getFirstItem();
 
         return $model;
     }
 
+    /**
+     * Reindex
+     *
+     * @return $this
+     */
     public function reindex()
     {
-        $address = $this->getData('address') . ', ' . $this->getData('city') . ' ' . $this->getData('state') . ' ' . $this->getData('country') . ' ' . $this->getData('zipcode');
+        $address = $this->getData('address') . ', '
+            . $this->getData('city') . ' ' . $this->getData('state')
+            . ' ' . $this->getData('country') . ' ' . $this->getData('zipcode');
         $location = $this->geocode($address);
         if ($location) {
             $this->setData('latitude', $location[0]);
@@ -927,6 +996,13 @@ class Store extends AbstractModel
         return $this;
     }
 
+    /**
+     * Geo code
+     *
+     * @param string $address
+     * @return array|bool
+     * @throws \Magento\Framework\Exception\FileSystemException
+     */
     public function geocode($address)
     {
 
@@ -937,7 +1013,7 @@ class Store extends AbstractModel
         $url = "http://maps.google.com/maps/api/geocode/json?address={$address}";
 
         // get the json response
-        $resp_json = file_get_contents($url);
+        $resp_json = $this->driver->fileGetContents($url);
 
         // decode the json
         $resp = json_decode($resp_json, true);
@@ -954,7 +1030,7 @@ class Store extends AbstractModel
             if ($lati && $longi && $formatted_address) {
 
                 // put the data in the array
-                $data_arr = array();
+                $data_arr = [];
 
                 array_push(
                     $data_arr,
@@ -974,11 +1050,21 @@ class Store extends AbstractModel
         }
     }
 
+    /**
+     * Create MSI source
+     *
+     * @return $this
+     * @throws LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
     public function createMSISource()
     {
         if ($this->storePickupHelper->isMSISourceEnable()) {
             /** @var \Magento\InventoryApi\Api\SourceRepositoryInterface $sourceRepository */
-            $sourceRepository = $this->objectManager->create('Magento\InventoryApi\Api\SourceRepositoryInterface');
+            $sourceRepository = $this->objectManager->create(
+                \Magento\InventoryApi\Api\SourceRepositoryInterface::class
+            );
             if (!$this->getId() && $this->getSourceCode() === 'Create a new one') {
                 $newSourceCode = $this->getNewSourceCode();
                 if (!$newSourceCode) {
@@ -991,7 +1077,7 @@ class Store extends AbstractModel
                     $sourceRepository->get($newSourceCode);
                 } catch (\Exception $checkSourceCodeException) {
                     /** @var \Magento\InventoryApi\Api\Data\SourceInterface $source */
-                    $source = $this->objectManager->create('Magento\InventoryApi\Api\Data\SourceInterface');
+                    $source = $this->objectManager->create(\Magento\InventoryApi\Api\Data\SourceInterface::class);
                     $source->setName($this->getStoreName());
                     $source->setSourceCode($newSourceCode);
                     $source->setContactName($this->getContactName());
@@ -1012,7 +1098,9 @@ class Store extends AbstractModel
                         } catch (\Exception $getSourceException) {
                             throw $saveSourceException;
                         }
-                        throw new LocalizedException(__('There is already a Source with this code exist, please create a different code.'));
+                        throw new LocalizedException(
+                            __('There is already a Source with this code exist, please create a different code.')
+                        );
                     }
                     $source->getSourceCode();
                     $this->setSourceCode($source->getSourceCode());
@@ -1022,8 +1110,11 @@ class Store extends AbstractModel
                     }
                     return $this;
                 }
-                throw new LocalizedException(__('There is already a Source with this code exist, please create a different code.'));
+                throw new LocalizedException(
+                    __('There is already a Source with this code exist, please create a different code.')
+                );
             }
         }
+        return $this;
     }
 }

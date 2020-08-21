@@ -21,11 +21,15 @@
 
 namespace Magestore\Storepickup\Controller\Adminhtml\Checkout;
 
-use Magento\Framework\Exception\InputException;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\View\Result\PageFactory;
+use Magento\Framework\App\Action\HttpPostActionInterface;
 
-class ChangeStore extends \Magento\Framework\App\Action\Action
+/**
+ * Class ChangeStore
+ *
+ * Used to change store
+ */
+class ChangeStore extends \Magento\Framework\App\Action\Action implements HttpPostActionInterface
 {
     /**
      * @var \Magento\Framework\Controller\Result\JsonFactory
@@ -67,6 +71,7 @@ class ChangeStore extends \Magento\Framework\App\Action\Action
 
     /**
      * ChangeStore constructor.
+     *
      * @param \Magento\Framework\App\Action\Context $context
      * @param \Magento\Framework\Controller\Result\JsonFactory $resultJsonFactory
      * @param \Magento\Backend\Model\Session $backendSession
@@ -77,6 +82,7 @@ class ChangeStore extends \Magento\Framework\App\Action\Action
      * @param \Magento\Directory\Model\RegionFactory $regionFactory
      * @param \Psr\Log\LoggerInterface $logger
      * @param PageFactory $resultPageFactory
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
@@ -89,8 +95,7 @@ class ChangeStore extends \Magento\Framework\App\Action\Action
         \Magento\Directory\Model\RegionFactory $regionFactory,
         \Psr\Log\LoggerInterface $logger,
         PageFactory $resultPageFactory
-    )
-    {
+    ) {
         parent::__construct($context);
         $this->_resultJsonFactory = $resultJsonFactory;
         $this->_backendSession = $backendSession;
@@ -102,11 +107,17 @@ class ChangeStore extends \Magento\Framework\App\Action\Action
         $this->regionFactory = $regionFactory;
         $this->logger = $logger;
     }
+
+    /**
+     * Execute
+     *
+     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
+     */
     public function execute()
     {
         $result = [];
-        $storepickup_session = array('store_id' => $this->getRequest()->getParam('store_id'));
-        $this->_backendSession->setData('storepickup',$storepickup_session);
+        $storepickup_session = ['store_id' => $this->getRequest()->getParam('store_id')];
+        $this->_backendSession->setData('storepickup', $storepickup_session);
         $this->updateTax($this->getRequest()->getParam('store_id'));
 
         /** @var \Magento\Framework\View\Result\Page $resultPage */
@@ -118,7 +129,9 @@ class ChangeStore extends \Magento\Framework\App\Action\Action
     }
 
     /**
-     * @param $storeId
+     * Update tax
+     *
+     * @param int $storeId
      */
     public function updateTax($storeId)
     {
@@ -145,6 +158,7 @@ class ChangeStore extends \Magento\Framework\App\Action\Action
         if ($store->getFax()) {
             $dataShipping['fax'] = $store->getFax();
         } else {
+            // phpstan:ignore
             unset($dataShipping['fax']);
         }
 

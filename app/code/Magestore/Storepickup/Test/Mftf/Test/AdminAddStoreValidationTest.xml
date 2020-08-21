@@ -15,7 +15,7 @@
             <group value="yyyy"/>
         </annotations>
         <before>
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <actionGroup ref="PosAdminLoginActionGroup" stepKey="loginAsAdmin"/>
             <amOnPage url="{{AddNewStoreStorePickupAdminPage.url}}" stepKey="gotoAddNew"/>
             <waitForPageLoad stepKey="waitpageload1"/>
         </before>

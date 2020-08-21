@@ -4,19 +4,22 @@
  * Copyright © 2016 Magestore. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace Magestore\AdjustStock\Ui\DataProvider\Form\Modifier;
 
 use Magento\Ui\DataProvider\Modifier\ModifierInterface;
 use Magento\Framework\UrlInterface;
-
+use Magento\Framework\Phrase;
+use Magento\Ui\Component\Form;
+use Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\AbstractModifier as CoreAbstractModifier;
 
 /**
  * Class AbstractModifier
  *
+ * Modifier Abstract
  * @SuppressWarnings(PHPMD.NumberOfChildren)
  */
-class AbstractModifier extends \Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\AbstractModifier
-    implements ModifierInterface
+class AbstractModifier extends CoreAbstractModifier implements ModifierInterface
 {
     /**
      * Collapsible
@@ -40,7 +43,7 @@ class AbstractModifier extends \Magento\Catalog\Ui\DataProvider\Product\Form\Mod
     protected $_opened = true;
 
     /**
-     * sort Sales
+     * Sort Sales
      *
      * @var string
      */
@@ -82,13 +85,6 @@ class AbstractModifier extends \Magento\Catalog\Ui\DataProvider\Product\Form\Mod
      */
     protected $isRequried = true;
 
-    /**
-     * is required
-     *
-     * @var boolean
-     */
-    protected $visibleImage;
-
     const TMPL_INPUT = 'ui/form/element/input';
     const TMPL_TEXTAREA = 'ui/form/element/textarea';
     const TMPL_SELECT = 'ui/form/element/select';
@@ -99,6 +95,7 @@ class AbstractModifier extends \Magento\Catalog\Ui\DataProvider\Product\Form\Mod
 
     /**
      * AbstractModifier constructor.
+     *
      * @param UrlInterface $urlBuilder
      * @param \Magento\Framework\App\RequestInterface $request
      * @param \Magestore\AdjustStock\Api\AdjustStock\AdjustStockManagementInterface $adjustStockManagement
@@ -117,173 +114,200 @@ class AbstractModifier extends \Magento\Catalog\Ui\DataProvider\Product\Form\Mod
     }
 
     /**
-     * set visible
+     * Set visible
      *
-     * @param boolean
-     * @return
+     * @param boolean $visible
      */
-    public function setVisible($visible){
+    public function setVisible($visible)
+    {
         $this->_visible = $visible;
     }
 
     /**
-     * get visible
+     * Get visible
      *
-     * @param
-     * @return
+     * @return int|bool
      */
-    public function getVisible(){
+    public function getVisible()
+    {
         return $this->_visible;
     }
 
     /**
-     * get visible
+     * Get visible
      *
-     * @param
-     * @return bool
+     * @return bool|int
      */
-    public function getVisibleImage(){
+    public function getVisibleImage()
+    {
         return $this->adjustStockManagement->isShowThumbnail();
     }
 
     /**
-     * set opened
+     * Set opened
      *
-     * @param boolean
-     * @return
+     * @param boolean $opened
      */
-    public function setOpened($opened){
+    public function setOpened($opened)
+    {
         $this->_opened = $opened;
     }
 
     /**
-     * get opened
+     * Get opened
      *
-     * @param
-     * @return boolean
+     * @return boolean|int
      */
-    public function getOpened(){
+    public function getOpened()
+    {
         return $this->_opened;
     }
 
     /**
-     * set collapsible
+     * Set collapsible
      *
-     * @param boolean
-     * @return
+     * @param boolean $collapsible
      */
-    public function setCollapsible($collapsible){
+    public function setCollapsible($collapsible)
+    {
         $this->_collapsible = $collapsible;
     }
 
     /**
-     * get collapsible
+     * Get collapsible
      *
-     * @param
-     * @return boolean
+     * @return boolean|int
      */
-    public function getCollapsible(){
-            return $this->_collapsible;
+    public function getCollapsible()
+    {
+        return $this->_collapsible;
     }
 
     /**
-     * set group label
+     * Set group label
      *
-     * @param boolean
-     * @return
+     * @param boolean $groupLabel
      */
-    public function setGroupLabel($groupLabel){
+    public function setGroupLabel($groupLabel)
+    {
         $this->_groupLabel = $groupLabel;
     }
 
     /**
-     * get group label
+     * Get group label
      *
-     * @param
-     * @return boolean
+     * @return string
      */
-    public function getGroupLabel(){
-            return $this->_groupLabel;
+    public function getGroupLabel()
+    {
+        return $this->_groupLabel;
     }
 
     /**
-     * set sort order
+     * Set sort order
      *
-     * @param boolean
-     * @return
+     * @param int $sortOrder
      */
-    public function setSortOrder($sortOrder){
+    public function setSortOrder($sortOrder)
+    {
         $this->_sortOrder = $sortOrder;
     }
 
     /**
-     * get is required
+     * Get is required
      *
-     * @param
-     * @return
+     * @return boolean|int
      */
-    public function getIsRequired(){
+    public function getIsRequired()
+    {
         return $this->isRequried;
     }
 
     /**
-     * set is required
+     * Set is required
      *
-     * @param boolean
-     * @return
+     * @param boolean $isRequired
      */
-    public function setIsRequired($isRequired){
+    public function setIsRequired($isRequired)
+    {
         $this->isRequried = $isRequired;
     }
 
     /**
-     * get sort order
+     * Get sort order
      *
-     * @param
-     * @return
+     * @return int|string
      */
-    public function getSortOrder(){
+    public function getSortOrder()
+    {
         return $this->_sortOrder;
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
-    public function modifyData(array $data){
+    public function modifyData(array $data)
+    {
         return $data;
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
-    public function modifyMeta(array $meta){
+    public function modifyMeta(array $meta)
+    {
         return $meta;
     }
 
     /**
-     * get modify tmpl
+     * Get modify tmpl
      *
-     * @param
-     * @return
+     * @param string $type
+     * @return string
      */
     public function getModifyTmpl($type)
     {
-        switch ($type){
+        switch ($type) {
             case 'input':
                 return static::TMPL_INPUT;
-                break;
             case 'date':
                 return static::TMPL_DATE;
-                break;
             case 'textarea':
                 return static::TMPL_TEXTAREA;
-                break;
             case 'select':
                 return static::TMPL_SELECT;
-                break;
             default:
                 return static::TMPL_INPUT;
         }
     }
 
+    /**
+     * Returns text column configuration for the dynamic grid
+     *
+     * @param string $dataScope
+     * @param bool $fit
+     * @param Phrase $label
+     * @param int $sortOrder
+     * @return array
+     */
+    public function getTextColumn($dataScope, $fit, Phrase $label, $sortOrder)
+    {
+        $column = [
+            'arguments' => [
+                'data' => [
+                    'config' => [
+                        'componentType' => Form\Field::NAME,
+                        'formElement' => Form\Element\Input::NAME,
+                        'elementTmpl' => 'ui/dynamic-rows/cells/text',
+                        'dataType' => Form\Element\DataType\Text::NAME,
+                        'dataScope' => $dataScope,
+                        'fit' => $fit,
+                        'label' => $label,
+                        'sortOrder' => $sortOrder,
+                    ],
+                ],
+            ],
+        ];
+        return $column;
+    }
 }

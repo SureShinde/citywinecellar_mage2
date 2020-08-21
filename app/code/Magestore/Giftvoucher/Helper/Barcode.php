@@ -9,7 +9,8 @@ namespace Magestore\Giftvoucher\Helper;
 
 /**
  * Class Barcode
- * @package Magestore\Giftvoucher\Helper
+ *
+ * Barcode helper
  */
 class Barcode
 {
@@ -20,7 +21,7 @@ class Barcode
     const WIDTH = 0;
     const IMAGE_TYPE = 'png';
     const DRAW_TEXT = false;
-    
+
     /**
      * Generate source of barcode image
      *
@@ -28,17 +29,17 @@ class Barcode
      * @param array $config
      *
      * @return string
+     * phpcs:disable Magento2.Functions.DiscouragedFunction
      */
     public function getBarcodeSource($barcodeString, $config = [])
     {
         $symbology = isset($config['symbology']) ? $config['symbology'] : self::SYMBOLOGY;
-        $fontSize = isset($config['font_size']) ? $config['font_size'] : self::FONT_SIZE;
         $height = isset($config['height']) ? $config['height'] : self::HEIGHT;
         $width = isset($config['width']) ? $config['width'] : self::WIDTH;
         $imageType = isset($config['image_type']) ? $config['image_type'] : self::IMAGE_TYPE;
         $fontSize = isset($config['font_size']) ? $config['font_size'] : self::FONT_SIZE;
         $drawText = isset($config['drawText']) ? $config['drawText'] : self::DRAW_TEXT;
-        
+
         $barcodeOptions = [
             'text' => $barcodeString,
             'fontSize' => $fontSize,
@@ -58,17 +59,20 @@ class Barcode
         }
 
         $source = \Zend_Barcode::factory(
-            $symbology, 'image', $barcodeOptions, $rendererOptions
+            $symbology,
+            'image',
+            $barcodeOptions,
+            $rendererOptions
         );
-        
+
         ob_start();
         imagepng($source->draw());
         $barcode = ob_get_contents();
         ob_end_clean();
-        
+
         return base64_encode($barcode);
     }
-    
+
     /**
      * Get barcode source in png image format
      *

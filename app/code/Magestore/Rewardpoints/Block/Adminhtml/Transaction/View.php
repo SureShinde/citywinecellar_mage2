@@ -24,25 +24,28 @@ namespace Magestore\Rewardpoints\Block\Adminhtml\Transaction;
 use Magento\Backend\Block\Widget\Grid;
 use Magento\Backend\Block\Widget\Grid\Column;
 
-
-class View extends \Magento\Backend\Block\Widget\Form\Generic{
-
-
+/**
+ *  Transaction view block
+ */
+class View extends \Magento\Backend\Block\Widget\Form\Generic
+{
     /**
      * @var TimezoneInterface
      */
     protected $timezone;
 
-
-    protected  $_transaction;
     /**
-     * GeneralTab constructor.
+     * @var \Magestore\Rewardpoints\Model\Transaction
+     */
+    protected $_transaction;
+
+    /**
+     * View constructor.
+     *
      * @param \Magento\Backend\Block\Template\Context $context
      * @param \Magento\Framework\Registry $registry
      * @param \Magento\Framework\Data\FormFactory $formFactory
-     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
-     * @param \Magento\Store\Model\System\Store $systemStore
-     * @param \Magestore\Megamenu\Model\Megamenu $megamenuModel
+     * @param \Magestore\Rewardpoints\Model\Transaction $transaction
      * @param array $data
      */
     public function __construct(
@@ -50,17 +53,15 @@ class View extends \Magento\Backend\Block\Widget\Form\Generic{
         \Magento\Framework\Registry $registry,
         \Magento\Framework\Data\FormFactory $formFactory,
         \Magestore\Rewardpoints\Model\Transaction $transaction,
-        array $data = array()
+        array $data = []
     ) {
         parent::__construct($context, $registry, $formFactory, $data);
         $this->_storeManager= $context->getStoreManager();
         $this->_transaction = $transaction;
-
     }
 
-
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function canShowTab()
     {
@@ -68,7 +69,7 @@ class View extends \Magento\Backend\Block\Widget\Form\Generic{
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function isHidden()
     {
@@ -76,14 +77,18 @@ class View extends \Magento\Backend\Block\Widget\Form\Generic{
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     protected function _prepareForm()
     {
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $resourceActions = $objectManager->create('Magestore\Rewardpoints\Ui\Component\Listing\Column\Transaction\Actions');
+        $resourceActions = $objectManager->create(
+            \Magestore\Rewardpoints\Ui\Component\Listing\Column\Transaction\Actions::class
+        );
 
-        $resourceStoreView = $objectManager->create('Magestore\Rewardpoints\Ui\Component\Listing\Column\Transaction\StoreView');
+        $resourceStoreView = $objectManager->create(
+            \Magestore\Rewardpoints\Ui\Component\Listing\Column\Transaction\StoreView::class
+        );
 
         $id  = $this->getRequest()->getParam('id');
         $transaction = $this->_transaction->load($id);
@@ -92,45 +97,44 @@ class View extends \Magento\Backend\Block\Widget\Form\Generic{
 
         $fieldset = $form->addFieldset('general_fieldset', ['legend' => __('Transaction Information')]);
 
-        $fieldset->addField('transactionTitle', 'note', array(
+        $fieldset->addField('transactionTitle', 'note', [
             'label'     => __('Transaction Title'),
             'text'      => $transaction->getTitle(),
-        ));
-        $fieldset->addField('customerEmail', 'note', array(
+        ]);
+        $fieldset->addField('customerEmail', 'note', [
             'label'     => __('Customer Email'),
             'text'      => '<a href="#">'.$transaction->getCustomerEmail().'</a>'
-        ));
-        $fieldset->addField('action', 'note', array(
+        ]);
+        $fieldset->addField('action', 'note', [
             'label'     => __('Action'),
             'text'      => $resourceActions->toOptionHash()[$transaction->getAction()]
-        ));
-        $fieldset->addField('status', 'note', array(
+        ]);
+        $fieldset->addField('status', 'note', [
             'label'     => __('Status'),
             'text'      => '<strong>'.$transaction->getStatusHash()[$transaction->getStatus()].'</strong>'
-        ));
-        $fieldset->addField('points', 'note', array(
+        ]);
+        $fieldset->addField('points', 'note', [
             'label'     => __('Points'),
             'text'      => '<strong>'.$transaction->getPointAmount().' '.__('Points').'</strong>'
-        ));
-        $fieldset->addField('pointUsed', 'note', array(
+        ]);
+        $fieldset->addField('pointUsed', 'note', [
             'label'     => __('Point Used'),
             'text'      => $transaction->getPointUsed().' '.__('Points')
-        ));
+        ]);
 
-
-        $fieldset->addField('createdTime', 'note', array(
+        $fieldset->addField('createdTime', 'note', [
             'label'     => __('Created time'),
-            'text'      => date('F j, Y g:i A',strtotime($transaction->getCreatedTime()))
-        ));
+            'text'      => date('F j, Y g:i A', strtotime($transaction->getCreatedTime()))
+        ]);
         $updatedTime = ($transaction->getUpdatedTime())?$transaction->getUpdatedTime():$transaction->getCreatedTime();
-        $fieldset->addField('updatedAt', 'note', array(
+        $fieldset->addField('updatedAt', 'note', [
             'label'     => __('Updated At'),
-            'text'      =>  date('F j, Y g:i A',strtotime($updatedTime))
-        ));
-        $fieldset->addField('storeView', 'note', array(
+            'text'      =>  date('F j, Y g:i A', strtotime($updatedTime))
+        ]);
+        $fieldset->addField('storeView', 'note', [
             'label'     => __('Store View'),
             'text'      => $resourceStoreView->toOptionHash()[$transaction->getStoreId()]
-        ));
+        ]);
 
         $this->setForm($form);
 

@@ -22,18 +22,25 @@
 namespace Magestore\Storepickup\Controller\Adminhtml\Store;
 
 use Magestore\Storepickup\Controller\Adminhtml\Store;
+use Magento\Framework\App\Action\HttpPostActionInterface;
 
 /**
- * Adminhtml Storepickup ProcessImport Action
+ * Class ImportProcess
  *
- * @category Magestore
- * @package  Magestore_Storepickup
- * @module   Storepickup
- * @author   Magestore Developer
+ * Used to import process
  */
-class ImportProcess extends Store
+class ImportProcess extends Store implements HttpPostActionInterface
 {
-
+    /**
+     * Used to execute
+     *
+     * @return mixed
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * phpcs:disable Generic.Metrics.NestingLevel
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
     public function execute()
     {
         $resultRedirect = $this->resultRedirectFactory->create();
@@ -46,16 +53,16 @@ class ImportProcess extends Store
 
             $fileName = $files['tmp_name'];
             /** @var \Magento\Framework\File\Csv $csvObject */
-            $csvObject = $this->_objectManager->create('Magento\Framework\File\Csv');
+            $csvObject = $this->_objectManager->create(\Magento\Framework\File\Csv::class);
             /** @var \Magestore\Storepickup\Helper\Region $helperRegion */
-            $helperRegion = $this->_objectManager->create('Magestore\Storepickup\Helper\Region');
+            $helperRegion = $this->_objectManager->create(\Magestore\Storepickup\Helper\Region::class);
             /** @var \Magestore\Storepickup\Helper\Data $storePickupHelper */
-            $storePickupHelper = $this->_objectManager->create('Magestore\Storepickup\Helper\Data');
+            $storePickupHelper = $this->_objectManager->create(\Magestore\Storepickup\Helper\Data::class);
 
             $isMSISourceEnable = $storePickupHelper->isMSISourceEnable();
             $data = $csvObject->getData($fileName);
             $store = $this->_createMainModel();
-            $storeData = array();
+            $storeData = [];
 
             try {
                 $total = 0;
@@ -65,42 +72,51 @@ class ImportProcess extends Store
                     if ($col == 0) {
                         $index_row = $row;
                     } else {
-                        for ($i = 0; $i < count($row); $i++) {
+                        $lengthRow = count($row);
+                        for ($i = 0; $i < $lengthRow; $i++) {
                             $storeData[$index_row[$i]] = $row[$i];
                         }
 
                         if ($isMSISourceEnable) {
                             if (!isset($storeData['source_code']) || !$storeData['source_code']) {
-                                $requireSourceErrorMessage .= ' <br />' . $requireSourceFlag . ': ' . $storeData['store_name'] . '</strong>';
+                                $requireSourceErrorMessage .= ' <br />' . $requireSourceFlag . ': '
+                                    . $storeData['store_name'] . '</strong>';
                                 $requireSourceFlag++;
                                 continue;
                             }
-                            /** @var \Magento\InventoryApi\Api\SourceRepositoryInterface $sourceRepository */
-                            $sourceRepository = $this->_objectManager->get('Magento\InventoryApi\Api\SourceRepositoryInterface');
+                            $sourceRepository = $this->_objectManager
+                                ->get(\Magento\InventoryApi\Api\SourceRepositoryInterface::class);
                             try {
                                 $sourceRepository->get($storeData['source_code']);
                             } catch (\Exception $e) {
-                                $unexistSourceErrorMessage .= ' <br />' . $storeData['source_code'] . ': ' . $storeData['store_name'] . '</strong>';
+                                $unexistSourceErrorMessage .= ' <br />' . $storeData['source_code'] . ': '
+                                    . $storeData['store_name'] . '</strong>';
                                 continue;
                             }
                         }
 
                         if (isset($storeData['country_id']) && isset($storeData['state'])) {
-                            $storeData['state_id'] = $helperRegion->validateState($storeData['country_id'], $storeData['state']);
+                            $storeData['state_id'] = $helperRegion
+                                ->validateState($storeData['country_id'], $storeData['state']);
                         }
 
-                        if (isset($storeData['state_id']) && $storeData['state_id'] == \Magestore\Storepickup\Helper\Region::STATE_ERROR) {
-                            $_state = $storeData['state_id'] == '' || $storeData['state_id'] == -1 ? 'null' : $storeData['state_id'];
-                            $stateErrorMessage .= ' <br />' . $stateFlag . ': ' . $_state . ' of <strong>' . $storeData['store_name'] . '</strong>';
+                        if (isset($storeData['state_id']) && $storeData['state_id']
+                            == \Magestore\Storepickup\Helper\Region::STATE_ERROR) {
+                            $_state = $storeData['state_id'] == '' || $storeData['state_id'] == -1 ? 'null'
+                                : $storeData['state_id'];
+                            $stateErrorMessage .= ' <br />' . $stateFlag . ': ' . $_state . ' of <strong>'
+                                . $storeData['store_name'] . '</strong>';
                             $stateFlag++;
                         }
 
-                        if (isset($storeData['state_id']))
+                        if (isset($storeData['state_id'])) {
                             $_state_id = $storeData['state_id'] > \Magestore\Storepickup\Helper\Region::STATE_ERROR;
+                        }
 
                         if (isset($storeData['store_name']) && $storeData['store_name'] &&
                             isset($storeData['address']) && $storeData['address'] &&
-                            isset($storeData['country_id']) && $storeData['country_id'] && isset($_state_id) && $_state_id
+                            isset($storeData['country_id']) && $storeData['country_id'] && isset($_state_id)
+                            && $_state_id
                         ) {
                             $storeData['meta_title'] = $storeData['store_name'];
                             $storeData['meta_keywords'] = $storeData['store_name'];
@@ -111,11 +127,8 @@ class ImportProcess extends Store
                             if ($store->import()) {
                                 $total++;
                             }
-
                         }
-
                     }
-
                 }
 
                 if ($stateErrorMessage != '') {
@@ -145,8 +158,14 @@ class ImportProcess extends Store
                 return $resultRedirect->setPath('*/*/importstore');
             }
         }
+        return $resultRedirect->setPath('*/*/index');
     }
 
+    /**
+     * Is allowed
+     *
+     * @return bool
+     */
     protected function _isAllowed()
     {
         return $this->_authorization->isAllowed('Magestore_Storepickup::storepickup');

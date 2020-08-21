@@ -10,8 +10,7 @@ use Magento\Framework\UrlInterface;
 use Magento\Ui\Component\Form\Fieldset;
 
 /**
- * Class History
- * @package Magestore\Giftvoucher\Ui\DataProvider\Giftvoucher\Modifier
+ * Gift voucher modifier - History
  */
 class History implements ModifierInterface
 {
@@ -39,7 +38,7 @@ class History implements ModifierInterface
     }
     
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function modifyMeta(array $meta)
     {
@@ -55,18 +54,28 @@ class History implements ModifierInterface
                                 'autoRender' => true,
                                 'componentType' => 'insertListing',
                                 'dataScope' => 'giftcard_code_history_listing',
-                                'externalProvider' => 'giftcard_code_history_listing.giftcard_code_history_listing_data_source',
-                                'selectionsProvider' => 'giftcard_code_history_listing.giftcard_code_history_listing.giftcode_columns.ids',
+                                'externalProvider' => 'giftcard_code_history_listing'
+                                    . '.' . 'giftcard_code_history_listing_data_source',
+                                'selectionsProvider' => 'giftcard_code_history_listing'
+                                    . '.' . 'giftcard_code_history_listing'
+                                    . '.' . 'giftcode_columns'
+                                    . '.' . 'ids',
                                 'ns' => 'giftcard_code_history_listing',
                                 'render_url' => $this->urlBuilder->getUrl('mui/index/render'),
                                 'realTimeLink' => false,
                                 'behaviourType' => 'simple',
                                 'externalFilterMode' => true,
                                 'imports' => [
-                                    'giftvoucherId' => '${ $.provider }:data.current_giftvoucher_id'
+                                    'giftvoucherId' => '${ $.provider }:data.current_giftvoucher_id',
+                                    '__disableTmpl' => [
+                                        'giftvoucherId' => false
+                                    ]
                                 ],
                                 'exports' => [
-                                    'giftvoucherId' => '${ $.externalProvider }:params.current_giftvouchert_id'
+                                    'giftvoucherId' => '${ $.externalProvider }:params.current_giftvouchert_id',
+                                    '__disableTmpl' => [
+                                        'giftvoucherId' => false
+                                    ]
                                 ],
                             ],
                         ],
@@ -88,7 +97,7 @@ class History implements ModifierInterface
     }
     
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function modifyData(array $data)
     {

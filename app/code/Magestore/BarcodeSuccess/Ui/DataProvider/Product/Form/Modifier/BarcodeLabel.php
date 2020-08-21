@@ -3,6 +3,7 @@
  * Copyright © 2016 Magestore. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace Magestore\BarcodeSuccess\Ui\DataProvider\Product\Form\Modifier;
 
 use Magento\Ui\DataProvider\Modifier\ModifierInterface;
@@ -12,10 +13,11 @@ use Magento\Ui\Component\Form;
 /**
  * Class Barcode
  *
+ * Used to create barcode label
  * @SuppressWarnings(PHPMD.NumberOfChildren)
  */
-class BarcodeLabel extends \Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\AbstractModifier
-    implements ModifierInterface
+class BarcodeLabel extends \Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\AbstractModifier implements
+    ModifierInterface
 {
     /**
      * @var string
@@ -73,9 +75,14 @@ class BarcodeLabel extends \Magento\Catalog\Ui\DataProvider\Product\Form\Modifie
     protected $barcodeFactory;
 
     /**
+     * BarcodeLabel constructor.
+     *
      * @param UrlInterface $urlBuilder
      * @param \Magento\Framework\App\RequestInterface $request
-     * @param array $_modifierConfig
+     * @param \Magestore\BarcodeSuccess\Model\BarcodeFactory $barcodeFactory
+     * @param \Magestore\BarcodeSuccess\Model\Source\Template $barcodeTemplate
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param array $modifierConfig
      */
     public function __construct(
         UrlInterface $urlBuilder,
@@ -95,32 +102,35 @@ class BarcodeLabel extends \Magento\Catalog\Ui\DataProvider\Product\Form\Modifie
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function modifyData(array $data)
     {
-        if(!$this->oneBarcodePerSku)
+        if (!$this->oneBarcodePerSku) {
             return $data;
+        }
         $barcode = $this->barcodeFactory->create();
         $barcode->getResource()->load($barcode, $this->request->getParam('id'), 'product_id');
         $data[$this->request->getParam('id')]['os_barcode'] = $barcode->getBarcode();
         $template = $this->scopeConfig->getValue('barcodesuccess/general/default_barcode_template');
-        if(!$template){
+        if (!$template) {
             $templates = $this->barcodeTemplate->toOptionArray();
-            if(count($templates)>0)
+            if (count($templates) > 0) {
                 $template = $templates[0]['value'];
+            }
         }
         $data[$this->request->getParam('id')]['os_barcode_template'] = $template;
         return $data;
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function modifyMeta(array $meta)
     {
-        if(!$this->oneBarcodePerSku)
+        if (!$this->oneBarcodePerSku) {
             return $meta;
+        }
         $meta = array_replace_recursive(
             $meta,
             [
@@ -216,7 +226,7 @@ class BarcodeLabel extends \Magento\Catalog\Ui\DataProvider\Product\Form\Modifie
                 ],
             ];
         } else {
-            $children = array(
+            $children = [
                 'os_barcode' => [
                     'arguments' => [
                         'data' => [
@@ -230,19 +240,23 @@ class BarcodeLabel extends \Magento\Catalog\Ui\DataProvider\Product\Form\Modifie
                         ]
                     ]
                 ],
-            );
+            ];
             if ($this->request->getParam('id')) {
                 $children = $this->appendGenerateButton($children);
             }
         }
-
-
         return $children;
     }
 
+    /**
+     * Append generate button
+     *
+     * @param array $children
+     * @return mixed
+     */
     public function appendGenerateButton($children)
     {
-        $children['generate'] = array(
+        $children['generate'] = [
             'arguments' => [
                 'data' => [
                     'config' => [
@@ -258,10 +272,15 @@ class BarcodeLabel extends \Magento\Catalog\Ui\DataProvider\Product\Form\Modifie
                     ]
                 ]
             ]
-        );
+        ];
         return $children;
     }
 
+    /**
+     * Has exist barcode
+     *
+     * @return bool
+     */
     public function hasExistBarcode()
     {
         $productId = $this->request->getParam('id');
@@ -276,6 +295,4 @@ class BarcodeLabel extends \Magento\Catalog\Ui\DataProvider\Product\Form\Modifie
             }
         }
     }
-
 }
-

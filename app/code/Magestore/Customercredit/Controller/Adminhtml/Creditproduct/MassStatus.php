@@ -22,7 +22,14 @@
 
 namespace Magestore\Customercredit\Controller\Adminhtml\Creditproduct;
 
-class MassStatus extends \Magento\Backend\App\Action
+use Magento\Framework\App\Action\HttpPostActionInterface;
+
+/**
+ * Class MassStatus
+ *
+ * Credit product mass status controller
+ */
+class MassStatus extends \Magento\Backend\App\Action implements HttpPostActionInterface
 {
     /**
      * Check for is allowed
@@ -36,8 +43,6 @@ class MassStatus extends \Magento\Backend\App\Action
 
     /**
      * Update product(s) status action
-     *
-     * @return \Magento\Backend\Model\View\Result\Redirect
      */
     public function execute()
     {
@@ -47,17 +52,18 @@ class MassStatus extends \Magento\Backend\App\Action
 
         try {
             $this->_validateMassStatus($productIds, $status);
-            $this->_objectManager->get('Magento\Catalog\Model\Product\Action')
-                ->updateAttributes($productIds, array('status' => $status), $storeId);
+            $this->_objectManager->get(\Magento\Catalog\Model\Product\Action::class)
+                ->updateAttributes($productIds, ['status' => $status], $storeId);
             $this->messageManager->addSuccess(
                 sprintf(__('Total of %d record(s) have been updated.'), count($productIds))
             );
-            $this->_objectManager->get('\Magento\Catalog\Model\Indexer\Product\Price\Processor')->reindexList($productIds);
+            $this->_objectManager->get(\Magento\Catalog\Model\Indexer\Product\Price\Processor::class)
+                ->reindexList($productIds);
         } catch (\Exception $e) {
             $this->messageManager->addException($e, __('An error occurred while updating the product(s) status.'));
         }
 
-        $this->_redirect('*/*/', array('store' => $storeId));
+        $this->_redirect('*/*/', ['store' => $storeId]);
     }
 
     /**
@@ -71,13 +77,11 @@ class MassStatus extends \Magento\Backend\App\Action
     public function _validateMassStatus(array $productIds, $status)
     {
         if ($status == \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED) {
-            if (!$this->_objectManager->create('Magento\Catalog\Model\Product')->isProductsHasSku($productIds)) {
+            if (!$this->_objectManager->create(\Magento\Catalog\Model\Product::class)->isProductsHasSku($productIds)) {
                 throw new \Magento\Framework\Exception\LocalizedException(
                     __('Please make sure to define SKU values for all processed products.')
                 );
             }
         }
     }
-
-
 }

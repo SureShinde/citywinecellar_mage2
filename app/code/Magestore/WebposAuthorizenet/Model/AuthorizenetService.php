@@ -7,6 +7,9 @@
 
 namespace Magestore\WebposAuthorizenet\Model;
 
+/**
+ * Webpos Authorizenet Service
+ */
 class AuthorizenetService implements \Magestore\WebposAuthorizenet\Api\AuthorizenetServiceInterface
 {
     /**
@@ -25,29 +28,37 @@ class AuthorizenetService implements \Magestore\WebposAuthorizenet\Api\Authorize
     }
 
     /**
-     * @return bool
+     * @inheritDoc
      */
-    public function isEnable(){
+    public function isEnable()
+    {
         $hasSDK = $this->authorizenet->validateRequiredSDK();
         $configs = $this->authorizenet->getConfig();
-        return ($hasSDK && $configs['enable'] && !empty($configs['transaction_key']) && !empty($configs['api_login']))?true:false;
+        return ($hasSDK
+            && $configs['enable']
+            && !empty($configs['transaction_key'])
+            && !empty($configs['api_login'])
+        ) ? true : false;
     }
 
     /**
-     * @return string
+     * @inheritDoc
      */
-    public function getConfigurationError(){
+    public function getConfigurationError()
+    {
         $message = '';
         $hasSDK = $this->authorizenet->validateRequiredSDK();
         $configs = $this->authorizenet->getConfig();
-        if(!$hasSDK){
-            $message = __('Authorizenet SDK not found, please go to the configuration to get the instruction to install the SDK');
-        }else{
-            if($configs['enable']){
-                if(empty($configs['transaction_key']) || empty($configs['api_login'])){
+        if (!$hasSDK) {
+            $message = __(
+                'Authorizenet SDK not found, please go to the configuration to get the instruction to install the SDK'
+            );
+        } else {
+            if ($configs['enable']) {
+                if (empty($configs['transaction_key']) || empty($configs['api_login'])) {
                     $message = __('Authorizenet application client id and client secret are required');
                 }
-            }else{
+            } else {
                 $message = __('Authorizenet integration is disabled');
             }
         }
@@ -55,19 +66,24 @@ class AuthorizenetService implements \Magestore\WebposAuthorizenet\Api\Authorize
     }
 
     /**
-     * @param string $token
-     * @param string $amount
-     * @return string
-     * @throws \Exception
+     * @inheritDoc
      */
-    public function finishPayment($token, $amount){
-        return $this->authorizenet->completePayment($token, $amount);
+    public function finishPayment($token, $amount)
+    {
+        error_reporting(E_ALL & ~E_DEPRECATED);
+        $result = $this->authorizenet->completePayment($token, $amount);
+        error_reporting(E_ALL);
+        return $result;
     }
 
     /**
-     * @return bool
+     * @inheritDoc
      */
-    public function canConnectToApi(){
-        return $this->authorizenet->canConnectToApi();
+    public function canConnectToApi()
+    {
+        error_reporting(E_ALL & ~E_DEPRECATED);
+        $result = $this->authorizenet->canConnectToApi();
+        error_reporting(E_ALL);
+        return $result;
     }
 }

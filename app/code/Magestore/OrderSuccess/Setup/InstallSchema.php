@@ -5,22 +5,26 @@
  */
 
 namespace Magestore\OrderSuccess\Setup;
+
 use Magento\Framework\Setup\InstallSchemaInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\SchemaSetupInterface;
 
 /**
- * Class InstallSchema
- * @package Magestore\OrderSuccess\Setup
+ * InstallSchema for order success
  */
 class InstallSchema implements InstallSchemaInterface
 {
 
     /**
+     * Install
+     *
      * @param SchemaSetupInterface $setup
      * @param ModuleContextInterface $context
      * @return $this
      * @throws \Zend_Db_Exception
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function install(SchemaSetupInterface $setup, ModuleContextInterface $context)
     {
@@ -30,9 +34,9 @@ class InstallSchema implements InstallSchemaInterface
         $setup->getConnection()->dropTable($setup->getTable('os_ordersuccess_batch'));
 
         /**
-         * create os_ordersuccess_batch table
+         * Create os_ordersuccess_batch table
          */
-        $table  = $installer->getConnection()
+        $table = $installer->getConnection()
             ->newTable($installer->getTable('os_ordersuccess_batch'))
             ->addColumn(
                 'batch_id',
@@ -70,61 +74,59 @@ class InstallSchema implements InstallSchemaInterface
         $installer->getConnection()->createTable($table);
 
         /**
-         * add columns to sales_order table
+         * Add columns to sales_order table
          */
         $installer->getConnection()->addColumn(
             $installer->getTable('sales_order'),
             'tag_color',
-            array(
-                'type'      => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
-                'nullable'  => true,
-                'length'    => 255,
-                'default'    => '',
-                'comment'   => 'Tag Color'
-            )
+            [
+                'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                'nullable' => true,
+                'length' => 255,
+                'default' => '',
+                'comment' => 'Tag Color'
+            ]
         );
         $installer->getConnection()->addColumn(
             $installer->getTable('sales_order'),
             'is_verified',
-            array(
-                'type'      => \Magento\Framework\DB\Ddl\Table::TYPE_SMALLINT,
-                'nullable'  => false,
-                'default'  => 0,
-                'length'    => 1,
-                'comment'   => 'Is Verified'
-            )
+            [
+                'type' => \Magento\Framework\DB\Ddl\Table::TYPE_SMALLINT,
+                'nullable' => false,
+                'default' => 0,
+                'length' => 1,
+                'comment' => 'Is Verified'
+            ]
         );
         $installer->getConnection()->addColumn(
             $installer->getTable('sales_order'),
             'batch_id',
-            array(
-                'type'      => \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
-                'nullable'  => false,
-                'default'  => 0,
-                'length'    => 11,
+            [
+                'type' => \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
+                'nullable' => false,
+                'default' => 0,
+                'length' => 11,
                 'unsigned' => true,
-                'comment'   => 'Batch ID'
-            )
+                'comment' => 'Batch ID'
+            ]
         );
 
         /**
-         * add columns to sales_order_item table
+         * Add columns to sales_order_item table
          */
         $installer->getConnection()->addColumn(
             $installer->getTable('sales_order_item'),
             'qty_prepareship',
-            array(
-                'type'      => \Magento\Framework\DB\Ddl\Table::TYPE_DECIMAL,
-                'nullable'  => false,
-                'length'    => '12,4',
-                'default'    => 0,
-                'comment'   => 'Qty Prepareship'
-            )
+            [
+                'type' => \Magento\Framework\DB\Ddl\Table::TYPE_DECIMAL,
+                'nullable' => false,
+                'length' => '12,4',
+                'default' => 0,
+                'comment' => 'Qty Prepareship'
+            ]
         );
 
         $installer->endSetup();
         return $this;
-        }
-
-
+    }
 }

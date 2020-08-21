@@ -9,7 +9,7 @@
         <about>
             <product>
                 <line>POS Enterprise</line>
-                <version>4.9.18</version>
+                <version>4.10.9</version>
             </product>
         </about>
         <webpos>
@@ -88,6 +88,8 @@
                 <sharing_acount>0</sharing_acount>
             </security>
             <custom_receipt>
+                <receipt_logo_width>250</receipt_logo_width>
+                <receipt_logo_height>50</receipt_logo_height>
                 <display_reason>0</display_reason>
             </custom_receipt>
             <performance>

@@ -17,6 +17,9 @@ use Magento\Catalog\Api\ProductRepositoryInterface;
 
 use Magestore\Webpos\Test\Constant\Product;
 
+/**
+ * Api Test PlaceOrdersTest
+ */
 class PlaceOrdersTest extends WebapiAbstract
 {
 
@@ -38,7 +41,12 @@ class PlaceOrdersTest extends WebapiAbstract
      */
     protected $productRepository;
 
-    protected function setUp()
+    /**
+     * Set Up
+     *
+     * @return void
+     */
+    protected function setUp() : void // phpcs:ignore
     {
         $this->posSession = $this->loginAndAssignPos();
         $this->timeZone = Bootstrap::getObjectManager()->get('\Magento\Framework\Stdlib\DateTime\TimezoneInterface');
@@ -48,32 +56,50 @@ class PlaceOrdersTest extends WebapiAbstract
     /**
      * Test Case 1
      */
-    public function testCase1(){
-        $currentTimeStamp = $this->timeZone->scopeTimeStamp();
-        $itemDataFactory = Bootstrap::getObjectManager()->get('\Magestore\Webpos\Test\Api\PlaceOrders\RequestData\ItemsData');
-        $requestOrderData = Bootstrap::getObjectManager()->get('\Magestore\Webpos\Test\Api\PlaceOrders\RequestData\OrderData');
-
-        $productSku = Product::SKU_13;
-        $productName = Product::NAME_13;
-        $product = $this->productRepository->get($productSku);
-        $productId = $product->getId();
-        $qtyOrdered = 1;
-
-        $ship = 1;
-        $invoice = 1;
-        $paymentMethod = 'cashforpos';
-
-        $items = $itemDataFactory->getSchemaJson($currentTimeStamp, $productSku, $productName, $productId, $qtyOrdered);
-        $requestData = $requestOrderData->getSchemaJson($ship, $invoice, $currentTimeStamp, $paymentMethod, $items);
-        $requestData = json_decode($requestData, true);
-        $serviceInfo = [
-            'rest' => [
-                'resourcePath' => self::RESOURCE_PATH
-                    .'?pos_session=' . $this->posSession,
-                'httpMethod' => RestRequest::HTTP_METHOD_POST,
-            ]
-        ];
+    public function testCase1()
+    {
         return true;
-        $reponse = $this->_webApiCall($serviceInfo, $requestData);
+        // $currentTimeStamp = $this->timeZone->scopeTimeStamp();
+        // $itemDataFactory = Bootstrap::getObjectManager()->get(
+        //     '\Magestore\Webpos\Test\Api\PlaceOrders\RequestData\ItemsData'
+        // );
+        // $requestOrderData = Bootstrap::getObjectManager()->get(
+        //     '\Magestore\Webpos\Test\Api\PlaceOrders\RequestData\OrderData'
+        // );
+
+        // $productSku = Product::SKU_13;
+        // $productName = Product::NAME_13;
+        // $product = $this->productRepository->get($productSku);
+        // $productId = $product->getId();
+        // $qtyOrdered = 1;
+
+        // $ship = 1;
+        // $invoice = 1;
+        // $paymentMethod = 'cashforpos';
+
+        // $items = $itemDataFactory->getSchemaJson(
+        //     $currentTimeStamp,
+        //     $productSku,
+        //     $productName,
+        //     $productId,
+        //     $qtyOrdered
+        // );
+        // $requestData = $requestOrderData->getSchemaJson(
+        //     $ship,
+        //     $invoice,
+        //     $currentTimeStamp,
+        //     $paymentMethod,
+        //     $items
+        // );
+        // $requestData = json_decode($requestData, true);
+        // $serviceInfo = [
+        //     'rest' => [
+        //         'resourcePath' => self::RESOURCE_PATH
+        //             .'?pos_session=' . $this->posSession,
+        //         'httpMethod' => RestRequest::HTTP_METHOD_POST,
+        //     ]
+        // ];
+        
+        // $reponse = $this->_webApiCall($serviceInfo, $requestData);
     }
 }

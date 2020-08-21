@@ -24,8 +24,8 @@
                     <comment><![CDATA[Recommended size: 250x50 px <br />Supported file: jpeg, png]]></comment>
                 </field>
                 <!--<field id="webpos_color" translate="label" sortOrder="20" type="select" showInDefault="1" showInWebsite="0" showInStore="0">-->
-                    <!--<label>Web POS Color</label>-->
-                    <!--<source_model>Magestore\Webpos\Model\Source\Adminhtml\Color</source_model>-->
+                <!--<label>Web POS Color</label>-->
+                <!--<source_model>Magestore\Webpos\Model\Source\Adminhtml\Color</source_model>-->
                 <!--</field>-->
                 <field id="session_timeout" translate="label" sortOrder="30" type="text" showInDefault="1"
                        showInWebsite="0" showInStore="0">
@@ -33,8 +33,8 @@
                     <comment>Second(s)</comment>
                 </field>
                 <!--<field id="enable_session" translate="label" sortOrder="40" type="select" showInDefault="1" showInWebsite="0" showInStore="0">-->
-                    <!--<label>Need to create session before working</label>-->
-                    <!--<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>-->
+                <!--<label>Need to create session before working</label>-->
+                <!--<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>-->
                 <!--</field>-->
                 <field id="google_api_key" translate="label" sortOrder="50" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Google API Key</label>
@@ -48,6 +48,7 @@
                 <label>Product</label>
                 <field id="barcode" translate="label" sortOrder="10" type="select" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Barcode Attribute</label>
+                    <frontend_model>Magestore\Webpos\Block\System\Config\Form\Field\Barcode</frontend_model>
                     <backend_model>Magestore\Webpos\Model\Indexer\Product\System\Config\Barcode</backend_model>
                     <source_model>Magestore\Webpos\Model\Source\Adminhtml\Product\Barcodeattribute</source_model>
                     <comment>This is used to scan barcode. Select an attribute of product that has unique value.</comment>
@@ -199,8 +200,8 @@
                         <source_model>Magento\Tax\Model\System\Config\Source\PriceType</source_model>
                     </field>
                     <!--<field id="full_tax_summary" translate="label" sortOrder="40" type="select" showInDefault="1" showInWebsite="0" showInStore="0">-->
-                        <!--<label>Display Full Tax Summary</label>-->
-                        <!--<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>-->
+                    <!--<label>Display Full Tax Summary</label>-->
+                    <!--<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>-->
                     <!--</field>-->
                     <field id="zero_tax_subtotal" translate="label" sortOrder="50" type="select" showInDefault="1" showInWebsite="0" showInStore="0">
                         <label>Display Zero Tax subtotal</label>
@@ -280,15 +281,15 @@
             </group>
 
             <!--<group id="security" translate="label" sortOrder="100" type="text" showInDefault="1" showInWebsite="0" showInStore="0">-->
-                <!--<label>Security</label>-->
-                <!--<field id="sharing_acount" translate="label" sortOrder="10" type="select" showInDefault="1" showInWebsite="0" showInStore="0">-->
-                    <!--<label>Pos Account Sharing</label>-->
-                    <!--<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>-->
-                    <!--<comment><![CDATA[ If set to Yes, you can login from multiple devices in same account.-->
-                                       <!--Default setting No to improves security.-->
-                         <!--]]>-->
-                    <!--</comment>-->
-                <!--</field>-->
+            <!--<label>Security</label>-->
+            <!--<field id="sharing_acount" translate="label" sortOrder="10" type="select" showInDefault="1" showInWebsite="0" showInStore="0">-->
+            <!--<label>Pos Account Sharing</label>-->
+            <!--<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>-->
+            <!--<comment><![CDATA[ If set to Yes, you can login from multiple devices in same account.-->
+            <!--Default setting No to improves security.-->
+            <!--]]>-->
+            <!--</comment>-->
+            <!--</field>-->
             <!--</group>-->
             <group id="custom_receipt" translate="label" sortOrder="120" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
                 <label>Custom receipt</label>
@@ -301,13 +302,23 @@
                     <backend_model>Magento\Config\Model\Config\Backend\Image\Pdf</backend_model>
                     <upload_dir config="system/filesystem/media" scope_info="1">webpos/receipt_logo</upload_dir>
                     <base_url type="media" scope_info="1">webpos/receipt_logo</base_url>
-                    <comment><![CDATA[Recommended size: 250x50 px <br />Supported file: jpeg, png]]></comment>
+                    <comment><![CDATA[Supported file: jpeg, png]]></comment>
                 </field>
-                <field id="receipt_header" translate="label comment" sortOrder="30" type="textarea" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="receipt_logo_width" translate="label" sortOrder="30" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Receipt Logo Width</label>
+                    <comment>Necessary only if an image has been uploaded above. Enter number of pixels, without appending "px". Default is 250.</comment>
+                    <validate>validate-digits</validate>
+                </field>
+                <field id="receipt_logo_height" translate="label" sortOrder="40" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Receipt Logo Height</label>
+                    <comment>Necessary only if an image has been uploaded above. Enter number of pixels, without appending "px". Default is 50.</comment>
+                    <validate>validate-digits</validate>
+                </field>
+                <field id="receipt_header" translate="label comment" sortOrder="50" type="textarea" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Receipt Header</label>
                     <comment>HTML Code</comment>
                 </field>
-                <field id="receipt_footer" translate="label comment" sortOrder="40" type="textarea" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="receipt_footer" translate="label comment" sortOrder="60" type="textarea" showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Receipt Footer</label>
                     <comment>HTML Code</comment>
                 </field>
@@ -327,13 +338,13 @@
 
         </section>
         <!--<section id="payment" translate="label" sortOrder="300" type="text" showInDefault="1" showInWebsite="0" showInStore="0">-->
-            <!--<group id="multipaymentforpos" translate="label" sortOrder="1" type="text" showInDefault="1" showInWebsite="0" showInStore="0">-->
-                <!--<label>POS - Multiple Payments</label>-->
-                <!--<field id="active" translate="label" sortOrder="1" type="select" showInDefault="1" showInWebsite="0" showInStore="0">-->
-                    <!--<label>Enabled</label>-->
-                    <!--<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>-->
-                <!--</field>-->
-            <!--</group>-->
+        <!--<group id="multipaymentforpos" translate="label" sortOrder="1" type="text" showInDefault="1" showInWebsite="0" showInStore="0">-->
+        <!--<label>POS - Multiple Payments</label>-->
+        <!--<field id="active" translate="label" sortOrder="1" type="select" showInDefault="1" showInWebsite="0" showInStore="0">-->
+        <!--<label>Enabled</label>-->
+        <!--<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>-->
+        <!--</field>-->
+        <!--</group>-->
         <!--</section>-->
         <section id="about" translate="label" sortOrder="1000" type="text" showInDefault="1" showInWebsite="0" showInStore="0">
             <label>About</label>

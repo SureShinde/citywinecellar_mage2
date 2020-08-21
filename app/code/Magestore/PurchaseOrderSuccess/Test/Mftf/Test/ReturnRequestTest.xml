@@ -22,7 +22,7 @@
 
         <before>
             <!-- Login to backend magento -->
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
+            <actionGroup ref="PosAdminLoginActionGroup" stepKey="loginAsAdmin1"/>
         </before>
 
         <after>

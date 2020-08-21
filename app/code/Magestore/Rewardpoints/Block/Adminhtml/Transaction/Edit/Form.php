@@ -35,14 +35,14 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements TabInte
     /**
      * @var \Magento\Store\Model\StoreManagerInterface
      */
-    protected  $_storeManager;
+    protected $_storeManager;
 
     /**
-     * GeneralTab constructor.
+     * Form constructor.
+     *
      * @param \Magento\Backend\Block\Template\Context $context
      * @param \Magento\Framework\Registry $registry
      * @param \Magento\Framework\Data\FormFactory $formFactory
-     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param \Magento\Store\Model\System\Store $systemStore
      * @param array $data
      */
@@ -51,16 +51,15 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements TabInte
         \Magento\Framework\Registry $registry,
         \Magento\Framework\Data\FormFactory $formFactory,
         \Magento\Store\Model\System\Store $systemStore,
-        array $data = array()
+        array $data = []
     ) {
         parent::__construct($context, $registry, $formFactory, $data);
         $this->_storeManager= $context->getStoreManager();
         $this->_systemStore =$systemStore;
     }
 
-
     /**
-     * get registry model.
+     * Get registry model.
      *
      * @return \Magento\Framework\Model\AbstractModel|null
      */
@@ -70,7 +69,7 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements TabInte
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function getTabLabel()
     {
@@ -78,7 +77,7 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements TabInte
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function getTabTitle()
     {
@@ -86,7 +85,7 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements TabInte
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function canShowTab()
     {
@@ -94,7 +93,7 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements TabInte
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function isHidden()
     {
@@ -102,7 +101,7 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements TabInte
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     protected function _prepareForm()
     {
@@ -153,7 +152,9 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements TabInte
                   
                     require(["jquery","prototype"], function  (jQuery) {
                          jQuery("body").delegate(".radio","click",function(){
-                            jQuery("#featured_customers").val(jQuery(this).parent().siblings(".col-email").text().trim());
+                            jQuery("#featured_customers").val(
+                                jQuery(this).parent().siblings(".col-email").text().trim()
+                            );
                             jQuery("#selectedCustomer").val(jQuery(this).val().trim());
                             TINY.box.hide();
                          })
@@ -199,6 +200,4 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic implements TabInte
 
         return parent::_prepareForm();
     }
-
-
 }

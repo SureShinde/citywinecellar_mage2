@@ -11,6 +11,9 @@ use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use Magento\Framework\View\Element\UiComponentFactory;
 use Magento\Ui\Component\Listing\Columns\Column;
 
+/**
+ * Pick request column Detail
+ */
 class Detail extends Column
 {
     /**
@@ -19,7 +22,7 @@ class Detail extends Column
     protected $urlBuilder;
 
     /**
-     * Constructor
+     * Detail constructor.
      *
      * @param ContextInterface $context
      * @param UiComponentFactory $uiComponentFactory
@@ -49,11 +52,11 @@ class Detail extends Column
         if (isset($dataSource['data']['items'])) {
             $fieldName = $this->getData('name');
             foreach ($dataSource['data']['items'] as & $item) {
-                $item[$fieldName . '_html'] = "<button class='button'><span>".__('View Details')."</span></button>";
+                $item[$fieldName . '_html'] = "<button class='button'><span>" . __('View Details') . "</span></button>";
                 $item[$fieldName . '_title'] = __('Pick Request Information');
                 $item[$fieldName . '_pick_request_id'] = $item['pick_request_id'];
 
-                $url = $this->urlBuilder->getUrl('fulfilsuccess/pickRequest/getInfo', $params = array());
+                $url = $this->urlBuilder->getUrl('fulfilsuccess/pickRequest/getInfo', []);
                 $item[$fieldName . '_url'] = $url;
             }
         }

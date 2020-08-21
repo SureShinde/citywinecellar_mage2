@@ -5,36 +5,39 @@
  */
 namespace Magestore\Giftvoucher\Controller\Adminhtml\Giftvoucher;
 
+use Magento\Framework\App\Action\HttpPostActionInterface;
+
 /**
  * Adminhtml Giftvoucher ProcessImport Action
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class ProcessImport extends \Magestore\Giftvoucher\Controller\Adminhtml\Giftvoucher
+class ProcessImport extends \Magestore\Giftvoucher\Controller\Adminhtml\Giftvoucher implements HttpPostActionInterface
 {
     /**
      * @var \Magento\Framework\File\Csv
      */
     protected $csv;
-    
+
     /**
      * @var \Magento\Backend\Model\Auth\Session
      */
     protected $authSession;
-    
+
     /**
      * @var \Magestore\Giftvoucher\Model\ResourceModel\GiftTemplate\CollectionFactory
      */
     protected $templateCollectionFactory;
-    
+
     /**
      * @var \Magento\Store\Model\StoreManagerInterface
      */
     protected $storeManager;
-    
+
     /**
      * @var \Magento\Framework\Stdlib\DateTime\Filter\Date
      */
     protected $filterDate;
-    
+
     /**
      * @var \Magestore\Giftvoucher\Api\GiftvoucherRepositoryInterface
      */
@@ -54,6 +57,7 @@ class ProcessImport extends \Magestore\Giftvoucher\Controller\Adminhtml\Giftvouc
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param \Magento\Framework\Stdlib\DateTime\Filter\Date $filterDate
      * @param \Magestore\Giftvoucher\Api\GiftvoucherRepositoryInterface $repository
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         \Magento\Backend\App\Action\Context $context,
@@ -88,7 +92,10 @@ class ProcessImport extends \Magestore\Giftvoucher\Controller\Adminhtml\Giftvouc
     }
 
     /**
-     * @return $this
+     * @inheritDoc
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function execute()
     {
@@ -102,9 +109,9 @@ class ProcessImport extends \Magestore\Giftvoucher\Controller\Adminhtml\Giftvouc
             try {
                 $fileName = $file['tmp_name'];
                 $data= $this->csv->getData($fileName);
-                $count = array();
-                $fields = array();
-                $giftVoucherImport = array();
+                $count = [];
+                $fields = [];
+                $giftVoucherImport = [];
                 foreach ($data as $row => $cols) {
                     if ($row == 0) {
                         $fields = $cols;
@@ -112,17 +119,17 @@ class ProcessImport extends \Magestore\Giftvoucher\Controller\Adminhtml\Giftvouc
                         $giftVoucherImport[] = array_combine($fields, $cols);
                     }
                 }
-                
-                $statuses = array(
+
+                $statuses = [
                     '1' => 1, 'pending' => 1,
                     '2' => 2, 'active' => 2,
                     '3' => 3, 'disabled' => 3,
                     '4' => 4, 'used' => 4,
                     '5' => 5, 'expired' => 5,
-                );
+                ];
                 $extraContent = __('Imported by %1', $this->authSession->getUser()->getUsername());
                 $template = $this->templateCollectionFactory->create()->getFirstItem();
-                
+
                 foreach ($giftVoucherImport as $giftVoucherData) {
                     $giftVoucher = $this->modelFactory->create();
                     if (!empty($giftVoucherData['gift_code'])) {
@@ -130,10 +137,8 @@ class ProcessImport extends \Magestore\Giftvoucher\Controller\Adminhtml\Giftvouc
                         if ($giftVoucher->getId()) {
                             $this->messageManager->addError(
                                 __('Gift code %1 already existed', $giftVoucher->getGiftCode())
-                                );
+                            );
                             continue;
-                        } else {
-                            //Mage::helper('giftvoucher')->createBarcode($giftVoucherData['gift_code']);
                         }
                     }
                     // Prepare Expired At
@@ -156,7 +161,7 @@ class ProcessImport extends \Magestore\Giftvoucher\Controller\Adminhtml\Giftvouc
                     if (!empty($giftVoucherData['extra_content'])) {
                         $giftVoucherData['extra_content'] = str_replace(
                             '\n',
-                            chr(10),
+                            pack("i", 10),
                             $giftVoucherData['extra_content']
                         );
                     } else {
@@ -165,11 +170,11 @@ class ProcessImport extends \Magestore\Giftvoucher\Controller\Adminhtml\Giftvouc
                     // Prepare Address
                     $giftVoucherData['recipient_address'] = str_replace(
                         '\n',
-                        chr(10),
+                        pack("i", 10),
                         $giftVoucherData['recipient_address']
                     );
                     // Prepare Message
-                    $giftVoucherData['message'] = str_replace('\n', chr(10), $giftVoucherData['message']);
+                    $giftVoucherData['message'] = str_replace('\n', pack("i", 10), $giftVoucherData['message']);
                     // Prepare Currency
                     if (!isset($giftVoucherData['currency'])) {
                         $giftVoucherData['currency'] = $this->storeManager->getStore($giftVoucherData['store_id'])
@@ -192,13 +197,13 @@ class ProcessImport extends \Magestore\Giftvoucher\Controller\Adminhtml\Giftvouc
                         $this->messageManager->addError($e->getMessage());
                     }
                 }
-                
+
                 if (count($count)) {
                     $successMessage = __('Imported total %1 Gift Code(s)', count($count));
                     if ($this->getRequest()->getParam('print')) {
-                        $url = $this->getUrl('*/*/massPrint', array(
+                        $url = $this->getUrl('*/*/massPrint', [
                             'ids' => implode(',', $count)
-                        ));
+                        ]);
                         $successMessage .= "<script type='text/javascript'>window.onload = function(){"
                             . "var bob=window.open('" . $url . "','_blank');"
                             . "};</script>";
@@ -214,5 +219,6 @@ class ProcessImport extends \Magestore\Giftvoucher\Controller\Adminhtml\Giftvouc
                 return $resultRedirect->setPath('*/*/import');
             }
         }
+        return $resultRedirect->setPath('*/*/import');
     }
 }

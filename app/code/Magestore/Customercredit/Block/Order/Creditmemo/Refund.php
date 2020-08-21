@@ -22,6 +22,11 @@
 
 namespace Magestore\Customercredit\Block\Order\Creditmemo;
 
+/**
+ * Class Refund
+ *
+ * Creditmemo refund block
+ */
 class Refund extends \Magento\Framework\View\Element\Template
 {
 
@@ -53,14 +58,17 @@ class Refund extends \Magento\Framework\View\Element\Template
      * @var \Magento\Framework\App\RequestInterface
      */
     protected $_request;
+
     /**
+     * Refund constructor.
+     *
      * @param \Magento\Framework\View\Element\Template\Context $context
      * @param \Magento\Framework\Registry $registry
      * @param \Magento\Framework\ObjectManagerInterface $objectManager
      * @param \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency
      * @param \Magestore\Customercredit\Helper\Data $creditHelper
      * @param \Magento\Customer\Model\CustomerFactory $customerFactory
-     * @param \Magento\Sales\Model\Order $order
+     * @param \Magento\Sales\Model\OrderFactory $orderFactory
      * @param array $data
      */
     public function __construct(
@@ -71,9 +79,8 @@ class Refund extends \Magento\Framework\View\Element\Template
         \Magestore\Customercredit\Helper\Data $creditHelper,
         \Magento\Customer\Model\CustomerFactory $customerFactory,
         \Magento\Sales\Model\OrderFactory $orderFactory,
-        array $data = array()
-    )
-    {
+        array $data = []
+    ) {
         $this->_coreRegistry = $registry;
         $this->_objectManager = $objectManager;
         $this->priceCurrency = $priceCurrency;
@@ -84,36 +91,61 @@ class Refund extends \Magento\Framework\View\Element\Template
         parent::__construct($context, $data);
     }
 
+    /**
+     * Get Creditmemo
+     *
+     * @return \Magento\Sales\Model\Order\Creditmemo
+     */
     public function getCreditmemo()
     {
         return $this->_coreRegistry->registry('current_creditmemo');
     }
 
+    /**
+     * Get order
+     *
+     * @return \Magento\Sales\Model\Order
+     */
     public function getOrder()
     {
         return $this->getCreditmemo()->getOrder();
     }
 
+    /**
+     * Get Customer
+     *
+     * @return bool|\Magento\Customer\Model\Customer
+     */
     public function getCustomer()
     {
         $order = $this->getOrder();
         if ($order->getCustomerIsGuest()) {
             return false;
         }
-        $customer = $this->_objectManager->get('Magento\Customer\Model\Customer')->load($order->getCustomerId());
+        $customer = $this->_objectManager->get(\Magento\Customer\Model\Customer::class)->load($order->getCustomerId());
         if ($customer->getId()) {
             return $customer;
         }
         return false;
     }
 
+    /**
+     * Get Grand Total
+     *
+     * @return float
+     */
     public function getGrandTotal()
     {
-        $totalsBlock = $this->_objectManager->get('Magento\Sales\Block\Order\Creditmemo\Totals');
+        $totalsBlock = $this->_objectManager->get(\Magento\Sales\Block\Order\Creditmemo\Totals::class);
         $creditmemo = $totalsBlock->getCreditmemo();
         return $creditmemo->getGrandTotal();
     }
 
+    /**
+     * Get Max Amount
+     *
+     * @return float
+     */
     public function getMaxAmount()
     {
         $maxAmount = 0;
@@ -126,25 +158,45 @@ class Refund extends \Magento\Framework\View\Element\Template
         return $this->priceCurrency->round($maxAmount);
     }
 
+    /**
+     * Enable Template
+     *
+     * @return bool
+     */
     public function enableTemplate()
     {
         $order_id = $this->_request->getParam('order_id');
         return $this->_creditHelper->isBuyCreditProduct($order_id);
     }
 
+    /**
+     * Is Assign Credit
+     *
+     * @return bool
+     */
     public function isAssignCredit()
     {
         return true;
     }
 
+    /**
+     * Format Price
+     *
+     * @param float $price
+     * @return string
+     */
     public function formatPrice($price)
     {
         return $this->getOrder()->format($price);
     }
 
+    /**
+     * Is Enable Credit
+     *
+     * @return mixed
+     */
     public function isEnableCredit()
     {
         return $this->_creditHelper->getGeneralConfig('enable');
     }
-
 }

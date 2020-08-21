@@ -11,7 +11,7 @@ if ($block->isZendBarcodeInstalled()):
 
     if (count($barcodes) > 0):
         $qty = count($barcodes);
-        $label_per_row = intval($config['label_per_row']);
+        $label_per_row = (int)($config['label_per_row']);
         $maxRowNumber = ceil($qty / $label_per_row);
         $measurement_unit = $config['measurement_unit'];
         $paper_height = $config['paper_height'] . $measurement_unit;
@@ -22,20 +22,22 @@ if ($block->isZendBarcodeInstalled()):
         $margin_right = $config['right_margin'] . $measurement_unit;
         $margin_bottom = $config['bottom_margin'] . $measurement_unit;
         $margin_top = $config['top_margin'] . $measurement_unit;
-        $jewelryWidth = (($config['label_width'] + $config['left_margin'] + $config['right_margin']))*2;
+        $jewelryWidth = (($config['label_width'] + $config['left_margin'] + $config['right_margin'])) * 2;
         $jewelryMarginLeft = ($config['paper_width'] - $jewelryWidth);
 
         /* barcode attributes */
         $font_size = $config['font_size'] . 'px';
-        $attributes_height_label = ($config['paper_height']-$config['label_height'])- $config['top_margin'] -$config['bottom_margin'] - 1 ;
+        $attributes_height_label = ($config['paper_height'] - $config['label_height']) - $config['top_margin']
+            - $config['bottom_margin'] - 1;
         /* end - barcoder attributes */
 
-        $bodyHeight = $maxRowNumber * intval($paper_height);
+        $bodyHeight = $maxRowNumber * (int)($paper_height);
         if ($maxRowNumber > 0):
             $generated = 0;
-            for ($rowNumber = 1;$rowNumber <= $maxRowNumber;$rowNumber++):
+            for ($rowNumber = 1; $rowNumber <= $maxRowNumber; $rowNumber++):
                 ?>
-                <div class="barcode-row <?php if ($block->isJewelry()) echo " jewelry "; ?>" style="text-align: center;">
+                <div class="barcode-row <?php if ($block->isJewelry()) {echo " jewelry ";} ?>"
+                     style="text-align: center;">
                     <?php
                     for ($labelInRow = 1; $labelInRow <= $label_per_row; $labelInRow++) {
                         if ($qty > 0) {
@@ -44,23 +46,32 @@ if ($block->isZendBarcodeInstalled()):
                                 $source = $barcodes[$generated];
                                 $attributes_soucre = $barcodes[$generated]['attribute_data'];
                                 $source = $barcodes[$generated]['barcode_source'];
+                                // phpcs:ignore Magento2.Functions.DiscouragedFunction
                                 ob_start();
+                                // phpcs:ignore Magento2.Functions.DiscouragedFunction
                                 imagepng($source->draw());
+                                // phpcs:ignore Magento2.Functions.DiscouragedFunction
                                 $barcode = ob_get_contents();
+                                // phpcs:ignore Magento2.Functions.DiscouragedFunction
                                 ob_end_clean();
                                 ?>
                                 <?php if (!$block->isJewelry()): ?>
                                     <div class="barcode-att">
                                         <div class="barcode-att"
-                                             style=" height:<?php echo $attributes_height_label.$measurement_unit ?>;
-                                                 line-height:<?php echo ($attributes_height_label/( ($attributes_soucre)?count($attributes_soucre):1 )).$measurement_unit?>
-                                                 ">
+                                             style=" height:<?= /* @noEscape */ $attributes_height_label
+                                                . $measurement_unit ?>;
+                                                     line-height:<?= /* @noEscape */ ($attributes_height_label
+                                                        / (($attributes_soucre) ? count($attributes_soucre) : 1))
+                                                                 . $measurement_unit ?>
+                                                     ">
                                             <?php
-                                            if($attributes_soucre){
-                                                foreach($attributes_soucre as $value){
-                                                    if($value){
+                                            if ($attributes_soucre) {
+                                                foreach ($attributes_soucre as $value) {
+                                                    if ($value) {
                                                         ?>
-                                                        <span class='barcode-att barcode-att-cal' style = "font-size :<?php echo $font_size?>"><?php echo $value; ?></span></br>
+                                                        <span class='barcode-att barcode-att-cal'
+                                                              style="font-size :<?= /* @noEscape */ $font_size ?>"><?=
+                                                            /* @noEscape */ $value; ?></span></br>
                                                         <?php
                                                     }
                                                 }
@@ -69,7 +80,8 @@ if ($block->isZendBarcodeInstalled()):
                                         </div>
                                         <div class="barcode-att">
                                             <img class='barcode-img' name='barcode'
-                                                 src="data:image/png;base64,<?php echo base64_encode($barcode); ?>"/>
+                                                 src="data:image/png;base64,<?=
+                                                 /* @noEscape */ base64_encode($barcode); ?>"/>
                                         </div>
                                     </div>
                                 <?php endif; ?>
@@ -77,9 +89,11 @@ if ($block->isZendBarcodeInstalled()):
                                     <div class="jewelry-container">
                                         <div class="jewelry-tongue"></div>
                                         <img class='barcode-img' name='barcode'
-                                             src="data:image/png;base64,<?php echo base64_encode($barcode); ?>"/>
+                                             src="data:image/png;base64,<?=
+                                             /* @noEscape */ base64_encode($barcode); ?>"/>
                                         <img class='barcode-img' name='barcode'
-                                             src="data:image/png;base64,<?php echo base64_encode($barcode); ?>"/>
+                                             src="data:image/png;base64,<?=
+                                             /* @noEscape */ base64_encode($barcode); ?>"/>
                                     </div>
                                 <?php endif;
                                 $generated++;
@@ -92,54 +106,62 @@ if ($block->isZendBarcodeInstalled()):
                 <?php
             endfor;
         endif;
-    ?>
-    <style type="text/css">
-        body,html{
-            height:<?php echo $bodyHeight.$measurement_unit;?>;
-            margin:0px;
-        }
-        .barcode-row {
-            height: <?php echo $paper_height;?>;
-            width: <?php echo $paper_width;?>;
-            display: inline-flex;
-        }
-
-        .barcode-row .barcode-img {
-            height: <?php echo $label_height;?>;
-            width: <?php echo $label_width;?>;
-            margin-top: <?php echo $margin_top;?>;
-            margin-bottom: <?php echo $margin_bottom;?>;
-            margin-left: <?php echo $margin_left;?>;
-            margin-right: <?php echo $margin_right;?>;
-            float: left;
-        }
-
-        .barcode-row.jewelry .jewelry-container {
-            width: <?php echo $jewelryWidth.$measurement_unit;?>;
-            height: 100%;
-            float: right;
-        }
-        .barcode_preview_container .barcode-row.jewelry .jewelry-container .jewelry-tongue{
-            right:-<?php echo $jewelryMarginLeft.$measurement_unit;?>;
-            width:<?php echo $jewelryMarginLeft.$measurement_unit;?>;
-        }
-        .barcode-row.jewelry .jewelry-container .barcode{
-            height: 100%;
-        }
-        @media print {
-            body {
-                color: #000;
-                background-color: #fff;
+        ?>
+        <style type="text/css">
+            body, html {
+                height: <?= /* @noEscape */ $bodyHeight.$measurement_unit;?>;
+                margin: 0px;
             }
-        }
-        @page
-        {
-            size: auto;
-            margin: 2mm 4mm;
-        }
-        .clear{clear:both}
-    </style>
+
+            .barcode-row {
+                height: <?= /* @noEscape */ $paper_height;?>;
+                width: <?= /* @noEscape */ $paper_width;?>;
+                display: inline-flex;
+            }
+
+            .barcode-row .barcode-img {
+                height: <?= /* @noEscape */ $label_height;?>;
+                width: <?= /* @noEscape */ $label_width;?>;
+                margin-top: <?= /* @noEscape */ $margin_top;?>;
+                margin-bottom: <?= /* @noEscape */ $margin_bottom;?>;
+                margin-left: <?= /* @noEscape */ $margin_left;?>;
+                margin-right: <?= /* @noEscape */ $margin_right;?>;
+                float: left;
+            }
+
+            .barcode-row.jewelry .jewelry-container {
+                width: <?= /* @noEscape */ $jewelryWidth.$measurement_unit;?>;
+                height: 100%;
+                float: right;
+            }
+
+            .barcode_preview_container .barcode-row.jewelry .jewelry-container .jewelry-tongue {
+                right: -<?= /* @noEscape */ $jewelryMarginLeft.$measurement_unit;?>;
+                width: <?= /* @noEscape */ $jewelryMarginLeft.$measurement_unit;?>;
+            }
+
+            .barcode-row.jewelry .jewelry-container .barcode {
+                height: 100%;
+            }
+
+            @media print {
+                body {
+                    color: #000;
+                    background-color: #fff;
+                }
+            }
+
+            @page {
+                size: auto;
+                margin: 2mm 4mm;
+            }
+
+            .clear {
+                clear: both
+            }
+        </style>
     <?php endif;
-else:?>
-    <div style="color: red"><?php echo(__('Unable to Preview Barcode. Require ') . '<a href="' . $block->getBarcodeSetupGuideUrl() .'">Zend_Barcode.</a>')?></div>
-<?php endif;?>
+    else:?>
+    <div style="color: red"><?= /* @noEscape */ __('Unable to Preview Barcode. Require ') . '<a href="'
+        . $block->getBarcodeSetupGuideUrl() . '">Zend_Barcode.</a>' ?></div>
+<?php endif; ?>

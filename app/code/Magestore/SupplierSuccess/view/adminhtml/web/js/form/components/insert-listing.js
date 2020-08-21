@@ -149,5 +149,26 @@ define([
             });
             layout([child]);
         },
+
+        /**
+         * Filter external links.
+         *
+         * @param {Object} data
+         * @param {String }ns
+         * @returns {Object}
+         */
+        filterExternalLinks: function (data, ns) {
+            var links  = {};
+
+            _.each(data, function (value, key) {
+                if (typeof value === 'string') {
+                    if (value.split('.')[0] === ns) {
+                        links[key] = value;
+                    }
+                }
+            });
+
+            return links;
+        },
     });
 });

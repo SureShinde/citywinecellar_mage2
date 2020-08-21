@@ -5,7 +5,6 @@
  */
 namespace Magestore\Webpos\Test\Api\GetCategories;
 
-
 use Magento\Framework\Api\SearchCriteria;
 use Magento\Framework\Webapi\Rest\Request as RestRequest;
 use Magento\TestFramework\Assert\AssertArrayContains;
@@ -15,6 +14,9 @@ use Magento\Framework\Webapi\Exception;
 
 use Magestore\Webpos\Test\Api\GetSessionTrait;
 
+/**
+ * Api Test GetCategoriesTest
+ */
 class GetCategoriesTest extends WebapiAbstract
 {
     use GetSessionTrait;
@@ -33,13 +35,13 @@ class GetCategoriesTest extends WebapiAbstract
     protected $apiName = "getCategories";
 
     /**
+     * Set Up
      * @return false|string
      */
-    protected function setUp()
+    protected function setUp() : void // phpcs:ignore
     {
         $this->posSession = $this->loginAndAssignPos();
     }
-
 
     /**
      * Test Case GC1 - No items need to sync from sample data
@@ -75,10 +77,10 @@ class GetCategoriesTest extends WebapiAbstract
         AssertArrayContains::assert($requestData['searchCriteria'], $response['search_criteria']);
 
         /* check totalcount = 0 */
-        self::assertEquals($expectedTotalCount, $response['total_count'] , $message);
+        self::assertEquals($expectedTotalCount, $response['total_count'], $message);
 
         /* check list_items is null or empty */
-        self::assertEmpty($response['items'] , $message);
+        self::assertEmpty($response['items'], $message);
     }
 
     /**
@@ -109,15 +111,14 @@ class GetCategoriesTest extends WebapiAbstract
         $message = "API getCategories fail at testcase GC2";
         $this->assertNotNull($response, $message);
 
-
         /* check search_criteria */
         AssertArrayContains::assert($requestData['searchCriteria'], $response['search_criteria']);
 
         /* check totalcount = 3 */
-        self::assertEquals($expectedTotalCount, $response['total_count'] , $message);
+        self::assertEquals($expectedTotalCount, $response['total_count'], $message);
 
         /* check list_items is not empty */
-        self::assertNotEmpty($response['items'] , $message);
+        self::assertNotEmpty($response['items'], $message);
 
         $expectedItemsData = [
             [
@@ -167,5 +168,4 @@ class GetCategoriesTest extends WebapiAbstract
         $this->testCaseId = "GC5";
         $this->sessionCase3();
     }
-
 }

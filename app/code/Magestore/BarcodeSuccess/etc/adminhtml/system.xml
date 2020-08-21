@@ -37,6 +37,7 @@ See COPYING.txt for license details.
                 <field id="attribute_code" translate="label comment" type="select" sortOrder="40" showInDefault="1"
                        showInWebsite="1" showInStore="1">
                     <label>Use the attribute as barcode</label>
+                    <backend_model>Magestore\BarcodeSuccess\Model\Indexer\Product\System\Config\BarcodeAttribute</backend_model>
                     <source_model>Magestore\BarcodeSuccess\Model\System\Config\Source\AttributeCode</source_model>
                     <comment>
                         <![CDATA[<strong style="color:red">Warning!</strong> Value of this attribute will be imported to barcode. All existed barcode will be <strong style="color:red">DELETED</strong> and <strong style="color:red">OVERRIDED</strong>. It will override the barcode pattern.]]>

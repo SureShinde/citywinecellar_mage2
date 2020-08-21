@@ -10,7 +10,7 @@ use Magestore\Webpos\Api\Data\Location\LocationInterface;
 use Magento\Store\Model\ScopeInterface;
 
 /**
- * Class LocationRepository
+ * Model - Location Repository
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
@@ -135,7 +135,9 @@ class LocationRepository implements \Magestore\Webpos\Api\Location\LocationRepos
         if ($location->getId()) {
             return $location;
         } else {
-            throw new \Magento\Framework\Exception\NoSuchEntityException(__('Location with id "%1" does not exist.', $id));
+            throw new \Magento\Framework\Exception\NoSuchEntityException(
+                __('Location with id "%1" does not exist.', $id)
+            );
         }
     }
 
@@ -168,11 +170,12 @@ class LocationRepository implements \Magestore\Webpos\Api\Location\LocationRepos
         }
         $collection->setCurPage($searchCriteria->getCurrentPage());
         $collection->setPageSize($searchCriteria->getPageSize());
+        $collectionSize = $collection->getSize();
         $collection->load();
         $searchResults = $this->locationSearchResultsFactory->create();
         $searchResults->setSearchCriteria($searchCriteria);
         $searchResults->setItems($collection->getItems());
-        $searchResults->setTotalCount($collection->getSize());
+        $searchResults->setTotalCount($collectionSize);
         return $searchResults;
     }
 
@@ -221,10 +224,14 @@ class LocationRepository implements \Magestore\Webpos\Api\Location\LocationRepos
                 $this->resourceLocation->delete($location);
                 return true;
             } else {
-                throw new \Magento\Framework\Exception\ValidatorException(__('The operations failed. Some locations are still working. You can\'t delete them!'));
+                throw new \Magento\Framework\Exception\ValidatorException(
+                    __('The operations failed. Some locations are still working. You can\'t delete them!')
+                );
             }
         } else {
-            throw new \Magento\Framework\Exception\NoSuchEntityException(__('Location with id "%1" does not exist.', $locationId));
+            throw new \Magento\Framework\Exception\NoSuchEntityException(
+                __('Location with id "%1" does not exist.', $locationId)
+            );
         }
     }
 
@@ -267,12 +274,6 @@ class LocationRepository implements \Magestore\Webpos\Api\Location\LocationRepos
             /** @var \Magestore\Webpos\Api\Data\Pos\PosInterface $pos */
             foreach ($posCollection as $pos) {
                 if ($pos->getStatus() == \Magestore\Webpos\Model\Source\Adminhtml\Status::STATUS_ENABLED) {
-                    $currentShiftByPos = $this->shiftRepository->getCurrentShiftByPosId($pos->getPosId());
-                    if ($currentShiftByPos->getStaffId() && $currentShiftByPos->getStaffId() != $staffId) {
-                        $pos->setStaffId($currentShiftByPos->getStaffId());
-                        $pos->setStaffName($currentShiftByPos->getStaffName());
-                    }
-
                     $posArray[] = $pos;
                     $numberPosAssign++;
                 }
@@ -345,12 +346,6 @@ class LocationRepository implements \Magestore\Webpos\Api\Location\LocationRepos
             /** @var \Magestore\Webpos\Api\Data\Pos\PosInterface $pos */
             foreach ($posCollection as $pos) {
                 if ($pos->getStatus() == \Magestore\Webpos\Model\Source\Adminhtml\Status::STATUS_ENABLED) {
-                    $currentShiftByPos = $this->shiftRepository->getCurrentShiftByPosId($pos->getPosId());
-                    if ($currentShiftByPos->getStaffId() && $currentShiftByPos->getStaffId() != $staffId) {
-                        $pos->setStaffId($currentShiftByPos->getStaffId());
-                        $pos->setStaffName($currentShiftByPos->getStaffName());
-                    }
-
                     $posArray[] = $pos;
                     $numberPosAssign++;
                 }

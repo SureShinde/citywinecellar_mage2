@@ -5,10 +5,65 @@
   -->
 
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-
-    <!-- Model Menu -->
-    <type name="Magento\Backend\Block\Menu">
-        <plugin name="Magestore_ReportSuccess_Plugin_Menu" type="Magestore\ReportSuccess\Plugin\Backend\Block\Menu" sortOrder="10" disabled="false"  />
+    <type name="Magestore\ReportSuccess\Block\Adminhtml\Report\Panel\InventoryReportPanel">
+        <arguments>
+            <argument name="panelItems" xsi:type="array">
+                <item name="historycalStock" xsi:type="object">HistorycalStockReportPanelItem</item>
+                <item name="incomingStock" xsi:type="object">IncomingStockReportPanelItem</item>
+                <item name="stockByLocation" xsi:type="object">StockByLocationReportPanelItem</item>
+                <item name="stockDetails" xsi:type="object">StockDetailsReportPanelItem</item>
+                <item name="stockValue" xsi:type="object">StockValueReportPanelItem</item>
+            </argument>
+        </arguments>
     </type>
 
+    <virtualType name="HistorycalStockReportPanelItem" type="Magestore\ReportSuccess\Model\Report\PanelItems\AbstractItem">
+        <arguments>
+            <argument name="id" xsi:type="string">historicalStock</argument>
+            <argument name="title" xsi:type="string">Historical Stock</argument>
+            <argument name="description" xsi:type="string">Export stock levels, avg.cost and stock value from a past date</argument>
+            <argument name="action" xsi:type="string">omcreports/inventory/historicalStock</argument>
+            <argument name="sortOrder" xsi:type="string">0</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="IncomingStockReportPanelItem" type="Magestore\ReportSuccess\Model\Report\PanelItems\IncomingStock">
+        <arguments>
+            <argument name="id" xsi:type="string">incomingStock</argument>
+            <argument name="title" xsi:type="string">Incoming Stock</argument>
+            <argument name="description" xsi:type="string">View PO list of incoming stock and their cost</argument>
+            <argument name="action" xsi:type="string">omcreports/inventory/incomingStock</argument>
+            <argument name="sortOrder" xsi:type="string">1</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="StockByLocationReportPanelItem" type="Magestore\ReportSuccess\Model\Report\PanelItems\StockByLocation">
+        <arguments>
+            <argument name="id" xsi:type="string">stockByLocation</argument>
+            <argument name="title" xsi:type="string">Stock by Source</argument>
+            <argument name="description" xsi:type="string">Compare stock levels between sources</argument>
+            <argument name="action" xsi:type="string">omcreports/inventory/stockByLocation</argument>
+            <argument name="sortOrder" xsi:type="string">2</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="StockDetailsReportPanelItem" type="Magestore\ReportSuccess\Model\Report\PanelItems\AbstractItem">
+        <arguments>
+            <argument name="id" xsi:type="string">stockDetails</argument>
+            <argument name="title" xsi:type="string">Stock Details</argument>
+            <argument name="description" xsi:type="string">View Qty. on-hand, Qty. Available, Qty. to ship and Qty. on order</argument>
+            <argument name="action" xsi:type="string">omcreports/inventory/stockDetails</argument>
+            <argument name="sortOrder" xsi:type="string">3</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="StockValueReportPanelItem" type="Magestore\ReportSuccess\Model\Report\PanelItems\AbstractItem">
+        <arguments>
+            <argument name="id" xsi:type="string">stockValue</argument>
+            <argument name="title" xsi:type="string">Stock Value</argument>
+            <argument name="description" xsi:type="string">View current stock levels, avg. cost and total stock value</argument>
+            <argument name="action" xsi:type="string">omcreports/inventory/stockValue</argument>
+            <argument name="sortOrder" xsi:type="string">4</argument>
+        </arguments>
+    </virtualType>
 </config>

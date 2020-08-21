@@ -10,13 +10,12 @@ use Magestore\PurchaseOrderSuccess\Api\Data\PaymentInterface;
 use Magestore\PurchaseOrderSuccess\Model\PurchaseOrder\Option\PaymentMethod as PaymentMethodOption;
 
 /**
- * Class PaymentMethod
- * @package Magestore\PurchaseOrderSuccess\Service\Config
+ * Service PaymentMethod Config
  */
 class PaymentMethod
 {
     const PURCHASE_ORDER_CONFIG_PATH = 'purchaseordersuccess/payment_method/payment_method';
-    
+
     /**
      * @var \Magento\Config\Model\ConfigFactory
      */
@@ -27,7 +26,12 @@ class PaymentMethod
      */
     protected $scopeConfig;
 
-
+    /**
+     * PaymentMethod constructor.
+     *
+     * @param \Magento\Config\Model\ConfigFactory $configFactory
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     */
     public function __construct(
         \Magento\Config\Model\ConfigFactory $configFactory,
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
@@ -35,16 +39,17 @@ class PaymentMethod
         $this->configFactory = $configFactory;
         $this->scopeConfig = $scopeConfig;
     }
-    
+
     /**
      * Save new payment method
      *
      * @param array $params
      * @return array
      */
-    public function saveConfig($params = []){
-        if(!$params[PaymentInterface::PAYMENT_METHOD]
-            || $params[PaymentInterface::PAYMENT_METHOD] == PaymentMethodOption::OPTION_NEW_VALUE){
+    public function saveConfig($params = [])
+    {
+        if (!$params[PaymentInterface::PAYMENT_METHOD]
+            || $params[PaymentInterface::PAYMENT_METHOD] == PaymentMethodOption::OPTION_NEW_VALUE) {
             $params = $this->initNewConfig($params);
             $this->initAllConfigValue($params);
         }
@@ -52,46 +57,58 @@ class PaymentMethod
     }
 
     /**
+     * Init New Config
+     *
      * @param array $params
-     * @return mixed
+     * @return array
      */
-    public function initNewConfig($params = []){
-        $params[PaymentInterface::PAYMENT_METHOD] = $params['new_'.PaymentInterface::PAYMENT_METHOD];
+    public function initNewConfig($params = [])
+    {
+        $params[PaymentInterface::PAYMENT_METHOD] = $params['new_' . PaymentInterface::PAYMENT_METHOD];
         return $params;
     }
 
     /**
+     * Init All Config Value
+     *
      * @param array $params
-     * @return $this
      * @throws \Exception
      */
-    public function initAllConfigValue($params = []){
+    public function initAllConfigValue($params = [])
+    {
         $configValue = $this->scopeConfig->getValue(static::PURCHASE_ORDER_CONFIG_PATH);
-        if(!is_array($configValue)){
-            $configValue = unserialize($configValue);
-            $configValue = !$configValue?[]:$configValue;
+        if (!is_array($configValue)) {
+            /** @var \Magento\Framework\Serialize\Serializer\Serialize $serializer */
+            $serializer = \Magento\Framework\App\ObjectManager::getInstance()
+                ->get(\Magento\Framework\Serialize\Serializer\Serialize::class);
+            $configValue = $serializer->unserialize($configValue);
+            $configValue = !$configValue ? [] : $configValue;
             $currentConfig = $this->searchSubArray($configValue, 'name', $params[PaymentInterface::PAYMENT_METHOD]);
-            if(!is_array($currentConfig)){
+            if (!is_array($currentConfig)) {
                 $this->saveNewConfig($configValue, $params[PaymentInterface::PAYMENT_METHOD]);
             }
         }
     }
 
     /**
+     * Save New Config
+     *
      * @param array $configValue
-     * @param $newConfig
+     * @param string $newConfig
      * @throws \Exception
      */
-    public function saveNewConfig($configValue, $newConfig){
+    public function saveNewConfig($configValue, $newConfig)
+    {
         $date = new \DateTime();
         $configValue[$date->getTimestamp()] = $this->generateNewConfig($newConfig);
         $config = $this->configFactory->create();
         $config->setDataByPath(
-            static::PURCHASE_ORDER_CONFIG_PATH, $configValue
+            static::PURCHASE_ORDER_CONFIG_PATH,
+            $configValue
         );
-        try{
+        try {
             $config->save();
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             throw $e;
         }
     }
@@ -102,7 +119,8 @@ class PaymentMethod
      * @param string $newConfig
      * @return array
      */
-    public function generateNewConfig($newConfig){
+    public function generateNewConfig($newConfig)
+    {
         return [
             'name' => $newConfig,
             'status' => \Magestore\PurchaseOrderSuccess\Block\Adminhtml\Form\Field\Status::ENABLE_VALUE
@@ -114,13 +132,16 @@ class PaymentMethod
      *
      * @param array $array
      * @param string $key
-     * @param mixed $value
+     * @param string $value
      * @return array|null
      */
-    public function searchSubArray($array, $key, $value) {
-        foreach ($array as $subarray){
-            if (isset($subarray[$key]) && $subarray[$key] == $value)
+    public function searchSubArray($array, $key, $value)
+    {
+        foreach ($array as $subarray) {
+            if (isset($subarray[$key]) && $subarray[$key] == $value) {
                 return $subarray;
+            }
         }
+        return [];
     }
 }

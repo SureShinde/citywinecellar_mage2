@@ -9,8 +9,7 @@ namespace Magestore\ReportSuccess\Ui\DataProvider\Report\StockValue;
 use Magestore\ReportSuccess\Model\ResourceModel\Product\CollectionFactory;
 
 /**
- * Class DataProvider
- * @package Magestore\ReportSuccess\Ui\DataProvider\Report\StockValue
+ * Stock value report data provider
  */
 class DataProvider extends \Magento\Ui\DataProvider\AbstractDataProvider
 {
@@ -58,6 +57,7 @@ class DataProvider extends \Magento\Ui\DataProvider\AbstractDataProvider
      * @param array $addFilterStrategies
      * @param array $meta
      * @param array $data
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         $name,
@@ -70,8 +70,7 @@ class DataProvider extends \Magento\Ui\DataProvider\AbstractDataProvider
         array $addFilterStrategies = [],
         array $meta = [],
         array $data = []
-    )
-    {
+    ) {
         parent::__construct($name, $primaryFieldName, $requestFieldName, $meta, $data);
         $this->collection = $collectionFactory->create();
         $this->currency = $currency;
@@ -79,7 +78,6 @@ class DataProvider extends \Magento\Ui\DataProvider\AbstractDataProvider
         $this->addFieldStrategies = $addFieldStrategies;
         $this->addFilterStrategies = $addFilterStrategies;
     }
-
 
     /**
      * Get data
@@ -100,7 +98,7 @@ class DataProvider extends \Magento\Ui\DataProvider\AbstractDataProvider
         $itemsAll = $collection->setPageSize(null)->setCurPage(null)->load()->addCategoryIds()->toArray();
         $this->roundedDecimal($items);
 
-        if($isExport) {
+        if ($isExport) {
             return [
                 'totalRecords' => $this->getCollection()->getSize(),
                 'items' => array_values($items),
@@ -132,21 +130,19 @@ class DataProvider extends \Magento\Ui\DataProvider\AbstractDataProvider
         }
     }
 
-
-
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function addFilter(\Magento\Framework\Api\Filter $filter)
     {
         $this->addedField[] = $filter->getField();
         if ($filter->getField() == "category_ids") {
-            $this->getCollection()->addCategoriesFilter(array("in" => $filter->getValue()));
-        } else if ($filter->getField() == "warehouse") {
+            $this->getCollection()->addCategoriesFilter(["in" => $filter->getValue()]);
+        } elseif ($filter->getField() == "warehouse") {
             $this->getCollection()->addWarehouseToFilter($filter->getValue());
-        } else if ($filter->getField() == "supplier" && $filter->getValue()) {
+        } elseif ($filter->getField() == "supplier" && $filter->getValue()) {
             $this->getCollection()->addSupplierToFilter($filter->getValue());
-        } else if ($filter->getField() == "barcode" && $filter->getValue()) {
+        } elseif ($filter->getField() == "barcode" && $filter->getValue()) {
             $this->getCollection()->addBarcodeToFilter($filter->getValue());
         } else {
             if (isset($this->addFilterStrategies[$filter->getField()])) {
@@ -160,18 +156,38 @@ class DataProvider extends \Magento\Ui\DataProvider\AbstractDataProvider
                 parent::addFilter($filter);
             }
         }
+        return null;
     }
 
-    public function roundedDecimal(&$data) {
+    /**
+     * Round decimal
+     *
+     * @param array $data
+     */
+    public function roundedDecimal(&$data)
+    {
         foreach ($data as &$datum) {
             foreach ($this->decimalField as $field) {
-                if(isset($datum[$field])) {
-                    $datum[$field] = $this->currency->format(round($datum[$field], 2), ['display'=>\Zend_Currency::NO_SYMBOL], false);
+                if (isset($datum[$field])) {
+                    $datum[$field] = $this->currency->format(
+                        round($datum[$field], 2),
+                        ['display'=>\Zend_Currency::NO_SYMBOL],
+                        false
+                    );
                 }
             }
         }
     }
-    public function getDataTotal($items) {
+
+    /**
+     * Get data total
+     *
+     * @param array $items
+     *
+     * @return array
+     */
+    public function getDataTotal($items)
+    {
         $total = [
             'qty_on_hand' => 0,
             'stock_value' => 0,
@@ -180,7 +196,7 @@ class DataProvider extends \Magento\Ui\DataProvider\AbstractDataProvider
         ];
         foreach ($items as $item) {
             foreach ($total as $key => &$value) {
-                if(isset($item[$key])) {
+                if (isset($item[$key])) {
                     $value += (float)$item[$key];
                 }
             }

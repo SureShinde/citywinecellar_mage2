@@ -20,15 +20,14 @@
  * @license     http://www.magestore.com/license-agreement.html
  */
 
+namespace Magestore\Rewardpoints\Helper\Calculation;
+
 /**
  * RewardPoints Earning Calculation Helper
- *
- * @category    Magestore
- * @package     Magestore_RewardPoints
- * @author      Magestore Developer
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-namespace Magestore\Rewardpoints\Helper\Calculation;
-class Earning extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalculation {
+class Earning extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalculation
+{
 
     const XML_PATH_EARNING_EXPIRE = 'rewardpoints/earning/expire';
     const XML_PATH_EARNING_ORDER_INVOICE = 'rewardpoints/earning/order_invoice';
@@ -62,6 +61,21 @@ class Earning extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalcula
      */
     protected $_adminQuoteSessionFactory;
 
+    /**
+     * Earning constructor.
+     *
+     * @param \Magento\Framework\App\Helper\Context $context
+     * @param \Magento\Checkout\Model\SessionFactory $sessionFactory
+     * @param \Magento\Framework\ObjectManagerInterface $objectManager
+     * @param \Magestore\Rewardpoints\Model\RateFactory $rateFactory
+     * @param \Magestore\Rewardpoints\Helper\Calculator $helperCalculator
+     * @param \Magestore\Rewardpoints\Helper\Config $helperConfig
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param \Magento\Framework\App\State $appState
+     * @param \Magento\Customer\Model\SessionFactory $customerSessionFactory
+     * @param \Magento\Backend\Model\Session\QuoteFactory $adminQuoteSessionFactory
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     */
     public function __construct(
         \Magento\Framework\App\Helper\Context $context,
         \Magento\Checkout\Model\SessionFactory $sessionFactory,
@@ -73,26 +87,24 @@ class Earning extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalcula
         \Magento\Framework\App\State $appState,
         \Magento\Customer\Model\SessionFactory $customerSessionFactory,
         \Magento\Backend\Model\Session\QuoteFactory $adminQuoteSessionFactory
-    )
-    {
+    ) {
         $this->_rateFactory = $rateFactory;
         $this->_appState = $appState;
         $this->_helperCalculator = $helperCalculator;
         $this->_helperConfig = $helperConfig;
         $this->_adminQuoteSessionFactory = $adminQuoteSessionFactory;
-        parent::__construct($context,$storeManager,$customerSessionFactory,$sessionFactory,$objectManager);
+        parent::__construct($context, $storeManager, $customerSessionFactory, $sessionFactory, $objectManager);
     }
 
     /**
-     * get Total Point that customer can earn by purchase current order/ quote
+     * Get Total Point that customer can earn by purchase current order/ quote
      *
-     * @param null|Mage_Sales_Model_Quote $quote
+     * @param null|\Magento\Quote\Model\Quote $quote
      * @return int
      */
-
-
-    public function getTotalPointsEarning($quote = null) {
-        if (is_null($quote)) {
+    public function getTotalPointsEarning($quote = null)
+    {
+        if ($quote === null) {
             $quote = $this->getQuote();
         }
         if ($quote->isVirtual()) {
@@ -108,16 +120,19 @@ class Earning extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalcula
     }
 
     /**
-     * get Total Point earning by discount
+     * Get Total Point earning by discount
      *
-     * @param null|Mage_Sales_Model_Quote $quote
+     * @param null|\Magento\Quote\Model\Quote $quote
      * @return int
      */
-    public function getEarningPointByCoupon($quote = null){
+    public function getEarningPointByCoupon($quote = null)
+    {
         $needConvert = $this->_helperConfig->getGeneralConfig('convert_point');
-        if(!$needConvert) return 0;
+        if (!$needConvert) {
+            return 0;
+        }
 
-        if (is_null($quote)) {
+        if ($quote === null) {
             $quote = $this->getQuote();
         }
         if ($quote->isVirtual()) {
@@ -129,16 +144,19 @@ class Earning extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalcula
     }
 
     /**
-     * get Total Point earning by using coupon code
+     * Get Total Point earning by using coupon code
      *
-     * @param null|Mage_Sales_Model_Quote $quote
+     * @param null|\Magento\Quote\Model\Quote $quote
      * @return int
      */
-    public function getCouponEarnPoints($quote = null){
+    public function getCouponEarnPoints($quote = null)
+    {
         $needConvert =  $this->_helperConfig->getGeneralConfig('convert_point');
-        if(!$needConvert) return 0;
+        if (!$needConvert) {
+            return 0;
+        }
 
-        if (is_null($quote)) {
+        if ($quote === null) {
             $quote = $this->getQuote();
         }
         if ($quote->isVirtual()) {
@@ -150,20 +168,22 @@ class Earning extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalcula
     }
 
     /**
-     * calculate quote earning points by system rate
+     * Calculate quote earning points by system rate
      *
      * @param float $baseGrandTotal
      * @param mixed $store
      * @return int
      */
-    public function getRateEarningPoints($baseGrandTotal, $store = null) {
-
+    public function getRateEarningPoints($baseGrandTotal, $store = null)
+    {
         $customerGroupId = $this->getCustomerGroupId();
 
         $websiteId = $this->getWebsiteId();
 
         $rate = $this->_rateFactory->create()->getRate(
-            \Magestore\Rewardpoints\Model\Rate::MONEY_TO_POINT, $customerGroupId, $websiteId
+            \Magestore\Rewardpoints\Model\Rate::MONEY_TO_POINT,
+            $customerGroupId,
+            $websiteId
         );
 
         if ($rate && $rate->getId()) {
@@ -174,7 +194,8 @@ class Earning extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalcula
                 $baseGrandTotal = 0;
             }
             $points = $this->_helperCalculator->round(
-                $baseGrandTotal * $rate->getPoints() / $rate->getMoney(), $store
+                $baseGrandTotal * $rate->getPoints() / $rate->getMoney(),
+                $store
             );
         } else {
             $points = 0;
@@ -184,28 +205,34 @@ class Earning extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalcula
     }
 
     /**
-     * get current checkout quote
+     * Get current checkout quote
      *
-     * @return Mage_Sales_Model_Quote
+     * @return \Magento\Quote\Model\Quote
      */
-    public function getQuote() {
-        if($this->_appState->getAreaCode() ==  \Magento\Backend\App\Area\FrontNameResolver::AREA_CODE){
+    public function getQuote()
+    {
+        if ($this->_appState->getAreaCode() ==  \Magento\Backend\App\Area\FrontNameResolver::AREA_CODE) {
             return $this->_adminQuoteSessionFactory->create()->getQuote();
         }
         return $this->_checkoutSessionFactory->create()->getQuote();
     }
+
     /**
-     * get shipping earning point from $order
+     * Get shipping earning point from $order
+     *
+     * @param \Magento\Sales\Model\Order $order
      * @return int
      */
-    public function getShippingEarningPoints($order){
-        if(!$order instanceof \Magento\Sales\Model\Order){
+    public function getShippingEarningPoints($order)
+    {
+        if (!$order instanceof \Magento\Sales\Model\Order) {
             return 0;
         }
         $shippingEarningPoints = $order->getRewardpointsEarn();
-        foreach ($order->getAllItems() as $item){
-            if ($item->getParentItemId())
+        foreach ($order->getAllItems() as $item) {
+            if ($item->getParentItemId()) {
                 continue;
+            }
             if ($item->getHasChildren() && $item->isChildrenCalculated()) {
                 foreach ($item->getChildrenItems() as $child) {
                     $shippingEarningPoints -= $child->getRewardpointsEarn();
@@ -216,5 +243,4 @@ class Earning extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalcula
         }
         return $shippingEarningPoints;
     }
-
 }

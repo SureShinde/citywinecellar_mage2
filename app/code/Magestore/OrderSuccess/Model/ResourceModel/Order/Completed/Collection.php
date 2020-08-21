@@ -3,27 +3,28 @@
  * Copyright © 2016 Magestore. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace Magestore\OrderSuccess\Model\ResourceModel\Order\Completed;
 
 /**
- * Class Collection
- * @package Magestore\OrderSuccess\Model\ResourceModel\Sales\Completed
+ * Order Completed Collection
  */
 class Collection extends \Magestore\OrderSuccess\Model\ResourceModel\Order\Collection
 {
     /**
-     * add condition.
+     * Add Condition
      *
-     * @param
-     * @return $this
+     * @return Collection|void
      */
-    public function addCondition(){
-        $this->addFieldToFilter('main_table.status', array(
-                                        'in'=> array(
-                                            'complete'
-                                            )
-                                        ))
-            ;
+    public function addCondition()
+    {
+        $this->addFieldToFilter(
+            'main_table.status',
+            [
+                'in' => [
+                    'complete'
+                ]
+            ]
+        );
     }
-
 }

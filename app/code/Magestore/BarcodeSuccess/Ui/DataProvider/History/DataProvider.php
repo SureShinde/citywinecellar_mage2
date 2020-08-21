@@ -8,11 +8,11 @@ namespace Magestore\BarcodeSuccess\Ui\DataProvider\History;
 
 use Magestore\BarcodeSuccess\Model\ResourceModel\History\CollectionFactory;
 use Magento\Ui\DataProvider\AbstractDataProvider;
-use Magento\Framework\UrlInterface;
 
 /**
- * Class History
- * @package Magestore\BarcodeSuccess\Ui\DataProvider
+ * Class DataProvider
+ *
+ * Used to create data provider
  */
 class DataProvider extends AbstractDataProvider
 {
@@ -25,13 +25,14 @@ class DataProvider extends AbstractDataProvider
      * @var string
      */
     protected $type_provider;
+
     /**
      * Generate constructor.
+     *
      * @param string $name
      * @param string $primaryFieldName
      * @param string $requestFieldName
      * @param CollectionFactory $collectionFactory
-     * @param UrlInterface $urlBuilder
      * @param array $meta
      * @param array $data
      */
@@ -40,25 +41,33 @@ class DataProvider extends AbstractDataProvider
         $primaryFieldName,
         $requestFieldName,
         CollectionFactory $collectionFactory,
-        UrlInterface $urlBuilder,
         array $meta = [],
         array $data = []
     ) {
         parent::__construct($name, $primaryFieldName, $requestFieldName, $meta, $data);
         $this->collection = $collectionFactory->create();
-        $this->collection->getSelect()->joinLeft(array('admin_user' => $this->collection->getTable('admin_user'))
-            , 'main_table.created_by = admin_user.user_id', array('username'));
-        if(isset($data['type_provider']) && $data['type_provider']) {
+        $this->collection->getSelect()->joinLeft(
+            ['admin_user' => $this->collection->getTable('admin_user')],
+            'main_table.created_by = admin_user.user_id',
+            ['username']
+        );
+
+        if (isset($data['type_provider']) && $data['type_provider']) {
             $this->type_provider = $data['type_provider'];
         }
     }
 
+    /**
+     * Get data
+     *
+     * @return array
+     */
     public function getData()
     {
         if (isset($this->loadedData)) {
             return $this->loadedData;
         }
-        if($this->type_provider == 'form') {
+        if ($this->type_provider == 'form') {
             $items = $this->collection->getItems();
             foreach ($items as $item) {
                 $this->loadedData[$item->getId()] = $item->getData();
@@ -69,7 +78,7 @@ class DataProvider extends AbstractDataProvider
                 $item->setData($data);
                 $this->loadedData[$item->getId()] = $item->getData();
             }
-        }else{
+        } else {
             $this->loadedData = $this->getCollection()->toArray();
         }
         return $this->loadedData;

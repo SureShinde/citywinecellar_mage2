@@ -7,10 +7,10 @@
 namespace Magestore\Giftvoucher\Service\GiftVoucherProduct;
 
 /**
- * Class OrderManagement
+ * Gift voucher product - Order Management
  *
- * @package Magestore\Giftvoucher\Service\GiftvoucherProduct
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.CookieAndSessionMisuse)
  */
 class OrderManagement implements \Magestore\Giftvoucher\Api\GiftvoucherProduct\OrderManagementInterface
 {
@@ -164,11 +164,7 @@ class OrderManagement implements \Magestore\Giftvoucher\Api\GiftvoucherProduct\O
     }
 
     /**
-     * Refund offline
-     *
-     * @param \Magento\Sales\Model\Order $order
-     * @param float $baseGrandTotal
-     * @return \Magento\Sales\Model\Order\Creditmemo|$this
+     * @inheritDoc
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      * @SuppressWarnings(PHPMD.NPathComplexity)
@@ -253,7 +249,7 @@ class OrderManagement implements \Magestore\Giftvoucher\Api\GiftvoucherProduct\O
             if ($credit->getId()) {
                 // check order is refunded to credit balance
                 $histories = $this->_objectManager
-                    ->create(\Magestore\Giftvoucher\Model\ResourceModel\Credithistory\Collection::class)
+                    ->create(\Magestore\Giftvoucher\Model\ResourceModel\CreditHistory\Collection::class)
                     ->addFieldToFilter('customer_id', $order->getCustomerId())
                     ->addFieldToFilter('action', 'Refund')
                     ->addFieldToFilter('order_id', $order->getId())
@@ -277,7 +273,7 @@ class OrderManagement implements \Magestore\Giftvoucher\Api\GiftvoucherProduct\O
                         $currencyBalance = round($credit->getBalance(), 4);
                     }
                     $credithistory = $this->_objectManager
-                        ->create(\Magestore\Giftvoucher\Model\Credithistory::class)
+                        ->create(\Magestore\Giftvoucher\Model\CreditHistory::class)
                         ->setData($credit->getData());
                     $credithistory->addData(
                         [
@@ -301,10 +297,7 @@ class OrderManagement implements \Magestore\Giftvoucher\Api\GiftvoucherProduct\O
     }
 
     /**
-     * Add Gift Card data to order
-     *
-     * @param \Magento\Sales\Model\Order $order
-     * @return \Magento\Sales\Model\Order|$this
+     * @inheritDoc
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      * @SuppressWarnings(PHPMD.NPathComplexity)
@@ -430,21 +423,18 @@ class OrderManagement implements \Magestore\Giftvoucher\Api\GiftvoucherProduct\O
                         $dir = $this->_helperData->getBaseDirMedia()->getAbsolutePath(
                             'tmp/giftvoucher/images/' . $buyRequest['giftcard_template_image']
                         );
-                        // phpcs:ignore Magento2.Functions.DiscouragedFunction
-                        if (file_exists($dir)) {
+                        if ($this->_helperData->getFilesystemDriver()->isExists($dir)) {
                             $imageObj = $this->imageFactory->create();
                             $imageObj->open($dir);
                             $imagePath = $this->_helperData->getStoreManager()->getStore()
                                     ->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA)
                                 . 'giftvoucher/template/images/';
-                            // phpcs:ignore Magento2.Functions.DiscouragedFunction
-                            $customerIploadImage = strval($time) . $buyRequest['giftcard_template_image'];
+                            $customerIploadImage = (string) $time . $buyRequest['giftcard_template_image'];
                             $dirCustomerUpload = $this->_helperData->getBaseDirMedia()
                                 ->getAbsolutePath(
                                     strstr($imagePath, '/giftvoucher') . $customerIploadImage
                                 );
-                            // phpcs:ignore Magento2.Functions.DiscouragedFunction
-                            if (!file_exists($dirCustomerUpload)) {
+                            if (!$this->_helperData->getFilesystemDriver()->isExists($dirCustomerUpload)) {
                                 $imageObj->save($dirCustomerUpload);
                                 $this->_helperData->customResizeImage($customerIploadImage, 'images');
                             }

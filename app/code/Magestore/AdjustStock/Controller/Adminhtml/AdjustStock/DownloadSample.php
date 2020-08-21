@@ -5,21 +5,26 @@
  */
 
 namespace Magestore\AdjustStock\Controller\Adminhtml\AdjustStock;
+
+use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\App\Filesystem\DirectoryList;
+
 /**
  * Class Import
- * @package Magestore\InventorySuccess\Controller\Adminhtml\AdjustStock
+ *
+ * Download sample controller
  */
-class DownloadSample extends \Magestore\AdjustStock\Controller\Adminhtml\AdjustStock\AdjustStock
+class DownloadSample extends \Magestore\AdjustStock\Controller\Adminhtml\AdjustStock\AdjustStock implements
+    HttpGetActionInterface
 {
     const SAMPLE_QTY = 1;
-    
+
     /**
-     * @return \Magento\Backend\Model\View\Result\Page
+     * @inheritDoc
      */
     public function execute()
     {
-        $name = md5(microtime());
+        $name = sha1(microtime());
         $this->filesystem->getDirectoryWrite(DirectoryList::VAR_DIR)->create('import');
         $filename = DirectoryList::VAR_DIR.'/import/'.$name.'.csv';
 
@@ -27,9 +32,9 @@ class DownloadSample extends \Magestore\AdjustStock\Controller\Adminhtml\AdjustS
         $stream->lock();
         $qtyLabel = __('Adjust Qty');
         $skuLabel = __('SKU');
-        $data = array(
-            array($skuLabel,$qtyLabel)
-        );
+        $data = [
+            [$skuLabel,$qtyLabel]
+        ];
         $data = array_merge($data, $this->generateSampleData(3));
         foreach ($data as $row) {
             $stream->writeCsv($row);
@@ -39,17 +44,17 @@ class DownloadSample extends \Magestore\AdjustStock\Controller\Adminhtml\AdjustS
 
         return $this->fileFactory->create(
             'import_product_to_adjuststock.csv',
-            array(
+            [
                 'type' => 'filename',
                 'value' => $filename,
                 'rm' => true  // can delete file after use
-            ),
+            ],
             DirectoryList::VAR_DIR
         );
     }
 
     /**
-     * get sample csv url
+     * Get sample csv url
      *
      * @return string
      */
@@ -61,7 +66,7 @@ class DownloadSample extends \Magestore\AdjustStock\Controller\Adminhtml\AdjustS
     }
 
     /**
-     * get base dir media
+     * Get base dir media
      *
      * @return string
      */
@@ -71,19 +76,20 @@ class DownloadSample extends \Magestore\AdjustStock\Controller\Adminhtml\AdjustS
     }
 
     /**
-     * generate sample data
+     * Generate sample data
      *
-     * @param int
+     * @param int $number
      * @return array
      */
     public function generateSampleData($number)
     {
         $data = [];
-        $productCollection = $this->_objectManager->create('Magento\Catalog\Model\ResourceModel\Product\Collection')
+        $productCollection = $this->_objectManager
+            ->create(\Magento\Catalog\Model\ResourceModel\Product\Collection::class)
             ->setPageSize($number)
             ->setCurPage(1);
         foreach ($productCollection as $productModel) {
-            $data[]= array($productModel->getData('sku'), self::SAMPLE_QTY);
+            $data[]= [$productModel->getData('sku'), self::SAMPLE_QTY];
         }
         return $data;
     }

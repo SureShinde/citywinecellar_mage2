@@ -22,6 +22,11 @@
 
 namespace Magestore\Customercredit\Model\Source;
 
+/**
+ * Class Status
+ *
+ * Source status model
+ */
 class Status extends \Magento\Framework\DataObject
 {
     const STATUS_UNUSED = 1;
@@ -30,40 +35,44 @@ class Status extends \Magento\Framework\DataObject
     const STATUS_AWAITING_VERIFICATION = 4;
 
     /**
-     * get model option as array
+     * Get model option as array
      *
      * @return array
      */
-    static public function getOptionArray()
+    public function getOptionArray()
     {
-        return array(
+        return [
             self::STATUS_UNUSED => __('Unused'),
             self::STATUS_USED => __('Used'),
             self::STATUS_CANCELLED => __('Cancelled'),
             self::STATUS_AWAITING_VERIFICATION => __('Awaiting verification')
-        );
+        ];
     }
 
     /**
-     * get model option hash as array
+     * Get model option hash as array
      *
      * @return array
      */
-    static public function getOptions()
+    public function getOptions()
     {
-        $options = array();
-        foreach (self::getOptionArray() as $value => $label) {
-            $options[] = array(
+        $options = [];
+        foreach ($this->getOptionArray() as $value => $label) {
+            $options[] = [
                 'value' => $value,
                 'label' => $label
-            );
+            ];
         }
         return $options;
     }
 
+    /**
+     * To Option Array
+     *
+     * @return array
+     */
     public function toOptionArray()
     {
-        return self::getOptions();
+        return $this->getOptions();
     }
-
 }

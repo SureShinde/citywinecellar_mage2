@@ -5,15 +5,20 @@
  */
 
 namespace Magestore\Webpos\Model\Staff;
+
+use Magestore\Appadmin\Model\ResourceModel\Staff\AuthorizationRule\CollectionFactory as RuleCollectionFactory;
+
 /**
- * Class StaffManagement
- * @package Magestore\Webpos\Model\Staff
+ * Model StaffManagement
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.CookieAndSessionMisuse)
+ * @SuppressWarnings(PHPMD.TooManyFields)
  */
 class StaffManagement implements \Magestore\Webpos\Api\Staff\StaffManagementInterface
 {
-
     /**
-     * const is_sharing_account
+     * Const is_sharing_account
      */
     const IS_SHARING_ACCOUNT = 1;
     /**
@@ -84,7 +89,6 @@ class StaffManagement implements \Magestore\Webpos\Api\Staff\StaffManagementInte
      */
     protected $storeManagerment;
 
-
     /**
      * @var \Magestore\Appadmin\Api\Event\DispatchServiceInterface
      */
@@ -97,6 +101,7 @@ class StaffManagement implements \Magestore\Webpos\Api\Staff\StaffManagementInte
 
     /**
      * StaffManagement constructor.
+     *
      * @param \Magestore\Webpos\Api\Data\Staff\Login\LoginResultInterface $loginResult
      * @param \Magestore\Webpos\Api\Data\Staff\Logout\LogoutResultInterface $logoutResult
      * @param \Magestore\Appadmin\Api\Staff\StaffRepositoryInterface $staffRepository
@@ -111,10 +116,11 @@ class StaffManagement implements \Magestore\Webpos\Api\Staff\StaffManagementInte
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
      * @param \Magento\Framework\App\RequestInterface $request
      * @param \Magento\Framework\Registry $coreRegistry
-     * @param \Magestore\Appadmin\Model\ResourceModel\Staff\AuthorizationRule\CollectionFactory $authorizationRuleCollectionFactory
+     * @param RuleCollectionFactory $authorizationRuleCollectionFactory
      * @param \Magento\Store\Model\StoreManagerInterface $storeManagerment
      * @param \Magestore\Appadmin\Api\Event\DispatchServiceInterface $dispatchService
      * @param \Magestore\WebposIntegration\Api\ApiServiceInterface $apiService
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         \Magestore\Webpos\Api\Data\Staff\Login\LoginResultInterface $loginResult,
@@ -131,12 +137,11 @@ class StaffManagement implements \Magestore\Webpos\Api\Staff\StaffManagementInte
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Framework\App\RequestInterface $request,
         \Magento\Framework\Registry $coreRegistry,
-        \Magestore\Appadmin\Model\ResourceModel\Staff\AuthorizationRule\CollectionFactory $authorizationRuleCollectionFactory,
+        RuleCollectionFactory $authorizationRuleCollectionFactory,
         \Magento\Store\Model\StoreManagerInterface $storeManagerment,
         \Magestore\Appadmin\Api\Event\DispatchServiceInterface $dispatchService,
         \Magestore\WebposIntegration\Api\ApiServiceInterface $apiService
-    )
-    {
+    ) {
         $this->loginResult = $loginResult;
         $this->logoutResult = $logoutResult;
         $this->staffRepository = $staffRepository;
@@ -158,8 +163,8 @@ class StaffManagement implements \Magestore\Webpos\Api\Staff\StaffManagementInte
     }
 
     /**
-     * Login Staff
-     * {@inheritdoc}
+     * @inheritdoc
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function login($staff)
     {
@@ -169,19 +174,28 @@ class StaffManagement implements \Magestore\Webpos\Api\Staff\StaffManagementInte
         if ($username && $password) {
             try {
                 $resultLogin = $this->staffFactory->create()->authenticate($username, $password);
-                if ($resultLogin && $resultLogin->getStatus() == \Magestore\Appadmin\Api\Data\Staff\StaffInterface::STATUS_ENABLED && $resultLogin->getRoleId()) {
+                if ($resultLogin
+                    && $resultLogin->getStatus() == \Magestore\Appadmin\Api\Data\Staff\StaffInterface::STATUS_ENABLED
+                    && $resultLogin->getRoleId()) {
                     $this->sessionManagerInterface->regenerateId();
                     $sessionId = $this->sessionManagerInterface->getSessionId();
                     $this->session->setStaffId($resultLogin->getId());
                     $this->session->setSessionId($sessionId);
-                    $this->session->setLoggedDate(strftime('%Y-%m-%d %H:%M:%S', $this->timezone->scopeTimeStamp()));
+                    $this->session->setLoggedDate(
+                        strftime('%Y-%m-%d %H:%M:%S', $this->timezone->scopeTimeStamp())
+                    );
                     $this->sessionRepository->save($this->session);
                     $roleId = $resultLogin->getRoleId();
                     $authenticationRule = $this->authorizationRuleCollectionFactory->create()
                         ->addFieldToFilter('role_id', $roleId)
-                        ->addFieldToFilter('resource_id', array('in' => array('Magestore_Appadmin::all', 'Magestore_Webpos::manage_pos')));
+                        ->addFieldToFilter(
+                            'resource_id',
+                            ['in' => ['Magestore_Appadmin::all', 'Magestore_Webpos::manage_pos']]
+                        );
                     if (!$authenticationRule->getSize()) {
-                        throw new \Magento\Framework\Exception\AuthorizationException(__('Your account is invalid. Please try again'));
+                        throw new \Magento\Framework\Exception\AuthorizationException(
+                            __('Your account is invalid. Please try again')
+                        );
                     }
                     $this->loginResult->setToken($token);
                     $this->loginResult->setSessionId($sessionId);
@@ -195,8 +209,14 @@ class StaffManagement implements \Magestore\Webpos\Api\Staff\StaffManagementInte
                     $expireTime = $this->getExpireTime();
                     $sharingAccountConfig = $this->scopeConfig->getValue('webpos/security/sharing_acount');
                     $listCurrentSessionWithPos = $this->sessionRepository->getListByStaffId($resultLogin->getId());
-                    $listCurrentSessionWithPos->addFieldToFilter(\Magestore\Webpos\Api\Data\Staff\SessionInterface::POS_ID, array('gt' => 0));
-                    $listCurrentSessionWithPos->addFieldToFilter(\Magestore\Webpos\Api\Data\Staff\SessionInterface::LOGGED_DATE, array('from' => $expireTime));
+                    $listCurrentSessionWithPos->addFieldToFilter(
+                        \Magestore\Webpos\Api\Data\Staff\SessionInterface::POS_ID,
+                        ['gt' => 0]
+                    );
+                    $listCurrentSessionWithPos->addFieldToFilter(
+                        \Magestore\Webpos\Api\Data\Staff\SessionInterface::LOGGED_DATE,
+                        ['from' => $expireTime]
+                    );
                     $hasOccupyPos = $listCurrentSessionWithPos->getSize();
                     $this->loginResult->setSharingAccount(self::IS_SHARING_ACCOUNT);
                     /* if sharing config = No and staff are processing on Pos */
@@ -217,7 +237,8 @@ class StaffManagement implements \Magestore\Webpos\Api\Staff\StaffManagementInte
                     throw new \Magento\Framework\Exception\AuthorizationException(
                         __('Your account is invalid. Please try again'),
                         new \Exception(),
-                        \Magestore\Appadmin\Api\Event\DispatchServiceInterface::EXCEPTION_CODE_CANNOT_LOGIN);
+                        \Magestore\Appadmin\Api\Event\DispatchServiceInterface::EXCEPTION_CODE_CANNOT_LOGIN
+                    );
                 }
             } catch (\Magento\Framework\Exception\AuthorizationException $e) {
                 throw new \Magento\Framework\Exception\AuthorizationException(
@@ -230,20 +251,23 @@ class StaffManagement implements \Magestore\Webpos\Api\Staff\StaffManagementInte
         return $this->loginResult;
     }
 
-
     /**
-     * continue Login Staff
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function continueLogin()
     {
         $token = $this->getAccessToken();
-        $sessionId = $this->request->getParam(\Magestore\WebposIntegration\Controller\Rest\RequestProcessor::SESSION_PARAM_KEY);
+        $sessionId = $this->request->getParam(
+            \Magestore\WebposIntegration\Controller\Rest\RequestProcessor::SESSION_PARAM_KEY
+        );
         try {
             $sessionLogin = $this->sessionRepository->getBySessionId($sessionId);
             if ($sessionLogin) {
                 $listCurrentSessionWithPos = $this->sessionRepository->getListByStaffId($sessionLogin->getStaffId());
-                $listCurrentSessionWithPos->addFieldToFilter(\Magestore\Webpos\Api\Data\Staff\SessionInterface::SESSION_ID, array('neq' => $sessionId));
+                $listCurrentSessionWithPos->addFieldToFilter(
+                    \Magestore\Webpos\Api\Data\Staff\SessionInterface::SESSION_ID,
+                    ['neq' => $sessionId]
+                );
                 /* delete list $session */
                 if ($listCurrentSessionWithPos->getSize() > 0) {
                     foreach ($listCurrentSessionWithPos as $session) {
@@ -275,6 +299,8 @@ class StaffManagement implements \Magestore\Webpos\Api\Staff\StaffManagementInte
     }
 
     /**
+     * Is Allow Resource
+     *
      * @param string $resource
      * @param int $staffId
      * @return bool
@@ -293,8 +319,9 @@ class StaffManagement implements \Magestore\Webpos\Api\Staff\StaffManagementInte
         }
     }
 
-
     /**
+     * Authorize Session
+     *
      * @param string $phpSession
      * @return int
      * @throws \Magento\Framework\Exception\LocalizedException
@@ -311,7 +338,6 @@ class StaffManagement implements \Magestore\Webpos\Api\Staff\StaffManagementInte
             $this->coreRegistry->register('currrent_session_model', $webposModel);
         }
         if ($webposModel->getId()) {
-
             $logTimeStaff = $webposModel->getData('logged_date');
             $currentTime = $this->timezone->scopeTimeStamp();
             $logTimeStamp = strtotime($logTimeStaff);
@@ -327,7 +353,7 @@ class StaffManagement implements \Magestore\Webpos\Api\Staff\StaffManagementInte
                 $this->sessionRepository->delete($webposModel);
 
                 throw new \Magento\Framework\Exception\AuthorizationException(
-                    __(\Magestore\Appadmin\Api\Event\DispatchServiceInterface::EXCEPTION_MESSAGE),
+                    __('Opps! Access denied. Recent action has not been saved yet.'),
                     new \Exception(),
                     \Magestore\Appadmin\Api\Event\DispatchServiceInterface::EXCEPTION_CODE_FORCE_SIGN_OUT
                 );
@@ -337,14 +363,14 @@ class StaffManagement implements \Magestore\Webpos\Api\Staff\StaffManagementInte
         }
     }
 
-
     /**
-     * Logout Staff
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function logout()
     {
-        $sessionId = $this->request->getParam(\Magestore\WebposIntegration\Controller\Rest\RequestProcessor::SESSION_PARAM_KEY);
+        $sessionId = $this->request->getParam(
+            \Magestore\WebposIntegration\Controller\Rest\RequestProcessor::SESSION_PARAM_KEY
+        );
         try {
             $sessionLogin = $this->sessionRepository->getBySessionId($sessionId);
             if ($sessionLogin) {
@@ -352,8 +378,14 @@ class StaffManagement implements \Magestore\Webpos\Api\Staff\StaffManagementInte
                 $expireTime = $this->getExpireTime();
                 /**/
                 $listCurrentSessionWithPos = $this->sessionRepository->getListByStaffId($sessionLogin->getStaffId());
-                $listCurrentSessionWithPos->addFieldToFilter(\Magestore\Webpos\Api\Data\Staff\SessionInterface::POS_ID, $sessionLogin->getPosId());
-                $listCurrentSessionWithPos->addFieldToFilter(\Magestore\Webpos\Api\Data\Staff\SessionInterface::LOGGED_DATE, array('from' => $expireTime));
+                $listCurrentSessionWithPos->addFieldToFilter(
+                    \Magestore\Webpos\Api\Data\Staff\SessionInterface::POS_ID,
+                    $sessionLogin->getPosId()
+                );
+                $listCurrentSessionWithPos->addFieldToFilter(
+                    \Magestore\Webpos\Api\Data\Staff\SessionInterface::LOGGED_DATE,
+                    ['from' => $expireTime]
+                );
 
                 /** @var \Magestore\Webpos\Model\Staff\Session $sessionWithPos */
                 foreach ($listCurrentSessionWithPos as $sessionWithPos) {
@@ -374,7 +406,9 @@ class StaffManagement implements \Magestore\Webpos\Api\Staff\StaffManagementInte
     }
 
     /**
+     * GetExpireTime
      *
+     * @return false|string
      */
     public function getExpireTime()
     {
@@ -385,6 +419,8 @@ class StaffManagement implements \Magestore\Webpos\Api\Staff\StaffManagementInte
     }
 
     /**
+     * Get Access Token
+     *
      * @return string
      * @throws \Magento\Framework\Exception\AuthorizationException
      */
@@ -393,7 +429,9 @@ class StaffManagement implements \Magestore\Webpos\Api\Staff\StaffManagementInte
         try {
             $token = $this->apiService->getToken();
         } catch (\Exception $e) {
-            throw new \Magento\Framework\Exception\AuthorizationException(__("Can't retrieve access token, please get technical support."));
+            throw new \Magento\Framework\Exception\AuthorizationException(
+                __("Can't retrieve access token, please get technical support.")
+            );
         }
         return $token;
     }

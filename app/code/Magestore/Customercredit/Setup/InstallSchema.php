@@ -27,8 +27,17 @@ use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\SchemaSetupInterface;
 use Magento\Framework\DB\Ddl\Table;
 
+/**
+ * Class InstallSchema
+ *
+ * Setup install schema
+ */
 class InstallSchema implements InstallSchemaInterface
 {
+    /**
+     * @inheritDoc
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
     public function install(SchemaSetupInterface $setup, ModuleContextInterface $context)
     {
         $installer = $setup;
@@ -294,7 +303,7 @@ class InstallSchema implements InstallSchemaInterface
             ->setOption('charset', 'utf8');
         $installer->getConnection()->createTable($table);
 
-        $data = array();
+        $data = [];
         $data['0']['transaction_name'] = 'Changed by admin';
         $data['1']['transaction_name'] = 'Send credit to friends';
         $data['2']['transaction_name'] = 'Receive Credit from Friends';
@@ -308,7 +317,7 @@ class InstallSchema implements InstallSchemaInterface
         $installer->getConnection()->insertMultiple($setup->getTable('type_transaction'), $data);
 
         $installer->getConnection()->addColumn(
-            $installer->getTable('sales_order'), 
+            $installer->getTable('sales_order'),
             'customercredit_discount',
             [
                 'type' => \Magento\Framework\DB\Ddl\Table::TYPE_DECIMAL,
@@ -430,7 +439,7 @@ class InstallSchema implements InstallSchemaInterface
         );
 
         $installer->getConnection()->addColumn(
-            $installer->getTable('sales_invoice'), 
+            $installer->getTable('sales_invoice'),
             'customercredit_discount',
             [
                 'type' => \Magento\Framework\DB\Ddl\Table::TYPE_DECIMAL,
@@ -440,7 +449,7 @@ class InstallSchema implements InstallSchemaInterface
             ]
         );
         $installer->getConnection()->addColumn(
-            $installer->getTable('sales_invoice'), 
+            $installer->getTable('sales_invoice'),
             'base_customercredit_discount',
             [
                 'type' => \Magento\Framework\DB\Ddl\Table::TYPE_DECIMAL,
@@ -450,7 +459,7 @@ class InstallSchema implements InstallSchemaInterface
             ]
         );
         $installer->getConnection()->addColumn(
-            $installer->getTable('sales_invoice'), 
+            $installer->getTable('sales_invoice'),
             'base_customercredit_hidden_tax',
             [
                 'type' => \Magento\Framework\DB\Ddl\Table::TYPE_DECIMAL,
@@ -471,7 +480,7 @@ class InstallSchema implements InstallSchemaInterface
         );
 
         $installer->getConnection()->addColumn(
-            $installer->getTable('sales_creditmemo'), 
+            $installer->getTable('sales_creditmemo'),
             'customercredit_discount',
             [
                 'type' => \Magento\Framework\DB\Ddl\Table::TYPE_DECIMAL,
@@ -481,7 +490,7 @@ class InstallSchema implements InstallSchemaInterface
             ]
         );
         $installer->getConnection()->addColumn(
-            $installer->getTable('sales_creditmemo'), 
+            $installer->getTable('sales_creditmemo'),
             'base_customercredit_discount',
             [
                 'type' => \Magento\Framework\DB\Ddl\Table::TYPE_DECIMAL,
@@ -491,7 +500,7 @@ class InstallSchema implements InstallSchemaInterface
             ]
         );
         $installer->getConnection()->addColumn(
-            $installer->getTable('sales_creditmemo'), 
+            $installer->getTable('sales_creditmemo'),
             'base_customercredit_hidden_tax',
             [
                 'type' => \Magento\Framework\DB\Ddl\Table::TYPE_DECIMAL,
@@ -501,7 +510,7 @@ class InstallSchema implements InstallSchemaInterface
             ]
         );
         $installer->getConnection()->addColumn(
-            $installer->getTable('sales_creditmemo'), 
+            $installer->getTable('sales_creditmemo'),
             'customercredit_hidden_tax',
             [
                 'type' => \Magento\Framework\DB\Ddl\Table::TYPE_DECIMAL,

@@ -14,8 +14,8 @@ use Magento\Ui\Api\BookmarkManagementInterface;
 use Magestore\ReportSuccess\Model\Source\Adminhtml\StockByLocation\Metric;
 
 /**
- * Class ConvertToCsv
- * @package Magestore\ReportSuccess\Model\Export\StockByLocation
+ * Stock by location - convert to csv
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ConvertToCsv extends \Magestore\ReportSuccess\Model\Export\AbstractConvertToCsv
 {
@@ -64,6 +64,7 @@ class ConvertToCsv extends \Magestore\ReportSuccess\Model\Export\AbstractConvert
 
     /**
      * ConvertToCsv constructor.
+     *
      * @param Filesystem $filesystem
      * @param Filter $filter
      * @param \Magestore\ReportSuccess\Model\Export\MetadataProvider $metadataProvider
@@ -76,6 +77,7 @@ class ConvertToCsv extends \Magestore\ReportSuccess\Model\Export\AbstractConvert
      * @param DecoderInterface $jsonDecoder
      * @param \Magento\Ui\Model\ResourceModel\Bookmark\Collection $bookmarkCollection
      * @param \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency
+     * @param \Magento\Directory\Model\Currency $currency
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
      * @param \Magento\Framework\Stdlib\DateTime\TimezoneInterface $localeDate
@@ -83,8 +85,11 @@ class ConvertToCsv extends \Magestore\ReportSuccess\Model\Export\AbstractConvert
      * @param \Magestore\ReportSuccess\Model\Source\Adminhtml\Warehouse $warehouse
      * @param \Magento\Framework\Module\Manager $moduleManager
      * @param \Magestore\ReportSuccess\Model\Bookmark $bookmark
-     * @param \Magestore\ReportSuccess\Model\Source\Adminhtml\StockByLocation\Metric $stockByLocationSource
+     * @param Metric $stockByLocationSource
      * @param int $pageSize
+     *
+     * @throws \Magento\Framework\Exception\FileSystemException
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         Filesystem $filesystem,
@@ -109,18 +114,39 @@ class ConvertToCsv extends \Magestore\ReportSuccess\Model\Export\AbstractConvert
         \Magestore\ReportSuccess\Model\Bookmark $bookmark,
         \Magestore\ReportSuccess\Model\Source\Adminhtml\StockByLocation\Metric $stockByLocationSource,
         $pageSize = 200
-    )
-    {
+    ) {
         $this->stockByLocationSource = $stockByLocationSource;
         $stockOption = $this->stockByLocationSource->toOptionListArray();
         $metricTitle = $stockOption[$bookmark->getMetric()];
         $this->bookmark = $bookmark;
         $this->reportTitle = strtoupper($metricTitle) . ' BY WAREHOUSE REPORT';
-        parent::__construct($filesystem, $filter, $metadataProvider, $categoryCollectionFactory, $pricingHelper, $supplier, $purchaseOrder, $bookmarkManagement, $request, $jsonDecoder, $bookmarkCollection, $priceCurrency, $currency, $storeManager, $scopeConfig, $localeDate, $objectManager, $warehouse, $moduleManager, $pageSize);
+        parent::__construct(
+            $filesystem,
+            $filter,
+            $metadataProvider,
+            $categoryCollectionFactory,
+            $pricingHelper,
+            $supplier,
+            $purchaseOrder,
+            $bookmarkManagement,
+            $request,
+            $jsonDecoder,
+            $bookmarkCollection,
+            $priceCurrency,
+            $currency,
+            $storeManager,
+            $scopeConfig,
+            $localeDate,
+            $objectManager,
+            $warehouse,
+            $moduleManager,
+            $pageSize
+        );
     }
 
     /**
      * Abstract function
+     *
      * Initialize options
      */
     public function setOptions()
@@ -130,15 +156,20 @@ class ConvertToCsv extends \Magestore\ReportSuccess\Model\Export\AbstractConvert
     }
 
     /**
-     * @param $component
-     * @return array
+     * @inheritDoc
      */
     public function getFields($component)
     {
         $fields = $this->metadataProvider->getFields($component);
         $currentFields = $this->getFilterColumn();
-        $isEnableBarcode = $this->scopeConfig->getValue('reportsuccess/general/enable_barcode_in_report', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
-        $barcode = $this->scopeConfig->getValue('reportsuccess/general/barcode', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $isEnableBarcode = $this->scopeConfig->getValue(
+            'reportsuccess/general/enable_barcode_in_report',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
+        $barcode = $this->scopeConfig->getValue(
+            'reportsuccess/general/barcode',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
         if (!$isEnableBarcode) {
             foreach ($currentFields as $key => $value) {
                 if ($value == 'barcode') {
@@ -162,9 +193,8 @@ class ConvertToCsv extends \Magestore\ReportSuccess\Model\Export\AbstractConvert
         return count($currentFields) ? $currentFields : $fields;
     }
 
-
     /**
-     * @return array
+     * @inheritDoc
      */
     public function getFilterColumn()
     {
@@ -182,18 +212,16 @@ class ConvertToCsv extends \Magestore\ReportSuccess\Model\Export\AbstractConvert
         } else {
             $array = [];
             foreach ($columns as $key => $value) {
-                if ($value['visible'] && in_array($key, array('sku', 'name', 'barcode'))) {
+                if ($value['visible'] && in_array($key, ['sku', 'name', 'barcode'])) {
                     $array[] = $key;
                 }
             }
             return $array;
         }
-
     }
 
     /**
-     * @param $data
-     * @return $this|void
+     * @inheritDoc
      */
     public function roundedDecimal(&$data)
     {
@@ -201,16 +229,20 @@ class ConvertToCsv extends \Magestore\ReportSuccess\Model\Export\AbstractConvert
         if (!in_array($metric, $this->decimalField)) {
             return $this;
         }
-        foreach ($data as $key => $value) {
+        foreach (array_keys($data) as $key) {
             if (isset($data[$key]) && !in_array($key, $this->fixField)) {
-                $data[$key] = $this->currency->format(round($data[$key], 2), ['display' => \Zend_Currency::NO_SYMBOL], false);
+                $data[$key] = $this->currency->format(
+                    round($data[$key], 2),
+                    ['display' => \Zend_Currency::NO_SYMBOL],
+                    false
+                );
             }
         }
+        return $this;
     }
 
     /**
-     * @param $data
-     * @return $this|void
+     * @inheritDoc
      */
     public function formatPrice(&$data)
     {
@@ -219,10 +251,11 @@ class ConvertToCsv extends \Magestore\ReportSuccess\Model\Export\AbstractConvert
         if (!in_array($metric, $this->priceField)) {
             return $this;
         }
-        foreach ($data as $key => $value) {
+        foreach (array_keys($data) as $key) {
             if (isset($data[$key]) && !in_array($key, $this->fixField)) {
                 $data[$key] = $this->priceCurrency->format($data[$key], false, 2, null, $baseCurrencyCode);
             }
         }
+        return $this;
     }
 }

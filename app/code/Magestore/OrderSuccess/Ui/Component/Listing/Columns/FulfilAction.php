@@ -11,8 +11,7 @@ use Magento\Framework\View\Element\UiComponentFactory;
 use Magento\Framework\View\Element\UiComponent\ContextInterface;
 
 /**
- * Class FulfilAction
- * @package Magestore\OrderSuccess\Ui\Component\Listing\Columns
+ * Columns FulfilAction
  */
 class FulfilAction extends \Magento\Ui\Component\Listing\Columns\Column
 {
@@ -26,7 +25,7 @@ class FulfilAction extends \Magento\Ui\Component\Listing\Columns\Column
      *
      * @param array $dataSource
      * @return array
-     */    
+     */
     public function prepareDataSource(array $dataSource)
     {
         if (isset($dataSource['data']['items'])) {
@@ -34,7 +33,7 @@ class FulfilAction extends \Magento\Ui\Component\Listing\Columns\Column
             foreach ($dataSource['data']['items'] as &$item) {
                 $name = $this->getData('name');
                 if (isset($item[$indexField]) && $item[$indexField] != 0) {
-                    $item[$name] = array();
+                    $item[$name] = [];
                     $item[$name]['edit'] = [
                         'label' => $this->actionLabel,
                         'itemid' => $item[$indexField],
@@ -45,5 +44,5 @@ class FulfilAction extends \Magento\Ui\Component\Listing\Columns\Column
             }
         }
         return $dataSource;
-    }    
+    }
 }

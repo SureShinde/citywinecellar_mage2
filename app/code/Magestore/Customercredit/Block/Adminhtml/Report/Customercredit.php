@@ -22,39 +22,63 @@
 
 namespace Magestore\Customercredit\Block\Adminhtml\Report;
 
+/**
+ * Class Customercredit
+ *
+ * Generate Customer credit chart
+ */
 class Customercredit extends \Magestore\Customercredit\Block\Adminhtml\Report\Graph
 {
+    /**
+     * @inheritDoc
+     */
     public function _construct()
     {
-        $currency = $this->_localeCurrency->getCurrency($this->_storeManager->getStore()->getCurrentCurrencyCode())->getSymbol();
-        $this->_googleChartParams = array(
+        $currency = $this->_localeCurrency->getCurrency(
+            $this->_storeManager->getStore()->getCurrentCurrencyCode()
+        )->getSymbol();
+        $productMetadata = \Magento\Framework\App\ObjectManager::getInstance()
+            ->create(\Magento\Framework\App\ProductMetadataInterface::class);
+        if (version_compare($productMetadata->getVersion(), '2.3.2', '<')) {
+            $_chxt = 'x,y,y';
+        } else {
+            $_chxt = 'x,y';
+        }
+
+        $this->_googleChartParams = [
             'cht' => 'lc',
             'chf' => 'bg,s,f4f4f4|c,lg,90,ffffff,0.1,ededed,0',
             'chdl' => __('Used credit') . '|' . __('Received credit'),
             'chco' => '2424ff,db4814',
-            'chxt' => 'x,y,y',
+            'chxt' => $_chxt,
             'chxl' => '|2:||' . __('# Credit(%1)', $currency)
-        );
+        ];
 
         $this->setHtmlId('customer-credit');
         parent::_construct();
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function _prepareData()
     {
-        // $this->setDataHelperName('Magestore\Customercredit\Helper\Report\Customercredit');
         $this->getDataHelper()->setParam('store', $this->getRequest()->getParam('store'));
-        /*$data = */$this->setDataRows(array('spent_credit', 'received_credit'));
-        $this->_axisMaps = array(
+        /*$data = */$this->setDataRows(['spent_credit', 'received_credit']);
+        $this->_axisMaps = [
             'x' => 'range',
             'y' => 'received_credit'
-        );
+        ];
         parent::_prepareData();
     }
 
+    /**
+     * Get Comment Content
+     *
+     * @return \Magento\Framework\Phrase
+     */
     public function getCommentContent()
     {
         return __('This report shows the <b>used Credit </b> and <b>reveived Credit</b> of Customer');
     }
-
 }

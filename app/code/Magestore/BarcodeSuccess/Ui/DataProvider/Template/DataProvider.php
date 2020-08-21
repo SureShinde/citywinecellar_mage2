@@ -10,7 +10,9 @@ use Magestore\BarcodeSuccess\Ui\DataProvider\AbstractProvider;
 
 /**
  * Class DataProvider
- * @package Magestore\BarcodeSuccess\Ui\DataProvider
+ *
+ * Used for template data provider
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class DataProvider extends AbstractProvider
 {
@@ -45,6 +47,7 @@ class DataProvider extends AbstractProvider
      * @param \Magestore\BarcodeSuccess\Api\Data\BarcodeTemplateInterface $barcodeTemplate
      * @param array $meta
      * @param array $data
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         $name,
@@ -77,13 +80,15 @@ class DataProvider extends AbstractProvider
             $data
         );
         $this->collection = $collectionFactory->create();
-        if(isset($data['type_provider']) && $data['type_provider']) {
+        if (isset($data['type_provider']) && $data['type_provider']) {
             $this->type_provider = $data['type_provider'];
         }
         $this->barcodeTemplate = $barcodeTemplate;
     }
 
     /**
+     * Get data
+     *
      * @return array
      */
     public function getData()
@@ -91,7 +96,7 @@ class DataProvider extends AbstractProvider
         if (isset($this->loadedData)) {
             return $this->loadedData;
         }
-        if($this->type_provider == 'form') {
+        if ($this->type_provider == 'form') {
             $items = $this->collection->getItems();
             foreach ($items as $item) {
                 $this->loadedData[$item->getId()] = $item->getData();
@@ -103,50 +108,58 @@ class DataProvider extends AbstractProvider
                 $this->loadedData[$item->getId()] = $item->getData();
                 $this->loadedData[$item->getId()]['preview'] = $item->getPreviewData();
             }
-            if(count($items) == 0){
+            if (count($items) == 0) {
                 $item = $this->collection->getNewEmptyItem();
                 $this->loadedData[$item->getId()] = $item->getData();
                 $this->loadedData[$item->getId()]['preview'] = $item->getPreviewData();
             }
-        }else{
+        } else {
             $this->loadedData = $this->getCollection()->toArray();
         }
         return $this->loadedData;
     }
 
     /**
+     * Get search result
+     *
      * @return \Magento\Framework\Api\Search\SearchResultInterface|\Magento\Framework\DataObject
      */
     public function getSearchResult()
     {
-        if( ($this->request->getActionName() == 'gridToCsv') || ($this->request->getActionName() == 'gridToXml'))
-        {
-            $collection = $this->collection;//->getData();
-            $count = $collection->getSize();
-            $collection->setPageSize($collection->getSize()); // limit dung để query view dữ liệu - ko dùng cho export được
-            $objectManager = \Magento\Framework\App\ObjectManager::getInstance(); // Instance of object manager
-            /** @var \Magento\Framework\Search\EntityMetadata $entityMetadata */
-            $entityMetadata = $objectManager->create('Magento\Framework\Search\EntityMetadata', ['entityId' => 'id']);
-            /** @var \Magento\Framework\Search\Adapter\Mysql\DocumentFactory $documentFactory */
-            $documentFactory = $objectManager->create(
-                'Magento\Framework\Search\Adapter\Mysql\DocumentFactory',
-                ['entityMetadata' => $entityMetadata]
-            );
-            /** @var \Magento\Framework\Api\Search\Document[] $documents */
-            $documents = [];
-            foreach($collection as $value){
-                if($value->getStatus() == 1){
-                    $value->setStatus('Active');
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance(); // Instance of object manager
+        $metadataProvider = $objectManager->get(\Magento\Ui\Model\Export\MetadataProvider::class);
+        if (class_exists(\Magento\Framework\Search\Adapter\Mysql\DocumentFactory::class) &&
+            !method_exists($metadataProvider, 'getColumnOptions')) {
+            if (($this->request->getActionName() == 'gridToCsv') || ($this->request->getActionName() == 'gridToXml')) {
+                $collection = $this->collection;//->getData();
+                $count = $collection->getSize();
+                $collection->setPageSize($collection->getSize());
+                /** @var \Magento\Framework\Search\EntityMetadata $entityMetadata */
+                $entityMetadata = $objectManager->create(
+                    \Magento\Framework\Search\EntityMetadata::class,
+                    ['entityId' => 'id']
+                );
+                /** @var \Magento\Framework\Search\Adapter\Mysql\DocumentFactory $documentFactory */
+                $documentFactory = $objectManager->create(
+                    \Magento\Framework\Search\Adapter\Mysql\DocumentFactory::class,
+                    ['entityMetadata' => $entityMetadata]
+                );
+                /** @var \Magento\Framework\Api\Search\Document[] $documents */
+                $documents = [];
+                foreach ($collection as $value) {
+                    if ($value->getStatus() == 1) {
+                        $value->setStatus('Active');
+                    }
+                    if ($value->getStatus() == 2) {
+                        $value->setStatus('Inactive');
+                    }
+                    $documents[] = $documentFactory->create($value->getData());
                 }
-                if($value->getStatus() == 2){
-                    $value->setStatus('Inactive');
-                }
-                $documents[] = $documentFactory->create($value->getData());
+                $obj = new \Magento\Framework\DataObject();
+                $obj->setItems($documents);
+                $obj->setTotalCount($count);
+                return $obj;
             }
-            $obj = new \Magento\Framework\DataObject();
-            $obj->setItems($documents);
-            $obj->setTotalCount($count);
-            return $obj;
         }
         return parent::getSearchResult();
     }

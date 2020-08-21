@@ -19,14 +19,12 @@
  * @license     http://www.magestore.com/license-agreement.html
  */
 
+namespace Magestore\Rewardpoints\Helper;
+
 /**
  * RewardPoints Action Library Helper
- *
- * @category    Magestore
- * @package     Magestore_RewardPoints
- * @author      Magestore Developer
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-namespace Magestore\Rewardpoints\Helper;
 class Action extends Config
 {
 
@@ -37,7 +35,7 @@ class Action extends Config
      *
      * @var array
      */
-    protected $_config = array();
+    protected $_config = [];
 
     /**
      * Actions Array (code => label)
@@ -46,30 +44,33 @@ class Action extends Config
      */
     protected $_actions = null;
 
-
     /**
      * @var \Magento\Framework\Message\ManagerInterface
      */
     protected $messageManager;
 
-
+    /**
+     * Action constructor.
+     *
+     * @param \Magento\Framework\App\Helper\Context $context
+     * @param \Magento\Framework\Message\ManagerInterface $messageManager
+     */
     public function __construct(
         \Magento\Framework\App\Helper\Context $context,
         \Magento\Framework\Message\ManagerInterface $messageManager
-    )
-    {
+    ) {
         parent::__construct($context);
         $actionConfig = [
             // Admin - Change by Custom
-            "admin" => "\\Magestore\\Rewardpoints\\Model\\Action\\Admin",
+            "admin" => \Magestore\Rewardpoints\Model\Action\Admin::class,
             // Sales - Earning Actions
-            "earning_invoice" => "\\Magestore\\Rewardpoints\\Model\\Action\\Earning\\Invoice",
-            "earning_creditmemo" => "\\Magestore\\Rewardpoints\\Model\\Action\\Earning\\Creditmemo",
-            "earning_cancel" => "\\Magestore\\Rewardpoints\\Model\\Action\\Earning\\Cancel",
+            "earning_invoice" => \Magestore\Rewardpoints\Model\Action\Earning\Invoice::class,
+            "earning_creditmemo" => \Magestore\Rewardpoints\Model\Action\Earning\Creditmemo::class,
+            "earning_cancel" => \Magestore\Rewardpoints\Model\Action\Earning\Cancel::class,
             // Sales - Spending Actions
-            "spending_order" => "\\Magestore\\Rewardpoints\\Model\\Action\\Spending\\Order",
-            "spending_creditmemo" => "\\Magestore\\Rewardpoints\\Model\\Action\\Spending\\Creditmemo",
-            "spending_cancel" => "\\Magestore\\Rewardpoints\\Model\\Action\\Spending\\Cancel",
+            "spending_order" => \Magestore\Rewardpoints\Model\Action\Spending\Order::class,
+            "spending_creditmemo" => \Magestore\Rewardpoints\Model\Action\Spending\Creditmemo::class,
+            "spending_cancel" => \Magestore\Rewardpoints\Model\Action\Spending\Cancel::class,
         ];
         $this->_eventManager->dispatch(
             'action_config_rewardpoints',
@@ -82,12 +83,13 @@ class Action extends Config
     }
     
     /**
-     * add action config
-     * 
-     * @param array $config;
+     * Add action config
+     *
+     * @param array $configs
      * @return $this
      */
-    public function setActionConfig($configs = array()){
+    public function setActionConfig($configs = [])
+    {
         foreach ($configs as $code => $model) {
             $this->_config[$code] = (string)$model;
         }
@@ -98,15 +100,15 @@ class Action extends Config
      * Add transaction that change customer reward point balance
      *
      * @param string $actionCode
-     * @param Mage_Customer_Model_Customer $customer
-     * @param type $object
+     * @param \Magento\Customer\Model\Customer $customer
+     * @param \Magento\Framework\DataObject|null $object
      * @param array $extraContent
-     * @return Magestore_RewardPoints_Model_Transaction
+     * @return \Magestore\Rewardpoints\Model\Transaction
      */
-    public function addTransaction($actionCode, $customer, $object = null, $extraContent = array())
+    public function addTransaction($actionCode, $customer, $object = null, $extraContent = [])
     {
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $storeManager = $objectManager->create('Magento\Store\Model\StoreManagerInterface');
+        $storeManager = $objectManager->create(\Magento\Store\Model\StoreManagerInterface::class);
 //        \Varien_Profiler::start('REWARDPOINTS_HELPER_ACTION::addTransaction');
         if (!$customer->getId()) {
             $this->messageManager->addError(
@@ -114,15 +116,15 @@ class Action extends Config
             );
 
         }
+        /** @var \Magestore\Rewardpoints\Model\Action\InterfaceAction $actionModel */
         $actionModel = $this->getActionModel($actionCode);
-        /** @var $actionModel Magestore_RewardPoints_Model_Action_Interface */
-        $actionModel->setData(array(
+        $actionModel->setData([
             'customer'      => $customer,
             'action_object' => $object,
             'extra_content' => $extraContent
-        ))->prepareTransaction();
+        ])->prepareTransaction();
 
-        $transaction = $objectManager->create('Magestore\Rewardpoints\Model\Transaction');
+        $transaction = $objectManager->create(\Magestore\Rewardpoints\Model\Transaction::class);
         if (is_array($actionModel->getData('transaction_data'))) {
             $transaction->setData($actionModel->getData('transaction_data'));
         }
@@ -132,7 +134,7 @@ class Action extends Config
             $transaction->setData('store_id', $storeManager->getStore()->getId());
         }
 
-        $transaction->createTransaction(array(
+        $transaction->createTransaction([
             'customer_id'   => $customer->getId(),
             'customer'      => $customer,
             'customer_email'=> $customer->getEmail(),
@@ -141,36 +143,39 @@ class Action extends Config
             'action_type'   => $actionModel->getActionType(),
             'created_time'  => date('Y-m-d H:i:s'),
             'updated_time'  => date('Y-m-d H:i:s'),
-        ));
+        ]);
 
 //        Varien_Profiler::stop('REWARDPOINTS_HELPER_ACTION::addTransaction');
         return $transaction;
     }
 
     /**
-     * get Class Model for Action by code
+     * Get Class Model for Action by code
      *
      * @param string $code
-     * @return string
-     * @throws Exception
+     * @return string|null
+     * @throws \Exception
      */
-    public function getActionModelClass($code) {
+    public function getActionModelClass($code)
+    {
         if (isset($this->_config[$code]) && $this->_config[$code]) {
             return $this->_config[$code];
         }
         $this->messageManager->addError(
             __('Action code %1 not found on config.', $code)
         );
+        return null;
     }
 
     /**
-     * get action Model by Code
+     * Get action Model by Code
      *
      * @param string $code
-     * @return Magestore_RewardPoints_Model_Action_Interface
-     * @throws Exception
+     * @return \Magestore\Rewardpoints\Model\Action\InterfaceAction
+     * @throws \Exception
      */
-    public function getActionModel($code) {
+    public function getActionModel($code)
+    {
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $modelClass = $this->getActionModelClass($code);
         $model = $objectManager->create($modelClass);
@@ -181,14 +186,15 @@ class Action extends Config
     }
 
     /**
-     * get actions hash options
+     * Get actions hash options
      *
      * @return array
      */
-    public function getActionsHash() {
-        if (is_null($this->_actions)) {
-            $this->_actions = array();
-            foreach ($this->_config as $code => $class) {
+    public function getActionsHash()
+    {
+        if ($this->_actions === null) {
+            $this->_actions = [];
+            foreach (array_keys($this->_config) as $code) {
                 try {
                     $model = $this->getActionModel($code);
                     $this->_actions[$code] = $model->getActionLabel();
@@ -201,17 +207,18 @@ class Action extends Config
     }
 
     /**
-     * get actions array options
+     * Get actions array options
      *
      * @return array
      */
-    public function getActionsArray() {
-        $actions = array();
+    public function getActionsArray()
+    {
+        $actions = [];
         foreach ($this->getActionsHash() as $value => $label) {
-            $actions[] = array(
+            $actions[] = [
                 'value' => $value,
                 'label' => $label
-            );
+            ];
         }
         return $actions;
     }

@@ -13,7 +13,9 @@ use Psr\Log\LoggerInterface as Logger;
 use Magestore\FulfilSuccess\Api\Data\PackageInterface;
 use Magestore\FulfilSuccess\Service\Location\LocationServiceInterface;
 
-
+/**
+ * Fulfill Package Collection
+ */
 class Collection extends \Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult
 {
     /**
@@ -28,6 +30,7 @@ class Collection extends \Magento\Framework\View\Element\UiComponent\DataProvide
 
     /**
      * Collection constructor.
+     *
      * @param EntityFactory $entityFactory
      * @param Logger $logger
      * @param FetchStrategy $fetchStrategy
@@ -36,6 +39,7 @@ class Collection extends \Magento\Framework\View\Element\UiComponent\DataProvide
      * @param \Magestore\FulfilSuccess\Api\FulfilManagementInterface $fulfilManagement
      * @param string $mainTable
      * @param string $resourceModel
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function __construct(
         EntityFactory $entityFactory,
@@ -45,9 +49,8 @@ class Collection extends \Magento\Framework\View\Element\UiComponent\DataProvide
         LocationServiceInterface $locationService,
         \Magestore\FulfilSuccess\Api\FulfilManagementInterface $fulfilManagement,
         $mainTable = 'os_fulfilsuccess_package',
-        $resourceModel = 'Magestore\FulfilSuccess\Model\ResourceModel\Package\Package'
-    )
-    {
+        $resourceModel = \Magestore\FulfilSuccess\Model\ResourceModel\Package\Package::class
+    ) {
         $this->locationService = $locationService;
         $this->fulfilManagement = $fulfilManagement;
         parent::__construct($entityFactory, $logger, $fetchStrategy, $eventManager, $mainTable, $resourceModel);
@@ -71,7 +74,7 @@ class Collection extends \Magento\Framework\View\Element\UiComponent\DataProvide
                 PackageInterface::WAREHOUSE_ID,
                 'main_table.' . PackageInterface::SOURCE_CODE
             );
-        } else if ($isInventorySuccessEnable) {
+        } elseif ($isInventorySuccessEnable) {
             $this->addFilterToMap(
                 PackageInterface::WAREHOUSE_ID,
                 'main_table.' . PackageInterface::WAREHOUSE_ID
@@ -82,7 +85,7 @@ class Collection extends \Magento\Framework\View\Element\UiComponent\DataProvide
         if ($warehouseId) {
             if ($isMSIEnable) {
                 $this->addFieldToFilter(PackageInterface::SOURCE_CODE, $warehouseId);
-            } else if ($isInventorySuccessEnable) {
+            } elseif ($isInventorySuccessEnable) {
                 $this->addFieldToFilter(PackageInterface::WAREHOUSE_ID, $warehouseId);
             }
         }
@@ -108,32 +111,39 @@ class Collection extends \Magento\Framework\View\Element\UiComponent\DataProvide
     }
 
     /**
-     * rewrite add field to filters from collection
+     * Rewrite add field to filters from collection
      *
-     * @return array
+     * @param array|string $field
+     * @param array|string $condition
+     * @return Collection
      */
     public function addFieldToFilter($field, $condition = null)
     {
         if ($field == 'actions') {
             $field = 'sales_shipment_track.track_number';
-            $condition = array('eq' => trim($condition['like'], ' %'));
+            $condition = ['eq' => trim($condition['like'], ' %')];
         }
         return parent::addFieldToFilter($field, $condition);
     }
 
+    /**
+     * Get data
+     *
+     * @return array
+     */
     public function getData()
     {
         $data = parent::getData();
         $om = \Magento\Framework\App\ObjectManager::getInstance();
         /** @var \Magento\Framework\App\RequestInterface $request */
-        $timeZone = $om->get('Magento\Framework\Stdlib\DateTime\TimezoneInterface');
-        $requestInterface = $om->get('Magento\Framework\App\RequestInterface');
-        if (($requestInterface->getActionName() == 'gridToCsv') || ($requestInterface->getActionName() == 'gridToXml')) {
+        $timeZone = $om->get(\Magento\Framework\Stdlib\DateTime\TimezoneInterface::class);
+        $requestInterface = $om->get(\Magento\Framework\App\RequestInterface::class);
+        if (($requestInterface->getActionName() == 'gridToCsv')
+            || ($requestInterface->getActionName() == 'gridToXml')) {
             foreach ($data as &$item) {
                 $item['created_at'] = $timeZone->date($item['created_at'])->format('m-d-Y H:i:s');
             }
         }
         return $data;
     }
-
 }

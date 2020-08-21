@@ -184,34 +184,26 @@
             </argument>
         </column>
 
-        <column name="start_date" class="Magento\Ui\Component\Listing\Columns\Date">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="filter" xsi:type="string">dateRange</item>
-                    <item name="component" xsi:type="string">Magento_Ui/js/grid/columns/date</item>
-                    <item name="editor" xsi:type="string">date</item>
-                    <item name="dataType" xsi:type="string">date</item>
-                    <item name="timezone" xsi:type="boolean">false</item>
-                    <item name="skipTimeZoneConversion" xsi:type="boolean">true</item>
-                    <item name="label" xsi:type="string" translate="true">Start Date</item>
-                    <item name="dateFormat" xsi:type="string">MMM d, y</item>
-                </item>
-            </argument>
+        <column name="start_date" class="Magento\Ui\Component\Listing\Columns\Date" component="Magento_Ui/js/grid/columns/date">
+            <settings>
+                <timezone>false</timezone>
+                <dateFormat>MMM d, y</dateFormat>
+                <skipTimeZoneConversion>true</skipTimeZoneConversion>
+                <filter>dateRange</filter>
+                <dataType>date</dataType>
+                <label translate="true">Start Date</label>
+            </settings>
         </column>
 
-        <column name="end_date" class="Magento\Ui\Component\Listing\Columns\Date">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="filter" xsi:type="string">dateRange</item>
-                    <item name="component" xsi:type="string">Magento_Ui/js/grid/columns/date</item>
-                    <item name="editor" xsi:type="string">date</item>
-                    <item name="dataType" xsi:type="string">date</item>
-                    <item name="timezone" xsi:type="boolean">false</item>
-                    <item name="skipTimeZoneConversion" xsi:type="boolean">true</item>
-                    <item name="label" xsi:type="string" translate="true">End Date</item>
-                    <item name="dateFormat" xsi:type="string">MMM d, y</item>
-                </item>
-            </argument>
+        <column name="end_date" class="Magento\Ui\Component\Listing\Columns\Date" component="Magento_Ui/js/grid/columns/date">
+            <settings>
+                <timezone>false</timezone>
+                <dateFormat>MMM d, y</dateFormat>
+                <skipTimeZoneConversion>true</skipTimeZoneConversion>
+                <filter>dateRange</filter>
+                <dataType>date</dataType>
+                <label translate="true">End Date</label>
+            </settings>
         </column>
 
         <!--<column name="supplier_id">-->

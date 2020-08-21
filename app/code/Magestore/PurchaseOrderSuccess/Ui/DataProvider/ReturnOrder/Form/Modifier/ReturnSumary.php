@@ -9,10 +9,13 @@ namespace Magestore\PurchaseOrderSuccess\Ui\DataProvider\ReturnOrder\Form\Modifi
 use Magento\Ui\Component\Container;
 use Magento\Ui\Component\Modal;
 use Magestore\PurchaseOrderSuccess\Model\ReturnOrder\Option\Status;
+use Magestore\PurchaseOrderSuccess\Block\Adminhtml\ReturnOrder\Edit\Fieldset\ReturnSumary\Item;
 
 /**
- * Class PurchaseSumary
- * @package Magestore\PurchaseOrderSuccess\Ui\DataProvider\ReturnOrder\Form\Modifier
+ * Class ReturnSumary
+ *
+ * Used for return summary
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ReturnSumary extends AbstractModifier
 {
@@ -65,6 +68,16 @@ class ReturnSumary extends AbstractModifier
      */
     protected $jsObjectName;
 
+    /**
+     * ReturnSumary constructor.
+     *
+     * @param \Magento\Framework\ObjectManagerInterface $objectManager
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Framework\App\RequestInterface $request
+     * @param \Magento\Framework\UrlInterface $urlBuilder
+     * @param \Magento\Framework\Stdlib\DateTime\DateTime $dateTime
+     * @param \Magento\Framework\Module\Manager $moduleManager
+     */
     public function __construct(
         \Magento\Framework\ObjectManagerInterface $objectManager,
         \Magento\Framework\Registry $registry,
@@ -72,16 +85,16 @@ class ReturnSumary extends AbstractModifier
         \Magento\Framework\UrlInterface $urlBuilder,
         \Magento\Framework\Stdlib\DateTime\DateTime $dateTime,
         \Magento\Framework\Module\Manager $moduleManager
-    )
-    {
+    ) {
         parent::__construct($objectManager, $registry, $request, $urlBuilder);
         $this->_dateTime = $dateTime;
         $this->moduleManager = $moduleManager;
     }
 
     /**
-     * modify data
+     * Modify data
      *
+     * @param array $data
      * @return array
      */
     public function modifyData(array $data)
@@ -138,8 +151,10 @@ class ReturnSumary extends AbstractModifier
     }
 
     /**
+     * Get opened
      *
      * @return boolean
+     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
     public function getOpened()
     {
@@ -161,8 +176,8 @@ class ReturnSumary extends AbstractModifier
          * @var \Magento\Framework\Module\Manager $moduleManager
          */
         $moduleManager = \Magento\Framework\App\ObjectManager::getInstance()
-            ->create('Magento\Framework\Module\Manager');
-        if($moduleManager->isEnabled('Magestore_BarcodeSuccess')) {
+            ->create(\Magento\Framework\Module\Manager::class);
+        if ($moduleManager->isEnabled('Magestore_BarcodeSuccess')) {
             $children[$this->children['scan_product_modal']] = $this->getScanProductModal();
         }
 
@@ -178,13 +193,15 @@ class ReturnSumary extends AbstractModifier
     }
 
     /**
+     * Get purchase summary supplier
+     *
      * @return array
      */
     public function getPurchaseSumarySupplier()
     {
         return $this->addHtmlContentContainer(
             'return_sumary_supplier',
-            'Magestore\PurchaseOrderSuccess\Block\Adminhtml\ReturnOrder\Edit\Fieldset\ReturnSumary\Supplier'
+            \Magestore\PurchaseOrderSuccess\Block\Adminhtml\ReturnOrder\Edit\Fieldset\ReturnSumary\Supplier::class
         );
     }
 
@@ -197,7 +214,7 @@ class ReturnSumary extends AbstractModifier
     {
         return $this->addHtmlContentContainer(
             'grid_container',
-            'Magestore\PurchaseOrderSuccess\Block\Adminhtml\ReturnOrder\Edit\Fieldset\ReturnSumary'
+            \Magestore\PurchaseOrderSuccess\Block\Adminhtml\ReturnOrder\Edit\Fieldset\ReturnSumary::class
         );
     }
 
@@ -227,10 +244,16 @@ class ReturnSumary extends AbstractModifier
                         'behaviourType' => 'simple',
                         'externalFilterMode' => true,
                         'imports' => [
-                            'return_id' => '${ $.provider }:data.return_id'
+                            'return_id' => '${ $.provider }:data.return_id',
+                            '__disableTmpl' => [
+                                'return_id' => false
+                            ]
                         ],
                         'exports' => [
-                            'return_id' => '${ $.externalProvider }:params.return_id'
+                            'return_id' => '${ $.externalProvider }:params.return_id',
+                            '__disableTmpl' => [
+                                'return_id' => false
+                            ]
                         ],
                         'selectionsProvider' =>
                             $this->children['item_grid_listing']
@@ -282,16 +305,17 @@ class ReturnSumary extends AbstractModifier
                         'targetName' => $this->scopeName . '.' . $this->groupContainer
                             . '.' . $this->children['import_product_modal'],
                         'actionName' => 'openModal'
-                    ], [
-                        'targetName' => $this->scopeName . '.' . $this->groupContainer
-                            . '.' . $this->children['import_product_modal']
-                            . '.' . $this->children['import_product_form'],
-                        'actionName' => 'render'
+                    ],
+                    [
+                    'targetName' => $this->scopeName . '.' . $this->groupContainer
+                        . '.' . $this->children['import_product_modal']
+                        . '.' . $this->children['import_product_form'],
+                    'actionName' => 'render'
                     ]
                 ]
             ),
         ];
-        if ($this->objectManager->create('Magento\Framework\Module\Manager')
+        if ($this->objectManager->create(\Magento\Framework\Module\Manager::class)
             ->isEnabled('Magestore_BarcodeSuccess')
         ) {
             $children['scan_product_button'] = $this->addButton(
@@ -301,7 +325,8 @@ class ReturnSumary extends AbstractModifier
                         'targetName' => $this->scopeName . '.' . $this->groupContainer
                             . '.' . $this->children['scan_product_modal'],
                         'actionName' => 'openModal'
-                    ], [
+                    ],
+                    [
                     'targetName' => $this->scopeName . '.' . $this->groupContainer
                         . '.' . $this->children['scan_product_modal']
                         . '.' . $this->children['scan_product_form'],
@@ -332,12 +357,18 @@ class ReturnSumary extends AbstractModifier
         ];
     }
 
+    /**
+     * Get js object name
+     *
+     * @return string
+     */
     public function getJsObjectName()
     {
-        if (!$this->jsObjectName)
+        if (!$this->jsObjectName) {
             $this->jsObjectName = $this->objectManager
-                ->get('Magestore\PurchaseOrderSuccess\Block\Adminhtml\ReturnOrder\Edit\Fieldset\ReturnSumary\Item')
+                ->get(Item::class)
                 ->getJsObjectName();
+        }
         return $this->jsObjectName;
     }
 
@@ -346,6 +377,7 @@ class ReturnSumary extends AbstractModifier
      *
      * @param string $title
      * @param string $dataScope
+     * @param string $modal
      * @return array
      */
     public function addProductModal($title, $dataScope, $modal)
@@ -403,12 +435,22 @@ class ReturnSumary extends AbstractModifier
                                 'imports' => [
                                     'supplier_id' => '${ $.provider }:data.supplier_id',
                                     'return_id' => '${ $.provider }:data.return_id',
-                                    'warehouse_id' => '${ $.provider }:data.warehouse_id'
+                                    'warehouse_id' => '${ $.provider }:data.warehouse_id',
+                                    '__disableTmpl' => [
+                                        'supplier_id' => false,
+                                        'return_id' => false,
+                                        'warehouse_id' => false
+                                    ]
                                 ],
                                 'exports' => [
                                     'supplier_id' => '${ $.externalProvider }:params.supplier_id',
                                     'return_id' => '${ $.externalProvider }:params.return_id',
-                                    'warehouse_id' => '${ $.externalProvider }:params.warehouse_id'
+                                    'warehouse_id' => '${ $.externalProvider }:params.warehouse_id',
+                                    '__disableTmpl' => [
+                                        'supplier_id' => false,
+                                        'return_id' => false,
+                                        'warehouse_id' => false
+                                    ]
                                 ],
                                 'selectionsProvider' =>
                                     $this->children[$dataScope]
@@ -427,7 +469,8 @@ class ReturnSumary extends AbstractModifier
                                         'type' => 'block'
                                     ]
                                 ],
-                                'closeModal' => $this->scopeName . '.' . $this->groupContainer . '.' . $this->children[$modal]
+                                'closeModal' => $this->scopeName . '.'
+                                    . $this->groupContainer . '.' . $this->children[$modal]
                             ]
                         ]
                     ]
@@ -443,9 +486,18 @@ class ReturnSumary extends AbstractModifier
      */
     public function getAllSupplierProductModal()
     {
-        return $this->addProductModal('All Supplier Products', 'all_supplier_product_listing', 'all_supplier_product_modal');
+        return $this->addProductModal(
+            'All Supplier Products',
+            'all_supplier_product_listing',
+            'all_supplier_product_modal'
+        );
     }
 
+    /**
+     * Get import product modal
+     *
+     * @return array
+     */
     public function getImportProductModal()
     {
         return [
@@ -500,6 +552,11 @@ class ReturnSumary extends AbstractModifier
         ];
     }
 
+    /**
+     * Get scan product modal
+     *
+     * @return array
+     */
     public function getScanProductModal()
     {
         return [

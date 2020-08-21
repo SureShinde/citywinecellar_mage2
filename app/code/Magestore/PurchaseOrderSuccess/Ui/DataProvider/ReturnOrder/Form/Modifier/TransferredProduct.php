@@ -12,7 +12,8 @@ use Magestore\PurchaseOrderSuccess\Model\ReturnOrder\Option\Status;
 
 /**
  * Class TransferredProduct
- * @package Magestore\PurchaseOrderSuccess\Ui\DataProvider\ReturnOrder\Form\Modifier
+ *
+ * Used for transferred product
  */
 class TransferredProduct extends AbstractModifier
 {
@@ -43,8 +44,9 @@ class TransferredProduct extends AbstractModifier
     ];
 
     /**
-     * modify data
+     * Modify data
      *
+     * @param array $data
      * @return array
      */
     public function modifyData(array $data)
@@ -71,6 +73,11 @@ class TransferredProduct extends AbstractModifier
         return $meta;
     }
 
+    /**
+     * Get transferred product meta
+     *
+     * @return array
+     */
     public function getTransferredProductMeta()
     {
         $returnOrder = $this->getCurrentReturnOrder();
@@ -202,12 +209,13 @@ class TransferredProduct extends AbstractModifier
                             'targetName' => $this->scopeName
                                 . '.' . $this->children['transferred_product_modal'],
                             'actionName' => 'openModal'
-                        ], [
+                        ],
+                        [
                         'targetName' => $this->scopeName
                             . '.' . $this->children['transferred_product_modal']
                             . '.' . $this->children['transferred_product_modal_form'],
                         'actionName' => 'render'
-                    ]
+                        ]
                     ]
                 )
             ],
@@ -215,7 +223,7 @@ class TransferredProduct extends AbstractModifier
     }
 
     /**
-     * get transferred product list
+     * Get transferred product list
      *
      * @return array
      */
@@ -243,11 +251,19 @@ class TransferredProduct extends AbstractModifier
                         'externalFilterMode' => true,
                         'imports' => [
                             'supplier_id' => '${ $.provider }:data.supplier_id',
-                            'return_id' => '${ $.provider }:data.return_id'
+                            'return_id' => '${ $.provider }:data.return_id',
+                            '__disableTmpl' => [
+                                'supplier_id' => false,
+                                'return_id' => false
+                            ]
                         ],
                         'exports' => [
                             'supplier_id' => '${ $.externalProvider }:params.supplier_id',
-                            'return_id' => '${ $.externalProvider }:params.return_id'
+                            'return_id' => '${ $.externalProvider }:params.return_id',
+                            '__disableTmpl' => [
+                                'supplier_id' => false,
+                                'return_id' => false
+                            ]
                         ],
                         'selectionsProvider' =>
                             $this->children[$dataScope]

@@ -8,13 +8,11 @@ namespace Magestore\Giftvoucher\Model\Source;
 /**
  * Giftvoucher Displayincart Model
  *
- * @category    Magestore
- * @package     Magestore_Giftvoucher
  * @author      Magestore Developer
  */
 class DisplayInCart implements \Magento\Framework\Option\ArrayInterface
 {
-    
+
     /**
      * Get model option as array
      *
@@ -22,7 +20,7 @@ class DisplayInCart implements \Magento\Framework\Option\ArrayInterface
      */
     public function toOptionArray()
     {
-        $positions = array(
+        $positions = [
             'amount' => __('Gift Card value'),
             'giftcard_template_id' => __('Gift Card template'),
             'customer_name' => __('Sender name'),
@@ -33,14 +31,14 @@ class DisplayInCart implements \Magento\Framework\Option\ArrayInterface
             'message' => __('Custom message'),
             'day_to_send' => __('Day to send'),
             'timezone_to_send' => __('Time zone'),
-        );
-        $options = array();
+        ];
+        $options = [];
 
         foreach ($positions as $code => $label) {
-            $options[] = array(
+            $options[] = [
                 'value' => $code,
                 'label' => $label
-            );
+            ];
         }
         return $options;
     }

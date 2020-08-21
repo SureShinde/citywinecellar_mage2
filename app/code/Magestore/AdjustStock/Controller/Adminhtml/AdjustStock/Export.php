@@ -6,18 +6,20 @@
 
 namespace Magestore\AdjustStock\Controller\Adminhtml\AdjustStock;
 
+use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\App\Filesystem\DirectoryList;
 
 /**
- * Class Import
- * @package Magestore\InventorySuccess\Controller\Adminhtml\AdjustStock
+ * Class Export
+ *
+ * Export adjust stock controller
  */
-class Export extends AdjustStock
+class Export extends AdjustStock implements HttpGetActionInterface
 {
     const SAMPLE_QTY = 1;
 
     /**
-     * @return \Magento\Backend\Model\View\Result\Page
+     * @inheritDoc
      */
     public function execute()
     {
@@ -38,13 +40,13 @@ class Export extends AdjustStock
         $this->csvProcessor->saveData($filename, $data);
         return $this->fileFactory->create(
             'adjusted_products.csv',
-            file_get_contents($filename),
+            $this->driverFile->fileGetContents($filename),
             DirectoryList::VAR_DIR
         );
     }
 
     /**
-     * get csv url
+     * Get csv url
      *
      * @return string
      */
@@ -56,9 +58,10 @@ class Export extends AdjustStock
     }
 
     /**
-     * get base dir media
+     * Get base dir media
      *
-     * @return string
+     * @return \Magento\Framework\Filesystem\Directory\WriteInterface
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     public function getBaseDirMedia()
     {
@@ -66,7 +69,7 @@ class Export extends AdjustStock
     }
 
     /**
-     * get adjusted product collection
+     * Get adjusted product collection
      *
      * @param
      * @return array
@@ -74,7 +77,7 @@ class Export extends AdjustStock
     public function getProductCollection()
     {
         $adjustStockId = $this->getRequest()->getParam('id');
-        $data = array();
+        $data = [];
 
         if (isset($adjustStockId)) {
             $adjustStock = $this->adjustStockFactory->create();
@@ -82,7 +85,7 @@ class Export extends AdjustStock
             $productCollection = $adjustStock->getProductCollection();
             $number = 1;
             foreach ($productCollection as $productModel) {
-                $data[]= array(
+                $data[]= [
                     $number,
                     $productModel->getData('product_sku'),
                     $productModel->getData('product_name'),
@@ -90,7 +93,7 @@ class Export extends AdjustStock
                     $productModel->getData('old_qty'),
                     $productModel->getData('change_qty'),
                     $productModel->getData('new_qty'),
-                );
+                ];
                 $number ++;
             }
         }

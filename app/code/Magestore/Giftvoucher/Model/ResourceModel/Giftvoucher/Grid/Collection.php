@@ -13,7 +13,6 @@ use Psr\Log\LoggerInterface as Logger;
 
 /**
  * Giftcode Grid Collection
- * @package Magestore\Giftvoucher
  */
 class Collection extends \Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult
 {
@@ -30,13 +29,17 @@ class Collection extends \Magento\Framework\View\Element\UiComponent\DataProvide
     ];
 
     /**
+     * Collection constructor.
+     *
      * @param EntityFactory $entityFactory
      * @param Logger $logger
      * @param FetchStrategy $fetchStrategy
      * @param EventManager $eventManager
      * @param string $mainTable
      * @param string $resourceModel
+     *
      * @throws \Magento\Framework\Exception\LocalizedException
+     * phpcs:disable Generic.CodeAnalysis.UselessOverridingMethod
      */
     public function __construct(
         EntityFactory $entityFactory,
@@ -44,19 +47,19 @@ class Collection extends \Magento\Framework\View\Element\UiComponent\DataProvide
         FetchStrategy $fetchStrategy,
         EventManager $eventManager,
         $mainTable = 'giftvoucher',
-        $resourceModel = 'Magestore\Giftvoucher\Model\ResourceModel\Giftvoucher'
+        $resourceModel = \Magestore\Giftvoucher\Model\ResourceModel\Giftvoucher::class
     ) {
         parent::__construct($entityFactory, $logger, $fetchStrategy, $eventManager, $mainTable, $resourceModel);
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     protected function _initSelect()
     {
         $this->getSelect()->from(['main_table' => $this->getMainTable()])
             ->joinLeft(
-                array('history' => $this->getTable('giftvoucher_history')),
+                ['history' => $this->getTable('giftvoucher_history')],
                 'main_table.giftvoucher_id = history.giftvoucher_id',
                 $this->fields
             )->group('main_table.giftvoucher_id')
@@ -65,7 +68,7 @@ class Collection extends \Magento\Framework\View\Element\UiComponent\DataProvide
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function getSelectCountSql()
     {
@@ -89,7 +92,7 @@ class Collection extends \Magento\Framework\View\Element\UiComponent\DataProvide
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function addFieldToFilter($field, $condition = null)
     {
@@ -102,7 +105,7 @@ class Collection extends \Magento\Framework\View\Element\UiComponent\DataProvide
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function setOrder($field, $direction = self::SORT_ORDER_DESC)
     {

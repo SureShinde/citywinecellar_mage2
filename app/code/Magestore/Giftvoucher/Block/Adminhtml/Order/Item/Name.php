@@ -4,11 +4,10 @@
  * See COPYING.txt for license details.
  */
 namespace Magestore\Giftvoucher\Block\Adminhtml\Order\Item;
+
 /**
  * Adminhtml Giftvoucher Order Item Name Block
  *
- * @category Magestore
- * @package  Magestore_Giftvoucher
  * @module   Giftvoucher
  * @author   Magestore Developer
  */
@@ -46,6 +45,8 @@ class Name extends \Magento\Sales\Block\Adminhtml\Items\Column\Name
      * @param \Magestore\Giftvoucher\Api\GiftTemplateRepositoryInterface $giftTemplateRepository
      * @param \Magestore\Giftvoucher\Api\GiftCode\GiftCodeManagementServiceInterface $giftCodeManagementService
      * @param array $data
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
@@ -65,9 +66,13 @@ class Name extends \Magento\Sales\Block\Adminhtml\Items\Column\Name
         $this->giftCodeManagementService = $giftCodeManagementService;
         parent::__construct($context, $stockRegistry, $stockConfiguration, $registry, $optionFactory, $data);
     }
+
     /**
+     * Get Order Options
      *
      * @return array
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function getOrderOptions()
     {
@@ -84,17 +89,17 @@ class Name extends \Magento\Sales\Block\Adminhtml\Items\Column\Name
                     if ($code == 'giftcard_template_id') {
                         $giftTemplate = $this->giftTemplateRepository->getById($options[$code]);
 
-                        $result[] = array(
+                        $result[] = [
                             'label' => $label,
                             'value' => $this->_escaper->escapeHtml($giftTemplate->getTemplateName()),
                             'option_value' => $this->_escaper->escapeHtml($giftTemplate->getTemplateName()),
-                        );
+                        ];
                     } else {
-                        $result[] = array(
+                        $result[] = [
                             'label' => $label,
                             'value' => $this->_escaper->escapeHtml($options[$code]),
                             'option_value' => $this->_escaper->escapeHtml($options[$code]),
-                        );
+                        ];
                     }
                 }
             }
@@ -102,21 +107,21 @@ class Name extends \Magento\Sales\Block\Adminhtml\Items\Column\Name
 
         $giftVouchers = $this->giftCodeManagementService->getGiftCodesFromOrderItem($item);
         if (count($giftVouchers)) {
-            $giftVouchersCode = array();
+            $giftVouchersCode = [];
             foreach ($giftVouchers as $giftVoucher) {
                 $currency = $this->currencyFactory->create()->load($giftVoucher->getCurrency());
                 $balance = $giftVoucher->getBalance();
                 if ($currency) {
-                    $balance = $currency->format($balance, array(), false);
+                    $balance = $currency->format($balance, [], false);
                 }
                 $giftVouchersCode[] = $giftVoucher->getGiftCode() . ' (' . $balance . ') ';
             }
             $codes = implode(',', $giftVouchersCode);
-            $result[] = array(
+            $result[] = [
                 'label' => __('Gift Code'),
                 'value' => $this->_escaper->escapeHtml($codes),
                 'option_value' => $this->_escaper->escapeHtml($codes),
-            );
+            ];
         }
 
         return $result;

@@ -4,18 +4,18 @@
  *  See COPYING.txt for license details.
  */
 namespace Magestore\ReportSuccess\Model\HistoricalReport;
+
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Filesystem;
 use Magento\Framework\Notification\MessageInterface;
+
 /**
- * Class ConvertToCsv
- * @package Magestore\ReportSuccess\Model\HistoricalReport
+ * Historical report - Convert to csv
+ * @SuppressWarnings(PHPMD.TooManyFields)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ConvertToCsv
 {
-    /**
-     *
-     */
     const PAGE_SIZE = 200;
     /**
      * @var \Magestore\ReportSuccess\Model\ResourceModel\Report\HistoricalStock\CollectionFactory
@@ -88,6 +88,7 @@ class ConvertToCsv
 
     /**
      * ConvertToCsv constructor.
+     *
      * @param Filesystem $filesystem
      * @param \Magestore\ReportSuccess\Model\ResourceModel\Report\HistoricalStock\CollectionFactory $collectionFactory
      * @param \Magento\Framework\Archive $archive
@@ -101,6 +102,9 @@ class ConvertToCsv
      * @param \Magento\Framework\Stdlib\DateTime\DateTime $dateTime
      * @param \Magestore\ReportSuccess\Api\ReportManagementInterface $reportManagement
      * @param \Magestore\ReportSuccess\Model\ResourceModel\Report\StockDetails\Collection $collectionDetail
+     *
+     * @throws \Magento\Framework\Exception\FileSystemException
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         Filesystem $filesystem,
@@ -116,8 +120,7 @@ class ConvertToCsv
         \Magento\Framework\Stdlib\DateTime\DateTime $dateTime,
         \Magestore\ReportSuccess\Api\ReportManagementInterface $reportManagement,
         \Magestore\ReportSuccess\Model\ResourceModel\Report\StockDetails\Collection $collectionDetail
-    )
-    {
+    ) {
         $this->collectionFactory = $collectionFactory;
         $this->directory = $filesystem->getDirectoryWrite(DirectoryList::VAR_DIR);
         $this->archive = $archive;
@@ -134,16 +137,20 @@ class ConvertToCsv
         $this->reportManagement = $reportManagement;
         $this->collectionDetail = $collectionDetail;
     }
+
     /**
+     * Get Headers
+     *
      * @return array
      */
-    public function getHeaders(){
+    public function getHeaders()
+    {
         $header = [];
         $header['sku'] = 'SKU';
-        if ($this->isEnabledBarcode && $this->barcode != 'sku'){
+        if ($this->isEnabledBarcode && $this->barcode != 'sku') {
             $barcodeAttributeArray = $this->barcodeAttribute->toOptionArray();
-            foreach ($barcodeAttributeArray as $barcode){
-                if ($barcode['value'] == $this->barcode){
+            foreach ($barcodeAttributeArray as $barcode) {
+                if ($barcode['value'] == $this->barcode) {
                     $header['barcode'] = $barcode['label'];
                 }
             }
@@ -156,12 +163,17 @@ class ConvertToCsv
             'stock_value' => __('Stock Value'),
         ]);
     }
+
     /**
-     * @param null $warehouse
+     * Get Csv File
+     *
+     * @param null|\Magento\InventoryApi\Api\Data\SourceInterface $warehouse
      * @param bool $notification
      * @throws \Magento\Framework\Exception\FileSystemException
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function getCsvFile($warehouse = null, $notification = false)
     {
@@ -173,13 +185,14 @@ class ConvertToCsv
             $collection->getSelect()->joinLeft(
                 ['shipTable' => $qtyToShipSql],
                 'warehouse_product.sku = shipTable.sku and warehouse_product.source_code = shipTable.source_code',
-                '');
+                ''
+            );
             $collection->getSelect()->group('warehouse_product.sku');
             $collection->getSelect()->columns([
-                    'available_qty' => new \Zend_Db_Expr('SUM( IFNULL(warehouse_product.quantity,0) - IFNULL(shipTable.qty_to_ship,0))')]
-            );
-        }
-        else{
+                'available_qty' =>
+                    new \Zend_Db_Expr('SUM( IFNULL(warehouse_product.quantity,0) - IFNULL(shipTable.qty_to_ship,0))')
+            ]);
+        } else {
             $collection->getSelect()->columns([
                 'available_qty' => new \Zend_Db_Expr('IFNULL(IFNULL(SUM(warehouse_product.qty),0),0)')
             ]);
@@ -188,17 +201,19 @@ class ConvertToCsv
         $timeCreatedAt = $this->localeDate->date();
         $timeByTimeZone = $timeCreatedAt->format('YmdHis');
         $timeByTimeZoneFormatCsv = $timeCreatedAt->format('m/d/y h:i:s A');
-        if ($warehouse){
-            if($this->reportManagement->isMSIEnable()){
-                $collection->getSelect()->where('warehouse_product.source_code = ?',$warehouse->getSourceCode());
+        if ($warehouse) {
+            if ($this->reportManagement->isMSIEnable()) {
+                $collection->getSelect()->where('warehouse_product.source_code = ?', $warehouse->getSourceCode());
                 $warehouseName = $warehouse->getName();
                 $fileName = $warehouse->getSourceCode(). '_' .$timeByTimeZone;
-                $compressName = $warehouse->getSourceCode(). '_' .$this->localeDate->convertConfigTimeToUtc($timeCreatedAt, 'YmdHis');
-            }else{
+                $compressName = $warehouse->getSourceCode()
+                    . '_' .$this->localeDate->convertConfigTimeToUtc($timeCreatedAt, 'YmdHis');
+            } else {
                 $collection->addWarehouseToFilter($warehouse->getWarehouseId());
                 $warehouseName = $warehouse->getWarehouseName();
                 $fileName = $warehouse->getWarehouseCode(). '_' .$timeByTimeZone;
-                $compressName = $warehouse->getWarehouseCode(). '_' .$this->localeDate->convertConfigTimeToUtc($timeCreatedAt, 'YmdHis');
+                $compressName = $warehouse->getWarehouseCode()
+                    . '_' .$this->localeDate->convertConfigTimeToUtc($timeCreatedAt, 'YmdHis');
             }
             //Compress name in GMT timezone
         } else {
@@ -226,8 +241,8 @@ class ConvertToCsv
             $items = $collectionPageSize->toArray();
             foreach ($items as $item) {
                 $itemData = [];
-                foreach ($this->getHeaders() as $key => $value){
-                    if (in_array($key, array('mac', 'stock_value'))){
+                foreach (array_keys($this->getHeaders()) as $key) {
+                    if (in_array($key, ['mac', 'stock_value'])) {
                         if ($item[$key]) {
                             $item[$key] = $this->priceCurrency->format($item[$key], false, 2, null, $baseCurrencyCode);
                         } else {
@@ -245,15 +260,21 @@ class ConvertToCsv
         $stream->close();
         $fileCompress = 'historical_stock/'. $compressName . '.tgz';
         try {
-            $this->archive->pack($this->directory->getAbsolutePath($file), $this->directory->getAbsolutePath($fileCompress));
+            $this->archive->pack(
+                $this->directory->getAbsolutePath($file),
+                $this->directory->getAbsolutePath($fileCompress)
+            );
             $this->directory->delete($this->directory->getAbsolutePath($file));
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             return;
         }
-        if ($notification){
-            $this->inboxFactory->create()->add(MessageInterface::SEVERITY_NOTICE, __('Generated Historical Report Successfully.'),
-                __('A historical stock report has already been generated. Go to Historical Stock Report page to download this report.'));
+        if ($notification) {
+            $this->inboxFactory->create()->add(
+                MessageInterface::SEVERITY_NOTICE,
+                __('Generated Historical Report Successfully.'),
+                __('A historical stock report has already been generated. '
+                    . 'Go to Historical Stock Report page to download this report.')
+            );
         }
-        return;
     }
 }

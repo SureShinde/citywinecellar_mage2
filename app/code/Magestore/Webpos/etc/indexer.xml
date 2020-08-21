@@ -8,4 +8,9 @@
         <title translate="true">WebPOS Search Product</title>
         <description translate="true">Reorganize EAV product structure to search on WebPOS</description>
     </indexer>
+<!--    <indexer id="webpos_productsearch_fulltext" view_id="webpos_productsearch_fulltext" class="Magestore\Webpos\Model\Indexer\Fulltext">-->
+<!--        <title translate="true">POS Product Search</title>-->
+<!--        <description translate="true">Rebuild Catalog product fulltext search index</description>-->
+<!--        <structure class="Magestore\Webpos\Model\Indexer\IndexStructure" />-->
+<!--    </indexer>-->
 </config>

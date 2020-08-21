@@ -4,6 +4,7 @@
  * Copyright © 2018 Magestore. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace Magestore\Webpos\Model\Catalog;
 
 use Magento\Catalog\Model\ProductFactory;
@@ -17,16 +18,16 @@ use Magento\Framework\DB\Adapter\LockWaitException;
 use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\ValidatorException;
-
+use Magestore\Webpos\Api\Catalog\ProductRepositoryInterface;
 
 /**
+ * Catalog ProductRepository
+ *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @SuppressWarnings(PHPMD.TooManyFields)
  */
-class ProductRepository extends \Magento\Catalog\Model\ProductRepository
-    implements \Magestore\Webpos\Api\Catalog\ProductRepositoryInterface
+class ProductRepository extends \Magento\Catalog\Model\ProductRepository implements ProductRepositoryInterface
 {
-
     /**
      * @var \Magestore\Webpos\Model\ResourceModel\Catalog\Product\CollectionFactory
      */
@@ -75,7 +76,6 @@ class ProductRepository extends \Magento\Catalog\Model\ProductRepository
      */
     protected $filterGroupBuilder;
 
-
     protected $listAttributes = [
         'entity_id',
         'type_id',
@@ -94,7 +94,7 @@ class ProductRepository extends \Magento\Catalog\Model\ProductRepository
         'tax_class_id',
         'tier_price',
         'updated_at',
-        'weight',
+        'weight'
     ];
 
     protected $listCondition = [
@@ -110,15 +110,14 @@ class ProductRepository extends \Magento\Catalog\Model\ProductRepository
 
     protected $collectionSize = 0;
 
-
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getList(\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria)
     {
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $this->request = $objectManager->get('Magento\Framework\App\RequestInterface');
-        $this->registry = $objectManager->get('Magento\Framework\Registry');
+        $this->request = $objectManager->get(\Magento\Framework\App\RequestInterface::class);
+        $this->registry = $objectManager->get(\Magento\Framework\Registry::class);
         $this->registry->register('webpos_get_product_list', true);
         $isShowStock = (boolean)$this->request->getParam('show_stock');
         $isShowOption = (boolean)$this->request->getParam('show_option');
@@ -133,71 +132,71 @@ class ProductRepository extends \Magento\Catalog\Model\ProductRepository
             $this->registry->register('wp_is_show_stock', false);
         }
         /** @var \Magestore\Webpos\Helper\Data $helper */
-        $helper = $objectManager->get('Magestore\Webpos\Helper\Data');
+        $helper = $objectManager->get(\Magestore\Webpos\Helper\Data::class);
         $storeId = $helper->getCurrentStoreView()->getId();
         $this->prepareCollection($searchCriteria);
         $this->_productCollection->setStoreId($storeId);
-        $moduleManager = $objectManager->get('Magento\Framework\Module\Manager');
+        $moduleManager = $objectManager->get(\Magento\Framework\Module\Manager::class);
         if (!$moduleManager->isEnabled('Magestore_InventorySuccess')) {
             $this->_productCollection->addStoreFilter($storeId);
         }
         $this->_productCollection->setCurPage($searchCriteria->getCurrentPage());
         $this->_productCollection->setPageSize($searchCriteria->getPageSize());
         $searchResult = $this->searchResultsFactory->create();
+        $collectionSize = $this->_productCollection->getSize();
         $searchResult->setSearchCriteria($searchCriteria);
         $searchResult->setItems($this->_productCollection->getItems());
-        $searchResult->setTotalCount($this->_productCollection->getSize());
+        $searchResult->setTotalCount($collectionSize);
         return $searchResult;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function sync(\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria)
     {
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
 
         /** @var \Magento\Framework\App\Cache\StateInterface $cacheState */
-        $cacheState = $objectManager->get('Magento\Framework\App\Cache\StateInterface');
+        $cacheState = $objectManager->get(\Magento\Framework\App\Cache\StateInterface::class);
         if (!$cacheState->isEnabled(\Magestore\Webpos\Model\Cache\Type::TYPE_IDENTIFIER)
-            || count($searchCriteria->getFilterGroups())
-        ) {
+            || count($searchCriteria->getFilterGroups())) {
             return $this->getList($searchCriteria);
         }
 
         /** @var \Magento\Framework\App\CacheInterface $cache */
-        $cache = $objectManager->get('Magento\Framework\App\CacheInterface');
-        /** @var \Magento\Framework\Serialize\SerializerInterface $serializer */
-        /*$serializer = $objectManager->get('Magento\Framework\Serialize\SerializerInterface');*/
+        $cache = $objectManager->get(\Magento\Framework\App\CacheInterface::class);
 
         /** @var \Magestore\Webpos\Api\Staff\SessionRepositoryInterface $sessionRepository */
-        $sessionRepository = $objectManager->get('\Magestore\Webpos\Api\Staff\SessionRepositoryInterface');
-        $this->request = $objectManager->get('Magento\Framework\App\RequestInterface');
-        $session = $sessionRepository->getBySessionId($this->request->getParam(\Magestore\WebposIntegration\Controller\Rest\RequestProcessor::SESSION_PARAM_KEY));
+        $sessionRepository = $objectManager->get(\Magestore\Webpos\Api\Staff\SessionRepositoryInterface::class);
+        $this->request = $objectManager->get(\Magento\Framework\App\RequestInterface::class);
+        $session = $sessionRepository->getBySessionId(
+            $this->request->getParam(
+                \Magestore\WebposIntegration\Controller\Rest\RequestProcessor::SESSION_PARAM_KEY
+            )
+        );
         $locationId = $session->getLocationId();
 
-        $this->_moduleManager = $objectManager->get('Magento\Framework\Module\Manager');
-        if (!$this->_moduleManager->isEnabled('Magestore_InventorySuccess')) {
-//            $locationId = Stock::DEFAULT_STOCK_ID;
-        }
+        $this->_moduleManager = $objectManager->get(\Magento\Framework\Module\Manager::class);
+
         /** @var \Magestore\Webpos\Api\WebposManagementInterface $webposManagement */
-        $webposManagement = $objectManager->get('Magestore\Webpos\Api\WebposManagementInterface');
+        $webposManagement = $objectManager->get(\Magestore\Webpos\Api\WebposManagementInterface::class);
         if ($webposManagement->isMSIEnable()) {
             /** @var \Magestore\Webpos\Api\MultiSourceInventory\StockManagementInterface $stockManagement */
-            $stockManagement = $objectManager->get('Magestore\Webpos\Api\MultiSourceInventory\StockManagementInterface');
+            $stockManagement = $objectManager->get(
+                \Magestore\Webpos\Api\MultiSourceInventory\StockManagementInterface::class
+            );
             $locationId = $stockManagement->getStockId();
         }
 
         /** @var \Magestore\Webpos\Helper\Data $helper */
-        $helper = $objectManager->get('Magestore\Webpos\Helper\Data');
+        $helper = $objectManager->get(\Magestore\Webpos\Helper\Data::class);
         $key = 'syncProducts-' . $searchCriteria->getPageSize() . '-'
             . $searchCriteria->getCurrentPage() . '-'
             . $locationId . '-'
             . $helper->getCurrentStoreView()->getId();
 
         if ($response = $cache->load($key)) {
-            // Reponse from cache
-//            return $serializer->unserialize($response);
             return json_decode($response, true);
         }
 
@@ -205,8 +204,8 @@ class ProductRepository extends \Magento\Catalog\Model\ProductRepository
         $flag = \Magestore\Webpos\Api\SyncInterface::QUEUE_NAME;
         if ($cachedAt = $cache->load($flag)) {
             return [
-                'async_stage'   => 2, // processing
-                'cached_at'     => $cachedAt, // process started time
+                'async_stage' => 2, // processing
+                'cached_at' => $cachedAt, // process started time
             ];
         }
 
@@ -215,15 +214,14 @@ class ProductRepository extends \Magento\Catalog\Model\ProductRepository
         $cache->save($cachedAt, $flag, [\Magestore\Webpos\Model\Cache\Type::CACHE_TAG], 300);
 
         /** @var \Magento\Framework\Webapi\ServiceOutputProcessor $processor */
-        $processor = $objectManager->get('Magento\Framework\Webapi\ServiceOutputProcessor');
+        $processor = $objectManager->get(\Magento\Framework\Webapi\ServiceOutputProcessor::class);
         $outputData = $processor->process(
             $this->getList($searchCriteria),
-            'Magestore\Webpos\Api\Catalog\ProductRepositoryInterface',
+            ProductRepositoryInterface::class,
             'sync'
         );
         $outputData['cached_at'] = $cachedAt;
         $cache->save(
-//            $serializer->serialize($outputData),
             json_encode($outputData),
             $key,
             [
@@ -237,16 +235,18 @@ class ProductRepository extends \Magento\Catalog\Model\ProductRepository
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getProductsWithoutOptions(\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria)
     {
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $this->_moduleManager = $objectManager->get('Magento\Framework\Module\Manager');
-        $this->_productCollection = $objectManager->create('Magestore\Webpos\Model\ResourceModel\Catalog\Product\Collection');
+        $this->_moduleManager = $objectManager->get(\Magento\Framework\Module\Manager::class);
+        $this->_productCollection = $objectManager->create(
+            \Magestore\Webpos\Model\ResourceModel\Catalog\Product\Collection::class
+        );
         $this->prepareCollection($searchCriteria);
         /** @var \Magestore\Webpos\Helper\Data $helper */
-        $helper = $objectManager->get('Magestore\Webpos\Helper\Data');
+        $helper = $objectManager->get(\Magestore\Webpos\Helper\Data::class);
         $storeId = $helper->getCurrentStoreView()->getId();
         $this->_productCollection->setStoreId($storeId);
         $this->_productCollection->setCurPage($searchCriteria->getCurrentPage());
@@ -255,33 +255,46 @@ class ProductRepository extends \Magento\Catalog\Model\ProductRepository
         if (!$this->_moduleManager->isEnabled('Magestore_InventorySuccess')) {
             $this->_productCollection->addStoreFilter($storeId);
             $this->_productCollection->getSelect()->joinLeft(
-                array('stock_item' => $this->_productCollection->getTable('cataloginventory_stock_item')),
+                ['stock_item' => $this->_productCollection->getTable('cataloginventory_stock_item')],
                 'e.entity_id = stock_item.product_id AND stock_item.stock_id = "' . Stock::DEFAULT_STOCK_ID . '"',
-                array('qty', 'manage_stock', 'backorders', 'min_sale_qty', 'max_sale_qty', 'is_in_stock',
-                    'enable_qty_increments', 'qty_increments', 'is_qty_decimal')
+                [
+                    'qty',
+                    'manage_stock',
+                    'backorders',
+                    'min_sale_qty',
+                    'max_sale_qty',
+                    'is_in_stock',
+                    'enable_qty_increments',
+                    'qty_increments',
+                    'is_qty_decimal'
+                ]
             );
         }
         $searchResult = $this->searchResultsFactory->create();
         $searchResult->setSearchCriteria($searchCriteria);
-        $searchResult->setItems($this->_productCollection->getItems());
         $searchResult->setTotalCount($this->_productCollection->getSize());
+        $searchResult->setItems($this->_productCollection->getItems());
         return $searchResult;
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function prepareCollection($searchCriteria)
     {
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         /** @var \Magestore\Webpos\Api\Staff\SessionRepositoryInterface $sessionRepository */
-        $sessionRepository = $objectManager->get('\Magestore\Webpos\Api\Staff\SessionRepositoryInterface');
-        $session = $sessionRepository->getBySessionId($this->request->getParam(\Magestore\WebposIntegration\Controller\Rest\RequestProcessor::SESSION_PARAM_KEY));
+        $sessionRepository = $objectManager->get(\Magestore\Webpos\Api\Staff\SessionRepositoryInterface::class);
+        $session = $sessionRepository->getBySessionId(
+            $this->request->getParam(\Magestore\WebposIntegration\Controller\Rest\RequestProcessor::SESSION_PARAM_KEY)
+        );
 
-        $this->weeTax = $objectManager->create('Magento\Weee\Model\Tax');
+        $this->weeTax = $objectManager->create(\Magento\Weee\Model\Tax::class);
         if (empty($this->_productCollection)) {
-            $this->_productCollection = $objectManager->create('Magestore\Webpos\Model\ResourceModel\Catalog\Product\Collection');
-            $this->_eventManagerInterFace = $objectManager->get('Magento\Framework\Event\ManagerInterface');
+            $this->_productCollection = $objectManager->create(
+                \Magestore\Webpos\Model\ResourceModel\Catalog\Product\Collection::class
+            );
+            $this->_eventManagerInterFace = $objectManager->get(\Magento\Framework\Event\ManagerInterface::class);
             $this->_eventManagerInterFace->dispatch(
                 'webpos_catalog_product_getlist',
                 ['collection' => $this->_productCollection, 'is_new' => true, 'location' => $session->getLocationId()]
@@ -294,10 +307,17 @@ class ProductRepository extends \Magento\Catalog\Model\ProductRepository
             if (count($weeTax)) {
                 $this->_productCollection->addAttributeToSelect($weeTax);
             }
-            // $this->_productCollection->addAttributeToSort('name', 'ASC');
-            $this->_productCollection->joinAttribute('status', 'catalog_product/status', 'entity_id', null, 'inner');
-            $this->_productCollection->addAttributeToFilter('status', \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED);
-            // $this->_productCollection->setVisibility(4);
+            $this->_productCollection->joinAttribute(
+                'status',
+                'catalog_product/status',
+                'entity_id',
+                null,
+                'inner'
+            );
+            $this->_productCollection->addAttributeToFilter(
+                'status',
+                \Magento\Catalog\Model\Product\Attribute\Source\Status::STATUS_ENABLED
+            );
             $this->_productCollection->addVisibleFilter(); // filter visible on pos
             foreach ($searchCriteria->getFilterGroups() as $group) {
                 $this->addFilterGroupToCollection($group, $this->_productCollection);
@@ -307,17 +327,22 @@ class ProductRepository extends \Magento\Catalog\Model\ProductRepository
                 $field = $sortOrder->getField();
                 $this->_productCollection->addOrder(
                     $field,
-                    ($sortOrder->getDirection() == SortOrder::SORT_ASC) ? 'ASC' : 'DESC'
+                    ($sortOrder->getDirection() == SortOrder::SORT_ASC) ? SortOrder::SORT_ASC : SortOrder::SORT_DESC
                 );
             }
-            $this->_productCollection->addAttributeToFilter('type_id', ['in' => $this->getProductTypeIds()]);
+            /** @var \Magestore\Webpos\Helper\Data $webposHelper */
+            $webposHelper = \Magento\Framework\App\ObjectManager::getInstance()
+                ->get(\Magestore\Webpos\Helper\Data::class);
+            $productTypeIds = $webposHelper->getProductTypeIds();
+            $this->_productCollection->addAttributeToFilter('type_id', ['in' => $productTypeIds]);
 
             $this->filterProductByStockAndSource($this->_productCollection);
         }
     }
 
     /**
-     * get product attributes to select
+     * Get product attributes to select
+     *
      * @return array
      */
     public function getSelectProductAtrributes()
@@ -338,8 +363,10 @@ class ProductRepository extends \Magento\Catalog\Model\ProductRepository
     }
 
     /**
-     * get product type ids to support
+     * Get product type ids to support
+     *
      * @return array
+     * @deprecated Moved to \Magestore\Webpos\Helper\Data
      */
     public function getProductTypeIds()
     {
@@ -350,7 +377,9 @@ class ProductRepository extends \Magento\Catalog\Model\ProductRepository
             \Magento\Catalog\Model\Product\Type::TYPE_BUNDLE,
             \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE
         ];
-        if (\Magento\Framework\App\ObjectManager::getInstance()->get('Magestore\Webpos\Helper\Data')->isEnabledGiftCard()) {
+        /** @var \Magestore\Webpos\Helper\Data $webposHelper */
+        $webposHelper = \Magento\Framework\App\ObjectManager::getInstance()->get(\Magestore\Webpos\Helper\Data::class);
+        if ($webposHelper->isEnabledGiftCard()) {
             $types[] = \Magestore\Giftvoucher\Model\Product\Type\Giftvoucher::GIFT_CARD_TYPE;
         }
         return $types;
@@ -369,8 +398,8 @@ class ProductRepository extends \Magento\Catalog\Model\ProductRepository
     public function getProductById($id, $editMode = false, $storeId = null, $forceReload = false)
     {
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $this->_webposProduct = $objectManager->get('Magestore\Webpos\Model\Catalog\Product');
-        $this->registry = $objectManager->get('Magento\Framework\Registry');
+        $this->_webposProduct = $objectManager->get(\Magestore\Webpos\Model\Catalog\Product::class);
+        $this->registry = $objectManager->get(\Magento\Framework\Registry::class);
         $this->registry->register('webpos_get_product_by_id', true);
         $this->registry->register('wp_is_show_stock', true);
         $this->registry->register('wp_is_show_options', true);
@@ -405,20 +434,19 @@ class ProductRepository extends \Magento\Catalog\Model\ProductRepository
     public function getOptions($id, $editMode = false, $storeId = null)
     {
         $product = $this->getProductById($id, $editMode, $storeId);
-        $data = array();
+        $data = [];
         $data['custom_options'] = $this->getCustomOptions($product);
         if ($product->getTypeId() == \Magento\Catalog\Model\Product\Type::TYPE_BUNDLE) {
             $data['bundle_options'] = $product->getBundleOptions();
         }
-        /*if ($product->getTypeId() == \Magento\GroupedProduct\Model\Product\Type\Grouped::TYPE_CODE) {
-            $data['grouped_options'] = $product->getGroupedOptions();
-        }*/
         if ($product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) {
             $data['configurable_options'] = $product->getConfigOptions();
             /*$data['json_config'] = $product->getJsonConfig();*/
             $data['price_config'] = $product->getPriceConfig();
         }
-        if (\Magento\Framework\App\ObjectManager::getInstance()->get('Magestore\Webpos\Helper\Data')->isEnabledGiftCard()) {
+        /** @var \Magestore\Webpos\Helper\Data $webposHelper */
+        $webposHelper = \Magento\Framework\App\ObjectManager::getInstance()->get(\Magestore\Webpos\Helper\Data::class);
+        if ($webposHelper->isEnabledGiftCard()) {
             if ($product->getTypeId() == \Magestore\Giftvoucher\Model\Product\Type\Giftvoucher::GIFT_CARD_TYPE) {
                 $data['gift_card_price_config'] = $product->getGiftCardPriceConfig();
             }
@@ -426,18 +454,18 @@ class ProductRepository extends \Magento\Catalog\Model\ProductRepository
         return \Zend_Json::encode($data);
     }
 
-
     /**
-     * get custom options
-     * @params \Magestore\Webpos\Api\Data\Catalog\ProductInterface $product
+     * Get custom options
+     *
+     * @param \Magestore\Webpos\Api\Data\Catalog\ProductInterface $product
      * @return array
      */
     public function getCustomOptions($product)
     {
         $customOptions = $product->getOptions();
-        $options = array();
+        $options = [];
         foreach ($customOptions as $child) {
-            $values = array();
+            $values = [];
             if ($child->getValues()) {
                 foreach ($child->getValues() as $value) {
                     $values[] = $value->getData();
@@ -459,8 +487,7 @@ class ProductRepository extends \Magento\Catalog\Model\ProductRepository
     public function addFilterGroupToCollection(
         \Magento\Framework\Api\Search\FilterGroup $filterGroup,
         \Magento\Catalog\Model\ResourceModel\Product\Collection $collection
-    )
-    {
+    ) {
         $fields = [];
         $categoryFilter = [];
         $searchString = '';
@@ -541,7 +568,7 @@ class ProductRepository extends \Magento\Catalog\Model\ProductRepository
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      */
@@ -633,6 +660,23 @@ class ProductRepository extends \Magento\Catalog\Model\ProductRepository
         return $this->get($product->getSku(), false, $product->getStoreId());
     }
 
+    /**
+     * Create
+     *
+     * @param \Magento\Catalog\Api\Data\ProductInterface $product
+     * @param bool $saveOptions
+     * @return \Magento\Catalog\Api\Data\ProductInterface|\Magento\Catalog\Model\Product
+     * @throws CouldNotSaveException
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
+     * @throws \Magento\Eav\Model\Entity\Attribute\Exception
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\StateException
+     * @throws \Magento\Framework\Exception\TemporaryState\CouldNotSaveException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function create(\Magento\Catalog\Api\Data\ProductInterface $product, $saveOptions = false)
     {
         /** @var \Magestore\Webpos\Model\Catalog\Product $product */
@@ -646,7 +690,7 @@ class ProductRepository extends \Magento\Catalog\Model\ProductRepository
             $productLinks = $product->getProductLinks();
         }
         $productDataArray['store_id'] = (int)$this->storeManager->getStore()->getId();
-        $product = $this->initializeProductData($productDataArray, empty($existingProduct));
+        $product = $this->initializeProductData($productDataArray, true);
 
         $this->processLinks($product, $productLinks);
         if (isset($productDataArray['media_gallery'])) {
@@ -708,18 +752,23 @@ class ProductRepository extends \Magento\Catalog\Model\ProductRepository
     }
 
     /**
+     * Filter Product By Stock And Source
+     *
      * @param \Magestore\Webpos\Model\ResourceModel\Catalog\Product\Collection $collection
      */
     public function filterProductByStockAndSource($collection)
     {
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         /** @var \Magestore\Webpos\Api\MultiSourceInventory\StockManagementInterface $stockManagement */
-        $stockManagement = $objectManager->get('Magestore\Webpos\Api\MultiSourceInventory\StockManagementInterface');
+        $stockManagement = $objectManager->get(
+            \Magestore\Webpos\Api\MultiSourceInventory\StockManagementInterface::class
+        );
         $stockId = $stockManagement->getStockId();
         if ($stockId) {
-            $resource = $objectManager->create('Magento\Framework\App\ResourceConnection');
-            $stockTable = $objectManager->get('Magento\InventoryIndexer\Model\StockIndexTableNameResolverInterface')
-                ->execute($stockId);
+            $resource = $objectManager->create(\Magento\Framework\App\ResourceConnection::class);
+            $stockTable = $objectManager->get(
+                \Magento\InventoryIndexer\Model\StockIndexTableNameResolverInterface::class
+            )->execute($stockId);
             $sourceItemTable = $resource->getTableName('inventory_source_item');
             $linkedSources = $stockManagement->getLinkedSourceCodesByStockId($stockId);
             $collection->getSelect()

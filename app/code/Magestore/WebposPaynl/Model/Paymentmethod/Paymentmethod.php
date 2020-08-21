@@ -13,7 +13,7 @@ use Magestore\WebposPaynl\Model\Config;
 /**
  * Description of AbstractPaymentMethod
  *
- * @author Andy Pieters <andy@pay.nl>
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class PaymentMethod extends AbstractMethod
 {
@@ -27,14 +27,31 @@ class PaymentMethod extends AbstractMethod
     protected $paynlConfig;
 
     /**
-* @var \Magento\Sales\Model\OrderRepository
-*/
+     * @var \Magento\Sales\Model\OrderRepository
+     */
     protected $orderRepository;
     /**
      * @var \Magento\Sales\Model\Order\Config
      */
     protected $orderConfig;
 
+    /**
+     * PaymentMethod constructor.
+     *
+     * @param \Magento\Framework\Model\Context $context
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory
+     * @param \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory
+     * @param \Magento\Payment\Helper\Data $paymentData
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param \Magento\Payment\Model\Method\Logger $logger
+     * @param Order\Config $orderConfig
+     * @param \Magento\Sales\Model\OrderRepository $orderRepository
+     * @param \Magento\Framework\Model\ResourceModel\AbstractResource|null $resource
+     * @param \Magento\Framework\Data\Collection\AbstractDb|null $resourceCollection
+     * @param array $data
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
+     */
     public function __construct(
         \Magento\Framework\Model\Context $context,
         \Magento\Framework\Registry $registry,
@@ -50,24 +67,42 @@ class PaymentMethod extends AbstractMethod
         array $data = []
     ) {
         parent::__construct(
-            $context, $registry, $extensionFactory, $customAttributeFactory,
-            $paymentData, $scopeConfig, $logger, $resource, $resourceCollection, $data );
+            $context,
+            $registry,
+            $extensionFactory,
+            $customAttributeFactory,
+            $paymentData,
+            $scopeConfig,
+            $logger,
+            $resource,
+            $resourceCollection,
+            $data
+        );
 
         $this->orderRepository = $orderRepository;
         $this->orderConfig = $orderConfig;
         $this->paynlConfig = new Config($this->_scopeConfig);
     }
 
-    public function getState($status){
+    /**
+     * Get State
+     *
+     * @param string $status
+     * @return bool|mixed
+     */
+    public function getState($status)
+    {
         $validStates = [
             Order::STATE_NEW,
             Order::STATE_PENDING_PAYMENT,
             Order::STATE_HOLDED
         ];
 
-        foreach($validStates as $state){
+        foreach ($validStates as $state) {
             $statusses = $this->orderConfig->getStateStatuses($state, false);
-            if(in_array($status, $statusses)) return $state;
+            if (in_array($status, $statusses)) {
+                return $state;
+            }
         }
         return false;
     }
@@ -81,9 +116,28 @@ class PaymentMethod extends AbstractMethod
     {
         return trim($this->getConfigData('instructions'));
     }
-    public function getBanks(){
+
+    /**
+     * Get bank
+     *
+     * @return array
+     */
+    public function getBanks()
+    {
         return [];
     }
+
+    /**
+     * Initialize
+     *
+     * @param string $paymentAction
+     * @param \Magento\Framework\DataObject $stateObject
+     * @return PaymentMethod
+     * @throws \Magento\Framework\Exception\AlreadyExistsException
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     public function initialize($paymentAction, $stateObject)
     {
         $status = $this->getConfigData('order_status');
@@ -96,11 +150,11 @@ class PaymentMethod extends AbstractMethod
 
         $payment = $this->getInfoInstance();
         /** @var Order $order */
-        $order   = $payment->getOrder();
+        $order = $payment->getOrder();
 
-        if($sendEmail == 'after_payment') {
+        if ($sendEmail == 'after_payment') {
             //prevent sending the order confirmation
-            $order->setCanSendNewEmailFlag( false );
+            $order->setCanSendNewEmailFlag(false);
         }
 
         $this->orderRepository->save($order);
@@ -108,41 +162,66 @@ class PaymentMethod extends AbstractMethod
         return parent::initialize($paymentAction, $stateObject);
     }
 
+    /**
+     * Refund
+     *
+     * @param \Magento\Payment\Model\InfoInterface $payment
+     * @param float $amount
+     * @return bool|PaymentMethod
+     */
     public function refund(\Magento\Payment\Model\InfoInterface $payment, $amount)
     {
         $this->paynlConfig->configureSDK();
 
         $transactionId = $payment->getParentTransactionId();
 
-        \Paynl\Transaction::refund($transactionId, $amount);
+        \Paynl\Transaction::refund($transactionId, $amount); // phpstan:ignore
 
         return true;
     }
-    public function startTransaction($order, $total, $currency, $bankId) {
 
+    /**
+     * StartTransaction
+     *
+     * @param \Magento\Sales\Model\Order $order
+     * @param float $total
+     * @param string $currency
+     * @param int $bankId
+     * @return mixed
+     * @throws \Magento\Framework\Exception\AlreadyExistsException
+     * @throws \Magento\Framework\Exception\InputException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function startTransaction($order, $total, $currency, $bankId)
+    {
         $transaction = $this->doStartTransaction($order, $total, $currency, $bankId);
 
         $holded = $this->_scopeConfig->getValue('payment/' . $this->_code . '/holded', 'store');
-        if($holded){
+        if ($holded) {
             $order->hold();
         }
         $this->orderRepository->save($order);
 
         return $transaction->getRedirectUrl();
     }
+
+    /**
+     * Do Start Transaction
+     *
+     * @param \Magento\Sales\Model\Order $order
+     * @param float $total
+     * @param string $currency
+     * @param int $bankId
+     * @return mixed
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
     public function doStartTransaction($order, $total, $currency, $bankId)
     {
         $this->paynlConfig->configureSDK();
-//        $additionalData = $order->getPayment()->getAdditionalInformation();
         $expireDate = '';
-//        if(isset($additionalData['bank_id']) && is_numeric($additionalData['bank_id'])){
-//            $bankId = $additionalData['bank_id'];
-//        }
-//        if(isset($additionalData['valid_days']) && is_numeric($additionalData['valid_days'])){
-//            $expireDate = new \DateTime('+'.$additionalData['valid_days'].' days');
-//        }
 
-//        $total = $order->getGrandTotal();
         $items = $order->getAllVisibleItems();
 
         $orderId = $order->getIncrementId();
@@ -151,9 +230,8 @@ class PaymentMethod extends AbstractMethod
         $store = $order->getStore();
         $baseUrl = $store->getBaseUrl();
         // i want to use the url builder here, but that doenst work from admin, even if the store is supplied
-        $returnUrl = $baseUrl.'paynl/checkout/finish/';
-        $exchangeUrl = $baseUrl.'paynl/checkout/exchange/';
-//        $paymentOptionId = $this->getPaymentOptionId();
+        $returnUrl = $baseUrl . 'paynl/checkout/finish/';
+        $exchangeUrl = $baseUrl . 'paynl/checkout/exchange/';
 
         $arrBillingAddress = $order->getBillingAddress();
         if ($arrBillingAddress) {
@@ -162,25 +240,24 @@ class PaymentMethod extends AbstractMethod
             // Use default initials
             $strBillingFirstName = substr($arrBillingAddress['firstname'], 0, 1);
 
-            $enduser = array(
+            $enduser = [
                 'initials' => $strBillingFirstName,
                 'lastName' => $arrBillingAddress['lastname'],
                 'phoneNumber' => $arrBillingAddress['telephone'],
                 'emailAddress' => $arrBillingAddress['email'],
-            );
+            ];
 
-            $invoiceAddress = array(
+            $invoiceAddress = [
                 'initials' => $strBillingFirstName,
                 'lastName' => $arrBillingAddress['lastname']
-            );
+            ];
 
-            $arrAddress = \Paynl\Helper::splitAddress($arrBillingAddress['street']);
+            $arrAddress = \Paynl\Helper::splitAddress($arrBillingAddress['street']); // phpstan:ignore
             $invoiceAddress['streetName'] = $arrAddress[0];
             $invoiceAddress['houseNumber'] = $arrAddress[1];
             $invoiceAddress['zipCode'] = $arrBillingAddress['postcode'];
             $invoiceAddress['city'] = $arrBillingAddress['city'];
             $invoiceAddress['country'] = $arrBillingAddress['country_id'];
-
         }
 
         $arrShippingAddress = $order->getShippingAddress();
@@ -190,20 +267,19 @@ class PaymentMethod extends AbstractMethod
             // Use default initials
             $strShippingFirstName = substr($arrShippingAddress['firstname'], 0, 1);
 
-            $shippingAddress = array(
+            $shippingAddress = [
                 'initials' => $strShippingFirstName,
                 'lastName' => $arrShippingAddress['lastname']
-            );
-            $arrAddress2 = \Paynl\Helper::splitAddress($arrShippingAddress['street']);
+            ];
+            $arrAddress2 = \Paynl\Helper::splitAddress($arrShippingAddress['street']); // phpstan:ignore
             $shippingAddress['streetName'] = $arrAddress2[0];
             $shippingAddress['houseNumber'] = $arrAddress2[1];
             $shippingAddress['zipCode'] = $arrShippingAddress['postcode'];
             $shippingAddress['city'] = $arrShippingAddress['city'];
             $shippingAddress['country'] = $arrShippingAddress['country_id'];
-
         }
 
-        $data = array(
+        $data = [
             'amount' => $total,
             'returnUrl' => $returnUrl,
             'paymentMethod' => 1729,
@@ -216,29 +292,29 @@ class PaymentMethod extends AbstractMethod
             'extra3' => $order->getEntityId(),
             'exchangeUrl' => $exchangeUrl,
             'currency' => $currency,
-        );
-        if(isset($shippingAddress)){
+        ];
+        if (isset($shippingAddress)) {
             $data['address'] = $shippingAddress;
         }
-        if(isset($invoiceAddress)) {
+        if (isset($invoiceAddress)) {
             $data['invoiceAddress'] = $invoiceAddress;
         }
-        if(isset($enduser)){
+        if (isset($enduser)) {
             $data['enduser'] = $enduser;
         }
-        $arrProducts = array();
+        $arrProducts = [];
         foreach ($items as $item) {
             $arrItem = $item->toArray();
             if ($arrItem['price_incl_tax'] != null) {
                 // taxamount is not valid, because on discount it returns the taxamount after discount
                 $taxAmount = $arrItem['price_incl_tax'] - $arrItem['price'];
-                $product = array(
+                $product = [
                     'id' => $arrItem['product_id'],
                     'name' => $arrItem['name'],
                     'price' => $arrItem['price_incl_tax'],
                     'qty' => $arrItem['qty'],
                     'tax' => $taxAmount,
-                );
+                ];
                 $arrProducts[] = $product;
             }
         }
@@ -248,14 +324,14 @@ class PaymentMethod extends AbstractMethod
         $shippingTax = $order->getShippingTaxAmount();
         $shippingDescription = $order->getShippingDescription();
 
-        if($shippingCost != 0) {
-            $arrProducts[] = array(
+        if ($shippingCost != 0) {
+            $arrProducts[] = [
                 'id' => 'shipping',
                 'name' => $shippingDescription,
                 'price' => $shippingCost,
                 'qty' => 1,
                 'tax' => $shippingTax
-            );
+            ];
         }
 
         // kortingen
@@ -263,13 +339,13 @@ class PaymentMethod extends AbstractMethod
         $discountDescription = $order->getDiscountDescription();
 
         if ($discount != 0) {
-            $arrProducts[] = array(
+            $arrProducts[] = [
                 'id' => 'discount',
                 'name' => $discountDescription,
                 'price' => $discount,
                 'qty' => 1,
                 'tax' => $order->getDiscountTaxCompensationAmount() * -1
-            );
+            ];
         }
 
         $data['products'] = $arrProducts;
@@ -279,15 +355,20 @@ class PaymentMethod extends AbstractMethod
         }
         $ipAddress = $order->getRemoteIp();
         //The ip address field in magento is too short, if the ip is invalid, get the ip myself
-        if(!filter_var($ipAddress, FILTER_VALIDATE_IP)){
-            $ipAddress = \Paynl\Helper::getIp();
+        if (!filter_var($ipAddress, FILTER_VALIDATE_IP)) {
+            $ipAddress = \Paynl\Helper::getIp(); // phpstan:ignore
         }
         $data['ipaddress'] = $ipAddress;
-        $transaction = \Paynl\Transaction::start($data);
+        $transaction = \Paynl\Transaction::start($data); // phpstan:ignore
 
         return $transaction;
     }
 
+    /**
+     * GetPaymentOptionId
+     *
+     * @return int|float|string
+     */
     public function getPaymentOptionId()
     {
         return $this->getConfigData('payment_option_id');

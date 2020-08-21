@@ -8,63 +8,58 @@ namespace Magestore\Giftvoucher\Model\Source;
 
 /**
  * Class GiftCardTypeOptions
- * @package Magestore\Giftvoucher\Model\Source
+ *
+ * Source - Gift card type options model
  */
 class GiftCardTypeOptions extends \Magento\Eav\Model\Entity\Attribute\Source\AbstractSource
 {
-    /**
-     *
-     */
     const TYPE_PHYSICAL = 1;
-    /**
-     *
-     */
     const TYPE_VIRTUAL = 2;
-    /**
-     *
-     */
     const TYPE_COMBINE= 3;
+
     /**
      * Get the gift card's type
      *
      * @return array
      */
-    public static function getOptionArray()
+    public function getOptionArray()
     {
-        return array(
+        return [
             self::TYPE_PHYSICAL => __('Physical'),
             self::TYPE_VIRTUAL => __('Virtual'),
             self::TYPE_COMBINE=> __('Combine'),
-        );
+        ];
     }
 
     /**
+     * Get All Options
+     *
      * @param bool $withEmpty
      * @return array
      */
     public function getAllOptions($withEmpty = true)
     {
-        if (is_null($this->_options)) {
-            $this->_options = array(
-                array(
+        if ($this->_options === null) {
+            $this->_options = [
+                [
                     'label' => __('Physical'),
                     'value' => self::TYPE_PHYSICAL
-                ),
-                array(
+                ],
+                [
                     'label' => __('Virtual'),
                     'value' => self::TYPE_VIRTUAL
-                ),
-                array(
+                ],
+                [
                     'label' => __('Combine'),
                     'value' => self::TYPE_COMBINE
-                ),
-            );
+                ],
+            ];
         }
         if ($withEmpty) {
-            array_unshift($this->_options, array(
+            array_unshift($this->_options, [
                 'value' => '',
                 'label' => __('-- Please Select --'),
-            ));
+            ]);
         }
         return $this->_options;
     }

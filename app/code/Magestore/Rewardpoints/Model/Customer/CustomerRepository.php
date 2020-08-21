@@ -26,14 +26,18 @@
 
 namespace Magestore\Rewardpoints\Model\Customer;
 
-
 use Magestore\Rewardpoints\Api\CustomerRepositoryInterface;
 use Magestore\Rewardpoints\Api\Data\Customer\CustomerInterface;
+use Magestore\Rewardpoints\Api\Data\Customer\CustomerSearchResultsInterfaceFactory;
 
+/**
+ * Customer repository model
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class CustomerRepository implements CustomerRepositoryInterface
 {
     /**
-     * @var \Magestore\Rewardpoints\Api\Data\Customer\CustomerSearchResultsInterfaceFactory
+     * @var CustomerSearchResultsInterfaceFactory
      */
     protected $_rewardCustomerSearchResults;
 
@@ -41,34 +45,58 @@ class CustomerRepository implements CustomerRepositoryInterface
      * @var \Magestore\Rewardpoints\Helper\Customer
      */
     protected $_customerHelper;
+    /**
+     * @var \Magestore\Rewardpoints\Model\CustomerFactory
+     */
+    protected $_rewardCustomerFactory;
+
+    /**
+     * @var \Magento\Customer\Model\CustomerFactory
+     */
+    protected $_customerFactory;
+
+    /**
+     * @var \Magento\Framework\Webapi\Request
+     */
+    protected $_request;
+
+    /**
+     * @var \Psr\Log\LoggerInterface
+     */
+    protected $_logger;
 
     /**
      * CustomerRepository constructor.
+     *
+     * @param \Magestore\Rewardpoints\Model\CustomerFactory $rewardCustomerFactory
+     * @param \Magento\Customer\Model\CustomerFactory $customerFactory
+     * @param \Magestore\Rewardpoints\Helper\Customer $customerHelper
+     * @param CustomerSearchResultsInterfaceFactory $rewardCustomerSearchResults
+     * @param \Magento\Framework\Webapi\Request $request
+     * @param \Psr\Log\LoggerInterface $logger
      */
     public function __construct(
         \Magestore\Rewardpoints\Model\CustomerFactory $rewardCustomerFactory,
         \Magento\Customer\Model\CustomerFactory $customerFactory,
         \Magestore\Rewardpoints\Helper\Customer $customerHelper,
-        \Magestore\Rewardpoints\Api\Data\Customer\CustomerSearchResultsInterfaceFactory $rewardCustomerSearchResults,
-        \Magento\Framework\Webapi\Request $request
-
-    )
-    {
+        CustomerSearchResultsInterfaceFactory $rewardCustomerSearchResults,
+        \Magento\Framework\Webapi\Request $request,
+        \Psr\Log\LoggerInterface $logger
+    ) {
         $this->_rewardCustomerFactory       = $rewardCustomerFactory;
         $this->_customerFactory             = $customerFactory;
         $this->_customerHelper              = $customerHelper;
         $this->_rewardCustomerSearchResults = $rewardCustomerSearchResults;
         $this->_request                     = $request;
+        $this->_logger = $logger;
     }
 
     /**
-     * @param string $param
-     * @return \Magestore\Rewardpoints\Api\Data\Customer\CustomerInterface[]
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @inheritDoc
      */
     public function get($param)
     {
-        $rewardCustomers = array();
+        $rewardCustomers = [];
         /** many emails or ids */
         if (strpos($param, ',') !== false) {
             $params = explode(',', $param);
@@ -83,9 +111,12 @@ class CustomerRepository implements CustomerRepositoryInterface
     }
 
     /**
-     * @param $param
+     * Get By Param
+     *
+     * @param mixed $param
      * @return CustomerInterface
      * @throws \Magento\Framework\Webapi\Exception
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getByParam($param)
     {
@@ -103,6 +134,8 @@ class CustomerRepository implements CustomerRepositoryInterface
     }
 
     /**
+     * Get By Email
+     *
      * @param string $email
      * @param string $websiteId
      * @return \Magestore\Rewardpoints\Api\Data\Customer\CustomerInterface
@@ -134,6 +167,8 @@ class CustomerRepository implements CustomerRepositoryInterface
     }
 
     /**
+     * Get By Customer Id
+     *
      * @param string $customerId
      * @return \Magestore\Rewardpoints\Api\Data\Customer\CustomerInterface
      * @throws \Magento\Framework\Exception\NoSuchEntityException
@@ -164,8 +199,7 @@ class CustomerRepository implements CustomerRepositoryInterface
     }
 
     /**
-     * @param \Magento\Framework\Api\SearchCriteriaInterface $searchCriteria
-     * @return \Magestore\Rewardpoints\Api\Data\Customer\CustomerSearchResultsInterface
+     * @inheritDoc
      */
     public function getList(\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria)
     {
@@ -183,7 +217,10 @@ class CustomerRepository implements CustomerRepositoryInterface
         $sortOrders = $searchCriteria->getSortOrders();
         if ($sortOrders) {
             foreach ($sortOrders as $sortOrder) {
-                $rewardCustomerCollection->addOrder($sortOrder->getField(), ($sortOrder->getDirection() == SortOrder::SORT_ASC) ? 'ASC' : 'DESC');
+                $rewardCustomerCollection->addOrder(
+                    $sortOrder->getField(),
+                    ($sortOrder->getDirection() == \Magento\Framework\Api\SortOrder::SORT_ASC) ? 'ASC' : 'DESC'
+                );
             }
         }
         $rewardCustomerCollection->setCurPage($searchCriteria->getCurrentPage());
@@ -196,9 +233,8 @@ class CustomerRepository implements CustomerRepositoryInterface
         return $searchResult;
     }
 
-
     /**
-     * add a FilterGroup to the collection.
+     * Add a FilterGroup to the collection.
      *
      * @param \Magento\Framework\Api\Search\FilterGroup $filterGroup
      * @param mixed $collection
@@ -208,10 +244,7 @@ class CustomerRepository implements CustomerRepositoryInterface
     public function addFilterGroupToCollection(
         \Magento\Framework\Api\Search\FilterGroup $filterGroup,
         $collection
-    )
-    {
-        $fields     = [];
-        $conditions = [];
+    ) {
         foreach ($filterGroup->getFilters() as $filter) {
             $condition = $filter->getConditionType() ? $filter->getConditionType() : 'eq';
             $collection->addFieldToFilter($filter->getField(), [$condition => $filter->getValue()]);
@@ -220,9 +253,7 @@ class CustomerRepository implements CustomerRepositoryInterface
     }
 
     /**
-     * create new reward customer
-     * @param \Magestore\Rewardpoints\Api\Data\Customer\CustomerInterface $rewardCustomer
-     * @return \Magestore\Rewardpoints\Api\Data\Customer\CustomerInterface $rewardCustomer
+     * @inheritDoc
      */
     public function save(\Magestore\Rewardpoints\Api\Data\Customer\CustomerInterface $rewardCustomer)
     {
@@ -242,14 +273,13 @@ class CustomerRepository implements CustomerRepositoryInterface
                 ->setData(CustomerInterface::IS_NOTIFICATION, $rewardCustomer->getIsNotification());
             $newRewardCustomer->getResource()->save($newRewardCustomer);
         } catch (\Exception $e) {
+            $this->_logger->critical($e);
         }
         return $newRewardCustomer;
     }
 
     /**
-     * @param string $param
-     * @param \Magestore\Rewardpoints\Api\Data\Customer\CustomerInterface
-     * @return \Magestore\Rewardpoints\Api\Data\Customer\CustomerInterface
+     * @inheritDoc
      */
     public function update($param, \Magestore\Rewardpoints\Api\Data\Customer\CustomerInterface $rewardCustomer)
     {
@@ -271,18 +301,24 @@ class CustomerRepository implements CustomerRepositoryInterface
         return $this->getByParam($param);
     }
 
-
     /**
+     * Check Reward Customer Exist
+     *
      * @param CustomerInterface $rewardCustomer
      * @return $this
      * @throws \Magento\Framework\Exception\AlreadyExistsException
      */
-    public function checkRewardCustomerExist(\Magestore\Rewardpoints\Api\Data\Customer\CustomerInterface $rewardCustomer)
-    {
+    public function checkRewardCustomerExist(
+        \Magestore\Rewardpoints\Api\Data\Customer\CustomerInterface $rewardCustomer
+    ) {
         /** @var \Magestore\Rewardpoints\Model\Customer $newRewardCustomer */
         $newRewardCustomer = $this->_rewardCustomerFactory->create();
         if ($rewardCustomer->getRewardId()) {
-            $newRewardCustomer->getResource()->load($newRewardCustomer, $rewardCustomer->getRewardId(), \Magestore\Rewardpoints\Api\Data\Customer\CustomerInterface::REWARD_ID);
+            $newRewardCustomer->getResource()->load(
+                $newRewardCustomer,
+                $rewardCustomer->getRewardId(),
+                \Magestore\Rewardpoints\Api\Data\Customer\CustomerInterface::REWARD_ID
+            );
             if ($newRewardCustomer->getId()) {
                 throw new \Magento\Framework\Exception\AlreadyExistsException(
                     __(
@@ -294,8 +330,9 @@ class CustomerRepository implements CustomerRepositoryInterface
         return $this;
     }
 
-
     /**
+     * Check Customer Id
+     *
      * @param CustomerInterface $rewardCustomer
      * @return $this
      * @throws \Magento\Framework\Exception\NotFoundException
@@ -313,14 +350,14 @@ class CustomerRepository implements CustomerRepositoryInterface
                 );
             }
         } else {
-            throw new \Magento\Framework\Webapi\Exception(__('
-                "customer_id" is required.
-            '));
+            throw new \Magento\Framework\Webapi\Exception(__('"customer_id" is required.'));
         }
         return $this;
     }
 
     /**
+     * Check Customer Has Account
+     *
      * @param CustomerInterface $rewardCustomer
      * @return $this
      * @throws \Magento\Framework\Exception\AlreadyExistsException
@@ -330,7 +367,11 @@ class CustomerRepository implements CustomerRepositoryInterface
         /** @var \Magestore\Rewardpoints\Model\Customer $newRewardCustomer */
         $newRewardCustomer = $this->_rewardCustomerFactory->create();
         if ($rewardCustomer->getCustomerId()) {
-            $newRewardCustomer->getResource()->load($newRewardCustomer, $rewardCustomer->getCustomerId(), \Magestore\Rewardpoints\Api\Data\Customer\CustomerInterface::CUSTOMER_ID);
+            $newRewardCustomer->getResource()->load(
+                $newRewardCustomer,
+                $rewardCustomer->getCustomerId(),
+                \Magestore\Rewardpoints\Api\Data\Customer\CustomerInterface::CUSTOMER_ID
+            );
             if ($newRewardCustomer->getId()) {
                 throw new \Magento\Framework\Exception\AlreadyExistsException(
                     __(
@@ -341,5 +382,4 @@ class CustomerRepository implements CustomerRepositoryInterface
         }
         return $this;
     }
-
 }

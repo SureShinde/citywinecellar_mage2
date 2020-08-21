@@ -26,6 +26,12 @@ use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Exception\LocalizedException;
 
+/**
+ * Class Type
+ *
+ * Product type model
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class Type extends \Magento\Catalog\Model\Product\Type\AbstractType
 {
     /**
@@ -53,8 +59,9 @@ class Type extends \Magento\Catalog\Model\Product\Type\AbstractType
      * @var \Magento\Catalog\Helper\Data
      */
     protected $_catalogHelper;
+
     /**
-     * Construct
+     * Type constructor.
      *
      * @param \Magento\Catalog\Model\Product\Option $catalogProductOption
      * @param \Magento\Eav\Model\Config $eavConfig
@@ -65,12 +72,12 @@ class Type extends \Magento\Catalog\Model\Product\Type\AbstractType
      * @param \Magento\Framework\Registry $coreRegistry
      * @param \Psr\Log\LoggerInterface $logger
      * @param ProductRepositoryInterface $productRepository
-     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param \Magestore\Customercredit\Helper\Creditproduct $creditproductHelper
      * @param \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency
      * @param \Magestore\Customercredit\Helper\Data $helperData
      * @param \Magento\Tax\Helper\Data $taxHelper
      * @param \Magento\Catalog\Helper\Data $catalogData
+     *
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
@@ -94,7 +101,17 @@ class Type extends \Magento\Catalog\Model\Product\Type\AbstractType
         $this->helperData = $helperData;
         $this->_taxData = $taxHelper;
         $this->_catalogHelper = $catalogData;
-        parent::__construct($catalogProductOption, $eavConfig, $catalogProductType, $eventManager, $fileStorageDb, $filesystem, $coreRegistry, $logger, $productRepository);
+        parent::__construct(
+            $catalogProductOption,
+            $eavConfig,
+            $catalogProductType,
+            $eventManager,
+            $fileStorageDb,
+            $filesystem,
+            $coreRegistry,
+            $logger,
+            $productRepository
+        );
     }
 
     /**
@@ -102,28 +119,39 @@ class Type extends \Magento\Catalog\Model\Product\Type\AbstractType
      *
      * @param \Magento\Catalog\Model\Product $product
      * @return void
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function deleteTypeSpecificData(\Magento\Catalog\Model\Product $product)
     {
+        return null;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function isVirtual($product = null)
     {
         return true;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function hasRequiredOptions($product = null)
     {
-        if($this->_creditProductHelper->getGeneralConfig('enable_send_credit') == '1'){
+        if ($this->_creditProductHelper->getGeneralConfig('enable_send_credit') == '1') {
             return true;
         }
         $storecredit_type = $product->getData('storecredit_type');
-        if($storecredit_type == '1'){
+        if ($storecredit_type == '1') {
                 return false;
         }
         return true;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function canConfigure($product = null)
     {
         return true;
@@ -132,40 +160,54 @@ class Type extends \Magento\Catalog\Model\Product\Type\AbstractType
     /**
      * Initialize product(s) for add to cart process
      *
-     * @param \Magento\Framework\Object $buyRequest
+     * @param \Magento\Framework\DataObject $buyRequest
      * @param \Magento\Catalog\Model\Product $product
      * @return array|string
      */
     public function prepareForCart(\Magento\Framework\DataObject $buyRequest, $product)
     {
-        if (is_null($product))
-            $product = $this->getProduct();
         $result = parent::prepareForCart($buyRequest, $product);
-        if (is_string($result))
+        if (is_string($result)) {
             return $result;
+        }
         reset($result);
         $product = current($result);
         $result = $this->_prepareCustomerCredit($buyRequest, $product);
         return $result;
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function _prepareProduct(\Magento\Framework\DataObject $buyRequest, $product, $processMode)
     {
-        if (is_null($product))
-            $product = $this->getProduct();
         $result = parent::_prepareProduct($buyRequest, $product, $processMode);
 
-        if (is_string($result))
+        if (is_string($result)) {
             return $result;
-
+        }
         reset($result);
         $product = current($result);
         $result = $this->_prepareCustomerCredit($buyRequest, $product, $processMode);
         return $result;
     }
 
-    public function _prepareCustomerCredit(\Magento\Framework\DataObject $buyRequest, $product, $processMode = null)
-    {
+    /**
+     * Prepare Customer Credit
+     *
+     * @param \Magento\Framework\DataObject $buyRequest
+     * @param \Magento\Catalog\Model\Product $product
+     * @param null|string $processMode
+     * @return array
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
+    public function _prepareCustomerCredit( // phpcs:ignore Generic.Metrics.NestingLevel
+        \Magento\Framework\DataObject $buyRequest,
+        $product,
+        $processMode = null
+    ) {
         $fnPrice = 0;
         $amount = $buyRequest->getAmount();
         if ($amount || !$this->_isStrictProcessMode($processMode)) {
@@ -189,8 +231,9 @@ class Type extends \Magento\Catalog\Model\Product\Type\AbstractType
                 case 'dropdown':
                     if (!empty($creditData['options'])) {
                         $check = false;
-                        $giftDropdown = array();
-                        for ($i = 0; $i < count($creditData['options']); $i++) {
+                        $giftDropdown = [];
+                        $creditDataOptionsLength = count($creditData['options']);
+                        for ($i = 0; $i < $creditDataOptionsLength; $i++) {
                             $option = $this->convertPrice($product, $creditData['options'][$i]);
                             if ($amount == $option) {
                                 $check = true;
@@ -212,25 +255,32 @@ class Type extends \Magento\Catalog\Model\Product\Type\AbstractType
                     $fnPrice = $creditData['credit_price'];
                     break;
                 default:
-                    return array($product);
+                    return [$product];
                 //return __('Please enter Store Credit information.');
             }
         } else {
-            return array($product);
+            return [$product];
             //return __('Please enter Store Credit information.');
         }
 
         $buyRequest->setAmount($amount);
         $product->addCustomOption('credit_price_amount', $this->priceCurrency->round($fnPrice));
-        foreach ($this->helperData->getFullCreditProductOptions() as $key => $label) {
+        foreach (array_keys($this->helperData->getFullCreditProductOptions()) as $key) {
             if ($value = $buyRequest->getData($key)) {
                 $product->addCustomOption($key, $value);
             }
         }
 
-        return array($product);
+        return [$product];
     }
 
+    /**
+     * Convert Price
+     *
+     * @param \Magento\Catalog\Model\Product $product
+     * @param float $price
+     * @return float
+     */
     public function convertPrice($product, $price)
     {
         $includeTax = ($this->_taxData->getPriceDisplayType() != 1);

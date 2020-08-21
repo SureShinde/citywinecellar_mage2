@@ -5,15 +5,14 @@
  */
 
 namespace Magestore\Appadmin\Block\Adminhtml\Staff\Role\Edit;
+
 /**
- * Class Tabs
- * @package Magestore\Appadmin\Block\Adminhtml\Staff\Role\Edit
+ * Edit role Tabs
  */
 class Tabs extends \Magento\Backend\Block\Widget\Tabs
 {
-
     /**
-     *
+     * Construct
      */
     protected function _construct()
     {
@@ -24,6 +23,8 @@ class Tabs extends \Magento\Backend\Block\Widget\Tabs
     }
 
     /**
+     * Before To Html
+     *
      * @return $this
      * @throws \Exception
      * @throws \Magento\Framework\Exception\LocalizedException
@@ -35,22 +36,27 @@ class Tabs extends \Magento\Backend\Block\Widget\Tabs
             [
                 'label' => __('General'),
                 'title' => __('General'),
-                'content' => $this->getLayout()->createBlock('Magestore\Appadmin\Block\Adminhtml\Staff\Role\Edit\Tab\Form')
-                    ->toHtml(),
+                'content' => $this->getLayout()->createBlock(
+                    \Magestore\Appadmin\Block\Adminhtml\Staff\Role\Edit\Tab\Form::class
+                )->toHtml(),
                 'active' => true
             ]
         );
-        $permissionBlock = $this->getLayout()->createBlock('Magestore\Appadmin\Block\Adminhtml\Staff\Role\Edit\Tab\Permission');
-        $permissionBlock->addChild('block_discount_percent','Magestore\Appadmin\Block\Adminhtml\Staff\Role\Edit\Tab\Permission\Discount');
+        $permissionBlock = $this->getLayout()->createBlock(
+            \Magestore\Appadmin\Block\Adminhtml\Staff\Role\Edit\Tab\Permission::class
+        );
+        $permissionBlock->addChild(
+            'block_discount_percent',
+            \Magestore\Appadmin\Block\Adminhtml\Staff\Role\Edit\Tab\Permission\Discount::class
+        );
         $this->addTab(
             'webpos_permission',
             [
                 'label' => __('Permission'),
                 'title' => __('Permission'),
-                'content' => $permissionBlock ->toHtml()
+                'content' => $permissionBlock->toHtml()
             ]
         );
-
 
         $this->addTab(
             'user_section',
@@ -58,11 +64,13 @@ class Tabs extends \Magento\Backend\Block\Widget\Tabs
                 'label' => __('Staff List'),
                 'title' => __('Staff List'),
                 'class' => 'ajax',
-                'url' => $this->getUrl('*/*/staff', array('_current' => true, 'id' => $this->getRequest()->getParam('id')))
+                'url' => $this->getUrl(
+                    '*/*/staff',
+                    ['_current' => true, 'id' => $this->getRequest()->getParam('id')]
+                )
             ]
         );
 
         return parent::_beforeToHtml();
     }
-
 }

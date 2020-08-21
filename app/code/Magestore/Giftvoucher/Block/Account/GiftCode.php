@@ -5,11 +5,9 @@
  */
 namespace Magestore\Giftvoucher\Block\Account;
 
-use Magestore\Giftvoucher\Block\Account;
-use Magestore\Giftvoucher\Model\Actions;
-
 /**
  * Gift Code block
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class GiftCode extends \Magestore\Giftvoucher\Block\Account
 {
@@ -19,7 +17,13 @@ class GiftCode extends \Magestore\Giftvoucher\Block\Account
     protected $model;
 
     /**
+     * @var \Magestore\Giftvoucher\Model\Actions
+     */
+    protected $_actions;
+
+    /**
      * GiftCode constructor.
+     *
      * @param \Magento\Framework\View\Element\Template\Context $context
      * @param \Magento\Customer\Api\CustomerRepositoryInterface $accountManagement
      * @param \Magento\Customer\Helper\View $viewHelper
@@ -34,8 +38,10 @@ class GiftCode extends \Magestore\Giftvoucher\Block\Account
      * @param \Magestore\Giftvoucher\Model\ResourceModel\CustomerVoucher\CollectionFactory $collectionFactory
      * @param \Magestore\Giftvoucher\Model\GiftvoucherFactory $giftvoucherFactory
      * @param \Magestore\Giftvoucher\Model\CustomerVoucher $model
-     * @param \Magestore\Giftvoucher\Service\GiftTemplate\ProcessorService $processor
+     * @param \Magestore\Giftvoucher\Model\Actions $actions
      * @param array $data
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
@@ -52,24 +58,42 @@ class GiftCode extends \Magestore\Giftvoucher\Block\Account
         \Magestore\Giftvoucher\Model\ResourceModel\CustomerVoucher\CollectionFactory $collectionFactory,
         \Magestore\Giftvoucher\Model\GiftvoucherFactory $giftvoucherFactory,
         \Magestore\Giftvoucher\Model\CustomerVoucher $model,
-        \Magestore\Giftvoucher\Service\GiftTemplate\ProcessorService $processor,
+        \Magestore\Giftvoucher\Model\Actions $actions,
         array $data = []
     ) {
-        parent::__construct($context, $accountManagement, $viewHelper, $httpContext, $currentCustomer, $objectManager, $datetime, $decode, $imageFactory, $priceCurrency, $helper, $collectionFactory, $giftvoucherFactory, $data);
+        parent::__construct(
+            $context,
+            $accountManagement,
+            $viewHelper,
+            $httpContext,
+            $currentCustomer,
+            $objectManager,
+            $datetime,
+            $decode,
+            $imageFactory,
+            $priceCurrency,
+            $helper,
+            $collectionFactory,
+            $giftvoucherFactory,
+            $data
+        );
         $this->model = $model;
+        $this->_actions = $actions;
         if (!$model->getId()) {
             $this->model->load($this->getRequest()->getParam('id'));
         }
     }
 
     /**
+     * Get Customer Gift
+     *
      * @return \Magestore\Giftvoucher\Model\CustomerVoucher
      */
     public function getCustomerGift()
     {
         return $this->model;
     }
-    
+
     /**
      * Check a gift code is sent to the recipient or not
      *
@@ -82,7 +106,7 @@ class GiftCode extends \Magestore\Giftvoucher\Block\Account
             && $giftCard->getCustomerId() == $this->currentCustomer->getCustomerId()
             );
     }
-    
+
     /**
      * Get current Gift Code Model
      *
@@ -98,16 +122,16 @@ class GiftCode extends \Magestore\Giftvoucher\Block\Account
         }
         return $this->getData('gift_voucher');
     }
-    
+
     /**
-     * get History for Gift Card
+     * Get History for Gift Card
      *
      * @param \Magestore\Giftvoucher\Model\Giftvoucher $giftCard
      * @return \Magestore\Giftvoucher\Model\ResourceModel\History\Collection
      */
     public function getGiftCardHistory($giftCard)
     {
-        $collection = $this->getModel('Magestore\Giftvoucher\Model\History')->getCollection()
+        $collection = $this->getModel(\Magestore\Giftvoucher\Model\History::class)->getCollection()
             ->addFieldToFilter('main_table.giftvoucher_id', $giftCard->getId());
         if ($giftCard->getCustomerId() != $this->getCustomer()->getId()) {
             $collection->addFieldToFilter('main_table.customer_id', $this->getCustomer()->getId());
@@ -115,7 +139,7 @@ class GiftCode extends \Magestore\Giftvoucher\Block\Account
         $collection->getHistory();
         return $collection;
     }
-    
+
     /**
      * Get action name of Gift card history
      *
@@ -124,36 +148,36 @@ class GiftCode extends \Magestore\Giftvoucher\Block\Account
      */
     public function getActionName($history)
     {
-        $actions = Actions::getOptionArray();
+        $actions = $this->_actions->getOptionArray();
         if (isset($actions[$history->getAction()])) {
             return $actions[$history->getAction()];
         }
         reset($actions);
         return current($actions);
     }
-    
+
     /**
-     * get shipment for gift card
+     * Get shipment for gift card
      *
      * @param \Magestore\Giftvoucher\Model\Giftvoucher $giftCard
-     * @return \Magento\Sales\Model\Order\Shipment
+     * @return \Magento\Sales\Model\Order\Shipment|bool
      */
     public function getShipmentForGiftCard($giftCard)
     {
-        $history = $this->getModel('Magestore\Giftvoucher\Model\History')->getCollection()
+        $history = $this->getModel(\Magestore\Giftvoucher\Model\History::class)->getCollection()
             ->addFieldToFilter('giftvoucher_id', $giftCard->getId())
             ->addFieldToFilter('action', \Magestore\Giftvoucher\Model\Actions::ACTIONS_CREATE)
             ->getFirstItem();
         if (!$history->getOrderIncrementId() || !$history->getOrderItemId()) {
             return false;
         }
-        $shipmentItem = $this->getModel('Magento\Sales\Model\Order\Shipment\Item')->getCollection()
+        $shipmentItem = $this->getModel(\Magento\Sales\Model\Order\Shipment\Item::class)->getCollection()
             ->addFieldToFilter('order_item_id', $history->getOrderItemId())
             ->getFirstItem();
         if (!$shipmentItem || !$shipmentItem->getId()) {
             return false;
         }
-        $shipment = $this->getModel('Magento\Sales\Model\Order\Shipment')->load($shipmentItem->getParentId());
+        $shipment = $this->getModel(\Magento\Sales\Model\Order\Shipment::class)->load($shipmentItem->getParentId());
         if (!$shipment->getId()) {
             return false;
         }
@@ -161,6 +185,8 @@ class GiftCode extends \Magestore\Giftvoucher\Block\Account
     }
 
     /**
+     * Message Max Len
+     *
      * @return bool
      */
     public function messageMaxLen()

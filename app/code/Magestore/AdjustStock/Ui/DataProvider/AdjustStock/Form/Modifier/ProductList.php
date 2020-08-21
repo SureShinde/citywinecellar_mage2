@@ -4,59 +4,38 @@
  * Copyright © 2016 Magestore. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace Magestore\AdjustStock\Ui\DataProvider\AdjustStock\Form\Modifier;
 
+use Magento\Ui\Component\DynamicRows;
 use Magento\Ui\Component\Form;
+use Magento\Ui\Component\Modal;
+use Magento\Ui\DataProvider\Modifier\ModifierInterface;
 use Magestore\AdjustStock\Api\Data\AdjustStock\AdjustStockInterface;
 
 /**
- * Class Related
+ * Class ProductList
+ *
+ * Modifier Product list
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.TooManyFields)
  */
-class ProductList extends \Magestore\AdjustStock\Ui\DataProvider\AdjustStock\Form\Modifier\AdjustStock
+class ProductList extends AdjustStock implements ModifierInterface
 {
-
-    /**
-     * @var string
-     */
     protected $_groupContainer = 'os_adjuststock';
-
-    /**
-     * @var string
-     */
+    protected $_groupLabel = 'Product List';
+    protected $_sortOrder = '10';
     protected $_dataLinks = 'product_list';
-
-    /**
-     * @var string
-     */
     protected $_fieldsetContent = 'Please add or import products to adjust stock';
-
-    /**
-     * @var string
-     */
     protected $_buttonTitle = 'Add Products to Adjust Stock';
-
-    /**
-     * @var string
-     */
     protected $_modalTitle = 'Add Products to Adjust Stock';
-
-    /**
-     * Scan button title
-     *
-     * @var string
-     */
     protected $_scanTitle = 'Scan barcode';
-
-    /**
-     * @var string
-     */
     protected $_modalDataId = 'adjuststock_id';
-
-    /**
-     * @var string
-     */
     protected $_modalDataColumn = 'source_code';
+    protected $_useButtonSet = true;
+    protected $_modalButtonTitle = 'Add Selected Products';
+    protected $_importTitle = 'Import products';
+    protected $_modalListingRenderParams = [];
 
     /**
      * @var array
@@ -84,31 +63,53 @@ class ProductList extends \Magestore\AdjustStock\Ui\DataProvider\AdjustStock\For
     ];
 
     /**
-     * get fieldset content
+     * Get fieldset content
      *
-     * @param
-     * @return
+     * @return string
      */
-    public function getFieldsetContent(){
-        if ($this->getAdjustStockStatus() != '1')
+    public function getFieldsetContent()
+    {
+        if ($this->getAdjustStockStatus() != '1') {
             return $this->_fieldsetContent;
+        }
         return '';
     }
 
     /**
-     * get use button set
+     * Get use button set
      *
-     * @param
-     * @return
+     * @return bool|int
      */
-    public function getUseButtonSet(){
-        if ($this->getAdjustStockStatus() != '1')
+    public function getUseButtonSet()
+    {
+        if ($this->getAdjustStockStatus() != '1') {
             return $this->_useButtonSet;
+        }
         return false;
     }
 
     /**
-     * {@inheritdoc}
+     * Get use modal title
+     *
+     * @return string
+     */
+    public function getModalTitle()
+    {
+        return $this->_modalTitle;
+    }
+
+    /**
+     * Get use button title
+     *
+     * @return string
+     */
+    public function getButtonTitle()
+    {
+        return $this->_buttonTitle;
+    }
+
+    /**
+     * @inheritdoc
      */
     public function modifyData(array $data)
     {
@@ -117,21 +118,19 @@ class ProductList extends \Magestore\AdjustStock\Ui\DataProvider\AdjustStock\For
         if ($modelId) {
             $products = $this->collection->getAdjustedProducts($modelId);
             $data[$modelId]['links'][$this->_dataLinks] = [];
-            if($products->getSize() > 0) {
+            if ($products->getSize() > 0) {
                 foreach ($products as $product) {
                     $data[$modelId]['links'][$this->_dataLinks][] = $this->fillDynamicData($product);
                 }
             }
-//                $data[$modelId]['links'][$this->_dataLinks] = $products->getData();
         }
-//            $data[$modelId]['links']['product_stock_modal']['config']['update_url'] = 'aaa';
         return $data;
     }
 
     /**
      * Fill data column
      *
-     * @param ProductModel
+     * @param \Magento\Catalog\Model\Product $product
      * @return array
      */
     public function fillDynamicData($product)
@@ -149,41 +148,54 @@ class ProductList extends \Magestore\AdjustStock\Ui\DataProvider\AdjustStock\For
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function modifyMeta(array $meta)
     {
-        return parent::modifyMeta($meta);
+        $meta = array_replace_recursive(
+            $meta,
+            [
+                $this->_groupContainer => [
+                    'children' => $this->getModifierChildren(),
+                    'arguments' => [
+                        'data' => [
+                            'config' => [
+                                'label' => __($this->getGroupLabel()),
+                                'collapsible' => $this->getCollapsible(),
+                                'visible' => $this->getVisible(),
+                                'opened' => $this->getOpened(),
+                                'componentType' => Form\Fieldset::NAME,
+                                'sortOrder' => $this->getSortOrder()
+                            ],
+                        ],
+                    ],
+                ],
+            ]
+        );
+        return $meta;
     }
 
     /**
-     * get modal title
+     * Get modal title
      *
-     * @param
-     * @return
+     * @return string
      */
-    public function getImportTitle(){
-        if($this->getAdjustStockStatus() == AdjustStockInterface::STATUS_PROCESSING)
+    public function getImportTitle()
+    {
+        if ($this->getAdjustStockStatus() == AdjustStockInterface::STATUS_PROCESSING) {
             return 'Import products adjust stock';
+        }
         return $this->_importTitle;
     }
 
     /**
-     * get use scan title
+     * Get use scan title
      *
      * @return string
      */
-    public function getScanTitle(){
+    public function getScanTitle()
+    {
         return $this->_scanTitle;
-    }
-
-    /**
-     * set use scan title
-     *
-     * @param $scanTitle
-     */
-    public function setScanTitle($scanTitle){
-        $this->_scanTitle = $scanTitle;
     }
 
     /**
@@ -193,18 +205,126 @@ class ProductList extends \Magestore\AdjustStock\Ui\DataProvider\AdjustStock\For
      */
     public function getModifierChildren()
     {
-        $children = parent::getModifierChildren();
+        $children = [
+            $this->_modifierConfig['button_set'] => $this->getCustomButtons(),
+            $this->_modifierConfig['modal'] => $this->getCustomModal(),
+            $this->_dataLinks => $this->getDynamicGrid(),
+        ];
 
         /**
          * @var \Magento\Framework\Module\Manager $moduleManager
          */
         $moduleManager = \Magento\Framework\App\ObjectManager::getInstance()
-            ->create('Magento\Framework\Module\Manager');
+            ->create(\Magento\Framework\Module\Manager::class);
         if ($moduleManager->isEnabled('Magestore_BarcodeSuccess')) {
             $children['product_barcode_scan_input'] = $this->getProductScanBarcodeInput();
         }
 
         return $children;
+    }
+
+    /**
+     * Returns Modal configuration
+     *
+     * @return array
+     */
+    public function getCustomModal()
+    {
+        return [
+            'arguments' => [
+                'data' => [
+                    'config' => [
+                        'componentType' => Modal::NAME,
+                        'dataScope' => '',
+                        'provider' =>
+                            $this->_modifierConfig['form']
+                            . '.'
+                            . $this->_modifierConfig['form']
+                            . '_data_source',
+                        'options' => [
+                            'title' => __($this->getModalTitle()),
+                            'buttons' => [
+                                [
+                                    'text' => __('Cancel'),
+                                    'actions' => ['closeModal']
+                                ],
+                                [
+                                    'text' => __($this->_modalButtonTitle),
+                                    'class' => 'action-primary',
+                                    'actions' => [
+                                        [
+                                            'targetName' => 'index = ' . $this->_modifierConfig['listing'],
+                                            'actionName' => 'save'
+                                        ],
+                                        'closeModal'
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'children' => [$this->_modifierConfig['listing'] => $this->getModalListing()],
+        ];
+    }
+
+    /**
+     * Returns Listing configuration
+     *
+     * @return array
+     */
+    public function getModalListing()
+    {
+        return [
+            'arguments' => [
+                'data' => [
+                    'config' => [
+                        'autoRender' => false,
+                        'componentType' => 'insertListing',
+                        'dataScope' => $this->_modifierConfig['listing'],
+                        'externalProvider' =>
+                            $this->_modifierConfig['listing']
+                            . '.'
+                            . $this->_modifierConfig['listing']
+                            . '_data_source',
+                        'selectionsProvider' =>
+                            $this->_modifierConfig['listing']
+                            . '.'
+                            . $this->_modifierConfig['listing']
+                            . '.'
+                            . $this->_modifierConfig['columns_ids'],
+                        'ns' => $this->_modifierConfig['listing'],
+                        'render_url' => $this->urlBuilder
+                            ->getUrl('mui/index/render', $this->_modalListingRenderParams),
+                        'realTimeLink' => true,
+                        'provider' =>
+                            $this->_modifierConfig['form']
+                            . '.'
+                            . $this->_modifierConfig['form']
+                            . '_data_source',
+                        'dataLinks' => ['imports' => false, 'exports' => true],
+                        'behaviourType' => 'simple',
+                        'externalFilterMode' => true,
+                        'imports' => [
+                            $this->_modalDataId => '${ $.provider }:data.' . $this->_modalDataId,
+                            $this->_modalDataColumn => '${ $.provider }:data.' . $this->_modalDataColumn,
+                            '__disableTmpl' => [
+                                $this->_modalDataId => false,
+                                $this->_modalDataColumn => false
+                            ],
+                        ],
+                        'exports' => [
+                            $this->_modalDataId => '${ $.externalProvider }:params.' . $this->_modalDataId,
+                            $this->_modalDataColumn => '${ $.externalProvider }:params.' . $this->_modalDataColumn,
+                            '__disableTmpl' => [
+                                $this->_modalDataId => false,
+                                $this->_modalDataColumn => false,
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
     }
 
     /**
@@ -217,7 +337,8 @@ class ProductList extends \Magestore\AdjustStock\Ui\DataProvider\AdjustStock\For
         $adjustStockId = $this->request->getParam('id');
         $sourceCode = $this->getCurrentAdjustment()->getSourceCode();
         $getBarcodeUrl = $this->urlBuilder->getUrl(
-            'adjuststock/adjuststock/getBarcodeJson', [
+            'adjuststock/adjuststock/getBarcodeJson',
+            [
                 'adjuststock_id' => $adjustStockId,
                 'source_code' => $sourceCode
             ]
@@ -260,37 +381,171 @@ class ProductList extends \Magestore\AdjustStock\Ui\DataProvider\AdjustStock\For
      */
     public function getCustomButtons()
     {
-        $customButtons = parent::getCustomButtons();
+        if (!$this->getUseButtonSet()) {
+            $customButtons = [
+                'arguments' => [
+                    'data' => [
+                        'config' => [
+                            'formElement' => 'container',
+                            'componentType' => 'container',
+                            'label' => false,
+                            'template' => 'Magestore_AdjustStock/form/components/button-list',
+                        ],
+                    ],
+                ]
+            ];
+        } else {
+            $customButtons = [
+                'arguments' => [
+                    'data' => [
+                        'config' => [
+                            'formElement' => 'container',
+                            'componentType' => 'container',
+                            'label' => false,
+                            'content' => __($this->getFieldsetContent()),
+                            'template' => 'Magestore_AdjustStock/form/components/button-list',
+                        ],
+                    ],
+                ],
+                'children' => array_replace_recursive(
+                    [
+                        'dynamic_button' => [
+                            'arguments' => [
+                                'data' => [
+                                    'config' => [
+                                        'formElement' => 'container',
+                                        'componentType' => 'container',
+                                        'component' => 'Magento_Ui/js/form/components/button',
+                                        'actions' => [
+                                            [
+                                                'targetName' =>
+                                                    $this->_modifierConfig['form'] . '.'
+                                                    . $this->_modifierConfig['form']
+                                                    . '.'
+                                                    . $this->_groupContainer
+                                                    . '.'
+                                                    . $this->_modifierConfig['modal'],
+                                                'actionName' => 'openModal',
+                                            ],
+                                            [
+                                                'targetName' =>
+                                                    $this->_modifierConfig['form'] . '.'
+                                                    . $this->_modifierConfig['form']
+                                                    . '.'
+                                                    . $this->_groupContainer
+                                                    . '.'
+                                                    . $this->_modifierConfig['modal']
+                                                    . '.'
+                                                    . $this->_modifierConfig['listing'],
+                                                'actionName' => 'render',
+                                            ],
+                                        ],
+                                        'title' => __($this->getButtonTitle()),
+                                        'provider' => null,
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                    $this->getAdditionalButtons()
+                )
+            ];
+        }
         if ($this->getUseButtonSet()) {
             $moduleManager = \Magento\Framework\App\ObjectManager::getInstance()
-                ->get('Magento\Framework\Module\Manager');
+                ->get(\Magento\Framework\Module\Manager::class);
             $showScanBarcodeButton = $moduleManager->isEnabled('Magestore_BarcodeSuccess') ? true : false;
-            $customButtons['children'] = array_replace_recursive([
-                'scan_button' => [
-                    'arguments' => [
-                        'data' => [
-                            'config' => [
-                                'formElement' => 'container',
-                                'componentType' => 'container',
-                                'component' => 'Magestore_AdjustStock/js/element/scan-barcode-button',
-                                'actions' => [],
-                                'title' => $this->getScanTitle(),
-                                'provider' => null,
-                                'visible' => $showScanBarcodeButton,
+            $customButtons['children'] = array_replace_recursive(
+                [
+                    'scan_button' => [
+                        'arguments' => [
+                            'data' => [
+                                'config' => [
+                                    'formElement' => 'container',
+                                    'componentType' => 'container',
+                                    'component' => 'Magestore_AdjustStock/js/element/scan-barcode-button',
+                                    'actions' => [],
+                                    'title' => $this->getScanTitle(),
+                                    'provider' => null,
+                                    'visible' => $showScanBarcodeButton,
+                                ],
                             ],
                         ],
                     ],
                 ],
-            ], $customButtons['children']);
+                $customButtons['children']
+            );
         }
         return $customButtons;
     }
 
     /**
-     * add import product button to stocktake
+     * Returns dynamic rows configuration
      *
-     * @param
-     * @return
+     * @return array
+     */
+    public function getDynamicGrid()
+    {
+        $grid = [
+            'arguments' => [
+                'data' => [
+                    'config' => [
+                        'additionalClasses' => 'admin__field-wide',
+                        'componentType' => DynamicRows::NAME,
+                        'label' => null,
+                        'renderDefaultRecord' => false,
+                        'template' => 'ui/dynamic-rows/templates/grid',
+                        'component' => 'Magestore_AdjustStock/js/dynamic-rows/dynamic-rows-grid',
+                        'addButton' => false,
+                        'itemTemplate' => 'record',
+                        'dataScope' => 'data.links',
+                        'deleteButtonLabel' => __('Remove'),
+                        'dataProvider' => $this->_modifierConfig['listing'],
+                        'map' => $this->_mapFields,
+                        'links' => [
+                            'insertData' => '${ $.provider }:${ $.dataProvider }',
+                            '__disableTmpl' => ['insertData' => false],
+                        ],
+                        'sortOrder' => 20,
+                        'columnsHeader' => false,
+                        'columnsHeaderAfterRender' => true,
+                    ],
+                ],
+            ],
+            'children' => $this->getRows(),
+        ];
+        return $grid;
+    }
+
+    /**
+     * Returns Dynamic rows records configuration
+     *
+     * @return array
+     */
+    public function getRows()
+    {
+        return [
+            'record' => [
+                'arguments' => [
+                    'data' => [
+                        'config' => [
+                            'componentType' => 'container',
+                            'isTemplate' => true,
+                            'is_collection' => true,
+                            'component' => 'Magento_Ui/js/dynamic-rows/record',
+                            'dataScope' => '',
+                        ],
+                    ],
+                ],
+                'children' => $this->fillModifierMeta(),
+            ],
+        ];
+    }
+
+    /**
+     * Add import product button to stocktake
+     *
+     * @return array
      */
     public function getAdditionalButtons()
     {
@@ -313,16 +568,16 @@ class ProductList extends \Magestore\AdjustStock\Ui\DataProvider\AdjustStock\For
     }
 
     /**
-     * get visible
+     * Get visible
      *
-     * @param
-     * @return
+     * @return int|bool
      */
     public function getVisible()
     {
         $requestId = $this->request->getParam('id');
-        if ($requestId)
+        if ($requestId) {
             return $this->_visible;
+        }
         return false;
     }
 
@@ -333,7 +588,6 @@ class ProductList extends \Magestore\AdjustStock\Ui\DataProvider\AdjustStock\For
      */
     public function fillModifierMeta()
     {
-
         $additionalColumns = $this->getAdditionalColumns();
         $modifierColumns = array_replace_recursive(
             [
@@ -393,11 +647,12 @@ class ProductList extends \Magestore\AdjustStock\Ui\DataProvider\AdjustStock\For
      */
     public function getAdditionalColumns()
     {
-        if($this->getAdjustStockStatus() == AdjustStockInterface::STATUS_COMPLETED)
+        if ($this->getAdjustStockStatus() == AdjustStockInterface::STATUS_COMPLETED) {
             return [
                 'change_qty' => $this->getTextColumn('change_qty', false, __('Adjust Qty'), 70),
                 'new_qty' => $this->getTextColumn('new_qty', false, __('New Qty'), 80),
             ];
+        }
 
         return [
             'change_qty' => [
@@ -454,7 +709,7 @@ class ProductList extends \Magestore\AdjustStock\Ui\DataProvider\AdjustStock\For
      */
     public function getActionColumns()
     {
-        if ($this->getAdjustStockStatus() == AdjustStockInterface::STATUS_COMPLETED)
+        if ($this->getAdjustStockStatus() == AdjustStockInterface::STATUS_COMPLETED) {
             return [
                 'position' => [
                     'arguments' => [
@@ -471,6 +726,7 @@ class ProductList extends \Magestore\AdjustStock\Ui\DataProvider\AdjustStock\For
                     ],
                 ]
             ];
+        }
         return [
             'actionDelete' => [
                 'arguments' => [

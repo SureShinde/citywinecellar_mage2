@@ -14,6 +14,11 @@ use Psr\Log\LoggerInterface as Logger;
 use Magestore\PurchaseOrderSuccess\Api\Data\PurchaseOrderInterface;
 use Magestore\PurchaseOrderSuccess\Model\PurchaseOrder\Option\Type as PurchaseOrderType;
 
+/**
+ * Class PurchaseOrder
+ *
+ * Purchase order grid
+ */
 class PurchaseOrder extends \Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult
 {
     /**
@@ -22,14 +27,16 @@ class PurchaseOrder extends \Magento\Framework\View\Element\UiComponent\DataProv
     protected $request;
 
     /**
-     * Initialize dependencies.
+     * PurchaseOrder constructor.
      *
      * @param EntityFactory $entityFactory
      * @param Logger $logger
      * @param FetchStrategy $fetchStrategy
      * @param EventManager $eventManager
+     * @param \Magento\Framework\App\RequestInterface $request
      * @param string $mainTable
      * @param string $resourceModel
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function __construct(
         EntityFactory $entityFactory,
@@ -38,41 +45,61 @@ class PurchaseOrder extends \Magento\Framework\View\Element\UiComponent\DataProv
         EventManager $eventManager,
         \Magento\Framework\App\RequestInterface $request,
         $mainTable = 'os_purchase_order',
-        $resourceModel = 'Magestore\PurchaseOrderSuccess\Model\ResourceModel\PurchaseOrder'
+        $resourceModel = \Magestore\PurchaseOrderSuccess\Model\ResourceModel\PurchaseOrder::class
     ) {
         $this->request = $request;
         parent::__construct($entityFactory, $logger, $fetchStrategy, $eventManager, $mainTable, $resourceModel);
     }
 
+    /**
+     * Get data
+     *
+     * @return array
+     */
     public function getData()
     {
         $data = parent::getData();
         $isExport = $this->request->getParam('is_export');
-        if($isExport) {
+        if ($isExport) {
             $om = \Magento\Framework\App\ObjectManager::getInstance();
-            $supplierList = $om->get('Magestore\PurchaseOrderSuccess\Model\PurchaseOrder\Option\Supplier')
+            $supplierList = $om->get(\Magestore\PurchaseOrderSuccess\Model\PurchaseOrder\Option\Supplier::class)
                 ->getSupplierOptions();
-            $statusList = $om->get('Magestore\PurchaseOrderSuccess\Model\PurchaseOrder\Option\Status')
+            $statusList = $om->get(\Magestore\PurchaseOrderSuccess\Model\PurchaseOrder\Option\Status::class)
                 ->getOptionHash();
-            foreach ($data as &$item) {
-                $item['supplier_id'] = $supplierList[$item['supplier_id']];
-                $item['status'] = $statusList[$item['status']];
+            $metadataProvider = $om->get(\Magento\Ui\Model\Export\MetadataProvider::class);
+            if (!method_exists($metadataProvider, 'getColumnOptions')) {
+                foreach ($data as &$item) {
+                    $item['supplier_id'] = $supplierList[$item['supplier_id']];
+                    $item['status'] = $statusList[$item['status']];
+                }
             }
         }
         return $data;
     }
 
+    /**
+     * Init select
+     *
+     * @return $this|PurchaseOrder|void
+     */
     protected function _initSelect()
     {
         $supplierId = $this->request->getParam('supplier_id');
         $this->getSelect()->from(['main_table' => $this->getMainTable()])
             ->where(PurchaseOrderInterface::TYPE . ' = ?', $this->getFilterType());
-        if($supplierId)
-            $this->getSelect()->where('main_table.'.PurchaseOrderInterface::SUPPLIER_ID.' = ?',  $supplierId);
+        if ($supplierId) {
+            $this->getSelect()->where('main_table.' . PurchaseOrderInterface::SUPPLIER_ID . ' = ?', $supplierId);
+        }
         return $this;
     }
 
-    public function getFilterType(){
+    /**
+     * Get filter type
+     *
+     * @return int
+     */
+    public function getFilterType()
+    {
         return PurchaseOrderType::TYPE_PURCHASE_ORDER;
     }
 }

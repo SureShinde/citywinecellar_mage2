@@ -7,30 +7,24 @@
 namespace Magestore\BarcodeSuccess\Ui\DataProvider\History;
 
 use Magestore\BarcodeSuccess\Ui\DataProvider\Barcode\DataProvider as ParentBarcodeDataProvider;
-
-/* emlement export feature */
 use Magento\Framework\Api\Search\SearchCriteriaBuilder;
 use Magento\Framework\Api\Search\ReportingInterface;
 
-
-
 /**
  * Class BarcodeDataProvider
- * @package Magestore\BarcodeSuccess\Ui\DataProvider\History
+ *
+ * Used to create barcode data provider
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class BarcodeDataProvider extends ParentBarcodeDataProvider
 {
-
-
-
-    /* emlement export feature */
     protected $searchCriteria;
     protected $searchCriteriaBuilder;
     protected $reporting;
 
-
     /**
      * BarcodeDataProvider constructor.
+     *
      * @param string $name
      * @param string $primaryFieldName
      * @param string $requestFieldName
@@ -47,6 +41,7 @@ class BarcodeDataProvider extends ParentBarcodeDataProvider
      * @param \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry
      * @param array $meta
      * @param array $data
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         $name,
@@ -84,58 +79,35 @@ class BarcodeDataProvider extends ParentBarcodeDataProvider
             $meta,
             $data
         );
-
-        /* emlement export feature */
         $this->reporting = $reporting;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
-
-
         $historyId = $this->locator->getCurrentBarcodeHistory();
-        if($historyId !== false){
-            $this->collection->addFieldToFilter('history_id',$historyId);
+        if ($historyId !== false) {
+            $this->collection->addFieldToFilter('history_id', $historyId);
         }
     }
 
-    /* emlement export feature */
+    /**
+     * Get search criteria
+     *
+     * @return \Magento\Framework\Api\Search\SearchCriteria
+     */
     public function getSearchCriteria()
     {
         if (!$this->searchCriteria) {
             $this->searchCriteria = $this->searchCriteriaBuilder->create();
             $this->searchCriteria->setRequestName($this->name);
+            $historyId = $this->locator->getCurrentBarcodeHistory();
+            if ($historyId) {
+                $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+                $filter = $objectManager->create(\Magento\Framework\Api\Filter::class);
+                $filterGroup = $objectManager->create(\Magento\Framework\Api\Search\FilterGroup::class);
+                $filter->setField('history_id');
+                $filter->setValue($this->locator->getCurrentBarcodeHistory())->setConditionType('eq');
+                $filterGroup->setFilters([$filter]);
+                $this->searchCriteria->setFilterGroups([$filterGroup]);
+            }
         }
         return $this->searchCriteria;
-
-    }
-    public function getSearchResult()
-    {
-        $collection = $this->collection;//->getData();
-        $count = $collection->getSize();
-        $collection->setPageSize($collection->getSize()); // limit dung để query view dữ liệu - ko dùng cho export được
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance(); // Instance of object manager
-        /** @var \Magento\Framework\Search\EntityMetadata $entityMetadata */
-        $entityMetadata = $objectManager->create('Magento\Framework\Search\EntityMetadata', ['entityId' => 'ids']);
-        $idKey = $entityMetadata->getEntityId();
-        /** @var \Magento\Framework\Search\Adapter\Mysql\DocumentFactory $documentFactory */
-        $documentFactory = $objectManager->create(
-            'Magento\Framework\Search\Adapter\Mysql\DocumentFactory',
-            ['entityMetadata' => $entityMetadata]
-        );
-        /** @var \Magento\Framework\Api\Search\Document[] $documents */
-        $documents = [];
-        foreach($collection as $value){
-            $data = array();
-            $data['id'] = $value->getId();
-            $data['ids'] = $value->getId();
-            $data['barcode'] = $value->getBarcode();
-            $data['qty'] = $value->getQty();
-            $data['product_sku'] = $value->getProductSku();
-            $data['supplier_code'] = $value->getSupplierCode();
-            $data['purchased_time'] = $value->getPurchasedTime();
-            $documents[] = $documentFactory->create($data);
-        }
-        $obj = new \Magento\Framework\DataObject();
-        $obj->setItems($documents);
-        $obj->setTotalCount($count);
-        return $obj;
     }
 }

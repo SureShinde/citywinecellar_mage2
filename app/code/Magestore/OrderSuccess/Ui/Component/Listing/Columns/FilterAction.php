@@ -12,20 +12,18 @@ use Magento\Framework\View\Element\UiComponentFactory;
 use Magento\Framework\View\Element\UiComponent\ContextInterface;
 
 /**
- * Class FilterAction
- * @package Magestore\OrderSuccess\Ui\Component\Listing\Columns
+ * Columns FilterAction
  */
 class FilterAction extends \Magento\Ui\Component\Listing\Columns\Column
 {
-
     /**
-     * @var BatchInterfaceFactory 
+     * @var BatchInterfaceFactory
      */
     protected $batchFactory;
 
-
     /**
      * FilterAction constructor.
+     *
      * @param ContextInterface $context
      * @param UiComponentFactory $uiComponentFactory
      * @param BatchInterfaceFactory $batchFactory
@@ -41,26 +39,25 @@ class FilterAction extends \Magento\Ui\Component\Listing\Columns\Column
     ) {
         parent::__construct($context, $uiComponentFactory, $components, $data);
         $this->batchFactory = $batchFactory;
-    }    
-    
+    }
+
     /**
      * Prepare Data Source
      *
      * @param array $dataSource
      * @return array
-     */    
+     */
     public function prepareDataSource(array $dataSource)
     {
-
         $batch = $this->batchFactory->create();
-        
+
         if (isset($dataSource['data']['items'])) {
             $indexField = $this->getData('config/indexField');
             foreach ($dataSource['data']['items'] as &$item) {
                 $name = $this->getData('name');
                 if (isset($item[$indexField]) && $item[$indexField] != 0) {
                     $batch->setId($item[$indexField]);
-                    $item[$name] = array();
+                    $item[$name] = [];
                     $item[$name]['edit'] = [
                         'label' => $batch->getCode(),
                         'itemid' => $batch->getId(),
@@ -70,5 +67,5 @@ class FilterAction extends \Magento\Ui\Component\Listing\Columns\Column
             }
         }
         return $dataSource;
-    }    
+    }
 }

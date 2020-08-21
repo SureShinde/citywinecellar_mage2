@@ -8,8 +8,7 @@
 namespace Magestore\ReportSuccess\Model\Source\Adminhtml\StockByLocation;
 
 /**
- * Class Metric
- * @package Magestore\ReportSuccess\Model\Source\Adminhtml\StockByLocation
+ * Stock by location - Metric
  */
 class Metric implements \Magento\Framework\Option\ArrayInterface
 {
@@ -19,23 +18,26 @@ class Metric implements \Magento\Framework\Option\ArrayInterface
     const INVENTORY_VALUE = 'stock_value';
     const POTENTIAL_REVENUE = 'potential_revenue';
     const PROFIT_VALUE = 'potential_profit';
+
     /**
-     * @return array
+     * @inheritDoc
      */
     public function toOptionArray()
     {
-        $options = array(
+        $options = [
             ['value' => self::QTY_ON_HAND, 'label' => __('Qty On-hand')],
             ['value' => self::AVAILABLE_QTY, 'label' => __('Available Qty')],
             ['value' => self::QTY_TO_SHIP, 'label' => __('Qty To Ship')],
             ['value' => self::INVENTORY_VALUE, 'label' => __('Stock Value')],
             ['value' => self::POTENTIAL_REVENUE, 'label' => __('Potential Revenue')],
             ['value' => self::PROFIT_VALUE, 'label' => __('Potential Profit')]
-        );
+        ];
         return $options;
     }
 
     /**
+     * To Option List Array
+     *
      * @return array
      */
     public function toOptionListArray()
@@ -49,5 +51,4 @@ class Metric implements \Magento\Framework\Option\ArrayInterface
         $options[self::PROFIT_VALUE] = __('Profit Value');
         return $options;
     }
-
 }

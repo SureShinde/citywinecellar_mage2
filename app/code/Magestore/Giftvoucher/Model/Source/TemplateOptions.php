@@ -8,7 +8,8 @@ namespace Magestore\Giftvoucher\Model\Source;
 
 /**
  * Class TemplateOptions
- * @package Magestore\Giftvoucher\Model\Source
+ *
+ * Source - Template options model
  */
 class TemplateOptions extends \Magento\Eav\Model\Entity\Attribute\Source\AbstractSource
 {
@@ -27,7 +28,6 @@ class TemplateOptions extends \Magento\Eav\Model\Entity\Attribute\Source\Abstrac
         $this->_giftcardTemplate = $giftcardTemplate;
     }
 
-
     /**
      * Get Gift Card available templates
      *
@@ -37,10 +37,12 @@ class TemplateOptions extends \Magento\Eav\Model\Entity\Attribute\Source\Abstrac
     {
         $templates = $this->_giftcardTemplate->getCollection()
             ->addFieldToFilter('status', '1');
-        $listTemplate = array();
+        $listTemplate = [];
         foreach ($templates as $template) {
-            $listTemplate[] = array('label' => $template->getTemplateName(),
-                'value' => $template->getId());
+            $listTemplate[] = [
+                'label' => $template->getTemplateName(),
+                'value' => $template->getId()
+            ];
         }
         return $listTemplate;
     }
@@ -53,20 +55,22 @@ class TemplateOptions extends \Magento\Eav\Model\Entity\Attribute\Source\Abstrac
      */
     public function getAllOptions($withEmpty = true)
     {
-        if (is_null($this->_options)) {
+        if ($this->_options === null) {
             $this->_options = $this->getAvailableTemplate();
         }
         $options = $this->_options;
         if ($withEmpty) {
-            array_unshift($options, array(
+            array_unshift($options, [
                 'value' => '',
                 'label' => __('-- Please Select --'),
-            ));
+            ]);
         }
         return $options;
     }
 
     /**
+     * Get Default Data
+     *
      * @return mixed
      */
     public function getDefaultData()

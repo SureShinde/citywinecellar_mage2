@@ -74,4 +74,7 @@
     <event name="fulfilsuccess_get_stock_id_from_order_to_prepare_fulfil">
         <observer name="webpos_fulfilsuccess_get_stock_id_from_order_to_prepare_fulfil" instance="Magestore\Webpos\Observer\FulfilSuccess\Model\MultiSourceInventory\GetStockIdFromOrderToPrepareFulfil"/>
     </event>
+    <event name="barcode_success_save_after">
+        <observer name="barcode_success_save_after" instance="Magestore\Webpos\Observer\Barcode\SaveAfter"/>
+    </event>
 </config>

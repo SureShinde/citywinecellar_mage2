@@ -9,12 +9,13 @@ namespace Magestore\Webpos\Model\Location;
 use Magestore\Webpos\Api\Data\Location\LocationInterface;
 
 /**
- * Class Location
- * @package Magestore\Webpos\Model\Location
+ * Model Location
+ *
+ * @SuppressWarnings(PHPMD.ExcessivePublicCount)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class Location extends \Magento\Framework\Model\AbstractModel implements \Magestore\Webpos\Api\Data\Location\LocationInterface
+class Location extends \Magento\Framework\Model\AbstractModel implements LocationInterface
 {
-
     /**
      * Prefix of model events names
      *
@@ -69,6 +70,7 @@ class Location extends \Magento\Framework\Model\AbstractModel implements \Magest
 
     /**
      * Location constructor.
+     *
      * @param \Magento\Framework\Model\Context $context
      * @param \Magento\Framework\Registry $registry
      * @param \Magestore\Webpos\Model\ResourceModel\Location\Location $resource
@@ -84,6 +86,7 @@ class Location extends \Magento\Framework\Model\AbstractModel implements \Magest
      * @param \Magestore\Appadmin\Api\Event\DispatchServiceInterface $dispatchService
      * @param \Magestore\Webpos\Api\Location\LocationRepositoryInterface $locationRepository
      * @param array $data
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         \Magento\Framework\Model\Context $context,
@@ -100,8 +103,8 @@ class Location extends \Magento\Framework\Model\AbstractModel implements \Magest
         \Magento\Store\Model\StoreFactory $storeFactory,
         \Magestore\Appadmin\Api\Event\DispatchServiceInterface $dispatchService,
         \Magestore\Webpos\Api\Location\LocationRepositoryInterface $locationRepository,
-        array $data = [])
-    {
+        array $data = []
+    ) {
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
         $this->country = $country;
         $this->regionFactory = $regionFactory;
@@ -190,8 +193,8 @@ class Location extends \Magento\Framework\Model\AbstractModel implements \Magest
     /**
      * Get location code
      *
-     * @api
      * @return string
+     * @api
      */
     public function getLocationCode()
     {
@@ -201,9 +204,9 @@ class Location extends \Magento\Framework\Model\AbstractModel implements \Magest
     /**
      * Set location code
      *
-     * @api
      * @param string $locationCode
      * @return $this
+     * @api
      */
     public function setLocationCode($locationCode)
     {
@@ -417,11 +420,17 @@ class Location extends \Magento\Framework\Model\AbstractModel implements \Magest
         return $this->getData('address', $address);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getWarehouseId()
     {
         return $this->getData(self::WAREHOUSE_ID);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function setWarehouseId($warehouseId)
     {
         return $this->setData(self::WAREHOUSE_ID, $warehouseId);
@@ -451,25 +460,28 @@ class Location extends \Magento\Framework\Model\AbstractModel implements \Magest
     /**
      * @inheritDoc
      */
-    public function getStoreId() {
+    public function getStoreId()
+    {
         return $this->getData(self::STORE_ID);
     }
 
     /**
      * @inheritDoc
      */
-    public function setStoreId($storeId) {
+    public function setStoreId($storeId)
+    {
         return $this->setData(self::STORE_ID, $storeId);
     }
 
     /**
      * @inheritDoc
      */
-    public function getStoreCode() {
+    public function getStoreCode()
+    {
         $storeId = $this->getStoreId();
         /** @var \Magento\Store\Model\Store $store */
         $store = $this->storeFactory->create()->load($storeId);
-        if(!$storeId || !$store) {
+        if (!$storeId || !$store) {
             return $this->storeManager->getDefaultStoreView()->getCode();
         }
         return $store->getCode();
@@ -478,17 +490,20 @@ class Location extends \Magento\Framework\Model\AbstractModel implements \Magest
     /**
      * @inheritDoc
      */
-    public function setStoreCode($storeCode){
+    public function setStoreCode($storeCode)
+    {
         return $this->setData(self::STORE_CODE, $storeCode);
     }
+
     /**
      * @inheritDoc
      */
-    public function getWebsiteId(){
+    public function getWebsiteId()
+    {
         $storeId = $this->getStoreId();
         /** @var \Magento\Store\Model\Store $store */
         $store = $this->storeFactory->create()->load($storeId);
-        if(!$storeId || !$store) {
+        if (!$storeId || !$store) {
             return $this->storeManager->getDefaultStoreView()->getWebsiteId();
         }
         return $store->getWebsiteId();
@@ -497,32 +512,46 @@ class Location extends \Magento\Framework\Model\AbstractModel implements \Magest
     /**
      * @inheritDoc
      */
-    public function setWebsiteId($websiteId){
+    public function setWebsiteId($websiteId)
+    {
         return $this->setData(self::WEBSITE_ID, $websiteId);
     }
 
+    /**
+     * Before delete
+     *
+     * @return Location
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
     public function beforeDelete()
     {
         $this->forceChangeLocationData($this->getId());
         return parent::beforeDelete();
     }
 
-    public function forceChangeLocationData($locationId) {
+    /**
+     * Force change location
+     *
+     * @param int $locationId
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function forceChangeLocationData($locationId)
+    {
         /** @var \Magestore\Webpos\Model\ResourceModel\Location\Location $resourceLocation */
         $resourceLocation = $this->getResource();
         $select = $resourceLocation->getConnection()->select();
         $select->from(['e' => $resourceLocation->getMainTable()]);
         $select->join(
-            array('pos' => $resourceLocation->getTable('webpos_pos')),
+            ['pos' => $resourceLocation->getTable('webpos_pos')],
             'pos.location_id = e.' . $resourceLocation->getIdFieldName(),
             []
         );
-        $select->where('pos.location_id = '. $locationId);
+        $select->where('pos.location_id = ' . $locationId);
         $select->columns('pos.staff_id');
 
         $data = $resourceLocation->getConnection()->fetchAll($select);
         foreach ($data as $datum) {
-            if(!$datum['staff_id']) {
+            if (!$datum['staff_id']) {
                 continue;
             }
             // dispatch event force sign out
@@ -547,14 +576,13 @@ class Location extends \Magento\Framework\Model\AbstractModel implements \Magest
         $this->setCountry($countryModel->getName());
 
         // set data object before save
-        if(!$this->isObjectNew()) {
+        if (!$this->isObjectNew()) {
             $currentObject = $this->locationRepository->getById($this->getId());
             $this->currentData = $currentObject->getData();
         }
 
         return parent::beforeSave();
     }
-
 
     /**
      * Processing object after save data
@@ -568,7 +596,7 @@ class Location extends \Magento\Framework\Model\AbstractModel implements \Magest
             $this->stockManagement->addCustomSaleToStock($stockId);
         }
 
-        if(!$this->isObjectNew()) {
+        if (!$this->isObjectNew()) {
             if ($this->hasDataChangeForField(self::STORE_ID)) {
                 $this->forceChangeLocationData($this->getId());
             }
@@ -577,9 +605,15 @@ class Location extends \Magento\Framework\Model\AbstractModel implements \Magest
         return parent::afterSave();
     }
 
-    // check if data has change for field
-    public function hasDataChangeForField($fieldName) {
-        if(!isset($this->currentData[$fieldName])) {
+    /**
+     * Check if data has change for field
+     *
+     * @param string $fieldName
+     * @return bool
+     */
+    public function hasDataChangeForField($fieldName)
+    {
+        if (!isset($this->currentData[$fieldName])) {
             return $this->getData($fieldName) == null ? false : true;
         }
         return !($this->currentData[$fieldName] == $this->getData($fieldName));
@@ -598,7 +632,7 @@ class Location extends \Magento\Framework\Model\AbstractModel implements \Magest
      */
     public function setExtensionAttributes(
         \Magestore\Webpos\Api\Data\Location\LocationExtensionInterface $extensionAttributes
-    ){
+    ) {
         return $this->setData(self::EXTENSION_ATTRIBUTES_KEY, $extensionAttributes);
     }
 }

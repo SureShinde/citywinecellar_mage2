@@ -20,16 +20,14 @@
  * @license     http://www.magestore.com/license-agreement.html
  */
 
-/**
- * Rewardpoints Spend for Order by Point Model
- *
- * @category    Magestore
- * @package     Magestore_RewardPoints
- * @author      Magestore Developer
- */
 namespace Magestore\Rewardpoints\Model\Total\Quote;
-class PointAfterTax extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal{
 
+/**
+ * Quote total - point after tax model
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
+class PointAfterTax extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal
+{
     /**
      * @var \Magento\Checkout\Model\SessionFactory
      */
@@ -86,7 +84,7 @@ class PointAfterTax extends \Magento\Quote\Model\Quote\Address\Total\AbstractTot
      * @param \Magestore\Rewardpoints\Helper\Calculation\Spending $calculationSpending
      * @param \Magestore\Rewardpoints\Helper\Customer $helperCustomer
      * @param \Magento\Tax\Helper\Data $taxHelperData
-     * @param \Magento\Tax\Model\CalculationFactory $taxModelCalculationFactory
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         \Magestore\Rewardpoints\Helper\Config $globalConfig,
@@ -97,8 +95,7 @@ class PointAfterTax extends \Magento\Quote\Model\Quote\Address\Total\AbstractTot
         \Magestore\Rewardpoints\Helper\Block\Spend $blockSpend,
         \Magestore\Rewardpoints\Helper\Calculation\Spending $calculationSpending,
         \Magestore\Rewardpoints\Helper\Customer $helperCustomer,
-        \Magento\Tax\Helper\Data $taxHelperData,
-        \Magento\Tax\Model\CalculationFactory $taxModelCalculationFactory
+        \Magento\Tax\Helper\Data $taxHelperData
     ) {
 
         $this->setCode('rewardpoint');
@@ -114,14 +111,18 @@ class PointAfterTax extends \Magento\Quote\Model\Quote\Address\Total\AbstractTot
     }
 
     /**
-     * @param $quote
-     * @param $address
-     * @param $session
+     * Check Output
+     *
+     * @param \Magento\Quote\Model\Quote $quote
+     * @param \Magento\Quote\Api\Data\AddressInterface $address
+     * @param \Magento\Checkout\Model\Session $session
      * @return $this|bool
      */
-    public function checkOutput($quote,$address,$session){
+    public function checkOutput($quote, $address, $session)
+    {
         $applyTaxAfterDiscount = (bool) $this->_helper->getConfig(
-            \Magento\Tax\Model\Config::CONFIG_XML_PATH_APPLY_AFTER_DISCOUNT, $quote->getStoreId()
+            \Magento\Tax\Model\Config::CONFIG_XML_PATH_APPLY_AFTER_DISCOUNT,
+            $quote->getStoreId()
         );
         if ($applyTaxAfterDiscount) {
             $this->_processHiddenTaxes($address);
@@ -142,21 +143,20 @@ class PointAfterTax extends \Magento\Quote\Model\Quote\Address\Total\AbstractTot
         return false;
     }
     /**
-     * collect reward points total
-     *
-     * @param Mage_Sales_Model_Quote_Address $address
-     * @return Magestore_RewardPoints_Model_Total_Quote_Point
+     * @inheritDoc
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function collect(
         \Magento\Quote\Model\Quote $quote,
         \Magento\Quote\Api\Data\ShippingAssignmentInterface $shippingAssignment,
         \Magento\Quote\Model\Quote\Address\Total $total
-    )
-    {
+    ) {
         parent::collect($quote, $shippingAssignment, $total);
         $address = $shippingAssignment->getShipping()->getAddress();
         $session = $this->_checkOutSessionFactory->create();
-        if($this->checkOutput($quote,$address,$session)){
+        if ($this->checkOutput($quote, $address, $session)) {
             return $this;
         }
         $rewardSalesRules = $session->getRewardSalesRules();
@@ -173,24 +173,30 @@ class PointAfterTax extends \Magento\Quote\Model\Quote\Address\Total\AbstractTot
         }
         $maxPoints -= $helper->getPointItemSpent();
         if ($maxPoints <= 0 || !$this->_helperCustomer->isAllowSpend($quote->getStoreId())) {
-            $session->setRewardCheckedRules(array());
-            $session->setRewardSalesRules(array());
+            $session->setRewardCheckedRules([]);
+            $session->setRewardSalesRules([]);
             return $this;
         }
         $baseDiscount = 0;
         $pointUsed = 0;
         // Checked Rules Discount First
         if (is_array($rewardCheckedRules)) {
-            $newRewardCheckedRules = array();
+            $newRewardCheckedRules = [];
             foreach ($rewardCheckedRules as $ruleData) {
-                if ($baseTotal < 0.0001)
+                if ($baseTotal < 0.0001) {
                     break;
+                }
                 $rule = $helper->getQuoteRule($ruleData['rule_id']);
                 if (!$rule || !$rule->getId() || $rule->getSimpleAction() != 'fixed') {
                     continue;
                 }
                 if ($maxPoints < $rule->getPointsSpended()) {
-                    $session->addNotice(__('You cannot spend more than %s points per order', $helper->getMaxPointsPerOrder($quote->getStoreId())));
+                    $session->addNotice(
+                        __(
+                            'You cannot spend more than %s points per order',
+                            $helper->getMaxPointsPerOrder($quote->getStoreId())
+                        )
+                    );
                     continue;
                 }
                 $points = $rule->getPointsSpended();
@@ -202,11 +208,11 @@ class PointAfterTax extends \Magento\Quote\Model\Quote\Address\Total\AbstractTot
                 $maxPoints -= $points;
                 $baseDiscount += $ruleDiscount;
                 $pointUsed += $points;
-                $newRewardCheckedRules[$rule->getId()] = array(
+                $newRewardCheckedRules[$rule->getId()] = [
                     'rule_id' => $rule->getId(),
                     'use_point' => $points,
                     'base_discount' => $ruleDiscount,
-                );
+                ];
                 $this->_prepareDiscountForTaxAmount($shippingAssignment, $ruleDiscount, $points, $rule);
                 if ($rule->getStopRulesProcessing()) {
                     break;
@@ -216,7 +222,7 @@ class PointAfterTax extends \Magento\Quote\Model\Quote\Address\Total\AbstractTot
         }
         // Sales Rule (slider) discount Last
         if (is_array($rewardSalesRules)) {
-            $newRewardSalesRules = array();
+            $newRewardSalesRules = [];
             if ($baseTotal > 0.0 && isset($rewardSalesRules['rule_id'])) {
                 $rule = $helper->getQuoteRule($rewardSalesRules['rule_id']);
                 if ($rule && $rule->getId() && $rule->getSimpleAction() == 'by_price') {
@@ -227,11 +233,11 @@ class PointAfterTax extends \Magento\Quote\Model\Quote\Address\Total\AbstractTot
                         $maxPoints -= $points;
                         $baseDiscount += $ruleDiscount;
                         $pointUsed += $points;
-                        $newRewardSalesRules = array(
+                        $newRewardSalesRules =[
                             'rule_id' => $rule->getId(),
                             'use_point' => $points,
                             'base_discount' => $ruleDiscount,
-                        );
+                        ];
                         if ($rule->getId() == 'rate') {
                             $this->_prepareDiscountForTaxAmount($shippingAssignment, $ruleDiscount, $points);
                         } else {
@@ -248,19 +254,22 @@ class PointAfterTax extends \Magento\Quote\Model\Quote\Address\Total\AbstractTot
             $baseDiscount = $helper->getQuoteBaseTotal($quote, $address);
         }
         if ($baseDiscount) {
-            $this->setDiscount($baseDiscount,$total,$address,$pointUsed,$quote);
+            $this->setDiscount($baseDiscount, $total, $address, $pointUsed, $quote);
         }
         return $this;
     }
 
     /**
-     * @param $baseDiscount
-     * @param $total
-     * @param $address
-     * @param $pointUsed
-     * @param $quote
+     * Set Discount
+     *
+     * @param float $baseDiscount
+     * @param \Magento\Quote\Model\Quote\Address\Total $total
+     * @param \Magento\Quote\Api\Data\AddressInterface $address
+     * @param int $pointUsed
+     * @param \Magento\Quote\Model\Quote $quote
      */
-    public function setDiscount($baseDiscount,$total,$address,$pointUsed,$quote){
+    public function setDiscount($baseDiscount, $total, $address, $pointUsed, $quote)
+    {
         $discount =  $this->_priceCurrency->convert($baseDiscount);
         $total->addTotalAmount('rewardpoints', -$discount);
         $total->addBaseTotalAmount('rewardpoints', -$baseDiscount);
@@ -279,40 +288,58 @@ class PointAfterTax extends \Magento\Quote\Model\Quote\Address\Total\AbstractTot
     /**
      * Prepare Discount Amount used for Tax
      *
-     * @param Mage_Sales_Model_Quote_Address $address
-     * @param type $baseDiscount
-     * @return Magestore_RewardPoints_Model_Total_Quote_Point
+     * @param \Magento\Quote\Api\Data\ShippingAssignmentInterface $shippingAssignment
+     * @param float $baseDiscount
+     * @param int $points
+     * @param null|\Magento\Framework\DataObject $rule
+     * @return $this
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
-    public function _prepareDiscountForTaxAmount(\Magento\Quote\Api\Data\ShippingAssignmentInterface $shippingAssignment, $baseDiscount, $points, $rule = null) {
+    public function _prepareDiscountForTaxAmount(
+        \Magento\Quote\Api\Data\ShippingAssignmentInterface $shippingAssignment,
+        $baseDiscount,
+        $points,
+        $rule = null
+    ) {
         $address = $shippingAssignment->getShipping()->getAddress();
         $items = $address->getAllItems();
-        if (!count($items))
+        if (!count($items)) {
             return $this;
+        }
         // Calculate total item prices
         $baseItemsPrice = 0;
         $spendHelper = $this->_calculationSpending;
-        $baseParentItemsPrice = array();
+        $baseParentItemsPrice = [];
         foreach ($items as $item) {
-            if ($item->getParentItemId())
+            if ($item->getParentItemId()) {
                 continue;
+            }
             if ($item->getHasChildren() && $item->isChildrenCalculated()) {
                 $baseParentItemsPrice[$item->getId()] = 0;
                 foreach ($item->getChildren() as $child) {
-                    if ($rule !== null && !$rule->getActions()->validate($child))
+                    if ($rule !== null && !$rule->getActions()->validate($child)) {
                         continue;
-                    $baseParentItemsPrice[$item->getId()] = $item->getQty() * ($child->getQty() * $spendHelper->_getItemBasePrice($child)) - $child->getBaseDiscountAmount() - $child->getMagestoreBaseDiscount();
+                    }
+                    $baseParentItemsPrice[$item->getId()] = $item->getQty()
+                        * ($child->getQty() * $spendHelper->_getItemBasePrice($child))
+                        - $child->getBaseDiscountAmount() - $child->getMagestoreBaseDiscount();
                 }
                 $baseItemsPrice += $baseParentItemsPrice[$item->getId()];
             } elseif ($item->getProduct()) {
-                if ($rule !== null && !$rule->getActions()->validate($item))
+                if ($rule !== null && !$rule->getActions()->validate($item)) {
                     continue;
-                $baseItemsPrice += $item->getQty() * $spendHelper->_getItemBasePrice($item) - $item->getBaseDiscountAmount() - $item->getMagestoreBaseDiscount();
+                }
+                $baseItemsPrice += $item->getQty() * $spendHelper->_getItemBasePrice($item)
+                    - $item->getBaseDiscountAmount() - $item->getMagestoreBaseDiscount();
             }
         }
-        if ($baseItemsPrice < 0.0001)
+        if ($baseItemsPrice < 0.0001) {
             return $this;
+        }
         $discountForShipping = $this->_helper->getConfig(
-            \Magestore\Rewardpoints\Helper\Calculation\Spending::XML_PATH_SPEND_FOR_SHIPPING, $address->getQuote()->getStoreId()
+            \Magestore\Rewardpoints\Helper\Calculation\Spending::XML_PATH_SPEND_FOR_SHIPPING,
+            $address->getQuote()->getStoreId()
         );
         if ($baseItemsPrice < $baseDiscount && $discountForShipping) {
             $baseDiscountForShipping = $baseDiscount - $baseItemsPrice;
@@ -322,16 +349,20 @@ class PointAfterTax extends \Magento\Quote\Model\Quote\Address\Total\AbstractTot
         }
         // Update discount for each item
         foreach ($items as $item) {
-            if ($item->getParentItemId())
+            if ($item->getParentItemId()) {
                 continue;
+            }
             if ($item->getHasChildren() && $item->isChildrenCalculated()) {
                 $parentItemBaseDiscount = $baseDiscount * $baseParentItemsPrice[$item->getId()] / $baseItemsPrice;
                 foreach ($item->getChildren() as $child) {
-                    if ($parentItemBaseDiscount <= 0)
+                    if ($parentItemBaseDiscount <= 0) {
                         break;
-                    if ($rule !== null && !$rule->getActions()->validate($child))
+                    }
+                    if ($rule !== null && !$rule->getActions()->validate($child)) {
                         continue;
-                    $baseItemPrice = $item->getQty() * ($child->getQty() * $spendHelper->_getItemBasePrice($child)) - $child->getBaseDiscountAmount() - $child->getMagestoreBaseDiscount();
+                    }
+                    $baseItemPrice = $item->getQty() * ($child->getQty() * $spendHelper->_getItemBasePrice($child))
+                        - $child->getBaseDiscountAmount() - $child->getMagestoreBaseDiscount();
                     $itemBaseDiscount = min($baseItemPrice, $parentItemBaseDiscount);
                     $parentItemBaseDiscount -= $itemBaseDiscount;
                     $itemDiscount = $this->_priceCurrency->convert($itemBaseDiscount);
@@ -343,9 +374,11 @@ class PointAfterTax extends \Magento\Quote\Model\Quote\Address\Total\AbstractTot
                         ->setRewardpointsSpent($child->getRewardpointsSpent() + $pointSpent);
                 }
             } elseif ($item->getProduct()) {
-                if ($rule !== null && !$rule->getActions()->validate($item))
+                if ($rule !== null && !$rule->getActions()->validate($item)) {
                     continue;
-                $baseItemPrice = $item->getQty() * $spendHelper->_getItemBasePrice($item) - $item->getBaseDiscountAmount() - $item->getMagestoreBaseDiscount();
+                }
+                $baseItemPrice = $item->getQty() * $spendHelper->_getItemBasePrice($item)
+                    - $item->getBaseDiscountAmount() - $item->getMagestoreBaseDiscount();
                 $itemBaseDiscount = $baseDiscount * $baseItemPrice / $baseItemsPrice;
                 $itemDiscount = $this->_priceCurrency->convert($itemBaseDiscount);
                 $pointSpent = round($points * $baseItemPrice / $baseItemsPrice, 0, PHP_ROUND_HALF_DOWN);
@@ -357,23 +390,27 @@ class PointAfterTax extends \Magento\Quote\Model\Quote\Address\Total\AbstractTot
             }
         }
         if ($baseDiscountForShipping) {
-            $this->baseDiscountForShipping($address,$baseDiscountForShipping);
+            $this->baseDiscountForShipping($address, $baseDiscountForShipping);
         }
         return $this;
     }
 
     /**
-     * @param $address
-     * @param $baseDiscountForShipping
+     * Base Discount For Shipping
+     *
+     * @param \Magento\Quote\Api\Data\AddressInterface $address
+     * @param float $baseDiscountForShipping
      */
-    public function baseDiscountForShipping($address,$baseDiscountForShipping){
+    public function baseDiscountForShipping($address, $baseDiscountForShipping)
+    {
         $shippingAmount = $address->getShippingAmountForDiscount();
         if ($shippingAmount !== null) {
             $baseShippingAmount = $address->getBaseShippingAmountForDiscount();
         } else {
             $baseShippingAmount = $address->getBaseShippingAmount();
         }
-        $baseShipping = $baseShippingAmount - $address->getBaseShippingDiscountAmount() - $address->getMagestoreBaseDiscountForShipping();
+        $baseShipping = $baseShippingAmount - $address->getBaseShippingDiscountAmount()
+            - $address->getMagestoreBaseDiscountForShipping();
         $itemBaseDiscount = ($baseDiscountForShipping <= $baseShipping) ? $baseDiscountForShipping : $baseShipping;
         $itemDiscount = $this->_priceCurrency->convert($itemBaseDiscount);
         $address->setRewardpointsBaseAmount($address->getRewardpointsBaseAmount() + $itemBaseDiscount)
@@ -382,21 +419,32 @@ class PointAfterTax extends \Magento\Quote\Model\Quote\Address\Total\AbstractTot
             ->setMagestoreBaseDiscountForShipping($address->getMagestoreBaseDiscountForShipping() + $itemBaseDiscount);
     }
 
-    public function _processHiddenTaxes($address) {
+    /**
+     * Process Hidden Taxes
+     *
+     * @param \Magento\Quote\Api\Data\AddressInterface $address
+     */
+    public function _processHiddenTaxes($address)
+    {
         foreach ($address->getAllItems() as $item) {
-            if ($item->getParentItemId())
+            if ($item->getParentItemId()) {
                 continue;
+            }
             if ($item->getHasChildren() && $item->isChildrenCalculated()) {
                 foreach ($item->getChildren() as $child) {
                     $child->setHiddenTaxAmount($child->getHiddenTaxAmount() + $child->getRewardpointsHiddenTaxAmount());
-                    $child->setBaseHiddenTaxAmount($child->getBaseHiddenTaxAmount() + $child->getRewardpointsBaseHiddenTaxAmount());
+                    $child->setBaseHiddenTaxAmount(
+                        $child->getBaseHiddenTaxAmount() + $child->getRewardpointsBaseHiddenTaxAmount()
+                    );
 
                     $address->addTotalAmount('hidden_tax', $child->getRewardpointsHiddenTaxAmount());
                     $address->addBaseTotalAmount('hidden_tax', $child->getRewardpointsBaseHiddenTaxAmount());
                 }
             } elseif ($item->getProduct()) {
                 $item->setHiddenTaxAmount($item->getHiddenTaxAmount() + $item->getRewardpointsHiddenTaxAmount());
-                $item->setBaseHiddenTaxAmount($item->getBaseHiddenTaxAmount() + $item->getRewardpointsBaseHiddenTaxAmount());
+                $item->setBaseHiddenTaxAmount(
+                    $item->getBaseHiddenTaxAmount() + $item->getRewardpointsBaseHiddenTaxAmount()
+                );
 
                 $address->addTotalAmount('hidden_tax', $item->getRewardpointsHiddenTaxAmount());
                 $address->addBaseTotalAmount('hidden_tax', $item->getRewardpointsBaseHiddenTaxAmount());
@@ -407,5 +455,4 @@ class PointAfterTax extends \Magento\Quote\Model\Quote\Address\Total\AbstractTot
             $address->addBaseTotalAmount('shipping_hidden_tax', $address->getRewardpointsBaseShippingHiddenTaxAmount());
         }
     }
-
 }

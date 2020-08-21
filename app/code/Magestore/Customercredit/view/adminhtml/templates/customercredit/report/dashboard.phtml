@@ -30,7 +30,11 @@
     changeDiagramsPeriod = function(periodObj) {
         periodParam = periodObj.value ? 'period/' + periodObj.value + '/' : '';
         ajaxBlockParam = 'block/adminhtml_report_customercredit/';
-        ajaxBlockUrl = '<?php echo $this->getUrl('*/*/ajaxBlock', array('_current' => true, 'block' => '', 'period' => '')) ?>' + ajaxBlockParam + periodParam;
+        ajaxBlockUrl =
+            '<?= /* @noEscape */
+                $block->getUrl('*/*/ajaxBlock', ['_current' => true, 'block' => '', 'period' => '']) ?>'
+            + ajaxBlockParam
+            + periodParam;
         $.ajax({
             url: ajaxBlockUrl,
             postBody: '',
@@ -54,9 +58,12 @@
                 catch (e) {
                     $(tabContentElementId).html(transport.responseText);
                 }
-            
+
         });
-        ajaxBlockUrl = '<?php echo $block->getUrl('*/*/ajaxBlock', array('_current' => true, 'block' => '', 'period' => '')) ?>' + periodParam;
+        ajaxBlockUrl =
+            '<?= /* @noEscape */
+                $block->getUrl('*/*/ajaxBlock', ['_current' => true, 'block' => '', 'period' => '']) ?>'
+            + periodParam;
 
         $.ajax({
             url: ajaxBlockUrl,
@@ -66,7 +73,7 @@
                 tabContentElementId = 'dashboard_diagram_totals';
                 try {
                     if (transport.responseText.isJSON()) {
-                        var response = transport.responseText.evalJSON()
+                        var response = transport.responseText.evalJSON();
                         if (response.error) {
                             alert(response.message);
                         }
@@ -80,7 +87,7 @@
                 catch (e) {
                     $(tabContentElementId).html(transport.responseText);
                 }
-            
+
         });
     }
 })
@@ -93,7 +100,7 @@
             <td>
                 <div class="entry-edit">
                     <div id="diagram_tab_content">
-                        <?php echo $block->getChildHtml('customer-credit') ?>
+                        <?= /* @noEscape */ $block->getChildHtml('customer-credit') ?>
                     </div>
                 </div>
             </td>
@@ -102,7 +109,7 @@
 </div>
 <script type="text/javascript">
     //<![CDATA[
-    require(['jquery'], function($) { 
+    require(['jquery'], function($) {
         jQuery('#report_customer-credit_period').val('7d')
     });
     //]]>

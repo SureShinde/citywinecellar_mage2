@@ -22,7 +22,7 @@
 
         <before>
             <!-- Login to backend magento -->
-            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
+            <actionGroup ref="PosAdminLoginActionGroup" stepKey="loginAsAdmin1"/>
         </before>
 
         <after>
@@ -39,12 +39,12 @@
         <wait stepKey="waitAfterFillFormNewTransfer" time="1"/>
         <click stepKey="clickToStartTransferItem" selector="{{NewTransferStockSection.prepareButton}}"/>
         <waitForPageLoad stepKey="waitTransferStockEditPageLoaded"/>
-        <wait stepKey="wait1sAfterLoadEditPage" time="1"/>
+        <wait stepKey="wait1sAfterLoadEditPage" time="5"/>
 
         <!-- Add products to transfer -->
         <click stepKey="clickToOpenModalAddProduct" selector="{{TransferStockAddProductsSection.addProductButton}}"/>
         <waitForPageLoad stepKey="waitAddProductsModalLoaded"/>
-        <wait stepKey="wait1sAfterModalAddProductLoaded" time="1"/>
+        <wait stepKey="wait1sAfterModalAddProductLoaded" time="3"/>
         <click stepKey="clickToFiltersButton" selector="{{TransferStockAddProductsSection.buttonFilters}}"/>
         <wait stepKey="wait1sAfterClickFilters" time="1"/>
         <fillField stepKey="fillSkuToFilter" selector="{{TransferStockAddProductsSection.filterInputSku}}" userInput="{{product_24WB02.sku}}"/>
@@ -52,35 +52,35 @@
         <wait stepKey="wait1sAfterApplyFilters" time="1"/>
         <click stepKey="chooseItem" selector="{{TransferStockAddProductsSection.checkboxButton(product_24WB02.sku)}}"/>
         <click stepKey="clickToAddSelectedProductButton" selector="{{TransferStockAddProductsSection.buttonAddSelectedProducts}}"/>
-        <wait stepKey="wait1sAfterAddProduct" time="1"/>
+        <wait stepKey="wait1sAfterAddProduct" time="3"/>
 
         <!-- Fill qty and send -->
         <fillField stepKey="fillQtyToTransfer" selector="{{TransferStockAddProductsSection.qtyToSendInPutOfFirstProduct}}" userInput="{{product_24WB02.qty_transferred}}"/>
         <click stepKey="clickToSendButton" selector="{{TransferStockAddProductsSection.sendButton}}"/>
-        <wait stepKey="wait1sAfterClickSendButton" time="1"/>
+        <wait stepKey="wait1sAfterClickSendButton" time="3"/>
         <click stepKey="clickToConfirmSendButton" selector="{{TransferStockAddProductsSection.confirmPopupOK}}"/>
         <waitForPageLoad stepKey="waitSendProductLoaded"/>
-        <wait stepKey="wait1sAfterSendFinish" time="1"/>
+        <wait stepKey="wait1sAfterSendFinish" time="15"/>
 
         <!-- Receive item -->
         <click stepKey="clickToReceiveButton" selector="{{TransferStockReceiveSection.receiveButton}}"/>
         <waitForPageLoad stepKey="waitReceiveModalLoaded"/>
-        <wait stepKey="wait1sAfterModalReceiveLoaded" time="1"/>
+        <wait stepKey="wait1sAfterModalReceiveLoaded" time="3"/>
         <click stepKey="clickToAddProductToReceiveButton" selector="{{TransferStockReceiveSection.addProductToReceiveButton}}"/>
         <waitForPageLoad stepKey="waitAddProductsToReceiveModalLoaded"/>
-        <wait stepKey="wait1sAfterModalAddProductsToReceiveLoaded" time="1"/>
+        <wait stepKey="wait1sAfterModalAddProductsToReceiveLoaded" time="3"/>
         <click stepKey="chooseItemToReceive" selector="{{TransferStockReceiveSection.checkboxButton(product_24WB02.sku)}}"/>
         <click stepKey="clickAddProductToReceiveButton" selector="{{TransferStockReceiveSection.addSelectedProductsToReceivebutton}}"/>
-        <wait stepKey="wait1sAfterAddProductsToReceive" time="1"/>
+        <wait stepKey="wait1sAfterAddProductsToReceive" time="3"/>
         <fillField stepKey="fillQtyToReceive" selector="{{TransferStockReceiveSection.qtyToReceiveInputBox}}" userInput="{{product_24WB02.qty_transferred}}"/>
         <click stepKey="clickButtonCreateReceive" selector="{{TransferStockReceiveSection.createReceiveButton}}"/>
         <waitForPageLoad stepKey="waitPageAfterCreateReceiveLoaded"/>
-        <wait stepKey="wait1sAfterPageAfterCreateReceiveLoaded" time="1"/>
+        <wait stepKey="wait1sAfterPageAfterCreateReceiveLoaded" time="3"/>
 
         <!-- Check product qty in source -->
         <amOnPage url="{{EditProductPage.url(product_24WB02.id)}}" stepKey="amOnEditProductPage"/>
         <waitForPageLoad stepKey="waitForEditProductPage"/>
-        <wait stepKey="wait1sAfterLoadProductDetailPage" time="1"/>
+        <wait stepKey="wait1sAfterLoadProductDetailPage" time="3"/>
 
         <grabValueFrom selector="{{ProductSourceDetailSection.qtyInputInSource(source_warehouse.code)}}" stepKey="grabSourceWarehouseQtyValue"/>
         <assertEquals stepKey="assertSourceWarehouseQty" message="Assert Source Warehouse Qty Value">

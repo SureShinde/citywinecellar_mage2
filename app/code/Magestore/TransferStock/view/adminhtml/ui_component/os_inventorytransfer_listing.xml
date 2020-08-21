@@ -139,7 +139,7 @@
                     <item name="filter" xsi:type="string">dateRange</item>
                     <item name="component" xsi:type="string">Magento_Ui/js/grid/columns/date</item>
                     <item name="dataType" xsi:type="string">date</item>
-                    <item name="dateFormat" xsi:type="string">MM/dd/YYYY</item>
+                    <item name="dateFormat" xsi:type="string">MM/dd/yyyy</item>
                     <item name="label" xsi:type="string" translate="true">Created On</item>
                     <item name="sortOrder" xsi:type="number">40</item>
                 </item>

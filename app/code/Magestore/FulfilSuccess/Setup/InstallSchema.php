@@ -11,17 +11,19 @@ use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\SchemaSetupInterface;
 
 /**
- * Class InstallSchema
- * @package Magestore\OrderSuccess\Setup
+ * Fulfillment InstallSchema
  */
 class InstallSchema implements InstallSchemaInterface
 {
-
     /**
+     * Install
+     *
      * @param SchemaSetupInterface $setup
      * @param ModuleContextInterface $context
      * @return $this
      * @throws \Zend_Db_Exception
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function install(SchemaSetupInterface $setup, ModuleContextInterface $context)
     {
@@ -45,7 +47,7 @@ class InstallSchema implements InstallSchemaInterface
         $setup->getConnection()->dropTable($setup->getTable('os_fulfilsuccess_package_item'));
 
         /**
-         * create os_fulfilsuccess_batch table
+         * Create os_fulfilsuccess_batch table
          */
         $table = $installer->getConnection()
             ->newTable($installer->getTable('os_fulfilsuccess_batch'))
@@ -269,7 +271,7 @@ class InstallSchema implements InstallSchemaInterface
         $installer->getConnection()->createTable($table);
 
         /**
-         * create os_fulfilsuccess_packrequest table
+         * Create os_fulfilsuccess_packrequest table
          */
         $table = $installer->getConnection()
             ->newTable($installer->getTable('os_fulfilsuccess_packrequest'))
@@ -376,7 +378,7 @@ class InstallSchema implements InstallSchemaInterface
         $installer->getConnection()->createTable($table);
 
         /**
-         * create os_fulfilsuccess_packrequest_item table
+         * Create os_fulfilsuccess_packrequest_item table
          */
         $table = $installer->getConnection()
             ->newTable($installer->getTable('os_fulfilsuccess_packrequest_item'))
@@ -620,7 +622,7 @@ class InstallSchema implements InstallSchemaInterface
         $installer->getConnection()->createTable($table);
 
         /**
-         * create os_fulfilsuccess_package_item table
+         * Create os_fulfilsuccess_package_item table
          */
         $table = $installer->getConnection()
             ->newTable($installer->getTable('os_fulfilsuccess_package_item'))
@@ -693,22 +695,21 @@ class InstallSchema implements InstallSchemaInterface
         $installer->getConnection()->createTable($table);
 
         /**
-         * add columns to sales_shipment table
+         * Add columns to sales_shipment table
          */
         $installer->getConnection()->addColumn(
             $installer->getTable('sales_shipment'),
             'fulfil_status',
-            array(
+            [
                 'type' => \Magento\Framework\DB\Ddl\Table::TYPE_SMALLINT,
                 'nullable' => true,
                 'length' => 5,
                 'default' => 0,
                 'comment' => 'Fulfil Status. 0: Did not give to carrier, 1: Gave to carrier'
-            )
+            ]
         );
 
         $installer->endSetup();
         return $this;
     }
-
 }

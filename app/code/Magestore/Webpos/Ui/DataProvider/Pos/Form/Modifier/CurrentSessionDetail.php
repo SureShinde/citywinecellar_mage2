@@ -12,8 +12,9 @@ use Magento\Ui\Component\Form;
 use Magento\Ui\Component\Container;
 
 /**
- * Class SessionDetails
- * @package Magestore\Webpos\Ui\DataProvider\Pos\Form\Modifier
+ * POS Form CurrentSessionDetail
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class CurrentSessionDetail extends AbstractModifier
 {
@@ -45,9 +46,11 @@ class CurrentSessionDetail extends AbstractModifier
      * @var \Magestore\Webpos\Model\Config\ConfigRepository
      */
     protected $configRepository;
+    protected $loadedData;
 
     /**
      * CurrentSessionDetail constructor.
+     *
      * @param \Magento\Framework\ObjectManagerInterface $objectManager
      * @param \Magento\Framework\Registry $registry
      * @param \Magento\Framework\App\RequestInterface $request
@@ -66,10 +69,12 @@ class CurrentSessionDetail extends AbstractModifier
         \Magestore\Webpos\Helper\Shift $shiftHelper,
         \Magento\Framework\Locale\CurrencyInterface $localeCurrency,
         \Magestore\Webpos\Model\Config\ConfigRepository $configRepository
-    )
-    {
+    ) {
         parent::__construct(
-            $objectManager, $registry, $request, $urlBuilder
+            $objectManager,
+            $registry,
+            $request,
+            $urlBuilder
         );
         $this->shiftRepository = $shiftRepository;
         $this->shiftHelper = $shiftHelper;
@@ -84,8 +89,9 @@ class CurrentSessionDetail extends AbstractModifier
      */
     public function getCurrentPos()
     {
-        if (!$this->currentPos)
+        if (!$this->currentPos) {
             $this->currentPos = $this->registry->registry('current_pos');
+        }
         return $this->currentPos;
     }
 
@@ -96,7 +102,7 @@ class CurrentSessionDetail extends AbstractModifier
      */
     public function getData()
     {
-        if (isset($this->loadedData)) {
+        if ($this->loadedData !== null) {
             return $this->loadedData;
         }
         $this->loadedData = [];
@@ -109,22 +115,23 @@ class CurrentSessionDetail extends AbstractModifier
     }
 
     /**
-     * get visible
+     * Get visible
      *
-     * @param
-     * @return
+     * @return bool|int
      */
     public function getVisible()
     {
         $pos = $this->getCurrentPos();
-        if (!$pos || !$pos->getId())
+        if (!$pos || !$pos->getId()) {
             return false;
+        }
         return true;
     }
 
     /**
-     * modify data
+     * Modify data
      *
+     * @param array $data
      * @return array
      */
     public function modifyData(array $data)
@@ -133,7 +140,7 @@ class CurrentSessionDetail extends AbstractModifier
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function modifyMeta(array $meta)
     {
@@ -178,6 +185,11 @@ class CurrentSessionDetail extends AbstractModifier
         return $children;
     }
 
+    /**
+     * Get Current Session Form
+     *
+     * @return array
+     */
     public function getCurrentSessionForm()
     {
         return [
@@ -192,21 +204,6 @@ class CurrentSessionDetail extends AbstractModifier
                 ],
             ],
             'children' => [
-                /*'html_content' => [
-                    'arguments' => [
-                        'data' => [
-                            'type' => 'html_content',
-                            'name' => 'html_content',
-                            'config' => [
-                                'componentType' => Container::NAME,
-                                'component' => 'Magento_Ui/js/form/components/html',
-                                'content' => \Magento\Framework\App\ObjectManager::getInstance()
-                                    ->create('Magestore\Webpos\Block\Adminhtml\Pos\Tab\SessionDetail')
-                                    ->toHtml()
-                            ]
-                        ]
-                    ]
-                ],*/
                 'details' => [
                     'arguments' => [
                         'data' => [
@@ -232,6 +229,12 @@ class CurrentSessionDetail extends AbstractModifier
         ];
     }
 
+    /**
+     * Get Template Detail
+     *
+     * @param string $fileName
+     * @return array
+     */
     public function getTemplateDetail($fileName)
     {
         return [
@@ -247,6 +250,8 @@ class CurrentSessionDetail extends AbstractModifier
     }
 
     /**
+     * Get Current Shift
+     *
      * @return \Magestore\Webpos\Api\Data\Shift\ShiftInterface|null
      */
     public function getCurrentShift()
@@ -265,12 +270,14 @@ class CurrentSessionDetail extends AbstractModifier
     }
 
     /**
+     * Get Shift Data
+     *
      * @return string
      */
     public function getShiftData()
     {
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $FormKey = $objectManager->get('Magento\Framework\Data\Form\FormKey');
+        $FormKey = $objectManager->get(\Magento\Framework\Data\Form\FormKey::class);
         $FormKey->getFormKey();
 
         $shift = $this->getCurrentShift();
@@ -281,38 +288,39 @@ class CurrentSessionDetail extends AbstractModifier
         } else {
             $result = $this->shiftHelper->getShiftDataForAdmin($shift);
 
-            $location = $objectManager->create('Magestore\Webpos\Model\Location\Location')->load($shift->getLocationId());
-            if ($location->getId()){
+            $location = $objectManager->create(\Magestore\Webpos\Model\Location\Location::class)
+                ->load($shift->getLocationId());
+            if ($location->getId()) {
                 $addressArray = [];
-                if ($location->getStreet()){
+                if ($location->getStreet()) {
                     $addressArray[] = $location->getStreet();
                 }
-                if ($location->getRegion()){
+                if ($location->getRegion()) {
                     $addressArray[] = $location->getRegion();
                 }
-                if ($location->getCity()){
+                if ($location->getCity()) {
                     $addressArray[] = $location->getCity();
                 }
-                if ($location->getPostcode()){
+                if ($location->getPostcode()) {
                     $addressArray[] = $location->getPostcode();
                 }
-                if ($location->getCountry()){
+                if ($location->getCountry()) {
                     $addressArray[] = $location->getCountry();
                 }
                 $result['location_address'] = implode(', ', $addressArray);
             }
         }
-        /** refresh action */
+        /** Refresh action */
         $result["refresh_url"] = $this->urlBuilder->getUrl(
             "*/*/getShift",
             ['pos_id' => $this->getCurrentPos()->getPosId()]
         );
-        /** save Cash adjustment action */
+        /** Save Cash adjustment action */
         $result["save_url"] = $this->urlBuilder->getUrl(
             "*/*/saveShift",
             ['form_key' => $FormKey->getFormKey()]
         );
-        /** save close shift action */
+        /** Save close shift action */
         $result["save_close_shift_url"] = $this->urlBuilder->getUrl(
             "*/*/saveCloseShift",
             ['form_key' => $FormKey->getFormKey()]
@@ -323,14 +331,14 @@ class CurrentSessionDetail extends AbstractModifier
 
     /**
      * Get currency data
-     * 
+     *
      * @return string
      */
     public function getCurrencyData()
     {
         $output = [];
         $shift = $this->getCurrentShift();
-        if($shift && $shift->getShiftId()) {
+        if ($shift && $shift->getShiftId()) {
             $currentCurrency = $this->localeCurrency->getCurrency($shift->getShiftCurrencyCode());
             $baseCurrency = $this->localeCurrency->getCurrency($shift->getBaseCurrencyCode());
             $currentCurrencyCode = $shift->getShiftCurrencyCode();
@@ -339,7 +347,7 @@ class CurrentSessionDetail extends AbstractModifier
             $baseCurrencySymbol = $baseCurrency->getSymbol();
         } else {
             /** @var \Magento\Store\Model\StoreManagerInterface $storeManager */
-            $storeManager = $this->objectManager->get('Magento\Store\Model\StoreManagerInterface');
+            $storeManager = $this->objectManager->get(\Magento\Store\Model\StoreManagerInterface::class);
             $currentCurrency = $storeManager->getStore()->getCurrentCurrency();
             $baseCurrency = $storeManager->getStore()->getBaseCurrency();
             $currentCurrencyCode = $currentCurrency->getCode();
@@ -348,7 +356,7 @@ class CurrentSessionDetail extends AbstractModifier
             $baseCurrencySymbol = $baseCurrency->getCurrencySymbol();
         }
         /** @var \Magento\Framework\Locale\FormatInterface $localeFormat */
-        $localeFormat = $this->objectManager->get('Magento\Framework\Locale\FormatInterface');
+        $localeFormat = $this->objectManager->get(\Magento\Framework\Locale\FormatInterface::class);
         $output['currentCurrencyCode'] = $currentCurrencyCode;
         $output['baseCurrencyCode'] = $baseCurrencyCode;
         $output['currentCurrencySymbol'] = $currentCurrencySymbol;
@@ -359,12 +367,15 @@ class CurrentSessionDetail extends AbstractModifier
     }
 
     /**
+     * Get Denomination Data
+     *
      * @return array
      */
-    public function getDenominationData(){
-        $output = array();
+    public function getDenominationData()
+    {
+        $output = [];
         $denominations = $this->configRepository->getDenominations();
-        if($denominations) {
+        if ($denominations) {
             foreach ($denominations as $denomination) {
                 $output['denomination'][] = $denomination->getData();
             }

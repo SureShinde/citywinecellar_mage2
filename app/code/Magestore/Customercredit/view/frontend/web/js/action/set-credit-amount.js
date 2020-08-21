@@ -35,18 +35,22 @@ define(
         'Magento_Checkout/js/action/get-payment-information',
         'Magento_Checkout/js/model/totals',
         'mage/translate',
-        'Magestore_Customercredit/js/action/reload-shipping-method'
+        'Magestore_Customercredit/js/action/reload-shipping-method',
+        'mage/url'
     ],
-    function (ko, $, quote, urlManager, errorProcessor, messageContainer, storage, getPaymentInformationAction, totals, $t, reloadShippingMethod) {
+    function (ko, $, quote, urlManager, errorProcessor, messageContainer, storage, getPaymentInformationAction, totals, $t, reloadShippingMethod, urlBuilder) {
         'use strict';
 
         return function (amount, isApplied, isLoading, creditdata) {
             var credit_amount = amount.call();
-            var url = 'customercredit/checkout/amountpost/credit_amount/' + credit_amount;
+            var url = urlBuilder.build('customercredit/checkout/amountPost');
+            var params = {
+                credit_amount: Number(credit_amount)
+            };
 
-            return storage.put(
+            return $.post(
                 url,
-                false
+                params
             ).done(
                 function (response) {
                     var res = JSON.parse(response);

@@ -24,7 +24,7 @@ namespace Magestore\Rewardpoints\Block\Adminhtml\Transaction\TabContent\Tab;
 use Magento\Backend\Block\Widget\Tab\TabInterface;
 
 /**
- * Class Tab GeneralTab
+ * Class Tab Add new tab
  */
 class AddNew extends \Magento\Backend\Block\Widget\Form\Generic implements TabInterface
 {
@@ -36,14 +36,14 @@ class AddNew extends \Magento\Backend\Block\Widget\Form\Generic implements TabIn
     /**
      * @var \Magento\Store\Model\StoreManagerInterface
      */
-    protected  $_storeManager;
+    protected $_storeManager;
 
     /**
-     * GeneralTab constructor.
+     * AddNew constructor.
+     *
      * @param \Magento\Backend\Block\Template\Context $context
      * @param \Magento\Framework\Registry $registry
      * @param \Magento\Framework\Data\FormFactory $formFactory
-     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param \Magento\Store\Model\System\Store $systemStore
      * @param array $data
      */
@@ -52,16 +52,15 @@ class AddNew extends \Magento\Backend\Block\Widget\Form\Generic implements TabIn
         \Magento\Framework\Registry $registry,
         \Magento\Framework\Data\FormFactory $formFactory,
         \Magento\Store\Model\System\Store $systemStore,
-        array $data = array()
+        array $data = []
     ) {
         parent::__construct($context, $registry, $formFactory, $data);
         $this->_storeManager= $context->getStoreManager();
         $this->_systemStore =$systemStore;
     }
 
-
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function getTabLabel()
     {
@@ -69,7 +68,7 @@ class AddNew extends \Magento\Backend\Block\Widget\Form\Generic implements TabIn
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function getTabTitle()
     {
@@ -77,7 +76,7 @@ class AddNew extends \Magento\Backend\Block\Widget\Form\Generic implements TabIn
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function canShowTab()
     {
@@ -85,21 +84,10 @@ class AddNew extends \Magento\Backend\Block\Widget\Form\Generic implements TabIn
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function isHidden()
     {
         return false;
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function _prepareForm()
-    {
-
-        return parent::_prepareForm();
-    }
-
-
 }

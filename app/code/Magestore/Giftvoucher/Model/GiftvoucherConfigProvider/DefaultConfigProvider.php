@@ -9,8 +9,11 @@ use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Framework\Locale\FormatInterface as LocaleFormat;
 
 /**
+ * Giftvoucher Default Config Provider
+ *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @SuppressWarnings(PHPMD.TooManyFields)
+ * @SuppressWarnings(PHPMD.CookieAndSessionMisuse)
  */
 class DefaultConfigProvider extends \Magento\Framework\DataObject implements ConfigProviderInterface
 {
@@ -118,6 +121,7 @@ class DefaultConfigProvider extends \Magento\Framework\DataObject implements Con
      * @param \Magestore\Giftvoucher\Api\GiftTemplate\IOServiceInterface $IOService
      * @param \Magestore\Giftvoucher\Api\GiftTemplate\SampleDataServiceInterface $sampleDataService
      * @param array $data
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         \Magento\Config\Model\Config\Source\Locale\Timezone $timezone,
@@ -142,7 +146,7 @@ class DefaultConfigProvider extends \Magento\Framework\DataObject implements Con
         \Magestore\Giftvoucher\Api\GiftTemplate\SampleDataServiceInterface $sampleDataService,
         array $data = []
     ) {
-    
+
         $this->_timezone = $timezone;
         $this->_giftTemplateFactory = $giftTemplateFactory;
         $this->_coreRegistry = $registry;
@@ -167,20 +171,24 @@ class DefaultConfigProvider extends \Magento\Framework\DataObject implements Con
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function getConfig()
     {
         $product = $this->getProduct();
         $timezones = $this->_timezone->toOptionArray();
-        $timezoneArray = array();
+        $timezoneArray = [];
         foreach ($timezones as $timezone) {
             $timezoneArray[] = $timezone;
         }
         $output['timezones'] = $timezoneArray;
         $output['templates'] = $this->getAvailableTemplate();
         $output['imageBaseUrl'] = $this->_storeManager
-                ->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA) . 'giftvoucher/template/images';
+                ->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA)
+            . 'giftvoucher/template/images';
         $output['customImageBaseUrl'] = $this->_storeManager
                 ->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA) . 'tmp/giftvoucher/images';
         $output['giftAmount'] = $this->getGiftAmount($product);
@@ -193,10 +201,18 @@ class DefaultConfigProvider extends \Magento\Framework\DataObject implements Con
         $output['uploadUrl'] = $this->_storeManager->getStore()->getUrl("giftvoucher/index/uploadImageAjax");
         $output['giftCardType'] =  $this->getProduct()->getData('gift_card_type');
         $output['enableScheduleSend'] =  $this->giftVoucherHelper->getInterfaceConfig('schedule');
-        $output['barCodeUrl'] =$this->_template->getViewFileUrl('Magestore_Giftvoucher::images/template/barcode/default.png');
-        $output['defaultBackground'] =$this->_template->getViewFileUrl('Magestore_Giftvoucher::images/template/images/default.png');
+        $output['barCodeUrl'] =$this->_template->getViewFileUrl(
+            'Magestore_Giftvoucher::images/template/barcode/default.png'
+        );
+        $output['defaultBackground'] =$this->_template->getViewFileUrl(
+            'Magestore_Giftvoucher::images/template/images/default.png'
+        );
         $timeLife = $this->giftVoucherHelper->getGeneralConfig('expire');
-        $timeSite = date("m/d/Y", $this->giftVoucherHelper->getObjectManager()->get('Magento\Framework\Stdlib\DateTime\DateTime')->timestamp(time()));
+        $timeSite = date(
+            "m/d/Y",
+            $this->giftVoucherHelper->getObjectManager()->get(\Magento\Framework\Stdlib\DateTime\DateTime::class)
+                ->timestamp(time())
+        );
         $expire_day = date('m/d/Y', strtotime($timeSite . '+' . $timeLife . ' days'));
         if ($this->giftVoucherHelper->getGeneralConfig('show_expiry_date')) {
             $output['expireDay'] = $expire_day;
@@ -208,7 +224,8 @@ class DefaultConfigProvider extends \Magento\Framework\DataObject implements Con
         $output['notes'] = $this->sampleDataService->getNotesSample();
 
         if ($this->giftVoucherHelper->getCustomerSession()->isLoggedIn()) {
-            $output['customerName'] = $this->giftVoucherHelper->getObjectManager()->get('Magento\Customer\Helper\View')
+            $output['customerName'] = $this->giftVoucherHelper->getObjectManager()
+                ->get(\Magento\Customer\Helper\View::class)
                 ->getCustomerName($this->giftVoucherHelper->getCustomerSession()->getCustomerData());
         } else {
             $output['customerName'] = '';
@@ -236,7 +253,7 @@ class DefaultConfigProvider extends \Magento\Framework\DataObject implements Con
 
         $itemId = $this->request->getParam('id');
 
-        $output['additionalInfo'] = array(
+        $output['additionalInfo'] = [
             'amount' => 0,
             'customer_name' => $output['customerName'],
             'recipient_name' => '',
@@ -248,7 +265,7 @@ class DefaultConfigProvider extends \Magento\Framework\DataObject implements Con
             'notify_success' => 0,
             'giftcard_template_image' => '',
             'giftcard_use_custom_image' => false
-        );
+        ];
 
         if ($itemId) {
             $itemModel = $this->itemFactory->create()->load($itemId);
@@ -258,8 +275,10 @@ class DefaultConfigProvider extends \Magento\Framework\DataObject implements Con
                 $output['additionalInfo']['base_gc_value'] = $this->getFormConfigData()->getData('base_gc_value');
                 $output['additionalInfo']['day_to_send'] = $this->getFormConfigData()->getData('day_to_send');
                 $output['additionalInfo']['gc_product_type'] = $this->getFormConfigData()->getData('gc_product_type');
-                $output['additionalInfo']['giftcard_template_id'] = $this->getFormConfigData()->getData('giftcard_template_id');
-                $output['additionalInfo']['giftcard_template_image'] = $this->getFormConfigData()->getData('giftcard_template_image');
+                $output['additionalInfo']['giftcard_template_id'] = $this->getFormConfigData()
+                    ->getData('giftcard_template_id');
+                $output['additionalInfo']['giftcard_template_image'] = $this->getFormConfigData()
+                    ->getData('giftcard_template_image');
                 $output['additionalInfo']['info_buyRequest'] = $this->getFormConfigData()->getData('info_buyRequest');
                 $output['additionalInfo']['notify_success'] = $this->getFormConfigData()->getData('notify_success');
                 $output['additionalInfo']['price_amount'] = $this->getFormConfigData()->getData('price_amount');
@@ -278,11 +297,13 @@ class DefaultConfigProvider extends \Magento\Framework\DataObject implements Con
             }
         }
         if (!$output['additionalInfo']['timezone_to_send']) {
-            $output['additionalInfo']['timezone_to_send'] = $this->_storeManager->getStore()->getConfig('general/locale/timezone');
+            $output['additionalInfo']['timezone_to_send'] = $this->_storeManager->getStore()->getConfig(
+                'general/locale/timezone'
+            );
         }
         $productTemplate = $product->getGiftTemplateIds();
         $productTemplateArray = explode(',', $productTemplate);
-        $templateIdPreviewFile = array();
+        $templateIdPreviewFile = [];
         foreach ($productTemplateArray as $templateId) {
             $templateIdPreviewFile[$templateId] = $this->IOService->getTemplateFile($templateId);
         }
@@ -334,7 +355,6 @@ class DefaultConfigProvider extends \Magento\Framework\DataObject implements Con
         return $prices;
     }
 
-
     /**
      * Get Gift Card product price with all tax settings processing
      *
@@ -350,13 +370,12 @@ class DefaultConfigProvider extends \Magento\Framework\DataObject implements Con
         return $this->_priceCurrency->convert($priceWithTax);
     }
 
-
     /**
      * Convert Gift Card base price
      *
      * @param \Magestore\Giftvoucher\Model\Product $product
-     * @param float $basePrices
-     * @return float
+     * @param array $basePrices
+     * @return array
      */
     public function _convertPrices($product, $basePrices)
     {
@@ -370,6 +389,7 @@ class DefaultConfigProvider extends \Magento\Framework\DataObject implements Con
      * Retrieve currently viewed product object
      *
      * @return \Magento\Catalog\Model\Product
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getProduct()
     {
@@ -384,7 +404,10 @@ class DefaultConfigProvider extends \Magento\Framework\DataObject implements Con
     }
 
     /**
+     * Get Available Template
+     *
      * @return array
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getAvailableTemplate()
     {
@@ -393,13 +416,13 @@ class DefaultConfigProvider extends \Magento\Framework\DataObject implements Con
         if ($productTemplate) {
             $productTemplate = explode(',', $productTemplate);
         } else {
-            $productTemplate = array();
+            $productTemplate = [];
         }
 
         $templates = $this->_giftTemplateFactory->create()->getCollection()
             ->addFieldToFilter('status', '1')
-            ->addFieldToFilter('giftcard_template_id', array('in' => $productTemplate));
-        $templateData = array();
+            ->addFieldToFilter('giftcard_template_id', ['in' => $productTemplate]);
+        $templateData = [];
         foreach ($templates as $template) {
             $template->setData('template_file', $this->IOService->getTemplateFile($template->getId()));
             $templateData[] = $template->getData();
@@ -408,14 +431,18 @@ class DefaultConfigProvider extends \Magento\Framework\DataObject implements Con
     }
 
     /**
-     * @return $this
+     * Get Form Config Data
+     *
+     * @return \Magento\Framework\DataObject
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function getFormConfigData()
     {
         $store = $this->_storeManager->getStore();
         $request = $this->request;
-        $formData = array();
-        $result = array();
+        $formData = [];
+        $result = [];
         if ($this->isInConfigurePage()) {
             $options = $this->optionFactory->create()->getCollection()
                 ->addItemFilter($request->getParam('id'));
@@ -461,6 +488,8 @@ class DefaultConfigProvider extends \Magento\Framework\DataObject implements Con
     }
 
     /**
+     * Is In Configure Page
+     *
      * @return bool
      */
     public function isInConfigurePage()

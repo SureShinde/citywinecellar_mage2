@@ -8,8 +8,7 @@
 namespace Magestore\TransferStock\Model\Source\Adminhtml;
 
 /**
- * Class Source
- * @package Magestore\TransferStock\Model\Source\Adminhtml
+ * Source model
  */
 class Source implements \Magento\Framework\Option\ArrayInterface
 {
@@ -29,22 +28,21 @@ class Source implements \Magento\Framework\Option\ArrayInterface
     }
 
     /**
-     * @return array
+     * @inheritDoc
      */
     public function toOptionArray()
     {
         $collection = $this->sourceRepository->getList();
         $options = [];
         $items = $collection->getItems();
-        $options[] = array('value' => '', 'label' => __('-- Please Select --'));
-        if(count($items)) {
+        $options[] = ['value' => '', 'label' => __('-- Please Select --')];
+        if (count($items)) {
             /** @var \Magento\InventoryApi\Api\Data\SourceInterface $source */
             foreach ($items as $source) {
                 $label = $source->getName();
-                $options[] = array('value' => $source->getSourceCode(), 'label' => $label);
+                $options[] = ['value' => $source->getSourceCode(), 'label' => $label];
             }
         }
         return $options;
     }
-
 }

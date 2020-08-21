@@ -31,6 +31,16 @@ define([
         /**
          * @inheritDoc
          */
+        getChildItems: function (data, page) {
+            if (typeof this.pageSize === 'string') {
+                this.pageSize = Number(this.pageSize);
+            }
+            return this._super(data, page);
+        },
+
+        /**
+         * @inheritDoc
+         */
         setInitialProperty: function () {
             // We do not need init (used for default init)
             return this;

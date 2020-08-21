@@ -12,6 +12,8 @@ use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 
 /**
+ * @inheritDoc
+ *
  * @codeCoverageIgnore
  */
 class InstallData implements InstallDataInterface
@@ -29,18 +31,19 @@ class InstallData implements InstallDataInterface
      * InstallData constructor.
      *
      * @param \Magento\Framework\Module\Manager $moduleManager
+     * @param \Magento\Eav\Setup\EavSetupFactory $eavSetupFactory
      */
     public function __construct(
         \Magento\Framework\Module\Manager $moduleManager,
         \Magento\Eav\Setup\EavSetupFactory $eavSetupFactory
-    )
-    {
+    ) {
         $this->_moduleManager = $moduleManager;
         $this->eavSetupFactory = $eavSetupFactory;
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
+     *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
@@ -70,7 +73,7 @@ class InstallData implements InstallDataInterface
                 'visible' => false,
                 'required' => false,
                 'user_defined' => false,
-                'default' => 0,
+                'default' => null,
                 'searchable' => false,
                 'filterable' => false,
                 'comparable' => false,

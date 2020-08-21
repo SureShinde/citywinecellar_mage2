@@ -7,7 +7,8 @@ namespace Magestore\Giftvoucher\Observer;
 
 /**
  * Class SalesOrderInvoiceSaveAfterObserver
- * @package Magestore\Giftvoucher\Observer
+ *
+ * Sales Order Invoice - Save After Observer
  */
 class SalesOrderInvoiceSaveAfterObserver implements \Magento\Framework\Event\ObserverInterface
 {
@@ -18,7 +19,6 @@ class SalesOrderInvoiceSaveAfterObserver implements \Magento\Framework\Event\Obs
     protected $helperData;
 
     protected $messageManager;
-
 
     /**
      * SalesOrderInvoiceSaveAfterObserver constructor.
@@ -43,13 +43,15 @@ class SalesOrderInvoiceSaveAfterObserver implements \Magento\Framework\Event\Obs
      * Process Gift Card data after invoice is saved
      *
      * @param \Magento\Framework\Event\Observer $observer
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
-    public function execute(\Magento\Framework\Event\Observer $observer)
+    public function execute(\Magento\Framework\Event\Observer $observer) // phpcs:disable Generic.Metrics.NestingLevel
     {
         $invoice = $observer->getEvent()->getInvoice();
         $order = $invoice->getOrder();
         $order = $this->orderFactory->create()->load($order->getId());
-          
+
         foreach ($invoice->getAllItems() as $itemCredit) {
             $item = $order->getItemById($itemCredit->getOrderItemId());
             if (isset($item) && $item != null) {
@@ -57,31 +59,27 @@ class SalesOrderInvoiceSaveAfterObserver implements \Magento\Framework\Event\Obs
                     continue;
                 }
 
-                if($item->getQuoteItemId()) {
-                    $giftVouchers = $this->giftvoucherFactory->create()->getCollection()->addItemFilter($item->getQuoteItemId());
+                if ($item->getQuoteItemId()) {
+                    $giftVouchers = $this->giftvoucherFactory->create()->getCollection()
+                        ->addItemFilter($item->getQuoteItemId());
                 } else {
-                    $giftVouchers = $this->giftvoucherFactory->create()->getCollection()->addItemFilter($item->getId(), true);
+                    $giftVouchers = $this->giftvoucherFactory->create()->getCollection()
+                        ->addItemFilter($item->getId(), true);
                 }
                 $itemQtyInvoice = $itemCredit->getQty();
                 foreach ($giftVouchers as $giftVoucher) {
                     if ($giftVoucher->getStatus() == \Magestore\Giftvoucher\Model\Status::STATUS_PENDING) {
-                        $giftVoucher->addData(array(
+                        $giftVoucher->addData([
                             'status' => \Magestore\Giftvoucher\Model\Status::STATUS_ACTIVE,
                             'comments' => __('Active when order is complete'),
                             'amount' => $giftVoucher->getBalance(),
                             'action' => \Magestore\Giftvoucher\Model\Actions::ACTIONS_UPDATE,
                             'order_increment_id'    => $order->getIncrementId()
-                        ))->setIncludeHistory(true);
+                        ])->setIncludeHistory(true);
                         try {
                             if ($giftVoucher->getDayToSend() && strtotime($giftVoucher->getDayToSend()) > time()
                             ) {
                                 $giftVoucher->setData('dont_send_email_to_recipient', 1);
-                            }
-                            if (!empty($buyRequest['recipient_ship'])) {
-                                $giftVoucher->setData('is_sent', 2);
-                                if (!$this->helperData->getEmailConfig('send_with_ship', $order->getStoreId())) {
-                                    $giftVoucher->setData('dont_send_email_to_recipient', 1);
-                                }
                             }
                             $giftVoucher->save();
                             if ($this->helperData->getEmailConfig('enable', $order->getStoreId())) {
@@ -97,7 +95,7 @@ class SalesOrderInvoiceSaveAfterObserver implements \Magento\Framework\Event\Obs
                         } catch (\Exception $e) {
                             $this->messageManager->addErrorMessage($e->getMessage());
                         }
-                        $itemQtyInvoice -= 1;
+                        $itemQtyInvoice--;
                         if (!$itemQtyInvoice) {
                             break;
                         }

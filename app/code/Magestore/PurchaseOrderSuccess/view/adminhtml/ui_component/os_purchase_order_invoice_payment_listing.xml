@@ -72,7 +72,7 @@
                     <item name="dataType" xsi:type="string">date</item>
                     <item name="label" xsi:type="string" translate="true">Payment Date</item>
                     <item name="sortOrder" xsi:type="number">20</item>
-                    <item name="dateFormat" xsi:type="string">MM/dd/YYYY</item>
+                    <item name="dateFormat" xsi:type="string">MM/dd/yyyy</item>
                 </item>
             </argument>
         </column>

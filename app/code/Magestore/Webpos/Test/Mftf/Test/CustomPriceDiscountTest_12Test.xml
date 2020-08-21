@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="CustomPriceDiscountTest_12">
+        <annotations>
+            <features value="Custom Price Discount"/>
+            <stories value="Custom Price Discount"/>
+            <title value="Add custom price"/>
+            <description value="Display exactly the information on POS and back-end"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="CPD-12"/>
+            <group value="CheckOrderWithCustomPriceDiscountTest"/>
+            <group value="CreateOrderWithCustomPriceDiscountTest"/>
+            <group value="pwapos"/>
+        </annotations>
+
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <actionGroup ref="CreateNewOrderWithCustomPriceActionGroup" stepKey="CreateNewOrderWithCustomPriceActionGroup">
+                <argument name="dataProduct" value="pos_simple_product_test_custom_price_discount_increase_qty" />
+                <argument name="dataCustomer" value="default_customer" />
+                <argument name="customPriceDiscountAmount" value="20.00"/>
+                <argument name="customPriceDiscountReason" value="CPD-12"/>
+                <argument name="price" value="$60.00"/>
+                <argument name="originalPrice" value="$135.00"/>
+            </actionGroup>
+        </before>
+
+        <after>
+            <amOnPage url="admin/admin/auth/logout/" stepKey="amOnLogoutPage"/>
+            <wait time="10" stepKey="wait10SecondsBeforeFinish" />
+        </after>
+
+        <actionGroup ref="GetOrderIdFromToast" stepKey="GetOrderIdFromToast"/>
+
+        <!-- ************************************************* FRONTEND ************************************************** -->
+        <!-- Check order detail on frontend -->
+        <actionGroup ref="GoToFirstOrderDetailFrontend" stepKey="GoToFirstOrderDetailFrontend">
+            <argument name="orderId" value="{$orderIdGetOrderIdFromToast}"/>
+        </actionGroup>
+
+        <!-- General information -->
+        <see stepKey="generalCustomerNamePos" selector="{{OrderDetailSection.generalOrder}}" userInput="{{default_customer_info.fullname}}" />
+
+        <!-- Total -->
+        <see stepKey="totalGrandTotalPos" selector="{{OrderDetailSection.grandTotal}}" userInput="{{expected_CPD_12.grandTotal}}" />
+
+        <!-- Order item -->
+        <see stepKey="itemNamePos" selector="{{OrderDetailSection.firstItemDetail}}" userInput="{{pos_simple_product_test_custom_price_discount_increase_qty.name}}" />
+        <see stepKey="itemSkuPos" selector="{{OrderDetailSection.firstItemDetail}}" userInput="{{pos_simple_product_test_custom_price_discount_increase_qty.sku}}" />
+        <see stepKey="itemPricePos" selector="{{OrderDetailSection.firstItemPrice}}" userInput="{{expected_CPD_12.price}}" />
+        <see stepKey="itemOriginalPricePos" selector="{{OrderDetailSection.firstItemOriginalPrice}}" userInput="{{expected_CPD_12.originalPrice}}" />
+        <see stepKey="itemCustomReasonPos" selector="{{OrderDetailSection.firstItemCustomReason}}" userInput="{{expected_CPD_12.customReason}}" />
+
+        <wait time="5" stepKey="wait5SecondBeforeGoToBackend" />
+
+        <!-- ************************************************* BACKEND *************************************************** -->
+        <!-- Check order detail on backend -->
+        <actionGroup ref="GoToFirstOrderDetailBackend" stepKey="GoToFirstOrderDetailBackend" >
+            <argument name="orderId" value="{$orderIdGetOrderIdFromToast}"/>
+        </actionGroup>
+
+        <!-- Customer information -->
+        <see stepKey="seeTitleCustomer" selector="{{AdminOrderDetailsInformationSection.accountInformation}}" userInput="Customer" />
+        <see stepKey="seeCustomerEmail" selector="{{AdminOrderDetailsInformationSection.accountInformation}}" userInput="{{default_customer_info.email}}" />
+        <see stepKey="seeCustomerName" selector="{{AdminOrderDetailsInformationSection.accountInformation}}" userInput="{{default_customer_info.fullname}}" />
+        <see stepKey="seeCustomerGroup" selector="{{AdminOrderDetailsInformationSection.accountInformation}}" userInput="{{default_customer_info.group}}" />
+        <see stepKey="seeCustomerPhone" selector="{{AdminOrderDetailsInformationSection.accountInformation}}" userInput="{{default_customer_address_info.telephone}}" />
+
+        <!-- Item information -->
+        <see stepKey="itemName" selector="{{AdminOrderDetailsInformationSection.itemsOrdered}}" userInput="{{pos_simple_product_test_custom_price_discount_increase_qty.name}}" />
+        <see stepKey="itemSku" selector="{{AdminOrderDetailsInformationSection.itemsOrdered}}" userInput="{{pos_simple_product_test_custom_price_discount_increase_qty.sku}}" />
+        <see stepKey="itemPrice" selector="{{CustomPriceDiscountSection.orderItemPrice}}" userInput="{{expected_CPD_12.priceBackend}}" />
+        <see stepKey="itemOriginalPrice" selector="{{CustomPriceDiscountSection.orderItemOriginalPrice}}" userInput="{{expected_CPD_12.originalPriceBackend}}" />
+        <see stepKey="itemCustomReason" selector="{{CustomPriceDiscountSection.orderItemCustomReason}}" userInput="{{expected_CPD_12.customReason}}" />
+
+
+        <!-- Total -->
+        <see stepKey="totalGrandTotal" selector="{{BackendOrderTotalSection.grandTotal}}" userInput="{{expected_CPD_12.grandTotal}}" />
+    </test>
+</tests>

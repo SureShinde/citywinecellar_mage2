@@ -34,14 +34,13 @@ class UpgradeSchema implements UpgradeSchemaInterface
      */
     public function __construct(
         \Magestore\Giftvoucher\Api\GiftTemplate\IOServiceInterface $giftTemplateIOService
-    )
-    {
+    ) {
         $this->giftTemplateIOService = $giftTemplateIOService;
     }
 
     /**
-     * @param SchemaSetupInterface $setup
-     * @param ModuleContextInterface $context
+     * @inheritDoc
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function upgrade(SchemaSetupInterface $setup, ModuleContextInterface $context)
     {
@@ -114,261 +113,261 @@ class UpgradeSchema implements UpgradeSchemaInterface
             $setup->getConnection()->addColumn(
                 $setup->getTable('quote'),
                 'gift_voucher_gift_codes',
-                array(
+                [
                     'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
                     'nullable' => true,
                     'length' => '255',
                     'comment' => 'Gift Voucher Gift Codes'
-                )
+                ]
             );
 
             $setup->getConnection()->addColumn(
                 $setup->getTable('quote'),
                 'gift_voucher_gift_codes_discount',
-                array(
+                [
                     'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
                     'nullable' => true,
                     'length' => '255',
                     'comment' => 'Gift Voucher Gift Codes Discount'
-                )
+                ]
             );
 
             $setup->getConnection()->addColumn(
                 $setup->getTable('quote'),
                 'gift_voucher_gift_codes_max_discount',
-                array(
+                [
                     'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
                     'nullable' => true,
                     'length' => '255',
                     'comment' => 'Gift Voucher Gift Codes Max Discount'
-                )
+                ]
             );
             $setup->getConnection()->addColumn(
                 $setup->getTable('quote'),
                 'giftvoucher_base_shipping_hidden_tax_amount',
-                array(
+                [
                     'type' => \Magento\Framework\DB\Ddl\Table::TYPE_DECIMAL,
                     'nullable' => false,
                     'default' => 0,
                     'length' => '12,4',
                     'comment' => 'Gift Voucher Base Shipping Hidden Tax Amount'
-                )
+                ]
             );
             $setup->getConnection()->addColumn(
                 $setup->getTable('quote'),
                 'giftvoucher_shipping_hidden_tax_amount',
-                array(
+                [
                     'type' => \Magento\Framework\DB\Ddl\Table::TYPE_DECIMAL,
                     'nullable' => false,
                     'default' => 0,
                     'length' => '12,4',
                     'comment' => 'Gift Voucher Shipping Hidden Tax Amount'
-                )
+                ]
             );
             $setup->getConnection()->addColumn(
                 $setup->getTable('quote'),
                 'base_giftvoucher_discount_for_shipping',
-                array(
+                [
                     'type' => \Magento\Framework\DB\Ddl\Table::TYPE_DECIMAL,
                     'nullable' => false,
                     'default' => 0,
                     'length' => '12,4',
                     'comment' => 'Base Gift Voucher Discount For Shipping'
-                )
+                ]
             );
             $setup->getConnection()->addColumn(
                 $setup->getTable('quote'),
                 'giftvoucher_discount_for_shipping',
-                array(
+                [
                     'type' => \Magento\Framework\DB\Ddl\Table::TYPE_DECIMAL,
                     'nullable' => false,
                     'default' => 0,
                     'length' => '12,4',
                     'comment' => 'Gift Voucher Discount For Shipping'
-                )
+                ]
             );
 
             $setup->getConnection()->addColumn(
                 $setup->getTable('quote'),
                 'giftvoucher_base_hidden_tax_amount',
-                array(
+                [
                     'type' => \Magento\Framework\DB\Ddl\Table::TYPE_DECIMAL,
                     'nullable' => false,
                     'default' => 0,
                     'length' => '12,4',
                     'comment' => 'Gift Voucher Base Hidden Tax Amount'
-                )
+                ]
             );
             $setup->getConnection()->addColumn(
                 $setup->getTable('quote'),
                 'giftvoucher_hidden_tax_amount',
-                array(
+                [
                     'type' => \Magento\Framework\DB\Ddl\Table::TYPE_DECIMAL,
                     'nullable' => false,
                     'default' => 0,
                     'length' => '12,4',
                     'comment' => 'Gift Voucher Hidden Tax Amount'
-                )
+                ]
             );
 
             $setup->getConnection()->addColumn(
                 $setup->getTable('quote'),
                 'base_gift_voucher_discount',
-                array(
+                [
                     'type' => \Magento\Framework\DB\Ddl\Table::TYPE_DECIMAL,
                     'nullable' => false,
                     'default' => 0,
                     'length' => '12,4',
                     'comment' => 'Base Gift Voucher Discount'
-                )
+                ]
             );
             $setup->getConnection()->addColumn(
                 $setup->getTable('quote'),
                 'gift_voucher_discount',
-                array(
+                [
                     'type' => \Magento\Framework\DB\Ddl\Table::TYPE_DECIMAL,
                     'nullable' => false,
                     'default' => 0,
                     'length' => '12,4',
                     'comment' => 'Gift Voucher Discount'
-                )
+                ]
             );
             $setup->getConnection()->addColumn(
                 $setup->getTable('quote'),
                 'codes_base_discount',
-                array(
+                [
                     'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
                     'nullable' => true,
                     'length' => '255',
                     'comment' => 'Gift Voucher Codes Base Discount String'
-                )
+                ]
             );
             $setup->getConnection()->addColumn(
                 $setup->getTable('quote'),
                 'codes_discount',
-                array(
+                [
                     'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
                     'nullable' => true,
                     'length' => '255',
                     'comment' => 'Gift Voucher Codes Discount String'
-                )
+                ]
             );
 
             $setup->getConnection()->addColumn(
                 $setup->getTable('quote_item'),
                 'base_gift_voucher_discount',
-                array(
+                [
                     'type' => \Magento\Framework\DB\Ddl\Table::TYPE_DECIMAL,
                     'nullable' => false,
                     'default' => 0,
                     'length' => '12,4',
                     'comment' => 'Base Gift Voucher Discount'
-                )
+                ]
             );
             $setup->getConnection()->addColumn(
                 $setup->getTable('quote_item'),
                 'gift_voucher_discount',
-                array(
+                [
                     'type' => \Magento\Framework\DB\Ddl\Table::TYPE_DECIMAL,
                     'nullable' => false,
                     'default' => 0,
                     'length' => '12,4',
                     'comment' => 'Gift Voucher Discount'
-                )
+                ]
             );
             $setup->getConnection()->addColumn(
                 $setup->getTable('quote_item'),
                 'giftvoucher_base_hidden_tax_amount',
-                array(
+                [
                     'type' => \Magento\Framework\DB\Ddl\Table::TYPE_DECIMAL,
                     'nullable' => false,
                     'default' => 0,
                     'length' => '12,4',
                     'comment' => 'Gift Voucher Base Hidden Tax Amount'
-                )
+                ]
             );
             $setup->getConnection()->addColumn(
                 $setup->getTable('quote_item'),
                 'giftvoucher_hidden_tax_amount',
-                array(
+                [
                     'type' => \Magento\Framework\DB\Ddl\Table::TYPE_DECIMAL,
                     'nullable' => false,
                     'default' => 0,
                     'length' => '12,4',
                     'comment' => 'Gift Voucher Hidden Tax Amount'
-                )
+                ]
             );
 
             $setup->getConnection()->addColumn(
                 $setup->getTable('sales_order'),
                 'gift_voucher_gift_codes',
-                array(
+                [
                     'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
                     'nullable' => true,
                     'length' => '255',
                     'comment' => 'Gift Voucher Gift Codes'
-                )
+                ]
             );
             $setup->getConnection()->addColumn(
                 $setup->getTable('sales_order'),
                 'gift_voucher_gift_codes_discount',
-                array(
+                [
                     'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
                     'nullable' => true,
                     'length' => '255',
                     'comment' => 'Gift Voucher Gift Codes Discount'
-                )
+                ]
             );
 
             $setup->getConnection()->addColumn(
                 $setup->getTable('sales_order'),
                 'codes_base_discount',
-                array(
+                [
                     'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
                     'nullable' => true,
                     'length' => '255',
                     'comment' => 'Gift Voucher Codes Base Discount String'
-                )
+                ]
             );
             $setup->getConnection()->addColumn(
                 $setup->getTable('sales_order'),
                 'codes_discount',
-                array(
+                [
                     'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
                     'nullable' => true,
                     'length' => '255',
                     'comment' => 'Gift Voucher Codes Discount String'
-                )
+                ]
             );
             $setup->getConnection()->modifyColumn(
                 $setup->getTable('giftvoucher_history'),
                 'created_at',
-                array(
+                [
                     'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
                     'nullable' => false,
                     'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT
-                )
+                ]
             );
 
             $setup->getConnection()->modifyColumn(
                 $setup->getTable('giftvoucher_customer_voucher'),
                 'added_date',
-                array(
+                [
                     'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
                     'nullable' => false,
                     'default' => \Magento\Framework\DB\Ddl\Table::TIMESTAMP_INIT
-                )
+                ]
             );
 
             $setup->getConnection()->modifyColumn(
                 $setup->getTable('giftcard_template'),
                 'design_pattern',
-                array(
+                [
                     'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
                     'length' => 255,
                     'nullable' => false,
                     'default' => \Magestore\Giftvoucher\Api\Data\GiftTemplateInterface::DEFAULT_TEMPLATE_ID
-                )
+                ]
             );
         }
 
@@ -381,12 +380,12 @@ class UpgradeSchema implements UpgradeSchemaInterface
             $setup->getConnection()->addColumn(
                 $setup->getTable('giftvoucher_history'),
                 'order_item_id',
-                array(
+                [
                     'type' => \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
                     'nullable' => true,
                     'length' => 11,
                     'comment' => 'Order Item Id'
-                )
+                ]
             );
         }
 
@@ -394,37 +393,36 @@ class UpgradeSchema implements UpgradeSchemaInterface
             $setup->getConnection()->addColumn(
                 $setup->getTable('giftvoucher_history'),
                 'creditmemo_increment_id',
-                array(
+                [
                     'type' => \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
                     'nullable' => true,
                     'length' => 11,
                     'comment' => 'Creditmemo Increment Id'
-                )
+                ]
             );
         }
-
 
         if (version_compare($context->getVersion(), '2.2.0.8', '<')) {
             $setup->getConnection()->addColumn(
                 $setup->getTable('sales_order_item'),
                 'giftcodes_applied',
-                array(
+                [
                     'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
                     'nullable' => true,
                     'length' => '65536',
                     'comment' => 'Giftcode(s) applied'
-                )
+                ]
             );
 
             $setup->getConnection()->addColumn(
                 $setup->getTable('quote_item'),
                 'giftcodes_applied',
-                array(
+                [
                     'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
                     'nullable' => true,
                     'length' => '65536',
                     'comment' => 'Giftcode(s) applied'
-                )
+                ]
             );
         }
 
@@ -432,34 +430,34 @@ class UpgradeSchema implements UpgradeSchemaInterface
             $setup->getConnection()->addColumn(
                 $setup->getTable('sales_order'),
                 'giftcodes_applied_discount_for_shipping',
-                array(
+                [
                     'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
                     'nullable' => true,
                     'length' => '65536',
                     'comment' => 'Giftcode(s) applied discount for shipping'
-                )
+                ]
             );
 
             $setup->getConnection()->addColumn(
                 $setup->getTable('quote'),
                 'giftcodes_applied_discount_for_shipping',
-                array(
+                [
                     'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
                     'nullable' => true,
                     'length' => '65536',
                     'comment' => 'Giftcode(s) applied discount for shipping'
-                )
+                ]
             );
 
             $setup->getConnection()->addColumn(
                 $setup->getTable('quote_address'),
                 'giftcodes_applied_discount_for_shipping',
-                array(
+                [
                     'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
                     'nullable' => true,
                     'length' => '65536',
                     'comment' => 'Giftcode(s) applied discount for shipping'
-                )
+                ]
             );
         }
 
@@ -470,11 +468,17 @@ class UpgradeSchema implements UpgradeSchemaInterface
      * Update table
      *
      * @param SchemaSetupInterface $setup
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function updateRebuiltDiscount(SchemaSetupInterface $setup)
     {
 
-        if (!$setup->getConnection()->tableColumnExists($setup->getTable(self::QUOTE_TABLE), 'magestore_base_discount')) {
+        if (!$setup->getConnection()->tableColumnExists(
+            $setup->getTable(self::QUOTE_TABLE),
+            'magestore_base_discount'
+        )) {
             $setup->getConnection()->addColumn(
                 $setup->getTable(self::QUOTE_TABLE),
                 'magestore_base_discount',
@@ -501,7 +505,10 @@ class UpgradeSchema implements UpgradeSchemaInterface
             );
         }
 
-        if (!$setup->getConnection()->tableColumnExists($setup->getTable(self::QUOTE_ADDRESS_TABLE), 'magestore_base_discount')) {
+        if (!$setup->getConnection()->tableColumnExists(
+            $setup->getTable(self::QUOTE_ADDRESS_TABLE),
+            'magestore_base_discount'
+        )) {
             $setup->getConnection()->addColumn(
                 $setup->getTable(self::QUOTE_ADDRESS_TABLE),
                 'magestore_base_discount',
@@ -514,7 +521,10 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 ]
             );
         }
-        if (!$setup->getConnection()->tableColumnExists($setup->getTable(self::QUOTE_ADDRESS_TABLE), 'magestore_discount')) {
+        if (!$setup->getConnection()->tableColumnExists(
+            $setup->getTable(self::QUOTE_ADDRESS_TABLE),
+            'magestore_discount'
+        )) {
             $setup->getConnection()->addColumn(
                 $setup->getTable(self::QUOTE_ADDRESS_TABLE),
                 'magestore_discount',
@@ -527,7 +537,10 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 ]
             );
         }
-        if (!$setup->getConnection()->tableColumnExists($setup->getTable(self::QUOTE_ADDRESS_TABLE), 'base_gift_voucher_discount')) {
+        if (!$setup->getConnection()->tableColumnExists(
+            $setup->getTable(self::QUOTE_ADDRESS_TABLE),
+            'base_gift_voucher_discount'
+        )) {
             $setup->getConnection()->addColumn(
                 $setup->getTable(self::QUOTE_ADDRESS_TABLE),
                 'base_gift_voucher_discount',
@@ -540,7 +553,10 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 ]
             );
         }
-        if (!$setup->getConnection()->tableColumnExists($setup->getTable(self::QUOTE_ADDRESS_TABLE), 'gift_voucher_discount')) {
+        if (!$setup->getConnection()->tableColumnExists(
+            $setup->getTable(self::QUOTE_ADDRESS_TABLE),
+            'gift_voucher_discount'
+        )) {
             $setup->getConnection()->addColumn(
                 $setup->getTable(self::QUOTE_ADDRESS_TABLE),
                 'gift_voucher_discount',
@@ -553,7 +569,10 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 ]
             );
         }
-        if (!$setup->getConnection()->tableColumnExists($setup->getTable(self::QUOTE_ADDRESS_TABLE), 'magestore_base_discount_for_shipping')) {
+        if (!$setup->getConnection()->tableColumnExists(
+            $setup->getTable(self::QUOTE_ADDRESS_TABLE),
+            'magestore_base_discount_for_shipping'
+        )) {
             $setup->getConnection()->addColumn(
                 $setup->getTable(self::QUOTE_ADDRESS_TABLE),
                 'magestore_base_discount_for_shipping',
@@ -566,7 +585,10 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 ]
             );
         }
-        if (!$setup->getConnection()->tableColumnExists($setup->getTable(self::QUOTE_ADDRESS_TABLE), 'magestore_discount_for_shipping')) {
+        if (!$setup->getConnection()->tableColumnExists(
+            $setup->getTable(self::QUOTE_ADDRESS_TABLE),
+            'magestore_discount_for_shipping'
+        )) {
             $setup->getConnection()->addColumn(
                 $setup->getTable(self::QUOTE_ADDRESS_TABLE),
                 'magestore_discount_for_shipping',
@@ -579,7 +601,10 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 ]
             );
         }
-        if (!$setup->getConnection()->tableColumnExists($setup->getTable(self::QUOTE_ADDRESS_TABLE), 'base_giftvoucher_discount_for_shipping')) {
+        if (!$setup->getConnection()->tableColumnExists(
+            $setup->getTable(self::QUOTE_ADDRESS_TABLE),
+            'base_giftvoucher_discount_for_shipping'
+        )) {
             $setup->getConnection()->addColumn(
                 $setup->getTable(self::QUOTE_ADDRESS_TABLE),
                 'base_giftvoucher_discount_for_shipping',
@@ -592,7 +617,10 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 ]
             );
         }
-        if (!$setup->getConnection()->tableColumnExists($setup->getTable(self::QUOTE_ADDRESS_TABLE), 'giftvoucher_discount_for_shipping')) {
+        if (!$setup->getConnection()->tableColumnExists(
+            $setup->getTable(self::QUOTE_ADDRESS_TABLE),
+            'giftvoucher_discount_for_shipping'
+        )) {
             $setup->getConnection()->addColumn(
                 $setup->getTable(self::QUOTE_ADDRESS_TABLE),
                 'giftvoucher_discount_for_shipping',
@@ -606,7 +634,10 @@ class UpgradeSchema implements UpgradeSchemaInterface
             );
         }
 
-        if (!$setup->getConnection()->tableColumnExists($setup->getTable(self::QUOTE_ITEM_TABLE), 'magestore_base_discount')) {
+        if (!$setup->getConnection()->tableColumnExists(
+            $setup->getTable(self::QUOTE_ITEM_TABLE),
+            'magestore_base_discount'
+        )) {
             $setup->getConnection()->addColumn(
                 $setup->getTable(self::QUOTE_ITEM_TABLE),
                 'magestore_base_discount',
@@ -619,7 +650,10 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 ]
             );
         }
-        if (!$setup->getConnection()->tableColumnExists($setup->getTable(self::QUOTE_ITEM_TABLE), 'magestore_discount')) {
+        if (!$setup->getConnection()->tableColumnExists(
+            $setup->getTable(self::QUOTE_ITEM_TABLE),
+            'magestore_discount'
+        )) {
             $setup->getConnection()->addColumn(
                 $setup->getTable(self::QUOTE_ITEM_TABLE),
                 'magestore_discount',
@@ -633,7 +667,10 @@ class UpgradeSchema implements UpgradeSchemaInterface
             );
         }
 
-        if (!$setup->getConnection()->tableColumnExists($setup->getTable(self::ORDER_TABLE), 'magestore_base_discount')) {
+        if (!$setup->getConnection()->tableColumnExists(
+            $setup->getTable(self::ORDER_TABLE),
+            'magestore_base_discount'
+        )) {
             $setup->getConnection()->addColumn(
                 $setup->getTable(self::ORDER_TABLE),
                 'magestore_base_discount',
@@ -659,7 +696,10 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 ]
             );
         }
-        if (!$setup->getConnection()->tableColumnExists($setup->getTable(self::ORDER_TABLE), 'magestore_base_discount_for_shipping')) {
+        if (!$setup->getConnection()->tableColumnExists(
+            $setup->getTable(self::ORDER_TABLE),
+            'magestore_base_discount_for_shipping'
+        )) {
             $setup->getConnection()->addColumn(
                 $setup->getTable(self::ORDER_TABLE),
                 'magestore_base_discount_for_shipping',
@@ -672,7 +712,10 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 ]
             );
         }
-        if (!$setup->getConnection()->tableColumnExists($setup->getTable(self::ORDER_TABLE), 'magestore_discount_for_shipping')) {
+        if (!$setup->getConnection()->tableColumnExists(
+            $setup->getTable(self::ORDER_TABLE),
+            'magestore_discount_for_shipping'
+        )) {
             $setup->getConnection()->addColumn(
                 $setup->getTable(self::ORDER_TABLE),
                 'magestore_discount_for_shipping',
@@ -686,7 +729,10 @@ class UpgradeSchema implements UpgradeSchemaInterface
             );
         }
 
-        if (!$setup->getConnection()->tableColumnExists($setup->getTable(self::ORDER_ITEM_TABLE), 'magestore_base_discount')) {
+        if (!$setup->getConnection()->tableColumnExists(
+            $setup->getTable(self::ORDER_ITEM_TABLE),
+            'magestore_base_discount'
+        )) {
             $setup->getConnection()->addColumn(
                 $setup->getTable(self::ORDER_ITEM_TABLE),
                 'magestore_base_discount',
@@ -699,7 +745,10 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 ]
             );
         }
-        if (!$setup->getConnection()->tableColumnExists($setup->getTable(self::ORDER_ITEM_TABLE), 'magestore_discount')) {
+        if (!$setup->getConnection()->tableColumnExists(
+            $setup->getTable(self::ORDER_ITEM_TABLE),
+            'magestore_discount'
+        )) {
             $setup->getConnection()->addColumn(
                 $setup->getTable(self::ORDER_ITEM_TABLE),
                 'magestore_discount',
@@ -718,6 +767,8 @@ class UpgradeSchema implements UpgradeSchemaInterface
      * Update gift card template affer modify design_pattern column
      *
      * @param SchemaSetupInterface $setup
+     *
+     * @return $this
      */
     public function updateGiftcardTemplate(SchemaSetupInterface $setup)
     {
@@ -728,7 +779,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
         $count = count($templates);
         $index = 0;
         $updateValue = "CASE ";
-        foreach ($templates as $template) {
+        while ($index < $count) {
             $updateValue .= "WHEN MOD(giftcard_template_id, $count) = $index THEN '$templates[$index]' ";
             $index++;
         }
@@ -738,5 +789,6 @@ class UpgradeSchema implements UpgradeSchemaInterface
             ['design_pattern' => new \Zend_Db_Expr($updateValue)],
             ['design_pattern NOT IN (?)' => $templates]
         );
+        return $this;
     }
 }

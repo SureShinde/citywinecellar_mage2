@@ -22,6 +22,11 @@
 
 namespace Magestore\Customercredit\Block\Sharecredit;
 
+/**
+ * Class Creditcode
+ *
+ * Creditcode block
+ */
 class Creditcode extends \Magento\Framework\View\Element\Template
 {
     /**
@@ -49,8 +54,9 @@ class Creditcode extends \Magento\Framework\View\Element\Template
      */
     protected $storeManager;
 
-
     /**
+     * Creditcode constructor.
+     *
      * @param \Magento\Framework\View\Element\Template\Context $context
      * @param \Magento\Customer\Model\Session $customerSession
      * @param \Magestore\Customercredit\Model\CustomercreditFactory $customerCreditFactory
@@ -65,8 +71,7 @@ class Creditcode extends \Magento\Framework\View\Element\Template
         \Magestore\Customercredit\Helper\Data $creditHelper,
         \Magestore\Customercredit\Model\CreditcodeFactory $creditcodeFactory,
         \Magestore\Customercredit\Model\Source\Status $creditStatus
-    )
-    {
+    ) {
         $this->_customerSession = $customerSession;
         $this->_customerCreditFactory = $customerCreditFactory;
         $this->_creditHelper = $creditHelper;
@@ -76,6 +81,9 @@ class Creditcode extends \Magento\Framework\View\Element\Template
         parent::__construct($context);
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function _construct()
     {
         parent::_construct();
@@ -85,85 +93,131 @@ class Creditcode extends \Magento\Framework\View\Element\Template
             ->addFieldToFilter('main_table.customer_id', $customer_id);
         $collection->setOrder('transaction_time', 'DESC');
         if ($validate_config == 0) {
-            $collection->addFieldToFilter('status', array('neq' => '4'));
+            $collection->addFieldToFilter('status', ['neq' => '4']);
         }
 
         $this->setCollection($collection);
     }
 
+    /**
+     * @inheritDoc
+     */
     public function _prepareLayout()
     {
         parent::_prepareLayout();
-        $pager = $this->getLayout()->createBlock('Magento\Theme\Block\Html\Pager', 'customercredit.history.pager')->setCollection($this->getCollection());
+        $pager = $this->getLayout()->createBlock(
+            \Magento\Theme\Block\Html\Pager::class,
+            'customercredit.history.pager'
+        )->setCollection($this->getCollection());
         $this->setChild('cutomercredit_pager', $pager);
 
-        $grid = $this->getLayout()->createBlock('Magestore\Customercredit\Block\Sharecredit\Grid', 'customercredit_grid');
+        $grid = $this->getLayout()->createBlock(
+            \Magestore\Customercredit\Block\Sharecredit\Grid::class,
+            'customercredit_grid'
+        );
         // prepare column
 
-        $grid->addColumn('credit_code', array(
-            'header' => __('Credit Code'),
-            'index' => 'credit_code',
-            'format' => 'medium',
-            'align' => 'left',
-            'render' => 'getCodeTxt',
-            'searchable' => true,
-        ));
+        $grid->addColumn(
+            'credit_code',
+            [
+                'header' => __('Credit Code'),
+                'index' => 'credit_code',
+                'format' => 'medium',
+                'align' => 'left',
+                'render' => 'getCodeTxt',
+                'searchable' => true,
+            ]
+        );
 
-        $grid->addColumn('recipient_email', array(
-            'header' => __('Recipient\'s Email'),
-            'align' => 'left',
-            'index' => 'recipient_email',
-            'searchable' => true,
-        ));
+        $grid->addColumn(
+            'recipient_email',
+            [
+                'header' => __('Recipient\'s Email'),
+                'align' => 'left',
+                'index' => 'recipient_email',
+                'searchable' => true,
+            ]
+        );
 
-        $grid->addColumn('amount_credit', array(
-            'header' => __('Amount'),
-            'align' => 'left',
-            'type' => 'price',
-            'index' => 'amount_credit',
-            'render' => 'getBalanceFormat',
-            'searchable' => true,
-        ));
+        $grid->addColumn(
+            'amount_credit',
+            [
+                'header' => __('Amount'),
+                'align' => 'left',
+                'type' => 'price',
+                'index' => 'amount_credit',
+                'render' => 'getBalanceFormat',
+                'searchable' => true,
+            ]
+        );
 
-
-        $grid->addColumn('transaction_time', array(
-            'header' => __('Sending Date'),
-            'index' => 'transaction_time',
-            'type' => 'date',
-            'format' => 'medium',
-            'align' => 'left',
-            'searchable' => true,
-        ));
+        $grid->addColumn(
+            'transaction_time',
+            [
+                'header' => __('Sending Date'),
+                'index' => 'transaction_time',
+                'type' => 'date',
+                'format' => 'medium',
+                'align' => 'left',
+                'searchable' => true,
+            ]
+        );
         $statuses = $this->_creditStatus->getOptionArray();
-        $grid->addColumn('status', array(
-            'header' => __('Status'),
-            'align' => 'left',
-            'index' => 'status',
-            'type' => 'options',
-            'options' => $statuses,
-            'searchable' => true,
-        ));
-        $grid->addColumn('action', array(
-            'header' => __('Action'),
-            'align' => 'left',
-            'type' => 'action',
-            'width' => '50px',
-            'render' => 'getActions',
-        ));
+        $grid->addColumn(
+            'status',
+            [
+                'header' => __('Status'),
+                'align' => 'left',
+                'index' => 'status',
+                'type' => 'options',
+                'options' => $statuses,
+                'searchable' => true,
+            ]
+        );
+        $grid->addColumn(
+            'action',
+            [
+                'header' => __('Action'),
+                'align' => 'left',
+                'type' => 'action',
+                'width' => '50px',
+                'render' => 'getActions',
+            ]
+        );
 
         $this->setChild('customercredit_grid', $grid);
         return $this;
     }
 
+    /**
+     * Get No Number
+     *
+     * @param \Magento\Framework\DataObject $row
+     * @return string
+     */
     public function getNoNumber($row)
     {
         return sprintf('#%d', $row->getId());
     }
 
+    /**
+     * Get Code Txt
+     *
+     * @param \Magento\Framework\DataObject $row
+     * @return string
+     */
     public function getCodeTxt($row)
     {
-        $input = '<input id="input-credit-code' . $row->getId() . '" readonly type="text" class="input-text" value="' . $row->getCreditCode() . '" onblur="hiddencode' . $row->getId() . '(this);">';
-        $aelement = '<a href="javascript:void(0);" onclick="viewcreditcode' . $row->getId() . '()">' . $this->_creditHelper->getHiddenCode($row->getCreditCode()) . '</a>';
+        $input = '<input id="input-credit-code'
+            . $row->getId()
+            . '" readonly type="text" class="input-text" value="'
+            . $row->getCreditCode()
+            . '" onblur="hiddencode'
+            . $row->getId()
+            . '(this);">';
+        $aelement = '<a href="javascript:void(0);" onclick="viewcreditcode' . $row->getId() . '()">'
+            . $this->_creditHelper->getHiddenCode($row->getCreditCode())
+            . '</a>';
         $html = '<div id="inputboxcustomercredit' . $row->getId() . '" >' . $aelement . '</div>
                 <script type="text/javascript">
                         function viewcreditcode' . $row->getId() . '(){
@@ -177,30 +231,48 @@ class Creditcode extends \Magento\Framework\View\Element\Template
         return $html;
     }
 
+    /**
+     * Get Balance Format
+     *
+     * @param \Magento\Framework\DataObject $row
+     * @return float|string
+     */
     public function getBalanceFormat($row)
     {
-//        $amount = $this->_customerCredit->getConvertedFromBaseCustomerCredit($row->getAmountCredit()); Gin fix muti currentcy
         $amount =$row->getAmountCredit();
         return $this->_creditHelper->getFormatAmount($amount);
     }
 
+    /**
+     * Get Actions
+     *
+     * @param \Magento\Framework\DataObject $row
+     * @return string
+     */
     public function getActions($row)
     {
-        $creditcode = $row->getCreditCode();
         $recipient_email = $row->getRecipientEmail();
         $credit_amount = $row->getAmountCredit();
-        $confirmText = __('If you do this, the recipient will not be able to use the code and the credit will be given back to your account. Are you sure you want to continue?');
-        $cancelurl = $this->getUrl('customercredit/index/cancel', array('id' => $row->getId()));
-        $verify_sender_url = $this->getUrl('customercredit/index/verifySender', array(
-            'id' => $row->getId(),
-            'customercredit_email_input' => $recipient_email,
-            'customercredit_value_input' => $credit_amount
-        ));
+        $confirmText = __(
+            'If you do this, the recipient will not be able to use the code '
+            . 'and the credit will be given back to your account. Are you sure you want to continue?'
+        );
+        $cancelurl = $this->getUrl('customercredit/index/cancel', ['id' => $row->getId()]);
+        $verify_sender_url = $this->getUrl(
+            'customercredit/index/verifySender',
+            [
+                'id' => $row->getId(),
+                'customercredit_email_input' => $recipient_email,
+                'customercredit_value_input' => $credit_amount
+            ]
+        );
 
         $action = '';
         if ($row->getStatus() == \Magestore\Customercredit\Model\Source\Status::STATUS_UNUSED) {
 
-            $action .= ' <a href="javascript:void(0);" onclick="remove' . $row->getId() . '()">' . __('Cancel') . '</a>';
+            $action .= ' <a href="javascript:void(0);" onclick="remove' . $row->getId() . '()">'
+                . __('Cancel')
+                . '</a>';
             $action .= '<script type="text/javascript">
                         //<![CDATA[
                             function remove' . $row->getId() . '(){
@@ -212,7 +284,9 @@ class Creditcode extends \Magento\Framework\View\Element\Template
                     </script>';
         }
         if ($row->getStatus() == \Magestore\Customercredit\Model\Source\Status::STATUS_AWAITING_VERIFICATION) {
-            $action .= ' <a href="javascript:void(0);" onclick="verify' . $row->getId() . '()">' . __('Verify') . '</a>';
+            $action .= ' <a href="javascript:void(0);" onclick="verify' . $row->getId() . '()">'
+                . __('Verify')
+                . '</a>';
             $action .= '<script type="text/javascript">
                         //<![CDATA[
                             function verify' . $row->getId() . '(){
@@ -224,20 +298,32 @@ class Creditcode extends \Magento\Framework\View\Element\Template
         return $action;
     }
 
+    /**
+     * Get Pager Html
+     *
+     * @return string
+     */
     public function getPagerHtml()
     {
         return $this->getChildHtml('cutomercredit_pager');
     }
 
+    /**
+     * Get Grid Html
+     *
+     * @return string
+     */
     public function getGridHtml()
     {
         return $this->getChildHtml('customercredit_grid');
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function _toHtml()
     {
         $this->getChildBlock('customercredit_grid')->setCollection($this->getCollection());
         return parent::_toHtml();
     }
-
 }

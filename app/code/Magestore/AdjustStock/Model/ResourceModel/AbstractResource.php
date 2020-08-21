@@ -10,7 +10,7 @@ namespace Magestore\AdjustStock\Model\ResourceModel;
 use Magento\Framework\Exception\LocalizedException;
 
 /**
- *
+ * Class AbstractResource
  *
  * @category Magestore
  * @package  Magestore_AdjustStock
@@ -30,22 +30,21 @@ abstract class AbstractResource extends \Magento\Framework\Model\ResourceModel\D
      * AbstractResource constructor.
      * @param \Magestore\AdjustStock\Api\Db\QueryProcessorInterface $queryProcessor
      * @param \Magento\Framework\Model\ResourceModel\Db\Context $context
-     * @param null $connectionName
+     * @param null|string $connectionName
      */
     public function __construct(
         \Magestore\AdjustStock\Api\Db\QueryProcessorInterface $queryProcessor,
         \Magento\Framework\Model\ResourceModel\Db\Context $context,
         $connectionName = null
-    )
-    {
+    ) {
         $this->_queryProcessor = $queryProcessor;
         parent::__construct($context, $connectionName);
     }
 
     /**
-     * insert data to table.
+     * Insert data to table.
      *
-     * @param $table
+     * @param string $table
      * @param array $data
      *
      * @throws LocalizedException
@@ -68,9 +67,9 @@ abstract class AbstractResource extends \Magento\Framework\Model\ResourceModel\D
     }
 
     /**
-     * delete data from table.
+     * Delete data from table.
      *
-     * @param $table
+     * @param mixed $table
      * @param array $where
      *
      * @throws LocalizedException
@@ -93,11 +92,11 @@ abstract class AbstractResource extends \Magento\Framework\Model\ResourceModel\D
     }
 
     /**
-     * update data for table.
+     * Update data for table.
      *
-     * @param $table
-     * @param $bind
-     * @param $where
+     * @param  mixed $table The table to update.
+     * @param  array $bind Column-value pairs.
+     * @param  mixed $where UPDATE WHERE clause(s).
      *
      * @throws LocalizedException
      */

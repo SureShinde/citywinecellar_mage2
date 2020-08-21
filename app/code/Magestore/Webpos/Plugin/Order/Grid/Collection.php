@@ -3,14 +3,11 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace Magestore\Webpos\Plugin\Order\Grid;
 
 /**
- * Class Validator
- */
-/**
- * Class Validator
- * @package Magestore\Webpos\Plugin\Order\Address
+ * Plugin order grid Collection
  */
 class Collection
 {
@@ -23,28 +20,38 @@ class Collection
 
     /**
      * Collection constructor.
-     * @param \Magestore\Webpos\Model\Source\Adminhtml\Location $request
+     *
+     * @param \Magestore\Webpos\Model\Source\Adminhtml\Location $locationSource
      */
     public function __construct(
         \Magestore\Webpos\Model\Source\Adminhtml\Location $locationSource
-    ){
+    ) {
         $this->locationSource = $locationSource;
     }
 
+    /**
+     * After get data
+     *
+     * @param \Magento\Sales\Model\ResourceModel\Order\Grid\Collection $subject
+     * @param array $result
+     * @return mixed
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
     public function afterGetData(
         \Magento\Sales\Model\ResourceModel\Order\Grid\Collection $subject,
         $result
     ) {
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $requestInterface = $objectManager->get('Magento\Framework\App\RequestInterface');
-        if( ($requestInterface->getActionName() == 'gridToCsv') || ($requestInterface->getActionName() == 'gridToXml')){
+        $requestInterface = $objectManager->get(\Magento\Framework\App\RequestInterface::class);
+        if (($requestInterface->getActionName() == 'gridToCsv')
+            || ($requestInterface->getActionName() == 'gridToXml')) {
             $options = $this->getLocationSourceOptions();
-            $optionsFulfill = array('0'=> 'No','1'=>'Yes');
+            $optionsFulfill = ['0' => 'No', '1' => 'Yes'];
             foreach ($result as &$item) {
-                if($item['pos_location_id']) {
+                if ($item['pos_location_id']) {
                     $item['pos_location_id'] = $options[$item['pos_location_id']];
                 }
-                if(isset($item['pos_fulfill_online'])) {
+                if (isset($item['pos_fulfill_online'])) {
                     $item['pos_fulfill_online'] = $optionsFulfill[$item['pos_fulfill_online']];
                 }
             }
@@ -53,8 +60,14 @@ class Collection
         return $result;
     }
 
-    public function getLocationSourceOptions() {
-        if(!$this->locationSourceOptions) {
+    /**
+     * Get Location Source Options
+     *
+     * @return array
+     */
+    public function getLocationSourceOptions()
+    {
+        if (!$this->locationSourceOptions) {
             $this->locationSourceOptions = $this->locationSource->getOptionArray();
         }
         return $this->locationSourceOptions;

@@ -16,7 +16,7 @@ use Magento\Framework\Setup\SchemaSetupInterface;
 class UpgradeSchema implements UpgradeSchemaInterface
 {
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function upgrade(SchemaSetupInterface $setup, ModuleContextInterface $context)
     {
@@ -26,23 +26,23 @@ class UpgradeSchema implements UpgradeSchemaInterface
                 $setup->getTable('webpos_authorization_role'),
                 'description',
                 'description',
-                array(
-                    'type'      => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
-                    'nullable'  => false,
-                    'length'    => \Magento\Framework\DB\Ddl\Table::MAX_TEXT_SIZE,
-                    'comment'   => 'description'
-                )
+                [
+                    'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                    'nullable' => false,
+                    'length' => \Magento\Framework\DB\Ddl\Table::MAX_TEXT_SIZE,
+                    'comment' => 'description'
+                ]
             );
         }
         if (version_compare($context->getVersion(), '1.0.0.1', '<')) {
             $setup->getConnection()->addColumn(
                 $setup->getTable('webpos_authorization_role'),
                 'max_discount_percent',
-                array(
+                [
                     'type' => \Magento\Framework\DB\Ddl\Table::TYPE_FLOAT,
                     'nullable' => true,
                     'comment' => 'Maximum discount percent'
-                )
+                ]
             );
         }
         $setup->endSetup();

@@ -26,6 +26,8 @@ use Magento\Catalog\Model\Product\Attribute\Source\Status;
 
 /**
  * Class Related
+ *
+ * Used for related modifier
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Related extends AbstractModifier
@@ -92,11 +94,6 @@ class Related extends AbstractModifier
     protected $scopePrefix;
 
     /**
-     * @var \Magento\Catalog\Ui\Component\Listing\Columns\Price
-     */
-    private $priceModifier;
-
-    /**
      * @param LocatorInterface $locator
      * @param UrlInterface $urlBuilder
      * @param ProductLinkRepositoryInterface $productLinkRepository
@@ -130,7 +127,7 @@ class Related extends AbstractModifier
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function modifyMeta(array $meta)
     {
@@ -168,70 +165,11 @@ class Related extends AbstractModifier
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function modifyData(array $data)
     {
         return $data;
-        /** @var \Magento\Catalog\Model\Product $product */
-        $product = $this->locator->getProduct();
-        $productId = $product->getId();
-
-        if (!$productId) {
-            return $data;
-        }
-
-        $priceModifier = $this->getPriceModifier();
-        /**
-         * Set field name for modifier
-         */
-        $priceModifier->setData('name', 'price');
-
-        foreach ($this->getDataScopes() as $dataScope) {
-            $data[$productId]['links'][$dataScope] = [];
-            foreach ($this->productLinkRepository->getList($product) as $linkItem) {
-                if ($linkItem->getLinkType() !== $dataScope) {
-                    continue;
-                }
-
-                /** @var \Magento\Catalog\Model\Product $linkedProduct */
-                $linkedProduct = $this->productRepository->get(
-                    $linkItem->getLinkedProductSku(),
-                    false,
-                    $this->locator->getStore()->getId()
-                );
-                $data[$productId]['links'][$dataScope][] = $this->fillData($linkedProduct, $linkItem);
-            }
-            if (!empty($data[$productId]['links'][$dataScope])) {
-                $dataMap = $priceModifier->prepareDataSource([
-                    'data' => [
-                        'items' => $data[$productId]['links'][$dataScope]
-                    ]
-                ]);
-                $data[$productId]['links'][$dataScope] = $dataMap['data']['items'];
-            }
-        }
-
-        $data[$productId][self::DATA_SOURCE_DEFAULT]['current_product_id'] = $productId;
-        $data[$productId][self::DATA_SOURCE_DEFAULT]['current_store_id'] = $this->locator->getStore()->getId();
-
-        return $data;
-    }
-
-    /**
-     * Get price modifier
-     *
-     * @return \Magento\Catalog\Ui\Component\Listing\Columns\Price
-     * @deprecated
-     */
-    private function getPriceModifier()
-    {
-        if (!$this->priceModifier) {
-            $this->priceModifier = ObjectManager::getInstance()->get(
-                \Magento\Catalog\Ui\Component\Listing\Columns\Price::class
-            );
-        }
-        return $this->priceModifier;
     }
 
     /**
@@ -507,10 +445,18 @@ class Related extends AbstractModifier
                                 'imports' => [
                                     'productId' => '${ $.provider }:data.product.current_product_id',
                                     'storeId' => '${ $.provider }:data.product.current_store_id',
+                                    '__disableTmpl' => [
+                                        'productId' => false,
+                                        'storeId' => false
+                                    ]
                                 ],
                                 'exports' => [
                                     'productId' => '${ $.externalProvider }:params.current_product_id',
                                     'storeId' => '${ $.externalProvider }:params.current_store_id',
+                                    '__disableTmpl' => [
+                                        'productId' => false,
+                                        'storeId' => false
+                                    ]
                                 ]
                             ],
                         ],
@@ -560,7 +506,10 @@ class Related extends AbstractModifier
                             'thumbnail' => 'thumbnail_src',
                         ],
                         'links' => [
-                            'insertData' => '${ $.provider }:${ $.dataProvider }'
+                            'insertData' => '${ $.provider }:${ $.dataProvider }',
+                            '__disableTmpl' => [
+                                'insertData' => false
+                            ]
                         ],
                         'sortOrder' => 2,
                     ],

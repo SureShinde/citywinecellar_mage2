@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AddExistedConfigurableProductTest">
+        <annotations>
+            <features value="Add product to cart"/>
+            <stories value="US12.02 - Add config product to cart"/>
+            <title value="Add existed configurable product to cart with same options"/>
+            <description value="Add a configurable product which is added to cart before with same options"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="ACP-02"/>
+            <group value="addConfigurableProductToCartWhichIsExisted"/>
+            <group value="addConfigurableProductToCart"/>
+            <group value="pwapos"/>
+            <group value="demo"/>
+        </annotations>
+
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart">
+        </actionGroup>
+
+        <actionGroup ref="SearchAndClickProductBySku" stepKey="SearchProduct">
+            <argument name="dataProduct" value="pos_config_product_MH09"/>
+        </actionGroup>
+
+        <actionGroup ref="ConfigurableProductSelectOptionsAndAddToCartActionGroup" stepKey="addProductToCart">
+            <argument name="product" value="pos_config_product_MH09"/>
+        </actionGroup>
+
+        <waitForElementNotVisible selector="{{PosCheckoutPopupAddConfigurableProductSection.configProductPopup}}" time="120" stepKey="waitForConfigurablePopupNotVisible1"/>
+        <waitForElementVisible selector="{{CartSection.productFoundOnCartByName(pos_config_product_MH09.name)}}" time="120" stepKey="waitForItemVisibleInCart"/>
+        <seeElement selector="{{CartSection.productFoundOnCartByName(pos_config_product_MH09.name)}}" stepKey="seeItemInCart"/>
+
+        <!--Add that product again-->
+        <click stepKey="clickOnProductFoundInList" selector="{{ProductListSection.firstProduct}}"/>
+
+        <actionGroup ref="ConfigurableProductSelectOptionsAndAddToCartActionGroup" stepKey="addProductToCart2">
+            <argument name="product" value="pos_config_product_MH09"/>
+        </actionGroup>
+
+        <waitForElementNotVisible selector="{{PosCheckoutPopupAddConfigurableProductSection.configProductPopup}}" time="120" stepKey="waitForConfigurablePopupNotVisible2"/>
+        <waitForElementVisible selector="{{CartSection.productQtyInCart(pos_config_product_MH09.name)}}" time="120" stepKey="waitForQtyOfItemVisible"/>
+        <grabTextFrom selector="{{CartSection.productQtyInCart(pos_config_product_MH09.name)}}" stepKey="grabItemQty"/>
+
+        <assertEquals message="Assert item qty is correct" stepKey="assertItemQtyIsCorrect">
+            <expectedResult type="float">2</expectedResult>
+            <actualResult type="variable">grabItemQty</actualResult>
+        </assertEquals>
+    </test>
+</tests>

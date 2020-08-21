@@ -25,7 +25,9 @@ use Magestore\Giftvoucher\Helper\Data as GiftvoucherHelper;
 
 /**
  * Class GiftvoucherRepository
- * @package Magestore\Giftvoucher\Model\Repository
+ *
+ * Gift voucher's repository
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class GiftvoucherRepository implements GiftvoucherRepositoryInterface
 {
@@ -84,7 +86,6 @@ class GiftvoucherRepository implements GiftvoucherRepositoryInterface
      */
     protected $giftVoucherHelper;
 
-
     /**
      * GiftvoucherRepository constructor.
      * @param ResourceModel $resource
@@ -98,6 +99,7 @@ class GiftvoucherRepository implements GiftvoucherRepositoryInterface
      * @param StoreFactory $storeFactory
      * @param GiftTemplateFactory $giftTemplateFactory
      * @param GiftvoucherHelper $giftvoucherHelper
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         ResourceModel $resource,
@@ -126,11 +128,7 @@ class GiftvoucherRepository implements GiftvoucherRepositoryInterface
     }
 
     /**
-     * Save $giftvoucher
-     *
-     * @param GiftvoucherInterface $giftvoucher
-     * @return GiftvoucherInterface $giftvoucher
-     * @throws CouldNotSaveException
+     * @inheritDoc
      */
     public function save(GiftvoucherInterface $giftvoucher)
     {
@@ -143,11 +141,7 @@ class GiftvoucherRepository implements GiftvoucherRepositoryInterface
     }
 
     /**
-     * Load data by given Identity
-     *
-     * @param string $id
-     * @return GiftvoucherInterface $giftvoucher
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @inheritDoc
      */
     public function getById($id)
     {
@@ -160,12 +154,10 @@ class GiftvoucherRepository implements GiftvoucherRepositoryInterface
     }
 
     /**
-     * Load data collection by given search criteria
+     * @inheritDoc
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
-     * @param \Magento\Framework\Api\SearchCriteriaInterface $criteria
-     * @return \Magestore\Giftvoucher\Api\Data\GiftvoucherSearchResultsInterface
      */
     public function getList(\Magento\Framework\Api\SearchCriteriaInterface $criteria)
     {
@@ -197,11 +189,7 @@ class GiftvoucherRepository implements GiftvoucherRepositoryInterface
     }
 
     /**
-     * Delete Gift Template
-     *
-     * @param GiftvoucherInterface $giftTemplate
-     * @return bool
-     * @throws CouldNotDeleteException
+     * @inheritDoc
      */
     public function delete(GiftvoucherInterface $giftTemplate)
     {
@@ -214,23 +202,16 @@ class GiftvoucherRepository implements GiftvoucherRepositoryInterface
     }
 
     /**
-     * Delete Item by given Identity
-     *
-     * @param string $id
-     * @return bool
-     * @throws CouldNotDeleteException
-     * @throws NoSuchEntityException
+     * @inheritDoc
      */
     public function deleteById($id)
     {
         return $this->delete($this->getById($id));
     }
+
     /**
-     * mass create item.
-     *
-     * @param \Magestore\Giftvoucher\Api\Data\GiftcodeMassCreateJsonInterface $data
-     * @return \Magestore\Giftvoucher\Api\Data\GiftvoucherInterface[]
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @inheritDoc
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function massCreate(\Magestore\Giftvoucher\Api\Data\GiftcodeMassCreateJsonInterface $data)
     {
@@ -271,7 +252,7 @@ class GiftvoucherRepository implements GiftvoucherRepositoryInterface
             $giftcard['amount'] = $giftcard['balance'];
             $giftcard['status'] = \Magestore\Giftvoucher\Model\Source\Status::STATUS_ACTIVE;
             $amount = $model->getAmount();
-            $result = array();
+            $result = [];
             for ($i = 1; $i <= $amount; $i++) {
                 $giftvoucher = $this->modelFactory->create()
                     ->setData($giftcard)

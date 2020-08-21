@@ -7,8 +7,7 @@
 namespace Magestore\PurchaseOrderSuccess\Model\ResourceModel;
 
 /**
- * Class PurchaseOrder
- * @package Magestore\PurchaseOrderSuccess\Model\ResourceModel
+ * ResourceModel PurchaseOrder
  */
 class PurchaseOrder extends AbstractResource
 {
@@ -43,17 +42,17 @@ class PurchaseOrder extends AbstractResource
     }
 
     /**
-     *  Check whether post data is valid
+     * Check whether post data is valid
      *
      * @param \Magento\Framework\Model\AbstractModel $object
      * @return bool
      */
     public function isValidPostData(\Magento\Framework\Model\AbstractModel $object)
     {
-        if (is_null($object->getData('supplier_id')) || is_null($object->getData('purchased_at'))) {
+        if ($object->getData('supplier_id') === null
+            || $object->getData('purchased_at') === null) {
             return false;
         }
         return true;
     }
-    
 }

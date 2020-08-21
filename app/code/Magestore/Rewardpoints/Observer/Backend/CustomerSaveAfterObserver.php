@@ -23,6 +23,9 @@ namespace Magestore\Rewardpoints\Observer\Backend;
 use Magento\Framework\DataObject;
 use Magento\Framework\Event\ObserverInterface;
 
+/**
+ * Observer - Backend - Customer Save After
+ */
 class CustomerSaveAfterObserver implements ObserverInterface
 {
     /**
@@ -77,8 +80,7 @@ class CustomerSaveAfterObserver implements ObserverInterface
         \Magestore\Rewardpoints\Model\CustomerFactory $rewardAccountFactory,
         \Magento\Customer\Model\CustomerFactory $customerFactory,
         \Magestore\Rewardpoints\Helper\Action $action
-    )
-    {
+    ) {
         $this->_request = $request;
         $this->_rewardAccountFactory = $rewardAccountFactory;
         $this->_customerFactory = $customerFactory;
@@ -95,11 +97,11 @@ class CustomerSaveAfterObserver implements ObserverInterface
     {
         $customer = $observer->getEvent()->getCustomer();
         if (!$customer->getId()) {
-            return;
+            return $this;
         }
         $params = $this->_request->getParam('rewardpoints');
         if (empty($params['admin_editing'])) {
-            return;
+            return $this;
         }
 
         // Update reward account settings
@@ -123,11 +125,16 @@ class CustomerSaveAfterObserver implements ObserverInterface
         // Create transactions for customer if need
         if (!empty($params['change_balance'])) {
             try {
-                $this->_action->addTransaction('admin', $customer, new \Magento\Framework\DataObject(array(
-                        'point_amount' => $params['change_balance'],
-                        'title' => $params['change_title'],
-                        'expiration_day' => (int) $params['expiration_day'],
-                    ))
+                $this->_action->addTransaction(
+                    'admin',
+                    $customer,
+                    new \Magento\Framework\DataObject(
+                        [
+                            'point_amount' => $params['change_balance'],
+                            'title' => $params['change_title'],
+                            'expiration_day' => (int) $params['expiration_day'],
+                        ]
+                    )
                 );
             } catch (\Exception $e) {
                 $this->_messageManager->addError(__("An error occurred while changing the customer's point balance."));

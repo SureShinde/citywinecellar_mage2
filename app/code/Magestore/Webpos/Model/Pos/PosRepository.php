@@ -5,11 +5,14 @@
  */
 
 namespace Magestore\Webpos\Model\Pos;
+
 use Magestore\Webpos\Api\Data\Pos\PosInterface;
 
 /**
- * Class StaffManagement
- * @package Magestore\Webpos\Model\Staff
+ * Class PosRepository
+ *
+ * Used for pos repository
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class PosRepository implements \Magestore\Webpos\Api\Pos\PosRepositoryInterface
 {
@@ -22,7 +25,6 @@ class PosRepository implements \Magestore\Webpos\Api\Pos\PosRepositoryInterface
      * @var \Magestore\Webpos\Model\ResourceModel\Pos\Pos\CollectionFactory
      */
     protected $posResourceCollectionFactory;
-
 
     /**
      * @var \Magestore\Webpos\Api\Data\Pos\PosInterfaceFactory
@@ -53,9 +55,9 @@ class PosRepository implements \Magestore\Webpos\Api\Pos\PosRepositoryInterface
      */
     protected $orderCollectionFactory;
 
-
     /**
      * PosRepository constructor.
+     *
      * @param \Magestore\Webpos\Model\ResourceModel\Pos\Pos $posResourceModel
      * @param \Magestore\Webpos\Api\Data\Pos\PosInterfaceFactory $posFactory
      * @param \Magestore\Webpos\Model\ResourceModel\Pos\Pos\CollectionFactory $posResourceCollection
@@ -63,6 +65,7 @@ class PosRepository implements \Magestore\Webpos\Api\Pos\PosRepositoryInterface
      * @param \Magento\Framework\App\RequestInterface $request
      * @param \Magestore\Webpos\Model\ResourceModel\Staff\Session $sessionResource
      * @param \Magestore\Webpos\Api\Data\Pos\PosSearchResultsInterfaceFactory $posSearchResultsInterfaceFactory
+     * @param \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $orderCollectionFactory
      */
     public function __construct(
         \Magestore\Webpos\Model\ResourceModel\Pos\Pos $posResourceModel,
@@ -73,8 +76,7 @@ class PosRepository implements \Magestore\Webpos\Api\Pos\PosRepositoryInterface
         \Magestore\Webpos\Model\ResourceModel\Staff\Session $sessionResource,
         \Magestore\Webpos\Api\Data\Pos\PosSearchResultsInterfaceFactory $posSearchResultsInterfaceFactory,
         \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $orderCollectionFactory
-    )
-    {
+    ) {
         $this->posResourceModel = $posResourceModel;
         $this->posFactory = $posFactory;
         $this->posResourceCollectionFactory = $posResourceCollection;
@@ -92,7 +94,8 @@ class PosRepository implements \Magestore\Webpos\Api\Pos\PosRepositoryInterface
      * @return \Magestore\Webpos\Api\Data\Pos\PosInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function save(\Magestore\Webpos\Api\Data\Pos\PosInterface $pos) {
+    public function save(\Magestore\Webpos\Api\Data\Pos\PosInterface $pos)
+    {
         try {
             $this->posResourceModel->save($pos);
         } catch (\Exception $e) {
@@ -104,25 +107,12 @@ class PosRepository implements \Magestore\Webpos\Api\Pos\PosRepositoryInterface
     /**
      * @inheritdoc
      */
-    public function getAllPos() {
+    public function getAllPos()
+    {
         /** @var \Magestore\Webpos\Model\ResourceModel\Pos\Pos\Collection $collection */
         $collection = $this->posResourceCollectionFactory->create();
         return $collection;
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getById($posId) {
-        $pos = $this->posFactory->create();
-        $this->posResourceModel->load($pos, $posId);
-        if (!$pos->getId()) {
-            throw new \Magento\Framework\Exception\NoSuchEntityException(__('Pos with id "%1" does not exist.', $posId));
-        } else {
-            return $pos;
-        }
-    }
-
 
     /**
      * Retrieve pos collection.
@@ -130,7 +120,8 @@ class PosRepository implements \Magestore\Webpos\Api\Pos\PosRepositoryInterface
      * @param int $locationId
      * @return \Magestore\Webpos\Api\Data\Pos\PosInterface[]
      */
-    public function getPosByLocationId($locationId) {
+    public function getPosByLocationId($locationId)
+    {
         $posCollection =  $this->posResourceCollectionFactory->create()
             ->joinToStaffTable()
             ->addFieldToFilter(\Magestore\Webpos\Api\Data\Pos\PosInterface::LOCATION_ID, $locationId)
@@ -139,7 +130,7 @@ class PosRepository implements \Magestore\Webpos\Api\Pos\PosRepositoryInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function delete(\Magestore\Webpos\Api\Data\Pos\PosInterface $pos)
     {
@@ -147,7 +138,7 @@ class PosRepository implements \Magestore\Webpos\Api\Pos\PosRepositoryInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function deleteById($posId)
     {
@@ -156,22 +147,46 @@ class PosRepository implements \Magestore\Webpos\Api\Pos\PosRepositoryInterface
         if (!$salesCollection->getSize()) {
             $this->posResourceModel->delete($pos);
         } else {
-            throw new \Magento\Framework\Exception\CouldNotDeleteException(__('The operations failed. Some POS are still working. You can\'t delete them!'));
+            throw new \Magento\Framework\Exception\CouldNotDeleteException(
+                __('The operations failed. Some POS are still working. You can\'t delete them!')
+            );
+        }
+        return true;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getById($posId)
+    {
+        $pos = $this->posFactory->create();
+        $this->posResourceModel->load($pos, $posId);
+        if (!$pos->getId()) {
+            throw new \Magento\Framework\Exception\NoSuchEntityException(
+                __('Pos with id "%1" does not exist.', $posId)
+            );
+        } else {
+            return $pos;
         }
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
-    public function assignPos($pos) {
+    public function assignPos($pos)
+    {
         // TODO : update shift data
         $posModel = $this->posFactory->create();
         $this->posResourceModel->load($posModel, $pos->getPosId());
         if (!$posModel->getId()) {
-            throw new \Magento\Framework\Exception\NoSuchEntityException(__('Pos with id '.$pos->getPosId().' does not exist.'));
+            throw new \Magento\Framework\Exception\NoSuchEntityException(
+                __('Pos with id '.$pos->getPosId().' does not exist.')
+            );
         } else {
             try {
-                $sessionId = $this->request->getParam(\Magestore\WebposIntegration\Controller\Rest\RequestProcessor::SESSION_PARAM_KEY);
+                $sessionId = $this->request->getParam(
+                    \Magestore\WebposIntegration\Controller\Rest\RequestProcessor::SESSION_PARAM_KEY
+                );
                 try {
                     $sessionLogin = $this->sessionRepository->getBySessionId($sessionId);
                     if ($sessionLogin) {
@@ -182,8 +197,10 @@ class PosRepository implements \Magestore\Webpos\Api\Pos\PosRepositoryInterface
                     } else {
                         throw new \Magento\Framework\Exception\NoSuchEntityException(__('The session does not exist.'));
                     }
-                }catch(\Magento\Framework\Exception\LocalizedException $e){
-                    throw new \Magento\Framework\Exception\LocalizedException(__('There are some problem when save session!'));
+                } catch (\Magento\Framework\Exception\LocalizedException $e) {
+                    throw new \Magento\Framework\Exception\LocalizedException(
+                        __('There are some problem when save session!')
+                    );
                 }
                 $posModel->setData('staff_id', $sessionLogin->getStaffId());
                 $this->posResourceModel->save($posModel);
@@ -195,7 +212,7 @@ class PosRepository implements \Magestore\Webpos\Api\Pos\PosRepositoryInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function getList(\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria)
     {
@@ -223,16 +240,18 @@ class PosRepository implements \Magestore\Webpos\Api\Pos\PosRepositoryInterface
         }
         $collection->setCurPage($searchCriteria->getCurrentPage());
         $collection->setPageSize($searchCriteria->getPageSize());
+        $collectionSize = $collection->getSize();
         $collection->load();
         $searchResults = $this->posSearchResults->create();
         $searchResults->setSearchCriteria($searchCriteria);
         $searchResults->setItems($collection->getItems());
-        $searchResults->setTotalCount($collection->getSize());
+        $searchResults->setTotalCount($collectionSize);
         return $searchResults;
     }
 
-
     /**
+     * Free pos by id
+     *
      * @param int $posId
      * @return PosInterface
      * @throws \Exception
@@ -244,12 +263,13 @@ class PosRepository implements \Magestore\Webpos\Api\Pos\PosRepositoryInterface
         $posModel = $this->posFactory->create();
         $this->posResourceModel->load($posModel, $posId);
         if (!$posModel->getId()) {
-            throw new \Magento\Framework\Exception\NoSuchEntityException(__('Pos with id ' . $posId . ' does not exist.'));
+            throw new \Magento\Framework\Exception\NoSuchEntityException(
+                __('Pos with id ' . $posId . ' does not exist.')
+            );
         }
 
         $posModel->setData(PosInterface::STAFF_ID, null);
         $this->posResourceModel->save($posModel);
         return $posModel;
     }
-
 }

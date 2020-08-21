@@ -4,14 +4,19 @@
  * See COPYING.txt for license details.
  */
 namespace Magestore\Rewardpoints\Ui\Component\Listing\Column\Transaction;
+
 use Magento\Framework\Data\OptionSourceInterface;
+
 /**
- * Class Options
+ * Transaction actions options column
  */
 class Actions implements OptionSourceInterface
 {
-
-
+    /**
+     * To Option Hash
+     *
+     * @return array
+     */
     public function toOptionHash()
     {
         return [
@@ -25,14 +30,17 @@ class Actions implements OptionSourceInterface
         ];
     }
 
+    /**
+     * @inheritDoc
+     */
     public function toOptionArray()
     {
-        $options = array();
+        $options = [];
         foreach (self::toOptionHash() as $value => $label) {
-            $options[] = array(
+            $options[] = [
                 'value' => $value,
                 'label' => $label
-            );
+            ];
         }
         return $options;
     }

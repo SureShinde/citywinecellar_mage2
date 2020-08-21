@@ -8,7 +8,8 @@ namespace Magestore\AdjustStock\Model\ResourceModel\AdjustStock\Product;
 
 /**
  * Class Collection
- * @package Magestore\AdjustStock\Model\ResourceModel\AdjustStock\Product
+ *
+ * Product collection
  */
 class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection
 {
@@ -18,41 +19,47 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
      *
      * @return void
      */
-    protected function _construct() {
-        $this->_init('Magestore\AdjustStock\Model\AdjustStock\Product', 'Magestore\AdjustStock\Model\ResourceModel\AdjustStock\Product');
+    protected function _construct()
+    {
+        $this->_init(
+            \Magestore\AdjustStock\Model\AdjustStock\Product::class,
+            \Magestore\AdjustStock\Model\ResourceModel\AdjustStock\Product::class
+        );
     }
 
     /**
-     * get adjusted product
+     * Get adjusted product
      *
-     * @return void
+     * @param int $adjustStockId
+     * @return Collection
      */
-    public function getAdjustedProducts($adjustStockId){
+    public function getAdjustedProducts($adjustStockId)
+    {
         // get image
         $storeManager = \Magento\Framework\App\ObjectManager::getInstance()
-            ->get('Magento\Store\Model\StoreManagerInterface');
+            ->get(\Magento\Store\Model\StoreManagerInterface::class);
         $path = $storeManager->getStore()->getBaseUrl(
             \Magento\Framework\UrlInterface::URL_TYPE_MEDIA
         );
         $path .= 'catalog/product';
         $edition = \Magento\Framework\App\ObjectManager::getInstance()
-            ->get('Magento\Framework\App\ProductMetadataInterface')
+            ->get(\Magento\Framework\App\ProductMetadataInterface::class)
             ->getEdition();
         $rowId = strtolower($edition) == 'enterprise' ? 'row_id' : 'entity_id';
         /** @var \Magento\Eav\Model\ResourceModel\Entity\Attribute $eavAttribute */
         $eavAttribute = \Magento\Framework\App\ObjectManager::getInstance()
-            ->create('Magento\Eav\Model\ResourceModel\Entity\Attribute');
+            ->create(\Magento\Eav\Model\ResourceModel\Entity\Attribute::class);
         $productImagesAttributeId = $eavAttribute->getIdByCode(\Magento\Catalog\Model\Product::ENTITY, 'image');
         $this->getSelect()->joinLeft(
-            array('catalog_product_entity_varchar_img' => $this->getTable('catalog_product_entity_varchar')),
+            ['catalog_product_entity_varchar_img' => $this->getTable('catalog_product_entity_varchar')],
             "main_table.product_id = catalog_product_entity_varchar_img.$rowId && 
                 catalog_product_entity_varchar_img.attribute_id = $productImagesAttributeId && 
                 catalog_product_entity_varchar_img.store_id = 0",
-            array('')
-        )->columns(array(
+            ['']
+        )->columns([
             'image' => 'catalog_product_entity_varchar_img.value',
             'image_url' => 'CONCAT("'.$path.'", catalog_product_entity_varchar_img.value)'
-        ));
+        ]);
 
         $collection = $this->addFieldToFilter('adjuststock_id', $adjustStockId)
                            ->setOrder('product_id', 'DESC');

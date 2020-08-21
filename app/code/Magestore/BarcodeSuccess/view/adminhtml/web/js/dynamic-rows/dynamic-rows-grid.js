@@ -13,6 +13,32 @@ define([
 
     return dynamicRowsGrid.extend({
         /**
+         * Initialize children
+         *
+         * @returns {Object} Chainable.
+         */
+        initChildren: function () {
+            if (this.recordData().length > 0) {
+                this.parsePagesData(this.recordData());
+            }
+            this.getChildItems().forEach(function (data, index) {
+                this.processingAddChild(data, this.startIndex + index, data[this.identificationDRProperty]);
+            }, this);
+
+            return this;
+        },
+
+        /**
+         * @inheritDoc
+         */
+        getChildItems: function (data, page) {
+            if (typeof this.pageSize === 'string') {
+                this.pageSize = Number(this.pageSize);
+            }
+            return this._super(data, page);
+        },
+
+        /**
          * @inheritDoc
          */
         setInitialProperty: function () {

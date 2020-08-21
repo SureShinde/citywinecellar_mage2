@@ -14,10 +14,9 @@ use Magento\Framework\View\Element\Message\InterpretationStrategyInterface;
 /**
  * Giftvoucher Cart Item Block
  *
- * @category Magestore
- * @package  Magestore_Giftvoucher
  * @module   Giftvoucher
  * @author   Magestore Developer
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Item extends Renderer implements IdentityInterface
 {
@@ -42,6 +41,8 @@ class Item extends Renderer implements IdentityInterface
      * @param \Magento\Framework\ObjectManagerInterface $objectManager
      * @param array $data
      * @internal param \Magento\Catalog\Helper\Image $imageHelper
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
@@ -73,28 +74,23 @@ class Item extends Renderer implements IdentityInterface
     }
 
     /**
-     * @return array
+     * @inheritDoc
      */
     public function getProductOptions()
     {
-
-        $options = parent::getProductOptions();
-
-
-        $giftvoucherOptions = $this->_objectManager->create('Magestore\Giftvoucher\Helper\Data')
+        $giftvoucherOptions = $this->_objectManager->create(\Magestore\Giftvoucher\Helper\Data::class)
             ->getGiftVoucherOptions();
-        $templates = $this->_objectManager->create('Magestore\Giftvoucher\Model\GiftTemplate')
+        $templates = $this->_objectManager->create(\Magestore\Giftvoucher\Model\GiftTemplate::class)
             ->getCollection()
             ->addFieldToFilter('status', '1');
         $item = parent::getItem();
-        $product = $this->_objectManager->create('Magento\Catalog\Model\Product')->load($item->getProduct()->getId());
-        ;
+        $product = $this->_objectManager->create(\Magento\Catalog\Model\Product::class)
+            ->load($item->getProduct()->getId());
+
         $cartType = $product->getGiftCardType();
 
         $options = $item->getProductOptions();
 
-        $buyRequest = $options['info_buyRequest'];
-        //var_dump($product->getGiftCardType());die('xxx');
         foreach ($giftvoucherOptions as $code => $label) {
             if ($option = $this->getItem()->getOptionByCode($code)) {
                 if ($code == 'giftcard_template_id') {
@@ -104,14 +100,14 @@ class Item extends Renderer implements IdentityInterface
                         }
                     }
                     if ($cartType !=1) {
-                        $options[] = array(
+                        $options[] = [
                             'label' => $label,
                             'value' => $this->escapeHtml($valueTemplate->getTemplateName() ?
                                 $valueTemplate->getTemplateName() : $option->getValue()),
-                        );
+                        ];
                     }
                 } elseif ($code == 'amount') {
-                    $options[] = array(
+                    $options[] = [
                         'label' => $label,
                         'value' => $this->priceCurrency->format(
                             $option->getValue(),
@@ -119,12 +115,12 @@ class Item extends Renderer implements IdentityInterface
                             PriceCurrencyInterface::DEFAULT_PRECISION,
                             $this->_storeManager->getStore()
                         )
-                    );
+                    ];
                 } else {
-                    $options[] = array(
+                    $options[] = [
                         'label' => $label,
                         'value' => $this->escapeHtml($option->getValue()),
-                    );
+                    ];
                 }
             }
         }
@@ -132,15 +128,16 @@ class Item extends Renderer implements IdentityInterface
     }
 
     /**
+     * Get Product Thumbnail
+     *
      * @return string
      */
     public function getProductThumbnail()
     {
         /** @var \Magestore\Giftvoucher\Helper\Data $helper */
-        $helper = $this->_objectManager->create('Magestore\Giftvoucher\Helper\Data');
+        $helper = $this->_objectManager->create(\Magestore\Giftvoucher\Helper\Data::class);
         return $helper->getImageUrlByQuoteItem($this->getItem());
     }
-
 
     /**
      * Retrieve product image
@@ -156,13 +153,17 @@ class Item extends Renderer implements IdentityInterface
             ->setImageId($imageId)
             ->setAttributes($attributes)
             ->create();
-        if ($this->_objectManager->create('Magestore\Giftvoucher\Helper\Data')->getStoreConfig('giftvoucher/interface_checkout/display_image_item')) {
+        $displayImageItem = $this->_objectManager->create(\Magestore\Giftvoucher\Helper\Data::class)
+            ->getStoreConfig('giftvoucher/interface_checkout/display_image_item');
+        if ($displayImageItem) {
             $result->setImageUrl($this->getProductThumbnail());
         }
         return $result;
     }
 
     /**
+     * Get Image Src
+     *
      * @return string
      */
     public function getImageSrc()
@@ -172,13 +173,17 @@ class Item extends Renderer implements IdentityInterface
     }
 
     /**
+     * Get Item
+     *
      * @return \Magento\Quote\Model\Quote\Item\AbstractItem
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getItem()
     {
         $item = parent::getItem();
-        
-        $product = $this->_objectManager->create('Magento\Catalog\Model\Product')->load($item->getProduct()->getId());
+
+        $product = $this->_objectManager->create(\Magento\Catalog\Model\Product::class)
+            ->load($item->getProduct()->getId());
 
         $rowTotal = $item->getRowTotal();
         $qty = $item->getQty();
@@ -187,10 +192,11 @@ class Item extends Renderer implements IdentityInterface
 
         $baseCurrencyCode = $this->_storeManager->getStore()->getBaseCurrencyCode();
         $quoteCurrencyCode = $item->getQuote()->getQuoteCurrencyCode();
-        $baseCurrency = $this->_objectManager->create('Magento\Directory\Model\Currency')->load($baseCurrencyCode);
+        $baseCurrency = $this->_objectManager->create(\Magento\Directory\Model\Currency::class)
+            ->load($baseCurrencyCode);
 
         if ($baseCurrencyCode != $quoteCurrencyCode) {
-            $quoteCurrency = $this->_objectManager->create('Magento\Directory\Model\Currency')
+            $quoteCurrency = $this->_objectManager->create(\Magento\Directory\Model\Currency::class)
                 ->load($quoteCurrencyCode);
             if ($product->getGiftType() == \Magestore\Giftvoucher\Model\Source\GiftType::GIFT_TYPE_RANGE) {
                 $price = $price * $price / $baseCurrency->convert($price, $quoteCurrency);
@@ -199,14 +205,14 @@ class Item extends Renderer implements IdentityInterface
         }
 
         $options = $item->getOptions();
-        $result = array();
+        $result = [];
         foreach ($options as $option) {
             $result[$option->getCode()] = $option->getValue();
         }
 
         if (isset($result['base_gc_value']) && isset($result['base_gc_currency'])) {
             $currency = $store->getCurrentCurrencyCode();
-            $currentCurrency = $this->_objectManager->create('Magento\Directory\Model\Currency')->load($currency);
+            $currentCurrency = $this->_objectManager->create(\Magento\Directory\Model\Currency::class)->load($currency);
             $amount = $baseCurrency->convert($result['base_gc_value'], $currentCurrency);
             foreach ($options as $option) {
                 if ($option->getCode() == 'amount') {

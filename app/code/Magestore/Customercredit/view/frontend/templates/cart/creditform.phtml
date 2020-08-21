@@ -24,23 +24,33 @@
  * @var $block Magestore\Customercredit\Block\Cart\CreditForm
  */
 ?>
-<?php $store_id = $this->storeManager->getStore()->getStoreId(); ?>
+<?php $store_id = $block->storeManager->getStore()->getStoreId(); ?>
 <style>
     .title-credit h2.title-credit-label {
-        background-color: # <?php echo $this->_creditHelper->getStyleConfig('background_title', $store_id) ?>;
-        color: # <?php echo $this->_creditHelper->getStyleConfig('color_title', $store_id) ?>;
+        background-color: # <?= /* @noEscape */ $block->_creditHelper->getStyleConfig('background_title', $store_id) ?>;
+        color: # <?= /* @noEscape */ $block->_creditHelper->getStyleConfig('color_title', $store_id) ?>;
     }
 </style>
-<input type="hidden" id="blc-base" value="<?php echo $block->getCustomerBaseBalance() ?>">
+<input type="hidden" id="blc-base" value="<?= /* @noEscape */ $block->getCustomerBaseBalance() ?>">
 <div class="cart-discount" style="margin-top: 20px; float: left;">
-    <div class="block credit-discount" id="block-discount" data-mage-init='{"collapsible":{"openedState": "active", "saveState": false}}'>
-        <?php if ($this->isEnableCredit()): ?>
+    <div class="block credit-discount"
+         id="block-discount"
+         data-mage-init='{"collapsible":{"openedState": "active", "saveState": false}}'>
+        <?php if ($block->isEnableCredit()): ?>
             <div class="title" data-role="title">
-                <strong id="block-discount-heading" role="heading" aria-level="2"><?php echo __('Apply Credit Discount') ?></strong>
+                <strong id="block-discount-heading" role="heading" aria-level="2">
+                    <?= /* @noEscape */ __('Apply Credit Discount') ?>
+                </strong>
             </div>
-            <div class="content" data-role="content" aria-labelledby="block-discount-heading" role="tabpanel" aria-hidden="false">
-            <form id="customer-credit-form-code" action="<?php echo $this->getUrl('customercredit/checkout/amountPost') ?>" method="post">
-                <?php if (!$this->isLoggedIn()) { ?>
+            <div class="content"
+                 data-role="content"
+                 aria-labelledby="block-discount-heading"
+                 role="tabpanel"
+                 aria-hidden="false">
+            <form id="customer-credit-form-code"
+                  action="<?= /* @noEscape */ $block->getUrl('customercredit/checkout/amountPost') ?>"
+                  method="post">
+                <?php if (!$block->isLoggedIn()) { ?>
                     <div class="discount">
                         <dl id="">
                             <dt></dt>
@@ -48,14 +58,17 @@
                                 <div>
                                     <div class="checkout-cart-credit-amount">
                                         <p>
-                                            <?php echo __('Please ') . "<a href=\"" . $this->getUrl('customer/account/login') . "\">" . __('login') . "</a>" . __(' to use customer credit.'); ?>
+                                            <?= /* @noEscape */ __('Please ')
+                                                . "<a href=\"" . $block->getUrl('customer/account/login') . "\">"
+                                                . __('login')
+                                                . "</a>" . __(' to use customer credit.'); ?>
                                         </p>
                                     </div>
                                 </div>
                             </dd>
                         </dl>
                     </div>
-                <?php } elseif (!$this->_creditaccountHelper->customerGroupCheck() && $this->isLoggedIn()) {
+                <?php } elseif (!$block->_creditaccountHelper->customerGroupCheck() && $block->isLoggedIn()) {
                     ?>
                     <div class="discount">
                         <dl id="">
@@ -64,14 +77,14 @@
                                 <div>
                                     <div class="checkout-cart-credit-amount">
                                         <p>
-                                            <?php echo __('We are sorry that you can\'t use Store Credit'); ?>
+                                            <?= /* @noEscape */ __('We are sorry that you can\'t use Store Credit'); ?>
                                         </p>
                                     </div>
                                 </div>
                             </dd>
                         </dl>
                     </div>
-                <?php } elseif ($this->hasCustomerCreditItemOnly() || $this->hasCustomerCreditItem()) { ?>
+                <?php } elseif ($block->hasCustomerCreditItemOnly() || $block->hasCustomerCreditItem()) { ?>
                     <div class="discount">
                         <dl id="">
                             <dt></dt>
@@ -79,7 +92,8 @@
                                 <div>
                                     <div class="checkout-cart-credit-amount">
                                         <p style="font-weight:bold">
-                                            <?php echo __('Store Credit cannot be used to purchase Store Credit products'); ?>
+                                            <?= /* @noEscape */
+                                                __('Store Credit cannot be used to purchase Store Credit products'); ?>
                                         </p>
                                     </div>
                                 </div>
@@ -92,20 +106,33 @@
                             <dt></dt>
                             <dd>
                                 <div class="checkout-cart-credit-amount">
-                                    <p><?php echo __('Your current credit Balance is ') ?><span style="color: #020EBA;"><?php echo $block->getCustomerCreditLabel(); ?></span>
+                                    <p>
+                                        <?= /* @noEscape */ __('Your current credit Balance is ') ?>
+                                        <span style="color: #020EBA;">
+                                            <?= /* @noEscape */ $block->getCustomerCreditLabel(); ?>
+                                        </span>
                                     </p>
                                     <p>
-                                        <?php echo __('Enter a credit amount if you want to pay by Customer Credit'); ?>
+                                        <?= /* @noEscape */
+                                            __('Enter a credit amount if you want to pay by Customer Credit'); ?>
                                     </p>
                                     <div class="input-box" style="float: left;">
                                         <input type="text"
-                                               class="input-text required-entry validate-number form-control validate-zero-or-greater"
+                                               class="input-text required-entry validate-number
+                                                    form-control validate-zero-or-greater"
                                                id="checkout-cart-credit-amount-textbox"
-                                               value="<?php echo $this->getCurrentCreditAmount(); ?>"
-                                               title="<?php echo __('Customer Credit') ?>"
+                                               value="<?= /* @noEscape */ $block->getCurrentCreditAmount(); ?>"
+                                               title="<?= /* @noEscape */ __('Customer Credit') ?>"
                                                name="customer_credit"/>
 
-                                        <div class="validation-advice" id="advice-validate-number-customer_credit" style="display: none"><?php echo __('Please enter a number smaller than or equal to "%1"!', $this->getCustomerCreditLabel()); ?></div>
+                                        <div class="validation-advice"
+                                             id="advice-validate-number-customer_credit"
+                                             style="display: none">
+                                            <?= /* @noEscape */ __(
+                                                'Please enter a number smaller than or equal to "%1"!',
+                                                $block->getCustomerCreditLabel()
+                                            ); ?>
+                                        </div>
                                     </div>
                                 </div>
                             </dd>
@@ -114,13 +141,12 @@
                                 <div class="input-box">
                                     <button type="submit" class="button button-config action primary"
                                             id="checkout-cart-credit-amount-button">
-                                        <span><span><?php echo __('Apply') ?></span></span>
+                                        <span><span><?= /* @noEscape */ __('Apply') ?></span></span>
                                     </button>
-                                    <?php if ($this->getCurrentCreditAmount()): ?>
+                                    <?php if ($block->getCurrentCreditAmount()): ?>
                                         <button type="button" class="button button-config action primary"
-                                                id="checkout-cart-remove-credit-amount-button"
-                                                onclick="window.location.href = '<?php echo $this->getUrl('customercredit/checkout/amountPost/customer_credit/0') ?>'">
-                                            <span><span><?php echo __('Cancel') ?></span></span>
+                                                id="checkout-cart-remove-credit-amount-button">
+                                            <span><span><?= /* @noEscape */ __('Cancel') ?></span></span>
                                         </button>
                                     <?php endif ?>
                                 </div>
@@ -134,3 +160,11 @@
     </div>
 
 </div>
+
+<script type="text/x-magento-init">
+    {
+        "#customer-credit-form-code": {
+            "cartCustomerCredit": {}
+        }
+    }
+</script>

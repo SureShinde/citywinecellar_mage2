@@ -7,7 +7,8 @@ namespace Magestore\Giftvoucher\Model\Total\Quote;
 
 /**
  * Class GiftvoucherAbstract
- * @package Magestore\Giftvoucher\Model\Total\Quote
+ *
+ * Quote total - Gift voucher abstract
  */
 class GiftvoucherAbstract extends \Magento\Quote\Model\Quote\Address\Total\AbstractTotal
 {
@@ -37,34 +38,56 @@ class GiftvoucherAbstract extends \Magento\Quote\Model\Quote\Address\Total\Abstr
     protected $taxConfig;
 
     /**
+     * @var \Magento\Framework\Serialize\SerializerInterface
+     */
+    protected $serializer;
+
+    /**
      * GiftvoucherAbstract constructor.
+     *
      * @param \Magestore\Giftvoucher\Helper\Data $helper
      * @param \Magestore\Giftvoucher\Service\Redeem\CalculationService $calculationService
      * @param \Magestore\Giftvoucher\Api\GiftCode\GiftCodeManagementServiceInterface $giftCodeManagementService
      * @param \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency
+     * @param \Magento\Tax\Model\Config $taxConfig
+     * @param \Magento\Framework\Serialize\SerializerInterface $serializer
      */
     public function __construct(
         \Magestore\Giftvoucher\Helper\Data $helper,
         \Magestore\Giftvoucher\Service\Redeem\CalculationService $calculationService,
         \Magestore\Giftvoucher\Api\GiftCode\GiftCodeManagementServiceInterface $giftCodeManagementService,
         \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency,
-        \Magento\Tax\Model\Config $taxConfig
-    )
-    {
+        \Magento\Tax\Model\Config $taxConfig,
+        \Magento\Framework\Serialize\SerializerInterface $serializer
+    ) {
         $this->helper = $helper;
         $this->calculationService = $calculationService;
         $this->giftCodeManagementService = $giftCodeManagementService;
         $this->priceCurrency = $priceCurrency;
         $this->taxConfig = $taxConfig;
+        $this->serializer = $serializer;
     }
 
+    /**
+     * Calculate Discount
+     *
+     * @param \Magento\Quote\Model\Quote $quote
+     * @param \Magento\Quote\Api\Data\ShippingAssignmentInterface $shippingAssignment
+     * @param \Magento\Quote\Model\Quote\Address\Total $total
+     * @param bool $isApplyGiftAfterTax
+     *
+     * @return $this|bool
+     * @throws \Zend_Json_Exception
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
     public function calculateDiscount(
         \Magento\Quote\Model\Quote $quote,
         \Magento\Quote\Api\Data\ShippingAssignmentInterface $shippingAssignment,
         \Magento\Quote\Model\Quote\Address\Total $total,
         $isApplyGiftAfterTax = false
-    )
-    {
+    ) {
 
         $address = $shippingAssignment->getShipping()->getAddress();
         if (!$this->calculationService->validateQuote($quote, $address)) {
@@ -81,11 +104,11 @@ class GiftvoucherAbstract extends \Magento\Quote\Model\Quote\Address\Total\Abstr
         $codesArray = array_unique(explode(',', $codes));
 
         if ($quote->getGiftVoucherGiftCodesMaxDiscount()) {
-            $giftMaxUseAmount = unserialize($quote->getGiftVoucherGiftCodesMaxDiscount());
+            $giftMaxUseAmount = $this->serializer->unserialize($quote->getGiftVoucherGiftCodesMaxDiscount());
         }
 
         if (!isset($giftMaxUseAmount) || !is_array($giftMaxUseAmount)) {
-            $giftMaxUseAmount = array();
+            $giftMaxUseAmount = [];
         }
 
         $usableGiftCodes = $this->giftCodeManagementService->getUsableGiftCodeCollection($codesArray);
@@ -97,11 +120,13 @@ class GiftvoucherAbstract extends \Magento\Quote\Model\Quote\Address\Total\Abstr
         $currencyRate = $this->priceCurrency->convert(1, false, false);
         $store = $quote->getStore();
 
-        $allowDiscountShipping = $this->helper->getStoreConfig('giftvoucher/general/use_for_ship', $quote->getStoreId());
+        $allowDiscountShipping = $this->helper->getStoreConfig(
+            'giftvoucher/general/use_for_ship',
+            $quote->getStoreId()
+        );
 
-        foreach ($codesArray as $key => $code) {
-            if (
-                !isset($usableGiftCodes[$code])
+        foreach ($codesArray as $code) {
+            if (!isset($usableGiftCodes[$code])
                 || !$usableGiftCodes[$code]
             ) {
                 $codesBaseDiscount[] = 0;
@@ -129,7 +154,10 @@ class GiftvoucherAbstract extends \Magento\Quote\Model\Quote\Address\Total\Abstr
                         continue;
                     }
 
-                    if ($item->isDeleted() || $item->getProduct()->getTypeId() == 'giftvoucher' || !$giftCode->getActions()->validate($item)) {
+                    if ($item->isDeleted()
+                        || $item->getProduct()->getTypeId() == 'giftvoucher'
+                        || !$giftCode->getActions()->validate($item)
+                    ) {
                         continue;
                     }
 
@@ -148,13 +176,13 @@ class GiftvoucherAbstract extends \Magento\Quote\Model\Quote\Address\Total\Abstr
                     if ($baseItemsPrice == $itemsTotal['base_items_price']) {
                         $baseGiftCardDiscountAmount = $maxBaseDiscount - $totalBaseDiscount;
                     } else {
-                        $discountRate = ($baseItemPriceAfterDiscount + $item->getBaseGiftVoucherDiscount()) / $itemsTotal['base_items_price'];
+                        $discountRate = ($baseItemPriceAfterDiscount + $item->getBaseGiftVoucherDiscount())
+                            / $itemsTotal['base_items_price'];
                         $baseGiftCardDiscountAmount = $maxBaseDiscount * $discountRate;
                     }
 
                     $baseGiftCardDiscountAmount = min($baseGiftCardDiscountAmount, $baseItemPriceAfterDiscount);
                     $baseGiftCardDiscountAmount = $this->priceCurrency->round($baseGiftCardDiscountAmount);
-
 
                     $giftCardDiscountAmount = $this->priceCurrency->convert($baseGiftCardDiscountAmount, $store);
                     $giftCardDiscountAmount = min($giftCardDiscountAmount, $itemPriceAfterDiscount);
@@ -162,11 +190,11 @@ class GiftvoucherAbstract extends \Magento\Quote\Model\Quote\Address\Total\Abstr
 
                     $giftcodesApplied = $item->getGiftcodesApplied();
 
-                    if($giftcodesApplied) {
+                    if ($giftcodesApplied) {
                         $giftcodesApplied = \Zend_Json::decode($giftcodesApplied);
                     }
 
-                    if(empty($giftcodesApplied)) {
+                    if (empty($giftcodesApplied)) {
                         $giftcodesApplied = [];
                     }
 
@@ -212,10 +240,10 @@ class GiftvoucherAbstract extends \Magento\Quote\Model\Quote\Address\Total\Abstr
 
                     /**  Start : storage the gift_code_applied for shipping */
                     $giftcodesAppliedDiscountForShipping = $total->getGiftcodesAppliedDiscountForShipping();
-                    if($giftcodesAppliedDiscountForShipping) {
+                    if ($giftcodesAppliedDiscountForShipping) {
                         $giftcodesAppliedDiscountForShipping = \Zend_Json::decode($giftcodesAppliedDiscountForShipping);
                     }
-                    if(empty($giftcodesAppliedDiscountForShipping)) {
+                    if (empty($giftcodesAppliedDiscountForShipping)) {
                         $giftcodesAppliedDiscountForShipping = [];
                     }
                     $giftcodesAppliedDiscountForShipping[] = [
@@ -223,14 +251,26 @@ class GiftvoucherAbstract extends \Magento\Quote\Model\Quote\Address\Total\Abstr
                         'discount' => $discountShipping,
                         'base_discount' => $baseDiscountShipping
                     ];
-                    $total->setGiftcodesAppliedDiscountForShipping(\Zend_Json::encode($giftcodesAppliedDiscountForShipping));
+                    $total->setGiftcodesAppliedDiscountForShipping(
+                        \Zend_Json::encode($giftcodesAppliedDiscountForShipping)
+                    );
                     /**  End : storage the gift_code_applied for shipping */
 
-                    $total->setBaseGiftvoucherDiscountForShipping($total->getBaseGiftvoucherDiscountForShipping() + $baseDiscountShipping);
-                    $total->setGiftvoucherDiscountForShipping($total->getGiftvoucherDiscountForShipping() + $discountShipping);
-                    $total->setMagestoreBaseDiscountForShipping($total->getMagestoreBaseDiscountForShipping() + $baseDiscountShipping);
-                    $total->setMagestoreDiscountForShipping($total->getMagestoreDiscountForShipping() + $discountShipping);
-                    $total->setBaseShippingDiscountAmount(max(0, $total->getBaseShippingDiscountAmount() + $baseDiscountShipping));
+                    $total->setBaseGiftvoucherDiscountForShipping(
+                        $total->getBaseGiftvoucherDiscountForShipping() + $baseDiscountShipping
+                    );
+                    $total->setGiftvoucherDiscountForShipping(
+                        $total->getGiftvoucherDiscountForShipping() + $discountShipping
+                    );
+                    $total->setMagestoreBaseDiscountForShipping(
+                        $total->getMagestoreBaseDiscountForShipping() + $baseDiscountShipping
+                    );
+                    $total->setMagestoreDiscountForShipping(
+                        $total->getMagestoreDiscountForShipping() + $discountShipping
+                    );
+                    $total->setBaseShippingDiscountAmount(
+                        max(0, $total->getBaseShippingDiscountAmount() + $baseDiscountShipping)
+                    );
                     $total->setShippingDiscountAmount(max(0, $total->getShippingDiscountAmount() + $discountShipping));
                     $totalBaseDiscount += $baseDiscountShipping;
                     $totalDiscount += $discountShipping;
@@ -276,6 +316,8 @@ class GiftvoucherAbstract extends \Magento\Quote\Model\Quote\Address\Total\Abstr
 
         $total->setTotalAmount($this->getCode(), (string)-$giftVoucherDiscount);
         $total->setBaseTotalAmount($this->getCode(), (string)-$baseGiftVoucherDiscount);
+
+        return $this;
     }
 
     /**

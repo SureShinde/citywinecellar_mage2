@@ -7,28 +7,35 @@
 namespace Magestore\BarcodeSuccess\Ui\DataProvider\Barcode\Form;
 
 use Magestore\BarcodeSuccess\Ui\DataProvider\Barcode\DataProvider as ParentBarcodeDataProvider;
-
-/* emlement export feature */
 use Magento\Framework\Api\Search\SearchCriteriaBuilder;
 use Magento\Framework\Api\Search\ReportingInterface;
 
-
-
 /**
- * Class BarcodeDataProvider
- * @package Magestore\BarcodeSuccess\Ui\DataProvider\History
+ * Class PrintDataProvider
+ *
+ * Used to create print data provider
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class PrintDataProvider extends ParentBarcodeDataProvider
 {
-
-    /* emlement export feature */
+    /**
+     * @var
+     */
     protected $searchCriteria;
-    protected $searchCriteriaBuilder;
-    protected $reporting;
 
+    /**
+     * @var SearchCriteriaBuilder
+     */
+    protected $searchCriteriaBuilder;
+
+    /**
+     * @var ReportingInterface
+     */
+    protected $reporting;
 
     /**
      * PrintDataProvider constructor.
+     *
      * @param string $name
      * @param string $primaryFieldName
      * @param string $requestFieldName
@@ -45,6 +52,7 @@ class PrintDataProvider extends ParentBarcodeDataProvider
      * @param \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry
      * @param array $meta
      * @param array $data
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         $name,
@@ -83,24 +91,27 @@ class PrintDataProvider extends ParentBarcodeDataProvider
             $data
         );
 
-        /* emlement export feature */
         $this->reporting = $reporting;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
 
-
         $printIds = $this->locator->get('current_barcode_ids_to_print');
-        if(!empty($printIds)){
-            $this->collection->addFieldToFilter('id',['in' => $printIds]);
+        if (!empty($printIds)) {
+            $this->collection->addFieldToFilter('id', ['in' => $printIds]);
         }
     }
 
+    /**
+     * Get data
+     *
+     * @return array
+     */
     public function getData()
     {
         $data = parent::getData();
         $items = $this->locator->get('print_inline_edit_qty');
-        if(!empty($items) && isset($data['items'])){
-            foreach ($data['items'] as $key => $item){
-                if(isset($items[$item['id']]['qty'])){
+        if (!empty($items) && isset($data['items'])) {
+            foreach ($data['items'] as $key => $item) {
+                if (isset($items[$item['id']]['qty'])) {
                     $data['items'][$key]['qty'] = $items[$item['id']]['qty'];
                 }
             }
@@ -108,7 +119,11 @@ class PrintDataProvider extends ParentBarcodeDataProvider
         return $data;
     }
 
-    /* emlement export feature */
+    /**
+     * Get search criteria
+     *
+     * @return \Magento\Framework\Api\Search\SearchCriteria
+     */
     public function getSearchCriteria()
     {
         if (!$this->searchCriteria) {
@@ -116,49 +131,17 @@ class PrintDataProvider extends ParentBarcodeDataProvider
             $this->searchCriteria->setRequestName($this->name);
         }
         return $this->searchCriteria;
-
     }
+
     /**
      * @inheritdoc
      */
     public function addFilter(\Magento\Framework\Api\Filter $filter)
     {
-        if($filter->getField() == 'qty') {
+        if ($filter->getField() == 'qty') {
             $filter->setConditionType('eq');
-            $filter->setValue(str_replace('%','',$filter->getValue()));
+            $filter->setValue(str_replace('%', '', $filter->getValue()));
         }
-        parent::addFilter($filter);
-    }
-    public function getSearchResult()
-    {
-        $collection = $this->collection;//->getData();
-        $count = $collection->getSize();
-        $collection->setPageSize($collection->getSize()); // limit dung để query view dữ liệu - ko dùng cho export được
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance(); // Instance of object manager
-        /** @var \Magento\Framework\Search\EntityMetadata $entityMetadata */
-        $entityMetadata = $objectManager->create('Magento\Framework\Search\EntityMetadata', ['entityId' => 'ids']);
-        $idKey = $entityMetadata->getEntityId();
-        /** @var \Magento\Framework\Search\Adapter\Mysql\DocumentFactory $documentFactory */
-        $documentFactory = $objectManager->create(
-            'Magento\Framework\Search\Adapter\Mysql\DocumentFactory',
-            ['entityMetadata' => $entityMetadata]
-        );
-        /** @var \Magento\Framework\Api\Search\Document[] $documents */
-        $documents = [];
-        foreach($collection as $value){
-            $data = array();
-            $data['id'] = $value->getId();
-            $data['ids'] = $value->getId();
-            $data['barcode'] = $value->getBarcode();
-            $data['qty'] = $value->getQty();
-            $data['product_sku'] = $value->getProductSku();
-            $data['supplier_code'] = $value->getSupplierCode();
-            $data['purchased_time'] = $value->getPurchasedTime();
-            $documents[] = $documentFactory->create($data);
-        }
-        $obj = new \Magento\Framework\DataObject();
-        $obj->setItems($documents);
-        $obj->setTotalCount($count);
-        return $obj;
+        return parent::addFilter($filter);
     }
 }

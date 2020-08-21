@@ -17,7 +17,8 @@
  * @package     Magestore_Customercredit
  * @copyright   Copyright (c) 2017 Magestore (http://www.magestore.com/)
  * @license     http://www.magestore.com/license-agreement.html
- *
+ * @phpcs:disable Generic.Files.LineLength
+ * @phpcs:disable PSR2.ControlStructures.SwitchDeclaration.BreakIndent
  */
 
 /**
@@ -30,20 +31,20 @@
 <?php if ($block->getData('add_searchable_row')): ?>
     <div class="customercredit-search-button">
         <button class="form-button button button-search" type="button"
-                onclick="setLocation('<?php echo $block->getFilterUrl() ?>');">
+                onclick="setLocation('<?= /* @noEscape */ $block->getFilterUrl() ?>');">
             <span>
-                <span><?php echo __('Reset Filter') ?></span>
+                <span><?= /* @noEscape */ __('Reset Filter') ?></span>
             </span>
         </button>
         <button class="form-button button button-search hidden-xs" id="button-search-form" type="button"
-                onclick="searchGrid<?php echo $block->getNameInLayout() ?>();">
+                onclick="searchGrid<?= /* @noEscape */ $block->getNameInLayout() ?>();">
             <span>
-                <span><?php echo __('Search') ?></span>
+                <span><?= /* @noEscape */ __('Search') ?></span>
             </span>
         </button>
         <button id ="button-seacrh-md" class="hidden-lg hidden-md hidden-sm form-button button button-search" type="button" onclick="showFormSearch()">
             <span>
-                <span><?php echo __('Search') ?></span>
+                <span><?= /* @noEscape */ __('Search') ?></span>
             </span>
         </button>
         <div class="button-img hidden-lg hidden-md hidden-sm hidden-xs" id="button-show" type="button"
@@ -80,14 +81,14 @@
             "prototype",
             "mage/translate"
         ], function (jQuery) {
-            searchGrid<?php echo $block->getNameInLayout() ?> = function () {
-                var inputEl = $$('#<?php echo $block->getNameInLayout() ?> thead input');
-                $$('#<?php echo $block->getNameInLayout() ?> thead select').each(function (el) {
+            searchGrid<?= /* @noEscape */ $block->getNameInLayout() ?> = function () {
+                var inputEl = $$('#<?= /* @noEscape */ $block->getNameInLayout() ?> thead input');
+                $$('#<?= /* @noEscape */ $block->getNameInLayout() ?> thead select').each(function (el) {
                     inputEl.push(el);
                 });
                 var filter = Form.serializeElements(inputEl);
                 filter = aff_base64_encode(filter);
-                var url = '<?php echo $block->getFilterUrl() ?>';
+                var url = '<?= /* @noEscape */ $block->getFilterUrl() ?>';
                 if (url.search('[?]') == -1) {
                     url += '?filter=' + filter;
                 } else {
@@ -96,20 +97,20 @@
                 setLocation(url);
             }
 
-            function inputPressEnter<?php echo $block->getNameInLayout() ?>(event) {
+            function inputPressEnter<?= /* @noEscape */ $block->getNameInLayout() ?>(event) {
                 if (event.which == 13) {
-                    searchGrid<?php echo $block->getNameInLayout() ?>();
+                    searchGrid<?= /* @noEscape */ $block->getNameInLayout() ?>();
                 } else if (event.keyCode == 13) {
-                    searchGrid<?php echo $block->getNameInLayout() ?>();
+                    searchGrid<?= /* @noEscape */ $block->getNameInLayout() ?>();
                 }
             }
 
             Event.observe(window, 'load', function () {
-                $$('#<?php echo $block->getNameInLayout() ?> thead input').each(function (el) {
-                    Event.observe(el, 'keypress', inputPressEnter<?php echo $block->getNameInLayout() ?>);
+                $$('#<?= /* @noEscape */ $block->getNameInLayout() ?> thead input').each(function (el) {
+                    Event.observe(el, 'keypress', inputPressEnter<?= /* @noEscape */ $block->getNameInLayout() ?>);
                 });
-                $$('#<?php echo $block->getNameInLayout() ?> thead select').each(function (el) {
-                    Event.observe(el, 'keypress', inputPressEnter<?php echo $block->getNameInLayout() ?>);
+                $$('#<?= /* @noEscape */ $block->getNameInLayout() ?> thead select').each(function (el) {
+                    Event.observe(el, 'keypress', inputPressEnter<?= /* @noEscape */ $block->getNameInLayout() ?>);
                 });
             });
             function aff_utf8_encode(string) {
@@ -156,93 +157,91 @@
     </script>
 <?php endif ?>
 <div id="no-more-tables" class="no-more-table">
-    <table class="table-bordered table-striped table-condensed cf" id="<?php echo $block->getNameInLayout() ?>">
+    <table class="table-bordered table-striped table-condensed cf" id="<?= /* @noEscape */ $block->getNameInLayout() ?>">
         <colgroup>
             <?php foreach ($columns as $id => $column): ?>
-                <col class="<?php echo $id ?>"
-                     style="<?php if (isset($column['align'])): ?>align:<?php echo $column['align'] ?>;<?php endif ?><?php if (isset($column['width'])): ?>width:<?php echo $column['width'] ?><?php endif ?>"/>
+                <col class="<?= /* @noEscape */ $id ?>"
+                     style="<?php if (isset($column['align'])): ?>align:<?= /* @noEscape */ $column['align'] ?>;<?php endif ?><?php if (isset($column['width'])): ?>width:<?= /* @noEscape */ $column['width'] ?><?php endif ?>"/>
             <?php endforeach ?>
         </colgroup>
         <thead class="cf">
         <tr <?php if ($block->getData('add_searchable_row')): ?>class="customercredit-grid-title"<?php endif ?>>
             <?php foreach ($columns as $id => $column): ?>
-                <th class="col numeric"><?php echo $column['header'] ?></th>
+                <th class="col numeric"><?= /* @noEscape */ $column['header'] ?></th>
             <?php endforeach ?>
         </tr>
         <?php if ($block->getData('add_searchable_row')): ?>
             <tr class="customercredit-grid-search hidden-xs" id="customercredit-grid-search">
                 <?php $j = 0 ?>
                 <?php foreach ($columns as $id => $column): ?>
-                    <td data-title="<?php echo $column['header'] ?>"
-                        class="col-td<?php if ($j == count($columns) - 1): ?> last<?php endif; ?>" id="<?php
-                    if (isset($column['type']) && ($column['type']) == 'date'):
-                        ?>date-to<?php elseif (isset($column['type']) && ($column['type'] == 'price' || $column['type'] == 'baseprice')): ?>td-price<?php endif; ?>">
+                    <td data-title="<?= /* @noEscape */ $column['header'] ?>"
+                        class="col-td<?php if ($j == count($columns) - 1): ?> last<?php endif; ?>" id="<?php if (isset($column['type']) && ($column['type']) == 'date'):?>date-to<?php elseif (isset($column['type']) && ($column['type'] == 'price' || $column['type'] == 'baseprice')): ?>td-price<?php endif; ?>">
                         <?php if (isset($column['searchable'])): ?>
                             <div
-                                class="customercredit-grid-search-item"<?php if (isset($column['width']) && $column['width']): ?> style="width:<?php echo $column['width'] ?>;"<?php endif ?>>
+                                class="customercredit-grid-search-item"<?php if (isset($column['width']) && $column['width']): ?> style="width:<?= /* @noEscape */ $column['width'] ?>;"<?php endif ?>>
                                 <?php $type = isset($column['type']) ? $column['type'] : '' ?>
                                 <?php if ($type == 'date' || $type == 'datetime'): ?>
                                     <div class="range-container">
                                         <div class="data-range from-date">
-                                            <span class="label"><?php echo __('From') ?>:</span>
-                                            <input type="text" name="<?php echo $id ?>-from"
-                                                   id="<?php echo $block->getNameInLayout() . '-' . $id ?>-from"
+                                            <span class="label"><?= /* @noEscape */ __('From') ?>:</span>
+                                            <input type="text" name="<?= /* @noEscape */ $id ?>-from"
+                                                   id="<?= /* @noEscape */ $block->getNameInLayout() . '-' . $id ?>-from"
                                                    class="search-item input-text range-text form-control"
-                                                   value="<?php echo $block->getFilterValue($id, '-from') ?>"/>
+                                                   value="<?= /* @noEscape */ $block->getFilterValue($id, '-from') ?>"/>
                                         </div>
                                         <div class="data-range to-date">
-                                            <span class="label"><?php echo __('To') ?>:</span>
-                                            <input type="text" name="<?php echo $id ?>-to"
-                                                   id="<?php echo $block->getNameInLayout() . '-' . $id ?>-to"
+                                            <span class="label"><?= /* @noEscape */ __('To') ?>:</span>
+                                            <input type="text" name="<?= /* @noEscape */ $id ?>-to"
+                                                   id="<?= /* @noEscape */ $block->getNameInLayout() . '-' . $id ?>-to"
                                                    class="search-item input-text range-text form-control"
-                                                   value="<?php echo $block->getFilterValue($id, '-to') ?>"/>
+                                                   value="<?= /* @noEscape */ $block->getFilterValue($id, '-to') ?>"/>
                                         </div>
                                         <script>
                                             require([
                                                 "jquery",
                                                 "mage/calendar"
                                             ], function ($) {
-                                                $("#<?php echo $block->getNameInLayout() . '-' . $id ?>-from").calendar({
-                                                    buttonText: "<?php echo __('Select Date') ?>",
+                                                $("#<?= /* @noEscape */ $block->getNameInLayout() . '-' . $id ?>-from").calendar({
+                                                    buttonText: "<?= /* @noEscape */ __('Select Date') ?>",
                                                 });
-                                                $("#<?php echo $block->getNameInLayout() . '-' . $id ?>-to").calendar({
-                                                    buttonText: "<?php echo __('Select Date') ?>",
+                                                $("#<?= /* @noEscape */ $block->getNameInLayout() . '-' . $id ?>-to").calendar({
+                                                    buttonText: "<?= /* @noEscape */ __('Select Date') ?>",
                                                 });
                                             });
                                         </script>
                                     </div>
                                 <?php elseif ($type == 'options'): ?>
-                                    <select name="<?php echo $id ?>"
-                                            id="<?php echo $block->getNameInLayout() . '-' . $id ?>"
+                                    <select name="<?= /* @noEscape */ $id ?>"
+                                            id="<?= /* @noEscape */ $block->getNameInLayout() . '-' . $id ?>"
                                             class="search-item input-select form-control" style="padding: 0">
                                         <option value=""></option>
                                         <?php foreach ($column['options'] as $value => $label): ?>
                                             <option
-                                                value="<?php echo $value ?>"<?php if ($value == $block->getFilterValue($id)): ?> selected="selected"<?php endif ?>><?php echo $label ?></option>
+                                                value="<?= /* @noEscape */ $value ?>"<?php if ($value == $block->getFilterValue($id)): ?> selected="selected"<?php endif ?>><?= /* @noEscape */ $label ?></option>
                                         <?php endforeach ?>
                                     </select>
                                 <?php elseif ($type == 'price' || $type == 'baseprice'): ?>
                                     <div class="range-container">
                                         <div class="data-range from-price">
-                                            <span class="label"><?php echo __('From') ?>:</span>
-                                            <input type="text" name="<?php echo $id ?>-from"
-                                                   id="<?php echo $block->getNameInLayout() . '-' . $id ?>-from"
+                                            <span class="label"><?= /* @noEscape */ __('From') ?>:</span>
+                                            <input type="text" name="<?= /* @noEscape */ $id ?>-from"
+                                                   id="<?= /* @noEscape */ $block->getNameInLayout() . '-' . $id ?>-from"
                                                    class=" form-control search-item input-text range-text"
-                                                   value="<?php echo $block->getFilterValue($id, '-from') ?>"/>
+                                                   value="<?= /* @noEscape */ $block->getFilterValue($id, '-from') ?>"/>
                                         </div>
                                         <div class="data-range to-price">
-                                            <span class="label"><?php echo __('To') ?>:</span>
-                                            <input type="text" name="<?php echo $id ?>-to"
-                                                   id="<?php echo $block->getNameInLayout() . '-' . $id ?>-to"
+                                            <span class="label"><?= /* @noEscape */ __('To') ?>:</span>
+                                            <input type="text" name="<?= /* @noEscape */ $id ?>-to"
+                                                   id="<?= /* @noEscape */ $block->getNameInLayout() . '-' . $id ?>-to"
                                                    class="form-control search-item input-text range-text"
-                                                   value="<?php echo $block->getFilterValue($id, '-to') ?>"/>
+                                                   value="<?= /* @noEscape */ $block->getFilterValue($id, '-to') ?>"/>
                                         </div>
                                     </div>
                                 <?php else: ?>
-                                    <input type="text" name="<?php echo $id ?>"
-                                           id="<?php echo $block->getNameInLayout() . '-' . $id ?>"
+                                    <input type="text" name="<?= /* @noEscape */ $id ?>"
+                                           id="<?= /* @noEscape */ $block->getNameInLayout() . '-' . $id ?>"
                                            class="form-control search-item input-text search-text"
-                                           value="<?php echo $block->getFilterValue($id) ?>"/>
+                                           value="<?= /* @noEscape */ $block->getFilterValue($id) ?>"/>
                                 <?php endif ?>
                             </div>
                         <?php endif ?>
@@ -256,7 +255,7 @@
         <?php if ($collection->count()): ?>
             <?php $k = 0 ?>
             <?php foreach ($collection as $row): ?>
-                <?php if ($row->getIsContinueNextRow()) continue; ?>
+                <?php if ($row->getIsContinueNextRow()) {continue;} ?>
                 <?php
                 $customer = $block->getCustomer();
                 ?>
@@ -264,47 +263,49 @@
                     <?php $i = 0; ?>
                     <?php foreach ($columns as $id => $column): ?>
 
-                        <td data-title="<?php echo $column['header'] ?>"
+                        <td data-title="<?= /* @noEscape */ $column['header'] ?>"
                             class="col-td<?php if ($i == count($columns) - 1): ?> last <?php endif; ?>"
                             id="td-<?php if (isset($column['index']) && $column['index'] == 'credit_code'): ?>id-credit<?php endif; ?>">
                             <?php if (isset($column['render']) && $column['render']): ?>
-                                <?php echo $block->fetchRender($column['render'], $row) ?>
+                                <?= /* @noEscape */ $block->fetchRender($column['render'], $row) ?>
                             <?php else: ?>
                                 <?php $type = isset($column['type']) ? $column['type'] : '' ?>
-                                <?php switch ($type): case 'action': ?>
-                                    <?php $action = $column['action'] ?>
-                                    <a href="<?php echo $block->getUrl($action['url'], array($action['name'] => $row->getData($action['field']))) ?>"
-                                       title="<?php echo $action['label'] ?>"><?php echo $action['label'] ?></a>
-                                    <?php
-                                    break;
+                                <?php switch ($type):
+                                    case 'action':
+                                        ?>
+                                        <?php $action = $column['action'] ?>
+                                        <a href="<?= /* @noEscape */ $block->getUrl($action['url'], [$action['name'] => $row->getData($action['field'])]) ?>"
+                                           title="<?= /* @noEscape */ $action['label'] ?>"><?= /* @noEscape */ $action['label'] ?></a>
+                                        <?php
+                                        break;
                                     case 'options':
                                         ?>
-                                        <?php echo $column['options'][$row->getData($column['index'])] ?>
+                                        <?= /* @noEscape */ $column['options'][$row->getData($column['index'])] ?>
                                         <?php
                                         break;
                                     case 'date':
                                         ?>
-                                        <?php echo $row->getData($column['index']) ?>
+                                        <?= /* @noEscape */ $row->getData($column['index']) ?>
                                         <?php
                                         break;
                                     case 'datetime':
                                         ?>
-                                        <?php echo $block->formatDate($row->getData($column['index']), $column['format'], true) ?>
+                                        <?= /* @noEscape */ $block->formatDate($row->getData($column['index']), $column['format'], true) ?>
                                         <?php
                                         break;
                                     case 'price':
                                         ?>
-                                        <?php echo $block->getPpriceCurrency->format($row->getData($column['index'])) ?>
+                                        <?= /* @noEscape */ $block->getPpriceCurrency->format($row->getData($column['index'])) ?>
                                         <?php
                                         break;
                                     case 'baseprice':
                                         ?>
-                                        <?php echo $block->getPpriceCurrency->format($row->getData($column['index'])) ?>
+                                        <?= /* @noEscape */ $block->getPpriceCurrency->format($row->getData($column['index'])) ?>
                                         <?php
                                         break;
                                     default:
                                         ?>
-                                        <?php echo $row->getData($column['index']) ?>
+                                        <?= /* @noEscape */ $row->getData($column['index']) ?>
                                     <?php endswitch ?>
                             <?php endif ?>
                         </td>
@@ -315,9 +316,9 @@
             <?php endforeach ?>
         <?php else: ?>
             <tr>
-                <td colspan="<?php echo count($columns) ?>" class="result">
+                <td colspan="<?= /* @noEscape */ count($columns) ?>" class="result">
                     <div>
-                        <?php echo __('There are no items matching this selection.') ?>
+                        <?= /* @noEscape */ __('There are no items matching this selection.') ?>
                     </div>
                 </td>
             </tr>
@@ -325,6 +326,6 @@
         </tbody>
     </table>
     <?php if ($block->getPagerHtml()): ?>
-                    <div class="order-products-toolbar toolbar bottom" style="float: left;width: 100%"><?php echo $block->getPagerHtml(); ?></div>
+                    <div class="order-products-toolbar toolbar bottom" style="float: left;width: 100%"><?= /* @noEscape */ $block->getPagerHtml(); ?></div>
                 <?php endif ?>
 </div>

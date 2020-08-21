@@ -4,9 +4,17 @@ namespace Magestore\Webpos\Model\Checkout\Order;
 
 use Magento\Sales\Model\Order\ItemFactory;
 use Magento\Framework\App\ResourceConnection;
+use Magestore\Webpos\Api\Data\Checkout\Order\ItemInterface;
 
-class Item extends \Magento\Framework\Model\AbstractModel
-    implements \Magestore\Webpos\Api\Data\Checkout\Order\ItemInterface
+/**
+ * Model order Item
+ *
+ * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessivePublicCount)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ */
+class Item extends \Magento\Framework\Model\AbstractModel implements ItemInterface
 {
     /**
      * @var ItemFactory
@@ -21,6 +29,18 @@ class Item extends \Magento\Framework\Model\AbstractModel
      */
     protected $magentoVersion;
 
+    /**
+     * Item constructor.
+     *
+     * @param \Magento\Framework\Model\Context $context
+     * @param \Magento\Framework\Registry $registry
+     * @param ItemFactory $itemFactory
+     * @param \Magestore\Webpos\Helper\Data $helper
+     * @param \Magento\Framework\App\ProductMetadataInterface $productMetadata
+     * @param \Magento\Framework\Model\ResourceModel\AbstractResource|null $resource
+     * @param \Magento\Framework\Data\Collection\AbstractDb|null $resourceCollection
+     * @param array $data
+     */
     public function __construct(
         \Magento\Framework\Model\Context $context,
         \Magento\Framework\Registry $registry,
@@ -30,8 +50,7 @@ class Item extends \Magento\Framework\Model\AbstractModel
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         array $data = []
-    )
-    {
+    ) {
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
         $this->orderItemFactory = $itemFactory;
         $this->helper = $helper;
@@ -198,21 +217,9 @@ class Item extends \Magento\Framework\Model\AbstractModel
     public function getProductOptions()
     {
         $productOptions = $this->getData(self::PRODUCT_OPTIONS);
-        if (version_compare($this->magentoVersion, '2.2.0', '<')) {
-            if (is_string($productOptions)) {
-                try {
-                    $productOptions = unserialize($productOptions);
-                    if (isset($productOptions['bundle_selection_attributes'])) {
-                        $productOptions['bundle_selection_attributes'] =
-                            unserialize($productOptions['bundle_selection_attributes']);
-                    }
-                } catch (\Exception $e) {
-                    $productOptions = $productOptions;
-                }
-            }
-        }
-        if (is_array($productOptions))
+        if (is_array($productOptions)) {
             return json_encode($productOptions);
+        }
         return $this->getData(self::PRODUCT_OPTIONS);
     }
 
@@ -221,14 +228,6 @@ class Item extends \Magento\Framework\Model\AbstractModel
      */
     public function setProductOptions($productOptions)
     {
-        if (version_compare($this->magentoVersion, '2.2.0', '<')) {
-            $productOptions = json_decode($productOptions, true);
-            if (isset($productOptions['bundle_selection_attributes'])) {
-                $productOptions['bundle_selection_attributes'] =
-                    serialize(json_decode($productOptions['bundle_selection_attributes'], true));
-            }
-//            $productOptions = serialize($productOptions);
-        }
         return $this->setData(self::PRODUCT_OPTIONS, $productOptions);
     }
 
@@ -1061,7 +1060,10 @@ class Item extends \Magento\Framework\Model\AbstractModel
      */
     public function setBaseDiscountTaxCompensationAmount($baseDiscountTaxCompensationAmount)
     {
-        return $this->setData(self::BASE_DISCOUNT_TAX_COMPENSATION_AMOUNT, round($baseDiscountTaxCompensationAmount, 4));
+        return $this->setData(
+            self::BASE_DISCOUNT_TAX_COMPENSATION_AMOUNT,
+            round($baseDiscountTaxCompensationAmount, 4)
+        );
     }
 
     /**
@@ -1093,7 +1095,10 @@ class Item extends \Magento\Framework\Model\AbstractModel
      */
     public function setBaseDiscountTaxCompensationInvoiced($baseDiscountTaxCompensationInvoiced)
     {
-        return $this->setData(self::BASE_DISCOUNT_TAX_COMPENSATION_INVOICED, round($baseDiscountTaxCompensationInvoiced, 4));
+        return $this->setData(
+            self::BASE_DISCOUNT_TAX_COMPENSATION_INVOICED,
+            round($baseDiscountTaxCompensationInvoiced, 4)
+        );
     }
 
     /**
@@ -1125,7 +1130,10 @@ class Item extends \Magento\Framework\Model\AbstractModel
      */
     public function setBaseDiscountTaxCompensationRefunded($baseDiscountTaxCompensationRefunded)
     {
-        return $this->setData(self::BASE_DISCOUNT_TAX_COMPENSATION_REFUNDED, round($baseDiscountTaxCompensationRefunded, 4));
+        return $this->setData(
+            self::BASE_DISCOUNT_TAX_COMPENSATION_REFUNDED,
+            round($baseDiscountTaxCompensationRefunded, 4)
+        );
     }
 
     /**
@@ -1487,9 +1495,9 @@ class Item extends \Magento\Framework\Model\AbstractModel
     {
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $productRepository = $objectManager
-            ->get('\Magento\Catalog\Model\ProductRepository');
+            ->get(\Magento\Catalog\Model\ProductRepository::class);
         $helper = $objectManager
-            ->get('\Magestore\Webpos\Helper\Data');
+            ->get(\Magestore\Webpos\Helper\Data::class);
         $searchAttribute = $helper->getStoreConfig('webpos/product_search/barcode');
         if ($searchAttribute != 'sku' && $this->getSku() != 'pos_custom_sale') {
             $product = $productRepository->getById($this->getProductId());
@@ -1500,6 +1508,7 @@ class Item extends \Magento\Framework\Model\AbstractModel
 
     /**
      * Get temp item id
+     *
      * @return float|null
      */
     public function getTmpItemId()
@@ -1508,7 +1517,8 @@ class Item extends \Magento\Framework\Model\AbstractModel
     }
 
     /**
-     * get reason for custom price
+     * Get reason for custom price
+     *
      * @return string
      */
     public function getOsPosCustomPriceReason()
@@ -1517,8 +1527,10 @@ class Item extends \Magento\Framework\Model\AbstractModel
     }
 
     /**
-     * @param $osPosCustomPriceReason
-     * @return \Magestore\Webpos\Api\Data\Checkout\Order\ItemInterface
+     * Set Os Pos Custom Price Reason
+     *
+     * @param string $osPosCustomPriceReason
+     * @return ItemInterface
      */
     public function setOsPosCustomPriceReason($osPosCustomPriceReason)
     {
@@ -1526,8 +1538,7 @@ class Item extends \Magento\Framework\Model\AbstractModel
     }
 
     /**
-     * Return checking of what shipment
-     * type was for this product
+     * Return checking of what shipment type was for this product
      *
      * @return bool
      */
@@ -1535,9 +1546,10 @@ class Item extends \Magento\Framework\Model\AbstractModel
     {
         if ($this->getProductType() == \Magento\Bundle\Model\Product\Type::TYPE_CODE) {
             return !$this->orderItemFactory->create()->load($this->getItemId())->isShipSeparately();
-        } else if ($this->getParentItemId()) {
+        } elseif ($this->getParentItemId()) {
             $parentItem = $this->orderItemFactory->create()->load($this->getParentItemId());
-            if ($parentItem->getProductType() == \Magento\Bundle\Model\Product\Type::TYPE_CODE && !$parentItem->isShipSeparately()) {
+            if ($parentItem->getProductType() == \Magento\Bundle\Model\Product\Type::TYPE_CODE
+                && !$parentItem->isShipSeparately()) {
                 return false;
             }
         }
@@ -1545,7 +1557,8 @@ class Item extends \Magento\Framework\Model\AbstractModel
     }
 
     /**
-     * used = invoiced - refund - redeem
+     * Used = invoiced - refund - redeem
+     *
      * @return float|null
      */
     public function getGiftCardQtyUsed()
@@ -1562,10 +1575,12 @@ class Item extends \Magento\Framework\Model\AbstractModel
             return null;
         }
 
-        if (!$this->getItemId()) return null;
+        if (!$this->getItemId()) {
+            return null;
+        }
 
         $refundOrderItemService = $this->helper->getObjectManager()
-            ->get('Magestore\Giftvoucher\Api\Sales\RefundOrderItemServiceInterface');
+            ->get(\Magestore\Giftvoucher\Api\Sales\RefundOrderItemServiceInterface::class);
         $maximumQtyRefund = $refundOrderItemService->getGiftCardQtyToRefund($this);
 
         $this->setData(self::GIFT_CARD_QTY_USED, $this->getQtyOrdered() - $this->getQtyRefunded() - $maximumQtyRefund);
@@ -1573,8 +1588,10 @@ class Item extends \Magento\Framework\Model\AbstractModel
     }
 
     /**
+     * Set Gift Card Qty Used
+     *
      * @param float|null $qty
-     * @return $this|\Magestore\Webpos\Api\Data\Checkout\Order\ItemInterface
+     * @return $this|ItemInterface
      */
     public function setGiftCardQtyUsed($qty)
     {
@@ -1599,6 +1616,7 @@ class Item extends \Magento\Framework\Model\AbstractModel
 
     /**
      * Get pos custom price
+     *
      * @return float|null
      */
     public function getPosCustomPrice()
@@ -1608,18 +1626,19 @@ class Item extends \Magento\Framework\Model\AbstractModel
 
     /**
      * Set pos custom price
+     *
      * @param float|null $posCustomPrice
-     * @return \Magestore\Webpos\Api\Data\Checkout\Order\ItemInterface
+     * @return ItemInterface
      */
     public function setPosCustomPrice($posCustomPrice)
     {
         return $this->setData(self::POS_CUSTOM_PRICE, $posCustomPrice);
     }
+
     /**
      * Retrieve existing extension attributes object or create a new one.
      *
      * @return \Magestore\Webpos\Api\Data\Checkout\Order\ItemExtensionInterface|null
-     * @since 102.0.0
      */
     public function getExtensionAttributes()
     {
@@ -1635,8 +1654,7 @@ class Item extends \Magento\Framework\Model\AbstractModel
      */
     public function setExtensionAttributes(
         \Magestore\Webpos\Api\Data\Checkout\Order\ItemExtensionInterface $extensionAttributes
-    )
-    {
+    ) {
         return $this->setData(self::EXTENSION_ATTRIBUTES_KEY, $extensionAttributes);
     }
 
@@ -1645,10 +1663,10 @@ class Item extends \Magento\Framework\Model\AbstractModel
      */
     public function getAppliedTaxes()
     {
-        if(!$this->getData(self::APPLIED_TAXES)) {
+        if (!$this->getData(self::APPLIED_TAXES)) {
             $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
             /** @var \Magento\Framework\App\ResourceConnection $resource */
-            $resource = $objectManager->create('\Magento\Framework\App\ResourceConnection');
+            $resource = $objectManager->create(\Magento\Framework\App\ResourceConnection::class);
             /** @var \Magento\Framework\DB\Adapter\AdapterInterface $connection */
             $connection = $resource->getConnection(ResourceConnection::DEFAULT_CONNECTION);
 

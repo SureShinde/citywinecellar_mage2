@@ -13,7 +13,9 @@ use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Module\Dir;
 
 /**
+ * Gift voucher upgrade data
  * @codeCoverageIgnore
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class UpgradeData implements UpgradeDataInterface
 {
@@ -50,6 +52,9 @@ class UpgradeData implements UpgradeDataInterface
      */
     protected $dataSetup;
 
+    /**
+     * @var \Magento\Sales\Model\OrderFactory
+     */
     protected $orderFactory;
 
     /**
@@ -73,10 +78,35 @@ class UpgradeData implements UpgradeDataInterface
     protected $_appState;
 
     /**
+     * EAV setup factory
+     *
+     * @var \Magento\Eav\Setup\EavSetupFactory
+     */
+    private $eavSetupFactory;
+
+    /**
      * UpgradeData constructor.
+     *
+     * @param \Magento\Eav\Setup\EavSetup $eavSetup
+     * @param \Magento\Eav\Setup\EavSetupFactory $eavSetupFactory
+     * @param \Magento\Eav\Model\Entity\Type $entityType
+     * @param \Magento\Eav\Model\Entity\Attribute $catalogAttribute
+     * @param \Magestore\Giftvoucher\Model\Source\TemplateOptions $templateoptions
+     * @param \Magento\Framework\Filesystem\DirectoryList $directoryList
+     * @param \Magento\Framework\Filesystem $filesystem
+     * @param Dir\Reader $moduleReader
+     * @param ModuleDataSetupInterface $dataSetup
+     * @param \Magento\Sales\Model\OrderFactory $orderFactory
+     * @param \Magento\Framework\Math\CalculatorFactory $_calculatorFactory
+     * @param \Magento\Framework\App\ProductMetadataInterface $productMetadata
+     * @param \Magento\Framework\App\State $appState
+     *
+     * @throws \Magento\Framework\Exception\FileSystemException
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         \Magento\Eav\Setup\EavSetup $eavSetup,
+        \Magento\Eav\Setup\EavSetupFactory $eavSetupFactory,
         \Magento\Eav\Model\Entity\Type $entityType,
         \Magento\Eav\Model\Entity\Attribute $catalogAttribute,
         \Magestore\Giftvoucher\Model\Source\TemplateOptions $templateoptions,
@@ -88,9 +118,9 @@ class UpgradeData implements UpgradeDataInterface
         \Magento\Framework\Math\CalculatorFactory $_calculatorFactory,
         \Magento\Framework\App\ProductMetadataInterface $productMetadata,
         \Magento\Framework\App\State $appState
-    )
-    {
+    ) {
         $this->_eavSetup = $eavSetup;
+        $this->eavSetupFactory = $eavSetupFactory;
         $this->_entityTypeModel = $entityType;
         $this->_catalogAttribute = $catalogAttribute;
         $this->templateOptions = $templateoptions;
@@ -105,7 +135,8 @@ class UpgradeData implements UpgradeDataInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function upgrade(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
     {
@@ -115,14 +146,14 @@ class UpgradeData implements UpgradeDataInterface
 
         if (version_compare($context->getVersion(), '1.0.4', '<')) {
             $defaultData = $this->templateOptions->getDefaultData();
-            $data = array(
+            $data = [
                 'group' => 'General',
                 'type' => 'varchar',
                 'input' => 'multiselect',
                 'label' => 'Select Gift Card Templates ',
-                'backend' => 'Magento\Eav\Model\Entity\Attribute\Backend\ArrayBackend',
+                'backend' => \Magento\Eav\Model\Entity\Attribute\Backend\ArrayBackend::class,
                 'frontend' => '',
-                'source' => 'Magestore\Giftvoucher\Model\Source\TemplateOptions',
+                'source' => \Magestore\Giftvoucher\Model\Source\TemplateOptions::class,
                 'visible' => 1,
                 'required' => 1,
                 'user_defined' => 1,
@@ -145,7 +176,7 @@ class UpgradeData implements UpgradeDataInterface
                 'is_visible_on_front' => 0,
                 'used_in_product_listing' => 1,
                 'used_for_sort_by' => 0,
-            );
+            ];
             $installer->removeAttribute(
                 $entityTypeModel->loadByCode('catalog_product')->getData('entity_type_id'),
                 'gift_template_ids'
@@ -161,8 +192,8 @@ class UpgradeData implements UpgradeDataInterface
             $giftTemplateIds->addData($data)->save();
 
             $data['input'] = 'select';
-            $data['label'] = 'Select The Gift Code Sets';
-            $data['source'] = 'Magestore\Giftvoucher\Model\Source\GiftCodeSetsOptions';
+            $data['label'] = __('Select The Gift Code Sets');
+            $data['source'] = \Magestore\Giftvoucher\Model\Source\GiftCodeSetsOptions::class;
             $data['sort_order'] = 110;
             $data['default'] = '';
             $data['required'] = 0;
@@ -175,9 +206,8 @@ class UpgradeData implements UpgradeDataInterface
             $giftCodeSets = $catalogAttributeModel->loadByCode('catalog_product', 'gift_code_sets');
             $giftCodeSets->addData($data)->save();
 
-
-            $data['label'] = 'Select Gift Card Type';
-            $data['source'] = 'Magestore\Giftvoucher\Model\Source\GiftCardTypeOptions';
+            $data['label'] = __('Select Gift Card Type');
+            $data['source'] = \Magestore\Giftvoucher\Model\Source\GiftCardTypeOptions::class;
             $data['sort_order'] = 14;
             $data['default'] = '';
             $data['is_required'] = 1;
@@ -194,11 +224,36 @@ class UpgradeData implements UpgradeDataInterface
 
         if (version_compare($context->getVersion(), '2.0.0', '<')) {
             // Update Attributes
-            $this->_eavSetup->updateAttribute('catalog_product', 'gift_code_sets', 'source_model', 'Magestore\Giftvoucher\Model\Source\GiftCodeSetsOptions');
-            $this->_eavSetup->updateAttribute('catalog_product', 'gift_card_type', 'source_model', 'Magestore\Giftvoucher\Model\Source\GiftCardTypeOptions');
-            $this->_eavSetup->updateAttribute('catalog_product', 'gift_type', 'source_model', 'Magestore\Giftvoucher\Model\Source\GiftType');
-            $this->_eavSetup->updateAttribute('catalog_product', 'gift_price_type', 'source_model', 'Magestore\Giftvoucher\Model\Source\GiftPriceType');
-            $this->_eavSetup->updateAttribute('catalog_product', 'gift_template_ids', 'source_model', 'Magestore\Giftvoucher\Model\Source\TemplateOptions');
+            $this->_eavSetup->updateAttribute(
+                'catalog_product',
+                'gift_code_sets',
+                'source_model',
+                \Magestore\Giftvoucher\Model\Source\GiftCodeSetsOptions::class
+            );
+            $this->_eavSetup->updateAttribute(
+                'catalog_product',
+                'gift_card_type',
+                'source_model',
+                \Magestore\Giftvoucher\Model\Source\GiftCardTypeOptions::class
+            );
+            $this->_eavSetup->updateAttribute(
+                'catalog_product',
+                'gift_type',
+                'source_model',
+                \Magestore\Giftvoucher\Model\Source\GiftType::class
+            );
+            $this->_eavSetup->updateAttribute(
+                'catalog_product',
+                'gift_price_type',
+                'source_model',
+                \Magestore\Giftvoucher\Model\Source\GiftPriceType::class
+            );
+            $this->_eavSetup->updateAttribute(
+                'catalog_product',
+                'gift_template_ids',
+                'source_model',
+                \Magestore\Giftvoucher\Model\Source\TemplateOptions::class
+            );
 
             $this->dataSetup->deleteTableRow(
                 'eav_entity_attribute',
@@ -232,8 +287,55 @@ class UpgradeData implements UpgradeDataInterface
             }
             $this->convertOrder($setup);
         }
+
+        if (version_compare($context->getVersion(), '2.2.1', '<')) {
+            $attributeArray = [
+                'gift_type',
+                'gift_value',
+                'gift_from',
+                'gift_to',
+                'gift_dropdown',
+                'gift_price_type',
+                'gift_price',
+                'gift_template_ids',
+                'gift_card_type',
+                'gift_code_sets'
+            ];
+            $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
+            foreach ($attributeArray as $attributeCode) {
+                $this->disableSearchOfAttribute($attributeCode, $eavSetup);
+            }
+        }
     }
 
+    /**
+     * Disable search of attribute
+     *
+     * @param string $attributeCode
+     * @param \Magento\Eav\Setup\EavSetup $eavSetup
+     */
+    public function disableSearchOfAttribute($attributeCode, $eavSetup)
+    {
+        $eavSetup->updateAttribute(
+            \Magento\Catalog\Model\Product::ENTITY,
+            $attributeCode,
+            [
+                'is_searchable' => 0,
+                'searchable' => false,
+                'used_in_product_listing' => false,
+                'is_visible_in_advanced_search' => 0,
+                'is_filterable' => 0,
+                'is_filterable_in_search' => 0
+            ]
+        );
+    }
+
+    /**
+     * Convert order
+     *
+     * @param ModuleDataSetupInterface $setup
+     * @throws \Exception
+     */
     public function convertOrder(ModuleDataSetupInterface $setup)
     {
         $orderTable = $setup->getTable('sales_order');
@@ -258,7 +360,8 @@ class UpgradeData implements UpgradeDataInterface
                 $discountAmount = $orderItem->getDiscountAmount();
                 $baseDiscountInvoiced = $orderItem->getBaseDiscountInvoiced();
                 $discountInvoiced = $orderItem->getDiscountInvoiced();
-                $baseDiscountRefunded = $orderItem->getBaseDiscountRefunded() ? $orderItem->getBaseDiscountRefunded() : 0;
+                $baseDiscountRefunded = $orderItem->getBaseDiscountRefunded() ?
+                    $orderItem->getBaseDiscountRefunded() : 0;
                 $discountRefunded = $orderItem->getDiscountRefunded() ? $orderItem->getDiscountRefunded() : 0;
                 $baseGiftvoucherDiscountInvoiced = $baseGiftVoucherDiscount / $qtyOrdered * $qtyInvoiced;
                 $giftvoucherDiscountInvoiced = $giftVoucherDiscount / $qtyOrdered * $qtyInvoiced;
@@ -300,27 +403,32 @@ class UpgradeData implements UpgradeDataInterface
             $giftVoucherDiscount = $order->getGiftVoucherDiscount();
             $order->setBaseDiscountAmount($baseDiscountAmount - $baseGiftVoucherDiscount);
             $order->setDiscountAmount($discountAmount - $giftVoucherDiscount);
-            $order->setBaseDiscountInvoiced($baseDiscountInvoiced - $this->roundPrice($totalItemsBaseGiftVoucherDiscountInvoiced, true, $store));
-            $order->setDiscountInvoiced($discountInvoiced - $this->roundPrice($totalItemsGiftVoucherDiscountInvoiced, true, $store));
-            $order->setBaseDiscountRefunded($baseDiscountRefunded - $this->roundPrice($totalItemsBaseGiftVoucherDiscountRefunded, true, $store));
-            $order->setDiscountRefunded($discountRefunded - $this->roundPrice($totalItemsGiftVoucherDiscountRefunded, true, $store));
+            $order->setBaseDiscountInvoiced(
+                $baseDiscountInvoiced - $this->roundPrice($totalItemsBaseGiftVoucherDiscountInvoiced, true, $store)
+            );
+            $order->setDiscountInvoiced(
+                $discountInvoiced - $this->roundPrice($totalItemsGiftVoucherDiscountInvoiced, true, $store)
+            );
+            $order->setBaseDiscountRefunded(
+                $baseDiscountRefunded - $this->roundPrice($totalItemsBaseGiftVoucherDiscountRefunded, true, $store)
+            );
+            $order->setDiscountRefunded(
+                $discountRefunded - $this->roundPrice($totalItemsGiftVoucherDiscountRefunded, true, $store)
+            );
             $order->save();
         }
     }
-
 
     /**
      * Round price considering delta
      *
      * @param float $price
-     * @param string $type
-     * @param bool $negative Indicates if we perform addition (true) or subtraction (false) of rounded value
-     *
-     * @return float
+     * @param bool $negative
+     * @param \Magento\Store\Model\Store $store
+     * @return mixed
      */
-    public function roundPrice($price, $negative = false, $store)
+    public function roundPrice($price, $negative, $store)
     {
-        $store->getStoreId();
         if ($price) {
             if (!isset($this->_calculators[$store->getStoreId()])) {
                 $this->_calculators[$store->getStoreId()] = $this->_calculatorFactory->create(['scope' => $store]);
@@ -329,5 +437,4 @@ class UpgradeData implements UpgradeDataInterface
         }
         return $price;
     }
-
 }

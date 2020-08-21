@@ -1,12 +1,13 @@
 <?php
 namespace Magestore\Rewardpoints\Controller\Adminhtml\Managepointbalances;
 
+use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\Controller\ResultFactory;
 
 /**
- * Class ProcessImport
+ * Process Import Controller
  */
-class ProcessImport extends \Magento\Backend\App\Action
+class ProcessImport extends \Magento\Backend\App\Action implements HttpPostActionInterface
 {
     /**
      * @var \Magento\Framework\App\Response\Http\FileFactory
@@ -19,41 +20,60 @@ class ProcessImport extends \Magento\Backend\App\Action
      * @var \Magento\Framework\File\Csv
      */
     protected $csvProcessor;
+    /**
+     * @var \Magento\Framework\Filesystem\Io\File
+     */
+    protected $ioFile;
 
     /**
+     * @var \Magento\Store\Model\StoreManagerInterface
+     */
+    protected $storeManager;
+
+    /**
+     * ProcessImport constructor.
+     *
      * @param \Magento\Backend\App\Action\Context $context
      * @param \Magento\Framework\App\Response\Http\FileFactory $fileFactory
+     * @param \Magento\Framework\File\Csv $csvProcessor
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param \Magento\Framework\Filesystem\Io\File $ioFile
      */
     public function __construct(
         \Magento\Backend\App\Action\Context $context,
         \Magento\Framework\App\Response\Http\FileFactory $fileFactory,
         \Magento\Framework\File\Csv $csvProcessor,
-        \Magento\Store\Model\StoreManagerInterface $storeManager
-    )
-    {
+        \Magento\Store\Model\StoreManagerInterface $storeManager,
+        \Magento\Framework\Filesystem\Io\File $ioFile
+    ) {
         $this->fileFactory = $fileFactory;
         $this->csvProcessor = $csvProcessor;
         $this->storeManager = $storeManager;
+        $this->ioFile = $ioFile;
         parent::__construct($context);
     }
 
     /**
-     * import action
+     * Import action
      *
      * @return \Magento\Backend\Model\View\Result\Redirect
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function execute()
     {
+        /* @var \Magento\MediaStorage\Model\File\Uploader $uploader */
         $uploader = $this->_objectManager->create(
-            'Magento\MediaStorage\Model\File\Uploader',
+            \Magento\MediaStorage\Model\File\Uploader::class,
             ['fileId' => 'filecsv']
         );
         $files = $uploader->validateFile();
 
         if (isset($files['name']) && $files['name'] != '') {
             try {
-                if(pathinfo($files['name'],PATHINFO_EXTENSION) !='csv'){
-                    $this->messageManager->addError(__('Does not support the %1 file', pathinfo($files['name'],PATHINFO_EXTENSION)));
+                if ($uploader->getFileExtension() !='csv') {
+                    $this->messageManager->addError(
+                        __('Does not support the %1 file', $uploader->getFileExtension())
+                    );
                     /** @var \Magento\Backend\Model\View\Result\Redirect $resultRedirect */
                     $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
                     $resultRedirect->setPath('rewardpoints/managepointbalances/import');
@@ -61,7 +81,8 @@ class ProcessImport extends \Magento\Backend\App\Action
                 }
                 $file = $this->getRequest()->getFiles('filecsv');
                 $dataFile = $this->csvProcessor->getData($file['tmp_name']);
-                $customerData = array();
+                $customerData = [];
+                $fields = [];
                 foreach ($dataFile as $row => $cols) {
                     if ($row == 0) {
                         $fields = $cols;
@@ -94,20 +115,28 @@ class ProcessImport extends \Magento\Backend\App\Action
             $this->messageManager->addError(__('No uploaded files'));
         }
 
-        /** @var \Magento\Backend\Model\View\Result\Redirect $resultRedirect */
+        /* @var \Magento\Backend\Model\View\Result\Redirect $resultRedirect */
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
         $resultRedirect->setPath('rewardpoints/managepointbalances/import');
         return $resultRedirect;
     }
 
+    /**
+     * Update Customer
+     *
+     * @param array $customerData
+     *
+     * @return int|void
+     */
     public function _updateCustomer($customerData)
     {
-        $collection = array();
-        $website = $this->_objectManager->create('Magento\Config\Model\Config\Source\Website')->toOptionArray();
-        $website[] = array(
+        $collection = [];
+        $website = $this->_objectManager->create(\Magento\Config\Model\Config\Source\Website::class)
+            ->toOptionArray();
+        $website[] = [
             'value' => 0,
             'label' => 'Admin'
-        );
+        ];
 
         foreach ($customerData as $key => $value) {
             $website_id = $this->storeManager->getDefaultStoreView()->getWebsiteId();
@@ -128,19 +157,23 @@ class ProcessImport extends \Magento\Backend\App\Action
                 ->setExpireAfter($expireAfter);
             $collection[] = $customerExist;
         }
-        $this->_objectManager->create('Magestore\Rewardpoints\Model\ResourceModel\Transaction')->importPointFromCsv($collection);
+        $this->_objectManager->create(\Magestore\Rewardpoints\Model\ResourceModel\Transaction::class)
+            ->importPointFromCsv($collection);
         return count($collection);
     }
 
     /**
-     * check customer exist by email
-     * @param type $email
-     * @param type $website_id
-     * @return type
+     * Check customer exist by email
+     *
+     * @param string $email
+     * @param int $website_id
+     * @return \Magento\Customer\Model\Customer
      */
     public function _checkCustomer($email, $website_id = 1)
     {
-        return $this->_objectManager->create('Magento\Customer\Model\Customer')->setWebsiteId($website_id)->loadByEmail($email);
+        return $this->_objectManager->create(\Magento\Customer\Model\Customer::class)
+            ->setWebsiteId($website_id)
+            ->loadByEmail($email);
     }
 
     /**
@@ -152,5 +185,4 @@ class ProcessImport extends \Magento\Backend\App\Action
     {
         return $this->_authorization->isAllowed('Magestore_Rewardpoints::Manage_Point_Balances');
     }
-
 }

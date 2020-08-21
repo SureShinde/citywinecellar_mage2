@@ -25,6 +25,11 @@ namespace Magestore\Customercredit\Block\Adminhtml\Customer\Tab;
 use Magento\Customer\Controller\RegistryConstants;
 use Magento\Ui\Component\Layout\Tabs\TabInterface;
 
+/**
+ * Class Storecredit
+ *
+ * Store credit block
+ */
 class Storecredit extends \Magento\Backend\Block\Widget\Form\Generic implements TabInterface
 {
     /**
@@ -36,7 +41,10 @@ class Storecredit extends \Magento\Backend\Block\Widget\Form\Generic implements 
      * @var \Magento\Framework\Pricing\Helper\Data
      */
     protected $_coreHelper;
+
     /**
+     * Storecredit constructor.
+     *
      * @param \Magento\Backend\Block\Template\Context $context
      * @param \Magento\Framework\Registry $registry
      * @param \Magento\Framework\Data\FormFactory $formFactory
@@ -51,74 +59,115 @@ class Storecredit extends \Magento\Backend\Block\Widget\Form\Generic implements 
         \Magento\Framework\Pricing\Helper\Data $coreHelper,
         \Magestore\Customercredit\Model\CustomercreditFactory $customerCreditFactory,
         array $data = []
-    )
-    {
+    ) {
         $this->_coreHelper = $coreHelper;
         $this->_customerCreditFactory = $customerCreditFactory;
         parent::__construct($context, $registry, $formFactory, $data);
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function _prepareForm()
     {
         $form = $this->_formFactory->create();
 
-        $fieldset = $form->addFieldset('customercredit_fieldset', array(
-            'legend' => __('Credit Information')
-        ));
+        $fieldset = $form->addFieldset(
+            'customercredit_fieldset',
+            [
+                'legend' => __('Credit Information')
+            ]
+        );
 
-        $fieldset->addField('credit_balance', 'note', array(
-            'label' => __('Current Credit Balance'),
-            'title' => __('Current Credit Balance'),
-            'text' => $this->getBalanceCredit(),
-        ));
-        $fieldset->addField('credit_value', 'text', array(
-            'label' => __('Add or subtract  a credit value'),
-            'title' => __('Add or subtract  a credit value'),
-            'name' => 'credit_value',
-            'data-form-part' => $this->getData('target_form'),
-            'note' => __('You can add or subtract an amount from customer’s balance by entering a number. For example, enter “99” to add $99 and “-99” to subtract $99'),
-        ));
-        $fieldset->addField('description', 'textarea', array(
-            'label' => __('Comment'),
-            'title' => __('Comment'),
-            'name' => 'description',
-            'data-form-part' => $this->getData('target_form'),
-        ));
-        $fieldset->addField('sendemail', 'checkbox', array(
-            'after_element_html' => __('Send email to customer'),
-            'title' => __('Send email to customer'),
-            'type' => 'checkbox',
-            'name' => 'send_mail',
-            'data-form-part' => $this->getData('target_form'),
-            'onclick' => 'this.value = this.checked ? 1 : 0;'
-        ));
+        $fieldset->addField(
+            'credit_balance',
+            'note',
+            [
+                'label' => __('Current Credit Balance'),
+                'title' => __('Current Credit Balance'),
+                'text' => $this->getBalanceCredit(),
+            ]
+        );
+        $fieldset->addField(
+            'credit_value',
+            'text',
+            [
+                'label' => __('Add or subtract  a credit value'),
+                'title' => __('Add or subtract  a credit value'),
+                'name' => 'credit_value',
+                'data-form-part' => $this->getData('target_form'),
+                'note' => __(
+                    'You can add or subtract an amount from customer’s balance by entering a number. '
+                    . 'For example, enter “99” to add $99 and “-99” to subtract $99'
+                ),
+            ]
+        );
+        $fieldset->addField(
+            'description',
+            'textarea',
+            [
+                'label' => __('Comment'),
+                'title' => __('Comment'),
+                'name' => 'description',
+                'data-form-part' => $this->getData('target_form'),
+            ]
+        );
+        $fieldset->addField(
+            'sendemail',
+            'checkbox',
+            [
+                'after_element_html' => __('Send email to customer'),
+                'title' => __('Send email to customer'),
+                'type' => 'checkbox',
+                'name' => 'send_mail',
+                'data-form-part' => $this->getData('target_form'),
+                'onclick' => 'this.value = this.checked ? 1 : 0;'
+            ]
+        );
 
-        $form->addFieldset('balance_history_fieldset', array(
-            'legend' => __('Transaction History')
-        ))->setRenderer($this->_layout
-            ->getBlockSingleton('Magento\Backend\Block\Widget\Form\Renderer\Fieldset')
+        $form->addFieldset(
+            'balance_history_fieldset',
+            [
+                'legend' => __('Transaction History')
+            ]
+        )->setRenderer($this->_layout
+            ->getBlockSingleton(\Magento\Backend\Block\Widget\Form\Renderer\Fieldset::class)
             ->setTemplate('Magestore_Customercredit::customercredit/transactionhistory.phtml'));
 
         $this->setForm($form);
         return parent::_prepareForm();
     }
 
+    /**
+     * Get Credit
+     *
+     * @return mixed
+     */
     public function getCredit()
     {
         $customerId = $this->_coreRegistry->registry(RegistryConstants::CURRENT_CUSTOMER_ID);
         return $this->_customerCreditFactory->create()->load($customerId, 'customer_id');
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getTabLabel()
     {
         return _('Store Credit');
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getTabTitle()
     {
         return __('Store Credit');
     }
 
+    /**
+     * @inheritDoc
+     */
     public function canShowTab()
     {
         if ($this->_coreRegistry->registry(RegistryConstants::CURRENT_CUSTOMER_ID)) {
@@ -127,6 +176,9 @@ class Storecredit extends \Magento\Backend\Block\Widget\Form\Generic implements 
         return false;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function isHidden()
     {
         if ($this->_coreRegistry->registry(RegistryConstants::CURRENT_CUSTOMER_ID)) {
@@ -135,6 +187,11 @@ class Storecredit extends \Magento\Backend\Block\Widget\Form\Generic implements 
         return true;
     }
 
+    /**
+     * Get Balance Credit
+     *
+     * @return float|string
+     */
     public function getBalanceCredit()
     {
         $customerCredit = $this->getCredit()->getCreditBalance();
@@ -170,5 +227,4 @@ class Storecredit extends \Magento\Backend\Block\Widget\Form\Generic implements 
     {
         return false;
     }
-
 }

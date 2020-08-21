@@ -14,6 +14,9 @@ use Magento\Framework\Webapi\Exception;
 use Magestore\Webpos\Test\Constant\Product;
 use Magestore\Webpos\Test\Api\GetSessionTrait;
 
+/**
+ * Api Test GetListUpdatedStockTest
+ */
 class GetListUpdatedStockTest extends WebapiAbstract
 {
     use GetSessionTrait;
@@ -32,9 +35,11 @@ class GetListUpdatedStockTest extends WebapiAbstract
     protected $apiName = "getListUpdatedStocks";
 
     /**
-     * @return false|string
+     * Set Up
+     *
+     * @return void
      */
-    protected function setUp()
+    protected function setUp() : void // phpcs:ignore
     {
         $this->posSession = $this->loginAndAssignPos();
     }
@@ -42,7 +47,7 @@ class GetListUpdatedStockTest extends WebapiAbstract
     /**
      * Initialize fixture namespaces.
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass() : void // phpcs:ignore
     {
         include __DIR__. '/../../_files/update_product.php';
         parent::setUpBeforeClass();
@@ -53,7 +58,7 @@ class GetListUpdatedStockTest extends WebapiAbstract
      *
      * @return void
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass() : void // phpcs:ignore
     {
         /* remove sample Data1 */
         include __DIR__. '/../../_files/update_product_rollback.php';
@@ -99,8 +104,7 @@ class GetListUpdatedStockTest extends WebapiAbstract
         self::assertEquals($expectedTotalCount, $response['total_count'], $message);
 
         /* check list_items is empty */
-        self::assertEmpty($response['items'] , $message);
-
+        self::assertEmpty($response['items'], $message);
     }
 
     /**#@-*/
@@ -127,10 +131,8 @@ class GetListUpdatedStockTest extends WebapiAbstract
                 SearchCriteria::CURRENT_PAGE => 1
             ],
         ];
-        $expectedTotalCount = 2;
         /* get Response from API test */
         $response = $this->getResponseAPI($requestData);
-
 
         $message = "API getListUpdatedStocks fail at testcase SS2";
         $this->assertNotNull($response, $message);
@@ -139,13 +141,12 @@ class GetListUpdatedStockTest extends WebapiAbstract
         AssertArrayContains::assert($requestData['searchCriteria'], $response['search_criteria']);
 
         /* check totalcount = 2 */
-        //self::assertEquals($expectedTotalCount, $response['total_count'], $message);
 
         /* change conditions : that not check the att visible_on_pos and product_status */
         self::assertEquals(3, $response['total_count'], $message);
 
         /* check list_items is not empty */
-        self::assertNotEmpty($response['items'] , $message);
+        self::assertNotEmpty($response['items'], $message);
 
         /* change conditions : that not check the att visible_on_pos and product_status -> has 3 item instead of 2*/
         $expectedItemsData = [
@@ -191,5 +192,4 @@ class GetListUpdatedStockTest extends WebapiAbstract
         $this->testCaseId = "SS5";
         $this->sessionCase3();
     }
-
 }

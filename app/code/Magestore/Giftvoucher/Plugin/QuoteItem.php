@@ -6,8 +6,7 @@
 namespace Magestore\Giftvoucher\Plugin;
 
 /**
- * Class QuoteItem
- * @package Magestore\Giftvoucher\Plugin
+ * Giftvoucher - plugin Quote ToOrderItem
  */
 class QuoteItem
 {
@@ -27,6 +26,8 @@ class QuoteItem
     }
 
     /**
+     * Around Convert
+     *
      * @param \Magento\Quote\Model\Quote\Item\ToOrderItem $subject
      * @param callable $proceed
      * @param \Magento\Quote\Model\Quote\Item\AbstractItem $item
@@ -38,15 +39,12 @@ class QuoteItem
         \Magento\Quote\Model\Quote\Item\ToOrderItem $subject,
         \Closure $proceed,
         \Magento\Quote\Model\Quote\Item\AbstractItem $item,
-        $additional
+        $additional = []
     ) {
-
         if ($item->getProduct()->getTypeId() == \Magestore\Giftvoucher\Model\Product\Type\Giftvoucher::GIFT_CARD_TYPE) {
             $item->setOriginalPrice($item->getPrice());
             $item->setBaseOriginalPrice($item->getBasePrice());
         }
-
-
 
         /** @var $orderItem \Magento\Sales\Model\Order\Item */
         $orderItem = $proceed($item, $additional);

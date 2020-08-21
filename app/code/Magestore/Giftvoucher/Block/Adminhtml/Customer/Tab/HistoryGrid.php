@@ -9,7 +9,8 @@ use Magento\Customer\Controller\RegistryConstants;
 
 /**
  * Class HistoryGrid
- * @package Magestore\Giftvoucher\Block\Adminhtml\Customer\Tab
+ *
+ * Customer tab history grid block
  */
 class HistoryGrid extends \Magento\Backend\Block\Widget\Grid\Extended
 {
@@ -22,13 +23,15 @@ class HistoryGrid extends \Magento\Backend\Block\Widget\Grid\Extended
      * @var \Magestore\Giftvoucher\Model\ResourceModel\History\Collection
      */
     protected $_historyCollection;
-    
+
     /**
      * @var \Magestore\Giftvoucher\Model\Actions
      */
     protected $_actions;
 
     /**
+     * HistoryGrid constructor.
+     *
      * @param \Magento\Backend\Block\Template\Context $context
      * @param \Magento\Backend\Helper\Data $backendHelper
      * @param \Magento\Framework\Registry $coreRegistry
@@ -50,6 +53,9 @@ class HistoryGrid extends \Magento\Backend\Block\Widget\Grid\Extended
         parent::__construct($context, $backendHelper, $data);
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function _construct()
     {
         parent::_construct();
@@ -61,7 +67,7 @@ class HistoryGrid extends \Magento\Backend\Block\Widget\Grid\Extended
     }
 
     /**
-     * @return $this
+     * @inheritDoc
      */
     protected function _prepareCollection()
     {
@@ -78,48 +84,48 @@ class HistoryGrid extends \Magento\Backend\Block\Widget\Grid\Extended
     }
 
     /**
-     * @return $this
+     * @inheritDoc
      */
     protected function _prepareColumns()
     {
-        $this->addColumn('history_id', array(
+        $this->addColumn('history_id', [
             'header' => __('ID'),
             'align' => 'left',
             'width' => '50px',
             'type' => 'number',
             'index' => 'history_id',
-        ));
-        
-        $this->addColumn('action', array(
+        ]);
+
+        $this->addColumn('action', [
             'header' => __('Action'),
             'align' => 'left',
             'index' => 'action',
             'type' => 'options',
             'options' => $this->_actions->getOptionArray(),
-        ));
+        ]);
 
-        $this->addColumn('amount', array(
+        $this->addColumn('amount', [
             'header' => __('Balance Change'),
             'align' => 'left',
             'index' => 'amount',
             'type' => 'currency',
             'currency' => 'currency',
             'rate' => 1
-        ));
-        
-        $this->addColumn('gift_code', array(
+        ]);
+
+        $this->addColumn('gift_code', [
             'header' => __('Gift Card Code'),
             'align' => 'left',
             'index' => 'gift_code',
-        ));
-        
-        $this->addColumn('order_increment_id', array(
+        ]);
+
+        $this->addColumn('order_increment_id', [
             'header' => __('Order'),
             'align' => 'left',
             'index' => 'order_increment_id',
-        ));
-        
-        $this->addColumn('balance', array(
+        ]);
+
+        $this->addColumn('balance', [
             'header' => __('Current Balance'),
             'align' => 'left',
             'index' => 'balance',
@@ -127,26 +133,26 @@ class HistoryGrid extends \Magento\Backend\Block\Widget\Grid\Extended
             'type' => 'currency',
             'currency' => 'currency',
             'rate' => 1
-        ));
-        
-        $this->addColumn('created_at', array(
+        ]);
+
+        $this->addColumn('created_at', [
             'header' => __('Created Time'),
             'align' => 'left',
             'type' => 'datetime',
             'index' => 'created_at',
-        ));
-        
+        ]);
+
         return parent::_prepareColumns();
     }
 
     /**
-     * @return string
+     * @inheritDoc
      */
     public function getGridUrl()
     {
-        return $this->getUrl('giftvoucheradmin/gifthistory/customer', array(
+        return $this->getUrl('giftvoucheradmin/gifthistory/customer', [
             '_current' => true,
             'customer_id' => $this->_coreRegistry->registry(RegistryConstants::CURRENT_CUSTOMER_ID),
-        ));
+        ]);
     }
 }

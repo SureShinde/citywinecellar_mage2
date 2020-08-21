@@ -8,22 +8,20 @@
 namespace Magestore\TransferStock\Model\Source\Adminhtml\Product;
 
 /**
- * Class Source
- * @package Magestore\TransferStock\Model\Source\Adminhtml
+ * Product type model
  */
 class Type implements \Magento\Framework\Option\ArrayInterface
 {
     /**
-     * @return array
+     * @inheritDoc
      */
     public function toOptionArray()
     {
         $options = [];
-        $options[] = array('value' => 'simple', 'label' => __('Simple Product'));
-        $options[] = array('value' => 'virtual', 'label' => __('Virtual Product'));
-        $options[] = array('value' => 'downloadable', 'label' => __('Downloadable Product'));
-        $options[] = array('value' => 'giftvoucher', 'label' => __('Gift Card Product'));
+        $options[] = ['value' => 'simple', 'label' => __('Simple Product')];
+        $options[] = ['value' => 'virtual', 'label' => __('Virtual Product')];
+        $options[] = ['value' => 'downloadable', 'label' => __('Downloadable Product')];
+        $options[] = ['value' => 'giftvoucher', 'label' => __('Gift Card Product')];
         return $options;
     }
-
 }

@@ -9,8 +9,6 @@ namespace Magestore\Giftvoucher\Model\Source;
 /**
  * Giftvoucher Typeofbarcode Model
  *
- * @category Magestore
- * @package  Magestore_Giftvoucher
  * @module   Giftvoucher
  * @author   Magestore Developer
  */
@@ -18,20 +16,20 @@ class TypeOfBarcode implements \Magento\Framework\Option\ArrayInterface
 {
 
     /**
-     * @return array
+     * @inheritDoc
      */
     public function toOptionArray()
     {
-        $positions = array(
+        $positions = [
             'code128' => __('Code 128'),
             'qr' => __('QR code'),
-        );
-        $options = array();
+        ];
+        $options = [];
         foreach ($positions as $code => $label) {
-            $options[] = array(
+            $options[] = [
                 'value' => $code,
                 'label' => $label
-            );
+            ];
         }
         return $options;
     }

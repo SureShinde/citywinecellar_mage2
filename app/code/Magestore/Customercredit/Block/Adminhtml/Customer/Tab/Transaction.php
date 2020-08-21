@@ -24,6 +24,11 @@ namespace Magestore\Customercredit\Block\Adminhtml\Customer\Tab;
 
 use Magento\Customer\Controller\RegistryConstants;
 
+/**
+ * Class Transaction
+ *
+ * Transaction block
+ */
 class Transaction extends \Magento\Backend\Block\Widget\Grid\Extended
 {
     /**
@@ -52,8 +57,7 @@ class Transaction extends \Magento\Backend\Block\Widget\Grid\Extended
         \Magento\Framework\Registry $coreRegistry,
         \Magestore\Customercredit\Model\TransactionFactory $transactionFactory,
         array $data = []
-    )
-    {
+    ) {
         $this->_storeManager = $context->getStoreManager();
         $this->_coreRegistry = $coreRegistry;
         $this->_transactionFactory = $transactionFactory;
@@ -61,7 +65,7 @@ class Transaction extends \Magento\Backend\Block\Widget\Grid\Extended
     }
 
     /**
-     * @return void
+     * @inheritDoc
      */
     protected function _construct()
     {
@@ -87,69 +91,67 @@ class Transaction extends \Magento\Backend\Block\Widget\Grid\Extended
         $collection = $this->_transactionFactory->create()->getCollection()
             ->addFieldToFilter('customer_id', $customerId);
         $collection->getSelect()->joinLeft(
-            array('table_type_transaction' => $collection->getTable('type_transaction')),
+            ['table_type_transaction' => $collection->getTable('type_transaction')],
             'table_type_transaction.type_transaction_id = main_table.type_transaction_id',
-            array('type_transaction' => 'table_type_transaction.transaction_name')
+            ['type_transaction' => 'table_type_transaction.transaction_name']
         );
         $this->setCollection($collection);
         return parent::_prepareCollection();
     }
     /**
-     * Initialize grid columns
-     *
-     * @return $this
+     * @inheritDoc
      */
     protected function _prepareColumns()
     {
-        $this->addColumn('transaction_id', array(
+        $this->addColumn('transaction_id', [
             'header' => __('ID'),
             'align' => 'left',
             'width' => '50px',
             'type' => 'number',
             'index' => 'transaction_id',
-        ));
-        $this->addColumn('type_transaction', array(
+        ]);
+        $this->addColumn('type_transaction', [
             'header' => __('Type of Transaction'),
             'align' => 'left',
             'filter_index' => 'table_type_transaction.transaction_name',
             'index' => 'type_transaction',
-        ));
+        ]);
 
-        $this->addColumn('detail_transaction', array(
+        $this->addColumn('detail_transaction', [
             'header' => __('Transaction Detail'),
             'align' => 'left',
             'index' => 'detail_transaction',
-        ));
+        ]);
         $currency = $this->_storeManager->getStore()->getBaseCurrencyCode();
 
-        $this->addColumn('amount_credit', array(
+        $this->addColumn('amount_credit', [
             'header' => __('Added/ Subtracted'),
             'align' => 'left',
             'index' => 'amount_credit',
             'currency_code' => $currency,
             'type' => 'price',
-        ));
-        $this->addColumn('end_balance', array(
+        ]);
+        $this->addColumn('end_balance', [
             'header' => __('Credit Balance'),
             'align' => 'left',
             'index' => 'end_balance',
             'currency_code' => $currency,
             'type' => 'price',
-        ));
-        $this->addColumn('transaction_time', array(
+        ]);
+        $this->addColumn('transaction_time', [
             'header' => __('Transaction Time'),
             'align' => 'left',
             'index' => 'transaction_time',
             'type' => 'datetime',
-        ));
+        ]);
 
-        $this->addColumn('status', array(
+        $this->addColumn('status', [
             'header' => __('Status'),
             'align' => 'left',
             'width' => '80px',
             'index' => 'status',
             'filter' => false,
-        ));
+        ]);
 
         return parent::_prepareColumns();
     }
@@ -159,11 +161,14 @@ class Transaction extends \Magento\Backend\Block\Widget\Grid\Extended
      *
      * @return string;
      */
-    public function getGridUrl(){
-        return $this->getUrl('customercreditadmin/customer/transaction', array(
+    public function getGridUrl()
+    {
+        return $this->getUrl(
+            'customercreditadmin/customer/transaction',
+            [
                 '_current' => true,
                 'customer_id' => $this->_coreRegistry->registry(RegistryConstants::CURRENT_CUSTOMER_ID),
-        ));
+            ]
+        );
     }
-
 }

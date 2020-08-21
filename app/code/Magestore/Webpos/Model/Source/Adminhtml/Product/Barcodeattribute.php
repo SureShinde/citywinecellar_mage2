@@ -8,36 +8,26 @@
 namespace Magestore\Webpos\Model\Source\Adminhtml\Product;
 
 /**
- * class \Magestore\Webpos\Model\Source\Adminhtml\Productattribute
- * 
- * Productattribute source model
- * Methods:
- *  toOptionArray
- * 
- * @category    Magestore
- * @package     Magestore_Webpos
- * @module      Webpos
- * @author      Magestore Developer
+ * Source option Barcodeattribute
  */
 class Barcodeattribute implements \Magento\Framework\Option\ArrayInterface
 {
-        /**
+    /**
+     * To Option Array
+     *
      * @return array
      */
     public function toOptionArray()
     {
         $options = [];
         $attributes = \Magento\Framework\App\ObjectManager::getInstance()->create(
-                '\Magento\Catalog\Model\ResourceModel\Product\Attribute\Collection'
-            )
-            ->addFieldToFilter('is_unique', 1);
-//            ->addFieldToFilter('frontend_input', 'text');
+            \Magento\Catalog\Model\ResourceModel\Product\Attribute\Collection::class
+        )->addFieldToFilter('is_unique', 1);
         if (!empty($attributes)) {
             foreach ($attributes as $attribute) {
-                $options[] = array('value' => $attribute->getAttributeCode(), 'label' => $attribute->getFrontendLabel());
+                $options[] = ['value' => $attribute->getAttributeCode(), 'label' => $attribute->getFrontendLabel()];
             }
         }
         return $options;
     }
-
 }

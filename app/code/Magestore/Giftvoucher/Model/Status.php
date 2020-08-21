@@ -10,7 +10,6 @@ namespace Magestore\Giftvoucher\Model;
  */
 class Status extends \Magento\Framework\DataObject implements \Magento\Framework\Data\OptionSourceInterface
 {
-
     const STATUS_PENDING = 1;
     const STATUS_ACTIVE = 2;
     const STATUS_DISABLED = 3;
@@ -27,16 +26,16 @@ class Status extends \Magento\Framework\DataObject implements \Magento\Framework
      *
      * @return array
      */
-    public static function getOptionArray()
+    public function getOptionArray()
     {
-        return array(
+        return [
             self::STATUS_PENDING => __('Pending'),
             self::STATUS_ACTIVE => __('Active'),
             self::STATUS_DISABLED => __('Disabled'),
             self::STATUS_USED => __('Used'),
             self::STATUS_EXPIRED => __('Expired'),
             self::STATUS_REFUNDED => __('Refunded'),
-        );
+        ];
     }
 
     /**
@@ -44,13 +43,13 @@ class Status extends \Magento\Framework\DataObject implements \Magento\Framework
      *
      * @return array
      */
-    public static function getOptionEmail()
+    public function getOptionEmail()
     {
-        return array(
+        return [
             self::STATUS_NOT_SEND => __('Not Send'),
             self::STATUS_SENT_EMAIL => __('Sent via Email'),
             self::STATUS_SENT_OFFICE => __('Send via Post Office'),
-        );
+        ];
     }
 
     /**
@@ -58,40 +57,40 @@ class Status extends \Magento\Framework\DataObject implements \Magento\Framework
      *
      * @return array
      */
-    public static function getOptions()
+    public function getOptions()
     {
-        $options = array();
-        foreach (self::getOptionArray() as $value => $label) {
-            $options[] = array(
+        $options = [];
+        foreach ($this->getOptionArray() as $value => $label) {
+            $options[] = [
                 'value' => $value,
                 'label' => $label
-            );
-        }
-        return $options;
-    }
-    
-    /**
-     * Email options
-     *
-     * @return array
-     */
-    public static function getEmailOptions()
-    {
-        $options = array();
-        foreach (self::getOptionEmail() as $value => $label) {
-            $options[] = array(
-                'value' => $value,
-                'label' => $label
-            );
+            ];
         }
         return $options;
     }
 
     /**
+     * Email options
+     *
      * @return array
+     */
+    public function getEmailOptions()
+    {
+        $options = [];
+        foreach ($this->getOptionEmail() as $value => $label) {
+            $options[] = [
+                'value' => $value,
+                'label' => $label
+            ];
+        }
+        return $options;
+    }
+
+    /**
+     * @inheritDoc
      */
     public function toOptionArray()
     {
-        return self::getOptions();
+        return $this->getOptions();
     }
 }

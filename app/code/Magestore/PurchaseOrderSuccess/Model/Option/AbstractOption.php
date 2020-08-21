@@ -7,8 +7,7 @@
 namespace Magestore\PurchaseOrderSuccess\Model\Option;
 
 /**
- * Class AbstractOption
- * @package Magestore\PurchaseOrderSuccess\Model\Option
+ * Model Option AbstractOption
  */
 class AbstractOption implements \Magento\Framework\Option\ArrayInterface
 {
@@ -16,9 +15,9 @@ class AbstractOption implements \Magento\Framework\Option\ArrayInterface
      * Status value
      */
     const STATUS_ENABLE = 1;
-    
+
     const STATUS_DISABLE = 0;
-    
+
     /**
      * Retrieve option array
      *
@@ -30,7 +29,7 @@ class AbstractOption implements \Magento\Framework\Option\ArrayInterface
     }
 
     /**
-     * get model option hash as array
+     * Get model option hash as array
      *
      * @return array
      */
@@ -39,8 +38,8 @@ class AbstractOption implements \Magento\Framework\Option\ArrayInterface
         $options = [];
         foreach ($this->getOptionHash() as $value => $label) {
             $options[] = [
-                'value'    => $value,
-                'label'    => $label
+                'value' => $value,
+                'label' => $label
             ];
         }
         return $options;
@@ -67,12 +66,21 @@ class AbstractOption implements \Magento\Framework\Option\ArrayInterface
     }
 
     /**
+     * Unserialize Array
+     *
      * @param string $value
      * @return array
      */
-    public function unserializeArray($value){
-        if(!is_array($value)){
-            return unserialize($value); 
+    public function unserializeArray($value)
+    {
+        if ($value === null) {
+            return [];
+        }
+        if (!is_array($value)) {
+            /** @var \Magento\Framework\Serialize\SerializerInterface $serializer */
+            $serializer = \Magento\Framework\App\ObjectManager::getInstance()
+                ->get(\Magento\Framework\Serialize\SerializerInterface::class);
+            return $serializer->unserialize($value);
         }
         return $value;
     }

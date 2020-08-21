@@ -14,7 +14,8 @@ use Psr\Log\LoggerInterface as Logger;
 
 /**
  * Class Collection
- * @package Magestore\AdjustStock\Model\ResourceModel\AdjustStock\Grid
+ *
+ * Adjust stock's grid collection
  */
 class Collection extends \Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult
 {
@@ -25,6 +26,7 @@ class Collection extends \Magento\Framework\View\Element\UiComponent\DataProvide
 
     /**
      * Collection constructor.
+     *
      * @param EntityFactory $entityFactory
      * @param Logger $logger
      * @param FetchStrategy $fetchStrategy
@@ -33,37 +35,42 @@ class Collection extends \Magento\Framework\View\Element\UiComponent\DataProvide
      * @param string $resourceModel
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function __construct(
+    public function __construct(// phpcs:ignore Generic.CodeAnalysis.UselessOverridingMethod
         EntityFactory $entityFactory,
         Logger $logger,
         FetchStrategy $fetchStrategy,
         EventManager $eventManager,
         $mainTable = 'os_adjuststock',
-        $resourceModel = 'Magestore\AdjustStock\Model\ResourceModel\AdjustStock'
+        $resourceModel = \Magestore\AdjustStock\Model\ResourceModel\AdjustStock::class
     ) {
         parent::__construct($entityFactory, $logger, $fetchStrategy, $eventManager, $mainTable, $resourceModel);
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getData()
     {
         $data = parent::getData();
 
         $om = \Magento\Framework\App\ObjectManager::getInstance();
         /** @var \Magento\Framework\App\RequestInterface $request */
-        $request = $om->get('Magento\Framework\App\RequestInterface');
-        $options = $om->get('Magestore\AdjustStock\Model\AdjustStock\Options\Status')
+        $request = $om->get(\Magento\Framework\App\RequestInterface::class);
+        $options = $om->get(\Magestore\AdjustStock\Model\AdjustStock\Options\Status::class)
             ->toOptionHash();
-        if($request->getParam('is_export')) {
-            foreach ($data as &$item) {
-                $item['status'] = $options[$item['status']];
+        $metadataProvider = $om->get(\Magento\Ui\Model\Export\MetadataProvider::class);
+        if (!method_exists($metadataProvider, 'getColumnOptions')) {
+            if ($request->getParam('is_export')) {
+                foreach ($data as &$item) {
+                    $item['status'] = $options[$item['status']];
+                }
             }
         }
-
         return $data;
     }
 
     /**
-     * @return $this|\Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult|void
+     * @inheritDoc
      */
     protected function _initSelect()
     {
@@ -72,15 +79,14 @@ class Collection extends \Magento\Framework\View\Element\UiComponent\DataProvide
                 [
                     'status', 'created_by', 'created_at', 'adjuststock_code', 'source_name',
                     'source' => new \Zend_Db_Expr('CONCAT(source_name, " (",source_code,")")')
-                ]);
+                ]
+            );
 
         return $this;
     }
 
     /**
-     * @param array|string $field
-     * @param null $condition
-     * @return \Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult
+     * @inheritDoc
      */
     public function addFieldToFilter($field, $condition = null)
     {

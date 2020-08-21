@@ -16,7 +16,6 @@
                         </resource>
                         <resource id="Magestore_Webpos::manage_session" title="Manage Session" sortOrder="20">
                             <resource id="Magestore_Webpos::make_adjustment" title="Make adjustment (put money in/ take money out)" sortOrder="10"/>
-                            <resource id="Magestore_Webpos::view_sessions_created_by_other_staff" title="View sessions created by other staff" sortOrder="20"/>
                         </resource>
                         <resource id="Magestore_Webpos::check_external_stock" title="Check external stock" sortOrder="30"/>
                         <resource id="Magestore_Webpos::manage_order" title="Manage Order" sortOrder="40">

@@ -7,7 +7,8 @@ namespace Magestore\Giftvoucher\Cron;
 
 /**
  * Class SendScheduleEmail
- * @package Magestore\Giftvoucher\Cron
+ *
+ * Cron Send schedule email
  */
 class SendScheduleEmail
 {
@@ -35,15 +36,15 @@ class SendScheduleEmail
     }
 
     /**
-     *
+     * Execute
      */
     public function execute()
     {
         $collection = $this->giftvoucherCollectionFactory->create();
         $timeSite = date("Y-m-d H:i:s", $this->date->timestamp());
-        $collection->addFieldToFilter('is_sent', array('neq' => 1))
-            ->addFieldToFilter('day_store', array('notnull' => true))
-            ->addFieldToFilter('day_store', array('to' => $timeSite));
+        $collection->addFieldToFilter('is_sent', ['neq' => 1])
+            ->addFieldToFilter('day_store', ['notnull' => true])
+            ->addFieldToFilter('day_store', ['to' => $timeSite]);
         if (count($collection)) {
             foreach ($collection as $giftCard) {
                 $giftCard->save();

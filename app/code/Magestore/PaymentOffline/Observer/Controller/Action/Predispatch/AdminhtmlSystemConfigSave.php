@@ -3,14 +3,19 @@
  * Copyright © 2018 Magestore. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace Magestore\PaymentOffline\Observer\Controller\Action\Predispatch;
+
 use Magento\Framework\Event\Observer;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Controller\ResultFactory;
+use Magestore\PaymentOffline\Model\Source\Adminhtml\IconType;
 
 /**
- * Class AdminhtmlSystemConfigSave
- * @package Magestore\PaymentOffline\Observer\Controller\Action\Predispatch
+ * Action predispatch AdminhtmlSystemConfigSave
+ *
+ * @SuppressWarnings(PHPMD.CookieAndSessionMisuse)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class AdminhtmlSystemConfigSave implements \Magento\Framework\Event\ObserverInterface
 {
@@ -30,14 +35,9 @@ class AdminhtmlSystemConfigSave implements \Magento\Framework\Event\ObserverInte
     protected $filesystem;
 
     /**
-     * @var
+     * @var \Magento\Framework\App\ObjectManager
      */
     protected $objectManager;
-    /**
-     * AdminhtmlSystemConfigSave constructor.
-     * @param \Magento\Backend\Model\Session $session
-     */
-
     /**
      * @var \Magestore\PaymentOffline\Service\PaymentOfflineService
      */
@@ -59,6 +59,7 @@ class AdminhtmlSystemConfigSave implements \Magento\Framework\Event\ObserverInte
 
     /**
      * AdminhtmlSystemConfigSave constructor.
+     *
      * @param \Magento\Backend\Model\Session $session
      * @param DirectoryList $directoryList
      * @param \Magento\Framework\Filesystem $filesystem
@@ -75,7 +76,7 @@ class AdminhtmlSystemConfigSave implements \Magento\Framework\Event\ObserverInte
         \Magestore\PaymentOffline\Helper\Data $helperData,
         \Magento\Framework\Message\ManagerInterface $messageManager,
         \Magento\Framework\Controller\ResultFactory $resultFactory
-    ){
+    ) {
         $this->session = $session;
         $this->directoryList = $directoryList;
         $this->objectManager = \Magento\Framework\App\ObjectManager::getInstance();
@@ -87,60 +88,35 @@ class AdminhtmlSystemConfigSave implements \Magento\Framework\Event\ObserverInte
     }
 
     /**
-     * @param Observer $observer
+     * Execute
      *
+     * @param Observer $observer
      * @return void
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    public function execute(\Magento\Framework\Event\Observer $observer)
+    public function execute(\Magento\Framework\Event\Observer $observer) //phpcs:disable
     {
         $controllerAction = $observer->getControllerAction();
         if ($controllerAction->getRequest()->getParam('section') == 'webpos') {
             $groups = $this->_getGroupsForSavePaymentOffline($controllerAction);
-            $payments = $groups['payment']['groups'];
-            if($payments){
-                foreach ($payments as $key => $payment) {
-                    if (strpos($key, 'wpo') !== false && strpos($key, 'wpo') === 0) {
-                        $paymentData = array();
-                        $paymentData['payment_code'] = $key;
-                        foreach ($payment['fields'] as $pkey => $value) {
-                            $paymentData[$pkey] = $value['value'];
-                        }
-                        unset($paymentData['icon_path']);
-                        if (isset($payment['fields']['icon_type']['value']) && $payment['fields']['icon_type']['value'] == \Magestore\PaymentOffline\Model\Source\Adminhtml\IconType::USE_SUGGEST) {
-                            if (isset($payment['fields']['icon_default']['value'])) {
-                                $paymentData['icon_path'] = $payment['fields']['icon_default']['value'];
+            if ($groups) {
+                $payments = $groups['payment']['groups'];
+                if ($payments) {
+                    foreach ($payments as $key => $payment) {
+                        if (strpos($key, 'wpo') !== false && strpos($key, 'wpo') === 0) {
+                            $paymentData = [];
+                            $paymentData['payment_code'] = $key;
+                            foreach ($payment['fields'] as $pkey => $value) {
+                                $paymentData[$pkey] = $value['value'];
                             }
-                        } else {
-                            if (isset($payment['fields']['icon_path']) && $payment['fields']['icon_path']['value']
-                                && $payment['fields']['icon_path']['value']['tmp_name']
-                                && $payment['fields']['icon_path']['value']['name']
-                            ) {
-                                $file = [];
-                                $iconPath = $this->helperData->getIconPath();
-                                $file['tmp_name'] = $payment['fields']['icon_path']['value']['tmp_name'];
-                                $file['name'] = $payment['fields']['icon_path']['value']['name'];
-                                $ext = pathinfo($payment['fields']['icon_path']['value']['name'], PATHINFO_EXTENSION);
-                                $allowed = ['jpg', 'jpeg', 'svg', 'png'];
-                                $uploader = $this->objectManager->create('Magento\MediaStorage\Model\File\Uploader', ['fileId' => $file]);
+                            $result = $this->addIconPathToPayment($payment, $paymentData);
+                            if ($result !== null) {
+                                return $result;
+                            }
 
-                                $uploader->setAllowedExtensions($allowed);
-                                if(!in_array($ext, $allowed) ) {
-                                    $this->messageManager->addErrorMessage('File upload failed. Please choose a jpeg, png, or svg file and try again.');
-                                    $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
-                                    $resultRedirect->setPath('*/*/', array('section' => 'webpos'));
-
-                                    return $resultRedirect;
-                                }
-                                $uploader->setAllowRenameFiles(true);
-                                $result = $uploader->save($iconPath);
-                                $paymentData['icon_path'] = $result['name'];
+                            if (count($paymentData)) {
+                                $this->paymentOfflineService->createPaymentOffline($paymentData);
                             }
-                            if (isset($payment['fields']['icon_path']['delete'])) {
-                                $paymentData['icon_path'] = '';
-                            }
-                        }
-                        if (count($paymentData)) {
-                            $this->paymentOfflineService->createPaymentOffline($paymentData);
                         }
                     }
                 }
@@ -149,28 +125,66 @@ class AdminhtmlSystemConfigSave implements \Magento\Framework\Event\ObserverInte
     }
 
     /**
-     * @return array
+     * Add Icon Path To Payment
+     *
+     * @param array $payment
+     * @param array $paymentData
+     * @return \Magento\Framework\Controller\ResultInterface|\Magento\Framework\View\Result\Layout|null
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    protected function getFileData()
+    protected function addIconPathToPayment($payment, &$paymentData)
     {
-        $file = [];
-        $value = $this->getValue();
-        $tmpName = $this->_requestData->getTmpName($this->getPath());
-        if ($tmpName) {
-            $file['tmp_name'] = $tmpName;
-            $file['name'] = $this->_requestData->getName($this->getPath());
-        } elseif (!empty($value['tmp_name'])) {
-            $file['tmp_name'] = $value['tmp_name'];
-            $file['name'] = isset($value['value']) ? $value['value'] : $value['name'];
-        }
+        unset($paymentData['icon_path']);
+        if (isset($payment['fields']['icon_type']['value'])
+            && $payment['fields']['icon_type']['value'] == IconType::USE_SUGGEST) {
+            if (isset($payment['fields']['icon_default']['value'])) {
+                $paymentData['icon_path'] = $payment['fields']['icon_default']['value'];
+            }
+        } else {
+            if (isset($payment['fields']['icon_path']) && $payment['fields']['icon_path']['value']
+                && $payment['fields']['icon_path']['value']['tmp_name']
+                && $payment['fields']['icon_path']['value']['name']) {
+                $file = [];
+                $iconPath = $this->helperData->getIconPath();
+                $file['tmp_name'] = $payment['fields']['icon_path']['value']['tmp_name'];
+                $file['name'] = $payment['fields']['icon_path']['value']['name'];
+                $om = \Magento\Framework\App\ObjectManager::getInstance();
+                /** @var \Magento\Framework\Filesystem\Io\File $ioFile */
+                $ioFile = $om->get(\Magento\Framework\Filesystem\Io\File::class);
+                $fileInfo = $ioFile->getPathInfo($payment['fields']['icon_path']['value']['name']);
+                $ext = $fileInfo['extension'] ?: '';
+                $allowed = ['jpg', 'jpeg', 'svg', 'png'];
+                $uploader = $this->objectManager->create(
+                    \Magento\MediaStorage\Model\File\Uploader::class,
+                    ['fileId' => $file]
+                );
 
-        return $file;
+                $uploader->setAllowedExtensions($allowed);
+                if (!in_array($ext, $allowed)) {
+                    $this->messageManager->addErrorMessage(
+                        'File upload failed. Please choose a jpeg, png, or svg file and try again.'
+                    );
+                    $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
+                    $resultRedirect->setPath('*/*/', ['section' => 'webpos']);
+
+                    return $resultRedirect;
+                }
+                $uploader->setAllowRenameFiles(true);
+                $result = $uploader->save($iconPath);
+                $paymentData['icon_path'] = $result['name'];
+            }
+            if (isset($payment['fields']['icon_path']['delete'])) {
+                $paymentData['icon_path'] = '';
+            }
+        }
+        return null;
     }
 
     /**
      * Get groups for save
      *
-     * @return array|null
+     * @param \Magento\Framework\App\Action\Action $controllerAction
+     * @return mixed
      */
     protected function _getGroupsForSavePaymentOffline($controllerAction)
     {

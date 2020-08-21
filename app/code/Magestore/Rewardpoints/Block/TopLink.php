@@ -28,14 +28,11 @@
  */
 namespace Magestore\Rewardpoints\Block;
 
+/**
+ * Top link block
+ */
 class TopLink extends \Magento\Framework\View\Element\Html\Link\Current
 {
-    /**
-     * @param \Magento\Framework\View\Element\Template\Context $context
-     * @param \Magento\Framework\App\DefaultPathInterface $defaultPath
-     * @param \Magento\Framework\App\Http\Context $httpContext
-     * @param array $data
-     */
     /**
      * @var \Magento\Framework\App\ObjectManager
      */
@@ -68,9 +65,9 @@ class TopLink extends \Magento\Framework\View\Element\Html\Link\Current
 
     /**
      * TopLink constructor.
+     *
      * @param \Magento\Framework\View\Element\Template\Context $context
      * @param \Magento\Framework\App\DefaultPathInterface $defaultPath
-     * @param \Magento\Framework\App\Http\Context $httpContext
      * @param \Magestore\Rewardpoints\Helper\Config $globalConfig
      * @param \Magento\Customer\Model\UrlFactory $urlFactory
      * @param Name $blockName
@@ -79,11 +76,10 @@ class TopLink extends \Magento\Framework\View\Element\Html\Link\Current
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
         \Magento\Framework\App\DefaultPathInterface $defaultPath,
-        \Magento\Framework\App\Http\Context $httpContext,
         \Magestore\Rewardpoints\Helper\Config $globalConfig,
         \Magento\Customer\Model\UrlFactory $urlFactory,
         \Magestore\Rewardpoints\Block\Name $blockName,
-        array $data = array()
+        array $data = []
     ) {
         parent::__construct($context, $defaultPath, $data);
         $this->_objectManager = \Magento\Framework\App\ObjectManager::getInstance();
@@ -93,33 +89,32 @@ class TopLink extends \Magento\Framework\View\Element\Html\Link\Current
         $this->setTemplate('Magestore_Rewardpoints::rewardpoints/topLink.phtml');
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getHref()
     {
         return $this->_modelUrlFactory->create()->getAccountUrl();
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getLabel()
     {
         $nameBlock =  $this->_blockName;
-        if($this->helper->getDisplayConfig('toplink')) {
+        if ($this->helper->getDisplayConfig('toplink')) {
             return __('My Account') . ' (' . $nameBlock->toHtml() . ')';
-        }else {
+        } else {
             return __('My Account');
         }
     }
 
-    public function getTitle(){
-        return  __('My Account');
-    }
-
     /**
-     * functional block - using to change other block information
-     *
-     * @return string
+     * @inheritDoc
      */
-    protected function _toHtml()
+    public function getTitle()
     {
-
-        return parent::_toHtml() ;
+        return  __('My Account');
     }
 }

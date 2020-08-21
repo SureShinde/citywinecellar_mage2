@@ -5,10 +5,11 @@ namespace Magestore\Rewardpoints\Controller;
 use Magento\Framework\App\RequestInterface;
 
 /**
- * Class AbstractAction
- * @package Magestore\Rewardpoints\Controller
+ * Reward point - Abstract action controller
+ *
+ * @SuppressWarnings(PHPMD.TooManyFields)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-
 abstract class AbstractAction extends \Magento\Framework\App\Action\Action
 {
     /**
@@ -77,6 +78,16 @@ abstract class AbstractAction extends \Magento\Framework\App\Action\Action
     protected $_sessionManager;
 
     /**
+     * @var \Magento\Cms\Model\PageFactory
+     */
+    protected $_modelPageFactory;
+
+    /**
+     * @var \Magento\Checkout\Model\CartFactory
+     */
+    protected $_checkoutCartFactory;
+
+    /**
      * AbstractAction constructor.
      * @param \Magento\Framework\App\Action\Context $context
      * @param \Magento\Framework\App\Request\Http $request
@@ -94,6 +105,7 @@ abstract class AbstractAction extends \Magento\Framework\App\Action\Action
      * @param \Magestore\Rewardpoints\Model\CustomerFactory $rewardpointsCustomerFactory
      * @param \Magestore\Rewardpoints\Helper\Calculation\Spending $calculationSpending
      * @param \Magento\Framework\Session\SessionManager $sessionManager
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
@@ -112,7 +124,7 @@ abstract class AbstractAction extends \Magento\Framework\App\Action\Action
         \Magestore\Rewardpoints\Model\CustomerFactory $rewardpointsCustomerFactory,
         \Magestore\Rewardpoints\Helper\Calculation\Spending $calculationSpending,
         \Magento\Framework\Session\SessionManager $sessionManager
-    ){
+    ) {
         $this->_request = $request;
         $this->_rewardpointsCustomerFactory = $rewardpointsCustomerFactory;
         $this->_helperData = $helperData;
@@ -132,13 +144,14 @@ abstract class AbstractAction extends \Magento\Framework\App\Action\Action
     }
 
     /**
-     * @return $this
+     * @inheritDoc
      */
 
-    public function dispatch(RequestInterface $request) {
+    public function dispatch(RequestInterface $request)
+    {
         if (!$this->_helperData->isEnable()) {
             $this->_redirect('customer/account');
-            $this->_actionFlag->set('',\Magento\Framework\App\Action\Action::FLAG_NO_DISPATCH, true);
+            $this->_actionFlag->set('', \Magento\Framework\App\Action\Action::FLAG_NO_DISPATCH, true);
         }
         $action = $this->getRequest()->getActionName();
         if ($action != 'policy' && $action != 'redirectLogin') {
@@ -148,10 +161,9 @@ abstract class AbstractAction extends \Magento\Framework\App\Action\Action
                     $this->_url->getUrl($this->_request->getFullActionName('/'))
                 );
                 $this->_redirect('customer/account/login');
-                $this->_actionFlag->set('',\Magento\Framework\App\Action\Action::FLAG_NO_DISPATCH, true);
+                $this->_actionFlag->set('', \Magento\Framework\App\Action\Action::FLAG_NO_DISPATCH, true);
             }
         }
         return parent::dispatch($request);
     }
-
 }

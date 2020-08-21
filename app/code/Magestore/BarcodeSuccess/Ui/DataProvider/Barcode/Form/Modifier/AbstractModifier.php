@@ -14,14 +14,15 @@ use Magento\GroupedProduct\Model\Product\Type\Grouped as GroupedProductType;
 use Magento\Framework\UrlInterface;
 use Magento\Ui\Component\DynamicRows;
 
-
 /**
  * Class AbstractModifier
  *
+ * Used to abstract modifier
  * @SuppressWarnings(PHPMD.NumberOfChildren)
+ * @SuppressWarnings(PHPMD.TooManyFields)
  */
-class AbstractModifier extends \Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\AbstractModifier
-    implements ModifierInterface
+class AbstractModifier extends \Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\AbstractModifier implements
+    ModifierInterface
 {
     /**
      * Collapsible
@@ -161,10 +162,17 @@ class AbstractModifier extends \Magento\Catalog\Ui\DataProvider\Product\Form\Mod
     protected $helper;
 
     /**
+     * @var \Magento\Framework\App\RequestInterface
+     */
+    protected $request;
+
+    /**
+     * Construct
+     *
      * @param UrlInterface $urlBuilder
      * @param \Magento\Framework\App\RequestInterface $request
-     * @param \Magento\Catalog\Model\ProductFactory $productFactory
-     * @param array $_modifierConfig
+     * @param \Magestore\BarcodeSuccess\Helper\Data $helper
+     * @param array $modifierConfig
      */
     public function __construct(
         UrlInterface $urlBuilder,
@@ -179,10 +187,9 @@ class AbstractModifier extends \Magento\Catalog\Ui\DataProvider\Product\Form\Mod
     }
 
     /**
-     * set visible
+     * Set visible
      *
-     * @param boolean
-     * @return
+     * @param boolean $visible
      */
     public function setVisible($visible)
     {
@@ -190,10 +197,10 @@ class AbstractModifier extends \Magento\Catalog\Ui\DataProvider\Product\Form\Mod
     }
 
     /**
-     * get visible
+     * Get visible
      *
-     * @param
-     * @return
+     * @return boolean
+     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
     public function getVisible()
     {
@@ -201,10 +208,9 @@ class AbstractModifier extends \Magento\Catalog\Ui\DataProvider\Product\Form\Mod
     }
 
     /**
-     * set opened
+     * Set opened
      *
-     * @param boolean
-     * @return
+     * @param boolean $opened
      */
     public function setOpened($opened)
     {
@@ -212,10 +218,10 @@ class AbstractModifier extends \Magento\Catalog\Ui\DataProvider\Product\Form\Mod
     }
 
     /**
-     * get opened
+     * Get opened
      *
-     * @param
      * @return boolean
+     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
     public function getOpened()
     {
@@ -223,7 +229,7 @@ class AbstractModifier extends \Magento\Catalog\Ui\DataProvider\Product\Form\Mod
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function modifyData(array $data)
     {
@@ -231,7 +237,7 @@ class AbstractModifier extends \Magento\Catalog\Ui\DataProvider\Product\Form\Mod
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function modifyMeta(array $meta)
     {
@@ -407,9 +413,15 @@ class AbstractModifier extends \Magento\Catalog\Ui\DataProvider\Product\Form\Mod
                         'externalFilterMode' => true,
                         'imports' => [
                             'storeId' => '${ $.provider }:data.product.current_store_id',
+                            '__disableTmpl' => [
+                                'storeId' => false
+                            ]
                         ],
                         'exports' => [
                             'storeId' => '${ $.externalProvider }:params.current_store_id',
+                            '__disableTmpl' => [
+                                'storeId' => false
+                            ]
                         ],
                     ],
                 ],
@@ -499,7 +511,12 @@ class AbstractModifier extends \Magento\Catalog\Ui\DataProvider\Product\Form\Mod
                         'deleteButtonLabel' => __('Remove'),
                         'dataProvider' => $this->_modifierConfig['listing'],
                         'map' => $this->_mapFields,
-                        'links' => ['insertData' => '${ $.provider }:${ $.dataProvider }'],
+                        'links' => [
+                            'insertData' => '${ $.provider }:${ $.dataProvider }',
+                            '__disableTmpl' => [
+                                'insertData' => false
+                            ]
+                        ],
                         'sortOrder' => 20,
                         'columnsHeader' => false,
                         'columnsHeaderAfterRender' => true,
@@ -589,8 +606,7 @@ class AbstractModifier extends \Magento\Catalog\Ui\DataProvider\Product\Form\Mod
     public function getFieldGroupCode(array $meta, $field)
     {
         foreach ($meta as $groupCode => $groupData) {
-            if (
-                isset($groupData['children'][$field])
+            if (isset($groupData['children'][$field])
                 || isset($groupData['children'][$this->_containerPrefix . $field])
             ) {
                 return $groupCode;
@@ -599,6 +615,4 @@ class AbstractModifier extends \Magento\Catalog\Ui\DataProvider\Product\Form\Mod
 
         return false;
     }
-
 }
-

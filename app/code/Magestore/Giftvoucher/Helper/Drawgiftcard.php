@@ -8,10 +8,9 @@ namespace Magestore\Giftvoucher\Helper;
 /**
  * Giftvoucher draw helper
  *
- * @category Magestore
- * @package  Magestore_Giftvoucher
  * @module   Giftvoucher
  * @author   Magestore Developer
+ * @SuppressWarnings(PHPMD.CookieAndSessionMisuse)
  */
 class Drawgiftcard extends \Magestore\Giftvoucher\Helper\Data
 {
@@ -19,11 +18,12 @@ class Drawgiftcard extends \Magestore\Giftvoucher\Helper\Data
      * Get the directory of gift code image
      *
      * @param string $code
-     * @return string
+     *
+     * @return array
      */
     public function getImagesInFolder($code)
     {
         $directory = $this->getBaseDirMedia()->getAbsolutePath('giftvoucher/draw/' . $code . '/');
-        return glob($directory . $code . "*.png");
+        return \Magento\Framework\Filesystem\Glob::glob($directory . $code . "*.png");
     }
 }

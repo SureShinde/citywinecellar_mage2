@@ -5,6 +5,8 @@
  */
 namespace Magestore\Giftvoucher\Model;
 
+use Magento\Framework\Exception\LocalizedException;
+
 /**
  * Giftvoucher Actions Model
  */
@@ -25,9 +27,9 @@ class Actions extends \Magento\Framework\DataObject
      *
      * @return array
      */
-    public static function getOptionArray()
+    public function getOptionArray()
     {
-        return array(
+        return [
             self::ACTIONS_CREATE => __('Create'),
             self::ACTIONS_UPDATE => __('Update'),
             self::ACTIONS_MASS_UPDATE => __('Mass update'),
@@ -35,37 +37,39 @@ class Actions extends \Magento\Framework\DataObject
             self::ACTIONS_REFUND => __('Refund'),
             self::ACTIONS_REDEEM => __('Redeem'),
             self::ACTIONS_CANCEL => __('Cancel'),
-        );
+        ];
     }
 
     /**
+     * Get Options
      *
      * @return array
      */
-    public static function getOptions()
+    public function getOptions()
     {
-        $options = array();
-        foreach (self::getOptionArray() as $value => $label) {
-            $options[] = array(
+        $options = [];
+        foreach ($this->getOptionArray() as $value => $label) {
+            $options[] = [
                 'value' => $value,
                 'label' => $label
-            );
+            ];
         }
         return $options;
     }
-    
+
     /**
+     * Get Action Label
      *
      * @param int $actionId
      * @return string
      * @throws \Exception
      */
-    public static function getActionLabel($actionId)
+    public function getActionLabel($actionId)
     {
-        $optionArray = self::getOptionArray();
+        $optionArray = $this->getOptionArray();
         if (isset($optionArray[$actionId])) {
             return $optionArray[$actionId];
         }
-        throw new \Exception(__('There is no available gift card history action'));
+        throw new LocalizedException(__('There is no available gift card history action'));
     }
 }

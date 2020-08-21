@@ -4,13 +4,13 @@
  * Copyright © 2018 Magestore. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace Magestore\Webpos\Model\Catalog\Product;
 
 use Magento\Catalog\Model\ProductFactory;
 
 /**
- * Class ConfigOptionsBuilder
- * @package Magestore\Webpos\Model\Catalog\Product
+ * Model ConfigOptionsBuilder
  */
 class ConfigOptionsBuilder
 {
@@ -25,7 +25,6 @@ class ConfigOptionsBuilder
     protected $productId = null;
 
     /**
-     *
      * @var \Magento\Framework\ObjectManagerInterface
      */
     protected $_objectManager;
@@ -42,6 +41,7 @@ class ConfigOptionsBuilder
 
     /**
      * ConfigOptionsBuilder constructor.
+     *
      * @param ProductFactory $productFactory
      * @param \Magento\Framework\ObjectManagerInterface $objectManager
      * @param \Magento\Framework\Pricing\Helper\Data $pricingHelper
@@ -60,8 +60,9 @@ class ConfigOptionsBuilder
     }
 
     /**
+     * Set Product Id
+     *
      * @param int $productId
-     * @return void
      */
     public function setProductId($productId)
     {
@@ -69,6 +70,8 @@ class ConfigOptionsBuilder
     }
 
     /**
+     * Get Product Id
+     *
      * @return int|null
      */
     public function getProductId()
@@ -77,15 +80,16 @@ class ConfigOptionsBuilder
     }
 
     /**
+     * Create
+     *
      * @return ConfigOptionsInterface[]|null
      */
     public function create()
     {
-        $configOptions = null;
         if ($this->getProductId()) {
             $product = $this->productFactory->create()->load($this->getProductId());
             $productAttributeOptions = $this->_configurable->getConfigurableAttributesAsArray($product);
-            $options = $prices = array();
+            $options = $prices = [];
             $originalPrice = $product->getFinalPrice();
             $tempKey = 1;
             foreach ($productAttributeOptions as $productAttributeOption) {
@@ -97,9 +101,13 @@ class ConfigOptionsBuilder
                 $options[$code]['optionLabel'] = $optionLabel;
                 foreach ($values as $value) {
                     $optionValueId = $value['value_index'];
-                    $pricing_value = (isset($value['pricing_value']) && $value['pricing_value'] != null) ? $value['pricing_value'] : 0;
+                    $pricing_value = (isset($value['pricing_value']) && $value['pricing_value'] != null)
+                        ? $value['pricing_value']
+                        : 0;
                     $val = $value['label'];
-                    $is_percent = (isset($value['is_percent']) && $value['is_percent'] != null) ? $value['is_percent'] : 0;
+                    $is_percent = (isset($value['is_percent']) && $value['is_percent'] != null)
+                        ? $value['is_percent']
+                        : 0;
                     $options[$code][$optionValueId] = $val;
                     $childPrice = ($is_percent == 0) ? ($pricing_value) : ($pricing_value * $originalPrice / 100);
                     $prices[$code . $tempKey][$optionId] = $optionValueId;
@@ -111,14 +119,17 @@ class ConfigOptionsBuilder
             $options['price_condition'] = \Zend_Json::encode(array_values($prices));
             return $options;
         }
+        return null;
     }
 
     /**
+     * Format price
      *
      * @param string $price
      * @return string
      */
-    public function formatPrice($price){
-        return $this->_pricingHelper->currency($price,true,false);
+    public function formatPrice($price)
+    {
+        return $this->_pricingHelper->currency($price, true, false);
     }
 }

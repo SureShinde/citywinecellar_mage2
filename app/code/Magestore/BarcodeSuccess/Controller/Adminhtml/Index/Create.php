@@ -5,33 +5,38 @@
  */
 
 namespace Magestore\BarcodeSuccess\Controller\Adminhtml\Index;
+
 use Magestore\BarcodeSuccess\Model\History;
-use Magestore\BarcodeSuccess\Model\Source\GenerateType;
+use Magento\Framework\App\Action\HttpPostActionInterface as HttpPostActionInterface;
 
 /**
  * Class Create
- * @package Magestore\BarcodeSuccess\Controller\Adminhtml\Index
+ *
+ * Used to create
  */
-class Create extends \Magestore\BarcodeSuccess\Controller\Adminhtml\Index\Save
+class Create extends \Magestore\BarcodeSuccess\Controller\Adminhtml\Index\Save implements HttpPostActionInterface
 {
 
     /**
+     * Execute create
+     *
      * @return mixed
      */
     public function execute()
     {
-        try{
-            $barcodes = array();
+        try {
+            $barcodes = [];
             $totalQty = 1;
             $productId = $this->getRequest()->getParam('product_id');
-            $productModel = $this->_objectManager->create('Magento\Catalog\Model\Product')->load($productId);
+            $productModel = $this->_objectManager->create(\Magento\Catalog\Model\Product::class)
+                ->load($productId);
             if ($productModel->getId()) {
-                $barcodes[] = array(
+                $barcodes[] = [
                     'product_id' => $productId,
                     'qty' => 1,
                     'product_sku' => $productModel->getData('sku'),
                     'supplier_code' => ''
-                );
+                ];
                 $historyId = $this->saveHistory($totalQty, History::GENERATED, '');
                 $result = $this->generateTypeItem($barcodes, $historyId);
                 if (isset($result['success']) && count($result['success'])) {
@@ -40,10 +45,10 @@ class Create extends \Magestore\BarcodeSuccess\Controller\Adminhtml\Index\Save
                     return $this->getResponse()->setBody(0);
                 }
             }
-
-        }catch (\Exception $ex){
+        } catch (\Exception $ex) {
             return $this->getResponse()->setBody(0);
         }
+        return $this->getResponse()->setBody(1);
     }
 
     /**

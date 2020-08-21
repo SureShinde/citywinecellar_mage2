@@ -5,13 +5,14 @@
  * See COPYING.txt for license details.
  */
 namespace Magestore\Webpos\Model;
+
 use Magestore\Webpos\Api\SearchCriteriaInterface;
 
 /**
  * Search Criteria
  */
-class SearchCriteria extends \Magento\Framework\Api\SearchCriteria
-    implements \Magestore\Webpos\Api\SearchCriteriaInterface
+class SearchCriteria extends \Magento\Framework\Api\SearchCriteria implements
+    \Magestore\Webpos\Api\SearchCriteriaInterface
 {
     const QUERY_STRING = 'query_string';
     const IS_LIMIT = 'is_limit';
@@ -31,7 +32,7 @@ class SearchCriteria extends \Magento\Framework\Api\SearchCriteria
      */
     public function getQueryString()
     {
-        return $this->_get(self::QUERY_STRING);
+        return urldecode($this->_get(self::QUERY_STRING));
     }
 
     /**

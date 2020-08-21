@@ -4,6 +4,7 @@
  * Copyright © 2016 Magestore. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace Magestore\BarcodeSuccess\Model\Source;
 
 use Magento\CatalogSearch\Model\Advanced;
@@ -14,13 +15,19 @@ use Magestore\BarcodeSuccess\Model\Source\Status;
 
 /**
  * Class TemplateType
- * @package Magestore\BarcodeSuccess\Model\Source\TemplateType
+ *
+ * Attributes options
  */
-
 class Attributes implements OptionSourceInterface
 {
-    protected $_catalogSearchAdvanced;
     /**
+     * @var Advanced
+     */
+    protected $_catalogSearchAdvanced;
+
+    /**
+     * Attributes constructor.
+     *
      * @param Advanced $catalogSearchAdvanced
      */
     public function __construct(
@@ -38,7 +45,7 @@ class Attributes implements OptionSourceInterface
     {
         $availableOptions = $this->getAttributeOptions();
         $options = [];
-        $options[] = array('value' => 'sku' ,'label' => 'SKU');
+        $options[] = ['value' => 'sku', 'label' => 'SKU'];
         foreach ($availableOptions as $key => $value) {
             $options[] = [
                 'label' => $value,
@@ -48,14 +55,20 @@ class Attributes implements OptionSourceInterface
         return $options;
     }
 
-    public function getAttributeOptions(){
-        $availableOptions = array();
+    /**
+     * Get attribute options
+     *
+     * @return array
+     */
+    public function getAttributeOptions()
+    {
+        $availableOptions = [];
         $attributes = $this->_catalogSearchAdvanced->getAttributes();
-        foreach($attributes as $attribute){
-            if( ($attribute->getAttributeCode() ==='sku') ||
-                ($attribute->getAttributeCode() ==='description') ||
-                ($attribute->getAttributeCode() ==='short_description'))
+        foreach ($attributes as $attribute) {
+            if (($attribute->getAttributeCode() === 'sku') || ($attribute->getAttributeCode() === 'description') ||
+                ($attribute->getAttributeCode() === 'short_description')) {
                 continue;
+            }
             $availableOptions[$attribute->getAttributeCode()] = $attribute->getFrontendLabel();
         }
         return $availableOptions;

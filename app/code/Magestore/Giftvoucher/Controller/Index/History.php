@@ -6,26 +6,25 @@
 namespace Magestore\Giftvoucher\Controller\Index;
 
 use Magento\Customer\Model\Session;
+use Magento\Framework\App\Action\HttpGetActionInterface;
 
 /**
  * Giftvoucher Index History Action
  *
- * @category Magestore
- * @package  Magestore_Giftvoucher
  * @module   Giftvoucher
  * @author   Magestore Developer
  */
-class History extends \Magestore\Giftvoucher\Controller\Action
+class History extends \Magestore\Giftvoucher\Controller\Action implements HttpGetActionInterface
 {
     /**
-     * @return mixed
+     * @inheritDoc
      */
     public function execute()
     {
         if (!$this->customerLoggedIn()) {
             $resultRedirectFactory = $this->getRedirectFactory()->setPath(
                 'customer/account/login',
-                array('_secure' => true)
+                ['_secure' => true]
             );
             return $resultRedirectFactory;
         }

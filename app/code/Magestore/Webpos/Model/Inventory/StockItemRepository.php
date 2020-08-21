@@ -22,7 +22,10 @@ use \Magento\CatalogInventory\Model\Stock as Stock;
 
 /**
  * Class StockItemRepository
+ *
+ * Used for stock item repos
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.TooManyFields)
  */
 class StockItemRepository implements StockItemRepositoryInterface
 {
@@ -56,10 +59,6 @@ class StockItemRepository implements StockItemRepositoryInterface
     protected $storeManager;
 
     /**
-     * @var StockConfigurationInterface
-     */
-    private $stockConfiguration;
-    /**
      *
      * @var StockRegistryProviderInterface
      */
@@ -73,20 +72,6 @@ class StockItemRepository implements StockItemRepositoryInterface
      * @var \Magento\Framework\Registry
      */
     protected $coreRegistry;
-
-    /**
-     * @var array
-     */
-    protected $listCondition = [
-        'eq' => '=',
-        'neq' => '!=',
-        'like' => 'like',
-        'gt' => '>',
-        'gteq' => '>=',
-        'lt' => '<',
-        'lteq' => '<=',
-        'in' => 'in'
-    ];
 
     /**
      * @var \Magestore\Webpos\Model\ResourceModel\Catalog\Product\CollectionFactory
@@ -140,7 +125,8 @@ class StockItemRepository implements StockItemRepositoryInterface
 
     /**
      * StockItemRepository constructor.
-     * @param StockItemResource $resource
+     *
+     * @param StockItemResource $stockItemResource
      * @param Stock\Item $stockItemModel
      * @param CoreStockItemRepositoryInterface $stockItemRepository
      * @param ObjectManagerInterface $objectManager
@@ -158,6 +144,7 @@ class StockItemRepository implements StockItemRepositoryInterface
      * @param \Magestore\Webpos\Helper\Data $helper
      * @param \Magestore\Webpos\Api\WebposManagementInterface $webposManagement
      * @param \Magestore\Webpos\Api\MultiSourceInventory\StockManagementInterface $stockManagement
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         StockItemResource $stockItemResource,
@@ -178,8 +165,7 @@ class StockItemRepository implements StockItemRepositoryInterface
         \Magestore\Webpos\Helper\Data $helper,
         \Magestore\Webpos\Api\WebposManagementInterface $webposManagement,
         \Magestore\Webpos\Api\MultiSourceInventory\StockManagementInterface $stockManagement
-    )
-    {
+    ) {
         $this->stockItemResource = $stockItemResource;
         $this->stockItemModel = $stockItemModel;
         $this->stockItemRepository = $stockItemRepository;
@@ -232,28 +218,30 @@ class StockItemRepository implements StockItemRepositoryInterface
         foreach ((array)$searchCriteria->getSortOrders() as $sortOrder) {
             $field = $sortOrder->getField();
             $collection->addOrder(
-                $field, ($sortOrder->getDirection() == SortOrder::SORT_ASC) ? SortOrder::SORT_ASC : SortOrder::SORT_DESC
+                $field,
+                ($sortOrder->getDirection() == SortOrder::SORT_ASC) ? SortOrder::SORT_ASC : SortOrder::SORT_DESC
             );
         }
         $collection->setCurPage($searchCriteria->getCurrentPage());
         $collection->setPageSize($searchCriteria->getPageSize());
+        $collectionSize = $collection->getSize();
         $collection->load();
         $searchResult = $this->_searchResultFactory->create();
         $searchResult->setSearchCriteria($searchCriteria);
         $searchResult->setItems($collection->getItems());
-        $searchResult->setTotalCount($collection->getSize());
+        $searchResult->setTotalCount($collectionSize);
         return $searchResult;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function sync(\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria)
     {
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
 
         /** @var \Magento\Framework\App\Cache\StateInterface $cacheState */
-        $cacheState = $objectManager->get('Magento\Framework\App\Cache\StateInterface');
+        $cacheState = $objectManager->get(\Magento\Framework\App\Cache\StateInterface::class);
         if (!$cacheState->isEnabled(\Magestore\Webpos\Model\Cache\Type::TYPE_IDENTIFIER)
             || count($searchCriteria->getFilterGroups())
         ) {
@@ -261,14 +249,16 @@ class StockItemRepository implements StockItemRepositoryInterface
         }
 
         /** @var \Magento\Framework\App\CacheInterface $cache */
-        $cache = $objectManager->get('Magento\Framework\App\CacheInterface');
+        $cache = $objectManager->get(\Magento\Framework\App\CacheInterface::class);
         /** @var \Magento\Framework\Serialize\SerializerInterface $serializer */
         /*$serializer = $objectManager->get('Magento\Framework\Serialize\SerializerInterface');*/
 
         /** @var \Magestore\Webpos\Api\Staff\SessionRepositoryInterface $sessionRepository */
-        $sessionRepository = $objectManager->get('\Magestore\Webpos\Api\Staff\SessionRepositoryInterface');
-        $request = $objectManager->get('Magento\Framework\App\RequestInterface');
-        $session = $sessionRepository->getBySessionId($request->getParam(\Magestore\WebposIntegration\Controller\Rest\RequestProcessor::SESSION_PARAM_KEY));
+        $sessionRepository = $objectManager->get(\Magestore\Webpos\Api\Staff\SessionRepositoryInterface::class);
+        $request = $objectManager->get(\Magento\Framework\App\RequestInterface::class);
+        $session = $sessionRepository->getBySessionId(
+            $request->getParam(\Magestore\WebposIntegration\Controller\Rest\RequestProcessor::SESSION_PARAM_KEY)
+        );
         $locationId = $session->getLocationId();
 
         if (!$this->_moduleManager->isEnabled('Magestore_InventorySuccess')) {
@@ -304,15 +294,14 @@ class StockItemRepository implements StockItemRepositoryInterface
         $cache->save($cachedAt, $flag, [\Magestore\Webpos\Model\Cache\Type::CACHE_TAG], 300);
 
         /** @var \Magento\Framework\Webapi\ServiceOutputProcessor $processor */
-        $processor = $objectManager->get('Magento\Framework\Webapi\ServiceOutputProcessor');
+        $processor = $objectManager->get(\Magento\Framework\Webapi\ServiceOutputProcessor::class);
         $outputData = $processor->process(
             $this->getStockItems($searchCriteria),
-            'Magestore\Webpos\Api\Inventory\StockItemRepositoryInterface',
+            \Magestore\Webpos\Api\Inventory\StockItemRepositoryInterface::class,
             'sync'
         );
         $outputData['cached_at'] = $cachedAt;
         $cache->save(
-//            $serializer->serialize($outputData),
             json_encode($outputData),
             $key,
             [
@@ -326,7 +315,8 @@ class StockItemRepository implements StockItemRepositoryInterface
     }
 
     /**
-     * get product type ids to support
+     * Get product type ids to support
+     *
      * @return array
      */
     public function getProductTypeIds()
@@ -352,15 +342,16 @@ class StockItemRepository implements StockItemRepositoryInterface
      * @return void
      */
     public function addFilterGroupToCollection(
-        \Magento\Framework\Api\Search\FilterGroup $filterGroup, \Magento\Catalog\Model\ResourceModel\Product\Collection $collection
-    )
-    {
+        \Magento\Framework\Api\Search\FilterGroup $filterGroup,
+        \Magento\Catalog\Model\ResourceModel\Product\Collection $collection
+    ) {
         $where = '(';
         $first = true;
         foreach ($filterGroup->getFilters() as $filter) {
             $conditionType = $filter->getConditionType() ? $filter->getConditionType() : 'eq';
             $condition = $this->convertCondition($conditionType);
-            $value = is_array($filter->getValue()) ? "('" . implode("','", $filter->getValue()) . "')" : $filter->getValue();
+            $value = is_array($filter->getValue()) ? "('"
+                . implode("','", $filter->getValue()) . "')" : $filter->getValue();
 
             if (in_array($condition, ['IN', 'NOT IN'])) {
                 $value = '(' . $value . ')';
@@ -368,13 +359,13 @@ class StockItemRepository implements StockItemRepositoryInterface
                 $value = "'" . $value . "'";
             }
 
-
             if (!$first) {
                 $where .= ' OR ';
             }
 
             /*implement for API-test with SKU */
-            if (in_array($condition, ['IN', 'NOT IN']) && $filter->getField() == "sku" && !is_array($filter->getValue())) {
+            if (in_array($condition, ['IN', 'NOT IN']) && $filter->getField() == "sku"
+                && !is_array($filter->getValue())) {
                 $valueArray = explode(',', $filter->getValue());
                 $valueArray = "('" . implode("','", $valueArray) . "')";
                 $columnFilter = "`e`.`sku`";
@@ -395,6 +386,7 @@ class StockItemRepository implements StockItemRepositoryInterface
      *
      * @param string $type
      * @return string
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function convertCondition($type)
     {
@@ -423,6 +415,7 @@ class StockItemRepository implements StockItemRepositoryInterface
     }
 
     /**
+     * Mass update stock items
      *
      * @param array $stockItems
      * @return bool
@@ -431,8 +424,9 @@ class StockItemRepository implements StockItemRepositoryInterface
     {
         if (count($stockItems)) {
             foreach ($stockItems as $stockItem) {
-                if (!$stockItem->getItemId())
+                if (!$stockItem->getItemId()) {
                     continue;
+                }
                 $this->updateStockItem($stockItem->getItemId(), $stockItem);
             }
         }
@@ -440,6 +434,7 @@ class StockItemRepository implements StockItemRepositoryInterface
     }
 
     /**
+     * Update stock item
      *
      * @param string $itemId
      * @param \Magestore\Webpos\Api\Data\Inventory\StockItemInterface $stockItem
@@ -471,7 +466,8 @@ class StockItemRepository implements StockItemRepositoryInterface
     public function getAvailableQty($product_id)
     {
         /** @var \Magento\Catalog\Model\Product $product */
-        $product = $this->objectManager->get('Magento\Catalog\Model\ProductFactory')->create()->load($product_id);
+        $product = $this->objectManager->get(\Magento\Catalog\Model\ProductFactory::class)
+            ->create()->load($product_id);
         if (!$product->getId()) {
             throw new \Magento\Framework\Exception\NoSuchEntityException(__('Product does not exist!'));
         }
@@ -534,9 +530,12 @@ class StockItemRepository implements StockItemRepositoryInterface
      *
      * @param \Magento\Framework\Api\SearchCriteriaInterface $searchCriteria
      * @return \Magestore\Webpos\Api\Data\Inventory\StockSearchResultsInterface
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
-    public function getStockItemsToRefund(\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria)
-    {
+    public function getStockItemsToRefund(
+        \Magento\Framework\Api\SearchCriteriaInterface $searchCriteria
+    ) {
         $response = $this->sync($searchCriteria);
         if (!$this->webposManagement->isMSIEnable()) {
             return $response;
@@ -579,12 +578,13 @@ class StockItemRepository implements StockItemRepositoryInterface
         }
         $collection->setCurPage($cloneSearchCriteria->getCurrentPage());
         $collection->setPageSize($cloneSearchCriteria->getPageSize());
+        $collectionSize = $collection->getSize();
         $collection->load();
         $searchResult = $this->_searchResultFactory->create();
         $searchResult->setSearchCriteria($searchCriteria);
         $itemsResponse = array_merge($itemsResponse, $collection->getItems());
         $searchResult->setItems($itemsResponse);
-        $searchResult->setTotalCount($response->getTotalCount() + $collection->getSize());
+        $searchResult->setTotalCount($response->getTotalCount() + $collectionSize);
         return $searchResult;
     }
 }

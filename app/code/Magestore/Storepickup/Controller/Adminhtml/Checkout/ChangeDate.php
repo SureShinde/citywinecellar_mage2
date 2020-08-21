@@ -21,7 +21,14 @@
 
 namespace Magestore\Storepickup\Controller\Adminhtml\Checkout;
 
-class ChangeDate extends \Magento\Framework\App\Action\Action
+use Magento\Framework\App\Action\HttpPostActionInterface;
+
+/**
+ * Class ChangeDate
+ *
+ * Used to change date
+ */
+class ChangeDate extends \Magento\Framework\App\Action\Action implements HttpPostActionInterface
 {
     /**
      * @var \Magento\Framework\Controller\Result\JsonFactory
@@ -40,11 +47,22 @@ class ChangeDate extends \Magento\Framework\App\Action\Action
      * @var \Magento\Framework\Stdlib\DateTime\DateTime
      */
     protected $_formatdate;
+
     /**
      * @var \Magestore\Storepickup\Helper\Data
      */
     protected $_storepickupHelper;
 
+    /**
+     * ChangeDate constructor.
+     *
+     * @param \Magento\Framework\App\Action\Context $context
+     * @param \Magento\Framework\Controller\Result\JsonFactory $resultJsonFactory
+     * @param \Magestore\Storepickup\Model\StoreFactory $storeCollection
+     * @param \Magento\Framework\Stdlib\DateTime\TimezoneInterface $gmtdate
+     * @param \Magestore\Storepickup\Helper\Data $storepickupHelper
+     * @param \Magento\Backend\Model\Session $backendSession
+     */
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
         \Magento\Framework\Controller\Result\JsonFactory $resultJsonFactory,
@@ -52,8 +70,7 @@ class ChangeDate extends \Magento\Framework\App\Action\Action
         \Magento\Framework\Stdlib\DateTime\TimezoneInterface $gmtdate,
         \Magestore\Storepickup\Helper\Data $storepickupHelper,
         \Magento\Backend\Model\Session $backendSession
-    )
-    {
+    ) {
 
         $this->_resultJsonFactory = $resultJsonFactory;
         $this->_storeCollection = $storeCollection;
@@ -62,74 +79,86 @@ class ChangeDate extends \Magento\Framework\App\Action\Action
         $this->_formatdate = $gmtdate;
         parent::__construct($context);
     }
+
+    /**
+     * Execute
+     *
+     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
+     */
     public function execute()
     {
-        $date = array();
-        $date['error']= 0;
+        $date = [];
+        $date['error'] = 0;
         $today = date("Y-m-d");
         $thisTime = date("H:i");
         $storeId = $this->getRequest()->getParam('store_id');
         $shippingDateString = $this->getRequest()->getParam('shipping_date');
-        $shippingDate = date('Y-m-d',strtotime($shippingDateString));
-        $dayofweek= strtolower (date('l', strtotime($shippingDate)));
+        $shippingDate = date('Y-m-d', strtotime($shippingDateString));
+        $dayofweek = strtolower(date('l', strtotime($shippingDate)));
         $collectionstore = $this->_storeCollection->create();
-        $store = $collectionstore->load($storeId,'storepickup_id');
-        $hasBreakTime= $store->hasBreakTime($dayofweek);
+        $store = $collectionstore->load($storeId, 'storepickup_id');
+        $hasBreakTime = $store->hasBreakTime($dayofweek);
         // check special days
         $specialsData = $store->getSpecialdaysData();
         $specialday = false;
-        foreach($specialsData as $specialID){
-                $isSpecialday = array_search($shippingDate, $specialID['date'],false);
-            if($isSpecialday !== false) {
-                $specialday= true;
-                $date['time_open']= $specialID['time_open'];
-                $date['time_close']= $specialID['time_close'];
+        foreach ($specialsData as $specialID) {
+            $isSpecialday = array_search($shippingDate, $specialID['date'], false);
+            if ($isSpecialday !== false) {
+                $specialday = true;
+                $date['time_open'] = $specialID['time_open'];
+                $date['time_close'] = $specialID['time_close'];
             }
         }
         // if shipping date is today
-        if($shippingDate==$today)
-        {
-             if($specialday !== false) //today is a special day
-            {
-                $date['html']= $this->_storepickupHelper->generateTimes( $date['time_open'],  $date['time_close'], $thisTime);
+        if ($shippingDate == $today) {
+            if ($specialday !== false) {
+                $date['html'] = $this->_storepickupHelper->generateTimes(
+                    $date['time_open'],
+                    $date['time_close'],
+                    $thisTime
+                );
                 return $this->getResponse()->setBody(\Zend_Json::encode($date));
-            } else //today is a nomarl day
-            {
+            } else {
                 $date['time_open'] = $store->getData($dayofweek . '_open');
                 $date['time_close'] = $store->getData($dayofweek . '_close');
-                if($thisTime>$date['time_close']) //The worktime has been finished
-                {
-                    $date['error']= __('The worktime has been finished. Please select an other day');
+                if ($thisTime > $date['time_close']) {
+                    $date['error'] = __('The worktime has been finished. Please select an other day');
                     return $this->getResponse()->setBody(\Zend_Json::encode($date));
                 }
-                if (!$hasBreakTime)
-                {
-                    $date['html'] = $this->_storepickupHelper->generateTimes($date['time_open'], $date['time_close'], $thisTime);
-                } else
-                {
+                if (!$hasBreakTime) {
+                    $date['html'] = $this->_storepickupHelper->generateTimes(
+                        $date['time_open'],
+                        $date['time_close'],
+                        $thisTime
+                    );
+                } else {
                     $date['open_break'] = $store->getData($dayofweek . '_open_break');
-                    $date['html'] = $this->_storepickupHelper->generateTimes($date['time_open'], $date['open_break'], $thisTime);
-                    //var_dump($thisTime);
+                    $date['html'] = $this->_storepickupHelper->generateTimes(
+                        $date['time_open'],
+                        $date['open_break'],
+                        $thisTime
+                    );
                     $date['close_break'] = $store->getData($dayofweek . '_close_break');
-                    $date['html'] .= $this->_storepickupHelper->generateTimes($date['close_break'], $date['time_close'], $thisTime);
+                    $date['html'] .= $this->_storepickupHelper->generateTimes(
+                        $date['close_break'],
+                        $date['time_close'],
+                        $thisTime
+                    );
                 }
                 return $this->getResponse()->setBody(\Zend_Json::encode($date));
             }
         }
         // shipping date is a specialday
-        if($specialday)
-        {
-            $date['html']= $this->_storepickupHelper->generateTimes( $date['time_open'],  $date['time_close']);
-            return $this->getResponse()->setBody(\Zend_Json::encode( $date));
+        if ($specialday) {
+            $date['html'] = $this->_storepickupHelper->generateTimes($date['time_open'], $date['time_close']);
+            return $this->getResponse()->setBody(\Zend_Json::encode($date));
         }
         //shipping date is a normal day
-        if(!$hasBreakTime)
-        {
+        if (!$hasBreakTime) {
             $date['time_open'] = $store->getData($dayofweek . '_open');
             $date['time_close'] = $store->getData($dayofweek . '_close');
             $date['html'] = $this->_storepickupHelper->generateTimes($date['time_open'], $date['time_close']);
-        } else
-        {
+        } else {
             $date['time_open'] = $store->getData($dayofweek . '_open');
             $date['open_break'] = $store->getData($dayofweek . '_open_break');
             $date['html'] = $this->_storepickupHelper->generateTimes($date['time_open'], $date['open_break']);
@@ -139,5 +168,4 @@ class ChangeDate extends \Magento\Framework\App\Action\Action
         }
         return $this->getResponse()->setBody(\Zend_Json::encode($date));
     }
-
 }

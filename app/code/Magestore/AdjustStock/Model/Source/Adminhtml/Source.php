@@ -8,8 +8,9 @@
 namespace Magestore\AdjustStock\Model\Source\Adminhtml;
 
 /**
- * Class Warehouse
- * @package Magestore\AdjustStock\Model\Source\Adminhtml
+ * Class Source
+ *
+ * Source model
  */
 class Source implements \Magento\Framework\Option\ArrayInterface
 {
@@ -29,21 +30,20 @@ class Source implements \Magento\Framework\Option\ArrayInterface
     }
 
     /**
-     * @return array
+     * @inheritDoc
      */
     public function toOptionArray()
     {
         $collection = $this->sourceRepository->getList();
         $options = [];
         $items = $collection->getItems();
-        if(count($items)) {
+        if (count($items)) {
             /** @var \Magento\InventoryApi\Api\Data\SourceInterface $source */
             foreach ($items as $source) {
                 $label = $source->getName() . ' (' . $source->getSourceCode() . ') ';
-                $options[] = array('value' => $source->getSourceCode(), 'label' => $label);
+                $options[] = ['value' => $source->getSourceCode(), 'label' => $label];
             }
         }
         return $options;
     }
-
 }

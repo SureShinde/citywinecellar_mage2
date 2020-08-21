@@ -4,13 +4,13 @@
  * Copyright © 2018 Magestore. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace Magestore\Webpos\Model\Catalog\Product;
 
 use Magento\Catalog\Model\ProductFactory;
 
 /**
- * Class BundleOptionsBuilder
- * @package Magestore\Webpos\Model\Catalog\Product
+ * Product BundleOptionsBuilder
  */
 class BundleOptionsBuilder
 {
@@ -25,7 +25,6 @@ class BundleOptionsBuilder
     protected $productId = null;
 
     /**
-     *
      * @var \Magento\Framework\ObjectManagerInterface
      */
     protected $_objectManager;
@@ -36,7 +35,6 @@ class BundleOptionsBuilder
     protected $_pricingHelper;
 
     /**
-     *
      * @var \Magento\Store\Model\StoreManagerInterface
      */
     protected $_storeManager;
@@ -52,6 +50,7 @@ class BundleOptionsBuilder
 
     /**
      * BundleOptionsBuilder constructor.
+     *
      * @param ProductFactory $productFactory
      * @param \Magento\Framework\ObjectManagerInterface $objectManager
      * @param \Magento\Framework\Pricing\Helper\Data $pricingHelper
@@ -76,6 +75,8 @@ class BundleOptionsBuilder
     }
 
     /**
+     * Set Product Id
+     *
      * @param int $productId
      * @return void
      */
@@ -85,6 +86,8 @@ class BundleOptionsBuilder
     }
 
     /**
+     * GetProductId
+     *
      * @return int|null
      */
     public function getProductId()
@@ -93,13 +96,15 @@ class BundleOptionsBuilder
     }
 
     /**
+     * Create
+     *
      * @return BundleOptionsInterface[]|null
      */
     public function create()
     {
         if ($this->getProductId()) {
             $product = $this->productFactory->create()->load($this->getProductId());
-            $bundleChilds = array();
+            $bundleChilds = [];
             $store_id = $this->_storeManager->getStore()->getId();
             $options = $this->_bundleOption->getResourceCollection()
                 ->setProductIdFilter($product->getId())
@@ -118,31 +123,41 @@ class BundleOptionsBuilder
                     $selection_price_type = $selection->getData('selection_price_type');
                     $selection_price_value = $selection->getData('selection_price_value');
                     $price = $selection->getData('price');
-                    $selection_price = ($selection_price_type == 0) ? $selection_price_value : $price * $selection_price_value;
+                    $selection_price = ($selection_price_type == 0)
+                        ? $selection_price_value
+                        : $price * $selection_price_value;
 
                     if ($price_type == 0) {
                         $selection_price = $price;
                     }
                     if ($option->getId() == $selection->getOptionId()) {
-                        $bundleChilds[$option->getId()]['items'][$selection->getSelectionId()] = array();
-                        $bundleChilds[$option->getId()]['items'][$selection->getSelectionId()]['name'] = $selection->getName();
-                        $bundleChilds[$option->getId()]['items'][$selection->getSelectionId()]['qty'] = $selection->getSelectionQty();
-                        $bundleChilds[$option->getId()]['items'][$selection->getSelectionId()]['price'] = $selection_price;
-                        $bundleChilds[$option->getId()]['items'][$selection->getSelectionId()]['can_change_qty'] = $selection->getSelectionCanChangeQty();
-                        $bundleChilds[$option->getId()]['items'][$selection->getSelectionId()]['is_default'] = $selection->getIsDefault();
+                        $bundleChilds[$option->getId()]['items'][$selection->getSelectionId()] = [];
+                        $bundleChilds[$option->getId()]['items'][$selection->getSelectionId()]['name']
+                            = $selection->getName();
+                        $bundleChilds[$option->getId()]['items'][$selection->getSelectionId()]['qty']
+                            = $selection->getSelectionQty();
+                        $bundleChilds[$option->getId()]['items'][$selection->getSelectionId()]['price']
+                            = $selection_price;
+                        $bundleChilds[$option->getId()]['items'][$selection->getSelectionId()]['can_change_qty']
+                            = $selection->getSelectionCanChangeQty();
+                        $bundleChilds[$option->getId()]['items'][$selection->getSelectionId()]['is_default']
+                            = $selection->getIsDefault();
                     }
                 }
             };
             return $bundleChilds;
         }
+        return null;
     }
 
     /**
+     * FormatPrice
      *
      * @param string $price
      * @return string
      */
-    public function formatPrice($price){
-        return $this->_pricingHelper->currency($price,true,false);
+    public function formatPrice($price)
+    {
+        return $this->_pricingHelper->currency($price, true, false);
     }
 }

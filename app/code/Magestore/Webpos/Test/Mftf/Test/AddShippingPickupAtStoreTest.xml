@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AddShippingPickupAtStore">
+        <annotations>
+            <features value="Shipping"/>
+            <stories value="Add Shipping"/>
+            <title value="Select shipping method as pickup at store"/>
+            <description value="Checkout without selecting shipping"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="ASM-01"/>
+            <group value="addShipping"/>
+            <group value="pwapos"/>
+        </annotations>
+
+        <before>
+            <magentoCLI command="config:set webpos/shipping/method flatrate,tablerate,freeshipping" stepKey="enableShippingMethod"/>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+
+        <actionGroup ref="SearchAndClickProduct" stepKey="SearchAndClickProduct">
+            <argument name="dataProduct" value="pos_simple_product"/>
+        </actionGroup>
+
+        <waitForElementVisible selector="{{CartSection.productFoundOnCartByName(pos_simple_product.name)}}" time="120" stepKey="waitProductIsAddedToCartSuccessfully"/>
+        <click selector="{{CartSection.chargeButton}}" stepKey="clickChargeButton"/>
+        <waitForElementVisible selector="{{TotalSection.cartTotalBlock}}" time="120" stepKey="waitAddChargeSuccessFully"/>
+        <waitForElementVisible selector="{{TotalSection.shippingLabel}}" time="120" stepKey="waitForText"/>
+        <grabTextFrom selector="{{TotalSection.shippingLabel}}" stepKey="grabTextOfShipping"/>
+        <assertEquals message="Shipping label is correct." stepKey="compareText">
+            <expectedResult type="string">Add Shipping</expectedResult>
+            <actualResult type="variable">grabTextOfShipping</actualResult>
+        </assertEquals>
+    </test>
+</tests>

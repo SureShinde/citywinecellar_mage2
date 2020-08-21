@@ -17,6 +17,9 @@ use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magestore\Webpos\Test\Constant\Product;
 use Magestore\Webpos\Test\Constant\Location;
 
+/**
+ * Webpos Check External Test
+ */
 class CheckExternalTest extends WebapiAbstract
 {
 
@@ -39,7 +42,12 @@ class CheckExternalTest extends WebapiAbstract
      */
     protected $productRepository;
 
-    protected function setUp()
+    /**
+     * Set Up
+     *
+     * @return void
+     */
+    protected function setUp() : void // phpcs:ignore
     {
         $this->posSession = $this->loginAndAssignPos();
         $this->timeZone = Bootstrap::getObjectManager()->get('\Magento\Framework\Stdlib\DateTime\TimezoneInterface');
@@ -53,7 +61,8 @@ class CheckExternalTest extends WebapiAbstract
     /**
      * Test Case 1
      */
-    public function testCase1(){
+    public function testCase1()
+    {
         $serviceInfo = [
             'rest' => [
                 'resourcePath' => self::RESOURCE_PATH
@@ -78,12 +87,12 @@ class CheckExternalTest extends WebapiAbstract
         ];
 
         /* check response is not empty */
-        self::assertNotEmpty($response , $message);
+        self::assertNotEmpty($response, $message);
 
         /* chek response has 1 item */
         /* change expected total count  = 3, because Shark team has create news location in SampleData */
         $expectedTotalCount = 3;
-        self::assertCount($expectedTotalCount, $response , $message);
+        self::assertCount($expectedTotalCount, $response, $message);
 
         /* check response is contains excepted data items */
         AssertArrayContains::assert($expectedItemsData, $response);
@@ -92,7 +101,8 @@ class CheckExternalTest extends WebapiAbstract
     /**
      * Test case 2
      */
-    public function testCase2(){
+    public function testCase2()
+    {
         include __DIR__ . '/../../_files/external_stock_data.php';
         $serviceInfo = [
             'rest' => [
@@ -138,23 +148,23 @@ class CheckExternalTest extends WebapiAbstract
         ];
 
         /* check response is not empty */
-        self::assertNotEmpty($response , $message);
+        self::assertNotEmpty($response, $message);
 
         /* chek response has 2 item */
         /* change expected total count  = 4, because Shark team has create news location in SampleData */
         $expectedTotalCount = 4;
-        self::assertCount($expectedTotalCount, $response , $message);
+        self::assertCount($expectedTotalCount, $response, $message);
 
         /* check response is contains excepted data items */
         AssertArrayContains::assert($expectedItemsData, $response);
         include __DIR__ . '/../../_files/external_stock_data_rollback.php';
     }
 
-
     /**
      * Test Case 3 try with product_id 99999999
      */
-    public function testCase3(){
+    public function testCase3()
+    {
         $product_id = 99999999;
         $serviceInfo = [
             'rest' => [
@@ -172,13 +182,12 @@ class CheckExternalTest extends WebapiAbstract
             $errorData = $this->processRestExceptionResult($e);
             /* check error message */
             $message = $this->getMessage($this->messageTxt);
-            self::assertEquals($expectedMessage, $errorData['message'] , $message);
+            self::assertEquals($expectedMessage, $errorData['message'], $message);
             /* check error code */
             $message = $this->getMessage($this->statusCodeTxt);
-            self::assertEquals(Exception::HTTP_NOT_FOUND, $e->getCode() , $message);
+            self::assertEquals(Exception::HTTP_NOT_FOUND, $e->getCode(), $message);
         }
     }
-
 
     /**
      * Test Case 4 - the pos_session is not valid
@@ -203,10 +212,10 @@ class CheckExternalTest extends WebapiAbstract
 
             /* check error message */
             $message = $this->getMessage($this->messageTxt);
-            self::assertEquals($expectedMessage, $errorData['message'] , $message);
+            self::assertEquals($expectedMessage, $errorData['message'], $message);
             /* check error code */
             $message = $this->getMessage($this->statusCodeTxt);
-            self::assertEquals(Exception::HTTP_UNAUTHORIZED, $e->getCode() , $message);
+            self::assertEquals(Exception::HTTP_UNAUTHORIZED, $e->getCode(), $message);
         }
     }
 
@@ -234,7 +243,7 @@ class CheckExternalTest extends WebapiAbstract
             self::assertEquals($expectedMessage, $errorData['message'], $message);
             /* check error code */
             $message = $this->getMessage($this->statusCodeTxt);
-            self::assertEquals(Exception::HTTP_UNAUTHORIZED, $e->getCode() , $message);
+            self::assertEquals(Exception::HTTP_UNAUTHORIZED, $e->getCode(), $message);
         }
     }
 }

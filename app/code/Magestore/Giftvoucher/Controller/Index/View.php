@@ -5,10 +5,12 @@
  */
 namespace Magestore\Giftvoucher\Controller\Index;
 
+use Magento\Framework\App\Action\HttpGetActionInterface;
+
 /**
  * View Action
  */
-class View extends \Magestore\Giftvoucher\Controller\Action
+class View extends \Magestore\Giftvoucher\Controller\Action implements HttpGetActionInterface
 {
     /**
      * Giftvoucher View action
@@ -17,7 +19,7 @@ class View extends \Magestore\Giftvoucher\Controller\Action
     {
         if (!$this->customerLoggedIn()) {
             $resultRedirectFactory = $this->getRedirectFactory()
-                ->setPath('customer/account/login', array('_secure' => true));
+                ->setPath('customer/account/login', ['_secure' => true]);
             return $resultRedirectFactory;
         }
         $resultPageFactory = $this->getPageFactory();

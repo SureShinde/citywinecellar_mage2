@@ -11,19 +11,11 @@ use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 
 /**
- * Class InstallData
- * @package Magestore\Webpos\Setup
+ * Setup InstallData
  */
 class InstallData implements InstallDataInterface
 {
-
-    /**
-     *
-     */
     const LOCATION_NAME = 'Primary Location';
-    /**
-     *
-     */
     const NOT_ENCODE_PASSWORD = 1;
 
     /**
@@ -61,9 +53,9 @@ class InstallData implements InstallDataInterface
      */
     protected $objectManager;
 
-
     /**
      * InstallData constructor.
+     *
      * @param \Magestore\Webpos\Model\Location\LocationFactory $locationFactory
      * @param \Magestore\Webpos\Model\Pos\PosFactory $posFactory
      * @param \Magestore\Webpos\Model\ResourceModel\Location\Location\CollectionFactory $locationCollectionFactory
@@ -80,8 +72,7 @@ class InstallData implements InstallDataInterface
         \Magento\Directory\Model\CountryFactory $countryFactory,
         \Magestore\Webpos\Api\WebposManagementInterface $webposManagement,
         \Magento\Framework\ObjectManagerInterface $objectManager
-    )
-    {
+    ) {
         $this->_locationFactory = $locationFactory;
         $this->_posFactory = $posFactory;
         $this->_locationCollectionFactory = $locationCollectionFactory;
@@ -97,6 +88,7 @@ class InstallData implements InstallDataInterface
      * @param ModuleDataSetupInterface $setup
      * @param ModuleContextInterface $context
      * @return void
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function install(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
     {
@@ -110,7 +102,7 @@ class InstallData implements InstallDataInterface
          * Setup Location Data
          */
         if (!$this->moduleManager->isEnabled('Magestore_InventorySuccess')) {
-            $locationData = array(
+            $locationData = [
                 'name' => 'Primary Location',
                 'street' => '6146 Honey Bluff Parkway',
                 'city' => 'Calder',
@@ -120,17 +112,23 @@ class InstallData implements InstallDataInterface
                 'country' => 'United State',
                 'postcode' => '49628-7978',
                 'description' => 'To distribute products for brick-and-mortar store'
-            );
+            ];
         }
         if ($isMSIEnable) {
             /** @var \Magento\InventoryApi\Api\SourceRepositoryInterface $sourceRepository */
-            $sourceRepository = $this->objectManager->create('Magento\InventoryApi\Api\SourceRepositoryInterface');
+            $sourceRepository = $this->objectManager->create(
+                \Magento\InventoryApi\Api\SourceRepositoryInterface::class
+            );
             /** @var \Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface $defaultSourceProvider */
-            $defaultSourceProvider = $this->objectManager->create('Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface');
+            $defaultSourceProvider = $this->objectManager->create(
+                \Magento\InventoryCatalogApi\Api\DefaultSourceProviderInterface::class
+            );
             /** @var \Magento\InventoryApi\Api\Data\SourceInterface $defaultSource */
             $defaultSource = $sourceRepository->get($defaultSourceProvider->getCode());
             /** @var \Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface $defaultStockProvider */
-            $defaultStockProvider = $this->objectManager->create('Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface');
+            $defaultStockProvider = $this->objectManager->create(
+                \Magento\InventoryCatalogApi\Api\DefaultStockProviderInterface::class
+            );
             if ($defaultSource->getSourceCode()) {
                 /** @var \Magento\Directory\Model\Country $country */
                 $country = $this->countryFactory->create();
@@ -155,16 +153,13 @@ class InstallData implements InstallDataInterface
         }
 
         /** @var \Magestore\Webpos\Model\Location\Location $locationModel */
-        $locationModel = $this->_locationCollectionFactory->create()
-//            ->addFieldToFilter('name', self::LOCATION_NAME)
-            ->getFirstItem();
-        $posData = array(
+        $locationModel = $this->_locationCollectionFactory->create()->getFirstItem();
+        $posData = [
             'pos_name' => 'Primary POS',
             'location_id' => $locationModel->getId(),
             'status' => '1'
-        );
+        ];
         $this->_posFactory->create()->setData($posData)->save();
-
 
         $setup->endSetup();
     }

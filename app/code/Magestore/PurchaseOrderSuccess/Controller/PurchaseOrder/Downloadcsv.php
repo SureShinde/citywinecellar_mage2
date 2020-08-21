@@ -3,23 +3,51 @@
 namespace Magestore\PurchaseOrderSuccess\Controller\PurchaseOrder;
 
 use Magento\Framework\App\Filesystem\DirectoryList;
+use Magento\Framework\Exception\NotFoundException;
 
-class Downloadcsv extends \Magestore\PurchaseOrderSuccess\Controller\AbstractController {
+/**
+ * Controller Downloadcsv
+ *
+ * @SuppressWarnings(PHPMD.AllPurposeAction)
+ */
+class Downloadcsv extends \Magestore\PurchaseOrderSuccess\Controller\AbstractController
+{
     protected $purchaseOrder;
 
-    public function execute() {
+    /**
+     * Execute
+     *
+     * @return \Magento\Framework\App\ResponseInterface
+     * @throws \Magento\Framework\Exception\FileSystemException
+     * @throws \Magento\Framework\Exception\NotFoundException
+     */
+    public function execute()
+    {
         $purchaseKey = $this->getRequest()->getParam('key');
         $purchaseOrder = $this->purchaseOrderRepository->getByKey($purchaseKey);
         $this->purchaseOrder = $purchaseOrder;
-        if($purchaseOrder && $purchaseOrder->getPurchaseOrderId()){
-            $filenameDownload = 'items-of-purchase-order-'.$purchaseOrder->getPurchaseCode().'.csv';
+        if ($purchaseOrder && $purchaseOrder->getPurchaseOrderId()) {
+            $filenameDownload = 'items-of-purchase-order-' . $purchaseOrder->getPurchaseCode() . '.csv';
             $this->getBaseDirMedia()->create('magestore/purchaseOrder/detail');
-            $filename = $this->getBaseDirMedia()->getAbsolutePath('magestore/purchaseOrder/detail/product_to_import.csv');
-            $data = array(
-                array('Product', 'SKU', 'Supplier SKU', 'Qty', 'Qty Received',
-                    'Qty Transferred', 'Qty Returned', 'Qty Billed',
-                    'Purchase Cost', 'Tax(%)', 'Discount(%)', 'Amount')
+            $filename = $this->getBaseDirMedia()->getAbsolutePath(
+                'magestore/purchaseOrder/detail/product_to_import.csv'
             );
+            $data = [
+                [
+                    'Product',
+                    'SKU',
+                    'Supplier SKU',
+                    'Qty',
+                    'Qty Received',
+                    'Qty Transferred',
+                    'Qty Returned',
+                    'Qty Billed',
+                    'Purchase Cost',
+                    'Tax(%)',
+                    'Discount(%)',
+                    'Amount'
+                ]
+            ];
 
             $items = $purchaseOrder->getItems();
 
@@ -30,16 +58,20 @@ class Downloadcsv extends \Magestore\PurchaseOrderSuccess\Controller\AbstractCon
             $data = array_merge($data, $tmp);
 
             $this->csvProcessor->saveData($filename, $data);
+            /** @var \Magento\Framework\Filesystem\DriverInterface $driverFile */
+            $driverFile = $this->_objectManager->get(\Magento\Framework\Filesystem\DriverInterface::class);
             return $this->fileFactory->create(
                 $filenameDownload,
-                file_get_contents($filename),
+                $driverFile->fileGetContents($filename),
                 DirectoryList::VAR_DIR
             );
+        } else {
+            throw new NotFoundException(__('Could not download sample file.'));
         }
     }
 
     /**
-     * get base dir media
+     * Get base dir media
      *
      * @return string
      */
@@ -49,10 +81,13 @@ class Downloadcsv extends \Magestore\PurchaseOrderSuccess\Controller\AbstractCon
     }
 
     /**
+     * Generate Item Data
+     *
      * @param \Magestore\PurchaseOrderSuccess\Api\Data\PurchaseOrderItemInterface $item
      * @return array
      */
-    public function generateItemData($item) {
+    public function generateItemData($item)
+    {
         return [
             $item->getProductName(),
             $item->getProductSku(),
@@ -69,7 +104,14 @@ class Downloadcsv extends \Magestore\PurchaseOrderSuccess\Controller\AbstractCon
         ];
     }
 
-    public function getPriceFormat($price){
+    /**
+     * Get Price Format
+     *
+     * @param float $price
+     * @return mixed
+     */
+    public function getPriceFormat($price)
+    {
         $currency = $this->currencyFactory->create()->load(
             $this->purchaseOrder->getCurrencyCode()
         );
@@ -77,22 +119,31 @@ class Downloadcsv extends \Magestore\PurchaseOrderSuccess\Controller\AbstractCon
     }
 
     /**
+     * Get Item Total
+     *
      * @param \Magestore\PurchaseOrderSuccess\Api\Data\PurchaseOrderItemInterface $item
      */
-    public function getItemTotal($item){
+    public function getItemTotal($item)
+    {
         $itemQty = $item->getQtyOrderred();
         $itemTotal = $itemQty * $item->getCost();
-        $itemDiscount = $itemTotal*$item->getDiscount()/100;
+        $itemDiscount = $itemTotal * $item->getDiscount() / 100;
         $taxType = $this->getTaxType();
-        if($taxType == 0){
-            $itemTax = $itemTotal*$item->getTax()/100;
-        }else{
-            $itemTax = ($itemTotal-$itemDiscount)*$item->getTax()/100;
+        if ($taxType == 0) {
+            $itemTax = $itemTotal * $item->getTax() / 100;
+        } else {
+            $itemTax = ($itemTotal - $itemDiscount) * $item->getTax() / 100;
         }
-        return $this->getPriceFormat($itemTotal-$itemDiscount+$itemTax);
+        return $this->getPriceFormat($itemTotal - $itemDiscount + $itemTax);
     }
 
-    public function getTaxType(){
+    /**
+     * Get Tax Type
+     *
+     * @return int
+     */
+    public function getTaxType()
+    {
         $taxType = $this->taxShippingService->getTaxType();
         return $taxType;
     }

@@ -26,11 +26,9 @@ use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
 
 /**
- * Helper Data.
- * @category Magestore
- * @package  Magestore_Storepickup
- * @module   Storepickup
- * @author   Magestore Developer
+ * Class Region
+ *
+ * Used to create region helper
  */
 class Region extends AbstractHelper
 {
@@ -42,38 +40,40 @@ class Region extends AbstractHelper
 
     /**
      * Region constructor.
+     *
      * @param Context $context
      * @param \Magento\Directory\Model\ResourceModel\Region\CollectionFactory $regionCollectionFactory
      */
     public function __construct(
-       Context $context,
-       \Magento\Directory\Model\ResourceModel\Region\CollectionFactory $regionCollectionFactory
+        Context $context,
+        \Magento\Directory\Model\ResourceModel\Region\CollectionFactory $regionCollectionFactory
     ) {
         $this->_regionCollectionFactory = $regionCollectionFactory;
         parent::__construct($context);
     }
 
-    /**
-     * error state code
-     */
     const STATE_ERROR = -1;
+
     /**
-     * @param $country_id
-     * @param $state_name
+     * Validate state
+     *
+     * @param string $country_id
+     * @param string $state_name
      * @return int
      */
-    public function validateState($country_id, $state_name){
+    public function validateState($country_id, $state_name)
+    {
         $collection = $this->_regionCollectionFactory->create();
         $collection->addCountryFilter($country_id);
 
-        if($state_name == ''){
+        if ($state_name == '') {
             return self::STATE_ERROR;
         }
 
-        if(sizeof($collection) > 0){
+        if (count($collection) > 0) {
             $region_id = self::STATE_ERROR;
-            foreach ($collection as $region){
-                if(strcasecmp($state_name,$region->getData('name')) == 0){
+            foreach ($collection as $region) {
+                if (strcasecmp($state_name, $region->getData('name')) == 0) {
                     $region_id = $region->getId();
                     break;
                 }
@@ -83,5 +83,4 @@ class Region extends AbstractHelper
             return 0;
         }
     }
-
 }

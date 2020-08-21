@@ -5,15 +5,16 @@
   -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
     <menu>
-        <add id="Magestore_ReportSuccess::report_listing" title="Report Dashboard" translate="title" module="Magestore_ReportSuccess" sortOrder="1" parent="Magento_Reports::report" resource="Magestore_ReportSuccess::report"/>
-            <add id="Magestore_ReportSuccess::overview" title="Overview" translate="title" module="Magestore_ReportSuccess" sortOrder="10" parent="Magestore_ReportSuccess::report_listing" action="omcreports/report/dashboard" resource="Magestore_ReportSuccess::report"/>
-        <add id="Magestore_ReportSuccess::inventory" title="Inventory" translate="title" module="Magestore_ReportSuccess" sortOrder="2" parent="Magento_Reports::report" resource="Magestore_ReportSuccess::inventory"/>
+        <add id="Magestore_ReportSuccess::report" title="Omni-channel Reports" translate="title" module="Magestore_ReportSuccess" sortOrder="60" resource="Magestore_ReportSuccess::report"/>
+        <add id="Magestore_ReportSuccess::report_listing" title="Report Dashboard" translate="title" module="Magestore_ReportSuccess" sortOrder="10" parent="Magestore_ReportSuccess::report" resource="Magestore_ReportSuccess::report"/>
+            <add id="Magestore_ReportSuccess::overview" title="All Reports" translate="title" module="Magestore_ReportSuccess" sortOrder="10" parent="Magestore_ReportSuccess::report_listing" action="omcreports/report/dashboard" resource="Magestore_ReportSuccess::report"/>
+        <add id="Magestore_ReportSuccess::inventory" title="Inventory" translate="title" module="Magestore_ReportSuccess" sortOrder="20" parent="Magestore_ReportSuccess::report" resource="Magestore_ReportSuccess::inventory"/>
             <add id="Magestore_ReportSuccess::stock_value" title="Stock Value" translate="title" module="Magestore_ReportSuccess" sortOrder="10" parent="Magestore_ReportSuccess::inventory" action="omcreports/inventory/stockValue" resource="Magestore_ReportSuccess::inventory"/>
             <add id="Magestore_ReportSuccess::stock_details" title="Stock Details" translate="title" module="Magestore_ReportSuccess" sortOrder="10" parent="Magestore_ReportSuccess::inventory" action="omcreports/inventory/stockDetails" resource="Magestore_ReportSuccess::inventory"/>
             <add id="Magestore_ReportSuccess::stock_by_location" title="Stock By Source" translate="title" module="Magestore_ReportSuccess" sortOrder="10" parent="Magestore_ReportSuccess::inventory" action="omcreports/inventory/stockByLocation" resource="Magestore_ReportSuccess::inventory"/>
             <add id="Magestore_ReportSuccess::incomming_stock" title="Incoming Stock" translate="title" module="Magestore_ReportSuccess" sortOrder="10" parent="Magestore_ReportSuccess::inventory" action="omcreports/inventory/incomingStock" resource="Magestore_ReportSuccess::inventory"/>
             <add id="Magestore_ReportSuccess::historycal_stock" title="Historical Stock" translate="title" module="Magestore_ReportSuccess" sortOrder="10" parent="Magestore_ReportSuccess::inventory" action="omcreports/inventory/historicalStock" resource="Magestore_ReportSuccess::inventory"/>
-        <add id="Magestore_ReportSuccess::settings" title="Settings" translate="title" module="Magestore_ReportSuccess" sortOrder="5" parent="Magento_Reports::report" resource="Magestore_ReportSuccess::config_reports"/>
+        <add id="Magestore_ReportSuccess::settings" title="Settings" translate="title" module="Magestore_ReportSuccess" sortOrder="200" parent="Magestore_ReportSuccess::report" resource="Magestore_ReportSuccess::config_reports"/>
             <add id="Magestore_ReportSuccess::configuration" title="Configuration" translate="title" module="Magestore_ReportSuccess" sortOrder="9" parent="Magestore_ReportSuccess::settings" action="adminhtml/system_config/edit/section/reportsuccess" resource="Magestore_ReportSuccess::config_reports"/>
     </menu>
 </config>

@@ -16,10 +16,12 @@ use Magento\Framework\Module\ModuleListInterface;
 /**
  * Giftvoucher default helper
  *
- * @category Magestore
- * @package  Magestore_Giftvoucher
  * @module   Giftvoucher
  * @author   Magestore Developer
+ * @SuppressWarnings(PHPMD.TooManyFields)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.CookieAndSessionMisuse)
  */
 class Data extends \Magento\Framework\App\Helper\AbstractHelper
 {
@@ -33,82 +35,82 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      * @var \Magento\Framework\ObjectManagerInterface
      */
     protected $_objectManager;
-    
+
     /**
      * @var PriceCurrencyInterface
      */
     protected $_priceCurrency;
-    
+
     /**
      * @var \Magento\Catalog\Model\ProductFactory
      */
     protected $_productFactory;
-    
+
     /**
      * @var \Magento\Catalog\Model\Product
      */
     protected $_product;
-    
+
     /**
      * @var \Magento\Customer\Model\Customer
      */
     protected $_customer;
-    
+
     /**
      * @var \Magento\Eav\Model\Entity\Attribute\Set
      */
     protected $_attributeSet;
-    
+
     /**
      * @var \Magento\Framework\Mail\Template\TransportBuilder
      */
     protected $_transportBuilder;
-    
+
     /**
      * @var \Magento\Framework\Translate\Inline\StateInterface
      */
     protected $_inlineTranslation;
-    
+
     /**
      * @var \Magento\Store\Model\StoreManagerInterface
      */
     protected $_storeManager;
-    
+
     /**
      * @var \Magento\Directory\Model\Currency
      */
     protected $_currencyModel;
-    
+
     /**
      * @var \Magento\Framework\Locale\ResolverInterface
      */
     protected $_locale;
-    
+
     /**
      * @var \Magento\Framework\Filesystem
      */
     protected $_filesystem;
-    
+
     /**
      * @var \Magento\Framework\Image\AdapterFactory
      */
     protected $_imageFactory;
-    
+
     /**
      * @var \Magento\Customer\Model\Session
      */
     protected $_customerSession;
-    
+
     /**
      * @var \Magento\Checkout\Model\Session
      */
     protected $_checkoutSession;
-    
+
     /**
      * @var \Magento\Framework\App\State
      */
     protected $_appState;
-    
+
     /**
      * @var \Magento\Tax\Model\Calculation
      */
@@ -128,18 +130,24 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      * @var \Magento\MediaStorage\Helper\File\Storage\Database
      */
     protected $coreFileStorageDatabase;
+
     /**
-     * @var
+     * @var \Magento\Framework\View\Element\Template
      */
     protected $view;
 
     /**
+     * @var \Magento\Backend\Model\Session\Quote
+     */
+    protected $_sessionQuote;
+
+    protected $filesystemDriver;
+
+    /**
      * Data constructor.
+     *
      * @param \Magento\Framework\App\Helper\Context $context
      * @param \Magento\Framework\ObjectManagerInterface $objectManager
-     * @param \Magento\Framework\Stdlib\StringUtils $string
-     * @param \Magento\Framework\Registry $coreRegistry
-     * @param \Magento\Tax\Api\Data\TaxClassKeyInterfaceFactory $taxClassKeyFactory
      * @param PriceCurrencyInterface $priceCurrency
      * @param \Magento\Eav\Model\Entity\Attribute\Set $attributeSet
      * @param \Magento\Catalog\Model\ProductFactory $productFactory
@@ -161,13 +169,13 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      * @param \Magento\Framework\Stdlib\DateTime\TimezoneInterface $localeDate
      * @param \Magento\MediaStorage\Helper\File\Storage\Database $coreFileStorageDatabase
      * @param \Magento\Framework\View\Element\Template $view
+     * @param ModuleListInterface $moduleList
+     * @param \Magento\Framework\Filesystem\DriverInterface $filesystemDriver
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         \Magento\Framework\App\Helper\Context $context,
         \Magento\Framework\ObjectManagerInterface $objectManager,
-        \Magento\Framework\Stdlib\StringUtils $string,
-        \Magento\Framework\Registry $coreRegistry,
-        \Magento\Tax\Api\Data\TaxClassKeyInterfaceFactory $taxClassKeyFactory,
         PriceCurrencyInterface $priceCurrency,
         \Magento\Eav\Model\Entity\Attribute\Set $attributeSet,
         \Magento\Catalog\Model\ProductFactory $productFactory,
@@ -189,7 +197,8 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         \Magento\Framework\Stdlib\DateTime\TimezoneInterface $localeDate,
         \Magento\MediaStorage\Helper\File\Storage\Database $coreFileStorageDatabase,
         \Magento\Framework\View\Element\Template $view,
-        ModuleListInterface $moduleList
+        ModuleListInterface $moduleList,
+        \Magento\Framework\Filesystem\DriverInterface $filesystemDriver
     ) {
         $this->_objectManager = $objectManager;
         $this->_priceCurrency = $priceCurrency;
@@ -214,15 +223,17 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         $this->coreFileStorageDatabase = $coreFileStorageDatabase;
         $this->view = $view;
         $this->_moduleList = $moduleList;
+        $this->filesystemDriver = $filesystemDriver;
         parent::__construct($context);
     }
-    
+
     /**
      * Get Gift Card general configuration
      *
      * @param string $code
      * @param int|null $store
      * @return boolean
+     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
     public function getGeneralConfig($code, $store = null)
     {
@@ -231,27 +242,27 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         }
         return $this->scopeConfig->getValue('giftvoucher/general/' . $code, 'store', $store);
     }
-    
+
     /**
      * Get Gift Card print-out configuration
      *
      * @param string $code
      * @param int|null $store
      * @return boolean
+     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
     public function getPrintConfig($code, $store = null)
     {
         return $this->scopeConfig->getValue('giftvoucher/print_voucher/' . $code, 'store', $store);
     }
-    
-    
-    
+
     /**
      * Get Gift Card interface configuration
      *
      * @param string $code
      * @param int|null $store
      * @return boolean
+     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
     public function getInterfaceConfig($code, $store = null)
     {
@@ -264,6 +275,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      * @param string $code
      * @param int|null $store
      * @return boolean
+     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
     public function getInterfaceCheckoutConfig($code, $store = null)
     {
@@ -273,9 +285,10 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     /**
      * Get Gift Card email configuration
      *
-     * @param $code
+     * @param string $code
      * @param int|null $store
      * @return bool
+     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
     public function getEmailConfig($code, $store = null)
     {
@@ -283,8 +296,10 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
-     * @param $code
-     * @param null $store
+     * Get Store Config
+     *
+     * @param string $code
+     * @param null|int|string $store
      * @return mixed
      */
     public function getStoreConfig($code, $store = null)
@@ -293,6 +308,8 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
+     * Get Base Dir Media
+     *
      * @return \Magento\Framework\Filesystem\Directory\ReadInterface
      */
     public function getBaseDirMedia()
@@ -301,6 +318,8 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
+     * Get Base Dir
+     *
      * @return \Magento\Framework\Filesystem\Directory\ReadInterface
      */
     public function getBaseDir()
@@ -309,6 +328,8 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
+     * Get Customer Session
+     *
      * @return CustomerSession
      */
     public function getCustomerSession()
@@ -317,6 +338,8 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
+     * Get Checkout Session
+     *
      * @return \Magento\Checkout\Model\Session
      */
     public function getCheckoutSession()
@@ -327,14 +350,14 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     /**
      * Returns a gift code string
      *
-     * @param $expression
+     * @param string $expression
      * @return string
      * @internal param string $param
      */
     public function calcCode($expression)
     {
         if ($this->isExpression($expression)) {
-            return preg_replace_callback('#\[([AN]{1,2})\.([0-9]+)\]#', array($this, 'convertExpression'), $expression);
+            return preg_replace_callback('#\[([AN]{1,2})\.([0-9]+)\]#', [$this, 'convertExpression'], $expression);
         } else {
             return $expression;
         }
@@ -350,7 +373,8 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     {
         $alphabet = (strpos($param[1], 'A')) === false ? '' : 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $alphabet .= (strpos($param[1], 'N')) === false ? '' : '0123456789';
-        return $this->_objectManager->create('Magento\Framework\Math\Random')->getRandomString($param[2], $alphabet);
+        return $this->_objectManager->create(\Magento\Framework\Math\Random::class)
+            ->getRandomString($param[2], $alphabet);
     }
 
     /**
@@ -368,12 +392,14 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      * Get Gift Card product options configuration
      *
      * @return array
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function getGiftVoucherOptions()
     {
         $option = explode(',', $this->getInterfaceCheckoutConfig('display'));
-        $result = array();
-        foreach ($option as $key => $val) {
+        $result = [];
+        foreach ($option as $val) {
             if ($val == 'amount') {
                 $result['amount'] = __('Gift Card value');
             }
@@ -418,7 +444,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      */
     public function getFullGiftVoucherOptions()
     {
-        return array(
+        return [
             'customer_name' => __('Sender Name'),
             'giftcard_template_id' => __('Giftcard Template'),
             'send_friend' => __('Send Gift Card to friend'),
@@ -434,22 +460,22 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
             'giftcard_template_image' => __('Giftcard Image'),
             'giftcard_use_custom_image' => __('Use Custom Image'),
             'notify_success' => __('Notify when the recipient receives Gift Card.')
-        );
+        ];
     }
 
     /**
      * Get the hidden gift code
      *
-     * @param string $code
+     * @param string $codes
      * @return string
      */
     public function getHiddenCode($codes)
     {
         $prefix = $this->getGeneralConfig('showprefix');
-        $listCodes = explode(',',$codes);
+        $listCodes = explode(',', $codes);
         $codes = '';
-        foreach($listCodes as $index => $code){
-            if(!$code){
+        foreach ($listCodes as $code) {
+            if (!$code) {
                 continue;
             }
             $prefixCode = substr($code, 0, $prefix);
@@ -463,9 +489,9 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
                 }
                 $suffixCode = preg_replace('#([a-zA-Z0-9\-])#', $hiddenChar, $suffixCode);
             }
-            if($codes){
+            if ($codes) {
                 $codes.= ','.$prefixCode . $suffixCode;
-            }else{
+            } else {
                 $codes = $prefixCode . $suffixCode;
             }
         }
@@ -479,7 +505,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      */
     public function isAvailableToAddCode()
     {
-        $codes = $this->_objectManager->get('Magestore\Giftvoucher\Model\Session')->getCodes()?: array();
+        $codes = $this->_objectManager->get(\Magestore\Giftvoucher\Model\Session::class)->getCodes()?: [];
         if ($max = $this->getGeneralConfig('maximum')) {
             if (count($codes) >= $max) {
                 return false;
@@ -489,11 +515,13 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
+     * Is Available To Check Code
+     *
      * @return bool
      */
     public function isAvailableToCheckCode()
     {
-        $codes = $this->_objectManager->get('Magestore\Giftvoucher\Model\Session')->getCodesInvalid()?: array();
+        $codes = $this->_objectManager->get(\Magestore\Giftvoucher\Model\Session::class)->getCodesInvalid()?: [];
         if ($max = $this->getGeneralConfig('maximum')) {
             if (count($codes) >= $max) {
                 return false;
@@ -507,6 +535,8 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      *
      * @param mixed $code
      * @return boolean
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function canUseCode($code)
     {
@@ -514,7 +544,8 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
             return false;
         }
         if (is_string($code)) {
-            $code = $this->_objectManager->create('Magestore\Giftvoucher\Model\Giftvoucher')->loadByCode($code);
+            $code = $this->_objectManager->create(\Magestore\Giftvoucher\Model\Giftvoucher::class)
+                ->loadByCode($code);
         }
         if (!($code instanceof \Magestore\Giftvoucher\Model\Giftvoucher)) {
             return false;
@@ -527,11 +558,11 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         } else {
             $customerId = $this->getCustomerSession()->getCustomerId();
         }
-        $shareCard = intval($this->getGeneralConfig('share_card'));
+        $shareCard = (int) $this->getGeneralConfig('share_card');
         if ($shareCard < 1) {
             return true;
         }
-        $customersUsed = $code->getCustomerIdsUsed()?: array();
+        $customersUsed = $code->getCustomerIdsUsed()?: [];
         if ($shareCard > count($customersUsed) || in_array($customerId, $customersUsed)
         ) {
             return true;
@@ -541,7 +572,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
 
     /**
      * Get store id from quote (fix Magento create order in backend)
-     * 
+     *
      * @param \Magento\Quote\Api\Data\CartInterface $quote
      * @return int
      */
@@ -554,13 +585,15 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
+     * Get Allowed Currencies
+     *
      * @return array
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getAllowedCurrencies()
     {
-        $baseCode = $this->_storeManager->getStore()->getBaseCurrencyCode();
         $allowedCurrencies = $this->_currencyModel->getConfigAllowCurrencies();
-        $currencies = $this->_objectManager->create('Magento\Framework\Locale\Bundle\CurrencyBundle')
+        $currencies = $this->_objectManager->create(\Magento\Framework\Locale\Bundle\CurrencyBundle::class)
             ->get($this->_locale->getLocale())['Currencies'];
         $options = [];
         foreach ($currencies as $code => $data) {
@@ -573,11 +606,11 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         return $options;
     }
 
-
     /**
-     * upload template image
-     * @param type $type
-     * @return type
+     * Upload template image
+     *
+     * @param string $type
+     * @return string
      */
     public function uploadImage($type)
     {
@@ -585,8 +618,11 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         try {
             $files = $this->_getRequest()->getFiles($type);
             if (isset($files['error']) && $files['error'] == 0) {
-                $uploader = $this->_objectManager->create('Magento\Framework\File\Uploader', array('fileId' => $type));
-                $uploader->setAllowedExtensions(array('jpg', 'jpeg', 'gif', 'png'));
+                $uploader = $this->_objectManager->create(
+                    \Magento\Framework\File\Uploader::class,
+                    ['fileId' => $type]
+                );
+                $uploader->setAllowedExtensions(['jpg', 'jpeg', 'gif', 'png']);
                 $uploader->setAllowRenameFiles(true);
                 $uploader->setFilesDispersion(true);
                 $mediaDirectory = $this->_filesystem->getDirectoryRead('media');
@@ -605,8 +641,9 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
-     * upload template image
-     * @return type
+     * Upload template background image
+     *
+     * @return string
      * @internal param type $type
      */
     public function uploadTemplateBackground()
@@ -616,13 +653,13 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
             $files = $this->_getRequest()->getFiles('background_img');
             if (isset($files['error']) && $files['error'] == 0) {
                 $uploader = $this->_objectManager->create(
-                    'Magento\Framework\File\Uploader',
-                    array('fileId' => 'background_img')
+                    \Magento\Framework\File\Uploader::class,
+                    ['fileId' => 'background_img']
                 );
-                $uploader->setAllowedExtensions(array('jpg', 'jpeg', 'gif', 'png'));
+                $uploader->setAllowedExtensions(['jpg', 'jpeg', 'gif', 'png']);
                 $uploader->setAllowRenameFiles(true);
                 $uploader->setFilesDispersion(true);
-                $mediaDirectory = $this->_objectManager->get('Magento\Framework\Filesystem')
+                $mediaDirectory = $this->_objectManager->get(\Magento\Framework\Filesystem::class)
                     ->getDirectoryRead(DirectoryList::MEDIA);
                 $result = $uploader->save($mediaDirectory->getAbsolutePath('giftvoucher/template/background'));
                 unset($result['tmp_name']);
@@ -636,16 +673,17 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         }
         return $image;
     }
-    
+
     /**
-     * delete image
-     * @param type $image
-     * @return type
+     * Delete image
+     *
+     * @param string $image
+     * @return bool
      */
     public function deleteImageFile($image)
     {
         if (!$image) {
-            return;
+            return false;
         }
         try {
             unset($image);
@@ -657,8 +695,9 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
 
     /**
      * Create folder for the Gift Card product image
-     * @param $parent
-     * @param $type
+     *
+     * @param string $parent
+     * @param string $type
      * @param bool $tmp
      */
     public function createImageFolderHaitv($parent, $type, $tmp = false)
@@ -673,23 +712,23 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         } else {
             $imagePath = $this->getBaseDirMedia()->getAbsolutePath('giftvoucher/template/'. $parent . '/' . $urlType);
         }
-        if (!is_dir($imagePath)) {
+        if (!$this->filesystemDriver->isDirectory($imagePath)) {
             try {
-                mkdir($imagePath);
-                chmod($imagePath, 0777);
+                $this->filesystemDriver->createDirectory($imagePath);
+                $this->filesystemDriver->changePermissions($imagePath, 0777);
             } catch (\Exception $e) {
+                $this->_logger->info($e->getMessage());
             }
         }
     }
 
-    /*
-     * resize image when admin upload template image
-     * @param string $imageName
-     * @return null
-     */
     /**
-     * @param $imageName
+     * Resize image when admin upload template image
+     *
+     * @param string $imageName
      * @param string $type
+     *
+     * @throws \Exception
      */
     public function resizeImage($imageName, $type = 'images')
     {
@@ -707,8 +746,10 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
-     * @param $width
-     * @param null $height
+     * Resize
+     *
+     * @param int $width
+     * @param null|int $height
      * @return $this
      */
     public function resize($width, $height = null)
@@ -717,9 +758,6 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
             ->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA)
             . "tmp/giftvoucher/cache/" . $this->_imageName;
         $this->_imageReturn = $imageReturn;
-        if (file_exists($this->getBaseDirMedia()->getAbsolutePath(strstr($imageReturn, '/media')))) {
-            //return $this;
-        }
         if ($height == null) {
             $height = $width;
         }
@@ -730,25 +768,30 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         $imageObj->constrainOnly(true);
         $imageObj->keepAspectRatio(true);
         $imageObj->keepFrame(true);
-        $imageObj->backgroundColor(array(255, 255, 255));
+        $imageObj->backgroundColor([255, 255, 255]);
         $imageObj->resize($width, $height);
         try {
             $imageObj->save($imageUrl);
         } catch (\Exception $e) {
+            $this->_logger->info($e->getMessage());
         }
         return $this;
     }
 
     /**
-     * @param $imageName
-     * @param $imageType
+     * Custom Resize Image
+     *
+     * @param string $imageName
+     * @param string $imageType
+     *
+     * @throws \Exception
      */
     public function customResizeImage($imageName, $imageType)
     {
         //$imagePath = Mage::getBaseDir() . str_replace("/", DS, strstr($imagePath, '/media'));
         $imagePath = $this->getBaseDirMedia()->getAbsolutePath('giftvoucher/template/'.$imageType.'/');
         $imageUrl = $imagePath . $imageName;
-        if (file_exists($imageUrl)) {
+        if ($this->filesystemDriver->isExists($imageUrl)) {
             //self::createImageFolderHaitv($imageType, 'left');
             //self::createImageFolderHaitv($imageType, 'top');
             if ($imageType == 'images') {
@@ -780,10 +823,14 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
-     * @param $url
-     * @param $filename
-     * @param $urlImage
+     * Get Product Thumbnail
+     *
+     * @param string $url
+     * @param string $filename
+     * @param string $urlImage
+     *
      * @return $this
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getProductThumbnail($url, $filename, $urlImage)
     {
@@ -802,8 +849,8 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     /**
      * Get the rate of items on quote
      *
-     * @param Mage_Sales_Model_Product $product
-     * @param Mage_Core_Model_Store $store
+     * @param \Magento\Catalog\Model\Product $product
+     * @param null|int|string $store
      * @return float
      */
     public function getItemRateOnQuote($product, $store)
@@ -821,14 +868,18 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
-     * @return mixed
+     * Get Checkout Helper
+     *
+     * @return \Magento\Checkout\Helper\Data
      */
     public function getCheckoutHelper()
     {
-        return $this->_objectManager->get('Magento\Checkout\Helper\Data');
+        return $this->_objectManager->get(\Magento\Checkout\Helper\Data::class);
     }
 
     /**
+     * Get Object Manager
+     *
      * @return \Magento\Framework\ObjectManagerInterface
      */
     public function getObjectManager()
@@ -837,6 +888,18 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
+     * Get Filesystem Driver
+     *
+     * @return \Magento\Framework\Filesystem\DriverInterface
+     */
+    public function getFilesystemDriver()
+    {
+        return $this->filesystemDriver;
+    }
+
+    /**
+     * Get Store Manager
+     *
      * @return \Magento\Store\Model\StoreManagerInterface
      */
     public function getStoreManager()
@@ -845,15 +908,18 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
-     * get rate from a currency with current currency
-     * @param type $currencyFrom
-     * @param null $currencyTo
-     * @return type
+     * Get rate from a currency with current currency
+     *
+     * @param string $currencyFrom
+     * @param null|string $currencyTo
+     *
+     * @return float|int
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getRateToCurrentCurrency($currencyFrom, $currencyTo = null)
     {
         $baseCurrency = $this->getStoreManager()->getStore()->getBaseCurrency();
-        if (is_null($currencyTo)) {
+        if ($currencyTo === null) {
             $currencyTo = $this->getStoreManager()->getStore()->getCurrentCurrency();
         }
         $rateCurrencyFrom = $baseCurrency->getRate($currencyFrom);
@@ -864,11 +930,15 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
             return $rateCurrencyTo;
         }
     }
+
     /**
-     * get currency format from other currency
-     * @param type $currencyFrom
-     * @param type $amount
-     * @return type
+     * Get currency format from other currency
+     *
+     * @param float $amount
+     * @param string $currencyFrom
+     *
+     * @return string
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getCurrencyFormat($amount, $currencyFrom)
     {
@@ -877,12 +947,12 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
             if ($currencyFrom == $currentCurrency->getCode()) {
                 return $currentCurrency->format($amount);
             }
-            $currencyFrom = $this->getObjectManager()->create('Magento\Directory\Model\Currency')
+            $currencyFrom = $this->getObjectManager()->create(\Magento\Directory\Model\Currency::class)
                 ->load($currencyFrom);
-        } elseif (is_null($currencyFrom)) {
+        } elseif ($currencyFrom === null) {
             return $currentCurrency->format($amount);
         }
-       
+
         $rate = $this->getRateToCurrentCurrency($currencyFrom);
         return $currentCurrency->format($amount * $rate);
     }
@@ -890,16 +960,17 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     /**
      * Get Type Of Gift Code
      *
-     * @param $code
+     * @param string $code
      * @return int
      */
     public function getSetIdOfCode($code)
     {
-        $codes = $this->_objectManager->create('Magestore\Giftvoucher\Model\Giftvoucher')->loadByCode($code);
+        $codes = $this->_objectManager->create(\Magestore\Giftvoucher\Model\Giftvoucher::class)->loadByCode($code);
         return $codes->getSetId();
     }
 
     /**
+     * Format Date
      *
      * @param string $data
      * @param string $format
@@ -912,6 +983,8 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
+     * Get Version
+     *
      * @return mixed
      */
     public function getVersion()
@@ -921,15 +994,19 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
+     * Is Rebuild Version
+     *
      * @return bool
      */
-    public function isRebuildVersion(){
+    public function isRebuildVersion()
+    {
         return (version_compare($this->getVersion(), '2.0.0', '<'))?false:true;
     }
 
-
     /**
-     * @param $item
+     * Get Image Url By Quote Item
+     *
+     * @param \Magento\Quote\Model\Quote\Item $item
      * @return string
      */
     public function getImageUrlByQuoteItem($item)

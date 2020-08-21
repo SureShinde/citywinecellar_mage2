@@ -9,8 +9,10 @@ namespace Magestore\Giftvoucher\Service\Sales;
 use \Magestore\Giftvoucher\Model\Actions as GiftvoucherHistoryAction;
 
 /**
- * process cancel gift card item
- *
+ * Process cancel gift card item
+ * @SuppressWarnings(PHPMD.TooManyFields)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.CookieAndSessionMisuse)
  */
 class RefundOrderService implements \Magestore\Giftvoucher\Api\Sales\RefundOrderServiceInterface
 {
@@ -89,9 +91,14 @@ class RefundOrderService implements \Magestore\Giftvoucher\Api\Sales\RefundOrder
      */
     protected $currencyHelper;
 
+    /**
+     * @var GiftvoucherHistoryAction
+     */
+    protected $giftvoucherHistoryAction;
 
     /**
      * RefundOrderService constructor.
+     *
      * @param \Magento\Framework\ObjectManagerInterface $objectManager
      * @param \Magento\Framework\App\State $state
      * @param \Magestore\Giftvoucher\Helper\Data $helperData
@@ -104,6 +111,8 @@ class RefundOrderService implements \Magestore\Giftvoucher\Api\Sales\RefundOrder
      * @param \Magestore\Giftvoucher\Helper\System $helperSystem
      * @param \Magento\Directory\Model\CurrencyFactory $currencyFactory
      * @param \Magento\Directory\Helper\Data $currencyHelper
+     * @param GiftvoucherHistoryAction $giftvoucherHistoryAction
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         \Magento\Framework\ObjectManagerInterface $objectManager,
@@ -117,9 +126,9 @@ class RefundOrderService implements \Magestore\Giftvoucher\Api\Sales\RefundOrder
         \Magento\Backend\Model\Session\Quote $quoteSession,
         \Magestore\Giftvoucher\Helper\System $helperSystem,
         \Magento\Directory\Model\CurrencyFactory $currencyFactory,
-        \Magento\Directory\Helper\Data $currencyHelper
-    )
-    {
+        \Magento\Directory\Helper\Data $currencyHelper,
+        GiftvoucherHistoryAction $giftvoucherHistoryAction
+    ) {
         $this->objectManager = $objectManager;
         $this->appState = $state;
         $this->helperData = $helperData;
@@ -132,38 +141,41 @@ class RefundOrderService implements \Magestore\Giftvoucher\Api\Sales\RefundOrder
         $this->helperSystem = $helperSystem;
         $this->currencyFactory = $currencyFactory;
         $this->currencyHelper = $currencyHelper;
+        $this->giftvoucherHistoryAction = $giftvoucherHistoryAction;
     }
 
-
-
     /**
-     * return list applied gift discount for shipping
-     * @param $baseTotal
-     * @param $giftcodesApplied
+     * Return list applied gift discount for shipping
+     *
+     * @param float $baseTotal
+     * @param string $giftcodesApplied
+     *
      * @return array
+     * @throws \Zend_Json_Exception
      */
-    public function getGiftcodeDiscountForShipping($baseTotal, $giftcodesApplied){
+    public function getGiftcodeDiscountForShipping($baseTotal, $giftcodesApplied)
+    {
 
-        if($giftcodesApplied){
+        if ($giftcodesApplied) {
             $giftcodesAppliedDiscountForShipping = \Zend_Json::decode($giftcodesApplied);
-        }else{
+        } else {
             $giftcodesAppliedDiscountForShipping = [];
         }
         $total = 0;
-        if(!empty($giftcodesAppliedDiscountForShipping)){
-            foreach($giftcodesAppliedDiscountForShipping as $codeDiscount){
+        if (!empty($giftcodesAppliedDiscountForShipping)) {
+            foreach ($giftcodesAppliedDiscountForShipping as $codeDiscount) {
                 $total += $codeDiscount['base_discount'];
             }
         }
         $remain_discount = $total;
         $result = [];
-        if($baseTotal > 0 && $total > 0) {
+        if ($baseTotal > 0 && $total > 0) {
             foreach ($giftcodesAppliedDiscountForShipping as $codeDiscount) {
-                if($remain_discount <= 0 ){
+                if ($remain_discount <= 0) {
                     continue;
                 }
                 $base_discount = $baseTotal * $codeDiscount['base_discount'] / $total;
-                if($base_discount > $remain_discount){
+                if ($base_discount > $remain_discount) {
                     $base_discount = $remain_discount;
                 }
                 $result[$codeDiscount['code']] = $this->priceCurrency->round($base_discount);
@@ -175,16 +187,20 @@ class RefundOrderService implements \Magestore\Giftvoucher\Api\Sales\RefundOrder
     }
     /**
      * Process refund amount to giftcode when refund items
-     * @param $order
-     * @param $creditmemo
-     * @param $baseGiftvoucherDiscountTotal
+     *
+     * @param \Magento\Sales\Model\Order $order
+     * @param \Magento\Sales\Model\Order\Creditmemo $creditmemo
+     * @param float $baseGiftvoucherDiscountTotal
      * @throws \Exception
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function processRefundAmountToGiftcode($order, $creditmemo, $baseGiftvoucherDiscountTotal)
     {
 
         $GiftcodesDiscountForShipping = [];
-        if($baseTotal = $creditmemo->getBaseTotalGiftcodeDiscountAmountForShipping()){
+        if ($baseTotal = $creditmemo->getBaseTotalGiftcodeDiscountAmountForShipping()) {
             $giftcodesApplied = $order->getGiftcodesAppliedDiscountForShipping();
             $GiftcodesDiscountForShipping = $this->getGiftcodeDiscountForShipping($baseTotal, $giftcodesApplied);
         }
@@ -193,7 +209,7 @@ class RefundOrderService implements \Magestore\Giftvoucher\Api\Sales\RefundOrder
             return;
         }
 
-        $listCodeAmountRefunded = array();
+        $listCodeAmountRefunded = [];
         foreach ($creditmemo->getItems() as $item) {
             if (($qtyRefund = $item->getQty()) > 0) {
                 $orderItem = $item->getOrderItem();
@@ -236,18 +252,30 @@ class RefundOrderService implements \Magestore\Giftvoucher\Api\Sales\RefundOrder
                 }
 
                 /* if have gift code discount for shipping */
-                if (!empty($GiftcodesDiscountForShipping)){
-                    if(isset($GiftcodesDiscountForShipping[$code])){
+                if (!empty($GiftcodesDiscountForShipping)) {
+                    if (isset($GiftcodesDiscountForShipping[$code])) {
                         $availableDiscount += $GiftcodesDiscountForShipping[$code];
                     }
                 }
 
-                $discountRefund = $this->currencyHelper->currencyConvert($availableDiscount, $baseCurrencyCode, $giftVoucher->getData('currency'));
-                $discountCurrentRefund = $this->currencyHelper->currencyConvert($availableDiscount, $baseCurrencyCode, $order->getOrderCurrencyCode());
+                $discountRefund = $this->currencyHelper->currencyConvert(
+                    $availableDiscount,
+                    $baseCurrencyCode,
+                    $giftVoucher->getData('currency')
+                );
+                $discountCurrentRefund = $this->currencyHelper->currencyConvert(
+                    $availableDiscount,
+                    $baseCurrencyCode,
+                    $order->getOrderCurrencyCode()
+                );
 
                 $balance = $giftVoucher->getBalance() + abs($discountRefund);
                 $baseBalance = $balance * $balance / $baseCurrency->convert($balance, $currentCurrency);
-                $currentBalance = $this->currencyHelper->currencyConvert($baseBalance, $baseCurrencyCode, $order->getOrderCurrencyCode());
+                $currentBalance = $this->currencyHelper->currencyConvert(
+                    $baseBalance,
+                    $baseCurrencyCode,
+                    $order->getOrderCurrencyCode()
+                );
 
                 if ($giftVoucher->getStatus() == \Magestore\Giftvoucher\Model\Status::STATUS_USED) {
                     $giftVoucher->setStatus(\Magestore\Giftvoucher\Model\Status::STATUS_ACTIVE);
@@ -255,7 +283,7 @@ class RefundOrderService implements \Magestore\Giftvoucher\Api\Sales\RefundOrder
                 $giftVoucher->setData('balance', $balance)->save();
 
                 $action = GiftvoucherHistoryAction::ACTIONS_REFUND;
-                $history->setData(array(
+                $history->setData([
                     'order_increment_id' => $order->getIncrementId(),
                     'creditmemo_increment_id' => $creditmemo->getId(),
                     'giftvoucher_id' => $giftVoucher->getId(),
@@ -265,21 +293,27 @@ class RefundOrderService implements \Magestore\Giftvoucher\Api\Sales\RefundOrder
                     'balance' => $currentBalance,
                     'currency' => $order->getOrderCurrencyCode(),
                     'status' => $giftVoucher->getStatus(),
-                    'comments' => __('%1 Order %2', GiftvoucherHistoryAction::getActionLabel($action), $order->getIncrementId()),
+                    'comments' => __(
+                        '%1 Order %2',
+                        $this->giftvoucherHistoryAction->getActionLabel($action),
+                        $order->getIncrementId()
+                    ),
                     'customer_id' => $order->getData('customer_id'),
                     'customer_email' => $order->getData('customer_email'),
-                    'extra_content' => __('%1 by %2', GiftvoucherHistoryAction::getActionLabel($action), $this->helperSystem->getCurUser()->getUserName()),
-                ))->save();
+                    'extra_content' => __(
+                        '%1 by %2',
+                        $this->giftvoucherHistoryAction->getActionLabel($action),
+                        $this->helperSystem->getCurUser()->getUserName()
+                    ),
+                ])->save();
             }
         }
-
     }
 
     /**
      * Process cancel order applied gift card discount
      *
      * @param \Magento\Sales\Model\Order\Creditmemo $creditmemo
-     * @return boolean
      */
     public function execute($creditmemo)
     {
@@ -293,8 +327,13 @@ class RefundOrderService implements \Magestore\Giftvoucher\Api\Sales\RefundOrder
      *
      * @param \Magento\Sales\Model\Order $order
      * @param float $baseGiftvoucherDiscountTotal
-     * @param string $action
-     * @return \Magento\Sales\Model\Order\Creditmemo
+     * @param null|string $action
+     * @param null|\Magento\Sales\Model\Order\Creditmemo $creditmemo
+     *
+     * @return $this|\Magento\Sales\Model\Order\Creditmemo|void
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function refundOffline($order, $baseGiftvoucherDiscountTotal, $action = null, $creditmemo = null)
     {
@@ -335,19 +374,31 @@ class RefundOrderService implements \Magestore\Giftvoucher\Api\Sales\RefundOrder
                 $baseCurrency = $this->currencyFactory->create()->load($baseCurrencyCode);
                 $currentCurrency = $this->currencyFactory->create()->load($giftVoucher->getData('currency'));
 
-                $discountRefund = $this->currencyHelper->currencyConvert($availableDiscount, $baseCurrencyCode, $giftVoucher->getData('currency'));
-                $discountCurrentRefund = $this->currencyHelper->currencyConvert($availableDiscount, $baseCurrencyCode, $order->getOrderCurrencyCode());
+                $discountRefund = $this->currencyHelper->currencyConvert(
+                    $availableDiscount,
+                    $baseCurrencyCode,
+                    $giftVoucher->getData('currency')
+                );
+                $discountCurrentRefund = $this->currencyHelper->currencyConvert(
+                    $availableDiscount,
+                    $baseCurrencyCode,
+                    $order->getOrderCurrencyCode()
+                );
 
                 $balance = $giftVoucher->getBalance() + abs($discountRefund);
                 $baseBalance = $balance * $balance / $baseCurrency->convert($balance, $currentCurrency);
-                $currentBalance = $this->currencyHelper->currencyConvert($baseBalance, $baseCurrencyCode, $order->getOrderCurrencyCode());
+                $currentBalance = $this->currencyHelper->currencyConvert(
+                    $baseBalance,
+                    $baseCurrencyCode,
+                    $order->getOrderCurrencyCode()
+                );
 
                 if ($giftVoucher->getStatus() == \Magestore\Giftvoucher\Model\Status::STATUS_USED) {
                     $giftVoucher->setStatus(\Magestore\Giftvoucher\Model\Status::STATUS_ACTIVE);
                 }
                 $giftVoucher->setData('balance', $balance)->save();
 
-                $history->setData(array(
+                $history->setData([
                     'order_increment_id' => $order->getIncrementId(),
                     'creditmemo_increment_id' => '',
                     'giftvoucher_id' => $giftVoucher->getId(),
@@ -357,11 +408,19 @@ class RefundOrderService implements \Magestore\Giftvoucher\Api\Sales\RefundOrder
                     'balance' => $currentBalance,
                     'currency' => $order->getOrderCurrencyCode(),
                     'status' => $giftVoucher->getStatus(),
-                    'comments' => __('%1 Order %2', GiftvoucherHistoryAction::getActionLabel($action), $order->getIncrementId()),
+                    'comments' => __(
+                        '%1 Order %2',
+                        $this->giftvoucherHistoryAction->getActionLabel($action),
+                        $order->getIncrementId()
+                    ),
                     'customer_id' => $order->getData('customer_id'),
                     'customer_email' => $order->getData('customer_email'),
-                    'extra_content' => __('%1 by %2', GiftvoucherHistoryAction::getActionLabel($action), $this->helperSystem->getCurUser()->getUserName()),
-                ))->save();
+                    'extra_content' => __(
+                        '%1 by %2',
+                        $this->giftvoucherHistoryAction->getActionLabel($action),
+                        $this->helperSystem->getCurUser()->getUserName()
+                    ),
+                ])->save();
             }
         }
 

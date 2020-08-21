@@ -28,7 +28,9 @@ use Magento\Store\Model\ScopeInterface;
 
 /**
  * Class Email
- * @package Magestore\Storepickup\Helper
+ *
+ * Used to create email helper
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Email extends \Magento\Framework\App\Helper\AbstractHelper
 {
@@ -65,56 +67,28 @@ class Email extends \Magento\Framework\App\Helper\AbstractHelper
      */
     protected $storeFactory;
 
-    /**
-     *
-     */
     const TEMPLATE_ID_NONE_EMAIL = 'none_email';
 
-    /**
-     *
-     */
     const XML_PATH_ADMIN_EMAIL_IDENTITY = "trans_email/ident_general";
-    /**
-     *
-     */
+
     const XML_PATH_ADMIN_EMAIL_GENERAL_NAME = 'trans_email/ident_general/name';
-    /**
-     *
-     */
+
     const XML_PATH_SALES_EMAIL_IDENTITY = "trans_email/ident_sales";
-    /**
-     *
-     */
+
     const XML_PATH_SALES_EMAIL_IDENTITY_NAME = "trans_email/ident_sales/name";
 
-    /**
-     *
-     */
     const XML_PATH_NEW_ORDER_TO_ADMIN_EMAIL = 'storepickup/email_configuration/shopadmin_email_template';
-    /**
-     *
-     */
+
     const XML_PATH_NEW_ORDER_TO_STORE_OWNER_EMAIL = 'storepickup/email_configuration/storeowner_email_template';
-    /**
-     *
-     */
+
     const XML_PATH_STATUS_ORDER_TO_STORE_OWNER_EMAIL = 'storepickup/email_configuration/storeowner_email_change_status';
-    /**
-     *
-     */
+
     const XML_PATH_ADMIN_EMAIL = 'storepickup/email_configuration/shopadmin_email';
 
-    /**
-     *
-     */
     const TYPE_SEND_NEW_ORDER_TO_ADMIN = 'admin';
-    /**
-     *
-     */
+
     const TYPE_SEND_NEW_ORDER_TO_STORE_OWNER = 'new_to_store_owner';
-    /**
-     *
-     */
+
     const TYPE_CHANGE_ORDER_STATUS_TO_STORE_OWNER = 'change_status';
 
     /**
@@ -139,8 +113,7 @@ class Email extends \Magento\Framework\App\Helper\AbstractHelper
         \Magento\Backend\Helper\Data $backendHelper,
         \Magento\Sales\Model\Order\Email\Container\OrderIdentity $identityContainer,
         \Magestore\Storepickup\Model\StoreFactory $storeFactory
-    )
-    {
+    ) {
         parent::__construct($context);
         $this->storeManager = $storeManager;
         $this->transportBuilder = $transportBuilder;
@@ -153,9 +126,12 @@ class Email extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
+     * Get email list
+     *
      * @return mixed
      */
-    public function getEmailList(){
+    public function getEmailList()
+    {
         return $this->scopeConfig->getValue('trans_email');
     }
 
@@ -175,6 +151,8 @@ class Email extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
+     * Get Formatted shipping address
+     *
      * @param Order $order
      * @return string|null
      */
@@ -186,6 +164,8 @@ class Email extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
+     * Get formatted billing address
+     *
      * @param Order $order
      * @return string|null
      */
@@ -195,63 +175,79 @@ class Email extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
-     * @param $order
-     * @param $type
+     * Send email
+     *
+     * @param \Magento\Sales\Model\Order $order
+     * @param string $type
      * @return $this
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    public function sendEmail($order, $type){
+    public function sendEmail($order, $type)
+    {
 
         $storeId = $order->getStore()->getId();
 
         $adminEmail = $this->scopeConfig->getValue(self::XML_PATH_ADMIN_EMAIL, ScopeInterface::SCOPE_STORE, $storeId);
         $this->inlineTranslation->suspend();
-        if ($type == self::TYPE_SEND_NEW_ORDER_TO_ADMIN){
-            $template = $this->scopeConfig->getValue(self::XML_PATH_NEW_ORDER_TO_ADMIN_EMAIL, ScopeInterface::SCOPE_STORE, $storeId);
-            $sendTo = array(
+        if ($type == self::TYPE_SEND_NEW_ORDER_TO_ADMIN) {
+            $template = $this->scopeConfig->getValue(
+                self::XML_PATH_NEW_ORDER_TO_ADMIN_EMAIL,
+                ScopeInterface::SCOPE_STORE,
+                $storeId
+            );
+            $sendTo = [
                 $this->scopeConfig->getValue(
-                    "trans_email/".$adminEmail,
+                    "trans_email/" . $adminEmail,
                     \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
                     $storeId
                 )
-            );
-        } else{
+            ];
+        } else {
             $storeLocation = $this->getStorePickupByOrder($order);
 
             if (!$storeLocation) {
                 return $this;
             }
 
-
-            $sendTo = array(
-                array(
+            $sendTo = [
+                [
                     'name' => $storeLocation->getData('owner_name'),
                     'email' => $storeLocation->getData('owner_email'),
-                ),
-            );
+                ],
+            ];
             $order->setStoreOwnerName($storeLocation->getData('owner_name'));
 
-            if (!$storeLocation->getData('owner_email')){
+            if (!$storeLocation->getData('owner_email')) {
                 return $this;
             }
 
-            if ($type == self::TYPE_SEND_NEW_ORDER_TO_STORE_OWNER){
-                $template = $this->scopeConfig->getValue(self::XML_PATH_NEW_ORDER_TO_STORE_OWNER_EMAIL, ScopeInterface::SCOPE_STORE, $storeId);
+            if ($type == self::TYPE_SEND_NEW_ORDER_TO_STORE_OWNER) {
+                $template = $this->scopeConfig->getValue(
+                    self::XML_PATH_NEW_ORDER_TO_STORE_OWNER_EMAIL,
+                    ScopeInterface::SCOPE_STORE,
+                    $storeId
+                );
             } else {
-                $template = $this->scopeConfig->getValue(self::XML_PATH_STATUS_ORDER_TO_STORE_OWNER_EMAIL, ScopeInterface::SCOPE_STORE, $storeId);
+                $template = $this->scopeConfig->getValue(
+                    self::XML_PATH_STATUS_ORDER_TO_STORE_OWNER_EMAIL,
+                    ScopeInterface::SCOPE_STORE,
+                    $storeId
+                );
             }
         }
-
 
         if ($template === self::TEMPLATE_ID_NONE_EMAIL) {
             return $this;
         }
         foreach ($sendTo as $recipient) {
             try {
-                $order->setAdminName($this->scopeConfig->getValue(
-                    'trans_email/'.$adminEmail.'/name',
-                    \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
-                    $storeId
-                ));
+                $order->setAdminName(
+                    $this->scopeConfig->getValue(
+                        'trans_email/' . $adminEmail . '/name',
+                        \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+                        $storeId
+                    )
+                );
 
                 $adminUrl = $this->backendHelper->getHomePageUrl();
                 $transport = $this->transportBuilder->setTemplateIdentifier(
@@ -267,9 +263,21 @@ class Email extends \Magento\Framework\App\Helper\AbstractHelper
                         'store' => $order->getStore(),
                         'formattedShippingAddress' => $this->getFormattedShippingAddress($order),
                         'formattedBillingAddress' => $this->getFormattedBillingAddress($order),
-                        'indentSupportEmail' => $this->scopeConfig->getValue('trans_email/ident_support/email', ScopeInterface::SCOPE_STORE, $storeId),
-                        'storePhone' => $this->scopeConfig->getValue('general/store_information/phone', ScopeInterface::SCOPE_STORE, $storeId),
-                        'storeHour' => $this->scopeConfig->getValue('general/store_information/hours', ScopeInterface::SCOPE_STORE, $storeId),
+                        'indentSupportEmail' => $this->scopeConfig->getValue(
+                            'trans_email/ident_support/email',
+                            ScopeInterface::SCOPE_STORE,
+                            $storeId
+                        ),
+                        'storePhone' => $this->scopeConfig->getValue(
+                            'general/store_information/phone',
+                            ScopeInterface::SCOPE_STORE,
+                            $storeId
+                        ),
+                        'storeHour' => $this->scopeConfig->getValue(
+                            'general/store_information/hours',
+                            ScopeInterface::SCOPE_STORE,
+                            $storeId
+                        ),
                     ]
                 )->setFrom(
                     $this->scopeConfig->getValue(
@@ -295,13 +303,15 @@ class Email extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
-     * @param $order
+     * Get store pickup by order
+     *
+     * @param \Magento\Sales\Model\Order $order
      * @return null
      */
     public function getStorePickupByOrder($order)
     {
         $pickupId = $order->getData('storepickup_id');
-        if ($pickupId){
+        if ($pickupId) {
             $storePickup = $this->storeFactory->create()->load($pickupId);
             return $storePickup;
         } else {

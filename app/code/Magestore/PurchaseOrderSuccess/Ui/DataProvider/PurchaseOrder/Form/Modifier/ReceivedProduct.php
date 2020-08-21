@@ -13,7 +13,8 @@ use Magestore\PurchaseOrderSuccess\Model\PurchaseOrder\Option\Type;
 
 /**
  * Class ReceivedProduct
- * @package Magestore\PurchaseOrderSuccess\Ui\DataProvider\PurchaseOrder\Form\Modifier
+ *
+ * Used for received product
  */
 class ReceivedProduct extends AbstractModifier
 {
@@ -44,8 +45,9 @@ class ReceivedProduct extends AbstractModifier
     ];
 
     /**
-     * modify data
+     * Modify data
      *
+     * @param array $data
      * @return array
      */
     public function modifyData(array $data)
@@ -62,8 +64,9 @@ class ReceivedProduct extends AbstractModifier
     public function modifyMeta(array $meta)
     {
         if (!$this->getPurchaseOrderId() || $this->getCurrentPurchaseOrder()->getStatus() == Status::STATUS_PENDING ||
-            ($this->getCurrentPurchaseOrder()->getType() == Type::TYPE_QUOTATION))
+            ($this->getCurrentPurchaseOrder()->getType() == Type::TYPE_QUOTATION)) {
             return $meta;
+        }
 
         $receivedProductMeta = $this->getReceivedProductMeta();
 
@@ -74,6 +77,11 @@ class ReceivedProduct extends AbstractModifier
         return $meta;
     }
 
+    /**
+     * Get received product meta
+     *
+     * @return array[]
+     */
     public function getReceivedProductMeta()
     {
         $purchaseOrder = $this->getCurrentPurchaseOrder();
@@ -172,8 +180,9 @@ class ReceivedProduct extends AbstractModifier
         $purchaseOrder = $this->getCurrentPurchaseOrder();
         if ($purchaseOrder->getStatus() == Status::STATUS_PROCESSING
             && $purchaseOrder->getTotalQtyOrderred() > $purchaseOrder->getTotalQtyReceived()
-        )
+        ) {
             $children[$this->children['received_product_buttons']] = $this->getReceivedProductButton();
+        }
         $children[$this->children['received_product_container']] = $this->getReceivedProductList();
 
         return $children;
@@ -184,8 +193,7 @@ class ReceivedProduct extends AbstractModifier
      *
      * @return array
      */
-    public
-    function getReceivedProductButton()
+    public function getReceivedProductButton()
     {
         return [
             'arguments' => [
@@ -214,12 +222,13 @@ class ReceivedProduct extends AbstractModifier
                             'targetName' => $this->scopeName
                                 . '.' . $this->children['received_product_modal'],
                             'actionName' => 'openModal'
-                        ], [
+                        ],
+                        [
                         'targetName' => $this->scopeName
                             . '.' . $this->children['received_product_modal']
                             . '.' . $this->children['received_product_modal_form'],
                         'actionName' => 'render'
-                    ]
+                        ]
                     ]
                 ),
 
@@ -232,8 +241,7 @@ class ReceivedProduct extends AbstractModifier
      *
      * @return array
      */
-    public
-    function getReceivedProductList()
+    public function getReceivedProductList()
     {
         $dataScope = 'received_product_listing';
         return [
@@ -257,11 +265,19 @@ class ReceivedProduct extends AbstractModifier
                         'externalFilterMode' => true,
                         'imports' => [
                             'supplier_id' => '${ $.provider }:data.supplier_id',
-                            'purchase_id' => '${ $.provider }:data.purchase_order_id'
+                            'purchase_id' => '${ $.provider }:data.purchase_order_id',
+                            '__disableTmpl' => [
+                                'supplier_id' => false,
+                                'purchase_id' => false
+                            ]
                         ],
                         'exports' => [
                             'supplier_id' => '${ $.externalProvider }:params.supplier_id',
-                            'purchase_id' => '${ $.externalProvider }:params.purchase_id'
+                            'purchase_id' => '${ $.externalProvider }:params.purchase_id',
+                            '__disableTmpl' => [
+                                'supplier_id' => false,
+                                'purchase_id' => false
+                            ]
                         ],
                         'selectionsProvider' =>
                             $this->children[$dataScope]

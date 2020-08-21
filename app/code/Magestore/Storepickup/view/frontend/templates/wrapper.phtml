@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Magestore
  *
@@ -19,53 +18,68 @@
  * @copyright   Copyright (c) 2012 Magestore (http://www.magestore.com/)
  * @license     http://www.magestore.com/license-agreement.html
  */
-
+// phpcs:disable Magento2.Templates.ThisInTemplate.FoundThis
+// phpcs:disable Magento2.Templates.ThisInTemplate.FoundHelper
 /** @var \Magestore\Storepickup\Block\Wrapper $block */
 ?>
 <?php
-$mcOptions = array(
-    array(
+$mcOptions = [
+    [
         "height" => 53,
-        "url" => $this->helper('Magestore\Storepickup\Helper\Image')->getMediaUrlImage('storepickup/markerclusterer/m1.png'),
+        "url" => $this->helper(\Magestore\Storepickup\Helper\Image::class)
+            ->getMediaUrlImage('storepickup/markerclusterer/m1.png'),
         "width" => 53
-    ),
-    array(
+    ],
+    [
         "height" => 56,
-        "url" => $this->helper('Magestore\Storepickup\Helper\Image')->getMediaUrlImage('storepickup/markerclusterer/m2.png'),
+        "url" => $this->helper(\Magestore\Storepickup\Helper\Image::class)
+            ->getMediaUrlImage('storepickup/markerclusterer/m2.png'),
         "width" => 56
-    ),
-    array(
+    ],
+    [
         "height" => 66,
-        "url" => $this->helper('Magestore\Storepickup\Helper\Image')->getMediaUrlImage('storepickup/markerclusterer/m3.png'),
+        "url" => $this->helper(\Magestore\Storepickup\Helper\Image::class)
+            ->getMediaUrlImage('storepickup/markerclusterer/m3.png'),
         "width" => 66
-    ),
-    array(
+    ],
+    [
         "height" => 78,
-        "url" => $this->helper('Magestore\Storepickup\Helper\Image')->getMediaUrlImage('storepickup/markerclusterer/m4.png'),
+        "url" => $this->helper(\Magestore\Storepickup\Helper\Image::class)
+            ->getMediaUrlImage('storepickup/markerclusterer/m4.png'),
         "width" => 78
-    ),
-    array(
+    ],
+    [
         "height" => 90,
-        "url" => $this->helper('Magestore\Storepickup\Helper\Image')->getMediaUrlImage('storepickup/markerclusterer/m5.png'),
+        "url" => $this->helper(\Magestore\Storepickup\Helper\Image::class)
+            ->getMediaUrlImage('storepickup/markerclusterer/m5.png'),
         "width" => 90
-    )
-); ?>
+    ]
+]; ?>
 
 <div class="storepickup-wrapper col-full">
-    <h2 class="title-page"><?php echo __('Store pickup') ?></h2>
-    <?php echo $block->getChildHtml('storepickup.searchbox'); ?>
+    <h2 class="title-page"><?= /* @noEscape */ __('Store pickup') ?></h2>
+    <?= /* @noEscape */
+    $block->getChildHtml('storepickup.searchbox'); ?>
     <div class="boxes-content">
-        <?php echo $block->getChildHtml('storepickup.mapbox'); ?>
-        <?php echo $block->getChildHtml('storepickup.liststorebox'); ?>
+        <?= /* @noEscape */
+        $block->getChildHtml('storepickup.mapbox'); ?>
+        <?= /* @noEscape */
+        $block->getChildHtml('storepickup.liststorebox'); ?>
     </div>
     <div class="overlay-bg">
-        <img src="<?php echo $block->getViewFileUrl('Magestore_Storepickup::images/ajax-loader.gif') ?>" alt="overlay"/>
+        <img src="<?= /* @noEscape */
+        $block->getViewFileUrl('Magestore_Storepickup::images/ajax-loader.gif') ?>" alt="overlay"/>
     </div>
     <script type="text/javascript">
-        var mcOptions = JSON.parse('<?php echo $this->helper('Magento\Framework\Json\Helper\Data')->jsonEncode($mcOptions) ?>');
-        var loadStoreURL = '<?php echo $block->getUrl('storepickup/index/loadstore') ?>';
-        if (window.location.href.slice(0, 5) == 'https') loadStoreURL = loadStoreURL.replace("http:", "https:");
-        require(['jquery', 'Magestore_Storepickup/js/liststore', 'Magestore_Storepickup/js/checkout/liststorecheckout', 'Magestore_Storepickup/js/pagination', 'Magestore_Storepickup/js/googlemap', 'Magestore_Storepickup/js/makercluster'], function ($) {
+        var mcOptions = JSON.parse('<?= /* @noEscape */ $this->helper(\Magento\Framework\Json\Helper\Data::class)
+            ->jsonEncode($mcOptions) ?>');
+        var loadStoreURL = '<?= /* @noEscape */ $block->getUrl('storepickup/index/loadstore') ?>';
+        if (window.location.href.slice(0, 5) === 'https') {
+            loadStoreURL = loadStoreURL.replace("http:", "https:");
+        }
+        require(['jquery', 'Magestore_Storepickup/js/liststore', 'Magestore_Storepickup/js/checkout/liststorecheckout',
+            'Magestore_Storepickup/js/pagination', 'Magestore_Storepickup/js/googlemap',
+            'Magestore_Storepickup/js/makercluster'], function ($) {
             $(document).ready(function ($) {
                 $('.googlemap').GoogleMap({
                     urlLoadStore: loadStoreURL,
@@ -75,13 +89,14 @@ $mcOptions = array(
                     listTag: '.list-tag-ul',
                     searchBox: '.search-box',
                     loader: '.overlay-bg',
-                    defaultRaidus: '<?php echo $block->getSystemConfig()->getDefaultRadius() ?>',
-                    distanceUnit: '<?php echo $block->getSystemConfig()->getDistanceUnit() ?>',
-                    circleCenterIcon: '<?php echo $block->getViewFileUrl('Magestore_Storepickup/images/circlecenter.png') ?>',
-                    mediaUrlImage: '<?php echo $block->getMediaUrlImage() ?>'
+                    defaultRaidus: '<?= /* @noEscape */ $block->getSystemConfig()->getDefaultRadius() ?>',
+                    distanceUnit: '<?= /* @noEscape */ $block->getSystemConfig()->getDistanceUnit() ?>',
+                    circleCenterIcon: '<?= /* @noEscape */
+                        $block->getViewFileUrl('Magestore_Storepickup/images/circlecenter.png') ?>',
+                    mediaUrlImage: '<?= /* @noEscape */ $block->getMediaUrlImage() ?>'
                 });
             });
         });
-        window.googleMapApiKey = "<?php echo $block->getSystemConfig()->getGoolgeApiKey()?>";
+        window.googleMapApiKey = "<?= /* @noEscape */ $block->getSystemConfig()->getGoolgeApiKey()?>";
     </script>
 </div>

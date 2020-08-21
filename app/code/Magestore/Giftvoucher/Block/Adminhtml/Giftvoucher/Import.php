@@ -6,10 +6,15 @@
 namespace Magestore\Giftvoucher\Block\Adminhtml\Giftvoucher;
 
 /**
+ * Class Import
+ *
  * Adminhtml Giftvoucher Import Block
  */
 class Import extends \Magento\Backend\Block\Widget\Form\Container
 {
+    /**
+     * @inheritDoc
+     */
     public function _construct()
     {
         parent::_construct();
@@ -19,10 +24,10 @@ class Import extends \Magento\Backend\Block\Widget\Form\Container
         $this->buttonList->update('save', 'label', __('Import'));
         $this->buttonList->remove('delete');
         $this->buttonList->remove('reset');
-        
+
         $this->buttonList->add(
             'print',
-            array(
+            [
                 'label' => __('Import and Print'),
                 'class' => 'save',
                 'data_attribute' => [
@@ -34,7 +39,7 @@ class Import extends \Magento\Backend\Block\Widget\Form\Container
                         ],
                     ],
                 ]
-            ),
+            ],
             100
         );
     }

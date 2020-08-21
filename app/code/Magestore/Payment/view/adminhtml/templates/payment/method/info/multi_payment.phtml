@@ -26,32 +26,32 @@ if ($specificInfo):
     <table class="data-table admin__table-secondary">
         <?php foreach ($specificInfo as $item): ?>
             <tr>
-                <th>
-                    <?php
-                    $additionalInfo = array(
-                        'cc_last4' => 'Last 4 Digits',
-                        'card_type' => 'Card Type',
-                        'reference_number' => 'Reference No'
-                    );
-                    ?>
-                    <?php echo $block->escapeHtml($item['label']) ?>
-                </th>
-                <td style='padding-left:10px;font-weight:bold;'>
-                    <?php /* @noEscape */ echo $block->escapeHtml($item['value']) ?>
-                    <?php foreach ($additionalInfo as $key => $label): ?>
-                        <?php if (!empty($item[$key])):?>
-                            <tr>
-                                <th style="padding-left: 50px; font-size: 12px"><i><?php echo $label;?></i></th>
-                                <td><?php echo $item[$key];?></td>
-                            </tr>
-                        <?php endif; ?>
-                    <?php endforeach; ?>
-                </td>
+            <th>
+                <?php
+                $additionalInfo = [
+                    'cc_last4' => 'Last 4 Digits',
+                    'card_type' => 'Card Type',
+                    'reference_number' => 'Reference No'
+                ];
+                ?>
+                <?= /* @escapeNotVerified */ $block->escapeHtml($item['label']) ?>
+            </th>
+            <td style='padding-left:10px;font-weight:bold;'>
+            <?= /* @escapeNotVerified */ $block->escapeHtml($item['value']) ?>
+            <?php foreach ($additionalInfo as $key => $label): ?>
+                <?php if (!empty($item[$key])): ?>
+                    <tr>
+                        <th style="padding-left: 50px; font-size: 12px">
+                            <i><?= /* @noEscape */ $label ?></i>
+                        </th>
+                        <td><?= /* @noEscape */ $item[$key] ?></td>
+                    </tr>
+                <?php endif; ?>
+            <?php endforeach; ?>
+            </td>
             </tr>
         <?php endforeach; ?>
     </table>
 <?php endif; ?>
 
-<?php
-echo $block->getChildHtml();
-?>
+<?= /* @escapeNotVerified */ $block->getChildHtml() ?>

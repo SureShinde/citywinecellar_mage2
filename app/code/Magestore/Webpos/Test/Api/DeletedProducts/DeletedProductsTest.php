@@ -1,8 +1,8 @@
 <?php
-
 /**
  *
  */
+
 namespace Magestore\Webpos\Test\Api\DeletedProducts;
 
 use Magento\Framework\Api\SearchCriteria;
@@ -20,9 +20,11 @@ use Magestore\Webpos\Test\Api\GetSessionTrait;
 use Magestore\Webpos\Test\Api\DeletedProducts\DeletedProductsTrait;
 use Magestore\Webpos\Test\Constant\Product;
 
+/**
+ * Api test DeletedProductsTest
+ */
 class DeletedProductsTest extends WebapiAbstract
 {
-
     use GetSessionTrait;
     use DeletedProductsTrait;
 
@@ -31,9 +33,7 @@ class DeletedProductsTest extends WebapiAbstract
      */
     const RESOURCE_PATH = '/V1/webpos/products/deleted';
     const SERVICE_NAME = 'deletedProductsRepositoryV1';
-    /**
-     * @var
-     */
+
     protected $posSession;
 
     /**
@@ -41,24 +41,19 @@ class DeletedProductsTest extends WebapiAbstract
      */
     protected $apiName = "deletedProducts";
 
-    /**
-     * @var
-     */
     protected $productRepository;
 
-    /**
-     * @var
-     */
     protected $time;
+
     /**
-     *
+     * Setup
      */
-    protected function setUp()
+    protected function setUp() : void // phpcs:ignore
     {
         $this->posSession = $this->loginAndAssignPos();
         /** @var ProductRepositoryInterface $productRepository */
         $this->productRepository = Bootstrap::getObjectManager()->get(ProductRepositoryInterface::class);
-        $this->time  = $this->getTimeAfterCreated();
+        $this->time = $this->getTimeAfterCreated();
         $this->deleteTable();
     }
 
@@ -67,7 +62,7 @@ class DeletedProductsTest extends WebapiAbstract
      *
      * @return void
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass() : void // phpcs:ignore
     {
         $productRepository = Bootstrap::getObjectManager()->get(ProductRepositoryInterface::class);
         /** SKU-11 */
@@ -98,7 +93,8 @@ class DeletedProductsTest extends WebapiAbstract
     /**
      * Not change anything on sample Data
      */
-    public function testCase1(){
+    public function testCase1()
+    {
         $this->testCaseId = "1";
 
         $requestData = $this->createRequestData($this->time);
@@ -112,7 +108,7 @@ class DeletedProductsTest extends WebapiAbstract
         $this->assertNotNull($response, $message);
 
         /* chek items count is 0 or not */
-        self::assertCount($expectedTotalCount, $response['ids'] , $message);
+        self::assertCount($expectedTotalCount, $response['ids'], $message);
     }
 
     /**
@@ -120,7 +116,8 @@ class DeletedProductsTest extends WebapiAbstract
      * SKU-11 : disabled
      * SKU-12 : not visible on pos
      */
-    public function testCase2(){
+    public function testCase2()
+    {
         /** SKU-11 */
         $product = $this->productRepository->get(Product::SKU_11);
         $product->setStatus(Status::STATUS_DISABLED);
@@ -142,11 +139,8 @@ class DeletedProductsTest extends WebapiAbstract
 
         $this->assertNotNull($response, $message);
 
-        /* chek items count is 0 or not */
-        //self::assertCount($expectedTotalCount, $response['ids'] , $message);
-
         /* change conditions that get all delete for all Stock */
-        self::assertCount($expectedTotalCount, $response['ids'] , $message);
+        self::assertCount($expectedTotalCount, $response['ids'], $message);
     }
 
     /**
@@ -155,8 +149,9 @@ class DeletedProductsTest extends WebapiAbstract
      * SKU-14 : not visible on pos
      * SKU-15 : change name
      */
-    public function testCase3(){
-        $idsExpected = array();
+    public function testCase3()
+    {
+        $idsExpected = [];
         /** SKU-13 */
         $product = $this->productRepository->get(Product::SKU_13);
         $product->setStatus(Status::STATUS_DISABLED);
@@ -186,14 +181,8 @@ class DeletedProductsTest extends WebapiAbstract
 
         $this->assertNotNull($response, $message);
 
-        /* chek items count is 0 or not */
-        //self::assertCount($expectedTotalCount, $response['ids'] , $message);
-
-        /* check list_items is contains excepted data items */
-        //AssertArrayContains::assert($idsExpected, $response['ids']);
-
         /* change conditions that get all delete for all Stock */
-        self::assertCount($expectedTotalCount, $response['ids'] , $message);
+        self::assertCount($expectedTotalCount, $response['ids'], $message);
     }
 
     /**
@@ -202,7 +191,8 @@ class DeletedProductsTest extends WebapiAbstract
      * SKU-14 : visible on pos
      * SKU-15 : change name
      */
-    public function testCase4(){
+    public function testCase4()
+    {
         /** SKU-13 */
         $product = $this->productRepository->get(Product::SKU_13);
         $product->setStatus(Status::STATUS_ENABLED);
@@ -223,14 +213,13 @@ class DeletedProductsTest extends WebapiAbstract
         $response = $this->getResponseAPI($requestData);
 
         $expectedTotalCount = 0;
-        
+
         $message = sprintf('Failed at Testcase  "%s" ', $this->testCaseId);
 
         $this->assertNotNull($response, $message);
 
         /* chek items count is 0 or not */
-        self::assertCount($expectedTotalCount, $response['ids'] , $message);
-
+        self::assertCount($expectedTotalCount, $response['ids'], $message);
     }
 
     /**
@@ -258,6 +247,5 @@ class DeletedProductsTest extends WebapiAbstract
     {
         $this->testCaseId = "7";
         $this->sessionCase3();
-
     }
 }

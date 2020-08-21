@@ -13,10 +13,11 @@ use Magestore\PurchaseOrderSuccess\Model\PurchaseOrder\Option\Type;
 
 /**
  * Class InvoiceList
- * @package Magestore\PurchaseOrderSuccess\Ui\DataProvider\PurchaseOrder\Form\Modifier
+ *
+ * Used for invoice list
  */
 class InvoiceList extends AbstractModifier
-{    
+{
     /**
      * @var string
      */
@@ -42,10 +43,11 @@ class InvoiceList extends AbstractModifier
         'invoice_modal' => 'invoice_modal',
         'invoice_modal_form' => 'os_purchase_order_invoice_form'
     ];
-    
+
     /**
-     * modify data
+     * Modify data
      *
+     * @param array $data
      * @return array
      */
     public function modifyData(array $data)
@@ -55,12 +57,13 @@ class InvoiceList extends AbstractModifier
 
     /**
      * Modify purchase order form meta
-     * 
+     *
      * @param array $meta
      * @return array
      */
-    public function modifyMeta(array $meta){
-        if(!$this->getPurchaseOrderId() || 
+    public function modifyMeta(array $meta)
+    {
+        if (!$this->getPurchaseOrderId() ||
             in_array($this->getCurrentPurchaseOrder()->getStatus(), [Status::STATUS_PENDING]) ||
             ($this->getCurrentPurchaseOrder()->getType() == Type::TYPE_QUOTATION)) {
             return $meta;
@@ -94,7 +97,7 @@ class InvoiceList extends AbstractModifier
                 ],
             ]
         );
-        return $meta;   
+        return $meta;
     }
 
     /**
@@ -102,22 +105,26 @@ class InvoiceList extends AbstractModifier
      *
      * @return int
      */
-    public function getSortOrder(){
-        if($this->getCurrentPurchaseOrder()->getStatus()==Status::STATUS_PROCESSING)
+    public function getSortOrder()
+    {
+        if ($this->getCurrentPurchaseOrder()->getStatus() == Status::STATUS_PROCESSING) {
             return 55;
+        }
         return $this->sortOrder;
     }
 
     /**
      * Add invoice form fields
-     * 
+     *
      * @return array
      */
-    public function getInvoiceChildren(){
+    public function getInvoiceChildren()
+    {
         $purchaseOrder = $this->getCurrentPurchaseOrder();
-        if($purchaseOrder->getStatus() != Status::STATUS_CANCELED
-            && $purchaseOrder->getTotalQtyOrderred()!=$purchaseOrder->getTotalQtyBilled())
+        if ($purchaseOrder->getStatus() != Status::STATUS_CANCELED
+            && $purchaseOrder->getTotalQtyOrderred() != $purchaseOrder->getTotalQtyBilled()) {
             $children[$this->children['invoice_list_buttons']] = $this->getInvoiceButton();
+        }
         $children[$this->children['invoice_list_container']] = $this->getInvoiceList();
         return $children;
     }
@@ -127,8 +134,8 @@ class InvoiceList extends AbstractModifier
      *
      * @return array
      */
-    public function getInvoiceButton(){
-        $purchaseOrderId = $this->getPurchaseOrderId();
+    public function getInvoiceButton()
+    {
         return [
             'arguments' => [
                 'data' => [
@@ -149,13 +156,14 @@ class InvoiceList extends AbstractModifier
                                 . '.' . $this->children['invoice_list_buttons']
                                 . '.' . $this->children['invoice_modal'],
                             'actionName' => 'openModal'
-                        ],[
+                        ],
+                        [
                         'targetName' => $this->scopeName . '.' . $this->groupContainer
                             . '.' . $this->children['invoice_list_buttons']
                             . '.' . $this->children['invoice_modal']
                             . '.' . $this->children['invoice_modal_form'],
                         'actionName' => 'render'
-                    ]
+                        ]
                     ]
                 ),
                 $this->children['invoice_modal'] => [
@@ -166,7 +174,10 @@ class InvoiceList extends AbstractModifier
                                 'type' => 'container',
                                 'options' => [
                                     'onCancel' => 'actionCancel',
-                                    'title' => __('Create an Invoice (Purchase Order #%1)', $this->getCurrentPurchaseOrder()->getPurchaseCode()),
+                                    'title' => __(
+                                        'Create an Invoice (Purchase Order #%1)',
+                                        $this->getCurrentPurchaseOrder()->getPurchaseCode()
+                                    ),
                                     'buttons' => [
                                         [
                                             'text' => __('Cancel'),
@@ -213,11 +224,12 @@ class InvoiceList extends AbstractModifier
     }
 
     /**
-     * get invoice list
-     * 
+     * Get invoice list
+     *
      * @return array
      */
-    public function getInvoiceList(){
+    public function getInvoiceList()
+    {
         $dataScope = 'invoice_list_listing';
         return [
             'arguments' => [
@@ -227,7 +239,7 @@ class InvoiceList extends AbstractModifier
                         'autoRender' => false,
                         'componentType' => 'insertListing',
                         'dataScope' => $this->children[$dataScope],
-                        'externalProvider' => $this->children[$dataScope]. '.' . $this->children[$dataScope]
+                        'externalProvider' => $this->children[$dataScope] . '.' . $this->children[$dataScope]
                             . '_data_source',
                         'ns' => $this->children[$dataScope],
                         'render_url' => $this->urlBuilder->getUrl('mui/index/render'),
@@ -240,11 +252,19 @@ class InvoiceList extends AbstractModifier
                         'externalFilterMode' => true,
                         'imports' => [
                             'supplier_id' => '${ $.provider }:data.supplier_id',
-                            'purchase_id' => '${ $.provider }:data.purchase_order_id'
+                            'purchase_id' => '${ $.provider }:data.purchase_order_id',
+                            '__disableTmpl' => [
+                                'supplier_id' => false,
+                                'purchase_id' => false
+                            ]
                         ],
                         'exports' => [
                             'supplier_id' => '${ $.externalProvider }:params.supplier_id',
-                            'purchase_id' => '${ $.externalProvider }:params.purchase_id'
+                            'purchase_id' => '${ $.externalProvider }:params.purchase_id',
+                            '__disableTmpl' => [
+                                'supplier_id' => false,
+                                'purchase_id' => false
+                            ]
                         ],
                         'selectionsProvider' =>
                             $this->children[$dataScope]

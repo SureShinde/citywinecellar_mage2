@@ -6,10 +6,13 @@
 
 namespace Magestore\FulfilReport\Block\Adminhtml\Report;
 
+/**
+ * Block Navigation
+ */
 class Navigation extends \Magento\Backend\Block\Template
 {
     /**
-     * report list
+     * Report list
      *
      * @var array
      */
@@ -20,50 +23,54 @@ class Navigation extends \Magento\Backend\Block\Template
      */
     protected $fulfilManagement;
 
-
     /**
+     * Navigation constructor.
+     *
      * @param \Magento\Backend\Block\Template\Context $context
+     * @param \Magestore\FulfilSuccess\Api\FulfilManagementInterface $fulfilManagement
      * @param array $data
      */
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
         \Magestore\FulfilSuccess\Api\FulfilManagementInterface $fulfilManagement,
         array $data = []
-    )
-    {
+    ) {
         $this->fulfilManagement = $fulfilManagement;
         parent::__construct($context, $data);
     }
 
-
     /**
-     * get a list of staff report controllers and names
+     * Get a list of staff report controllers and names
      *
      * @return array
      */
     public function getStaffReportList()
     {
-
-        return array(
+        return [
             'fulfilstaff' => __('Fulfilment by Staff'),
             'fulfilstaffdaily' => __('Fulfilment by Staff (Daily)')
-        );
+        ];
     }
 
     /**
-     * get a list of location report controllers and names
+     * Get a list of location report controllers and names
      *
      * @return array
      */
     public function getWarehouseReportList()
     {
         $isMSIEnable = $this->isMSIEnable();
-        return array(
+        return [
             'fulfilwarehouse' => __('Fulfilment by %1', $isMSIEnable ? 'Source' : 'Warehouse'),
             'fulfilwarehousedaily' => __('Fulfilment by %1 (Daily)', $isMSIEnable ? 'Source' : 'Warehouse')
-        );
+        ];
     }
 
+    /**
+     * Get report list
+     *
+     * @return array
+     */
     public function getReportList()
     {
         if (!$this->reportList) {
@@ -76,21 +83,20 @@ class Navigation extends \Magento\Backend\Block\Template
     }
 
     /**
-     * get report link from name
+     * Get report link from name
      *
-     * @param string
+     * @param string $controller
      * @return string
      */
     public function getReportLink($controller)
     {
         $path = 'fulfilreport/report_' . $controller;
-        return $this->getUrl($path, array('_forced_secure' => $this->getRequest()->isSecure()));
+        return $this->getUrl($path, ['_forced_secure' => $this->getRequest()->isSecure()]);
     }
 
     /**
-     * get current report name
+     * Get current report name
      *
-     * @param
      * @return string
      */
     public function getCurrentReportName()
@@ -105,6 +111,11 @@ class Navigation extends \Magento\Backend\Block\Template
         return $reportName;
     }
 
+    /**
+     * Is MSI Enable
+     *
+     * @return bool
+     */
     public function isMSIEnable()
     {
         return $this->fulfilManagement->isMSIEnable();

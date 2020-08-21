@@ -7,7 +7,8 @@ namespace Magestore\Giftvoucher\Service\Redeem;
 
 /**
  * Class CalculationService
- * @package Magestore\Giftvoucher\Service\Redeem
+ *
+ * Redeem calculation service
  */
 class CalculationService implements \Magestore\Giftvoucher\Api\Redeem\CalculationServiceInterface
 {
@@ -27,12 +28,13 @@ class CalculationService implements \Magestore\Giftvoucher\Api\Redeem\Calculatio
      */
     public function __construct(
         \Magestore\Giftvoucher\Helper\Data $helper
-    )
-    {
+    ) {
         $this->helper = $helper;
     }
 
     /**
+     * Is Apply Gift After Tax
+     *
      * @param int $storeId
      * @return bool
      */
@@ -43,7 +45,9 @@ class CalculationService implements \Magestore\Giftvoucher\Api\Redeem\Calculatio
     }
 
     /**
-     * @param $quote
+     * Clear Data
+     *
+     * @param \Magento\Quote\Model\Quote $quote
      * @return $this
      */
     public function clearData($quote)
@@ -57,8 +61,10 @@ class CalculationService implements \Magestore\Giftvoucher\Api\Redeem\Calculatio
     }
 
     /**
+     * Validate Quote
+     *
      * @param \Magento\Quote\Model\Quote $quote
-     * @param $address
+     * @param \Magento\Quote\Api\Data\AddressInterface $address
      * @return bool
      */
     public function validateQuote(\Magento\Quote\Model\Quote $quote, $address)
@@ -80,6 +86,8 @@ class CalculationService implements \Magestore\Giftvoucher\Api\Redeem\Calculatio
     }
 
     /**
+     * Validate Gift Code
+     *
      * @param \Magestore\Giftvoucher\Model\Giftvoucher $giftvoucher
      * @param \Magento\Quote\Model\Quote $quote
      * @param \Magento\Quote\Model\Quote\Address $address
@@ -99,6 +107,8 @@ class CalculationService implements \Magestore\Giftvoucher\Api\Redeem\Calculatio
     }
 
     /**
+     * Validate Customer
+     *
      * @param \Magestore\Giftvoucher\Model\Giftvoucher $giftvoucher
      * @param int $customerId
      * @return bool
@@ -111,7 +121,7 @@ class CalculationService implements \Magestore\Giftvoucher\Api\Redeem\Calculatio
         if (!$giftvoucher->getId()) {
             return false;
         }
-        $shareCard = intval($this->helper->getGeneralConfig('share_card'));
+        $shareCard = (int) $this->helper->getGeneralConfig('share_card');
         if ($shareCard < 1) {
             return true;
         }
@@ -126,11 +136,12 @@ class CalculationService implements \Magestore\Giftvoucher\Api\Redeem\Calculatio
     /**
      * Calculate quote totals for each giftCode and save results
      *
-     * @param $items
-     * @param $giftCodes
-     * @param $address
-     * @param bool $afterTax
+     * @param array $items
+     * @param array $giftCodes
+     * @param \Magento\Quote\Api\Data\AddressInterface $address
+     * @param bool $isApplyGiftAfterTax
      * @return $this
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function initTotals($items, $giftCodes, $address, $isApplyGiftAfterTax = false)
     {
@@ -146,14 +157,17 @@ class CalculationService implements \Magestore\Giftvoucher\Api\Redeem\Calculatio
                     if ($item->getParentItemId()) {
                         continue;
                     }
-                    if ($item->isDeleted() || $item->getProduct()->getTypeId() == 'giftvoucher' || !$giftCode->getActions()->validate($item)) {
+                    if ($item->isDeleted()
+                        || $item->getProduct()->getTypeId() == 'giftvoucher'
+                        || !$giftCode->getActions()->validate($item)
+                    ) {
                         continue;
                     }
 
                     $qty = $item->getTotalQty();
                     $totalItemsPrice += $this->getItemPrice($item) * $qty - $item->getDiscountAmount();
                     $totalBaseItemsPrice += $this->getItemBasePrice($item) * $qty - $item->getBaseDiscountAmount();
-                    if($isApplyGiftAfterTax){
+                    if ($isApplyGiftAfterTax) {
                         $totalItemsPrice += $item->getTaxAmount();
                         $totalBaseItemsPrice += $item->getBaseTaxAmount();
                     }
@@ -173,13 +187,14 @@ class CalculationService implements \Magestore\Giftvoucher\Api\Redeem\Calculatio
     /**
      * Get gift code items total
      *
-     * @param $code
+     * @param string $code
      * @return array|null
      */
     public function getGiftCodeItemsTotal($code)
     {
-        if (isset($this->giftCodeItemsTotal[$code]))
+        if (isset($this->giftCodeItemsTotal[$code])) {
             return $this->giftCodeItemsTotal[$code];
+        }
         return null;
     }
 

@@ -24,6 +24,13 @@ namespace Magestore\Customercredit\Model;
 
 use Magento\Framework\Pricing\PriceCurrencyInterface;
 
+/**
+ * Class Customercredit
+ *
+ * Customer credit model
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.CookieAndSessionMisuse)
+ */
 class Customercredit extends \Magento\Framework\Model\AbstractModel
 {
     /**
@@ -68,27 +75,29 @@ class Customercredit extends \Magento\Framework\Model\AbstractModel
      */
     protected $_helperSendmail;
 
-
     /**
-     * @param \Magento\Framework\Model\Context $context,
-     * @param \Magento\Framework\Registry $registry,
-     * @param \Magento\Store\Model\StoreManagerInterface $storeManager,
-     * @param \Magestore\Customercredit\Helper\Data $customercreditHelper,
-     * @param \Magento\Framework\Pricing\Helper\Data $pricingHelper,
-     * @param \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency,
-     * @param \Magento\Customer\Model\Session $customerSession,
-     * @param \Magento\Customer\Model\CustomerFactory $customerFactory,
-     * @param \Magento\Framework\Url $urlBuilder,
-     * @param \Magestore\Customercredit\Model\CreditcodeFactory $creditcode,
-     * @param \Magento\Framework\Message\ManagerInterface $messageManager,
-     * @param \Magestore\Customercredit\Helper\Sendmail $helperSendmail,
-     * @param \Magestore\Customercredit\Model\ResourceModel\Customercredit $resource
-     * @param \Magestore\Customercredit\Model\ResourceModel\Customercredit\Collection $resourceCollection
+     * Customercredit constructor.
+     *
+     * @param \Magento\Framework\Model\Context $context
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param \Magestore\Customercredit\Helper\Data $customercreditHelper
+     * @param \Magento\Framework\Pricing\Helper\Data $pricingHelper
+     * @param PriceCurrencyInterface $priceCurrency
+     * @param \Magento\Customer\Model\Session $customerSession
+     * @param \Magento\Customer\Model\CustomerFactory $customerFactory
+     * @param \Magento\Framework\Url $urlBuilder
+     * @param CreditcodeFactory $creditcode
+     * @param \Magento\Framework\Message\ManagerInterface $messageManager
+     * @param \Magestore\Customercredit\Helper\Sendmail $helperSendmail
+     * @param ResourceModel\Customercredit $resource
+     * @param ResourceModel\Customercredit\Collection $resourceCollection
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         \Magento\Framework\Model\Context $context,
         \Magento\Framework\Registry $registry,
-
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magestore\Customercredit\Helper\Data $customercreditHelper,
         \Magento\Framework\Pricing\Helper\Data $pricingHelper,
@@ -101,8 +110,7 @@ class Customercredit extends \Magento\Framework\Model\AbstractModel
         \Magestore\Customercredit\Helper\Sendmail $helperSendmail,
         \Magestore\Customercredit\Model\ResourceModel\Customercredit $resource,
         \Magestore\Customercredit\Model\ResourceModel\Customercredit\Collection $resourceCollection
-    )
-    {
+    ) {
         $this->_storeManager = $storeManager;
         $this->_customercreditHelper = $customercreditHelper;
         $this->_pricingHelper = $pricingHelper;
@@ -124,10 +132,16 @@ class Customercredit extends \Magento\Framework\Model\AbstractModel
     protected function _construct()
     {
         parent::_construct();
-        $this->_init('Magestore\Customercredit\Model\ResourceModel\Customercredit');
+        $this->_init(\Magestore\Customercredit\Model\ResourceModel\Customercredit::class);
         $this->setIdFieldName('credit_id');
     }
 
+    /**
+     * Get Credit By Customer Id
+     *
+     * @param int $customerId
+     * @return \Magento\Framework\DataObject
+     */
     public function getCreditByCustomerId($customerId)
     {
         $collection = $this->getCollection()->addFieldToFilter('customer_id', $customerId);
@@ -139,11 +153,17 @@ class Customercredit extends \Magento\Framework\Model\AbstractModel
         return $collection->getFirstItem();
     }
 
+    /**
+     * Change Customer Credit
+     *
+     * @param float $credit_amount
+     * @param null|int $customer_id
+     */
     public function changeCustomerCredit($credit_amount, $customer_id = null)
     {
-        if ($customer_id == null)
+        if ($customer_id == null) {
             $customer_id = $this->_customercreditHelper->getCustomer()->getId();
-
+        }
         $customer = $this->getCreditByCustomerId($customer_id);
         $begin_balance = $customer->getCreditBalance();
 
@@ -156,9 +176,15 @@ class Customercredit extends \Magento\Framework\Model\AbstractModel
         }
     }
 
+    /**
+     * Add Credit To Friend
+     *
+     * @param float $credit_amount
+     * @param int $customer_id
+     */
     public function addCreditToFriend($credit_amount, $customer_id)
     {
-        if($customer_id != null){
+        if ($customer_id != null) {
             $friend_account = $this->getCreditByCustomerId($customer_id);
             $friend_credit_balance = $friend_account->getCreditBalance() + $credit_amount;
             $friend_account->setCustomerId($customer_id)->setCreditBalance($friend_credit_balance);
@@ -171,21 +197,77 @@ class Customercredit extends \Magento\Framework\Model\AbstractModel
         }
     }
 
-    public function sendCreditToFriendByEmail($credit_amount, $friend_email, $message, $customer_id = null, $customer_name = null)
-    {
+    /**
+     * Send Credit To Friend By Email
+     *
+     * @param float $credit_amount
+     * @param string $friend_email
+     * @param string $message
+     * @param null|int $customer_id
+     * @param null|string $customer_name
+     */
+    public function sendCreditToFriendByEmail(
+        $credit_amount,
+        $friend_email,
+        $message,
+        $customer_id = null,
+        $customer_name = null
+    ) {
         $credit_code = $this->_creditcode->create();
-        $code = $credit_code->addCreditCode($friend_email, $credit_amount, \Magestore\Customercredit\Model\Source\Status::STATUS_UNUSED, $customer_id);
-        $this->sendCodeToFriendEmail($friend_email, $credit_amount, $message, $code, $customer_id = null, $customer_name);
+        $code = $credit_code->addCreditCode(
+            $friend_email,
+            $credit_amount,
+            \Magestore\Customercredit\Model\Source\Status::STATUS_UNUSED,
+            $customer_id
+        );
+        $this->sendCodeToFriendEmail(
+            $friend_email,
+            $credit_amount,
+            $message,
+            $code,
+            $customer_id = null,
+            $customer_name
+        );
     }
 
-    public function sendCreditToFriendByEmailAfterVerify($credit_code_id, $credit_amount, $friend_email, $message, $customer_id = null)
-    {
+    /**
+     * Send Credit To Friend By Email After Verify
+     *
+     * @param int $credit_code_id
+     * @param float $credit_amount
+     * @param string $friend_email
+     * @param string $message
+     * @param null|int $customer_id
+     */
+    public function sendCreditToFriendByEmailAfterVerify(
+        $credit_code_id,
+        $credit_amount,
+        $friend_email,
+        $message,
+        $customer_id = null
+    ) {
         $credit_code = $this->_creditcode->create()->load($credit_code_id);
         if (isset($credit_code) && isset($friend_email) && isset($credit_amount)) {
-            $this->sendCodeToFriendEmail($friend_email, $credit_amount, $message, $credit_code->getCreditCode(), $customer_id = null);
+            $this->sendCodeToFriendEmail(
+                $friend_email,
+                $credit_amount,
+                $message,
+                $credit_code->getCreditCode(),
+                $customer_id
+            );
         }
     }
 
+    /**
+     * Send Verify Email
+     *
+     * @param string $email
+     * @param float $value
+     * @param string $message
+     * @param string $keycode
+     * @return $this
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     public function sendVerifyEmail($email, $value, $message, $keycode)
     {
         $customer_id = $this->_customerSession->getCustomerId();
@@ -224,10 +306,26 @@ class Customercredit extends \Magento\Framework\Model\AbstractModel
         return $this;
     }
 
-    public function sendCodeToFriendEmail($email, $amount, $message, $creditcode, $customer_id = null, $customer_name = null)
-    {
-        $store = $this->_storeManager->getStore($this->getStoreId());
-        $storeurl = $store->getBaseUrl();
+    /**
+     * Send Code To Friend Email
+     *
+     * @param string $email
+     * @param float $amount
+     * @param string $message
+     * @param string $creditcode
+     * @param null|int $customer_id
+     * @param null|string $customer_name
+     * @return $this
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function sendCodeToFriendEmail(
+        $email,
+        $amount,
+        $message,
+        $creditcode,
+        $customer_id = null,
+        $customer_name = null
+    ) {
         if ($customer_id) {
             $customerData = $this->_customerFactory->create()->load($customer_id);
         } else {
@@ -237,14 +335,14 @@ class Customercredit extends \Magento\Framework\Model\AbstractModel
         $receiver_name = $this->_customercreditHelper->getNameCustomerByEmail($email);
         $send_name = $customer_name;
 
-        if(trim($send_name) == "" && $customerData->getId() != null){
+        if (trim($send_name) == "" && $customerData->getId() != null) {
             $send_name = $customerData->getFirstname() . " " . $customerData->getLastname();
         }
 
         /** @var \Magento\Framework\UrlInterface $urlInterface */
-        $urlInterface = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Framework\UrlInterface');
+        $urlInterface = \Magento\Framework\App\ObjectManager::getInstance()
+            ->get(\Magento\Framework\UrlInterface::class);
         $urlInterface->getCurrentUrl();
-
 
         $store = $this->_storeManager->getStore($this->getStoreId());
         $login_url = $this->_urlBuilder->getUrl('customer/account/login');
@@ -273,17 +371,28 @@ class Customercredit extends \Magento\Framework\Model\AbstractModel
             $this->_helperSendmail->Send('customercredit/email/creditcode', $emailTemplateVariables, $receiverInfo);
 
         } catch (\Magento\Framework\Exception\MailException $ex) {
-//            echo $ex->getMessage();
+            $this->_logger->info($ex->getMessage());
         }
         return $this;
     }
 
+    /**
+     * Send Notify to Customer
+     *
+     * @param string $email
+     * @param string $name
+     * @param float $credit_value
+     * @param float $balance
+     * @param string $message
+     * @return $this
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     public function sendNotifytoCustomer($email, $name, $credit_value, $balance, $message)
     {
         $store = $this->_storeManager->getStore($this->getStoreId());
         $storeurl = $store->getBaseUrl();
         if ($credit_value > 0) {
-            $emailTemplateVariables = array(
+            $emailTemplateVariables = [
                 'store' => $store,
                 'storeurl' => $storeurl,
                 'receiver_name' => $name,
@@ -291,9 +400,9 @@ class Customercredit extends \Magento\Framework\Model\AbstractModel
                 'message' => $message,
                 'balance' => $balance,
                 'addcredit' => true,
-            );
+            ];
         } else {
-            $emailTemplateVariables = array(
+            $emailTemplateVariables = [
                 'store' => $store,
                 'storeurl' => $storeurl,
                 'receiver_name' => $name,
@@ -301,7 +410,7 @@ class Customercredit extends \Magento\Framework\Model\AbstractModel
                 'message' => $message,
                 'balance' => $balance,
                 'deductcredit' => true,
-            );
+            ];
         }
         try {
             $receiverInfo = [
@@ -317,6 +426,15 @@ class Customercredit extends \Magento\Framework\Model\AbstractModel
         return $this;
     }
 
+    /**
+     * Send Success Email
+     *
+     * @param string $email
+     * @param string $customer
+     * @param string $receivename
+     * @param bool $check
+     * @return $this
+     */
     public function sendSuccessEmail($email, $customer, $receivename, $check)
     {
         try {
@@ -338,5 +456,4 @@ class Customercredit extends \Magento\Framework\Model\AbstractModel
         }
         return $this;
     }
-
 }

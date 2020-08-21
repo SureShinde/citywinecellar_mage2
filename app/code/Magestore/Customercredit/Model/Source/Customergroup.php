@@ -22,28 +22,49 @@
 
 namespace Magestore\Customercredit\Model\Source;
 
+/**
+ * Class Customergroup
+ *
+ * Source customer group model
+ */
 class Customergroup
 {
+    /**
+     * @var \Magento\Customer\Model\Group
+     */
+    protected $_group;
+
+    /**
+     * Customergroup constructor.
+     *
+     * @param \Magento\Customer\Model\Group $group
+     */
     public function __construct(
         \Magento\Customer\Model\Group $group
-    )
-    {
+    ) {
         $this->_group = $group;
     }
 
+    /**
+     * To Option Array
+     *
+     * @return array
+     */
     public function toOptionArray()
     {
         $customergroup = $this->_group->getCollection();
 
-        $array_list = array();
+        $array_list = [];
         $count = 0;
         foreach ($customergroup as $group) {
             if ($group->getCustomerGroupId()) {
-                $array_list[$count] = array('value' => $group->getCustomerGroupId(), 'label' => $group->getCustomerGroupCode());
+                $array_list[$count] = [
+                    'value' => $group->getCustomerGroupId(),
+                    'label' => $group->getCustomerGroupCode()
+                ];
                 $count++;
             }
         }
         return $array_list;
     }
-
 }

@@ -14,7 +14,6 @@ use Magento\Framework\App\RequestInterface;
 
 /**
  * Gift Code Pattern Grid Collection
- * @package Magestore\Giftvoucher
  */
 class GiftCode extends \Magestore\Giftvoucher\Model\ResourceModel\Giftvoucher\Grid\Collection
 {
@@ -24,6 +23,8 @@ class GiftCode extends \Magestore\Giftvoucher\Model\ResourceModel\Giftvoucher\Gr
     protected $request;
 
     /**
+     * GiftCode constructor.
+     *
      * @param EntityFactory $entityFactory
      * @param Logger $logger
      * @param FetchStrategy $fetchStrategy
@@ -31,6 +32,8 @@ class GiftCode extends \Magestore\Giftvoucher\Model\ResourceModel\Giftvoucher\Gr
      * @param RequestInterface $request
      * @param string $mainTable
      * @param string $resourceModel
+     *
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function __construct(
         EntityFactory $entityFactory,
@@ -39,20 +42,20 @@ class GiftCode extends \Magestore\Giftvoucher\Model\ResourceModel\Giftvoucher\Gr
         EventManager $eventManager,
         RequestInterface $request,
         $mainTable = 'giftvoucher',
-        $resourceModel = 'Magestore\Giftvoucher\Model\ResourceModel\Giftvoucher'
+        $resourceModel = \Magestore\Giftvoucher\Model\ResourceModel\Giftvoucher::class
     ) {
         $this->request = $request;
         parent::__construct($entityFactory, $logger, $fetchStrategy, $eventManager, $mainTable, $resourceModel);
     }
-    
+
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     protected function _initSelect()
     {
         $this->getSelect()->from(['main_table' => $this->getMainTable()])
             ->joinLeft(
-                array('history' => $this->getTable('giftvoucher_history')),
+                ['history' => $this->getTable('giftvoucher_history')],
                 'main_table.giftvoucher_id = history.giftvoucher_id',
                 $this->fields
             )->group('main_table.giftvoucher_id')

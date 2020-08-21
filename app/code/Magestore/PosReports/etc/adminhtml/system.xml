@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<!--
+  ~  Copyright © Magestore. All rights reserved.
+  ~  See COPYING.txt for license details.
+  -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="reportsuccess">
+            <group id="general">
+                <field id="first_day_of_week" translate="label" sortOrder="30" type="select" showInDefault="1"
+                       showInWebsite="0" showInStore="0">
+                    <label>First Day of Week</label>
+                    <source_model>Magestore\PosReports\Model\Source\FirstDayOfWeek</source_model>
+                    <comment>If you change this setting, don't forget to refresh the report statistics</comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

@@ -1,21 +1,23 @@
 <?php
 namespace Magestore\Storepickup\Model\Config\Source;
+
 /**
  * Class EmailTemplate
- * @package Magestore\Storepickup\Model\Config\Source
+ *
+ * Used to create email template source
  */
 class EmailTemplate extends \Magento\Config\Model\Config\Source\Email\Template
 {
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function toOptionArray()
     {
         $options = parent::toOptionArray();
-        $options[] =array(
-            'value'=> 'none_email',
+        $options[] = [
+            'value' => 'none_email',
             'label' => __('None')
-        );
+        ];
         return $options;
     }
 }

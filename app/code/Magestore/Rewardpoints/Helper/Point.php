@@ -19,14 +19,11 @@
  * @license     http://www.magestore.com/license-agreement.html
  */
 
+namespace Magestore\Rewardpoints\Helper;
+
 /**
  * RewardPoints Name and Image Helper
- *
- * @category    Magestore
- * @package     Magestore_RewardPoints
- * @author      Magestore Developer
  */
-namespace Magestore\Rewardpoints\Helper;
 class Point extends \Magestore\Rewardpoints\Helper\Config
 {
     const XML_PATH_POINT_NAME           = 'rewardpoints/general/point_name';
@@ -56,14 +53,22 @@ class Point extends \Magestore\Rewardpoints\Helper\Config
      */
     protected $_layout;
 
+    /**
+     * Point constructor.
+     *
+     * @param \Magento\Framework\App\Helper\Context $context
+     * @param Config $globalConfig
+     * @param \Magento\Framework\View\LayoutInterface $layout
+     * @param \Magento\Framework\View\Element\Template $elementTemplate
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     */
     public function __construct(
         \Magento\Framework\App\Helper\Context $context,
         \Magestore\Rewardpoints\Helper\Config $globalConfig,
         \Magento\Framework\View\LayoutInterface $layout,
         \Magento\Framework\View\Element\Template $elementTemplate,
         \Magento\Store\Model\StoreManagerInterface $storeManager
-    )
-    {
+    ) {
         $this->helper = $globalConfig;
         $this->_elementTemplate = $elementTemplate;
         $this->_layout = $layout;
@@ -72,52 +77,50 @@ class Point extends \Magestore\Rewardpoints\Helper\Config
     }
 
     /**
-     * get Label for Point, default is "Point"
+     * Get Label for Point, default is "Point"
      *
      * @param mixed $store
      * @return string
      */
-
-
     public function getName($store = null)
     {
-        if ($pointName = trim( $this->helper->getConfig(self::XML_PATH_POINT_NAME, $store) ) ) {
+        if ($pointName = trim($this->helper->getConfig(self::XML_PATH_POINT_NAME, $store))) {
             return $pointName;
         }
         return __('Point');
     }
 
     /**
-     * get reward Label for Points (plural), default is "Points"
+     * Get reward Label for Points (plural), default is "Points"
      *
      * @param mixed $store
      * @return string
      */
     public function getPluralName($store = null)
     {
-        if ($pluralName = trim( $this->helper->getConfig(self::XML_PATH_POINT_NAME_PLURAL, $store) ) ) {
+        if ($pluralName = trim($this->helper->getConfig(self::XML_PATH_POINT_NAME_PLURAL, $store))) {
             return $pluralName;
         }
         return __('Points');
     }
 
     /**
-     * get point image on store, default is template image url
+     * Get point image on store, default is template image url
      *
      * @param mixed $store
      * @return string image url
      */
     public function getImage($store = null)
     {
-        if ($imgPath = trim( $this->helper->getConfig(self::XML_PATH_POINT_IMAGE, $store) ) ) {
-           return $this->_storeManager->getStore()->getBaseUrl('media').'rewardpoints/'.$imgPath;
+        if ($imgPath = trim($this->helper->getConfig(self::XML_PATH_POINT_IMAGE, $store))) {
+            return $this->_storeManager->getStore()->getBaseUrl('media').'rewardpoints/'.$imgPath;
         }
 
         return $this->_elementTemplate->getViewFileUrl('Magestore_Rewardpoints::images/rewardpoints/point.png');
     }
 
     /**
-     * get Image (by HTML code)
+     * Get Image (by HTML code)
      *
      * @param boolean $hasAnchor
      * @return string
@@ -125,13 +128,13 @@ class Point extends \Magestore\Rewardpoints\Helper\Config
     public function getImageHtml($hasAnchor = false)
     {
 
-        return $this->_layout->getBlockSingleton('\Magestore\Rewardpoints\Block\Image')
+        return $this->_layout->getBlockSingleton(\Magestore\Rewardpoints\Block\Image::class)
             ->setIsAnchorMode($hasAnchor)
             ->toHtml();
     }
 
     /**
-     * format point with unit (name). Ex: 1 Point, 2 Points
+     * Format point with unit (name). Ex: 1 Point, 2 Points
      *
      * @param int $points
      * @param mixed $store
@@ -139,7 +142,7 @@ class Point extends \Magestore\Rewardpoints\Helper\Config
      */
     public function format($points, $store = null)
     {
-        $points = intval($points);
+        $points = (int)$points;
         if (abs($points) <= 1) {
             return $points . ' ' . $this->getName($store);
         }
@@ -147,9 +150,9 @@ class Point extends \Magestore\Rewardpoints\Helper\Config
     }
 
     /**
-     * check show earning reward points on top link
+     * Check show earning reward points on top link
      *
-     * @param type $store
+     * @param null|int|string $store
      * @return string
      */
     public function showOnProduct($store = null)
@@ -158,9 +161,9 @@ class Point extends \Magestore\Rewardpoints\Helper\Config
     }
 
     /**
-     * check show earning reward points on mini cart
+     * Check show earning reward points on mini cart
      *
-     * @param type $store
+     * @param null|int|string $store
      * @return string
      */
     public function showOnMiniCart($store = null)

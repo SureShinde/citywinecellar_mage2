@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AddExistedBundleProductTest">
+        <annotations>
+            <features value="Add product to cart"/>
+            <stories value="Add bundle product to cart"/>
+            <title value="Add more bundle product which existed in cart"/>
+            <description value="Add more bundle product which existed in cart"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="ABP-02"/>
+            <group value="addExistedBundleToCart"/>
+            <group value="addBundleProduct"/>
+            <group value="pwapos"/>
+            <group value="demo"/>
+        </annotations>
+
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+
+        <actionGroup ref="SearchAndClickBundleProduct" stepKey="searchAndClickGroupedProduct">
+            <argument name="dataProduct" value="pos_bundle_product"/>
+        </actionGroup>
+
+        <!-- wait for element is loaded to the page document -->
+        <wait time="30" stepKey="waitToAdd0"/>
+
+        <waitForElementVisible selector="{{PosCheckoutPopupBundleProductSection.popupBundleBlock}}" time="120" stepKey="waitPopupBundleVisible1"/>
+        <waitForElementVisible selector="{{PosCheckoutPopupBundleProductSection.product1}}" time="120" stepKey="waitForLoadOption1"/>
+        <waitForElementVisible selector="{{PosCheckoutPopupBundleProductSection.product2}}" time="120" stepKey="waitForLoadOption2"/>
+        <wait time="4" stepKey="waitToAdd1"/>
+
+        <click selector="{{PosCheckoutPopupBundleProductSection.product1}}" stepKey="chooseOptionProduct1"/>
+        <click selector="{{PosCheckoutPopupBundleProductSection.product2}}" stepKey="chooseOptionProduct2"/>
+
+        <click selector="{{PosCheckoutPopupBundleProductSection.addToCart}}" stepKey="clickAddButton1"/>
+        <waitForElementNotVisible selector="{{PosCheckoutPopupBundleProductSection.popupBundleBlock}}" time="120" stepKey="waitForPopupClosed1"/>
+        <waitForElementVisible selector="{{CartSection.productFoundOnCartByName(pos_bundle_product.name)}}" time="120" stepKey="waitForItemVisibleInCart"/>
+        <seeElement selector="{{CartSection.productFoundOnCartByName(pos_bundle_product.name)}}" stepKey="seeItemInCart"/>
+
+        <click stepKey="clickOnProductFoundInList2" selector="{{ProductListSection.firstProduct}}"/>
+        <waitForElementVisible selector="{{PosCheckoutPopupBundleProductSection.popupBundleBlock}}" time="120" stepKey="waitPopupBundleVisible2"/>
+        <waitForElementVisible selector="{{PosCheckoutPopupBundleProductSection.product1}}" time="120" stepKey="waitForLoadOption1Time2"/>
+        <waitForElementVisible selector="{{PosCheckoutPopupBundleProductSection.product2}}" time="120" stepKey="waitForLoadOption2Time2"/>
+        <wait time="4" stepKey="waitToAdd2"/>
+
+        <click selector="{{PosCheckoutPopupBundleProductSection.product1}}" stepKey="chooseOptionProductDoubleTime1"/>
+        <click selector="{{PosCheckoutPopupBundleProductSection.product2}}" stepKey="chooseOptionProductDoubleTime2"/>
+
+        <click selector="{{PosCheckoutPopupBundleProductSection.addToCart}}" stepKey="clickAddButton2"/>
+        <waitForElementNotVisible selector="{{PosCheckoutPopupBundleProductSection.popupBundleBlock}}" time="120" stepKey="waitForPopupClosed2"/>
+
+        <grabTextFrom selector="{{CartSection.productQtyInCart(pos_bundle_product.name)}}" stepKey="grabItemQty"/>
+
+        <assertEquals message="Assert item qty is correct" stepKey="assertItemQtyIsCorrect">
+            <expectedResult type="float">2</expectedResult>
+            <actualResult type="variable">grabItemQty</actualResult>
+        </assertEquals>
+    </test>
+</tests>

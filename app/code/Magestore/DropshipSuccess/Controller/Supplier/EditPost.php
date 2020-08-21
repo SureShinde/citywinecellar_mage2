@@ -3,17 +3,17 @@
  * Copyright © 2016 Magestore. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace Magestore\DropshipSuccess\Controller\Supplier;
 
-use Magento\Customer\Model\Session;
-
 /**
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * Controller Edit supplier
+ *
+ * @SuppressWarnings(PHPMD.AllPurposeAction)
  */
 class EditPost extends \Magestore\DropshipSuccess\Controller\AbstractSupplier
 {
-
-     /**
+    /**
      * Login post action
      *
      * @return \Magento\Framework\Controller\Result\Redirect
@@ -33,7 +33,7 @@ class EditPost extends \Magestore\DropshipSuccess\Controller\AbstractSupplier
             $data = $this->getRequest()->getPostValue();
             $supplier = $this->supplierSession->getSupplier();
             if ($data['new_password']) {
-                $data['password'] = md5($data['new_password']);
+                $data['password'] = hash('md5', $data['new_password']);
             }
             $supplier->addData($data);
             try {

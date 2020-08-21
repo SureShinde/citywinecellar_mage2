@@ -4,13 +4,18 @@
  * Copyright © 2016 Magento. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace Magestore\DropshipSuccess\Controller\Supplier;
 
 use Magento\Framework\App\Filesystem\DirectoryList;
 
+/**
+ * Controller UploadPricelist
+ *
+ * @SuppressWarnings(PHPMD.AllPurposeAction)
+ */
 class UploadPricelist extends \Magestore\DropshipSuccess\Controller\AbstractSupplier
 {
-
     /**
      * Default customer account page
      *
@@ -32,7 +37,7 @@ class UploadPricelist extends \Magestore\DropshipSuccess\Controller\AbstractSupp
         $uploader->setAllowRenameFiles(true);
         $path = $mediapath . '/' . $pricelistPath;
         try {
-            $newFileName = md5(microtime()) .'.csv';
+            $newFileName = hash('sha256', microtime()) . '.csv';
             $uploader->save($path, $newFileName);
 
             /** @var \Magestore\DropshipSuccess\Model\Supplier\PricelistUpload $pricelistUpload */
@@ -42,7 +47,7 @@ class UploadPricelist extends \Magestore\DropshipSuccess\Controller\AbstractSupp
 
             $this->pricelistUploadRepositoryInterface->save($pricelistUpload);
 
-            /** send email upload new pricelist to store owner */
+            /** Send email upload new pricelist to store owner */
             $this->emailService->sendEmailPricelistToAdmin($pricelistUpload);
 
             $this->messageManager->addSuccessMessage(__('You have successfully uploaded pricelist!'));

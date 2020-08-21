@@ -19,21 +19,15 @@
  * @license     http://www.magestore.com/license-agreement.html
  */
 
-/**
- * RewardPoints Config Source Rounding Model
- *
- * @category    Magestore
- * @package     Magestore_RewardPoints
- * @author      Magestore Developer
- */
-
 namespace Magestore\Rewardpoints\Model\System\Config\Source;
 
+/**
+ * RewardPoints Config Source Rounding Model
+ */
 class Rounding implements \Magento\Framework\Option\ArrayInterface
 {
     const REFER_URL_PARAM_IDENTIFY = '1';
     const REFER_URL_PARAM_AFFILIATE_ID = '2';
-
 
     /**
      * Options getter
@@ -42,10 +36,10 @@ class Rounding implements \Magento\Framework\Option\ArrayInterface
      */
     public function toOptionArray()
     {
-        return array(
-            array('value' => 'round', 'label' => __('Normal')),
-            array('value' => 'floor', 'label' => __('Rounding Down')),
-            array('value' => 'ceil', 'label' => __('Rounding Up')),
-        );
+        return [
+            ['value' => 'round', 'label' => __('Normal')],
+            ['value' => 'floor', 'label' => __('Rounding Down')],
+            ['value' => 'ceil', 'label' => __('Rounding Up')],
+        ];
     }
 }

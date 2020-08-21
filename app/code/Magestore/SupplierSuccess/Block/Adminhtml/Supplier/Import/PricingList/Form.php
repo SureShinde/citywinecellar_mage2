@@ -4,27 +4,27 @@
  * See COPYING.txt for license details.
  */
 
-
 namespace Magestore\SupplierSuccess\Block\Adminhtml\Supplier\Import\PricingList;
 
 /**
- * Class Form
- * @package Magestore\SupplierSuccess\Block\Adminhtml\Supplier\Import
+ * Supplier pricing list Form
  */
-class Form extends  \Magestore\SupplierSuccess\Block\Adminhtml\Supplier\Import\Form
+class Form extends \Magestore\SupplierSuccess\Block\Adminhtml\Supplier\Import\Form
 {
-
     /**
      * Get csv sample link
      *
      * @return mixed
      */
-    public function getCsvSampleLink() {
-        $url = $this->getUrl('suppliersuccess/supplier_pricinglist/downloadsample',
-                array(
-                    '_secure' => true,
-                    'id' => $this->getRequest()->getParam('id')
-                ));
+    public function getCsvSampleLink()
+    {
+        $url = $this->getUrl(
+            'suppliersuccess/supplier_pricinglist/downloadsample',
+            [
+                '_secure' => true,
+                'id' => $this->getRequest()->getParam('id')
+            ]
+        );
         return $url;
     }
 
@@ -33,7 +33,8 @@ class Form extends  \Magestore\SupplierSuccess\Block\Adminhtml\Supplier\Import\F
      *
      * @return string
      */
-    public function getContent() {
+    public function getContent()
+    {
         return __('Please choose a CSV file to import pricelist supplier. You can download this sample CSV file');
     }
 
@@ -42,14 +43,16 @@ class Form extends  \Magestore\SupplierSuccess\Block\Adminhtml\Supplier\Import\F
      *
      * @return mixed
      */
-    public function getImportLink() {
-        return $this->getUrl('suppliersuccess/supplier_pricinglist/import',
-                array(
-                    '_secure' => true,
-                    'id' => $this->getRequest()->getParam('id')
-                ));
+    public function getImportLink()
+    {
+        return $this->getUrl(
+            'suppliersuccess/supplier_pricinglist/import',
+            [
+                '_secure' => true,
+                'id' => $this->getRequest()->getParam('id')
+            ]
+        );
     }
-
 
     /**
      * Get html id

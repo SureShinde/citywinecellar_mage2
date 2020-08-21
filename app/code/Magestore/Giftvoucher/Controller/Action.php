@@ -12,23 +12,28 @@ use Magento\Framework\Pricing\PriceCurrencyInterface;
 /**
  * Giftvoucher Action
  *
- * @category Magestore
- * @package  Magestore_Giftvoucher
  * @module   Giftvoucher
  * @author   Magestore Developer
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.AllPurposeAction)
  */
 class Action extends \Magento\Framework\App\Action\Action
 {
-    
+
     /**
      * @var \Magento\Store\Model\StoreManagerInterface
      */
     protected $_storeManager;
-    
+
     /**
      * @var \Magento\Framework\View\Result\PageFactory
      */
     protected $resultPageFactory;
+
+    /**
+     * @var PriceCurrencyInterface
+     */
+    protected $priceCurrency;
 
     /**
      * @param \Magento\Backend\Block\Template\Context|\Magento\Framework\App\Action\Context $context
@@ -50,94 +55,116 @@ class Action extends \Magento\Framework\App\Action\Action
     }
 
     /**
-     *
+     * @inheritDoc
      */
     public function execute()
     {
+        return null;
     }
 
     /**
-     * @return mixed
+     * Get Result Raw Factory
+     *
+     * @return \Magento\Framework\Controller\Result\RawFactory
      */
     public function getResultRawFactory()
     {
-        return $this->_objectManager->create('Magento\Framework\Controller\Result\RawFactory');
+        return $this->_objectManager->create(\Magento\Framework\Controller\Result\RawFactory::class);
     }
 
     /**
-     * @return mixed
+     * Get Result Json Factory
+     *
+     * @return \Magento\Framework\Controller\Result\JsonFactory
      */
     public function getResultJsonFactory()
     {
-        return $this->_objectManager->create('Magento\Framework\Controller\Result\JsonFactory')->create();
+        return $this->_objectManager->create(\Magento\Framework\Controller\Result\JsonFactory::class)->create();
     }
 
     /**
-     * @return mixed
+     * Get Result Json
+     *
+     * @return \Magento\Framework\Controller\Result\Json
      */
     public function getResultJson()
     {
-        return $this->_objectManager->create('Magento\Framework\Controller\Result\Json');
+        return $this->_objectManager->create(\Magento\Framework\Controller\Result\Json::class);
     }
 
     /**
-     * @return mixed
+     * Get Forward Factory
+     *
+     * @return \Magento\Framework\Controller\Result\Forward
      */
     public function getForwardFactory()
     {
-        return $this->_objectManager->create('Magento\Framework\Controller\Result\Forward');
+        return $this->_objectManager->create(\Magento\Framework\Controller\Result\Forward::class);
     }
 
     /**
-     * @return mixed
+     * Get Redirect Factory
+     *
+     * @return \Magento\Framework\Controller\Result\Redirect
      */
     public function getRedirectFactory()
     {
-        return $this->_objectManager->create('Magento\Framework\Controller\Result\Redirect');
+        return $this->_objectManager->create(\Magento\Framework\Controller\Result\Redirect::class);
     }
 
     /**
-     * @return mixed
+     * Get Page Factory
+     *
+     * @return \Magento\Framework\View\Result\PageFactory
      */
     public function getPageFactory()
     {
-        return $this->_objectManager->create('Magento\Framework\View\Result\PageFactory')->create();
+        return $this->_objectManager->create(\Magento\Framework\View\Result\PageFactory::class)->create();
     }
 
     /**
-     * @return mixed
+     * Get Layout Factory
+     *
+     * @return \Magento\Framework\View\Result\LayoutFactory
      */
     public function getLayoutFactory()
     {
-        return $this->_objectManager->create('Magento\Framework\View\Result\LayoutFactory')->create();
+        return $this->_objectManager->create(\Magento\Framework\View\Result\LayoutFactory::class)->create();
     }
 
     /**
-     * @return mixed
+     * Get Cusomter Session Model
+     *
+     * @return \Magento\Customer\Model\Session
      */
     public function getCusomterSessionModel()
     {
-        return $this->_objectManager->get('Magento\Customer\Model\Session');
+        return $this->_objectManager->get(\Magento\Customer\Model\Session::class);
     }
 
     /**
-     * @return mixed
+     * Get Http Context Obj
+     *
+     * @return \Magento\Framework\App\Http\Context
      */
     public function getHttpContextObj()
     {
-        return $this->_objectManager->create('Magento\Framework\App\Http\Context');
+        return $this->_objectManager->create(\Magento\Framework\App\Http\Context::class);
     }
 
     /**
+     * Get Helper Data
      *
      * @return \Magestore\Giftvoucher\Helper\Data
      */
     public function getHelperData()
     {
-        return $this->_objectManager->create('Magestore\Giftvoucher\Helper\Data');
+        return $this->_objectManager->create(\Magestore\Giftvoucher\Helper\Data::class);
     }
 
     /**
+     * Init Function
+     *
      * @param string $title
      * @return mixed
      */
@@ -149,12 +176,14 @@ class Action extends \Magento\Framework\App\Action\Action
             return $resultPageFactory;
         } else {
             $resultRedirectFactory = $this->getRedirectFactory()
-                ->setPath('customer/account/login', array('_secure' => true));
+                ->setPath('customer/account/login', ['_secure' => true]);
             return $resultRedirectFactory;
         }
     }
 
     /**
+     * Customer Logged In
+     *
      * @return mixed
      */
     public function customerLoggedIn()
@@ -163,6 +192,8 @@ class Action extends \Magento\Framework\App\Action\Action
     }
 
     /**
+     * Get Customer
+     *
      * @return mixed
      */
     public function getCustomer()
@@ -171,7 +202,9 @@ class Action extends \Magento\Framework\App\Action\Action
     }
 
     /**
-     * @param $modelName
+     * Get Model
+     *
+     * @param string $modelName
      * @return mixed
      */
     public function getModel($modelName)
@@ -180,7 +213,9 @@ class Action extends \Magento\Framework\App\Action\Action
     }
 
     /**
-     * @param $modelName
+     * Get Singleton
+     *
+     * @param string $modelName
      * @return mixed
      */
     public function getSingleton($modelName)
@@ -189,26 +224,32 @@ class Action extends \Magento\Framework\App\Action\Action
     }
 
     /**
-     * @return mixed
+     * Get Helper
+     *
+     * @return \Magestore\Giftvoucher\Helper\Data
      */
     public function getHelper()
     {
-        return $this->_objectManager->create('Magestore\Giftvoucher\Helper\Data');
+        return $this->_objectManager->create(\Magestore\Giftvoucher\Helper\Data::class);
     }
 
     /**
-     * @return mixed
+     * Get Giftvoucher Model
+     *
+     * @return \Magestore\Giftvoucher\Model\Giftvoucher
      */
     public function getGiftvoucherModel()
     {
-        return $this->_objectManager->create('Magestore\Giftvoucher\Model\Giftvoucher');
+        return $this->_objectManager->create(\Magestore\Giftvoucher\Model\Giftvoucher::class);
     }
 
     /**
-     * @return mixed
+     * Get File System
+     *
+     * @return \Magento\Framework\Filesystem
      */
     public function getFileSystem()
     {
-        return $this->_objectManager->create('\Magento\Framework\Filesystem');
+        return $this->_objectManager->create(\Magento\Framework\Filesystem::class);
     }
 }

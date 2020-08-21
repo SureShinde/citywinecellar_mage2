@@ -19,17 +19,24 @@
  * @license     http://www.magestore.com/license-agreement.html
  *
  */
-
 namespace Magestore\Customercredit\Observer;
 
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Sales\Model\Order;
 
+/**
+ * Class SalesOrderLoadAfter
+ *
+ * Used for sales order load after
+ */
 class SalesOrderLoadAfter implements ObserverInterface
 {
     /**
+     * Execute
+     *
      * @param \Magento\Framework\Event\Observer $observer
      * @return $this
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
@@ -43,8 +50,9 @@ class SalesOrderLoadAfter implements ObserverInterface
             return $this;
         }
         foreach ($order->getAllItems() as $item) {
-            if ($item->getParentItemId())
+            if ($item->getParentItemId()) {
                 continue;
+            }
             if ($item->getHasChildren() && $item->isChildrenCalculated()) {
                 foreach ($item->getChildren() as $child) {
                     if (($child->getQtyInvoiced() - $child->getQtyRefunded() - $child->getQtyCanceled()) > 0) {
@@ -52,12 +60,13 @@ class SalesOrderLoadAfter implements ObserverInterface
                         return $this;
                     }
                 }
-            } elseif ($item->getProduct()) {
+            } elseif ($item->getProductId()) {
                 if (($item->getQtyInvoiced() - $item->getQtyRefunded() - $item->getQtyCanceled()) > 0) {
                     $order->setForcedCanCreditmemo(true);
                     return $this;
                 }
             }
         }
+        return $this;
     }
 }

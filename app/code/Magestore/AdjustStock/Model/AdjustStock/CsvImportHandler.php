@@ -10,10 +10,14 @@ namespace Magestore\AdjustStock\Model\AdjustStock;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magestore\AdjustStock\Api\Data\AdjustStock\AdjustStockInterface;
 use Magestore\AdjustStock\Api\Data\AdjustStock\ProductInterface;
-use Magestore\AdjustStock\Api\MultiSourceInventory\SourceManagementInterface;
+use Magestore\AdjustStock\Model\ResourceModel\AdjustStock\GlobalStock\CollectionFactory;
 
 /**
- * Tax Rate CSV Import Handler
+ * Class CsvImportHandler
+ *
+ * Used to import csv
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.CookieAndSessionMisuse)
  */
 class CsvImportHandler
 {
@@ -64,20 +68,25 @@ class CsvImportHandler
      */
     protected $driverFile;
 
+    /**
+     * @var \Magestore\AdjustStock\Api\MultiSourceInventory\SourceManagementInterface
+     */
     protected $sourceManagement;
 
     /**
      * CsvImportHandler constructor.
+     *
      * @param \Magento\Framework\File\Csv $csvProcessor
-     * @param \Magestore\InventorySuccess\Model\AdjustStockFactory $adjustStockFactory
-     * @param \Magestore\InventorySuccess\Api\AdjustStock\AdjustStockManagementInterface $adjustStockManagement
+     * @param \Magestore\AdjustStock\Model\AdjustStockFactory $adjustStockFactory
+     * @param \Magestore\AdjustStock\Api\AdjustStock\AdjustStockManagementInterface $adjustStockManagement
+     * @param \Magestore\AdjustStock\Api\MultiSourceInventory\SourceManagementInterface $sourceManagement
      * @param \Magento\Framework\App\RequestInterface $request
      * @param \Magento\Framework\Filesystem $filesystem
-     * @param \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory $productCollectionFactory
+     * @param CollectionFactory $productCollectionFactory
      * @param \Magento\Backend\Model\Session $backendSession
      * @param \Magento\Framework\Filesystem\File\WriteFactory $fileWriteFactory
      * @param \Magento\Framework\Filesystem\Driver\File $driverFile
-     * @param \Magestore\InventorySuccess\Helper\Data $helper
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         \Magento\Framework\File\Csv $csvProcessor,
@@ -86,12 +95,11 @@ class CsvImportHandler
         \Magestore\AdjustStock\Api\MultiSourceInventory\SourceManagementInterface $sourceManagement,
         \Magento\Framework\App\RequestInterface $request,
         \Magento\Framework\Filesystem $filesystem,
-        \Magestore\AdjustStock\Model\ResourceModel\AdjustStock\GlobalStock\CollectionFactory $productCollectionFactory,
+        CollectionFactory $productCollectionFactory,
         \Magento\Backend\Model\Session $backendSession,
         \Magento\Framework\Filesystem\File\WriteFactory $fileWriteFactory,
         \Magento\Framework\Filesystem\Driver\File $driverFile
-    )
-    {
+    ) {
         $this->csvProcessor = $csvProcessor;
         $this->adjustStockFactory = $adjustStockFactory;
         $this->adjustStockManagement = $adjustStockManagement;
@@ -104,11 +112,14 @@ class CsvImportHandler
         $this->sourceManagement = $sourceManagement;
     }
 
-
     /**
-     * @param $file
-     * @throws \Exception
+     * Import from csv file
+     *
+     * @param string $file
+     * @param int $importImmediately
      * @throws \Magento\Framework\Exception\LocalizedException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function importFromCsvFile($file, $importImmediately = 0)
     {
@@ -124,8 +135,8 @@ class CsvImportHandler
         if ($this->request->getParam('id')) {
             $adjustStock = $adjustStock->load($this->request->getParam('id'));
         }
-        $adjustData = array();
-        $invalidData = array();
+        $adjustData = [];
+        $invalidData = [];
         foreach ($importProductData as $rowIndex => $dataRow) {
             if ($rowIndex == 0) {
                 continue;
@@ -139,25 +150,30 @@ class CsvImportHandler
             if ($productModel->getId() && isset($dataRow[1]) &&
                 is_numeric($dataRow[1])) {
                 $changeQty = floatval($dataRow[1]);
-                $adjustData[AdjustStockInterface::KEY_PRODUCTS][$productModel->getId()] = array(
+                $adjustData[AdjustStockInterface::KEY_PRODUCTS][$productModel->getId()] = [
                     ProductInterface::PRODUCT_ID => $productModel->getId(),
                     ProductInterface::PRODUCT_SKU => $productSku,
                     ProductInterface::CHANGE_QTY => $changeQty,
                     ProductInterface::PRODUCT_NAME => $productModel->getName(),
                     ProductInterface::BARCODE => $productModel->getBarcode()
+                ];
+
+                $sourceItems = $this->sourceManagement->getSourceItemsMap(
+                    $productSku,
+                    [$adjustStock->getData(AdjustStockInterface::SOURCE_CODE)]
                 );
-
-                $sourceItems = $this->sourceManagement->getSourceItemsMap($productSku, [$adjustStock->getData(AdjustStockInterface::SOURCE_CODE)]);
-
                 if (isset($sourceItems[$adjustStock->getData(AdjustStockInterface::SOURCE_CODE)])) {
                     $sourceItem = $sourceItems[$adjustStock->getData(AdjustStockInterface::SOURCE_CODE)];
-                    $adjustData[AdjustStockInterface::KEY_PRODUCTS][$productModel->getId()][ProductInterface::OLD_QTY] = $sourceItem->getQuantity();
+                    $adjustData[AdjustStockInterface::KEY_PRODUCTS][$productModel->getId()][ProductInterface::OLD_QTY]
+                        = $sourceItem->getQuantity();
                 } else {
-                    $adjustData[AdjustStockInterface::KEY_PRODUCTS][$productModel->getId()][ProductInterface::OLD_QTY] = 0;
+                    $adjustData[AdjustStockInterface::KEY_PRODUCTS][$productModel->getId()][ProductInterface::OLD_QTY]
+                        = 0;
                 }
 
                 $adjustData[AdjustStockInterface::KEY_PRODUCTS][$productModel->getId()][ProductInterface::NEW_QTY]
                     = $adjustData[AdjustStockInterface::KEY_PRODUCTS][$productModel->getId()][ProductInterface::OLD_QTY]
+                    //phpcs:disable
                     + $adjustData[AdjustStockInterface::KEY_PRODUCTS][$productModel->getId()][ProductInterface::CHANGE_QTY];
 
             } else {
@@ -166,7 +182,8 @@ class CsvImportHandler
         }
 
         if ($adjustStock->getId()) {
-            $adjustData[AdjustStockInterface::ADJUSTSTOCK_CODE] = $adjustStock->getData(AdjustStockInterface::ADJUSTSTOCK_CODE);
+            $adjustData[AdjustStockInterface::ADJUSTSTOCK_CODE]
+                = $adjustStock->getData(AdjustStockInterface::ADJUSTSTOCK_CODE);
             $adjustData[AdjustStockInterface::SOURCE_CODE] = $adjustStock->getData(AdjustStockInterface::SOURCE_CODE);
             $adjustData[AdjustStockInterface::SOURCE_NAME] = $adjustStock->getData(AdjustStockInterface::SOURCE_NAME);
             $adjustData[AdjustStockInterface::REASON] = $adjustStock->getData(AdjustStockInterface::REASON);
@@ -178,9 +195,8 @@ class CsvImportHandler
             $this->createInvalidAdjustedFile($invalidData);
         }
 
-
         $this->adjustStockManagement->createAdjustment($adjustStock, $adjustData);
-        if($importImmediately == 1) {
+        if ($importImmediately == 1) {
             $this->adjustStockManagement->complete($adjustStock);
         }
     }
@@ -207,17 +223,18 @@ class CsvImportHandler
     }
 
     /**
-     * create adjusted invalid file
+     * Create adjust invalid data
      *
-     * @param array
-     * @return
+     * @param array $invalidData
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     public function createInvalidAdjustedFile($invalidData)
     {
         $this->backendSession->setData('error_import', true);
         $this->backendSession->setData('sku_invalid', count($invalidData));
         $this->filesystem->getDirectoryWrite(DirectoryList::VAR_DIR)->create('import');
-        $filename = DirectoryList::VAR_DIR . '/import/' . 'import_product_to_adjuststock_invalid.csv';
+        $filename = $this->filesystem->getDirectoryWrite(DirectoryList::VAR_DIR)
+            ->getAbsolutePath('import/import_product_to_adjuststock_invalid.csv');
 
         $file = $this->fileWriteFactory->create(
             $filename,
@@ -226,14 +243,16 @@ class CsvImportHandler
         );
         $file->close();
 
-        $data = array(
-            array('SKU', 'QTY')
-        );
+        $data = [
+            [__('SKU'), __('QTY')]
+        ];
         $data = array_merge($data, $invalidData);
         $this->csvProcessor->saveData($filename, $data);
     }
 
     /**
+     * Get required csv fields
+     *
      * @return array
      */
     public function getRequiredCsvFields()
@@ -246,11 +265,14 @@ class CsvImportHandler
     }
 
     /**
+     * Filter import product data
+     *
      * @param array $productRawData
      * @param array $invalidFields
      * @param array $validFields
      * @return array
      * @throws \Magento\Framework\Exception\LocalizedException
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
     public function _filterImportProductData(array $productRawData, array $invalidFields, array $validFields)
     {
@@ -276,11 +298,12 @@ class CsvImportHandler
     }
 
     /**
+     * Get base dir media
+     *
      * @return \Magento\Framework\Filesystem\Directory\ReadInterface
      */
     public function getBaseDirMedia()
     {
         return $this->filesystem->getDirectoryRead('media');
     }
-
 }

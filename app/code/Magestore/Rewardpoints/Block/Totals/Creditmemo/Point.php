@@ -22,10 +22,6 @@ namespace Magestore\Rewardpoints\Block\Totals\Creditmemo;
 
 /**
  * Rewardpoints Total Label Block
- *
- * @category    Magestore
- * @package     Magestore_RewardPoints
- * @author      Magestore Developer
  */
 class Point extends \Magento\Sales\Block\Order\Totals
 {
@@ -46,17 +42,14 @@ class Point extends \Magento\Sales\Block\Order\Totals
         \Magento\Framework\Registry $registry,
         \Magestore\Rewardpoints\Helper\Point $helperPoint,
         array $data = []
-    )
-    {
+    ) {
         $this->helperPoint = $helperPoint;
         parent::__construct($context, $registry, $data);
     }
 
     /**
-     * add points value into creditmemo total
-     *
+     * Add points value into creditmemo total
      */
-
     public function initTotals()
     {
         if (!$this->helperPoint->getGeneralConfig('enable')) {
@@ -67,30 +60,30 @@ class Point extends \Magento\Sales\Block\Order\Totals
         $creditmemo = $totalsBlock->getCreditmemo();
 
         if ($creditmemo->getRewardpointsEarn()) {
-            $totalsBlock->addTotal(new \Magento\Framework\DataObject(array(
+            $totalsBlock->addTotal(new \Magento\Framework\DataObject([
                 'code' => 'rewardpoints_earn_label',
                 'label' => __('Earn Points'),
                 'value' => $this->helperPoint->format($creditmemo->getRewardpointsEarn()),
                 'is_formated' => true,
-            )), 'subtotal');
+            ]), 'subtotal');
         }
 
         if ($creditmemo->getRewardpointsSpent()) {
-            $totalsBlock->addTotal(new \Magento\Framework\DataObject(array(
+            $totalsBlock->addTotal(new \Magento\Framework\DataObject([
                 'code' => 'rewardpoints_spent_label',
                 'label' => __('Spend Points'),
                 'value' => $this->helperPoint->format($creditmemo->getRewardpointsSpent()),
                 'is_formated' => true,
-            )), 'rewardpoints_earn_label');
+            ]), 'rewardpoints_earn_label');
         }
 
         if ($creditmemo->getRewardpointsDiscount() >= 0.0001) {
-            $totalsBlock->addTotal(new \Magento\Framework\DataObject(array(
+            $totalsBlock->addTotal(new \Magento\Framework\DataObject([
                 'code' => 'rewardpoints',
                 'label' => __('Use points on spend'),
                 'value' => -$creditmemo->getRewardpointsDiscount(),
                 'base_value' => -$creditmemo->getRewardpointsBaseDiscount(),
-            )), 'rewardpoints_spent_label');
+            ]), 'rewardpoints_spent_label');
 
             /**
              * Get total discount and re-calculate discount value to showing
@@ -105,5 +98,6 @@ class Point extends \Magento\Sales\Block\Order\Totals
                 }
             }
         }
+        return $this;
     }
 }

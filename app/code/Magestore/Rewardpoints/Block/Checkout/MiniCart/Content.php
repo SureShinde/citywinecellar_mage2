@@ -27,6 +27,10 @@
  * @author      Magestore Developer
  */
 namespace Magestore\Rewardpoints\Block\Checkout\MiniCart;
+
+/**
+ * Reward points - Checkout minicart content block
+ */
 class Content extends \Magento\Framework\View\Element\Template
 {
     /**
@@ -58,8 +62,7 @@ class Content extends \Magento\Framework\View\Element\Template
         \Magento\Customer\Model\SessionFactory $customerSessionFactory,
         \Magestore\Rewardpoints\Helper\Calculation\Earning $calculationEarning,
         array $data
-    )
-    {
+    ) {
         parent::__construct($context, $data);
         $this->helperPoint = $helperPoint;
         $this->_customerSessionFactory = $customerSessionFactory;
@@ -69,7 +72,7 @@ class Content extends \Magento\Framework\View\Element\Template
     /**
      * Check store is enable for display on minicart sidebar
      *
-     * @return type
+     * @return string
      */
     public function enableDisplay()
     {
@@ -77,7 +80,7 @@ class Content extends \Magento\Framework\View\Element\Template
     }
 
     /**
-     * get Image (HTML) for reward points
+     * Get Image (HTML) for reward points
      *
      * @param boolean $hasAnchor
      * @return string
@@ -88,14 +91,15 @@ class Content extends \Magento\Framework\View\Element\Template
     }
 
     /**
+     * Knockout Data
+     *
      * @return array
      */
-
     public function knockoutData()
     {
         $earning = $this->_calculationEarning;
         $results = [];
-        if ($this->enableDisplay()){
+        if ($this->enableDisplay()) {
             $earningPoint = $earning->getTotalPointsEarning();
             $results['enableReward'] = $this->enableDisplay();
             $results['getImageHtml'] = $this->getImageHtml(true);
@@ -107,14 +111,14 @@ class Content extends \Magento\Framework\View\Element\Template
                 $results['earnPoint'] = false;
             }
 
-            $results['urlRedirectLogin'] = $this->_urlBuilder->getUrl('rewardpoints/index/redirectLogin',
-                array(
+            $results['urlRedirectLogin'] = $this->_urlBuilder->getUrl(
+                'rewardpoints/index/redirectLogin',
+                [
                     'redirect'=>$this->_urlBuilder->getCurrentUrl()
-                )
+                ]
             );
         }
 
         return $results;
     }
-
 }

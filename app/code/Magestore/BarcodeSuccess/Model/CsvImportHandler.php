@@ -4,44 +4,77 @@
  * Copyright © 2016 Magestore. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace Magestore\BarcodeSuccess\Model;
 
-use Magestore\BarcodeSuccess\Model\History;
 use Magento\Framework\App\Filesystem\DirectoryList;
 
 /**
- * Tax Rate CSV Import Handler
+ * Class CsvImportHandler
+ *
+ * Used to import csv
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.CookieAndSessionMisuse)
  */
 class CsvImportHandler
 {
-
     /**
-     * CSV Processor
-     *
      * @var \Magento\Framework\File\Csv
      */
     protected $csvProcessor;
 
-
     /**
-     * @var \Magento\Framework\App\RequestInterface
+     * @var
      */
     protected $request;
 
+    /**
+     * @var \Magestore\BarcodeSuccess\Helper\Data
+     */
     protected $helper;
 
+    /**
+     * @var \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory
+     */
     protected $productCollectionFactory;
 
+    /**
+     * @var \Magento\Framework\Message\ManagerInterface
+     */
     protected $messageManager;
 
+    /**
+     * @var \Magento\Framework\Filesystem
+     */
     protected $filesystem;
 
+    /**
+     * @var \Magento\Backend\Model\Session
+     */
     protected $backendSession;
 
+    /**
+     * @var \Magento\Framework\Filesystem\File\WriteFactory
+     */
     protected $fileWriteFactory;
 
+    /**
+     * @var \Magento\Framework\Filesystem\Driver\File
+     */
     protected $driverFile;
 
+    /**
+     * CsvImportHandler constructor.
+     *
+     * @param \Magento\Framework\File\Csv $csvProcessor
+     * @param \Magestore\BarcodeSuccess\Helper\Data $helper
+     * @param \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory $productCollectionFactory
+     * @param \Magento\Framework\Message\ManagerInterface $messageManager
+     * @param \Magento\Framework\Filesystem $filesystem
+     * @param \Magento\Backend\Model\Session $backendSession
+     * @param \Magento\Framework\Filesystem\File\WriteFactory $fileWriteFactory
+     * @param \Magento\Framework\Filesystem\Driver\File $driverFile
+     */
     public function __construct(
         \Magento\Framework\File\Csv $csvProcessor,
         \Magestore\BarcodeSuccess\Helper\Data $helper,
@@ -51,8 +84,7 @@ class CsvImportHandler
         \Magento\Backend\Model\Session $backendSession,
         \Magento\Framework\Filesystem\File\WriteFactory $fileWriteFactory,
         \Magento\Framework\Filesystem\Driver\File $driverFile
-    )
-    {
+    ) {
         $this->csvProcessor = $csvProcessor;
         $this->helper = $helper;
         $this->productCollectionFactory = $productCollectionFactory;
@@ -63,30 +95,37 @@ class CsvImportHandler
         $this->fileWriteFactory = $fileWriteFactory;
     }
 
-
+    /**
+     * Import from csv file
+     *
+     * @param string $file
+     * @param string $reason
+     * @return array
+     * @throws \Magento\Framework\Exception\AlreadyExistsException
+     * @throws \Magento\Framework\Exception\FileSystemException
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     */
     public function importFromCsvFile($file, $reason)
     {
         if (!isset($file['tmp_name'])) {
             throw new \Magento\Framework\Exception\LocalizedException(__('Invalid file upload attempt.'));
         }
 
-
         $importProductRawData = $this->csvProcessor->getData($file['tmp_name']);
-
         $fileFields = $importProductRawData[0];
-
         $validFields = $this->_filterFileFields($fileFields);
-
         $invalidFields = array_diff_key($fileFields, $validFields);
-        
         $importProductData = $this->_filterImportProductData($importProductRawData, $invalidFields, $validFields);
 
         $totalQty = 0;
-        $barcodeArray = array();
+        $barcodeArray = [];
         $hasError = false;
-        $invalidData = array(
-            array('SKU', 'BARCODE', 'QTY', 'SUPPLIER', 'PURCHASE_TIME')
-        );
+        $invalidData = [
+            ['SKU', 'BARCODE', 'QTY', 'SUPPLIER', 'PURCHASE_TIME']
+        ];
         if (!count($importProductData)) {
             $invalidData = $importProductRawData;
             $hasError = true;
@@ -113,13 +152,13 @@ class CsvImportHandler
             $barcodeArray[] = $data;
         }
 
-        $invalidSku = array();
-        $invalidBarcode = array();
+        $invalidSku = [];
+        $invalidBarcode = [];
 
         $historyId = '';
-        $history = $this->helper->getModel('Magestore\BarcodeSuccess\Api\Data\HistoryInterface');
-        $historyResource = $this->helper->getModel('Magestore\BarcodeSuccess\Model\ResourceModel\History');
-        $adminSession = $this->helper->getModel('Magento\Backend\Model\Auth\Session');
+        $history = $this->helper->getModel(\Magestore\BarcodeSuccess\Api\Data\HistoryInterface::class);
+        $historyResource = $this->helper->getModel(\Magestore\BarcodeSuccess\Model\ResourceModel\History::class);
+        $adminSession = $this->helper->getModel(\Magento\Backend\Model\Auth\Session::class);
         try {
             $admin = $adminSession->getUser();
             $adminId = ($admin) ? $admin->getId() : 0;
@@ -132,13 +171,14 @@ class CsvImportHandler
         } catch (\Exception $e) {
             $this->helper->addLog($e->getMessage());
         }
-        
+
         $oneBarcodePerSku = $this->helper->getStoreConfig('barcodesuccess/general/one_barcode_per_sku');
         foreach ($barcodeArray as $barcodeData) {
             if ($barcodeData['product_sku'] && $barcodeData['barcode']) {
                 $productSku = $barcodeData['product_sku'];
                 if ($oneBarcodePerSku) {
-                    $skuExist = $this->helper->getModel('Magestore\BarcodeSuccess\Model\Barcode')->load($barcodeData['product_sku'],'product_sku');
+                    $skuExist = $this->helper->getModel(\Magestore\BarcodeSuccess\Model\Barcode::class)
+                        ->load($barcodeData['product_sku'], 'product_sku');
                     if ($skuExist->getId()) {
                         $skuExist
                             ->setBarcode($barcodeData['barcode'])
@@ -155,13 +195,14 @@ class CsvImportHandler
                     ->setPageSize(1)
                     ->setCurPage(1)
                     ->getFirstItem();
-                $barcodeExist = $this->helper->getModel('Magestore\BarcodeSuccess\Model\Barcode')->load($barcodeData['barcode'],'barcode');
+                $barcodeExist = $this->helper->getModel(\Magestore\BarcodeSuccess\Model\Barcode::class)
+                    ->load($barcodeData['barcode'], 'barcode');
                 if ($productModel->getId() && !$barcodeExist->getId()) {
                     $barcodeData['product_id'] = $productModel->getId();
                     $barcodeData['history_id'] = $historyId;
                     $totalQty += floatval($barcodeData['qty']);
                     $barcodeArray[] = $barcodeData;
-                    $barcode = $this->helper->getModel('\Magestore\BarcodeSuccess\Api\Data\BarcodeInterface');
+                    $barcode = $this->helper->getModel(\Magestore\BarcodeSuccess\Api\Data\BarcodeInterface::class);
                     $barcode->setData($barcodeData);
                     $this->helper->resource->save($barcode);
                     $importSuccess++;
@@ -181,10 +222,10 @@ class CsvImportHandler
             }
         }
 
-        if($importSuccess > 0){
+        if ($importSuccess > 0) {
             $history->setData('total_qty', $totalQty);
             $history->save();
-        }else{
+        } else {
             $history->setId($historyId)->delete();
         }
 
@@ -192,10 +233,10 @@ class CsvImportHandler
             $this->backendSession->setData('error_import', true);
             $this->backendSession->setData('sku_exist', count($invalidSku));
             $this->backendSession->setData('barcode_exist', count($invalidBarcode));
-            
+
             $this->filesystem->getDirectoryWrite(DirectoryList::VAR_DIR)->create('import');
             $filename = $this->filesystem->getDirectoryRead(DirectoryList::VAR_DIR)
-                            ->getAbsolutePath('import_product_invalid.csv');
+                ->getAbsolutePath('import_product_invalid.csv');
             $file = $this->fileWriteFactory->create(
                 $filename,
                 \Magento\Framework\Filesystem\DriverPool::FILE,
@@ -206,11 +247,11 @@ class CsvImportHandler
             $this->csvProcessor->saveData($filename, $invalidData);
         }
 
-        return array(
+        return [
             'history_id' => $historyId,
             'import_success' => $importSuccess,
             'edit_success' => $editSuccess
-        );
+        ];
     }
 
     /**
@@ -234,6 +275,11 @@ class CsvImportHandler
         return $filteredFields;
     }
 
+    /**
+     * Get required csv fields
+     *
+     * @return array
+     */
     public function getRequiredCsvFields()
     {
         // indexes are specified for clarity, they are used during import
@@ -244,6 +290,16 @@ class CsvImportHandler
         ];
     }
 
+    /**
+     * Filter import product data
+     *
+     * @param array $productRawData
+     * @param array $invalidFields
+     * @param array $validFields
+     * @return array
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     */
     public function _filterImportProductData(array $productRawData, array $invalidFields, array $validFields)
     {
         $validFieldsNum = count($validFields);
@@ -267,9 +323,13 @@ class CsvImportHandler
         return $productRawData;
     }
 
+    /**
+     * Get base dir media
+     *
+     * @return \Magento\Framework\Filesystem\Directory\ReadInterface
+     */
     public function getBaseDirMedia()
     {
         return $this->filesystem->getDirectoryRead('media');
     }
-
 }

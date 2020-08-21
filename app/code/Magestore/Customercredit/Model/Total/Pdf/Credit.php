@@ -22,8 +22,16 @@
 
 namespace Magestore\Customercredit\Model\Total\Pdf;
 
+/**
+ * Class Credit
+ *
+ * Total Pdf credit model
+ */
 class Credit extends \Magento\Sales\Model\Order\Pdf\Total\DefaultTotal
 {
+    /**
+     * @inheritDoc
+     */
     public function getTotalsForDisplay()
     {
         $amount = $this->getOrder()->formatPriceTxt($this->getAmount());
@@ -31,15 +39,19 @@ class Credit extends \Magento\Sales\Model\Order\Pdf\Total\DefaultTotal
         if ($this->getAmountPrefix()) {
             $amount = $this->getAmountPrefix() . $amount;
         }
-        $totals = array(array(
-            'label' => __('Customer credit:'),
-            'amount' => $amount,
-            'font_size' => $fontSize,
-        )
-        );
+        $totals = [
+            [
+                'label' => __('Customer credit:'),
+                'amount' => $amount,
+                'font_size' => $fontSize,
+            ]
+        ];
         return $totals;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getAmount()
     {
         if ($this->getSource()->getCustomercreditDiscount()) {
@@ -47,5 +59,4 @@ class Credit extends \Magento\Sales\Model\Order\Pdf\Total\DefaultTotal
         }
         return -$this->getOrder()->getCustomercreditDiscount();
     }
-
 }

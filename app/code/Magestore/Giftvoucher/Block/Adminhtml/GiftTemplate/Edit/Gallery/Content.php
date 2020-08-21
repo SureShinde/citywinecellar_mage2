@@ -3,36 +3,39 @@
  * Copyright © 2017 Magestore. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace Magestore\Giftvoucher\Block\Adminhtml\GiftTemplate\Edit\Gallery;
 
 /**
  * Class Content
- * @package Magestore\Giftvoucher\Block\Adminhtml\GiftTemplate\Edit\Gallery
+ *
+ * Gallery Content Gift Voucher
  */
 class Content extends \Magento\Catalog\Block\Adminhtml\Product\Helper\Form\Gallery\Content
 {
-    
     /**
      * @var \Magestore\Giftvoucher\Service\GiftTemplate\MediaService
      */
     protected $mediaService;
-    
+
     /**
      * @var \Magestore\Giftvoucher\Service\GiftTemplate\SampleDataService
      */
     protected $sampleDataService;
-    
+
     /**
      * @var \Magestore\Giftvoucher\Service\GiftTemplate\ProcessorService
      */
     protected $templateProcessorService;
-    
+
     /**
      * @var \Magento\Framework\Registry
      */
     protected $coreRegistry;
 
     /**
+     * Content constructor.
+     *
      * @param \Magento\Backend\Block\Template\Context $context
      * @param \Magento\Framework\Json\EncoderInterface $jsonEncoder
      * @param \Magento\Catalog\Model\Product\Media\Config $mediaConfig
@@ -58,16 +61,18 @@ class Content extends \Magento\Catalog\Block\Adminhtml\Product\Helper\Form\Galle
         $this->templateProcessorService = $templateProcessorService;
         parent::__construct($context, $jsonEncoder, $mediaConfig, $data);
     }
-    
+
     /**
-     * @return AbstractBlock
+     * Prepare layout
+     *
+     * @return $this|\Magento\Framework\View\Element\AbstractBlock
      */
     protected function _prepareLayout()
     {
         parent::_prepareLayout();
 
         $this->getUploader()->getConfig()->setUrl(
-            $this->_urlBuilder->addSessionParam()->getUrl('giftvoucheradmin/gifttemplate/upload')
+            $this->_urlBuilder->getUrl('giftvoucheradmin/gifttemplate/upload')
         )->setFileField(
             'image'
         )->setFilters(
@@ -78,11 +83,11 @@ class Content extends \Magento\Catalog\Block\Adminhtml\Product\Helper\Form\Galle
                 ],
             ]
         );
-        
+
         $this->setTemplate('Magestore_Giftvoucher::gifttemplate/edit/gallery.phtml');
         return $this;
     }
-    
+
     /**
      * Retrieve media attributes
      *
@@ -92,16 +97,19 @@ class Content extends \Magento\Catalog\Block\Adminhtml\Product\Helper\Form\Galle
     {
         return [];
     }
-    
+
     /**
+     * Get image json
+     *
      * @return string
      */
     public function getImagesJson()
     {
         return $this->mediaService->getImagesJson($this->getElement()->getModelData());
     }
-    
+
     /**
+     * Get gift template
      *
      * @return \Magestore\Giftvoucher\Api\Data\GiftTemplateInterface
      */
@@ -109,8 +117,9 @@ class Content extends \Magento\Catalog\Block\Adminhtml\Product\Helper\Form\Galle
     {
         return $this->getElement()->getModelData();
     }
-    
+
     /**
+     * Get Template Preview
      *
      * @return string
      */
@@ -125,7 +134,10 @@ class Content extends \Magento\Catalog\Block\Adminhtml\Product\Helper\Form\Galle
         try {
             return $this->templateProcessorService->getProcessedTemplate($variables, $giftTemplateId);
         } catch (\Exception $e) {
-            return __("We're sorry, an error has occurred while generating this gift card template. ". $e->getMessage());
+            return __(
+                "We're sorry, an error has occurred while generating this gift card template. "
+                . $e->getMessage()
+            );
         }
     }
 }

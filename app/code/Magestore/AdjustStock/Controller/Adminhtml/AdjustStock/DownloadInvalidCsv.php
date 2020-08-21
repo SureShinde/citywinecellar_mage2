@@ -5,38 +5,51 @@
  */
 
 namespace Magestore\AdjustStock\Controller\Adminhtml\AdjustStock;
+
 use Magento\Framework\App\Filesystem\DirectoryList;
-use Magento\Framework\Filesystem;
+use Magento\Framework\App\Action\HttpGetActionInterface as HttpGetActionInterface;
+
 /**
- * Class Import
- * @package Magestore\InventorySuccess\Controller\Adminhtml\AdjustStock
+ * Class DownloadInvalidCsv
+ *
+ * Used to download invalid csv file
  */
-class DownloadInvalidCsv extends \Magestore\AdjustStock\Controller\Adminhtml\AdjustStock\AdjustStock
+class DownloadInvalidCsv extends \Magestore\AdjustStock\Controller\Adminhtml\AdjustStock\AdjustStock implements
+    HttpGetActionInterface
 {
     /**
-     * @return mixed
+     * Execute download invalid csv
+     *
+     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
     public function execute()
     {
         $this->filesystem->getDirectoryWrite(DirectoryList::VAR_DIR)->create('import');
-        $filename = DirectoryList::VAR_DIR.'/import/'.'import_product_to_adjuststock_invalid.csv';           
+        $filename = $this->filesystem->getDirectoryWrite(DirectoryList::VAR_DIR)
+            ->getAbsolutePath('import/import_product_to_adjuststock_invalid.csv');
         return $this->fileFactory->create(
             'import_product_to_adjuststock_invalid.csv',
-            file_get_contents($filename),
+            $this->driverFile->fileGetContents($filename),
             DirectoryList::VAR_DIR
         );
     }
 
     /**
+     * Get Csv sample link
+     *
      * @return string
      */
-    public function getCsvSampleLink() {
+    public function getCsvSampleLink()
+    {
         $path = 'magestore/inventory/adjuststock/import_product_to_adjuststock_invalid.csv';
-        $url =  $this->_url->getBaseUrl(['_type' => \Magento\Framework\UrlInterface::URL_TYPE_MEDIA]) . $path;
+        $url = $this->_url->getBaseUrl(['_type' => \Magento\Framework\UrlInterface::URL_TYPE_MEDIA]) . $path;
         return $url;
     }
 
     /**
+     * Get base dir media
+     *
      * @return mixed
      */
     public function getBaseDirMedia()

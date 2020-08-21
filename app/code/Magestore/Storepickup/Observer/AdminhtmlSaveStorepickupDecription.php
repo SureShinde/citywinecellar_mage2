@@ -27,12 +27,10 @@ use Symfony\Component\Config\Definition\Exception\Exception;
 use Magestore\Storepickup\Model\ResourceModel\Orders\StorepickupStatus;
 
 /**
- * Class GiftMessageConfigObserver
+ * Class AdminhtmlSaveStorepickupDecription
  *
- * @category Magestore
- * @package  Magestore_StorePickup
- * @module   StorePickup
- * @author   Magestore Developer
+ * Used to observe store pickup save description
+ * @SuppressWarnings(PHPMD.CookieAndSessionMisuse)
  */
 class AdminhtmlSaveStorepickupDecription implements ObserverInterface
 {
@@ -60,7 +58,13 @@ class AdminhtmlSaveStorepickupDecription implements ObserverInterface
     protected $_storepickupHelperEmail;
 
     /**
-     * adminhtmlSaveStorepickupDecription constructor.
+     * @var \Magento\Backend\Model\Session
+     */
+    protected $_backendSession;
+
+    /**
+     * AdminhtmlSaveStorepickupDecription constructor.
+     *
      * @param \Magento\Backend\Model\Session $backendSession
      * @param \Magestore\Storepickup\Model\StoreFactory $storeCollection
      * @param \Magento\Sales\Api\Data\OrderAddressInterface $orderAddressInterface
@@ -73,7 +77,7 @@ class AdminhtmlSaveStorepickupDecription implements ObserverInterface
         \Magento\Sales\Api\Data\OrderAddressInterface $orderAddressInterface,
         \Magestore\Storepickup\Helper\Data $storepickupHelper,
         \Magestore\Storepickup\Helper\Email $storepickupHelperEmail
-    ){
+    ) {
         $this->_backendSession = $backendSession;
         $this->_storeCollection = $storeCollection;
         $this->_orderAddressInterface = $orderAddressInterface;
@@ -82,6 +86,8 @@ class AdminhtmlSaveStorepickupDecription implements ObserverInterface
     }
 
     /**
+     * Execute
+     *
      * @param \Magento\Framework\Event\Observer $observer
      * @return void
      */
@@ -91,39 +97,46 @@ class AdminhtmlSaveStorepickupDecription implements ObserverInterface
             /** @var \Magento\Sales\Model\Order $order */
             $order = $observer->getEvent()->getOrder();
             $shippingMethod = $order->getShippingMethod();
-            if($shippingMethod && $shippingMethod == "storepickup_storepickup") {
+            if ($shippingMethod && $shippingMethod == "storepickup_storepickup") {
                 if ($this->_backendSession->getData('storepickup')) {
                     $new = $order->getShippingDescription();
-                    $storepickup_session = $this->_backendSession->getData('storepickup',true);
-                    $datashipping = array();
+                    $storepickup_session = $this->_backendSession->getData('storepickup', true);
                     $storeId = $storepickup_session['store_id'];
                     $collectionstore = $this->_storeCollection->create();
                     $store = $collectionstore->load($storeId, 'storepickup_id');
                     //set Shipping Description
 
                     $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-                    $gooleAPI = $objectManager->create('Magestore\Storepickup\Helper\Data')->getGoogleApiKey();
+                    $gooleAPI = $objectManager->create(\Magestore\Storepickup\Helper\Data::class)
+                        ->getGoogleApiKey();
 
                     $pickupTime = '';
-                    if(isset($storepickup_session['shipping_date']) &&isset($storepickup_session['shipping_time'])){
-                        $pickupTime = $storepickup_session['shipping_date'].' '.$storepickup_session['shipping_time'];
-                        $new .= '<br>'.__('Pickup date').' : ' . $storepickup_session['shipping_date'].'<br>' .__('Pickup time'). ' : ' . $storepickup_session['shipping_time'].'<br><img src="http://maps.google.com/maps/api/staticmap?key='.$gooleAPI.'&center='.$store->getData('latitude'). ',' . $store->getData('longitude') . '&zoom=15&size=200x200&markers=color:red|label:S|' . $store->getData('latitude') . ',' . $store->getData('longitude') . '&sensor=false" />';
+                    if (isset($storepickup_session['shipping_date']) && isset($storepickup_session['shipping_time'])) {
+                        $pickupTime = $storepickup_session['shipping_date'] . ' '
+                            . $storepickup_session['shipping_time'];
+                        $new .= '<br>' . __('Pickup date') . ' : ' . $storepickup_session['shipping_date'] . '<br>'
+                            . __('Pickup time') . ' : ' . $storepickup_session['shipping_time']
+                            . '<br><img src="http://maps.google.com/maps/api/staticmap?key=' . $gooleAPI
+                            . '&center=' . $store->getData('latitude') . ',' . $store->getData('longitude')
+                            . '&zoom=15&size=200x200&markers=color:red|label:S|' . $store->getData('latitude')
+                            . ',' . $store->getData('longitude') . '&sensor=false" />';
                     } else {
-                        $new .= '<br><img src="http://maps.google.com/maps/api/staticmap?key='.$gooleAPI.'&center='.$store->getData('latitude'). ',' . $store->getData('longitude') . '&zoom=15&size=200x200&markers=color:red|label:S|' . $store->getData('latitude') . ',' . $store->getData('longitude') . '&sensor=false" />';
+                        $new .= '<br><img src="http://maps.google.com/maps/api/staticmap?key='
+                            . $gooleAPI . '&center=' . $store->getData('latitude') . ','
+                            . $store->getData('longitude') . '&zoom=15&size=200x200&markers=color:red|label:S|'
+                            . $store->getData('latitude') . ',' . $store->getData('longitude') . '&sensor=false" />';
                     }
                     $order->setShippingDescription($new);
                     //$order->sendNewOrderEmail();
                     //$this->_storepickupHelperEmail->sendNoticeEmailToStoreOwner($order,$store);
                     //$this->_storepickupHelperEmail->sendNoticeEmailToAdmin($order,$store);
-                    $order->setData('storepickup_id',$store->getId())
-                        ->setData('storepickup_status',StorepickupStatus::STOREPICUP_PENDING)
-                        ->setData('storepickup_time',$pickupTime);
-//                        ->setData('warehouse_id',$store->getWarehouseId());
+                    $order->setData('storepickup_id', $store->getId())
+                        ->setData('storepickup_status', StorepickupStatus::STOREPICUP_PENDING)
+                        ->setData('storepickup_time', $pickupTime);
                 }
             }
-
         } catch (Exception $e) {
-
+            return $this;
         }
     }
 }

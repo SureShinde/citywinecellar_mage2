@@ -7,22 +7,25 @@
 namespace Magestore\SupplierSuccess\Ui\DataProvider\SupplierProduct;
 
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
-//use Magestore\SupplierSuccess\Model\ResourceModel\Supplier\Product\CollectionFactory;
-use Magento\Framework\App\RequestInterface;
-
-
-/* Add by Kai - fix bug export on Modal */
-use Magento\Framework\Api\Search\SearchCriteriaBuilder;
+use Magento\Framework\Api\AttributeInterface;
+use Magento\Framework\Api\AttributeValue;
+use Magento\Framework\Api\CustomAttributesDataInterface;
+use Magento\Framework\Api\Search\Document;
+use Magento\Framework\Api\Search\DocumentInterface;
 use Magento\Framework\Api\Search\ReportingInterface;
-/* End by Kai - fix bug export on Modal */
-
+use Magento\Framework\Api\Search\SearchCriteriaBuilder;
+use Magento\Framework\App\RequestInterface;
+use Magestore\SupplierSuccess\Model\ResourceModel\Supplier\Product\Collection as SupplierProductCollection;
 
 /**
- * Class ProductDataProvider
+ * Class AddProductDataProvider
+ *
+ * Supplier product data provider
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class AddProductDataProvider extends \Magento\Ui\DataProvider\AbstractDataProvider
 {
-    /** @var mixed  */
+    /** @var mixed */
     protected $collection;
 
     /**
@@ -40,32 +43,31 @@ class AddProductDataProvider extends \Magento\Ui\DataProvider\AbstractDataProvid
      */
     protected $supplierProductService;
 
-
-    /* Add by Kai - fix bug export on Modal */
     protected $searchCriteria;
     protected $searchCriteriaBuilder;
     protected $reporting;
-    /* End by Kai - fix bug export on Modal */
 
     /**
-     * SupplierDataProvider constructor.
+     * AddProductDataProvider constructor.
+     *
      * @param string $name
      * @param string $primaryFieldName
      * @param string $requestFieldName
+     * @param ReportingInterface $reporting
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param CollectionFactory $collectionFactory
+     * @param RequestInterface $requestInterface
+     * @param \Magestore\SupplierSuccess\Service\Supplier\ProductService $supplierProductService
      * @param array $meta
      * @param array $data
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         $name,
         $primaryFieldName,
         $requestFieldName,
-
-        /* Add by Kai - fix bug export on Modal */
         ReportingInterface $reporting,
         SearchCriteriaBuilder $searchCriteriaBuilder,
-        /* End by Kai - fix bug export on Modal */
-
         CollectionFactory $collectionFactory,
         RequestInterface $requestInterface,
         \Magestore\SupplierSuccess\Service\Supplier\ProductService $supplierProductService,
@@ -73,12 +75,8 @@ class AddProductDataProvider extends \Magento\Ui\DataProvider\AbstractDataProvid
         array $data = []
     ) {
         parent::__construct($name, $primaryFieldName, $requestFieldName, $meta, $data);
-
-        /* Add by Kai - fix bug export on Modal */
         $this->reporting = $reporting;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
-        /* End by Kai - fix bug export on Modal */
-
         $this->requestInterface = $requestInterface;
         $this->collectionFactory = $collectionFactory;
         $this->supplierProductService = $supplierProductService;
@@ -102,6 +100,11 @@ class AddProductDataProvider extends \Magento\Ui\DataProvider\AbstractDataProvid
         ];
     }
 
+    /**
+     * Get modify collection
+     *
+     * @return \Magento\Catalog\Model\ResourceModel\Product\Collection
+     */
     public function getModifyCollection()
     {
         /** @var \Magento\Catalog\Model\ResourceModel\Product\Collection $collection */
@@ -110,18 +113,24 @@ class AddProductDataProvider extends \Magento\Ui\DataProvider\AbstractDataProvid
         $supplierId = $this->requestInterface->getParam('supplier_id', null);
         $supplierProductIds = 0;
         if ($supplierId) {
-            /** @var \Magestore\SupplierSuccess\Model\ResourceModel\Supplier\Product\Collection $supplierProductCollection */
+            /** @var SupplierProductCollection $supplierProductCollection */
             $supplierProductCollection = $this->supplierProductService->getProductsBySupplierId($supplierId);
-            if ($supplierProductCollection->getSize())
+            if ($supplierProductCollection->getSize()) {
                 $supplierProductIds = $supplierProductCollection->getColumnValues('product_id');
+            }
         }
         return $collection->addAttributeToFilter('entity_id', ['nin' => $supplierProductIds]);
     }
 
-    /* Add by Kai - fix bug export on Modal */
+    /**
+     * Get Search Criteria
+     *
+     * @return \Magento\Framework\Api\Search\SearchCriteria|null
+     */
     public function getSearchCriteria()
     {
-        if( ($this->requestInterface->getActionName() == 'gridToCsv') || ($this->requestInterface->getActionName() == 'gridToXml')) {
+        if (($this->requestInterface->getActionName() == 'gridToCsv')
+            || ($this->requestInterface->getActionName() == 'gridToXml')) {
             if (!$this->searchCriteria) {
                 $this->searchCriteria = $this->searchCriteriaBuilder->create();
                 $this->searchCriteria->setRequestName($this->name);
@@ -131,53 +140,53 @@ class AddProductDataProvider extends \Magento\Ui\DataProvider\AbstractDataProvid
         return parent::getSearchCriteria();
     }
 
-    public function modifiCollectionToExport(){
+    /**
+     * Modify Collection To Export
+     *
+     * @return \Magento\Catalog\Model\ResourceModel\Product\Collection|mixed
+     */
+    public function modifiCollectionToExport()
+    {
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance(); // Instance of object manager
-        $exportSession = $objectManager->get('\Magento\Newsletter\Model\Session');
-        //$exportSession->unsExportPage();
+        $exportSession = $objectManager->get(\Magento\Newsletter\Model\Session::class);
         $export_page = $exportSession->getExportPage();
         $collection = clone($this->collection);
-        $total_page = ceil($collection->getSize()/200);
-        if((int)$export_page && (int)$export_page > 0){
+        $total_page = ceil($collection->getSize() / 200);
+        if ((int)$export_page && (int)$export_page > 0) {
             $collection->setPageSize(200);
             $collection->setCurPage($export_page);
             $exportSession->setExportPage((int)$export_page + 1);
-        }else{
+        } else {
             $collection->setPageSize(200);
             $collection->setCurPage(1);
             $exportSession->setExportPage(2);
         }
-        if( (int)$exportSession->getExportPage() > (int)$total_page ){
+        if ((int)$exportSession->getExportPage() > (int)$total_page) {
             $exportSession->unsExportPage();
         }
         return $collection;
     }
+
+    /**
+     * Get Search Result
+     *
+     * @return \Magento\Framework\Api\Search\SearchResultInterface
+     */
     public function getSearchResult()
     {
-        if( ($this->requestInterface->getActionName() == 'gridToCsv') || ($this->requestInterface->getActionName() == 'gridToXml'))
-        {
-            //$collection = $this->collection;//->getData();
+        if (($this->requestInterface->getActionName() == 'gridToCsv')
+            || ($this->requestInterface->getActionName() == 'gridToXml')) {
             $collection = $this->modifiCollectionToExport();
             $count = $collection->getSize();
-            //$collection->setPageSize($collection->getSize()); // limit dung để query view dữ liệu - ko dùng cho export được
-            $objectManager = \Magento\Framework\App\ObjectManager::getInstance(); // Instance of object manager
-            /** @var \Magento\Framework\Search\EntityMetadata $entityMetadata */
-            $entityMetadata = $objectManager->create('Magento\Framework\Search\EntityMetadata', ['entityId' => 'id']);
-            $idKey = $entityMetadata->getEntityId();
-            /** @var \Magento\Framework\Search\Adapter\Mysql\DocumentFactory $documentFactory */
-            $documentFactory = $objectManager->create(
-                'Magento\Framework\Search\Adapter\Mysql\DocumentFactory',
-                ['entityMetadata' => $entityMetadata]
-            );
             /** @var \Magento\Framework\Api\Search\Document[] $documents */
             $documents = [];
-            foreach($collection as $value){
-                $data = array();
+            foreach ($collection as $value) {
+                $data = [];
                 $data['ids'] = $value->getEntityId();
                 $data['entity_id'] = $value->getEntityId();
                 $data['sku'] = $value->getSku();
                 $data['name'] = $value->getName();
-                $documents[] = $documentFactory->create($data);
+                $documents[] = $this->create($data);
             }
             $obj = new \Magento\Framework\DataObject();
             $obj->setItems($documents);
@@ -185,5 +194,43 @@ class AddProductDataProvider extends \Magento\Ui\DataProvider\AbstractDataProvid
             return $obj;
         }
         return parent::getSearchResult();
+    }
+
+    /**
+     * Create Search Document instance
+     *
+     * @param mixed $rawDocument
+     * @return \Magento\Framework\Api\Search\Document
+     */
+    public function create($rawDocument)
+    {
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance(); // Instance of object manager
+        /** @var \Magento\Framework\Search\EntityMetadata $entityMetadata */
+        $entityMetadata = $objectManager->create(
+            \Magento\Framework\Search\EntityMetadata::class,
+            ['entityId' => 'id']
+        );
+        $documentId = null;
+        $entityId = $entityMetadata->getEntityId();
+        $attributes = [];
+        foreach ($rawDocument as $fieldName => $value) {
+            if ($fieldName === $entityId) {
+                $documentId = $value;
+            } else {
+                $attributes[$fieldName] = new AttributeValue(
+                    [
+                        AttributeInterface::ATTRIBUTE_CODE => $fieldName,
+                        AttributeInterface::VALUE => $value,
+                    ]
+                );
+            }
+        }
+
+        return new Document(
+            [
+                DocumentInterface::ID => $documentId,
+                CustomAttributesDataInterface::CUSTOM_ATTRIBUTES => $attributes,
+            ]
+        );
     }
 }

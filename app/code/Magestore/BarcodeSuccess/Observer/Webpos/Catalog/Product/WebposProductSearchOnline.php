@@ -10,27 +10,33 @@ use Magento\Framework\Event\Observer as EventObserver;
 use Magento\Framework\Event\ObserverInterface;
 use Magestore\BarcodeSuccess\Model\ResourceModel\Barcode\CollectionFactory;
 
+/**
+ * Class WebposProductSearchOnline
+ *
+ * Used to observe webpos product search online
+ */
 class WebposProductSearchOnline implements ObserverInterface
 {
     /**
-     * @var MappingManagementInterface
+     * @var CollectionFactory
      */
     protected $_barcodeCollectionFactory;
 
     /**
-     * WebposLocationSaveAfter constructor.
-     * @param MappingManagementInterface $mappingManagement
+     * WebposProductSearchOnline constructor.
+     *
+     * @param CollectionFactory $_barcodeCollectionFactory
      */
     public function __construct(
         CollectionFactory $_barcodeCollectionFactory
-    )
-    {
+    ) {
         $this->_barcodeCollectionFactory = $_barcodeCollectionFactory;
     }
 
     /**
+     * Execute
+     *
      * @param EventObserver $observer
-     * @return $this
      */
     public function execute(EventObserver $observer)
     {
@@ -38,7 +44,7 @@ class WebposProductSearchOnline implements ObserverInterface
         $result = $observer->getResult();
         if ($barcodeString && $barcodeString != '' && $barcodeString != '%%') {
             $barcodes = $this->_barcodeCollectionFactory->create()
-                ->addFieldToFilter('barcode',  array('like' => $barcodeString));
+                ->addFieldToFilter('barcode', ['like' => $barcodeString]);
             $list_sku = $barcodes->getColumnValues('product_sku');
             $result->setData($list_sku);
         }

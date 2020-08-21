@@ -5,6 +5,11 @@
  */
 namespace Magestore\FulfilReport\Controller\Adminhtml;
 
+/**
+ * Class Report
+ *
+ * Use to create abstract report
+ */
 abstract class Report extends \Magento\Backend\App\Action
 {
     /**
@@ -12,7 +17,7 @@ abstract class Report extends \Magento\Backend\App\Action
      *
      * @see _isAllowed()
      */
-    const ADMIN_RESOURCE = 'Magestore_FulfilSuccess::report';
+    const ADMIN_RESOURCE = 'Magestore_FulfilReport::reports';
 
     /**
      * Core registry
@@ -22,13 +27,15 @@ abstract class Report extends \Magento\Backend\App\Action
     protected $_coreRegistry;
 
     /**
+     * Report constructor.
+     *
      * @param \Magento\Backend\App\Action\Context $context
      * @param \Magento\Framework\Registry $coreRegistry
      */
     public function __construct(
         \Magento\Backend\App\Action\Context $context,
-        \Magento\Framework\Registry $coreRegistry)
-    {
+        \Magento\Framework\Registry $coreRegistry
+    ) {
         $this->_coreRegistry = $coreRegistry;
         parent::__construct($context);
     }

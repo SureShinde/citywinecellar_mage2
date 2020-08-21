@@ -5,16 +5,20 @@
  */
 namespace Magestore\Giftvoucher\Model;
 
+use Elasticsearch\Common\Exceptions\MaxRetriesException;
+use Magento\Framework\Exception\AlreadyExistsException;
 use Magestore\Giftvoucher\Model\Status;
 
 /**
  * Giftvoucher Model
  *
- * @category    Magestore
- * @package     Magestore_Giftvoucher
  * @author      Magestore Developer
+ * @SuppressWarnings(PHPMD.ExcessivePublicCount)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestore\Giftvoucher\Api\Data\GiftvoucherInterface
+class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements
+    \Magestore\Giftvoucher\Api\Data\GiftvoucherInterface
 {
 
     /**
@@ -81,12 +85,12 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
      * @var \Magestore\Giftvoucher\Model\HistoryFactory
      */
     protected $_historyFactory;
-    
+
     /**
      * @var \Magestore\Giftvoucher\Api\HistoryRepositoryInterfaceFactory
      */
     protected $_historyRepositoryFactory;
-    
+
     /**
      * @var \Magento\Directory\Model\CurrencyFactory
      */
@@ -117,6 +121,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
      * @param \Magento\Framework\Data\Collection\AbstractDb $resourceCollection
      * @param array $data
      * @internal param \Magestore\Giftvoucher\Api\HistoryRepositoryInterface $historyRepository
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         \Magento\Framework\Model\Context $context,
@@ -141,7 +146,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         array $data = []
     ) {
-    
+
         $this->_conditionsInstance = $conditionsInstance;
         $this->_actionsInstance = $actionsInstance;
         $this->_helperData = $helperData;
@@ -174,7 +179,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
      */
     protected function _construct()
     {
-        $this->_init('Magestore\Giftvoucher\Model\ResourceModel\Giftvoucher');
+        $this->_init(\Magestore\Giftvoucher\Model\ResourceModel\Giftvoucher::class);
     }
 
     /**
@@ -189,8 +194,10 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
+     * Load
+     *
      * @param int $id
-     * @param null $field
+     * @param null|string $field
      * @return $this
      */
     public function load($id, $field = null)
@@ -254,16 +261,21 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * @param $price
+     * Round Price
+     *
+     * @param float $price
      * @param string $type
      * @param bool $negative
      * @return mixed
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function roundPrice($price, $type = 'regular', $negative = false)
     {
         if ($price) {
             if (!isset($this->_calculators[$type])) {
-                $this->_calculators[$type] = $this->_calculatorFactory->create(['scope' => $this->_storeManager->getStore()]);
+                $this->_calculators[$type] = $this->_calculatorFactory->create(
+                    ['scope' => $this->_storeManager->getStore()]
+                );
             }
             $price = $this->_calculators[$type]->deltaRound($price, $negative);
         }
@@ -275,6 +287,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
      *
      * @param string $storeId
      * @return float
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getBaseBalance($storeId = null)
     {
@@ -291,8 +304,13 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
+     * Before Save
+     *
      * @return $this
      * @throws \Exception
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function beforeSave()
     {
@@ -304,6 +322,21 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
         );
         if (!$this->getId()) {
             $this->setAction(\Magestore\Giftvoucher\Model\Actions::ACTIONS_CREATE);
+        }
+
+        if (!$this->getGiftcardTemplateId()) {
+            $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+            $defaultTemplate = $objectManager
+                ->get(\Magestore\Giftvoucher\Model\ResourceModel\GiftTemplate\Collection::class)
+                ->getFirstItem();
+            if ($defaultTemplate->getId()) {
+                $this->setGiftcardTemplateId($defaultTemplate->getId());
+                $images = $defaultTemplate->getImages();
+                $imagesArray = explode(',', $images);
+                if (isset($imagesArray[0])) {
+                    $this->setGiftcardTemplateImage($imagesArray[0]);
+                }
+            }
         }
 
         if ($this->getStoreId() == null) {
@@ -360,7 +393,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
         } else {
             if ($this->getAction() == \Magestore\Giftvoucher\Model\Actions::ACTIONS_CREATE) {
                 if ($this->getResource()->giftcodeExist($this->getGiftCode())) {
-                    throw new \Exception(__('Gift code is existed!'));
+                    throw new AlreadyExistsException(__('Gift code is existed!'));
                 }
             }
         }
@@ -384,7 +417,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * @return $this
+     * @inheritDoc
      */
     public function afterSave()
     {
@@ -408,6 +441,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
             try {
                 $this->_historyRepositoryFactory->create()->save($history);
             } catch (\Exception $e) {
+                $this->_logger->critical($e);
             }
         }
 
@@ -415,6 +449,8 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
+     * Code Is Expression
+     *
      * @return bool|int
      */
     public function _codeIsExpression()
@@ -423,6 +459,8 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
+     * Get Gift Code
+     *
      * @return string
      * @throws \Exception
      */
@@ -435,19 +473,21 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
             $code = $helper->calcCode($this->getGiftCode());
             $times--;
             if ($times == 0) {
-                throw new \Exception(__('Exceeded maximum retries to find available random gift card code!'));
+                throw new MaxRetriesException(__('Exceeded maximum retries to find available random gift card code!'));
             }
         }
         return $code;
     }
 
     /**
-     * @param null $session
+     * Add To Session
+     *
+     * @param mixed $session
      * @return $this
      */
     public function addToSession($session = null)
     {
-        if (is_null($session)) {
+        if ($session === null) {
             $session = $this->_helperData->getCheckoutSession();
         }
         if ($codes = $session->getGiftCodes()) {
@@ -462,7 +502,12 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
+     * Send Email
+     *
      * @return $this
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function sendEmail()
     {
@@ -530,12 +575,15 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
      * Send email to Gift Voucher Receipient
      *
      * @return int The number of email sent
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function sendEmailToRecipient()
     {
         $allowStatus = explode(',', $this->_helperData->getEmailConfig('only_complete', $this->getStoreId()));
         if (!is_array($allowStatus)) {
-            $allowStatus = array();
+            $allowStatus = [];
         }
         if ($this->getRecipientEmail() && !$this->getData('dont_send_email_to_recipient')
             && in_array($this->getStatus(), $allowStatus)
@@ -562,7 +610,9 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
                         'note' => $this->getEmailNotes(),
                         'logo' => $this->getPrintLogo(),
                         'url' => $this->getPrintTemplate(),
-                        'addurl' => $store->getBaseUrl() . '/giftvoucher/index/addlist/giftvouchercode/'. $this->getGiftCode(),
+                        'addurl' => $store->getBaseUrl()
+                            . '/giftvoucher/index/addlist/giftvouchercode/'
+                            . $this->getGiftCode(),
                         'secure_key' => base64_encode($this->getGiftCode() . '$' . $this->getId())
                     ]
                 )->setFrom(
@@ -597,6 +647,8 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
      * Send the success notification email
      *
      * @return \Magestore\Giftvoucher\Model\Giftvoucher
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function sendEmailSuccess()
     {
@@ -631,6 +683,8 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
      * Send the refund notification email
      *
      * @return \Magestore\Giftvoucher\Model\Giftvoucher
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function sendEmailRefundToRecipient()
     {
@@ -652,9 +706,9 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
                         'status' => $this->getStatusLabel(),
                         'message' => $this->getFormatedMessage(),
                         'description' => $this->getDescription(),
-                        'addurl' => $this->_urlBuilder->getUrl('giftvoucher/index/addlist', array(
+                        'addurl' => $this->_urlBuilder->getUrl('giftvoucher/index/addlist', [
                             'giftvouchercode' => $this->getGiftCode()
-                        )),
+                        ]),
                     ]
                 )->setFrom(
                     $this->_helperData->getEmailConfig('sender', $storeId)
@@ -671,15 +725,19 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
+     * Get Status Label
+     *
      * @return mixed
      */
     public function getStatusLabel()
     {
-        $statusArray = \Magestore\Giftvoucher\Model\Status::getOptionArray();
+        $statusArray = $this->_objectManager->get(\Magestore\Giftvoucher\Model\Status::class)->getOptionArray();
         return $statusArray[$this->getStatus()];
     }
 
     /**
+     * Get Formated Message
+     *
      * @return mixed
      */
     public function getFormatedMessage()
@@ -691,6 +749,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
      * Get the email notes
      *
      * @return string
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getEmailNotes()
     {
@@ -700,21 +759,25 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
                 \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
                 $this->getStoreId()
             );
-            $notes = str_replace(array(
-                '{store_url}',
-                '{store_name}',
-                '{store_address}'
+            $notes = str_replace(
+                [
+                    '{store_url}',
+                    '{store_name}',
+                    '{store_address}'
 
-            ), array(
-                $this->_storeManager->getStore($this->getStoreId())->getBaseUrl(),
-                $this->_storeManager->getStore($this->getStoreId())->getFrontendName(),
-                $this->_scopeConfig->getValue(
-                    'general/store_information/address',
-                    \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
-                    $this->getStoreId()
-                )
+                ],
+                [
+                    $this->_storeManager->getStore($this->getStoreId())->getBaseUrl(),
+                    $this->_storeManager->getStore($this->getStoreId())->getFrontendName(),
+                    $this->_scopeConfig->getValue(
+                        'general/store_information/address',
+                        \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+                        $this->getStoreId()
+                    )
 
-            ), $notes);
+                ],
+                $notes
+            );
             $this->setData('email_notes', $notes);
         }
         return $this->getData('email_notes');
@@ -724,6 +787,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
      * Get the print logo
      *
      * @return string|boolean
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getPrintLogo()
     {
@@ -746,7 +810,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
         $currency = $this->_currencyFactory->create()->load($this->getCurrency());
         return $currency->format($this->getBalance());
     }
-    
+
     /**
      * Gift code balance with currency format
      *
@@ -762,28 +826,30 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
      * Get the print notes
      *
      * @return string
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getPrintNotes()
     {
         if (!$this->hasData('print_notes')) {
             $notes = $this->_scopeConfig->getValue('giftvoucher/print_voucher/note', 'store', $this->getStoreId());
             $notes = str_replace(
-                array(
+                [
                     '{store_url}',
                     '{store_name}',
                     '{store_address}'
-                ),
-                array(
+                ],
+                [
                     '<span class="print-notes">' . $this->_storeManager->getStore($this->getStoreId())->getBaseUrl()
-                    . '</span>',
-                    '<span class="print-notes">' . $this->_storeManager->getStore($this->getStoreId())->getFrontendName() .
-                    '</span>',
+                        . '</span>',
+                    '<span class="print-notes">'
+                        . $this->_storeManager->getStore($this->getStoreId())->getFrontendName()
+                        . '</span>',
                     '<span class="print-notes">' . $this->_scopeConfig->getValue(
                         'general/store_information/address',
                         \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
                         $this->getStoreId()
                     ) . '</span>'
-                ),
+                ],
                 $notes
             );
             $this->setData('print_notes', $notes);
@@ -798,12 +864,13 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
      */
     public function getCustomerIdsUsed()
     {
-        $collection = $this->_objectManager->create('Magestore\Giftvoucher\Model\ResourceModel\History\Collection')
+        $collection = $this->_objectManager
+            ->create(\Magestore\Giftvoucher\Model\ResourceModel\History\Collection::class)
             ->addFieldToFilter('main_table.giftvoucher_id', $this->getId())
             ->addFieldToFilter('main_table.action', \Magestore\Giftvoucher\Model\Actions::ACTIONS_SPEND_ORDER);
 
         $collection->joinSalesOrder();
-        $customerIds = array();
+        $customerIds = [];
         foreach ($collection as $item) {
             $customerIds[] = $item->getData('order_customer_id');
         }
@@ -812,9 +879,10 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
 
     /**
      * Check gift code is valid in current website
-     * 
+     *
      * @param null|int $storeId
      * @return boolean
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function isValidWebsite($storeId = null)
     {
@@ -837,10 +905,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Set ID
-     *
-     * @param int $giftvoucherId
-     * @return GiftvoucherInterface
+     * @inheritDoc
      */
     public function setGiftvoucherId($giftvoucherId)
     {
@@ -858,10 +923,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Set Gift code
-     *
-     * @param string $giftCode
-     * @return GiftvoucherInterface
+     * @inheritDoc
      */
     public function setGiftCode($giftCode)
     {
@@ -879,10 +941,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Set Gift code balance
-     *
-     * @param string $balance
-     * @return GiftvoucherInterface
+     * @inheritDoc
      */
     public function setBalance($balance)
     {
@@ -900,10 +959,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Set Gift code currency
-     *
-     * @param string $currency
-     * @return GiftvoucherInterface
+     * @inheritDoc
      */
     public function setCurrency($currency)
     {
@@ -911,9 +967,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Get Gift code status
-     *
-     * @return int|null
+     * @inheritDoc
      */
     public function getStatus()
     {
@@ -921,10 +975,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Set Gift code status
-     *
-     * @param int $status
-     * @return GiftvoucherInterface
+     * @inheritDoc
      */
     public function setStatus($status)
     {
@@ -932,9 +983,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Get Gift code status
-     *
-     * @return string|null
+     * @inheritDoc
      */
     public function getExpiredAt()
     {
@@ -942,10 +991,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Set Gift code $expiredAt
-     *
-     * @param string $expiredAt
-     * @return GiftvoucherInterface
+     * @inheritDoc
      */
     public function setExpiredAt($expiredAt)
     {
@@ -953,9 +999,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Get Gift code $customerId
-     *
-     * @return int|null
+     * @inheritDoc
      */
     public function getCustomerId()
     {
@@ -963,10 +1007,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Set Gift code $customerId
-     *
-     * @param int $customerId
-     * @return GiftvoucherInterface
+     * @inheritDoc
      */
     public function setCustomerId($customerId)
     {
@@ -974,9 +1015,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Get Gift code $customerName
-     *
-     * @return string|null
+     * @inheritDoc
      */
     public function getCustomerName()
     {
@@ -984,10 +1023,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Set Gift code $customerName
-     *
-     * @param string $customerName
-     * @return GiftvoucherInterface
+     * @inheritDoc
      */
     public function setCustomerName($customerName)
     {
@@ -995,9 +1031,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Get Gift code $customerEmail
-     *
-     * @return string|null
+     * @inheritDoc
      */
     public function getCustomerEmail()
     {
@@ -1005,11 +1039,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Set Gift code $customerEmail
-     *
-     * @param $customerEmail
-     * @return GiftvoucherInterface
-     * @internal param string $customerName
+     * @inheritDoc
      */
     public function setCustomerEmail($customerEmail)
     {
@@ -1017,19 +1047,15 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Get Gift code $recipientName
-     *
-     * @return string|null
+     * @inheritDoc
      */
     public function getRecipientName()
     {
         return $this->getData(self::RECIPIENT_NAME);
     }
+
     /**
-     * Set Gift code $recipientName
-     *
-     * @param string $recipientName
-     * @return GiftvoucherInterface
+     * @inheritDoc
      */
     public function setRecipientName($recipientName)
     {
@@ -1037,9 +1063,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Get Gift code $customerEmail
-     *
-     * @return string|null
+     * @inheritDoc
      */
     public function getRecipientEmail()
     {
@@ -1047,10 +1071,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Set Gift code $recipientEmail
-     *
-     * @param string $recipientEmail
-     * @return GiftvoucherInterface
+     * @inheritDoc
      */
     public function setRecipientEmail($recipientEmail)
     {
@@ -1058,9 +1079,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Get Gift code $recipientAddress
-     *
-     * @return string|null
+     * @inheritDoc
      */
     public function getRecipientAddress()
     {
@@ -1068,10 +1087,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Set Gift code $recipientAddress
-     *
-     * @param string $recipientAddress
-     * @return GiftvoucherInterface
+     * @inheritDoc
      */
     public function setRecipientAddress($recipientAddress)
     {
@@ -1079,9 +1095,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Get Gift code $message
-     *
-     * @return string|null
+     * @inheritDoc
      */
     public function getMessage()
     {
@@ -1089,10 +1103,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Set Gift code $message
-     *
-     * @param string $message
-     * @return GiftvoucherInterface
+     * @inheritDoc
      */
     public function setMessage($message)
     {
@@ -1100,9 +1111,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Get Gift code $storeId
-     *
-     * @return int|null
+     * @inheritDoc
      */
     public function getStoreId()
     {
@@ -1110,10 +1119,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Set Gift code $storeId
-     *
-     * @param int $storeId
-     * @return GiftvoucherInterface
+     * @inheritDoc
      */
     public function setStoreId($storeId)
     {
@@ -1121,9 +1127,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Get Gift code $conditionsSerialized
-     *
-     * @return string|null
+     * @inheritDoc
      */
     public function getConditionsSerialized()
     {
@@ -1131,10 +1135,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Set Gift code $conditionsSerialized
-     *
-     * @param string $conditionsSerialized
-     * @return GiftvoucherInterface
+     * @inheritDoc
      */
     public function setConditionsSerialized($conditionsSerialized)
     {
@@ -1142,9 +1143,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Get Gift code $dayToSend
-     *
-     * @return string|null
+     * @inheritDoc
      */
     public function getDayToSend()
     {
@@ -1152,10 +1151,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Set Gift code $dayToSend
-     *
-     * @param string $dayToSend
-     * @return GiftvoucherInterface
+     * @inheritDoc
      */
     public function setDayToSend($dayToSend)
     {
@@ -1163,9 +1159,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Get Gift code $isSent
-     *
-     * @return string|null
+     * @inheritDoc
      */
     public function getIsSent()
     {
@@ -1173,10 +1167,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Set Gift code $isSent
-     *
-     * @param string $isSent
-     * @return GiftvoucherInterface
+     * @inheritDoc
      */
     public function setIsSent($isSent)
     {
@@ -1184,9 +1175,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Get Gift code $shippedToCustomer
-     *
-     * @return int|null
+     * @inheritDoc
      */
     public function getShippedToCustomer()
     {
@@ -1194,10 +1183,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Set Gift code $shippedToCustomer
-     *
-     * @param int $shippedToCustomer
-     * @return GiftvoucherInterface
+     * @inheritDoc
      */
     public function setShippedToCustomer($shippedToCustomer)
     {
@@ -1205,9 +1191,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Get Gift code $createdForm
-     *
-     * @return string|null
+     * @inheritDoc
      */
     public function getCreatedForm()
     {
@@ -1215,10 +1199,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Set Gift code $createdForm
-     *
-     * @param string $createdForm
-     * @return GiftvoucherInterface
+     * @inheritDoc
      */
     public function setCreatedForm($createdForm)
     {
@@ -1226,19 +1207,15 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Get Gift code $templateId
-     *
-     * @return int|null
+     * @inheritDoc
      */
     public function getTemplateId()
     {
         return $this->getData(self::TEMPLATE_ID);
     }
+
     /**
-     * Set Gift code $templateId
-     *
-     * @param int $templateId
-     * @return GiftvoucherInterface
+     * @inheritDoc
      */
     public function setTemplateId($templateId)
     {
@@ -1246,9 +1223,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Get Gift code $description
-     *
-     * @return string|null
+     * @inheritDoc
      */
     public function getDescription()
     {
@@ -1256,10 +1231,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Set Gift code $description
-     *
-     * @param string $description
-     * @return GiftvoucherInterface
+     * @inheritDoc
      */
     public function setDescription($description)
     {
@@ -1267,9 +1239,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Get Gift code $giftvoucherComments
-     *
-     * @return string|null
+     * @inheritDoc
      */
     public function getGiftvoucherComments()
     {
@@ -1277,10 +1247,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Set Gift code $giftvoucherComments
-     *
-     * @param string $giftvoucherComments
-     * @return GiftvoucherInterface
+     * @inheritDoc
      */
     public function setGiftvoucherComments($giftvoucherComments)
     {
@@ -1288,9 +1255,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Get Gift code $emailSender
-     *
-     * @return int|null
+     * @inheritDoc
      */
     public function getEmailSender()
     {
@@ -1298,10 +1263,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Set Gift code $emailSender
-     *
-     * @param int $emailSender
-     * @return GiftvoucherInterface
+     * @inheritDoc
      */
     public function setEmailSender($emailSender)
     {
@@ -1309,9 +1271,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Get Gift code $notifySuccess
-     *
-     * @return int|null
+     * @inheritDoc
      */
     public function getNotifySuccess()
     {
@@ -1319,19 +1279,15 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Set Gift code $notifySuccess
-     *
-     * @param int $notifySuccess
-     * @return GiftvoucherInterface
+     * @inheritDoc
      */
     public function setNotifySuccess($notifySuccess)
     {
         return $this->setData(self::NOTIFY_SUCCESS, $notifySuccess);
     }
+
     /**
-     * Get Gift code $giftcardCustomImage
-     *
-     * @return int|null
+     * @inheritDoc
      */
     public function getGiftcardCustomImage()
     {
@@ -1339,29 +1295,23 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Set Gift code $giftcardCustomImage
-     *
-     * @param int $giftcardCustomImage
-     * @return GiftvoucherInterface
+     * @inheritDoc
      */
     public function setGiftcardCustomImage($giftcardCustomImage)
     {
         return $this->setData(self::GIFTCARD_CUSTOM_IMAGE, $giftcardCustomImage);
     }
+
     /**
-     * Get Gift code $giftcardTemplateId
-     *
-     * @return int|null
+     * @inheritDoc
      */
     public function getGiftcardTemplateId()
     {
         return $this->getData(self::GIFTCARD_TEMPLATE_ID);
     }
+
     /**
-     * Set Gift code $giftcardTemplateId
-     *
-     * @param int $giftcardTemplateId
-     * @return GiftvoucherInterface
+     * @inheritDoc
      */
     public function setGiftcardTemplateId($giftcardTemplateId)
     {
@@ -1369,9 +1319,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Get Gift code $giftcardTemplateImage
-     *
-     * @return string|null
+     * @inheritDoc
      */
     public function getGiftcardTemplateImage()
     {
@@ -1379,10 +1327,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Set Gift code $giftcardTemplateImage
-     *
-     * @param string $giftcardTemplateImage
-     * @return GiftvoucherInterface
+     * @inheritDoc
      */
     public function setGiftcardTemplateImage($giftcardTemplateImage)
     {
@@ -1390,9 +1335,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Get Gift code $actionsSerialized
-     *
-     * @return string|null
+     * @inheritDoc
      */
     public function getActionsSerialized()
     {
@@ -1400,10 +1343,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Set Gift code $actionsSerialized
-     *
-     * @param string $actionsSerialized
-     * @return GiftvoucherInterface
+     * @inheritDoc
      */
     public function setActionsSerialized($actionsSerialized)
     {
@@ -1411,9 +1351,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Get Gift code $timezoneToSend
-     *
-     * @return string|null
+     * @inheritDoc
      */
     public function getTimezoneToSend()
     {
@@ -1421,10 +1359,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Set Gift code $timezoneToSend
-     *
-     * @param string $timezoneToSend
-     * @return GiftvoucherInterface
+     * @inheritDoc
      */
     public function setTimezoneToSend($timezoneToSend)
     {
@@ -1432,9 +1367,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Get Gift code $dayStore
-     *
-     * @return string|null
+     * @inheritDoc
      */
     public function getDayStore()
     {
@@ -1442,10 +1375,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Set Gift code $dayStore
-     *
-     * @param string $dayStore
-     * @return GiftvoucherInterface
+     * @inheritDoc
      */
     public function setDayStore($dayStore)
     {
@@ -1453,9 +1383,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Get Gift code $used
-     *
-     * @return int|null
+     * @inheritDoc
      */
     public function getUsed()
     {
@@ -1463,10 +1391,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Set Gift code $used
-     *
-     * @param int $used
-     * @return GiftvoucherInterface
+     * @inheritDoc
      */
     public function setUsed($used)
     {
@@ -1474,9 +1399,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Get Gift code $setId
-     *
-     * @return int|null
+     * @inheritDoc
      */
     public function getSetId()
     {
@@ -1484,10 +1407,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     }
 
     /**
-     * Set Gift code $setId
-     *
-     * @param int $setId
-     * @return GiftvoucherInterface
+     * @inheritDoc
      */
     public function setSetId($setId)
     {
@@ -1505,7 +1425,7 @@ class Giftvoucher extends \Magento\Rule\Model\AbstractModel implements \Magestor
     {
         return $formName . 'rule_conditions_fieldset_' . $this->getId();
     }
-    
+
     /**
      * Get actions field set id.
      *

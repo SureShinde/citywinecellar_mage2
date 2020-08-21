@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AdminSaleByPaymentMethodReportTest">
+        <annotations>
+            <features value="Pos Report"/>
+            <stories value="Pos Report - Sales By Payment Method"/>
+            <title value="Pos Report - Sales By Payment Method"/>
+            <description value="Pos Report - Sales By Payment Method"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="POSREPORT-04"/>
+            <group value="posreports"/>
+            <group value="pwapos"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosAdminLoginActionGroup" stepKey="loginAsAdmin"/>
+        </before>
+        <amOnPage url="{{ByPaymentMethodReportPage.url}}" stepKey="navigateToPosReport"/>
+        <waitForPageLoad time="60" stepKey="waitForPosReportPageToLoad"/>
+
+        <actionGroup ref="SelectFromToReportActionGroup" stepKey="selectTimeRange">
+            <argument name="report" value="default_report" />
+        </actionGroup>
+
+        <actionGroup ref="ShowReportActionGroup" stepKey="showReport"/>
+
+        <see selector="{{PosOrderReportResultSection.firstRow}}" userInput="{{default_report.sale_by_payment_method_row_1_payment_name}}" stepKey="seeAssertPaymentName1"/>
+        <see selector="{{PosOrderReportResultSection.firstRow}}" userInput="{{default_report.sale_by_payment_method_row_1_order}}" stepKey="seeAssertOrders1"/>
+        <see selector="{{PosOrderReportResultSection.firstRow}}" userInput="{{default_report.sale_by_payment_method_row_1_total_paid}}" stepKey="seeTotalPaid1"/>
+        <see selector="{{PosOrderReportResultSection.firstRow}}" userInput="{{default_report.sale_by_payment_method_row_1_total_refund}}" stepKey="seeTotalRefund1"/>
+        <see selector="{{PosOrderReportResultSection.firstRow}}" userInput="{{default_report.sale_by_payment_method_row_1_net_amount}}" stepKey="seeNetAmount1"/>
+
+        <see selector="{{PosOrderReportResultSection.secondRow}}" userInput="{{default_report.sale_by_payment_method_row_2_payment_name}}" stepKey="seeAssertPaymentName2"/>
+        <see selector="{{PosOrderReportResultSection.secondRow}}" userInput="{{default_report.sale_by_payment_method_row_2_order}}" stepKey="seeAssertOrders2"/>
+        <see selector="{{PosOrderReportResultSection.secondRow}}" userInput="{{default_report.sale_by_payment_method_row_2_total_paid}}" stepKey="seeTotalPaid2"/>
+        <see selector="{{PosOrderReportResultSection.secondRow}}" userInput="{{default_report.sale_by_payment_method_row_2_total_refund}}" stepKey="seeTotalRefund2"/>
+        <see selector="{{PosOrderReportResultSection.secondRow}}" userInput="{{default_report.sale_by_payment_method_row_2_net_amount}}" stepKey="seeNetAmount2"/>
+
+        <see selector="{{PosOrderReportResultSection.totalRow}}" userInput="{{default_report.sale_by_payment_method_total_payment_name}}" stepKey="seeAssertPaymentNameTotal"/>
+        <see selector="{{PosOrderReportResultSection.totalRow}}" userInput="{{default_report.sale_by_payment_method_total_order}}" stepKey="seeAssertOrdersTotal"/>
+        <see selector="{{PosOrderReportResultSection.totalRow}}" userInput="{{default_report.sale_by_payment_method_total_total_paid}}" stepKey="seeTotalPaidTotal"/>
+        <see selector="{{PosOrderReportResultSection.totalRow}}" userInput="{{default_report.sale_by_payment_method_total_total_refund}}" stepKey="seeTotalRefundTotal"/>
+        <see selector="{{PosOrderReportResultSection.totalRow}}" userInput="{{default_report.sale_by_payment_method_total_net_amount}}" stepKey="seeNetAmountTotal"/>
+    </test>
+</tests>

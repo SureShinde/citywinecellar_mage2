@@ -26,16 +26,13 @@ use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Exception\LocalizedException;
 
 /**
- * @category Magestore
- * @package  Magestore_Storepickup
- * @module   Storepickup
- * @author   Magestore Developer
+ * Class Image
+ *
+ * Used to create image helper
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Image extends \Magento\Framework\App\Helper\AbstractHelper
 {
-    /**
-     * default small image size.
-     */
     const SMALL_IMAGE_SIZE_WIDTH = 40;
     const SMALL_IMAGE_SIZE_HEIGHT = 30;
 
@@ -60,15 +57,33 @@ class Image extends \Magento\Framework\App\Helper\AbstractHelper
     protected $_imageUploaderFactory;
 
     /**
-     * Block constructor.
+     * @var \Magento\Framework\Filesystem\DriverInterface
+     */
+    protected $driver;
+
+    /**
+     * @var \Magento\Framework\Filesystem\Io\File
+     */
+    protected $fileIo;
+
+    /**
+     * Image constructor.
      *
      * @param \Magento\Framework\App\Helper\Context $context
+     * @param \Magento\Framework\ObjectManagerInterface $objectManager
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param \Magento\Framework\Filesystem $filesystem
+     * @param \Magento\Framework\Filesystem\DriverInterface $driver
+     * @param \Magento\Framework\Filesystem\Io\File $fileIo
+     * @param \Magestore\Storepickup\Model\ImageUploaderFactory $imageUploaderFactory
      */
     public function __construct(
         \Magento\Framework\App\Helper\Context $context,
         \Magento\Framework\ObjectManagerInterface $objectManager,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Framework\Filesystem $filesystem,
+        \Magento\Framework\Filesystem\DriverInterface $driver,
+        \Magento\Framework\Filesystem\Io\File $fileIo,
         \Magestore\Storepickup\Model\ImageUploaderFactory $imageUploaderFactory
     ) {
         parent::__construct($context);
@@ -77,13 +92,14 @@ class Image extends \Magento\Framework\App\Helper\AbstractHelper
         $this->_objectManager = $objectManager;
         $this->_storeManager = $storeManager;
         $this->_imageUploaderFactory = $imageUploaderFactory;
+        $this->driver = $driver;
+        $this->fileIo = $fileIo;
     }
 
     /**
-     * get media url of image.
+     * Get media url of image.
      *
      * @param string $imagePath
-     *
      * @return string
      */
     public function getMediaUrlImage($imagePath = '')
@@ -93,10 +109,12 @@ class Image extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
-     * @param \Magento\Framework\Model\AbstractModel $model
-     * @param $fileId
-     * @param $relativePath
+     * Get media upload image
      *
+     * @param \Magento\Framework\Model\AbstractModel $model
+     * @param string $fileId
+     * @param string $relativePath
+     * @param bool $makeResize
      * @throws LocalizedException
      */
     public function mediaUploadImage(
@@ -130,7 +148,9 @@ class Image extends \Magento\Framework\App\Helper\AbstractHelper
                         $mediaAbsolutePath . $uploader->getUploadedFileName(),
                         self::SMALL_IMAGE_SIZE_WIDTH
                     );
-                    $imagePath = $this->_getResizeImageFileName($relativePath . $uploader->getUploadedFileName());
+                    $imagePath = $this->_getResizeImageFileName(
+                        $relativePath . $uploader->getUploadedFileName()
+                    );
                 } else {
                     $imagePath = $relativePath . $uploader->getUploadedFileName();
                 }
@@ -151,17 +171,19 @@ class Image extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
-     * resize image.
+     * Resize image.
      *
-     * @param $fileName
-     * @param $width
-     * @param null $height
+     * @param string $fileName
+     * @param int $width
+     * @param int|null $height
      */
     public function _resizeImage($fileName, $width, $height = null)
     {
         /** @var \Magento\Framework\Image $image */
-        $image = $this->_objectManager->create('Magento\Framework\Image', ['fileName' => $fileName]);
-
+        $image = $this->_objectManager->create(
+            \Magento\Framework\Image::class,
+            ['fileName' => $fileName]
+        );
         $image->constrainOnly(true);
         $image->keepAspectRatio(true);
         $image->keepFrame(false);
@@ -170,12 +192,14 @@ class Image extends \Magento\Framework\App\Helper\AbstractHelper
     }
 
     /**
-     * @param $fileName
+     * Get resize image file name
      *
+     * @param string $fileName
      * @return string
      */
     public function _getResizeImageFileName($fileName)
     {
-        return dirname($fileName) . '/resize/' . basename($fileName);
+        return $this->driver->getParentDirectory($fileName)
+            . '/resize/' . $this->fileIo->getPathInfo($fileName)['basename'];
     }
 }

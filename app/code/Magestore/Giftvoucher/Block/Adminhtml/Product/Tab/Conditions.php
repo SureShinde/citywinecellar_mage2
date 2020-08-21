@@ -9,7 +9,9 @@ use Magento\Framework\App\ObjectManager;
 
 /**
  * Class Conditions
- * @package Magestore\Giftvoucher\Block\Adminhtml\Product\Tab
+ *
+ * Product - Tab - Conditions block
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Conditions extends \Magento\Backend\Block\Widget\Form\Generic implements
     \Magento\Ui\Component\Layout\Tabs\TabInterface
@@ -42,7 +44,6 @@ class Conditions extends \Magento\Backend\Block\Widget\Form\Generic implements
      * @var \Magento\Cms\Model\Wysiwyg\Config
      */
     protected $_wysiwygConfig;
-
 
     /**
      * Initialize dependencies.
@@ -83,13 +84,13 @@ class Conditions extends \Magento\Backend\Block\Widget\Form\Generic implements
     private function getRuleFactory()
     {
         if ($this->ruleFactory === null) {
-            $this->ruleFactory = ObjectManager::getInstance()->get('Magento\SalesRule\Model\RuleFactory');
+            $this->ruleFactory = ObjectManager::getInstance()->get(\Magento\SalesRule\Model\RuleFactory::class);
         }
         return $this->ruleFactory;
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      * @codeCoverageIgnore
      */
     public function getTabClass()
@@ -98,7 +99,7 @@ class Conditions extends \Magento\Backend\Block\Widget\Form\Generic implements
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      * @codeCoverageIgnore
      */
     public function getTabUrl()
@@ -107,7 +108,7 @@ class Conditions extends \Magento\Backend\Block\Widget\Form\Generic implements
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      * @codeCoverageIgnore
      */
     public function isAjaxLoaded()
@@ -116,7 +117,7 @@ class Conditions extends \Magento\Backend\Block\Widget\Form\Generic implements
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      * @codeCoverageIgnore
      */
     public function getTabLabel()
@@ -125,7 +126,7 @@ class Conditions extends \Magento\Backend\Block\Widget\Form\Generic implements
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      * @codeCoverageIgnore
      */
     public function getTabTitle()
@@ -134,7 +135,7 @@ class Conditions extends \Magento\Backend\Block\Widget\Form\Generic implements
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      * @codeCoverageIgnore
      */
     public function canShowTab()
@@ -143,14 +144,17 @@ class Conditions extends \Magento\Backend\Block\Widget\Form\Generic implements
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      * @codeCoverageIgnore
      */
     public function isHidden()
     {
         return false;
     }
+
     /**
+     * Get Product
+     *
      * @return mixed
      */
     public function getProduct()
@@ -162,9 +166,7 @@ class Conditions extends \Magento\Backend\Block\Widget\Form\Generic implements
     }
 
     /**
-     * Prepare form before rendering HTML
-     *
-     * @return $this
+     * @inheritDoc
      */
     protected function _prepareForm()
     {
@@ -215,7 +217,7 @@ class Conditions extends \Magento\Backend\Block\Widget\Form\Generic implements
             $conditionsFieldSetId
         );
 
-        $fieldset = $form->addFieldset('description_fieldset', array('legend' => __('Description')));
+        $fieldset = $form->addFieldset('description_fieldset', ['legend' => __('Description')]);
 
         $fieldset->addField(
             'giftcard_description',
@@ -232,9 +234,12 @@ class Conditions extends \Magento\Backend\Block\Widget\Form\Generic implements
 
         $fieldset = $form->addFieldset(
             $fieldsetId,
-
-            ['legend' => __('Allow using Gift Card only if the following shopping cart conditions are met (leave blank for all shopping carts)')]
-
+            [
+                'legend' => __(
+                    'Allow using Gift Card only if the following shopping cart conditions are met'
+                    .' (leave blank for all shopping carts)'
+                )
+            ]
         )->setRenderer(
             $renderer
         );

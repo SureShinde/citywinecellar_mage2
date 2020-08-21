@@ -7,8 +7,7 @@
 namespace Magestore\PurchaseOrderSuccess\Block\Adminhtml\Form\Field;
 
 /**
- * Class Status
- * @package Magestore\PurchaseOrderSuccess\Block\Adminhtml\Form\Field
+ * Block Field Status
  */
 class Status extends \Magento\Framework\View\Element\Html\Select
 {
@@ -16,13 +15,20 @@ class Status extends \Magento\Framework\View\Element\Html\Select
     const DISABLE_VALUE = 0;
     const ENABLE_LABEL = 'Enable';
     const DISABLE_LABEL = 'Disable';
-    
-    
-    public function getAllOptions(){
-        return [self::ENABLE_VALUE => __(self::ENABLE_LABEL), self::DISABLE_VALUE => __(self::DISABLE_LABEL)];
-    }
-    
+
     /**
+     * Get All Options
+     *
+     * @return array
+     */
+    public function getAllOptions()
+    {
+        return [self::ENABLE_VALUE => __('Enable'), self::DISABLE_VALUE => __('Disable')];
+    }
+
+    /**
+     * Set Input Name
+     *
      * @param string $value
      * @return $this
      */
@@ -40,11 +46,10 @@ class Status extends \Magento\Framework\View\Element\Html\Select
     {
         if (!$this->getOptions()) {
             foreach ($this->getAllOptions() as $value => $label) {
+                // phpcs:ignore Magento2.Functions.DiscouragedFunction
                 $this->addOption($value, addslashes($label));
             }
         }
         return parent::_toHtml();
     }
-    
-    
 }

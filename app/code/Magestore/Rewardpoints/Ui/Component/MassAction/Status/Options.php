@@ -9,7 +9,7 @@ use Magento\Framework\UrlInterface;
 use Zend\Stdlib\JsonSerializable;
 
 /**
- * Class Options
+ * Mass action - Status options
  */
 class Options implements JsonSerializable
 {
@@ -52,9 +52,8 @@ class Options implements JsonSerializable
     protected $additionalData = [];
 
     /**
-     * Constructor
+     * Options constructor.
      *
-     * @param CollectionFactory $collectionFactory
      * @param UrlInterface $urlBuilder
      * @param array $data
      */
@@ -74,16 +73,16 @@ class Options implements JsonSerializable
     public function jsonSerialize()
     {
         if ($this->options === null) {
-            $options = array(
-                array(
+            $options = [
+                [
                     "value" => "1",
                     "label" => ('Active'),
-                ),
-                array(
+                ],
+                [
                     "value" => "2",
                     "label" => ('Inactive'),
-                )
-            );
+                ]
+            ];
             $this->prepareData();
             foreach ($options as $optionCode) {
                 $this->options[$optionCode['value']] = [

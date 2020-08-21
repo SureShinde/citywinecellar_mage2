@@ -24,6 +24,11 @@ namespace Magestore\Customercredit\Helper;
 
 use \Magento\Framework\App\Helper\AbstractHelper;
 
+/**
+ * Class Upgrade
+ *
+ * Customer credit upgrade helper
+ */
 class Upgrade extends AbstractHelper
 {
     const MAGENTO_EE = 'Enterprise';
@@ -35,40 +40,52 @@ class Upgrade extends AbstractHelper
      * @var \Magento\Catalog\Model\ProductFactory
      */
     private $productFactory;
-    /**
-     * @param \Magento\Framework\App\Helper\Context $context
-     */
+
     /**
      * @var \Magento\Framework\App\ProductMetadataInterface
      */
     protected $productMetadata;
 
+    /**
+     * Upgrade constructor.
+     *
+     * @param \Magento\Framework\App\Helper\Context $context
+     * @param \Magento\Framework\App\ProductMetadataInterface $productMetadata
+     * @param \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory $productCollectionFactory
+     * @param \Magento\Catalog\Model\ProductFactory $productFactory
+     * @param \Magento\Framework\App\State $state
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
     public function __construct(
         \Magento\Framework\App\Helper\Context $context,
         \Magento\Framework\App\ProductMetadataInterface $productMetadata,
         \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory $productCollectionFactory,
         \Magento\Catalog\Model\ProductFactory $productFactory,
         \Magento\Framework\App\State $state
-    )
-    {
+    ) {
         $this->productMetadata = $productMetadata;
         $this->productCollectionFactory = $productCollectionFactory;
         $this->productFactory = $productFactory;
-        try{
+        try {
             $state->setAreaCode(\Magento\Framework\App\Area::AREA_ADMINHTML);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $state->getAreaCode();
         }
         parent::__construct($context);
     }
 
+    /**
+     * Get product data
+     *
+     * @return array
+     */
     public function getProductData()
     {
         $data = [];
-        /** @var \Magento\Catalog\Model\ResourceModel\Product\Collection $collection */
+        /* @var \Magento\Catalog\Model\ResourceModel\Product\Collection $collection */
         $collection = $this->productCollectionFactory->create();
         $collection->addFilter('type_id', 'customercredit');
-        foreach ($collection->getItems() as $item){
+        foreach ($collection->getItems() as $item) {
             $id = $item->getEntityId();
             $product = $this->productFactory->create()->load($id);
 
@@ -82,12 +99,19 @@ class Upgrade extends AbstractHelper
         return $data;
     }
 
+    /**
+     * Set Product Data
+     *
+     * @param array $data
+     * @return $this
+     * @throws \Exception
+     */
     public function setProductData($data)
     {
-        /** @var \Magento\Catalog\Model\ResourceModel\Product\Collection $collection */
+        /* @var \Magento\Catalog\Model\ResourceModel\Product\Collection $collection */
         $collection = $this->productCollectionFactory->create();
         $collection->addFilter('type_id', 'customercredit');
-        foreach ($collection->getItems() as $item){
+        foreach ($collection->getItems() as $item) {
             $id = $item->getEntityId();
             $data_set = $data[$id];
 
@@ -96,7 +120,7 @@ class Upgrade extends AbstractHelper
 
             $attributes = $item->getAttributes();
             foreach ($attributes as $attribute) {
-                if($attribute->getAttributeCode() == 'storecredit_type'){
+                if ($attribute->getAttributeCode() == 'storecredit_type') {
                     $this->xlog(__LINE__.' '.__METHOD__);
                     $this->xlog($attribute->getAttributeCode());
                     $this->xlog($attribute->getAttributeId());
@@ -112,22 +136,26 @@ class Upgrade extends AbstractHelper
         return $this;
     }
 
-    /*
-     * @param  $message string|array
+    /**
+     * Xlog
+     *
+     * @param  string|array $message
      * @return void
      */
     public function xlog($message = 'null')
     {
-        $log = print_r($message, true);
         \Magento\Framework\App\ObjectManager::getInstance()
-            ->get('Psr\Log\LoggerInterface')
-            ->debug($log);
+            ->get(\Psr\Log\LoggerInterface::class)
+            ->debug($message);
     }
+
     /**
+     * Check Magento EE
      *
      * @return string
      */
-    public function checkMagentoEE() {
+    public function checkMagentoEE()
+    {
         $edition = $this->productMetadata->getEdition();
         if ($edition == self::MAGENTO_EE) {
             return true;

@@ -4,11 +4,15 @@
  * Copyright © 2018 Magestore. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace Magestore\Webpos\Model\Catalog;
 
 use Magento\Eav\Model\Entity\Attribute\Option;
+use Magestore\Webpos\Api\Data\Catalog\Option\SwatchOptionSearchResultsInterfaceFactory;
 
 /**
+ * Model catalog SwatchOptionRepository
+ *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @SuppressWarnings(PHPMD.TooManyFields)
  */
@@ -27,7 +31,7 @@ class SwatchOptionRepository implements \Magestore\Webpos\Api\Catalog\SwatchOpti
      */
     protected $attributeCollection;
     /**
-     * @var \Magestore\Webpos\Api\Data\Catalog\Option\SwatchOptionSearchResultsInterfaceFactory
+     * @var SwatchOptionSearchResultsInterfaceFactory
      */
     protected $swatchOptionSearchResultsFactory;
     /**
@@ -45,18 +49,20 @@ class SwatchOptionRepository implements \Magestore\Webpos\Api\Catalog\SwatchOpti
 
     /**
      * SwatchOptionRepository constructor.
+     *
      * @param \Magento\Framework\View\Result\PageFactory $resultPageFactory
      * @param \Magento\Swatches\Helper\Data $swatchHelper
      * @param \Magento\Catalog\Model\ResourceModel\Product\Attribute\CollectionFactory $attributeCollection
-     * @param \Magestore\Webpos\Api\Data\Catalog\Option\SwatchOptionSearchResultsInterfaceFactory $swatchOptionSearchResultsFactory
+     * @param SwatchOptionSearchResultsInterfaceFactory $swatchOptionSearchResultsFactory
      * @param \Magestore\Webpos\Api\Data\Catalog\Option\Swatch\SwatchInterfaceFactory $swatchInterfaceFactory
      * @param \Magestore\Webpos\Api\Data\Catalog\Option\SwatchOptionInterfaceFactory $swatchOptionInterfaceFactory
+     * @param \Magento\Swatches\Helper\Media $swatchMediaHelper
      */
     public function __construct(
         \Magento\Framework\View\Result\PageFactory $resultPageFactory,
         \Magento\Swatches\Helper\Data $swatchHelper,
         \Magento\Catalog\Model\ResourceModel\Product\Attribute\CollectionFactory $attributeCollection,
-        \Magestore\Webpos\Api\Data\Catalog\Option\SwatchOptionSearchResultsInterfaceFactory $swatchOptionSearchResultsFactory,
+        SwatchOptionSearchResultsInterfaceFactory $swatchOptionSearchResultsFactory,
         \Magestore\Webpos\Api\Data\Catalog\Option\Swatch\SwatchInterfaceFactory $swatchInterfaceFactory,
         \Magestore\Webpos\Api\Data\Catalog\Option\SwatchOptionInterfaceFactory $swatchOptionInterfaceFactory,
         \Magento\Swatches\Helper\Media $swatchMediaHelper
@@ -73,9 +79,10 @@ class SwatchOptionRepository implements \Magestore\Webpos\Api\Catalog\SwatchOpti
     /**
      * @inheritdoc
      */
-    public function getSwatchOptions() {
-        $swatchAttributeArray= array();
-        $swatchArray = array();
+    public function getSwatchOptions()
+    {
+        $swatchAttributeArray = [];
+        $swatchArray = [];
         $collection = $this->attributeCollection->create();
         foreach ($collection as $attributeModel) {
             $isSwatch = $this->swatchHelper->isSwatchAttribute($attributeModel);
@@ -107,10 +114,13 @@ class SwatchOptionRepository implements \Magestore\Webpos\Api\Catalog\SwatchOpti
     }
 
     /**
+     * Get Swatch Option Data
+     *
      * @param array $swatches
      * @return \Magestore\Webpos\Api\Data\Catalog\Option\Swatch\SwatchInterface[]
      */
-    public function getSwatchOptionData($swatches) {
+    public function getSwatchOptionData($swatches)
+    {
         $data = [];
         foreach ($swatches as $swatch) {
             /** @var \Magestore\Webpos\Api\Data\Catalog\Option\Swatch\SwatchInterface $swt */
@@ -136,6 +146,12 @@ class SwatchOptionRepository implements \Magestore\Webpos\Api\Catalog\SwatchOpti
         return $data;
     }
 
+    /**
+     * Get Unused Option
+     *
+     * @param Option $swatchOption
+     * @return array
+     */
     public function getUnusedOption(Option $swatchOption)
     {
         return [

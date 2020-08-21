@@ -11,6 +11,11 @@ use Magento\Framework\Event\Observer as EventObserver;
 use Magento\Framework\Event\ObserverInterface;
 use Magestore\FulfilSuccess\Service\PickRequest\BuilderService;
 
+/**
+ * Observer SalesPlaceOrderAfter
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class SalesPlaceOrderAfter implements ObserverInterface
 {
     /**
@@ -43,6 +48,7 @@ class SalesPlaceOrderAfter implements ObserverInterface
 
     /**
      * SalesPlaceOrderAfter constructor.
+     *
      * @param BuilderService $builderService
      * @param \Magestore\FulfilSuccess\Api\FulfilManagementInterface $fulfilManagement
      * @param \Magento\Framework\Event\ManagerInterface $eventManager
@@ -57,8 +63,7 @@ class SalesPlaceOrderAfter implements ObserverInterface
         \Magento\Sales\Model\Order\ShipmentFactory $shipmentFactory,
         \Magento\Sales\Api\OrderRepositoryInterface $orderRepository,
         \Magento\Framework\ObjectManagerInterface $objectManager
-    )
-    {
+    ) {
         $this->builderService = $builderService;
         $this->fulfilManagement = $fulfilManagement;
         $this->eventManager = $eventManager;
@@ -78,14 +83,14 @@ class SalesPlaceOrderAfter implements ObserverInterface
     {
         $order = $observer->getEvent()->getOrder();
 
-        // get fully order data
+        // Get fully order data
         $orderId = $order->getId();
         /** @var \Magento\Framework\Api\SearchCriteriaInterface $searchCriteria */
-        $searchCriteria = $this->objectManager->get('Magento\Framework\Api\SearchCriteriaInterface');
+        $searchCriteria = $this->objectManager->get(\Magento\Framework\Api\SearchCriteriaInterface::class);
         /** @var \Magento\Framework\Api\Search\FilterGroup $filterGroup */
-        $filterGroup = $this->objectManager->get('Magento\Framework\Api\Search\FilterGroup');
+        $filterGroup = $this->objectManager->get(\Magento\Framework\Api\Search\FilterGroup::class);
         /** @var \Magento\Framework\Api\Filter $filter */
-        $filter = $this->objectManager->get('Magento\Framework\Api\Filter');
+        $filter = $this->objectManager->get(\Magento\Framework\Api\Filter::class);
         $filter->setField('entity_id');
         $filter->setValue($orderId);
 
@@ -93,14 +98,14 @@ class SalesPlaceOrderAfter implements ObserverInterface
         $searchCriteria->setFilterGroups([$filterGroup]);
 
         $listOrder = $this->orderRepository->getList($searchCriteria);
-        if($listOrder->getTotalCount()) {
+        if ($listOrder->getTotalCount()) {
             $order = $listOrder->getItems()[$orderId];
         }
 
         if ($this->checkPicking($order)) {
             $pickData = $this->preparePickingData($order);
             if ($pickData) {
-                $shipData = new \Magento\Framework\DataObject($pickData);;
+                $shipData = new \Magento\Framework\DataObject($pickData);
                 $this->builderService->createPickRequestsFromPostData($shipData);
             }
         }
@@ -108,9 +113,9 @@ class SalesPlaceOrderAfter implements ObserverInterface
     }
 
     /**
-     * prepare picking data from order
+     * Prepare picking data from order
      *
-     * @param $order
+     * @param \Magento\Sales\Model\Order $order
      * @return array|bool
      */
     public function preparePickingData($order)
@@ -119,9 +124,9 @@ class SalesPlaceOrderAfter implements ObserverInterface
         $items = $order->getAllItems();
         $shipItems = $this->getListShippingItem($order);
         if (count($items)) {
-            $itemData = array();
+            $itemData = [];
             foreach ($items as $item) {
-                if(!isset($shipItems[$item->getId()])) {
+                if (!isset($shipItems[$item->getId()])) {
                     continue;
                 }
                 $itemTmp['qty'] = $shipItems[$item->getId()];
@@ -129,16 +134,16 @@ class SalesPlaceOrderAfter implements ObserverInterface
                 $itemTmp['order_item_id'] = $item->getId();
                 $itemData[$item->getId()] = $itemTmp;
             }
-            $packages = array(
-                array(
-                    'params' => array('container' => 'fulfil'),
+            $packages = [
+                [
+                    'params' => ['container' => 'fulfil'],
                     'items' => $itemData
-                )
-            );
-            $pickingData = array(
+                ]
+            ];
+            $pickingData = [
                 'order_id' => $orderId,
                 'packages' => $packages
-            );
+            ];
             return $pickingData;
         }
         return false;
@@ -150,7 +155,8 @@ class SalesPlaceOrderAfter implements ObserverInterface
      * @param \Magento\Sales\Model\Order $order
      * @return array
      */
-    public function getListShippingItem($order) {
+    public function getListShippingItem($order)
+    {
         $itemCollection = $this->getShipment($order)->getAllItems();
 
         $dataItem = [];
@@ -174,10 +180,13 @@ class SalesPlaceOrderAfter implements ObserverInterface
     }
 
     /**
+     * Get Order Item Data
+     *
      * @param \Magento\Sales\Model\Order $order
      * @return array
      */
-    public function getOrderItemData(\Magento\Sales\Model\Order $order) {
+    public function getOrderItemData(\Magento\Sales\Model\Order $order)
+    {
         $data = [];
         foreach ($order->getAllItems() as $item) {
             $data[$item->getId()] = $item->getQtyToShip();
@@ -186,21 +195,25 @@ class SalesPlaceOrderAfter implements ObserverInterface
     }
 
     /**
-     * @param $order
+     * Check Picking
+     *
+     * @param \Magento\Sales\Model\Order $order
      * @return bool
      */
     public function checkPicking($order)
     {
-        if ($order->getData('pos_id') && !$order->getData('pos_fulfill_online') &&
-            $order->getShippingMethod() != 'webpos_shipping_storepickup'
-        ) {
+        if ($order->getData('pos_id')
+            && !$order->getData('pos_fulfill_online')
+            && $order->getShippingMethod() != 'webpos_shipping_storepickup') {
             return true;
         }
         return false;
     }
 
     /**
-     * @param $order
+     * Get Resource Picking Item
+     *
+     * @param \Magento\Sales\Model\Order $order
      * @return string|int
      */
     public function getResourcePickingItem($order)

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="urn:magento:mftf:Test/etc/testSchema.xsd">
+    <test name="AddNewBundleProductTest">
+        <annotations>
+            <features value="Add product to cart"/>
+            <stories value="Add bundle product to cart"/>
+            <title value="Add bundle product to cart"/>
+            <description value="Add a bundle product which is not added to cart yet before"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="ABP-01"/>
+            <group value="addNewBundleToCart"/>
+            <group value="addBundleProduct"/>
+            <group value="pwapos"/>
+        </annotations>
+
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+
+        <actionGroup ref="SearchAndClickProduct" stepKey="searchAndClickGroupedProduct">
+            <argument name="dataProduct" value="pos_bundle_product"/>
+        </actionGroup>
+
+        <waitForElementVisible selector="{{PosCheckoutPopupBundleProductSection.popupBundleBlock}}" time="120" stepKey="waitPopupBundleVisible"/>
+        <waitForElementNotVisible selector="{{PosCheckoutPopupBundleProductSection.loaderOption}}" time="120" stepKey="waitForLoadOption"/>
+
+        <waitForElementVisible selector="{{PosCheckoutPopupBundleProductSection.product1}}" time="60" stepKey="waitForLoadOption1"/>
+        <waitForElementVisible selector="{{PosCheckoutPopupBundleProductSection.product2}}" time="60" stepKey="waitForLoadOption2"/>
+        <wait time="4" stepKey="waitToAdd1"/>
+
+        <click selector="{{PosCheckoutPopupBundleProductSection.product1}}" stepKey="chooseOptionProduct1"/>
+        <click selector="{{PosCheckoutPopupBundleProductSection.product2}}" stepKey="chooseOptionProduct2"/>
+
+        <click selector="{{PosCheckoutPopupBundleProductSection.addToCart}}" stepKey="clickAddButton"/>
+        <waitForElementVisible selector="{{CartSection.productFoundOnCartByName(pos_bundle_product.name)}}" time="120" stepKey="waitForItemVisibleInCart"/>
+        <seeElement selector="{{CartSection.productFoundOnCartByName(pos_bundle_product.name)}}" stepKey="seeItemInCart"/>
+    </test>
+</tests>

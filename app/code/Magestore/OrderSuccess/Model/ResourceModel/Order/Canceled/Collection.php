@@ -3,27 +3,29 @@
  * Copyright © 2016 Magestore. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace Magestore\OrderSuccess\Model\ResourceModel\Order\Canceled;
 
 /**
- * Class Collection
- * @package Magestore\OrderSuccess\Model\ResourceModel\Sales\Canceled
+ * Order Canceled Collection
  */
 class Collection extends \Magestore\OrderSuccess\Model\ResourceModel\Order\Collection
 {
     /**
-     * add condition.
+     * Add condition
      *
-     * @param
-     * @return $this
+     * @return Collection|void
      */
-    public function addCondition(){
-        $this->addFieldToFilter('main_table.status', array(
-            'in'=> array(
-                'canceled',
-                'closed'
-            )
-        ))
-        ;
+    public function addCondition()
+    {
+        $this->addFieldToFilter(
+            'main_table.status',
+            [
+                'in' => [
+                    'canceled',
+                    'closed'
+                ]
+            ]
+        );
     }
 }

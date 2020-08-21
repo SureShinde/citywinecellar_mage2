@@ -3,28 +3,20 @@
  * Copyright © 2018 Magestore. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace Magestore\Webpos\Model\Source\Adminhtml;
 
 /**
- * Class Shipping
- * @package Magestore\Webpos\Model\Source\Adminhtml
- *
- * @category    Magestore
- * @package     Magestore_Webpos
- * @module      Webpos
- * @author      Magestore Developer
+ * Source Shipping
  */
 class Shipping implements \Magento\Framework\Option\ArrayInterface
 {
-    /**
-     *
-     */
     const SPECIFIC_SHIPPING = 'webpos/shipping/method';
 
     /**
      * @var array
      */
-    protected $allowShippings = array();
+    protected $allowShippings = [];
 
     /**
      * @var \Magestore\Webpos\Api\Data\Shipping\ShippingMethodInterfaceFactory
@@ -45,9 +37,9 @@ class Shipping implements \Magento\Framework\Option\ArrayInterface
      */
     protected $helper;
 
-
     /**
      * Shipping constructor.
+     *
      * @param \Magestore\Webpos\Api\Data\Shipping\ShippingMethodInterfaceFactory $shippingModel
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
      * @param \Magento\Shipping\Model\Config $shippingConfigModel
@@ -58,46 +50,51 @@ class Shipping implements \Magento\Framework\Option\ArrayInterface
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Shipping\Model\Config $shippingConfigModel,
         \Magestore\Webpos\Helper\Data $helper
-    )
-    {
+    ) {
         $this->shippingMethodFactory = $shippingModel;
         $this->shippingConfigModel = $shippingConfigModel;
         $this->scopeConfig = $scopeConfig;
         $this->helper = $helper;
-        $this->allowShippings = array('webpos_shipping', 'flatrate', 'freeshipping', 'tablerate');
+        $this->allowShippings = ['webpos_shipping', 'flatrate', 'freeshipping', 'tablerate'];
     }
 
     /**
+     * To Option Array
+     *
      * @return array
      */
     public function toOptionArray()
     {
         $collection = $this->getListCoreShippingMethods();
-        $options = array();
+        $options = [];
         if (count($collection) > 0) {
             foreach ($collection as $code => $carrier) {
-                if ($code == 'webpos_shipping')
+                if ($code == 'webpos_shipping') {
                     continue;
+                }
                 $title = $carrier->getConfigData('title') . ' - ' . $carrier->getConfigData('name');
-                $options[] = array('value' => $code, 'label' => $title);
+                $options[] = ['value' => $code, 'label' => $title];
             }
         }
         return $options;
     }
 
     /**
-     * get shipping methods for pos
+     * Get shipping methods for pos
      *
      * @return array
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function getPosShippingMethods()
     {
         $collection = $this->getListCoreShippingMethods();
-        $shippingList = array();
+        $shippingList = [];
         if (count($collection) > 0) {
             foreach ($collection as $code => $carrier) {
-                if (!$this->isAllowOnWebPOS($code))
+                if (!$this->isAllowOnWebPOS($code)) {
                     continue;
+                }
                 $shippingModel = $this->shippingMethodFactory->create();
                 $isDefault = 0;
                 if ($code == $this->getDefaultShippingMethod()) {
@@ -112,33 +109,46 @@ class Shipping implements \Magento\Framework\Option\ArrayInterface
                 $methodPrice = ($carrier->getConfigData('price') != null) ? (float)$carrier->getConfigData('price') : 0;
                 $methodType = ($carrier->getConfigData('type') != null) ? $carrier->getConfigData('type') : '';
                 $shipmentRequestType = $carrier->getConfigData('shipment_requesttype')
-                    ? $carrier->getConfigData('shipment_requesttype') : 0;
-                $conditionName = $carrier->getConfigData('condition_name') != null ?
-                    $carrier->getConfigData('condition_name') : '';
-                $methodDescription = $carrier->getConfigData('description') != null ?
-                    $carrier->getConfigData('description') : '';
-                $speCountriesAllow = $carrier->getConfigData('sallowspecific') ?
-                    $carrier->getConfigData('sallowspecific') : 0;
-                $methodSpecificerrmsg = $carrier->getConfigData('specificerrmsg') != null ?
-                    $carrier->getConfigData('specificerrmsg') : '';
-                $specificCountry = $carrier->getConfigData('specificcountry') ?
-                    $carrier->getConfigData('specificcountry') : '';
-                $handlingFee = $carrier->getConfigData('handling_fee') ? (float)$carrier->getConfigData('handling_fee') : 0;
-                $handlingType = $carrier->getConfigData('handling_type') ?
-                    $carrier->getConfigData('handling_type') : 'F';
-                $handlingAction = $carrier->getConfigData('handling_action') ?
-                    $carrier->getConfigData('handling_action') : 'O';
-                $maxPackageWeight = $carrier->getConfigData('max_package_weight') ?
-                    $carrier->getConfigData('max_package_weight') : 0;
-                $includeVirtualPrice = $carrier->getConfigData('include_virtual_price') ?
-                    $carrier->getConfigData('include_virtual_price') : 0;
-                $freeShippingSubtotal = $carrier->getConfigData('free_shipping_subtotal') ?
-                    $carrier->getConfigData('free_shipping_subtotal') : 0;
+                    ? $carrier->getConfigData('shipment_requesttype')
+                    : 0;
+                $conditionName = $carrier->getConfigData('condition_name') != null
+                    ? $carrier->getConfigData('condition_name')
+                    : '';
+                $methodDescription = $carrier->getConfigData('description') != null
+                    ? $carrier->getConfigData('description')
+                    : '';
+                $speCountriesAllow = $carrier->getConfigData('sallowspecific')
+                    ? $carrier->getConfigData('sallowspecific')
+                    : 0;
+                $methodSpecificerrmsg = $carrier->getConfigData('specificerrmsg') != null
+                    ? $carrier->getConfigData('specificerrmsg')
+                    : '';
+                $specificCountry = $carrier->getConfigData('specificcountry')
+                    ? $carrier->getConfigData('specificcountry')
+                    : '';
+                $handlingFee = $carrier->getConfigData('handling_fee')
+                    ? (float)$carrier->getConfigData('handling_fee')
+                    : 0;
+                $handlingType = $carrier->getConfigData('handling_type')
+                    ? $carrier->getConfigData('handling_type')
+                    : 'F';
+                $handlingAction = $carrier->getConfigData('handling_action')
+                    ? $carrier->getConfigData('handling_action')
+                    : 'O';
+                $maxPackageWeight = $carrier->getConfigData('max_package_weight')
+                    ? $carrier->getConfigData('max_package_weight')
+                    : 0;
+                $includeVirtualPrice = $carrier->getConfigData('include_virtual_price')
+                    ? $carrier->getConfigData('include_virtual_price')
+                    : 0;
+                $freeShippingSubtotal = $carrier->getConfigData('free_shipping_subtotal')
+                    ? $carrier->getConfigData('free_shipping_subtotal')
+                    : 0;
                 $rates = [];
                 if ($code == 'tablerate') {
                     /** @var \Magento\OfflineShipping\Model\ResourceModel\Carrier\Tablerate $resourceModel */
                     $resourceModel = \Magento\Framework\App\ObjectManager::getInstance()
-                        ->create('Magento\OfflineShipping\Model\ResourceModel\Carrier\Tablerate');
+                        ->create(\Magento\OfflineShipping\Model\ResourceModel\Carrier\Tablerate::class);
                     $connection = $resourceModel->getConnection();
                     $select = $connection->select()->from($resourceModel->getMainTable());
                     $result = $connection->fetchAll($select);
@@ -170,6 +180,11 @@ class Shipping implements \Magento\Framework\Option\ArrayInterface
         return $shippingList;
     }
 
+    /**
+     * Get List Core Shipping Methods
+     *
+     * @return array
+     */
     public function getListCoreShippingMethods()
     {
         $collection = $this->shippingConfigModel->getAllCarriers($this->helper->getCurrentStoreView()->getId());
@@ -183,7 +198,8 @@ class Shipping implements \Magento\Framework\Option\ArrayInterface
     }
 
     /**
-     * get array of allow shipping methods
+     * Get array of allow shipping methods
+     *
      * @return array
      */
     public function getAllowShippingMethods()
@@ -192,14 +208,17 @@ class Shipping implements \Magento\Framework\Option\ArrayInterface
     }
 
     /**
-     * check shipping method for pos
+     * Check shipping method for pos
      *
      * @param string $code
      * @return boolean
      */
     public function isAllowOnWebPOS($code)
     {
-        $specificshipping = $this->scopeConfig->getValue(self::SPECIFIC_SHIPPING, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $specificshipping = $this->scopeConfig->getValue(
+            self::SPECIFIC_SHIPPING,
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
         $specificshipping = explode(',', $specificshipping);
         $specificshipping[] = 'webpos_shipping';
         if (in_array($code, $specificshipping)) {
@@ -210,7 +229,7 @@ class Shipping implements \Magento\Framework\Option\ArrayInterface
     }
 
     /**
-     * get default shipping method for pos
+     * Get default shipping method for pos
      *
      * @return string
      */
@@ -218,5 +237,4 @@ class Shipping implements \Magento\Framework\Option\ArrayInterface
     {
         return 'webpos_shipping';
     }
-
 }

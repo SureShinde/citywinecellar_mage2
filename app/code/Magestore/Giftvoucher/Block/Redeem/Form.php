@@ -3,11 +3,13 @@
  * Copyright © 2017 Magestore. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 namespace Magestore\Giftvoucher\Block\Redeem;
 
 /**
  * Class Form
- * @package Magestore\Giftvoucher\Block\Redeem
+ *
+ * Redeem form
  */
 class Form extends \Magento\Payment\Block\Form
 {
@@ -23,6 +25,7 @@ class Form extends \Magento\Payment\Block\Form
 
     /**
      * Form constructor.
+     *
      * @param \Magento\Backend\Block\Template\Context $context
      * @param \Magestore\Giftvoucher\Service\Redeem\CheckoutService $checkoutService
      * @param \Magestore\Giftvoucher\Helper\Data $helper
@@ -40,6 +43,8 @@ class Form extends \Magento\Payment\Block\Form
     }
 
     /**
+     * Is enable
+     *
      * @return bool
      */
     public function isEnabled()
@@ -51,13 +56,15 @@ class Form extends \Magento\Payment\Block\Form
     }
 
     /**
+     * Get form data
+     *
      * @param bool $isJson
      * @param string $key
      * @return array|mixed|string
      */
     public function getFormData($isJson = true, $key = '')
     {
-        $cartId = $this->getQuote()->getId();
+        $cartId = $this->helper->getCheckoutSession()->getQuoteId();
         $data = [];
         $data['quote_id'] = $this->getQuote()->getId();
         $data['gift_voucher_discount'] = $this->checkoutService->getQuote($cartId)->getGiftVoucherDiscount();
@@ -78,6 +85,8 @@ class Form extends \Magento\Payment\Block\Form
     }
 
     /**
+     * Has gift card only
+     *
      * @return int
      */
     public function hasGiftcardOnly()
@@ -97,6 +106,8 @@ class Form extends \Magento\Payment\Block\Form
     }
 
     /**
+     * Get Quote
+     *
      * @return mixed
      */
     public function getQuote()

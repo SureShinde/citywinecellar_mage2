@@ -5,12 +5,13 @@
  */
 namespace Magestore\Giftvoucher\Controller\Index;
 
+use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magestore\Giftvoucher\Controller\Action;
 
 /**
  * Print from Email Action
  */
-class Printemail extends Action
+class Printemail extends Action implements HttpGetActionInterface
 {
     /**
      * @var \Magestore\Giftvoucher\Model\Giftvoucher
@@ -37,11 +38,12 @@ class Printemail extends Action
     }
 
     /**
-     * @return \Magento\Framework\App\ResponseInterface|mixed
+     * @inheritDoc
      */
     public function execute()
     {
         if ($key = $this->getRequest()->getParam('k')) {
+            // phpcs:ignore Magento2.Functions.DiscouragedFunction
             $keyDecode = explode('$', base64_decode($key));
             $giftvoucher = $this->_giftVoucher->load($keyDecode[1]);
             if ($giftvoucher && $giftvoucher->getId() && $giftvoucher->getGiftCode() == $keyDecode[0]) {
@@ -50,5 +52,6 @@ class Printemail extends Action
         } else {
             return $this->_redirect('*/*/index');
         }
+        return $this;
     }
 }

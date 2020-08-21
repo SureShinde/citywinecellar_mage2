@@ -6,13 +6,18 @@
 
 namespace Magestore\TransferStock\Controller\Adminhtml\InventoryTransfer\Receive;
 
+use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\App\Filesystem\DirectoryList;
+use Magestore\TransferStock\Model\ResourceModel\InventoryTransfer\ReceiveProduct\CollectionFactory
+    as ReceiveProductCollectionFactory;
+use \Magestore\TransferStock\Model\ResourceModel\InventoryTransfer\ReceiveProduct\Collection
+    as ReceiveProductCollection;
 
 /**
- * Class Export
- * @package Magestore\TransferStock\Controller\Adminhtml\InventoryTransfer\Receive
+ * Export receive
  */
-class Export extends \Magestore\TransferStock\Controller\Adminhtml\InventoryTransfer\InventoryTransfer
+class Export extends \Magestore\TransferStock\Controller\Adminhtml\InventoryTransfer\InventoryTransfer implements
+    HttpGetActionInterface
 {
     /**
      * @var \Magento\Framework\File\Csv
@@ -34,30 +39,36 @@ class Export extends \Magestore\TransferStock\Controller\Adminhtml\InventoryTran
      */
     protected $_collectionFactory;
 
+    protected $filesystemDriver;
+
     /**
      * Export constructor.
+     *
      * @param \Magestore\TransferStock\Controller\Adminhtml\Context $context
-     * @param \Magestore\TransferStock\Model\ResourceModel\InventoryTransfer\ReceiveProduct\CollectionFactory $collectionFactory
+     * @param ReceiveProductCollectionFactory $collectionFactory
      * @param \Magento\Framework\File\Csv $csvProcessor
      * @param \Magento\Framework\App\Response\Http\FileFactory $fileFactory
      * @param \Magento\Framework\Filesystem $filesystem
+     * @param \Magento\Framework\Filesystem\DriverInterface $filesystemDriver
      */
     public function __construct(
         \Magestore\TransferStock\Controller\Adminhtml\Context $context,
-        \Magestore\TransferStock\Model\ResourceModel\InventoryTransfer\ReceiveProduct\CollectionFactory $collectionFactory,
+        ReceiveProductCollectionFactory $collectionFactory,
         \Magento\Framework\File\Csv $csvProcessor,
         \Magento\Framework\App\Response\Http\FileFactory $fileFactory,
-        \Magento\Framework\Filesystem $filesystem
-    ){
+        \Magento\Framework\Filesystem $filesystem,
+        \Magento\Framework\Filesystem\DriverInterface $filesystemDriver
+    ) {
         parent::__construct($context);
         $this->_collectionFactory = $collectionFactory;
         $this->csvProcessor = $csvProcessor;
         $this->fileFactory = $fileFactory;
         $this->filesystem = $filesystem;
+        $this->filesystemDriver = $filesystemDriver;
     }
 
     /**
-     * execute
+     * Execute
      *
      * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
      * @throws \Magento\Framework\Exception\FileSystemException
@@ -74,13 +85,13 @@ class Export extends \Magestore\TransferStock\Controller\Adminhtml\InventoryTran
         $this->csvProcessor->saveData($filename, $data);
         return $this->fileFactory->create(
             $name,
-            file_get_contents($filename),
+            $this->filesystemDriver->fileGetContents($filename),
             DirectoryList::VAR_DIR
         );
     }
 
     /**
-     * get base dir media
+     * Get base dir media
      *
      * @return \Magento\Framework\Filesystem\Directory\WriteInterface
      * @throws \Magento\Framework\Exception\FileSystemException
@@ -95,26 +106,24 @@ class Export extends \Magestore\TransferStock\Controller\Adminhtml\InventoryTran
      *
      * @return array
      */
-    public function generateData() {
+    public function generateData()
+    {
         $receiveId = $this->_request->getParam("id");
         $data = [];
-        if($receiveId){
-            /** @var \Magestore\TransferStock\Model\ResourceModel\InventoryTransfer\ReceiveProduct\Collection $receiveProductCollection */
+        if ($receiveId) {
+            /** @var ReceiveProductCollection $receiveProductCollection */
             $receiveProductCollection = $this->_collectionFactory->create();
             $receiveProductCollection->getProductType();
             $receiveProductCollection->addFieldToFilter("receive_id", $receiveId);
             foreach ($receiveProductCollection as $product) {
-                $data[]= array(
+                $data[]= [
                     $product->getData('product_sku'),
                     $product->getData('product_name'),
                     $product->getData('product_type_id'),
                     (float) $product->getData('qty'),
-                );
+                ];
             }
         }
         return $data;
     }
-
 }
-
-

@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--
+  ~  Copyright © Magestore. All rights reserved.
+  ~  See COPYING.txt for license details.
+  -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <reportsuccess>
+            <general>
+                <first_day_of_week>0</first_day_of_week>
+            </general>
+        </reportsuccess>
+    </default>
+</config>

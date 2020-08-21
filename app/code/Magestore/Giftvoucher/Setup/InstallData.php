@@ -12,7 +12,8 @@ use Magento\Framework\Setup\ModuleDataSetupInterface;
 
 /**
  * Class InstallData
- * @package Magestore\Webpos\Setup
+ *
+ * Gift voucher install data
  */
 class InstallData implements InstallDataInterface
 {
@@ -49,11 +50,8 @@ class InstallData implements InstallDataInterface
     }
 
     /**
-     * Installs data for a module
-     *
-     * @param ModuleDataSetupInterface $setup
-     * @param ModuleContextInterface $context
-     * @return void
+     * @inheritDoc
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function install(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
     {
@@ -67,13 +65,13 @@ class InstallData implements InstallDataInterface
         $applyTo = explode(',', $tax->getData('apply_to'));
         $applyTo[] = 'giftvoucher';
         $taxApplyTo = implode(',', $applyTo);
-        $tax->addData(array('apply_to' => $taxApplyTo))->save();
+        $tax->addData(['apply_to' => $taxApplyTo])->save();
 
         $weight = $catalogAttributeModel->loadByCode('catalog_product', 'weight');
         $applyTo = explode(',', $weight->getData('apply_to'));
         $applyTo[] = 'giftvoucher';
         $weightApplyTo = implode(',', $applyTo);
-        $weight->addData(array('apply_to' => $weightApplyTo))->save();
+        $weight->addData(['apply_to' => $weightApplyTo])->save();
 
         $installer->removeAttribute(
             $entityTypeModel->loadByCode('catalog_product')->getData('entity_type_id'),
@@ -108,14 +106,14 @@ class InstallData implements InstallDataInterface
             'gift_template_ids'
         );
 
-        $data = array(
+        $data = [
             'group' => 'General',
             'type' => 'varchar',
             'input' => 'multiselect',
             'label' => 'Select Gift Card templates ',
-            'backend' => 'Magento\Eav\Model\Entity\Attribute\Backend\ArrayBackend',
+            'backend' => \Magento\Eav\Model\Entity\Attribute\Backend\ArrayBackend::class,
             'frontend' => '',
-            'source' => 'Magestore\Giftvoucher\Model\Source\TemplateOptions',
+            'source' => \Magestore\Giftvoucher\Model\Source\TemplateOptions::class,
             'visible' => 1,
             'required' => 1,
             'user_defined' => 1,
@@ -138,7 +136,7 @@ class InstallData implements InstallDataInterface
             'is_visible_on_front' => 0,
             'used_in_product_listing' => 1,
             'used_for_sort_by' => 0,
-        );
+        ];
         $installer->addAttribute(
             $entityTypeModel->loadByCode('catalog_product')->getData('entity_type_id'),
             'gift_template_ids',
@@ -147,7 +145,6 @@ class InstallData implements InstallDataInterface
         $giftTemplateIds = $catalogAttributeModel->loadByCode('catalog_product', 'gift_template_ids');
         $giftTemplateIds->addData($data)->save();
 
-
         $data['group'] = 'Advanced Pricing';
         $data['type'] = 'int';
         $data['input'] = 'select';
@@ -155,7 +152,7 @@ class InstallData implements InstallDataInterface
         $data['backend'] = '';
         $data['required'] = 1;
         $data['visible'] = 1;
-        $data['source'] = 'Magestore\Giftvoucher\Model\Source\GiftType';
+        $data['source'] = \Magestore\Giftvoucher\Model\Source\GiftType::class;
         $installer->addAttribute(
             $entityTypeModel->loadByCode('catalog_product')->getData('entity_type_id'),
             'gift_type',
@@ -163,7 +160,6 @@ class InstallData implements InstallDataInterface
         );
         $giftType = $catalogAttributeModel->loadByCode('catalog_product', 'gift_type');
         $giftType->addData($data)->save();
-
 
         $data['type'] = 'decimal';
         $data['input'] = 'price';
@@ -182,7 +178,6 @@ class InstallData implements InstallDataInterface
         $giftValue = $catalogAttributeModel->loadByCode('catalog_product', 'gift_value');
         $giftValue->addData($data)->save();
 
-
         $data['type'] = 'text';
         $data['input'] = 'text';
         $data['class'] = '';
@@ -198,7 +193,6 @@ class InstallData implements InstallDataInterface
         );
         $giftPrice = $catalogAttributeModel->loadByCode('catalog_product', 'gift_price');
         $giftPrice->addData($data)->save();
-
 
         $data['type'] = 'decimal';
         $data['input'] = 'price';
@@ -217,7 +211,6 @@ class InstallData implements InstallDataInterface
         $giftFrom = $catalogAttributeModel->loadByCode('catalog_product', 'gift_from');
         $giftFrom->addData($data)->save();
 
-
         $data['label'] = 'Maximum Gift Card value';
         $data['class'] = 'validate-number';
         $data['position'] = 11;
@@ -231,7 +224,6 @@ class InstallData implements InstallDataInterface
         );
         $giftTo = $catalogAttributeModel->loadByCode('catalog_product', 'gift_to');
         $giftTo->addData($data)->save();
-
 
         $data['type'] = 'varchar';
         $data['input'] = 'text';
@@ -251,7 +243,6 @@ class InstallData implements InstallDataInterface
         $giftDropdown = $catalogAttributeModel->loadByCode('catalog_product', 'gift_dropdown');
         $giftDropdown->addData($data)->save();
 
-
         $data['type'] = 'int';
         $data['input'] = 'select';
         $data['label'] = 'Type of Gift Card price';
@@ -262,7 +253,7 @@ class InstallData implements InstallDataInterface
         $data['sort_order'] = 109;
         $data['backend_type'] = 'text';
         $data['note'] = __('Gift Card price is the same as Gift Card value by default.');
-        $data['source'] = 'Magestore\Giftvoucher\Model\Source\GiftPriceType';
+        $data['source'] = \Magestore\Giftvoucher\Model\Source\GiftPriceType::class;
         $installer->addAttribute(
             $entityTypeModel->loadByCode('catalog_product')->getData('entity_type_id'),
             'gift_price_type',

@@ -8,35 +8,42 @@ namespace Magestore\Webpos\Model\ResourceModel\Pos\Pos;
 
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 
+/**
+ * Resource POS Collection
+ */
 class Collection extends AbstractCollection
 {
-
     /**
      * @var string
      */
     protected $_idFieldName = 'pos_id';
 
     /**
-     * construct
+     * Construct
      */
     public function _construct()
     {
-        $this->_init('Magestore\Webpos\Model\Pos\Pos', 'Magestore\Webpos\Model\ResourceModel\Pos\Pos');
+        $this->_init(
+            \Magestore\Webpos\Model\Pos\Pos::class,
+            \Magestore\Webpos\Model\ResourceModel\Pos\Pos::class
+        );
     }
 
     /**
-     * join to staff table
+     * Join to staff table
      *
      * @return $this
      */
     public function joinToStaffTable()
     {
-        $this->getSelect()->joinLeft(array('staff' => $this->getTable('webpos_staff')),
-                        'main_table.staff_id = staff.staff_id',
-                        array(
-                            'staff_name'=>'staff.name'
-                        ));
-        $this->getSelect()->order(array('staff_id ASC', 'pos_name ASC'));
+        $this->getSelect()->joinLeft(
+            ['staff' => $this->getTable('webpos_staff')],
+            'main_table.staff_id = staff.staff_id',
+            [
+                'staff_name' => 'staff.name'
+            ]
+        );
+        $this->getSelect()->order(['staff_id ASC', 'pos_name ASC']);
         return $this;
     }
 }

@@ -13,24 +13,20 @@
         <!-- /ko -->
     </div>
     <div class="admin__field-complex-content fieldset-wrapper-title title">
-        <strong data-bind="html: shiftData().shift_increment_id"></strong>
+        <strong data-bind="text: shiftData().shift_increment_id"></strong>
     </div>
 </div>
 <div class="admin__field-complex session-detail-content">
     <div class="session-content session-content-header">
         <table>
             <tr>
-                <td class="label" data-bind="i18n: 'Staff'"></td>
-                <td data-bind="html: shiftData().staff_name"></td>
-            </tr>
-            <tr>
                 <td class="label" data-bind="i18n: 'Opened'"></td>
-                <td data-bind="html: shiftData().opened_at"></td>
+                <td data-bind="text: shiftData().opened_at"></td>
             </tr>
             <!-- ko if: isClosed() -->
             <tr>
                 <td class="label" data-bind="i18n: 'Closed'"></td>
-                <td data-bind="html: shiftData().closed_at"></td>
+                <td data-bind="text: shiftData().closed_at"></td>
             </tr>
             <!-- /ko -->
         </table>

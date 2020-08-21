@@ -10,7 +10,9 @@ use Magestore\Giftvoucher\Api\Data\Redeem\ResponseInterface;
 
 /**
  * Class CheckingService
- * @package Magestore\Giftvoucher\Service\GiftCode
+ *
+ * Gift code checking service
+ * @SuppressWarnings(PHPMD.CookieAndSessionMisuse)
  */
 class CheckingService implements \Magestore\Giftvoucher\Api\GiftCode\CheckingServiceInterface
 {
@@ -41,20 +43,17 @@ class CheckingService implements \Magestore\Giftvoucher\Api\GiftCode\CheckingSer
 
     /**
      * CheckingService constructor.
-     * @param \Magento\Framework\View\Element\Template\Context $context
+     *
      * @param \Magestore\Giftvoucher\Helper\Data $helper
      * @param \Magestore\Giftvoucher\Model\Session $session
      * @param \Magestore\Giftvoucher\Model\GiftvoucherFactory $giftvoucherFactory
-     * @param \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency
      * @param \Magento\Directory\Model\CurrencyFactory $currencyFactory
      * @param \Magestore\Giftvoucher\Model\StatusFactory $statusFactory
      */
     public function __construct(
-        \Magento\Framework\View\Element\Template\Context $context,
         \Magestore\Giftvoucher\Helper\Data $helper,
         \Magestore\Giftvoucher\Model\Session $session,
         \Magestore\Giftvoucher\Model\GiftvoucherFactory $giftvoucherFactory,
-        \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency,
         \Magento\Directory\Model\CurrencyFactory $currencyFactory,
         \Magestore\Giftvoucher\Model\StatusFactory $statusFactory
     ) {
@@ -66,8 +65,7 @@ class CheckingService implements \Magestore\Giftvoucher\Api\GiftCode\CheckingSer
     }
 
     /**
-     * @param string $code
-     * @return \Magestore\Giftvoucher\Api\Data\Redeem\ResponseInterface
+     * @inheritDoc
      */
     public function check($code)
     {
@@ -86,7 +84,10 @@ class CheckingService implements \Magestore\Giftvoucher\Api\GiftCode\CheckingSer
                 $this->session->setCodesInvalid($codes);
             }
             if (!$this->helper->isAvailableToCheckCode()) {
-                $result[ResponseInterface::ERRORS][] = __('The maximum number of times to enter the invalid gift codes is %1!', $max);
+                $result[ResponseInterface::ERRORS][] = __(
+                    'The maximum number of times to enter the invalid gift codes is %1!',
+                    $max
+                );
             } else {
                 if (!$giftVoucher->getId()) {
                     $errorMessage = __('Invalid gift code. ');
@@ -102,16 +103,17 @@ class CheckingService implements \Magestore\Giftvoucher\Api\GiftCode\CheckingSer
             }
         } else {
             if (!$this->helper->isAvailableToCheckCode()) {
-                $result[ResponseInterface::ERRORS][] = __('The maximum number of times to enter the invalid gift codes is %1!', $max);
+                $result[ResponseInterface::ERRORS][] = __(
+                    'The maximum number of times to enter the invalid gift codes is %1!',
+                    $max
+                );
             }
         }
         return $result;
     }
 
     /**
-     * @param string $code
-     * @param bool $formated
-     * @return array
+     * @inheritDoc
      */
     public function getCodeData($code, $formated = false)
     {
@@ -132,7 +134,7 @@ class CheckingService implements \Magestore\Giftvoucher\Api\GiftCode\CheckingSer
                     case true:
                         $data = [
                             'code' => $this->helper->getHiddenCode($code),
-                            'balance' => $currency->format($giftVoucher->getBalance(), array(), false),
+                            'balance' => $currency->format($giftVoucher->getBalance(), [], false),
                             'description' => $giftVoucher->getDescription(),
                             'status' => $statusArray[$giftVoucher->getStatus()],
                             'expired_at' => $this->helper->formatDate($giftVoucher->getExpiredAt(), 'M d, Y')

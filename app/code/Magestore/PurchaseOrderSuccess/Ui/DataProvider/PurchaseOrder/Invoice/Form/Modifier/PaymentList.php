@@ -13,10 +13,11 @@ use Magento\Ui\Component\DynamicRows;
 
 /**
  * Class PaymentList
- * @package Magestore\PurchaseOrderSuccess\Ui\DataProvider\PurchaseOrder\Invoice\Form\Modifier
+ *
+ * Used for payment list
  */
 class PaymentList extends AbstractModifier
-{    
+{
     /**
      * @var string
      */
@@ -31,17 +32,18 @@ class PaymentList extends AbstractModifier
      * @var int
      */
     protected $sortOrder = 30;
-    
+
     protected $children = [
         'button_set' => 'button_set',
         'invoice_payment_list_listing' => 'os_purchase_order_invoice_payment_listing',
         'register_payment_modal' => 'register_payment_modal',
         'register_payment_modal_form' => 'os_purchase_order_invoice_payment_form'
     ];
-    
+
     /**
-     * modify data
+     * Modify data
      *
+     * @param array $data
      * @return array
      */
     public function modifyData(array $data)
@@ -51,13 +53,15 @@ class PaymentList extends AbstractModifier
 
     /**
      * Modify purchase order form meta
-     * 
+     *
      * @param array $meta
      * @return array
      */
-    public function modifyMeta(array $meta){
-        if(!$this->getCurrentInvoice())
+    public function modifyMeta(array $meta)
+    {
+        if (!$this->getCurrentInvoice()) {
             return $meta;
+        }
         $meta = array_replace_recursive(
             $meta,
             [
@@ -86,18 +90,20 @@ class PaymentList extends AbstractModifier
                 ],
             ]
         );
-        return $meta;   
+        return $meta;
     }
 
     /**
      * Add invoice payment form fields
-     * 
+     *
      * @return array
      */
-    public function getPaymentListChildren(){
+    public function getPaymentListChildren()
+    {
         $children = [];
-        if($this->getCurrentInvoice()->getTotalDue()>0)
+        if ($this->getCurrentInvoice()->getTotalDue() > 0) {
             $children[$this->children['button_set']] = $this->getPaymentButtons();
+        }
         $children[$this->children['invoice_payment_list_listing']] = $this->getInvoicePaymentListing();
         return $children;
     }
@@ -107,7 +113,8 @@ class PaymentList extends AbstractModifier
      *
      * @return array
      */
-    public function getPaymentButtons(){
+    public function getPaymentButtons()
+    {
         return [
             'arguments' => [
                 'data' => [
@@ -128,12 +135,13 @@ class PaymentList extends AbstractModifier
                                 . '.' . $this->children['button_set']
                                 . '.' . $this->children['register_payment_modal'],
                             'actionName' => 'openModal'
-                        ],[
-                            'targetName' => $this->scopeName . '.' . $this->groupContainer
-                                . '.' . $this->children['button_set']
-                                . '.' . $this->children['register_payment_modal']
-                                . '.' . $this->children['register_payment_modal_form'],
-                            'actionName' => 'render'
+                        ],
+                        [
+                        'targetName' => $this->scopeName . '.' . $this->groupContainer
+                            . '.' . $this->children['button_set']
+                            . '.' . $this->children['register_payment_modal']
+                            . '.' . $this->children['register_payment_modal_form'],
+                        'actionName' => 'render'
                         ]
                     ]
                 ),
@@ -193,10 +201,11 @@ class PaymentList extends AbstractModifier
 
     /**
      * Get invoice payment listing
-     * 
+     *
      * @return array
      */
-    public function getInvoicePaymentListing(){
+    public function getInvoicePaymentListing()
+    {
         $dataScope = 'invoice_payment_list_listing';
         return [
             'arguments' => [
@@ -206,7 +215,7 @@ class PaymentList extends AbstractModifier
                         'autoRender' => false,
                         'componentType' => 'insertListing',
                         'dataScope' => $this->children[$dataScope],
-                        'externalProvider' => $this->children[$dataScope]. '.' . $this->children[$dataScope]
+                        'externalProvider' => $this->children[$dataScope] . '.' . $this->children[$dataScope]
                             . '_data_source',
                         'ns' => $this->children[$dataScope],
                         'render_url' => $this->urlBuilder->getUrl('mui/index/render'),
@@ -219,11 +228,19 @@ class PaymentList extends AbstractModifier
                         'externalFilterMode' => true,
                         'imports' => [
                             'invoice_id' => '${ $.provider }:data.purchase_order_invoice_id',
-                            'purchase_id' => '${ $.provider }:data.purchase_order_id'
+                            'purchase_id' => '${ $.provider }:data.purchase_order_id',
+                            '__disableTmpl' => [
+                                'invoice_id' => false,
+                                'purchase_id' => false
+                            ]
                         ],
                         'exports' => [
                             'invoice_id' => '${ $.externalProvider }:params.invoice_id',
-                            'purchase_id' => '${ $.externalProvider }:params.purchase_id'
+                            'purchase_id' => '${ $.externalProvider }:params.purchase_id',
+                            '__disableTmpl' => [
+                                'invoice_id' => false,
+                                'purchase_id' => false
+                            ]
                         ],
                         'selectionsProvider' =>
                             $this->children[$dataScope]

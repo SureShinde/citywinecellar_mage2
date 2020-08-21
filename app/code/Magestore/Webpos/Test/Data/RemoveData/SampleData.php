@@ -5,6 +5,9 @@ namespace Magestore\Webpos\Test\Data\RemoveData;
 use Magento\TestFramework\TestCase\WebapiAbstract;
 use Magento\TestFramework\Assert\AssertArrayContains;
 
+/**
+ * Api Test Remove Sample Data
+ */
 class SampleData extends WebapiAbstract
 {
     /**
@@ -12,7 +15,7 @@ class SampleData extends WebapiAbstract
      *
      * @return void
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass() : void // phpcs:ignore
     {
         /* remove sample Data1 */
         include __DIR__. '/../../_files/product_rollback.php';
@@ -26,8 +29,9 @@ class SampleData extends WebapiAbstract
     /**
      * Test Case
      */
-    public function testCase(){
+    public function testCase()
+    {
         $expected = true;
-        self::assertEquals($expected,$expected);
+        self::assertEquals($expected, $expected);
     }
 }

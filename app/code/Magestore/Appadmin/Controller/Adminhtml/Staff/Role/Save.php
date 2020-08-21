@@ -7,26 +7,19 @@
 
 namespace Magestore\Appadmin\Controller\Adminhtml\Staff\Role;
 
+use Magento\Framework\App\Action\HttpPostActionInterface;
+
 /**
- * class \Magestore\Appadmin\Controller\Adminhtml\Staff\Role\Delete
- *
- * Delete user
- * Methods:
- *  execute
- *
- * @category    Magestore
- * @package     Magestore\Appadmin\Controller\Adminhtml\Staff\Role
- * @module      Appadmin
- * @author      Magestore Developer
+ * Staff Save
  */
-/**
- * Class Delete
- * @package Magestore\Appadmin\Controller\Adminhtml\Staff\Role
- */
-class Save extends \Magestore\Appadmin\Controller\Adminhtml\Staff\Role
+class Save extends \Magestore\Appadmin\Controller\Adminhtml\Staff\Role implements HttpPostActionInterface
 {
     /**
+     * Execute
+     *
      * @return $this
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function execute()
     {
@@ -48,15 +41,16 @@ class Save extends \Magestore\Appadmin\Controller\Adminhtml\Staff\Role
         try {
             $role->save();
             $roleId = $role->getRoleId();
-            $resources = array();
+            $resources = [];
             if (isset($data['all']) && $data['all']) {
-                $resources = array('Magestore_Appadmin::all');
+                $resources = ['Magestore_Appadmin::all'];
             } else {
                 if (isset($data['resource'])) {
                     $resources = $data['resource'];
                     /* Always save label resource to resource*/
-                    $labelResources = $this->_objectManager->create('Magestore\Appadmin\Model\Staff\Acl\LabelResources')
-                        ->getLabelResources();
+                    $labelResources = $this->_objectManager->create(
+                        \Magestore\Appadmin\Model\Staff\Acl\LabelResources::class
+                    )->getLabelResources();
                     foreach ($labelResources as $resource) {
                         if (!in_array($resource, $resources)) {
                             $resources[] = $resource;
@@ -65,9 +59,9 @@ class Save extends \Magestore\Appadmin\Controller\Adminhtml\Staff\Role
                 }
             }
 
-            $authorizeRuleCollection = $this->_objectManager->create('Magestore\Appadmin\Model\Staff\AuthorizationRule')
-                ->getCollection()
-                ->addFieldToFilter('role_id', $roleId);
+            $authorizeRuleCollection = $this->_objectManager->create(
+                \Magestore\Appadmin\Model\Staff\AuthorizationRule::class
+            )->getCollection()->addFieldToFilter('role_id', $roleId);
             foreach ($authorizeRuleCollection as $authorizeRule) {
                 $authorizeRule->delete();
             }
@@ -75,17 +69,19 @@ class Save extends \Magestore\Appadmin\Controller\Adminhtml\Staff\Role
             // check if resource change and not have permission to use pos
             $checkPermissionCheckout = false;
             foreach ($resources as $resource) {
-                if(in_array($resource, ['Magestore_Appadmin::all', 'Magestore_Webpos::manage_pos'])) {
+                if (in_array($resource, ['Magestore_Appadmin::all', 'Magestore_Webpos::manage_pos'])) {
                     $checkPermissionCheckout = true;
                 }
-                $authorizeRuleCollection = $this->_objectManager->create('Magestore\Appadmin\Model\Staff\AuthorizationRule');
+                $authorizeRuleCollection = $this->_objectManager->create(
+                    \Magestore\Appadmin\Model\Staff\AuthorizationRule::class
+                );
                 $authorizeRuleCollection->setRoleId($roleId);
                 $authorizeRuleCollection->setResourceId($resource);
                 $authorizeRuleCollection->save();
             }
 
             // dispatch event to force sign out
-            if(!$checkPermissionCheckout) {
+            if (!$checkPermissionCheckout) {
                 $staffs = $this->staffRepository->getByRoleId($role->getRoleId());
                 foreach ($staffs as $staff) {
                     $this->dispatchService->dispatchEventForceSignOut($staff->getStaffId());
@@ -108,6 +104,5 @@ class Save extends \Magestore\Appadmin\Controller\Adminhtml\Staff\Role
             return $resultRedirect->setPath('*/*/edit', ['id' => $roleId]);
         }
         return $resultRedirect->setPath('*/*/');
-
     }
 }

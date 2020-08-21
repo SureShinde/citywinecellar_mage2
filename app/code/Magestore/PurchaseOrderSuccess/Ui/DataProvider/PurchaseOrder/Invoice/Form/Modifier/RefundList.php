@@ -13,10 +13,11 @@ use Magento\Ui\Component\DynamicRows;
 
 /**
  * Class RefundList
- * @package Magestore\PurchaseOrderSuccess\Ui\DataProvider\PurchaseOrder\Invoice\Form\Modifier
+ *
+ * Used for refund list
  */
 class RefundList extends AbstractModifier
-{    
+{
     /**
      * @var string
      */
@@ -31,17 +32,18 @@ class RefundList extends AbstractModifier
      * @var int
      */
     protected $sortOrder = 40;
-    
+
     protected $children = [
         'button_set' => 'button_set',
         'invoice_refund_list_listing' => 'os_purchase_order_invoice_refund_listing',
         'register_refund_modal' => 'register_refund_modal',
         'register_refund_modal_form' => 'os_purchase_order_invoice_refund_form'
     ];
-    
+
     /**
-     * modify data
+     * Modify data
      *
+     * @param array $data
      * @return array
      */
     public function modifyData(array $data)
@@ -51,13 +53,15 @@ class RefundList extends AbstractModifier
 
     /**
      * Modify purchase order form meta
-     * 
+     *
      * @param array $meta
      * @return array
      */
-    public function modifyMeta(array $meta){
-        if(!$this->getCurrentInvoice())
+    public function modifyMeta(array $meta)
+    {
+        if (!$this->getCurrentInvoice()) {
             return $meta;
+        }
         $meta = array_replace_recursive(
             $meta,
             [
@@ -86,19 +90,21 @@ class RefundList extends AbstractModifier
                 ],
             ]
         );
-        return $meta;   
+        return $meta;
     }
 
     /**
      * Add invoice refund form fields
-     * 
+     *
      * @return array
      */
-    public function getRefundListChildren(){
+    public function getRefundListChildren()
+    {
         $invoice = $this->getCurrentInvoice();
         $children = [];
-        if($invoice->getGrandTotalInclTax() - $invoice->getTotalDue() > $invoice->getTotalRefund())
+        if ($invoice->getGrandTotalInclTax() - $invoice->getTotalDue() > $invoice->getTotalRefund()) {
             $children[$this->children['button_set']] = $this->getRefundButtons();
+        }
         $children[$this->children['invoice_refund_list_listing']] = $this->getInvoiceRefundListing();
         return $children;
     }
@@ -108,7 +114,8 @@ class RefundList extends AbstractModifier
      *
      * @return array
      */
-    public function getRefundButtons(){
+    public function getRefundButtons()
+    {
         return [
             'arguments' => [
                 'data' => [
@@ -129,12 +136,13 @@ class RefundList extends AbstractModifier
                                 . '.' . $this->children['button_set']
                                 . '.' . $this->children['register_refund_modal'],
                             'actionName' => 'openModal'
-                        ],[
-                            'targetName' => $this->scopeName . '.' . $this->groupContainer
-                                . '.' . $this->children['button_set']
-                                . '.' . $this->children['register_refund_modal']
-                                . '.' . $this->children['register_refund_modal_form'],
-                            'actionName' => 'render'
+                        ],
+                        [
+                        'targetName' => $this->scopeName . '.' . $this->groupContainer
+                            . '.' . $this->children['button_set']
+                            . '.' . $this->children['register_refund_modal']
+                            . '.' . $this->children['register_refund_modal_form'],
+                        'actionName' => 'render'
                         ]
                     ]
                 ),
@@ -194,10 +202,11 @@ class RefundList extends AbstractModifier
 
     /**
      * Get invoice refund listing
-     * 
+     *
      * @return array
      */
-    public function getInvoiceRefundListing(){
+    public function getInvoiceRefundListing()
+    {
         $dataScope = 'invoice_refund_list_listing';
         return [
             'arguments' => [
@@ -207,7 +216,7 @@ class RefundList extends AbstractModifier
                         'autoRender' => false,
                         'componentType' => 'insertListing',
                         'dataScope' => $this->children[$dataScope],
-                        'externalProvider' => $this->children[$dataScope]. '.' . $this->children[$dataScope]
+                        'externalProvider' => $this->children[$dataScope] . '.' . $this->children[$dataScope]
                             . '_data_source',
                         'ns' => $this->children[$dataScope],
                         'render_url' => $this->urlBuilder->getUrl('mui/index/render'),
@@ -220,11 +229,19 @@ class RefundList extends AbstractModifier
                         'externalFilterMode' => true,
                         'imports' => [
                             'invoice_id' => '${ $.provider }:data.purchase_order_invoice_id',
-                            'purchase_id' => '${ $.provider }:data.purchase_order_id'
+                            'purchase_id' => '${ $.provider }:data.purchase_order_id',
+                            '__disableTmpl' => [
+                                'invoice_id' => false,
+                                'purchase_id' => false
+                            ]
                         ],
                         'exports' => [
                             'invoice_id' => '${ $.externalProvider }:params.invoice_id',
-                            'purchase_id' => '${ $.externalProvider }:params.purchase_id'
+                            'purchase_id' => '${ $.externalProvider }:params.purchase_id',
+                            '__disableTmpl' => [
+                                'invoice_id' => false,
+                                'purchase_id' => false
+                            ]
                         ],
                         'selectionsProvider' =>
                             $this->children[$dataScope]

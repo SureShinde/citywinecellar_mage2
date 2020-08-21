@@ -10,25 +10,28 @@ namespace Magestore\Rewardpoints\Observer\Webpos\Order;
 
 use Magento\Framework\Event\ObserverInterface;
 
+/**
+ * Observer -  Webpos Order Collection Load Before
+ */
 class WebposOrderCollectionLoadBefore implements ObserverInterface
 {
     /**
-     * @param \Magento\Framework\Event\Observer $observer
-     * @return $this|void
+     * @inheritDoc
      */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
         $collection = $observer['collection'];
         $collection->getSelect()
-            ->joinLeft(array('creditmemo' => $collection->getTable('sales_creditmemo')),
+            ->joinLeft(
+                ['creditmemo' => $collection->getTable('sales_creditmemo')],
                 'main_table.entity_id = creditmemo.order_id',
-                array(
+                [
                     'creditmemo_rewardpoints_earn' => 'SUM(creditmemo.rewardpoints_earn)',
                     'creditmemo_rewardpoints_discount' => 'SUM(creditmemo.rewardpoints_discount)',
                     'creditmemo_rewardpoints_base_discount' => 'SUM(creditmemo.rewardpoints_base_discount)',
-                )
+                ]
             );
         $collection->getSelect()->group('main_table.entity_id');
-        return ;
+        return $this;
     }
 }

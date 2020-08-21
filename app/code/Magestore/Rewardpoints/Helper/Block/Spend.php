@@ -19,14 +19,14 @@
  * @license     http://www.magestore.com/license-agreement.html
  */
 
-/**
- * RewardPoints Action Library Helper
- *
- * @category    Magestore
- * @package     Magestore_RewardPoints
- * @author      Magestore Developer
- */
 namespace Magestore\Rewardpoints\Helper\Block;
+
+/**
+ * Class Spend
+ *
+ * Spend block
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class Spend extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalculation
 {
     /**
@@ -61,8 +61,10 @@ class Spend extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalculati
 
     /**
      * Spend constructor.
+     *
      * @param \Magento\Framework\App\Helper\Context $context
      * @param \Magento\Checkout\Model\SessionFactory $checkoutSessionFactory
+     * @param \Magento\Framework\ObjectManagerInterface $objectManager
      * @param \Magestore\Rewardpoints\Helper\Calculation\Spending $helperSpending
      * @param \Magento\Framework\App\State $appState
      * @param \Magento\Backend\Model\Session\QuoteFactory $quoteSessionBackendFactory
@@ -70,6 +72,7 @@ class Spend extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalculati
      * @param \Magestore\Rewardpoints\Helper\Data $rewardHelperData
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param \Magento\Customer\Model\SessionFactory $customerSessionFactory
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         \Magento\Framework\App\Helper\Context $context,
@@ -82,20 +85,25 @@ class Spend extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalculati
         \Magestore\Rewardpoints\Helper\Data $rewardHelperData,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Customer\Model\SessionFactory $customerSessionFactory
-    )
-    {
+    ) {
         $this->_helperSpending = $helperSpending;
         $this->_appState = $appState;
         $this->_rewardHelperCustomer = $rewardHelperCustomer;
         $this->_rewardHelperData = $rewardHelperData;
         $this->_quoteSessionBackendFactory = $quoteSessionBackendFactory;
-        parent::__construct($context,$storeManager,$customerSessionFactory,$checkoutSessionFactory,$objectManager);
+        parent::__construct(
+            $context,
+            $storeManager,
+            $customerSessionFactory,
+            $checkoutSessionFactory,
+            $objectManager
+        );
     }
 
     /**
-     * get spending calculation
+     * Get spending calculation
      *
-     * @return Magestore_RewardPoints_Helper_Calculation_Spending
+     * @return \Magestore\Rewardpoints\Helper\Calculation\Spending
      */
     public function getCalculation()
     {
@@ -103,22 +111,26 @@ class Spend extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalculati
     }
 
     /**
-     * get current working with quote
+     * Get current working with quote
      *
-     * @return Mage_Sales_Model_Quote
+     * @return mixed
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function getQuote()
     {
-        if($this->_appState->getAreaCode() ==  \Magento\Backend\App\Area\FrontNameResolver::AREA_CODE){
+        if ($this->_appState->getAreaCode() == \Magento\Backend\App\Area\FrontNameResolver::AREA_CODE) {
             return $this->_quoteSessionBackendFactory->create()->getQuote();
         }
-        return $this->_checkoutSessionFactory->create()->getQuote();
+        $quoteId = $this->_checkoutSessionFactory->create()->getQuoteId();
+        return $this->_objectManager->get(\Magento\Quote\Api\CartRepositoryInterface::class)->get($quoteId);
     }
 
     /**
-     * check reward points is enable to use or not
+     * Check reward points is enable to use or not
      *
-     * @return boolean
+     * @return bool
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function enableReward()
     {
@@ -138,9 +150,9 @@ class Spend extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalculati
     }
 
     /**
-     * get all spending rules available for current shopping cart
+     * Get all spending rules available for current shopping cart
      *
-     * @return array
+     * @return mixed|null
      */
     public function getSpendingRules()
     {
@@ -148,24 +160,29 @@ class Spend extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalculati
         if ($this->hasCache($cacheKey)) {
             return $this->getCache($cacheKey);
         }
-        $container = new \Magento\Framework\DataObject(array(
-            'spending_rules'   => array()
-        ));
-        $this->_eventManager->dispatch('rewardpoints_block_spend_get_rules', array(
-            'container' => $container,
-        ));
+        $container = new \Magento\Framework\DataObject(
+            [
+                'spending_rules' => []
+            ]
+        );
+        $this->_eventManager->dispatch(
+            'rewardpoints_block_spend_get_rules',
+            [
+                'container' => $container,
+            ]
+        );
         $this->saveCache($cacheKey, $container->getSpendingRules());
         return $this->getCache($cacheKey);
     }
 
     /**
-     * get all spending rule with type is slider
+     * Get all spending rule with type is slider
      *
      * @return array
      */
     public function getSliderRules()
     {
-        $rules = array();
+        $rules = [];
         $rule = $this->getCalculation()->getSpendingRateAsRule();
         if ($rule && $rule->getId()) {
             $rules[] = $rule;
@@ -179,13 +196,13 @@ class Spend extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalculati
     }
 
     /**
-     * get all spending rule with type is checkbox
+     * Get all spending rule with type is checkbox
      *
      * @return array
      */
     public function getCheckboxRules()
     {
-        $rules = array();
+        $rules = [];
         $customerPoints = $this->getCustomerTotalPoints() - $this->getCalculation()->getPointItemSpent();
         foreach ($this->getSpendingRules() as $rule) {
             if (in_array($rule->getId(), $this->getCheckedData()) ||
@@ -199,22 +216,25 @@ class Spend extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalculati
     }
 
     /**
+     * Get Rules data
+     *
      * @param array $rules
      * @return string
      */
-    public function getRulesData($rules = null) {
-        if (is_null($rules)) {
+    public function getRulesData($rules = null)
+    {
+        if ($rules === null) {
             $rules = $this->getSliderRules();
         }
-        $result = array();
+        $result = [];
         foreach ($rules as $rule) {
-            $ruleOptions = array();
+            $ruleOptions = [];
             if ($this->getCustomerPoint() < $rule->getPointsSpended()) {
                 $ruleOptions['optionType'] = 'needPoint';
                 $ruleOptions['needPoint'] = $rule->getPointsSpended() - $this->getCustomerPoint();
             } else {
                 $quote = $this->getQuote();
-                $sliderOption = array();
+                $sliderOption = [];
 
                 $sliderOption['minPoints'] = 0;
                 $sliderOption['pointStep'] = (int)$rule->getPointsSpended();
@@ -245,24 +265,25 @@ class Spend extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalculati
     }
 
     /**
-     * get JSON string used for JS
+     * Get JSON string used for JS
      *
      * @param array $rules
      * @return string
      */
-    public function getRulesJson($rules = null) {
-        if (is_null($rules)) {
+    public function getRulesJson($rules = null)
+    {
+        if ($rules === null) {
             $rules = $this->getSliderRules();
         }
-        $result = array();
+        $result = [];
         foreach ($rules as $rule) {
-            $ruleOptions = array();
+            $ruleOptions = [];
             if ($this->getCustomerPoint() < $rule->getPointsSpended()) {
                 $ruleOptions['optionType'] = 'needPoint';
                 $ruleOptions['needPoint'] = $rule->getPointsSpended() - $this->getCustomerPoint();
             } else {
                 $quote = $this->getQuote();
-                $sliderOption = array();
+                $sliderOption = [];
 
                 $sliderOption['minPoints'] = 0;
                 $sliderOption['pointStep'] = (int)$rule->getPointsSpended();
@@ -291,25 +312,27 @@ class Spend extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalculati
         }
         return json_encode($result);
     }
+
     /**
-     * get JSON string used for JS
+     * Get JSON string used for JS
      *
      * @param array $rules
      * @return string
      */
-    public function getRulesArray($rules = null) {
-        if (is_null($rules)) {
+    public function getRulesArray($rules = null)
+    {
+        if ($rules === null) {
             $rules = $this->getSliderRules();
         }
-        $result = array();
+        $result = [];
         foreach ($rules as $rule) {
-            $ruleOptions = array();
+            $ruleOptions = [];
             if ($this->getCustomerPoint() < $rule->getPointsSpended()) {
                 $ruleOptions['optionType'] = 'needPoint';
                 $ruleOptions['needPoint'] = $rule->getPointsSpended() - $this->getCustomerPoint();
             } else {
                 $quote = $this->getQuote();
-                $sliderOption = array();
+                $sliderOption = [];
 
                 $sliderOption['minPoints'] = 0;
                 $sliderOption['pointStep'] = (int)$rule->getPointsSpended();
@@ -337,7 +360,7 @@ class Spend extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalculati
     }
 
     /**
-     * get customer total points on his balance
+     * Get customer total points on his balance
      *
      * @return int
      */
@@ -347,14 +370,14 @@ class Spend extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalculati
     }
 
     /**
-     * get customer point after he use to spend for order (estimate)
+     * Get customer point after he use to spend for order (estimate)
      *
      * @return int
      */
     public function getCustomerPoint()
     {
         if (!$this->hasCache('customer_point')) {
-            $points  = $this->getCustomerTotalPoints();
+            $points = $this->getCustomerTotalPoints();
             $points -= $this->getCalculation()->getPointItemSpent();
             $points -= $this->getCalculation()->getCheckedRulePoint();
             if ($points < 0) {
@@ -366,9 +389,9 @@ class Spend extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalculati
     }
 
     /**
-     * get current customer model
+     * Get current customer model
      *
-     * @return Mage_Customer_Model_Customer
+     * @return mixed
      */
     public function getCustomer()
     {
@@ -376,8 +399,10 @@ class Spend extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalculati
     }
 
     /**
-     * @param $rule
-     * @return string
+     * Format discount
+     *
+     * @param \Magento\Framework\DataObject $rule
+     * @return mixed|string
      */
     public function formatDiscount($rule)
     {
@@ -390,24 +415,26 @@ class Spend extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalculati
                 return round($rule->getDiscountAmount(), 2) . '%';
             }
         }
-        return $this->_rewardHelperData->convertAndFormat($price,true);
+        return $this->_rewardHelperData->convertAndFormat($price, true);
     }
 
     /**
-     * get slider rules date that applied
+     * Get slider rules date that applied
      *
-     * @return Varien_Object
+     * @return \Magento\Framework\DataObject
      */
     public function getSliderData()
     {
-        if($this->_checkoutSessionFactory->create()->getRewardSalesRules()){
-            return new \Magento\Framework\DataObject($this->_checkoutSessionFactory->create()->getRewardSalesRules());
+        if ($this->_checkoutSessionFactory->create()->getRewardSalesRules()) {
+            return new \Magento\Framework\DataObject(
+                $this->_checkoutSessionFactory->create()->getRewardSalesRules()
+            );
         }
         return new \Magento\Framework\DataObject([]);
     }
 
     /**
-     * get checked rule data that applied
+     * Get checked rule data that applied
      *
      * @return array
      */
@@ -416,7 +443,7 @@ class Spend extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalculati
         if (!$this->hasCache('checked_data')) {
             $rewardCheckedRules = $this->_checkoutSessionFactory->create()->getRewardCheckedRules();
             if (!is_array($rewardCheckedRules)) {
-                $this->saveCache('checked_data', array());
+                $this->saveCache('checked_data', []);
             } else {
                 $this->saveCache('checked_data', array_keys($rewardCheckedRules));
             }
@@ -425,7 +452,7 @@ class Spend extends \Magestore\Rewardpoints\Helper\Calculation\AbstractCalculati
     }
 
     /**
-     * check current checkout session is using point or not
+     * Check current checkout session is using point or not
      *
      * @return boolean
      */

@@ -6,6 +6,11 @@
 
 namespace Magestore\AdjustStock\Model\ResourceModel\IncrementId\IncrementId;
 
+/**
+ * Class Collection
+ *
+ * Increment id collection
+ */
 class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection
 {
 
@@ -16,6 +21,9 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
      */
     protected function _construct()
     {
-        $this->_init('Magestore\AdjustStock\Model\IncrementId\IncrementId', 'Magestore\AdjustStock\Model\ResourceModel\IncrementId\IncrementId');
+        $this->_init(
+            \Magestore\AdjustStock\Model\IncrementId\IncrementId::class,
+            \Magestore\AdjustStock\Model\ResourceModel\IncrementId\IncrementId::class
+        );
     }
 }

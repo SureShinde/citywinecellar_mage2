@@ -7,7 +7,8 @@ namespace Magestore\Giftvoucher\Cron;
 
 /**
  * Class AutoSendMail
- * @package Magestore\Giftvoucher\Cron
+ *
+ * Cron Auto sent email
  */
 class AutoSendMail
 {
@@ -35,13 +36,13 @@ class AutoSendMail
     }
 
     /**
-     *
+     * Execute
      */
     public function execute()
     {
         if ($this->helperGiftvoucher->getEmailConfig('autosend')) {
             $giftVouchers = $this->giftvoucherFactory->create()->getCollection()
-                ->addFieldToFilter('status', array('neq' => \Magestore\Giftvoucher\Model\Status::STATUS_DELETED))
+                ->addFieldToFilter('status', ['neq' => \Magestore\Giftvoucher\Model\Status::STATUS_DELETED])
                 ->addExpireAfterDaysFilter($this->helperGiftvoucher->getEmailConfig('daybefore'));
             foreach ($giftVouchers as $giftVoucher) {
                 $giftVoucher->sendEmail();

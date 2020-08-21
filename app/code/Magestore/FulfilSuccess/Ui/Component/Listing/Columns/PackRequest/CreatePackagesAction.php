@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright © 2016 Magestore. All rights reserved.
  * See COPYING.txt for license details.
@@ -12,15 +11,14 @@ use Magento\Framework\View\Element\UiComponent\ContextInterface;
 use Magento\Framework\View\Element\UiComponentFactory;
 
 /**
- * Class CreatePackagesAction
- * @package Magestore\FulfillSuccess\Ui\Component\Listing\Columns\PackRequest
+ * Pack request CreatePackagesAction
  */
 class CreatePackagesAction extends \Magento\Ui\Component\Listing\Columns\Column
 {
     /**
      * @var string
      */
-    protected $actionLabel = 'Create Packages';
+    protected $actionLabel = 'Create Packages'; // phpcs:ignore
 
     /**
      * @var UrlInterface
@@ -29,6 +27,7 @@ class CreatePackagesAction extends \Magento\Ui\Component\Listing\Columns\Column
 
     /**
      * CreatePackagesAction constructor.
+     *
      * @param ContextInterface $context
      * @param UiComponentFactory $uiComponentFactory
      * @param UrlInterface $urlBuilder
@@ -40,8 +39,8 @@ class CreatePackagesAction extends \Magento\Ui\Component\Listing\Columns\Column
         UiComponentFactory $uiComponentFactory,
         UrlInterface $urlBuilder,
         array $components,
-        array $data = [])
-    {
+        array $data = []
+    ) {
         $this->urlBuilder = $urlBuilder;
         parent::__construct($context, $uiComponentFactory, $components, $data);
     }
@@ -59,11 +58,14 @@ class CreatePackagesAction extends \Magento\Ui\Component\Listing\Columns\Column
             foreach ($dataSource['data']['items'] as &$item) {
                 $name = $this->getData('name');
                 if (isset($item[$indexField]) && $item[$indexField] != 0) {
-                    $item[$name] = array();
+                    $item[$name] = [];
                     $item[$name]['edit'] = [
                         'label' => $this->actionLabel,
                         'itemid' => $item[$indexField],
-                        'callback' => $this->urlBuilder->getUrl('fulfilsuccess/packRequest/getPackaging', $params = array()),
+                        'callback' => $this->urlBuilder->getUrl(
+                            'fulfilsuccess/packRequest/getPackaging',
+                            []
+                        ),
                         'href' => '',
                     ];
                 }

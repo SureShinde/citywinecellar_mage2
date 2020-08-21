@@ -26,9 +26,6 @@ class AbstractConvertToCsv extends \Magento\Ui\Model\Export\ConvertToCsv
      */
     protected $addCategoryInCollection = false;
 
-    /**
-     *
-     */
     const PAGE_SIZE = 200;
 
     /**
@@ -334,8 +331,7 @@ class AbstractConvertToCsv extends \Magento\Ui\Model\Export\ConvertToCsv
     {
         $component = $this->filter->getComponent();
 
-        // phpcs:ignore
-        $name = md5(microtime());
+        $name = sha1(microtime());
         $file = 'export/' . $component->getName() . $name . '.csv';
 
         $this->filter->prepareComponent($component);
@@ -566,6 +562,7 @@ class AbstractConvertToCsv extends \Magento\Ui\Model\Export\ConvertToCsv
             if (isset($a[$key]) && isset($b[$key])) {
                 return strnatcmp($a[$key], $b[$key]);
             }
+            return null;
         };
     }
 

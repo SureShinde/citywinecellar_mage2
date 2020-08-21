@@ -25,27 +25,24 @@ namespace Magestore\Rewardpoints\Observer\Webpos;
 use Magento\Framework\Event\ObserverInterface;
 
 /**
- * Class ProductGetFinalPrice
- * @package Magestore\Affiliateplus\Observer
+ * Observer - Webpos - Get Loyalty Collection
  */
 class GetLoyaltyCollection implements ObserverInterface
 {
     /**
-     * @param \Magento\Framework\Event\Observer $observer
-     *
-     * @return void
-     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @inheritDoc
      */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
         $collection = $observer->getEvent()->getCollection();
         $collection->getSelect()->joinLeft(
-            array('rewardpoints_customer' => $collection->getTable('rewardpoints_customer')),
+            ['rewardpoints_customer' => $collection->getTable('rewardpoints_customer')],
             'e.entity_id = rewardpoints_customer.customer_id',
-            array(
+            [
                 'rewardpoints_updated_at' => 'rewardpoints_customer.updated_at',
                 'point_balance' => 'rewardpoints_customer.point_balance'
-            ));
-        return ;
+            ]
+        );
+        return $this;
     }
 }

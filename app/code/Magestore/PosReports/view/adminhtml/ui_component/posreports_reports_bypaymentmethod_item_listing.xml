@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright © Magestore. All rights reserved.
+See COPYING.txt for license details.
+-->
+
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd"
+         class="ReportSalesByPaymentMethodListing">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">
+                posreports_reports_bypaymentmethod_item_listing.posreports_reports_bypaymentmethod_item_listing_data_source
+            </item>
+        </item>
+    </argument>
+    <settings>
+        <spinner>posreports_reports_bypaymentmethod_item_listing_columns</spinner>
+        <deps>
+            <dep>
+                posreports_reports_bypaymentmethod_item_listing.posreports_reports_bypaymentmethod_item_listing_data_source
+            </dep>
+        </deps>
+    </settings>
+    <dataSource name="posreports_reports_bypaymentmethod_item_listing_data_source"
+                component="Magestore_PosReports/js/report/data-provider">
+        <settings>
+            <updateUrl path="mui/index/render"/>
+            <storageConfig>
+                <param name="indexField" xsi:type="string">id</param>
+                <param name="cacheRequests" xsi:type="boolean">false</param>
+            </storageConfig>
+        </settings>
+        <dataProvider class="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider"
+                      name="posreports_reports_bypaymentmethod_item_listing_data_source">
+            <settings>
+                <requestFieldName>id</requestFieldName>
+                <primaryFieldName>id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+    <listingToolbar name="listing_top">
+        <columnsControls name="columns_controls"/>
+        <paging name="listing_paging"/>
+        <bookmark name="bookmarks"/>
+        <exportButton name="export_button" class="Magestore\PosReports\Ui\Component\Listing\ExportButton">
+            <settings>
+                <additionalParams>
+                    <param xsi:type="string" name="reportFilters">${ $.provider}:params.reportFilters</param>
+                </additionalParams>
+                <options>
+                    <option name="csv" xsi:type="array">
+                        <item name="url" xsi:type="string">posreports/reports_export/reportToCsv</item>
+                    </option>
+                </options>
+            </settings>
+        </exportButton>
+        <filters name="listing_filters">
+            <settings>
+                <templates>
+                    <filters>
+                        <select>
+                            <param name="template" xsi:type="string">Magestore_PosReports/report/filters/elements/ui-select</param>
+                            <param name="component" xsi:type="string">Magento_Ui/js/form/element/ui-select</param>
+                            <param name="filterOptions" xsi:type="boolean">true</param>
+                            <param name="chipsEnabled" xsi:type="boolean">true</param>
+                        </select>
+                    </filters>
+                </templates>
+            </settings>
+        </filters>
+    </listingToolbar>
+    <columns name="posreports_reports_bypaymentmethod_item_listing_columns">
+        <selectionsColumn name="ids">
+            <settings>
+                <indexField>id</indexField>
+                <preserveSelectionsOnFilter>true</preserveSelectionsOnFilter>
+                <visible>false</visible>
+            </settings>
+        </selectionsColumn>
+
+        <!--<column name="method" class="Magestore\PosReports\Ui\Component\Listing\Column\PaymentMethod">-->
+            <!--<settings>-->
+                <!--<label translate="true">Payment Method</label>-->
+                <!--<filter>text</filter>-->
+                <!--<visible>false</visible>-->
+            <!--</settings>-->
+        <!--</column>-->
+
+        <column name="method_title" class="Magestore\PosReports\Ui\Component\Listing\Column\PaymentMethod">
+            <settings>
+                <label translate="true">Payment Method</label>
+                <filter>text</filter>
+            </settings>
+        </column>
+
+        <column name="orders_count">
+            <settings>
+                <label translate="true">Orders</label>
+                <filter>textRange</filter>
+                <headerTmpl>Magestore_PosReports/report/grid/columns/header</headerTmpl>
+                <altField>Number of orders' transactions during the defined time period by each payment
+                    method.
+                </altField>
+            </settings>
+        </column>
+
+        <column name="total_paid" class="Magestore\PosReports\Ui\Component\Listing\Column\Price">
+            <settings>
+                <label translate="true">Total Paid</label>
+                <filter>textRange</filter>
+                <headerTmpl>Magestore_PosReports/report/grid/columns/header</headerTmpl>
+                <altField>Total paid amount generated from offline sales during the defined time
+                    period.
+                </altField>
+            </settings>
+        </column>
+
+        <column name="total_refunded" class="Magestore\PosReports\Ui\Component\Listing\Column\Price">
+            <settings>
+                <label translate="true">Total Refunded</label>
+                <filter>textRange</filter>
+                <headerTmpl>Magestore_PosReports/report/grid/columns/header</headerTmpl>
+                <altField>All refund amount by each payment method during the defined time period.
+                </altField>
+            </settings>
+        </column>
+
+        <column name="net_amount" class="Magestore\PosReports\Ui\Component\Listing\Column\Price">
+            <settings>
+                <label translate="true">Net Amount</label>
+                <filter>textRange</filter>
+                <headerTmpl>Magestore_PosReports/report/grid/columns/header</headerTmpl>
+                <altField>Equals paid amount minus refund amount.</altField>
+            </settings>
+        </column>
+
+    </columns>
+
+</listing>

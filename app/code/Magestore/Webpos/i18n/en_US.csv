@@ -12,6 +12,7 @@ Delete,Delete
 Back,Back
 Reset,Reset
 "Force Sign-out","Force Sign-out"
+"POS is still working in the session. Are you sure to force sign-out?","POS is still working in the session. Are you sure to force sign-out?"
 "No POS available in this location.","No POS available in this location."
 ID,ID
 "POS Name","POS Name"
@@ -297,3 +298,6 @@ Country,Country
 "Are you sure you want to do this?","Are you sure you want to do this?"
 "Add POS","Add POS"
 "Order were converted.","Order were converted."
+"Necessary only if an image has been uploaded above. Enter number of pixels, without appending "px". Default is 250.","Necessary only if an image has been uploaded above. Enter number of pixels, without appending "px". Default is 250."
+"Necessary only if an image has been uploaded above. Enter number of pixels, without appending "px". Default is 50.","Necessary only if an image has been uploaded above. Enter number of pixels, without appending "px". Default is 50."
+

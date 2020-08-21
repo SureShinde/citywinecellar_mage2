@@ -1,7 +1,14 @@
 <?php
 namespace Magestore\Rewardpoints\Model;
 
-class Transaction extends \Magento\Framework\Model\AbstractModel implements \Magestore\Rewardpoints\Api\Data\Transaction\TransactionInterface
+/**
+ * Transaction model
+ * @SuppressWarnings(PHPMD.ExcessivePublicCount)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
+class Transaction extends \Magento\Framework\Model\AbstractModel implements
+    \Magestore\Rewardpoints\Api\Data\Transaction\TransactionInterface
 {
     /**
      * @var Customer
@@ -74,6 +81,7 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
 
     /**
      * Transaction constructor.
+     *
      * @param \Magento\Framework\Model\Context $context
      * @param \Magento\Framework\Registry $registry
      * @param \Magento\Framework\Mail\Template\TransportBuilder $transportBuilder
@@ -86,9 +94,11 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
      * @param \Magestore\Rewardpoints\Helper\Customer $rewardpointsHelperCustomer
      * @param \Magestore\Rewardpoints\Helper\Action $helperAction
      * @param \Magento\Framework\Stdlib\DateTime\DateTime $dateTime
+     * @param \Magento\Framework\Translate\Inline\StateInterface $inlineTranslation
      * @param \Magento\Framework\Model\ResourceModel\AbstractResource|null $resource
      * @param \Magento\Framework\Data\Collection\AbstractDb|null $resourceCollection
      * @param array $data
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         \Magento\Framework\Model\Context $context,
@@ -106,8 +116,8 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
         \Magento\Framework\Translate\Inline\StateInterface $inlineTranslation,
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
-        array $data = [])
-    {
+        array $data = []
+    ) {
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
         $this->messageManager              = $contextAction->getMessageManager();
         $this->rewardAccountFactory               = $rewardpointsCustomerFactory;
@@ -129,46 +139,57 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
      */
     protected function _construct()
     {
-        $this->_init('Magestore\Rewardpoints\Model\ResourceModel\Transaction');
+        $this->_init(\Magestore\Rewardpoints\Model\ResourceModel\Transaction::class);
     }
 
     /**
-     * get transaction status as hash array
+     * Get transaction status as hash array
      *
      * @return array
      */
     public function getStatusHash()
     {
-        return array(
+        return [
             self::STATUS_PENDING => __('Pending'),
             self::STATUS_ON_HOLD => __('On Hold'),
             self::STATUS_COMPLETED => __('Complete'),
             self::STATUS_CANCELED => __('Canceled'),
             self::STATUS_EXPIRED => __('Expired'),
-        );
+        ];
     }
 
+    /**
+     * Get Status Array
+     *
+     * @return array
+     */
     public function getStatusArray()
     {
-        $options = array();
+        $options = [];
         foreach ($this->getStatusHash() as $value => $label) {
-            $options[] = array(
+            $options[] = [
                 'value' => $value,
                 'label' => $label,
-            );
+            ];
         }
         return $options;
     }
 
+    /**
+     * Get Const
+     *
+     * @param string $const
+     * @return bool|mixed
+     */
     public function getConst($const)
     {
-        $data = array(
+        $data = [
             'STATUS_PENDING' => self::STATUS_PENDING,
             'STATUS_ON_HOLD' => self::STATUS_ON_HOLD,
             'STATUS_COMPLETED' => self::STATUS_COMPLETED,
             'STATUS_CANCELED' => self::STATUS_CANCELED,
             'STATUS_EXPIRED' => self::STATUS_EXPIRED,
-        );
+        ];
         if (isset($data[$const]) && $data[$const]) {
             return $data[$const];
         } else {
@@ -176,10 +197,21 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
         }
     }
 
+    /**
+     * Complete Transaction
+     *
+     * @return $this|bool
+     * @throws \Exception
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
     public function completeTransaction()
     {
 
-        if (!$this->getId() || !$this->getCustomerId() || !$this->getRewardId() || $this->getPointAmount() <= 0 || !in_array($this->getStatus(), array(self::STATUS_PENDING, self::STATUS_ON_HOLD))
+        if (!$this->getId()
+            || !$this->getCustomerId()
+            || !$this->getRewardId()
+            || $this->getPointAmount() <= 0
+            || !in_array($this->getStatus(), [self::STATUS_PENDING, self::STATUS_ON_HOLD])
         ) {
             $this->messageManager->addError(__('Invalid transaction data to complete.'));
             return false;
@@ -189,16 +221,23 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
             $rewardAccount->setHoldingBalance($rewardAccount->getHoldingBalance() - $this->getRealPoint());
         }
         // dispatch event when complete a transaction
-        $this->_eventManager->dispatch($this->_eventPrefix . '_complete_' . $this->getData('action'), $this->_getEventData());
+        $this->_eventManager->dispatch(
+            $this->_eventPrefix . '_complete_' . $this->getData('action'),
+            $this->_getEventData()
+        );
 
         $this->setStatus(self::STATUS_COMPLETED);
 
         $maxBalance = (int)$this->helper->getConfig(self::XML_PATH_MAX_BALANCE, $this->getStoreId());
 
-        if ($maxBalance > 0 && $this->getRealPoint() > 0 && $rewardAccount->getPointBalance() + $this->getRealPoint() > $maxBalance
+        if ($maxBalance > 0
+            && $this->getRealPoint() > 0
+            && $rewardAccount->getPointBalance() + $this->getRealPoint() > $maxBalance
         ) {
             if ($maxBalance > $rewardAccount->getPointBalance()) {
-                $this->setPointAmount($maxBalance - $rewardAccount->getPointBalance() + $this->getPointAmount() - $this->getRealPoint());
+                $this->setPointAmount(
+                    $maxBalance - $rewardAccount->getPointBalance() + $this->getPointAmount() - $this->getRealPoint()
+                );
                 $this->setRealPoint($maxBalance - $rewardAccount->getPointBalance());
                 $rewardAccount->setPointBalance($maxBalance);
                 $this->sendUpdateBalanceEmail($rewardAccount);
@@ -218,10 +257,16 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
         return $this;
     }
 
+    /**
+     * Get Reward Account
+     *
+     * @return mixed
+     */
     public function getRewardAccount()
     {
         if (!$this->hasData('reward_account')) {
-            $this->setData('reward_account',
+            $this->setData(
+                'reward_account',
                 $this->rewardAccountFactory->create()->load($this->getRewardId())
             );
         }
@@ -229,10 +274,12 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
     }
 
     /**
-     * send Update Balance to customer
+     * Send Update Balance to customer
      *
      * @param \Magestore\RewardPoints\Model\Customer $rewardAccount
-     * @return \Magestore\RewardPoints\Model\Transaction
+     * @return $this
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function sendUpdateBalanceEmail($rewardAccount = null)
     {
@@ -241,7 +288,7 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
             return $this;
         }
 
-        if (is_null($rewardAccount)) {
+        if ($rewardAccount === null) {
             $rewardAccount = $this->getRewardAccount();
         }
 
@@ -257,16 +304,12 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
             return $this;
         }
 
-
         $store = $this->_storeManager->getStore()->getId();
-
-//        $translate = Mage::getSingleton('core/translate');
-//        $translate->setTranslateInline(false);
 
         $customerName = '';
         if ($customer instanceof \Magento\Customer\Model\Customer) {
             $customerName = $customer->getName();
-        } else if ($customer instanceof \Magento\Customer\Model\Data\Customer) {
+        } elseif ($customer instanceof \Magento\Customer\Model\Data\Customer) {
             if ($customer->getPrefix()) {
                 $customerName = $customer->getPrefix() . ' ';
             }
@@ -305,7 +348,6 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
             $this->messageManager->addError($e->getMessage());
             return $this;
         }
-//      $translate->setTranslateInline(true);
         return $this;
     }
 
@@ -314,8 +356,11 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
      *
      * @param \Magestore\RewardPoints\Model\Customer $rewardAccount
      * @return \Magestore\RewardPoints\Model\Transaction
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    public function sendBeforeExpireEmail() {
+    public function sendBeforeExpireEmail()
+    {
         if (!$this->helper->getConfig(self::XML_PATH_EMAIL_ENABLE, $this->getStoreId())) {
             return $this;
         }
@@ -342,7 +387,7 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
         $customerName = '';
         if ($customer instanceof \Magento\Customer\Model\Customer) {
             $customerName = $customer->getName();
-        } else if ($customer instanceof \Magento\Customer\Model\Data\Customer) {
+        } elseif ($customer instanceof \Magento\Customer\Model\Data\Customer) {
             if ($customer->getPrefix()) {
                 $customerName = $customer->getPrefix() . ' ';
             }
@@ -392,11 +437,8 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
         return $this;
     }
 
-
     /**
-     * get status label of transaction
-     *
-     * @return string
+     * @inheritDoc
      */
     public function getStatusLabel()
     {
@@ -407,24 +449,32 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
         return '';
     }
 
-
     /**
      * Cancel Transaction, allow for Pending, On Hold and Completed transaction
      * only cancel transaction with amount > 0
      * Cancel mean that similar as we do not have this transaction
      *
-     * @return \Magestore\RewardPoints\Model\Transaction
+     * @return $this|boolean
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function cancelTransaction()
     {
-        if (!$this->getId() || !$this->getCustomerId() || !$this->getRewardId() || $this->getPointAmount() <= 0 || $this->getStatus() > self::STATUS_COMPLETED || !$this->getStatus()
+        if (!$this->getId()
+            || !$this->getCustomerId()
+            || !$this->getRewardId()
+            || $this->getPointAmount() <= 0
+            || $this->getStatus() > self::STATUS_COMPLETED
+            || !$this->getStatus()
         ) {
             $this->messageManager->addError(__('Invalid transaction data to cancel.'));
             return false;
         }
 
         // dispatch event when complete a transaction
-        $this->_eventManager->dispatch($this->_eventPrefix . '_cancel_' . $this->getData('action'), $this->_getEventData());
+        $this->_eventManager->dispatch(
+            $this->_eventPrefix . '_cancel_' . $this->getData('action'),
+            $this->_getEventData()
+        );
 
         if ($this->getStatus() != self::STATUS_COMPLETED) {
             if ($this->getData('status') == self::STATUS_ON_HOLD) {
@@ -460,23 +510,34 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
         return $this;
     }
 
-
     /**
      * Expire Transaction, allow for Pending, On Hold and Completed transaction
-     * only expire transaction with amount > 0
      *
-     * @return \Magestore\RewardPoints\Model\Transaction
+     * Only expire transaction with amount > 0
+     *
+     * @return $this|boolean
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function expireTransaction()
     {
-        if (!$this->getId() || !$this->getCustomerId() || !$this->getRewardId() || $this->getPointAmount() <= $this->getPointUsed() || $this->getStatus() > self::STATUS_COMPLETED || !$this->getStatus() || strtotime($this->getExpirationDate()) > time() || !$this->getExpirationDate()
+        if (!$this->getId()
+            || !$this->getCustomerId()
+            || !$this->getRewardId()
+            || $this->getPointAmount() <= $this->getPointUsed()
+            || $this->getStatus() > self::STATUS_COMPLETED
+            || !$this->getStatus()
+            || strtotime($this->getExpirationDate()) > time()
+            || !$this->getExpirationDate()
         ) {
             $this->messageManager->addError(__('Invalid transaction data to expire.'));
             return false;
         }
 
         // dispatch event when complete a transaction
-        $this->_eventManager->dispatch($this->_eventPrefix . '_expire_' . $this->getData('action'), $this->_getEventData());
+        $this->_eventManager->dispatch(
+            $this->_eventPrefix . '_expire_' . $this->getData('action'),
+            $this->_getEventData()
+        );
 
         if ($this->getStatus() != self::STATUS_COMPLETED) {
             if ($this->getData('status') == self::STATUS_ON_HOLD) {
@@ -507,10 +568,12 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
      *
      * @param array $data
      * @return \Magestore\RewardPoints\Model\Transaction
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    public function createTransaction($data = array())
+    public function createTransaction($data = [])
     {
-
         $this->addData($data);
 
         if (!$this->getPointAmount()) {
@@ -534,14 +597,6 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
         }
 
         if ($rewardAccount->getPointBalance() + $this->getPointAmount() < 0) {
-            //Hai.Tran 18/11/2013 fix refund when balance < refund points
-//            if (!$this->getData('creditmemo_holding') && $rewardAccount->getHoldingBalance() + $this->getPointAmount() < 0) {
-//                if ($this->getData('creditmemo_transaction'))
-//                    $this->messageManager->addError(__('Account balance of Customer is not enough to take points back.'));
-//                throw new \Exception(
-//                    __('Account balance is not enough to create this transaction.')
-//                );
-//            }
             $this->setPointAmount(-$rewardAccount->getPointBalance());
         }
 
@@ -571,7 +626,6 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
             $rewardAccount->setSpentBalance($rewardAccount->getSpentBalance() - $this->getPointAmount());
         }
 
-
         // Completed when create transaction
         if ($this->getData('status') == self::STATUS_COMPLETED) {
             //$maxBalance 500
@@ -579,7 +633,9 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
             //$rewardAccount->getPointBalance() 500
             $maxBalance = $this->helper->getConfig(self::XML_PATH_MAX_BALANCE, $this->getStoreId());
 
-            if ($maxBalance > 0 && $this->getPointAmount() > 0 && $rewardAccount->getPointBalance() + $this->getPointAmount() > $maxBalance
+            if ($maxBalance > 0
+                && $this->getPointAmount() > 0
+                && $rewardAccount->getPointBalance() + $this->getPointAmount() > $maxBalance
             ) {
                 if ($maxBalance > $rewardAccount->getPointBalance()) {
                     $this->setPointAmount($maxBalance - $rewardAccount->getPointBalance());
@@ -592,14 +648,15 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
                     return $this;
                 }
             } else {
-
                 $rewardAccount->setPointBalance($rewardAccount->getPointBalance() + $this->getPointAmount());
                 $rewardAccount->save();
                 $this->save();
                 $this->sendUpdateBalanceEmail($rewardAccount);
             }
         } else {
-            if ($this->getPointAmount() < 0 && $this->getData('status') == self::STATUS_ON_HOLD && $this->getData('action_type') == self::ACTION_TYPE_EARN
+            if ($this->getPointAmount() < 0
+                && $this->getData('status') == self::STATUS_ON_HOLD
+                && $this->getData('action_type') == self::ACTION_TYPE_EARN
             ) {
                 $isHoldingStatus = true;
                 $this->setData('status', self::STATUS_COMPLETED);
@@ -621,15 +678,16 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
         }
 
         // Dispatch Event when create an action
-        $this->_eventManager->dispatch($this->_eventPrefix . '_created_' . $this->getData('action')
-            , $this->_getEventData()
+        $this->_eventManager->dispatch(
+            $this->_eventPrefix . '_created_' . $this->getData('action'),
+            $this->_getEventData()
         );
 
         return $this;
     }
 
     /**
-     * get transaction title as HTML
+     * Get transaction title as HTML
      *
      * @return string
      */
@@ -648,7 +706,7 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
     }
 
     /**
-     * get action model of current transaction
+     * Get action model of current transaction
      *
      * @return \Magestore\Rewardpoints\Model\InterfaceAction
      */
@@ -658,7 +716,7 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
     }
 
     /**
-     * @return mixed
+     * @inheritDoc
      */
     public function getTransactionId()
     {
@@ -666,7 +724,7 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
     }
 
     /**
-     * @return mixed
+     * @inheritDoc
      */
     public function getRewardId()
     {
@@ -674,7 +732,7 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
     }
 
     /**
-     * @return mixed
+     * @inheritDoc
      */
     public function getCustomerId()
     {
@@ -682,7 +740,7 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
     }
 
     /**
-     * @return mixed
+     * @inheritDoc
      */
     public function getCustomerEmail()
     {
@@ -690,16 +748,15 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
     }
 
     /**
-     * @return mixed
+     * @inheritDoc
      */
     public function getCurrentPointBalance()
     {
         return $this->getRewardAccount()->getPointBalance();
     }
 
-
     /**
-     * @return mixed
+     * @inheritDoc
      */
     public function getTitle()
     {
@@ -707,7 +764,7 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
     }
 
     /**
-     * @return mixed
+     * @inheritDoc
      */
     public function getAction()
     {
@@ -715,7 +772,7 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
     }
 
     /**
-     * @return mixed
+     * @inheritDoc
      */
     public function getStoreId()
     {
@@ -723,7 +780,7 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
     }
 
     /**
-     * @return mixed
+     * @inheritDoc
      */
     public function getPointAmount()
     {
@@ -731,7 +788,7 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
     }
 
     /**
-     * @return mixed
+     * @inheritDoc
      */
     public function getStatus()
     {
@@ -739,7 +796,7 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
     }
 
     /**
-     * @return mixed
+     * @inheritDoc
      */
     public function getCreatedTime()
     {
@@ -747,7 +804,7 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
     }
 
     /**
-     * @return mixed
+     * @inheritDoc
      */
     public function getUpdatedTime()
     {
@@ -755,7 +812,7 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
     }
 
     /**
-     * @return mixed
+     * @inheritDoc
      */
     public function getExpirationDate()
     {
@@ -763,7 +820,7 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
     }
 
     /**
-     * @return mixed
+     * @inheritDoc
      */
     public function getOrderId()
     {
@@ -771,7 +828,7 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
     }
 
     /**
-     * @return mixed
+     * @inheritDoc
      */
     public function getOrderIncrementId()
     {
@@ -779,7 +836,7 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
     }
 
     /**
-     * @return mixed
+     * @inheritDoc
      */
     public function getOrderAmount()
     {
@@ -787,7 +844,7 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
     }
 
     /**
-     * @return mixed
+     * @inheritDoc
      */
     public function getDiscount()
     {
@@ -795,7 +852,7 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
     }
 
     /**
-     * @return mixed
+     * @inheritDoc
      */
     public function getExtraContent()
     {
@@ -803,8 +860,7 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
     }
 
     /**
-     * @param $transactionId
-     * @return mixed
+     * @inheritDoc
      */
     public function setTransactionId($transactionId)
     {
@@ -812,8 +868,7 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
     }
 
     /**
-     * @param $rewardId
-     * @return mixed
+     * @inheritDoc
      */
     public function setRewardId($rewardId)
     {
@@ -821,8 +876,7 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
     }
 
     /**
-     * @param $customerId
-     * @return mixed
+     * @inheritDoc
      */
     public function setCustomerId($customerId)
     {
@@ -830,8 +884,7 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
     }
 
     /**
-     * @param $customerEmail
-     * @return mixed
+     * @inheritDoc
      */
     public function setCustomerEmail($customerEmail)
     {
@@ -839,8 +892,7 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
     }
 
     /**
-     * @param $balance
-     * @return mixed
+     * @inheritDoc
      */
     public function setCurrentPointBalance($balance)
     {
@@ -848,8 +900,7 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
     }
 
     /**
-     * @param $title
-     * @return mixed
+     * @inheritDoc
      */
     public function setTitle($title)
     {
@@ -857,8 +908,7 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
     }
 
     /**
-     * @param $action
-     * @return mixed
+     * @inheritDoc
      */
     public function setAction($action)
     {
@@ -866,8 +916,7 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
     }
 
     /**
-     * @param $storeId
-     * @return mixed
+     * @inheritDoc
      */
     public function setStoreId($storeId)
     {
@@ -875,8 +924,7 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
     }
 
     /**
-     * @param $pointAmount
-     * @return mixed
+     * @inheritDoc
      */
     public function setPointAmount($pointAmount)
     {
@@ -884,8 +932,7 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
     }
 
     /**
-     * @param $status
-     * @return mixed
+     * @inheritDoc
      */
     public function setStatus($status)
     {
@@ -893,8 +940,7 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
     }
 
     /**
-     * @param $createdTime
-     * @return mixed
+     * @inheritDoc
      */
     public function setCreatedTime($createdTime)
     {
@@ -902,8 +948,7 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
     }
 
     /**
-     * @param $time
-     * @return mixed
+     * @inheritDoc
      */
     public function setUpdatedTime($time)
     {
@@ -911,8 +956,7 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
     }
 
     /**
-     * @param $time
-     * @return mixed
+     * @inheritDoc
      */
     public function setExpirationDate($time)
     {
@@ -920,8 +964,7 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
     }
 
     /**
-     * @param $id
-     * @return mixed
+     * @inheritDoc
      */
     public function setOrderId($id)
     {
@@ -929,8 +972,7 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
     }
 
     /**
-     * @param $id
-     * @return mixed
+     * @inheritDoc
      */
     public function setOrderIncrementId($id)
     {
@@ -938,8 +980,7 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
     }
 
     /**
-     * @param $amount
-     * @return mixed
+     * @inheritDoc
      */
     public function setOrderAmount($amount)
     {
@@ -947,8 +988,7 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
     }
 
     /**
-     * @param $discount
-     * @return mixed
+     * @inheritDoc
      */
     public function setDiscount($discount)
     {
@@ -956,14 +996,10 @@ class Transaction extends \Magento\Framework\Model\AbstractModel implements \Mag
     }
 
     /**
-     * @param $content
-     * @return mixed
+     * @inheritDoc
      */
     public function setExtraContent($content)
     {
         return $this->setData('content', $content);
     }
-
-
 }
-

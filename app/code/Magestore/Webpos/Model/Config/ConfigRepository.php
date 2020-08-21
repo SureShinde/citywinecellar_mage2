@@ -15,7 +15,10 @@ use Magestore\Webpos\Api\Data\Config\RefundPaymentTypeInterfaceFactory;
 
 /**
  * Class ConfigRepository
- * @package Magestore\Webpos\Model\Config
+ *
+ * Used to get config from Magento
+ * @SuppressWarnings(PHPMD.TooManyFields)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ConfigRepository implements \Magestore\Webpos\Api\Config\ConfigRepositoryInterface
 {
@@ -92,12 +95,24 @@ class ConfigRepository implements \Magestore\Webpos\Api\Config\ConfigRepositoryI
      */
     protected $helper;
 
+    /**
+     * @var \Magento\Framework\Webapi\Rest\Request
+     */
     protected $request;
 
+    /**
+     * @var \Magestore\Webpos\Api\Staff\StaffManagementInterface
+     */
     protected $staffManagement;
 
+    /**
+     * @var \Magestore\Appadmin\Api\Staff\StaffRepositoryInterface
+     */
     protected $staffRepository;
 
+    /**
+     * @var
+     */
     protected $roleRepository;
 
     /**
@@ -105,12 +120,24 @@ class ConfigRepository implements \Magestore\Webpos\Api\Config\ConfigRepositoryI
      */
     protected $roleFactory;
 
+    /**
+     * @var \Magestore\Appadmin\Model\ResourceModel\Staff\AuthorizationRule\CollectionFactory
+     */
     protected $ruleCollectionFactory;
 
+    /**
+     * @var \Magestore\Appadmin\Model\Staff\Acl\AclResource\Provider
+     */
     protected $aclResource;
 
+    /**
+     * @var \Magestore\Webpos\Model\Tax\TaxRateRepository
+     */
     protected $taxRateRepository;
 
+    /**
+     * @var \Magestore\Webpos\Model\Tax\TaxRuleRepository
+     */
     protected $taxRuleRepository;
 
     /**
@@ -118,6 +145,9 @@ class ConfigRepository implements \Magestore\Webpos\Api\Config\ConfigRepositoryI
      */
     protected $productTaxClass;
 
+    /**
+     * @var \Magestore\Webpos\Api\Data\Config\ProductTaxClassesInterfaceFactory
+     */
     protected $productTaxClassFactory;
 
     /**
@@ -144,7 +174,6 @@ class ConfigRepository implements \Magestore\Webpos\Api\Config\ConfigRepositoryI
      * @var \Magestore\Webpos\Helper\Product\CustomSale $customSaleHelper
      */
     protected $customSaleHelper;
-
 
     /**#@-*/
 
@@ -227,6 +256,7 @@ class ConfigRepository implements \Magestore\Webpos\Api\Config\ConfigRepositoryI
 
     /**
      * ConfigRepository constructor.
+     *
      * @param \Magestore\Webpos\Api\Data\Config\SystemConfigInterfaceFactory $systemConfigInterfaceFactory
      * @param \Magestore\Webpos\Api\Data\Config\ConfigInterface $config
      * @param \Magestore\Webpos\Api\Data\Config\PriceFormatInterfaceFactory $priceFormatFactory
@@ -270,8 +300,9 @@ class ConfigRepository implements \Magestore\Webpos\Api\Config\ConfigRepositoryI
      * @param PaymentType $allPaymentType
      * @param RefundPaymentTypeFactory $allRefundPaymentTypeFactory
      * @param \Magestore\Webpos\Api\Data\Config\PaymentTypeInterface $paymentType
-     * @param \Magestore\Webpos\Api\Data\Config\RefundPaymentTypeInterfaceFactory $refundPaymentTypeFactory
+     * @param RefundPaymentTypeInterfaceFactory $refundPaymentTypeFactory
      * @param \Magestore\Webpos\Model\ResourceModel\Sales\Order $orderResourceModel
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         \Magestore\Webpos\Api\Data\Config\SystemConfigInterfaceFactory $systemConfigInterfaceFactory,
@@ -319,8 +350,7 @@ class ConfigRepository implements \Magestore\Webpos\Api\Config\ConfigRepositoryI
         \Magestore\Webpos\Api\Data\Config\PaymentTypeInterface $paymentType,
         RefundPaymentTypeInterfaceFactory $refundPaymentTypeFactory,
         \Magestore\Webpos\Model\ResourceModel\Sales\Order $orderResourceModel
-    )
-    {
+    ) {
         $this->systemConfigFactory = $systemConfigInterfaceFactory;
         $this->scopeConfig = $scopeConfig;
         $this->storeManager = $storeManager;
@@ -369,7 +399,7 @@ class ConfigRepository implements \Magestore\Webpos\Api\Config\ConfigRepositoryI
     }
 
     /**
-     * get list location
+     * Get list location
      *
      * @return \Magestore\Webpos\Api\Data\Config\ConfigInterface
      * @throws \Magento\Framework\Exception\LocalizedException
@@ -394,9 +424,6 @@ class ConfigRepository implements \Magestore\Webpos\Api\Config\ConfigRepositoryI
         }
         $this->config->setSettings($configurations);
         $this->config->setPermissions($this->getPermissions());
-        $baseCurrencyCode = $this->scopeConfig->getValue(
-            \Magento\Directory\Model\Currency::XML_PATH_CURRENCY_BASE, 'stores', $storeId
-        );
         $this->config->setBaseCurrencyCode($store->getBaseCurrencyCode());
         $this->config->setCurrentCurrencyCode($store->getDefaultCurrencyCode());
         $this->config->setCustomerGroups($this->getCustomerGroups());
@@ -413,7 +440,9 @@ class ConfigRepository implements \Magestore\Webpos\Api\Config\ConfigRepositoryI
         $this->config->setEnableModules($this->getEnableModules());
         $this->config->setMaxDiscountPercent($this->getMaxDiscountPercent());
         $this->config->setCustomerForm($this->customerMetadataService->getAttributes('adminhtml_customer'));
-        $this->config->setCustomerAddressForm($this->addressMetadataService->getAttributes('adminhtml_customer_address'));
+        $this->config->setCustomerAddressForm(
+            $this->addressMetadataService->getAttributes('adminhtml_customer_address')
+        );
         $this->config->setCustomerCustomAttributes($this->customerMetadataService->getCustomAttributesMetadata());
         $this->config->setCustomerAddressCustomAttributes($this->addressMetadataService->getCustomAttributesMetadata());
         $this->config->setRootCategoryId($this->helper->getCurrentStoreView()->getRootCategoryId());
@@ -442,6 +471,8 @@ class ConfigRepository implements \Magestore\Webpos\Api\Config\ConfigRepositoryI
     }
 
     /**
+     * Get payment type
+     *
      * @return \Magestore\Webpos\Api\Data\Config\PaymentTypeInterface
      */
     public function getPaymentType()
@@ -452,11 +483,15 @@ class ConfigRepository implements \Magestore\Webpos\Api\Config\ConfigRepositoryI
         $this->paymentType->setFlatPayments(implode(',', $information['flat_payments']));
         $this->paymentType->setTerminalPayments(implode(',', $information['terminal_payments']));
         $this->paymentType->setInternetTerminalPayments(implode(',', $information['internet_terminal_payments']));
-        $this->paymentType->setPreventCancelOrderRulePayments(implode(',', $information['prevent_cancel_order_rule_payments']));
+        $this->paymentType->setPreventCancelOrderRulePayments(
+            implode(',', $information['prevent_cancel_order_rule_payments'])
+        );
         return $this->paymentType;
     }
 
     /**
+     * Get refund payment type
+     *
      * @return RefundPaymentTypeInterface
      */
     public function getRefundPaymentType()
@@ -471,6 +506,8 @@ class ConfigRepository implements \Magestore\Webpos\Api\Config\ConfigRepositoryI
     }
 
     /**
+     * Get base media url
+     *
      * @return string
      */
     public function getBaseMediaUrl()
@@ -479,13 +516,17 @@ class ConfigRepository implements \Magestore\Webpos\Api\Config\ConfigRepositoryI
     }
 
     /**
+     * Get permissions
+     *
      * @return array
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getPermissions()
     {
         $permissions = [];
-        $sessionId = $this->request->getParam(\Magestore\WebposIntegration\Controller\Rest\RequestProcessor::SESSION_PARAM_KEY);
+        $sessionId = $this->request->getParam(
+            \Magestore\WebposIntegration\Controller\Rest\RequestProcessor::SESSION_PARAM_KEY
+        );
         try {
             $staffId = $this->staffManagement->authorizeSession($sessionId);
             $staffModel = $this->staffRepository->getById($staffId);
@@ -496,17 +537,19 @@ class ConfigRepository implements \Magestore\Webpos\Api\Config\ConfigRepositoryI
             }
 
         } catch (\Exception $exception) {
-            throw new \Magento\Framework\Exception\NoSuchEntityException(__('Session with id "%1" does not exist.', $sessionId));
+            throw new \Magento\Framework\Exception\NoSuchEntityException(
+                __('Session with id "%1" does not exist.', $sessionId)
+            );
         }
         return $permissions;
     }
-
 
     /**
      * Get general config.
      *
      * @param
      * @return array
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function getConfigPath()
     {
@@ -586,8 +629,11 @@ class ConfigRepository implements \Magestore\Webpos\Api\Config\ConfigRepositoryI
             'webpos/offline/session_time',
             'webpos/offline/order_since',
             'webpos/session/session_since',
+
             'webpos/custom_receipt/display_reason',
             'webpos/custom_receipt/receipt_logo',
+            'webpos/custom_receipt/receipt_logo_width',
+            'webpos/custom_receipt/receipt_logo_height',
 
             'webpos/performance/pos_default_mode',
             'webpos/performance/pos_tablet_default_mode',
@@ -613,7 +659,9 @@ class ConfigRepository implements \Magestore\Webpos\Api\Config\ConfigRepositoryI
         return $configurations;
     }
 
-    /** get base currency code
+    /**
+     * Get base currency code
+     *
      * @return mixed
      */
     public function getBaseCurrencyCode()
@@ -622,6 +670,8 @@ class ConfigRepository implements \Magestore\Webpos\Api\Config\ConfigRepositoryI
     }
 
     /**
+     * Get currency list
+     *
      * @return array
      */
     public function getCurrencyList()
@@ -630,8 +680,8 @@ class ConfigRepository implements \Magestore\Webpos\Api\Config\ConfigRepositoryI
         $currency = $this->currencyFactory->create();
         $baseCurrency = $this->helper->getCurrentStoreView()->getBaseCurrency();
         $baseCurrencyCode = $baseCurrency->getData('currency_code');
-        $currencyList = array();
-        $priceFormats = array();
+        $currencyList = [];
+        $priceFormats = [];
         $output = [];
         $collection = $store->getAllowedCurrencies();
         $orderCurrencyList = $this->orderResourceModel->getAllOrderCurrency();
@@ -673,6 +723,8 @@ class ConfigRepository implements \Magestore\Webpos\Api\Config\ConfigRepositoryI
     }
 
     /**
+     * Get guest customer info
+     *
      * @return \Magestore\Webpos\Api\Data\Config\GuestCustomerInterface
      */
     public function getGuestCustomerInfo()
@@ -700,6 +752,8 @@ class ConfigRepository implements \Magestore\Webpos\Api\Config\ConfigRepositoryI
     }
 
     /**
+     * Get shipping info
+     *
      * @return \Magestore\Webpos\Api\Data\Config\ShippingInterface
      */
     public function getShippingInfo()
@@ -725,6 +779,8 @@ class ConfigRepository implements \Magestore\Webpos\Api\Config\ConfigRepositoryI
     }
 
     /**
+     * Get payment info
+     *
      * @return \Magestore\Webpos\Api\Data\Config\PaymentInterface
      */
     public function getPaymentInfo()
@@ -736,16 +792,20 @@ class ConfigRepository implements \Magestore\Webpos\Api\Config\ConfigRepositoryI
         $payment = $this->payment;
 
         foreach ($paymentInfo as $key => $item) {
-            $payment->setData($item,
+            $payment->setData(
+                $item,
                 $this->scopeConfig->getValue($key, 'stores', $this->currentStore->getId())
                     ? $this->scopeConfig->getValue($key, 'stores', $this->currentStore->getId())
-                    : "");
+                    : ""
+            );
         }
 
         return $payment;
     }
 
     /**
+     * Get customer groups
+     *
      * @return \Magestore\Webpos\Api\Data\Config\CustomerGroupInterface[]
      * @throws \Magento\Framework\Exception\LocalizedException
      */
@@ -768,6 +828,8 @@ class ConfigRepository implements \Magestore\Webpos\Api\Config\ConfigRepositoryI
     }
 
     /**
+     * Get tax rates
+     *
      * @return array
      */
     public function getTaxRates()
@@ -792,6 +854,8 @@ class ConfigRepository implements \Magestore\Webpos\Api\Config\ConfigRepositoryI
     }
 
     /**
+     * Get tax rules
+     *
      * @return array
      */
     public function getTaxRules()
@@ -813,6 +877,8 @@ class ConfigRepository implements \Magestore\Webpos\Api\Config\ConfigRepositoryI
     }
 
     /**
+     * Get denominations
+     *
      * @return array
      */
     public function getDenominations()
@@ -834,6 +900,8 @@ class ConfigRepository implements \Magestore\Webpos\Api\Config\ConfigRepositoryI
     }
 
     /**
+     * Is primary location
+     *
      * @return bool
      */
     public function isPrimaryLocation()
@@ -854,6 +922,11 @@ class ConfigRepository implements \Magestore\Webpos\Api\Config\ConfigRepositoryI
         return false;
     }
 
+    /**
+     * Get enable modules
+     *
+     * @return array
+     */
     public function getEnableModules()
     {
         $enableModules = [];
@@ -874,16 +947,26 @@ class ConfigRepository implements \Magestore\Webpos\Api\Config\ConfigRepositoryI
         return $enableModules;
     }
 
+    /**
+     * Get max discount percent
+     *
+     * @return mixed
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     public function getMaxDiscountPercent()
     {
-        $sessionId = $this->request->getParam(\Magestore\WebposIntegration\Controller\Rest\RequestProcessor::SESSION_PARAM_KEY);
+        $sessionId = $this->request->getParam(
+            \Magestore\WebposIntegration\Controller\Rest\RequestProcessor::SESSION_PARAM_KEY
+        );
         try {
             $staffId = $this->staffManagement->authorizeSession($sessionId);
             $staffModel = $this->staffRepository->getById($staffId);
             $roleId = $staffModel->getRoleId();
             $role = $this->roleFactory->create()->load((int)$roleId);
         } catch (\Exception $exception) {
-            throw new \Magento\Framework\Exception\NoSuchEntityException(__('Session with id "%1" does not exist.', $sessionId));
+            throw new \Magento\Framework\Exception\NoSuchEntityException(
+                __('Session with id "%1" does not exist.', $sessionId)
+            );
         }
         return $role->getMaxDiscountPercent();
     }
@@ -915,6 +998,7 @@ class ConfigRepository implements \Magestore\Webpos\Api\Config\ConfigRepositoryI
 
     /**
      * Get config stores
+     *
      * @return \Magento\Store\Api\Data\StoreInterface[]
      */
     public function getConfigStores()

@@ -9,37 +9,36 @@ namespace Magestore\Giftvoucher\Model\Source;
 /**
  * Giftvoucher Aftertax Model
  *
- * @category    Magestore
- * @package     Magestore_Giftvoucher
  * @author      Magestore Developer
  */
 class AfterTax extends \Magento\Framework\DataObject
 {
-    
     /**
      * Get model option as array
      *
      * @return array
      */
-    public static function getOptionArray()
+    public function getOptionArray()
     {
-        return array(
+        return [
             0 => 'Before tax',
             1 => 'After tax',
-        );
+        ];
     }
 
     /**
+     * To Option Array
+     *
      * @return array
      */
     public function toOptionArray()
     {
-        $options = array();
-        foreach (self::getOptionArray() as $value => $label) {
-            $options[] = array(
+        $options = [];
+        foreach ($this->getOptionArray() as $value => $label) {
+            $options[] = [
                 'value' => $value,
                 'label' => $label
-            );
+            ];
         }
         return $options;
     }

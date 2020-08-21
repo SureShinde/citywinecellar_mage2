@@ -6,11 +6,19 @@
 
 namespace Magestore\FulfilReport\Block\Adminhtml\Report;
 
-use Magestore\FulfilSuccess\Api\Data\PickRequestInterface;
+use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
+use Magestore\FulfilSuccess\Model\ResourceModel\PickRequest\Grid\Collection as PickRequestGridCollection;
 
+/**
+ * Block Verify Report
+ */
 class Verify extends Dashboard
 {
-
+    /**
+     * Get Verify Request Collection
+     *
+     * @return OrderCollectionFactory|PickRequestGridCollection
+     */
     public function getVerifyRequestCollection()
     {
         $collection = $this->getOrders()->addFieldToFilter('is_verified', ['eq' => '1']);
@@ -18,7 +26,8 @@ class Verify extends Dashboard
     }
 
     /**
-     * 
+     * Get Verify Request Collection Per Day
+     *
      * @return array
      */
     public function getVerifyRequestCollectionPerDay()
@@ -41,13 +50,15 @@ class Verify extends Dashboard
     }
 
     /**
+     * Get Verified Orders InPeriod
+     *
+     * @param string $timeRange
      * @return array
      */
     public function getVerifiedOrdersInPeriod($timeRange)
     {
         $totalVerifiedOrders = [];
-        $lastIndex = 0;
-        switch ($timeRange){
+        switch ($timeRange) {
             case 'last7days':
                 $lastIndex = 6;
                 break;
@@ -59,25 +70,30 @@ class Verify extends Dashboard
                 break;
             default:
                 $lastIndex = 6;
-        }       
-        if($lastIndex) {
+        }
+        if ($lastIndex) {
             for ($i = $lastIndex; $i >= 0; $i--) {
                 $toDate = date('Y-m-d 23:59:59', strtotime("-{$i} days"));
                 $fromDate = date('Y-m-d 00:00:00', strtotime("-{$i} days"));
                 $date = date('d/m', strtotime("-{$i} days"));
                 $verifyRequestsPerDay = $this->getVerifyRequestCollection()
                     ->addFieldToFilter(
-                        'updated_at', ['from' => $fromDate, 'to' => $toDate]
+                        'updated_at',
+                        ['from' => $fromDate, 'to' => $toDate]
                     )
                     ->getSize();
                 $totalVerifiedOrders[$date] = $verifyRequestsPerDay;
-            };            
+            }
         }
 
         return $totalVerifiedOrders;
     }
 
     /**
+     * Get Verified Orders Per Day Custom Range
+     *
+     * @param string $dateFrom
+     * @param string $dateTo
      * @return array
      */
     public function getVerifiedOrdersPerDayCustomRange($dateFrom, $dateTo)
@@ -89,7 +105,7 @@ class Verify extends Dashboard
         $dateDiffCustomRange = strtotime($toDate) - strtotime($fromDate);
         $dayToday = floor(($dateDiffToday) / (60 * 60 * 24));
         $toDateFromNow = floor(($dateDiffCustomRange) / (60 * 60 * 24));
-        $totalVerifiedOrders = array();
+        $totalVerifiedOrders = [];
         for ($i = $toDateFromNow; $i >= 0; $i--) {
             $j = $dayToday + $i;
             $toDate = date('Y-m-d 23:59:59', strtotime("-{$j} days"));
@@ -97,7 +113,8 @@ class Verify extends Dashboard
             $date = date('d/m', strtotime("-{$j} days"));
             $pickRequestsPerDay = $this->getVerifyRequestCollection()
                 ->addFieldToFilter(
-                    'updated_at', ['from' => $fromDate, 'to' => $toDate]
+                    'updated_at',
+                    ['from' => $fromDate, 'to' => $toDate]
                 )
                 ->getSize();
             $totalVerifiedOrders[$date] = $pickRequestsPerDay;

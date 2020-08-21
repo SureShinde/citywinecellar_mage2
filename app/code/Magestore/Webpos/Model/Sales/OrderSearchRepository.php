@@ -8,9 +8,12 @@ namespace Magestore\Webpos\Model\Sales;
 
 use Magestore\Webpos\Helper\Profiler;
 use Magestore\Webpos\Model\Source\Adminhtml\Since;
+use Magestore\Webpos\Api\Sales\OrderSearchRepositoryInterface;
 
-class OrderSearchRepository extends OrderRepository
-    implements \Magestore\Webpos\Api\Sales\OrderSearchRepositoryInterface
+/**
+ * Model OrderSearchRepository
+ */
+class OrderSearchRepository extends OrderRepository implements OrderSearchRepositoryInterface
 {
     /**
      * @inheritDoc
@@ -20,71 +23,68 @@ class OrderSearchRepository extends OrderRepository
         $collection = $this->getOrderCollection($searchCriteria);
         $searchResult = $this->searchResultFactory->create();
         $searchResult->setSearchCriteria($searchCriteria);
-        $searchResult->setItems($collection->getItems());
         $searchResult->setTotalCount($collection->getSize());
+        $searchResult->setItems($collection->getItems());
         return $searchResult;
     }
 
     /**
-     * @param $searchCriteria
-     * @return mixed
+     * Get Order Collection
+     *
+     * @param \Magestore\Webpos\Api\SearchCriteriaInterface $searchCriteria
+     * @return \Magestore\Webpos\Model\ResourceModel\Sales\Order\Collection
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getOrderCollection($searchCriteria) {
+    public function getOrderCollection($searchCriteria)
+    {
         Profiler::start('search');
         $collection = $this->collectionFactory->create();
         /** @var \Magestore\Webpos\Api\Data\Sales\OrderSearchResultInterface $searchResult */
-        if($searchCriteria ->getCurrentPage()) {
+        if ($searchCriteria->getCurrentPage()) {
             $collection->setCurPage($searchCriteria->getCurrentPage());
         }
-        if($searchCriteria ->getPageSize()) {
+        if ($searchCriteria->getPageSize()) {
             $collection->setPageSize($searchCriteria->getPageSize());
         }
 
-        /**  check permission */
         /**
          * @var \Magestore\Webpos\Model\Config\ConfigRepository $configRepository
          */
-        $configRepository = $this->_objectManager->get('\Magestore\Webpos\Model\Config\ConfigRepository');
+        $configRepository = $this->_objectManager->get(\Magestore\Webpos\Model\Config\ConfigRepository::class);
         $permission = $configRepository->getPermissions();
         $locationId = $this->helper->getCurrentLocationId();
         $this->orderHelper->applyPermissionForOrderCollect($permission, $collection, $locationId);
 
-
         $isLimit = $searchCriteria->getIsLimit();
-        if($searchCriteria->getIsHold()) {
+        if ($searchCriteria->getIsHold()) {
             $collection->addFieldToFilter('main_table.state', \Magento\Sales\Model\Order::STATE_HOLDED);
             $collection->addFieldToFilter('main_table.pos_location_id', $locationId);
         } else {
-            if($isLimit) {
-               /* $time = time();*/
+            if ($isLimit) {
                 $lastTime = $this->getSearchDays();
-                /*$date = strtotime($daySearch, $time);
-                $lastTime = date('Y-m-d H:i:s', $date);*/
-                $collection->addFieldToFilter('main_table.created_at', array('gteq' => $lastTime));
+                $collection->addFieldToFilter('main_table.created_at', ['gteq' => $lastTime]);
             }
             $collection->addFieldToFilter('main_table.state', ['nin' => \Magento\Sales\Model\Order::STATE_HOLDED]);
         }
-
-        $this->_objectManager->get('Magento\Framework\Event\ManagerInterface')
+        $collection->addFieldToFilter('main_table.created_at', ['gt' => '2020-07-01']);
+        $this->_objectManager->get(\Magento\Framework\Event\ManagerInterface::class)
             ->dispatch('webpos_order_collection_load_before', ['collection' => $collection]);
 
-        if($searchCriteria->getQueryString()) {
+        if ($searchCriteria->getQueryString()) {
             $queryString = '%' . $searchCriteria->getQueryString() . '%';
-            $collection
-                ->joinToGetSearchString($queryString);
-            ;
+            $collection->joinToGetSearchString($queryString);
         }
         $collection->addOrder('main_table.created_at', 'DESC');
         return $collection;
     }
 
     /**
-     * get period search from config
+     * Get period search from config
      *
      * @return string
      */
-    public function getSearchDays() {
+    public function getSearchDays()
+    {
         $config = $this->helper->getStoreConfig('webpos/offline/order_since');
         $time = time();
         switch ($config) {

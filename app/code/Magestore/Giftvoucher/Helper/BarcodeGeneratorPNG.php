@@ -4,6 +4,11 @@ namespace Magestore\Giftvoucher\Helper;
 
 use Magestore\Giftvoucher\Helper\Exceptions\BarcodeException;
 
+/**
+ * Class BarcodeGeneratorPNG
+ *
+ * Barcode generator png exception
+ */
 class BarcodeGeneratorPNG extends BarcodeGenerator
 {
 
@@ -18,8 +23,9 @@ class BarcodeGeneratorPNG extends BarcodeGenerator
      * @return string image data or false in case of error.
      * @public
      * @throws BarcodeException
+     * phpcs:disable Magento2.Functions.DiscouragedFunction
      */
-    public function getBarcode($code, $type, $widthFactor = 2, $totalHeight = 30, $color = array(0, 0, 0))
+    public function getBarcode($code, $type, $widthFactor = 2, $totalHeight = 30, $color = [0, 0, 0])
     {
         $barcodeData = $this->getBarcodeData($code, $type);
 
@@ -45,8 +51,14 @@ class BarcodeGeneratorPNG extends BarcodeGenerator
             if ($bar['drawBar']) {
                 $y = round(($bar['positionVertical'] * $totalHeight / $barcodeData['maxHeight']), 3);
                 // draw a vertical bar
-                imagefilledrectangle($png, $positionHorizontal, $y, ($positionHorizontal + $bw) - 1, ($y + $bh),
-                    $colorForeground);
+                imagefilledrectangle(
+                    $png,
+                    $positionHorizontal,
+                    $y,
+                    ($positionHorizontal + $bw) - 1,
+                    ($y + $bh),
+                    $colorForeground
+                );
             }
             $positionHorizontal += $bw;
         }

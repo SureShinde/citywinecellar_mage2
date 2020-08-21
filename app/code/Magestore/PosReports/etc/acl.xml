@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+
+<!--
+  ~  Copyright © Magestore. All rights reserved.
+  ~  See COPYING.txt for license details.
+  -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Magento_Backend::admin">
+                <resource id="Magento_Reports::report">
+                    <resource id="Magestore_ReportSuccess::report">
+                        <resource id="Magestore_PosReports::report_listing"
+                                  title="POS Reports"
+                                  translate="title"
+                                  sortOrder="20">
+                            <resource id="Magestore_PosReports::location_overview"
+                                      title="Location Overview"
+                                      translate="title" sortOrder="1"/>
+                            <resource id="Magestore_PosReports::location_breakdown"
+                                      title="Location Breakdown"
+                                      translate="title"
+                                      sortOrder="2"/>
+                            <resource id="Magestore_PosReports::sales_by_staff"
+                                      title="Sales by Staff"
+                                      translate="title"
+                                      sortOrder="3"/>
+                            <resource id="Magestore_PosReports::sales_by_payment_method"
+                                      title="Sales by Payment Method"
+                                      translate="title"
+                                      sortOrder="4"/>
+                        </resource>
+                    </resource>
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>

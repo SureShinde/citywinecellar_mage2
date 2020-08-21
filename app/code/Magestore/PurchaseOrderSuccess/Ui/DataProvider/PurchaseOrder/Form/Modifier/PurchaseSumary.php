@@ -9,10 +9,15 @@ namespace Magestore\PurchaseOrderSuccess\Ui\DataProvider\PurchaseOrder\Form\Modi
 use Magento\Ui\Component\Container;
 use Magento\Ui\Component\Modal;
 use Magestore\PurchaseOrderSuccess\Model\PurchaseOrder\Option\Status;
+use Magestore\PurchaseOrderSuccess\Block\Adminhtml\PurchaseOrder\Edit\Fieldset\PurchaseSumary\Supplier;
+use Magestore\PurchaseOrderSuccess\Block\Adminhtml\PurchaseOrder\Edit\Fieldset\PurchaseSumary\Total;
+use Magestore\PurchaseOrderSuccess\Block\Adminhtml\PurchaseOrder\Edit\Fieldset\PurchaseSumary\Item;
 
 /**
  * Class PurchaseSumary
- * @package Magestore\PurchaseOrderSuccess\Ui\DataProvider\PurchaseOrder\Form\Modifier
+ *
+ * Used for purchase summary
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class PurchaseSumary extends AbstractModifier
 {
@@ -75,6 +80,17 @@ class PurchaseSumary extends AbstractModifier
      */
     protected $productConfig;
 
+    /**
+     * PurchaseSumary constructor.
+     *
+     * @param \Magento\Framework\ObjectManagerInterface $objectManager
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Framework\App\RequestInterface $request
+     * @param \Magento\Framework\UrlInterface $urlBuilder
+     * @param \Magento\Framework\Stdlib\DateTime\DateTime $dateTime
+     * @param \Magestore\PurchaseOrderSuccess\Service\Config\ProductConfig $productConfig
+     * @param \Magento\Framework\Module\Manager $moduleManager
+     */
     public function __construct(
         \Magento\Framework\ObjectManagerInterface $objectManager,
         \Magento\Framework\Registry $registry,
@@ -83,8 +99,7 @@ class PurchaseSumary extends AbstractModifier
         \Magento\Framework\Stdlib\DateTime\DateTime $dateTime,
         \Magestore\PurchaseOrderSuccess\Service\Config\ProductConfig $productConfig,
         \Magento\Framework\Module\Manager $moduleManager
-    )
-    {
+    ) {
         parent::__construct($objectManager, $registry, $request, $urlBuilder);
         $this->_dateTime = $dateTime;
         $this->productConfig = $productConfig;
@@ -92,8 +107,9 @@ class PurchaseSumary extends AbstractModifier
     }
 
     /**
-     * modify data
+     * Modify data
      *
+     * @param array $data
      * @return array
      */
     public function modifyData(array $data)
@@ -114,7 +130,7 @@ class PurchaseSumary extends AbstractModifier
         }
         $actions = null;
         $purchaseOrder = $this->getCurrentPurchaseOrder();
-        if ($purchaseOrder->getStatus() != Status::STATUS_PENDING)
+        if ($purchaseOrder->getStatus() != Status::STATUS_PENDING) {
             $actions = [
                 [
                     'targetName' => $this->scopeName . '.' . $this->groupContainer . '.' .
@@ -122,6 +138,7 @@ class PurchaseSumary extends AbstractModifier
                     'actionName' => 'render',
                 ],
             ];
+        }
         $meta = array_replace_recursive(
             $meta,
             [
@@ -149,8 +166,10 @@ class PurchaseSumary extends AbstractModifier
     }
 
     /**
+     * Get opened
      *
      * @return boolean
+     * @SuppressWarnings(PHPMD.BooleanGetMethodName)
      */
     public function getOpened()
     {
@@ -187,13 +206,15 @@ class PurchaseSumary extends AbstractModifier
     }
 
     /**
+     * Get purchase summary supplier
+     *
      * @return array
      */
     public function getPurchaseSumarySupplier()
     {
         return $this->addHtmlContentContainer(
             'purchase_sumary_supplier',
-            'Magestore\PurchaseOrderSuccess\Block\Adminhtml\PurchaseOrder\Edit\Fieldset\PurchaseSumary\Supplier'
+            Supplier::class
         );
     }
 
@@ -206,7 +227,7 @@ class PurchaseSumary extends AbstractModifier
     {
         return $this->addHtmlContentContainer(
             'grid_container',
-            'Magestore\PurchaseOrderSuccess\Block\Adminhtml\PurchaseOrder\Edit\Fieldset\PurchaseSumary'
+            \Magestore\PurchaseOrderSuccess\Block\Adminhtml\PurchaseOrder\Edit\Fieldset\PurchaseSumary::class
         );
     }
 
@@ -236,10 +257,16 @@ class PurchaseSumary extends AbstractModifier
                         'behaviourType' => 'simple',
                         'externalFilterMode' => true,
                         'imports' => [
-                            'purchase_id' => '${ $.provider }:data.purchase_order_id'
+                            'purchase_id' => '${ $.provider }:data.purchase_order_id',
+                            '__disableTmpl' => [
+                                'purchase_id' => false
+                            ]
                         ],
                         'exports' => [
-                            'purchase_id' => '${ $.externalProvider }:params.purchase_id'
+                            'purchase_id' => '${ $.externalProvider }:params.purchase_id',
+                            '__disableTmpl' => [
+                                'purchase_id' => false
+                            ]
                         ],
                         'selectionsProvider' =>
                             $this->children['item_grid_listing']
@@ -260,7 +287,7 @@ class PurchaseSumary extends AbstractModifier
     {
         return $this->addHtmlContentContainer(
             'purchase_sumary_total_container',
-            'Magestore\PurchaseOrderSuccess\Block\Adminhtml\PurchaseOrder\Edit\Fieldset\PurchaseSumary\Total'
+            Total::class
         );
     }
 
@@ -304,12 +331,13 @@ class PurchaseSumary extends AbstractModifier
                         'targetName' => $this->scopeName . '.' . $this->groupContainer
                             . '.' . $this->children['import_product_modal'],
                         'actionName' => 'openModal'
-                    ], [
+                    ],
+                    [
                     'targetName' => $this->scopeName . '.' . $this->groupContainer
                         . '.' . $this->children['import_product_modal']
                         . '.' . $this->children['import_product_form'],
                     'actionName' => 'render'
-                ]
+                    ]
                 ]
             ),
         ];
@@ -321,7 +349,8 @@ class PurchaseSumary extends AbstractModifier
             )
         );
         $title = __('All Store Products');
-        if($this->productConfig->getProductSource() == \Magestore\PurchaseOrderSuccess\Model\System\Config\ProductSource::TYPE_SUPPLIER) {
+        if ($this->productConfig->getProductSource()
+            == \Magestore\PurchaseOrderSuccess\Model\System\Config\ProductSource::TYPE_SUPPLIER) {
             $title = __('All Supplier Products');
         }
         $children['all_supplier_product_button'] = $this->addButton(
@@ -346,12 +375,18 @@ class PurchaseSumary extends AbstractModifier
         ];
     }
 
+    /**
+     * Get js object name
+     *
+     * @return string
+     */
     public function getJsObjectName()
     {
-        if (!$this->jsObjectName)
+        if (!$this->jsObjectName) {
             $this->jsObjectName = $this->objectManager
-                ->get('Magestore\PurchaseOrderSuccess\Block\Adminhtml\PurchaseOrder\Edit\Fieldset\PurchaseSumary\Item')
+                ->get(Item::class)
                 ->getJsObjectName();
+        }
         return $this->jsObjectName;
     }
 
@@ -360,7 +395,9 @@ class PurchaseSumary extends AbstractModifier
      *
      * @param string $title
      * @param string $dataScope
+     * @param string $modal
      * @return array
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function addProductModal($title, $dataScope, $modal)
     {
@@ -418,13 +455,25 @@ class PurchaseSumary extends AbstractModifier
                                     'supplier_id' => '${ $.provider }:data.supplier_id',
                                     'purchase_id' => '${ $.provider }:data.purchase_order_id',
                                     'currency_code' => '${ $.provider }:data.currency_code',
-                                    'currency_rate' => '${ $.provider }:data.currency_rate'
+                                    'currency_rate' => '${ $.provider }:data.currency_rate',
+                                    '__disableTmpl' => [
+                                        'supplier_id' => false,
+                                        'purchase_id' => false,
+                                        'currency_code' => false,
+                                        'currency_rate' => false,
+                                    ]
                                 ],
                                 'exports' => [
                                     'supplier_id' => '${ $.externalProvider }:params.supplier_id',
                                     'purchase_id' => '${ $.externalProvider }:params.purchase_id',
                                     'currency_code' => '${ $.externalProvider }:params.currency_code',
                                     'currency_rate' => '${ $.externalProvider }:params.currency_rate',
+                                    '__disableTmpl' => [
+                                        'supplier_id' => false,
+                                        'purchase_id' => false,
+                                        'currency_code' => false,
+                                        'currency_rate' => false,
+                                    ]
                                 ],
                                 'selectionsProvider' =>
                                     $this->children[$dataScope]
@@ -443,7 +492,8 @@ class PurchaseSumary extends AbstractModifier
                                         'type' => 'block'
                                     ]
                                 ],
-                                'closeModal' => $this->scopeName . '.' . $this->groupContainer . '.' . $this->children[$modal]
+                                'closeModal' => $this->scopeName . '.' . $this->groupContainer . '.'
+                                    . $this->children[$modal]
                             ]
                         ]
                     ]
@@ -460,12 +510,12 @@ class PurchaseSumary extends AbstractModifier
     public function getAllSupplierProductModal()
     {
         $title = __('All Store Products');
-        if($this->productConfig->getProductSource() == \Magestore\PurchaseOrderSuccess\Model\System\Config\ProductSource::TYPE_SUPPLIER) {
+        if ($this->productConfig->getProductSource()
+            == \Magestore\PurchaseOrderSuccess\Model\System\Config\ProductSource::TYPE_SUPPLIER) {
             $title = __('All Supplier Products');
         }
         return $this->addProductModal($title, 'all_supplier_product_listing', 'all_supplier_product_modal');
     }
-
 
     /**
      * Get back order product modal
@@ -477,6 +527,11 @@ class PurchaseSumary extends AbstractModifier
         return $this->addProductModal('Back Sales Products', 'back_order_product_listing', 'back_order_product_modal');
     }
 
+    /**
+     * Get import product modal
+     *
+     * @return array
+     */
     public function getImportProductModal()
     {
         return [

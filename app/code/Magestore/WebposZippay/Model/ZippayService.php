@@ -9,7 +9,11 @@ namespace Magestore\WebposZippay\Model;
 
 use Magestore\WebposZippay\Api\Data\ZippayErrorInterface;
 use Magestore\WebposZippay\Api\Data\ZippayPurchaseResponseInterface;
+use Magestore\WebposZippay\Api\Data\ZippayResponseInterface;
 
+/**
+ * Model ZippayService
+ */
 class ZippayService implements \Magestore\WebposZippay\Api\ZippayServiceInterface
 {
     const UNKNOWN_EXCEPTION_MESSAGE = 'Connection failed. Please contact admin to check the configuration of API';
@@ -44,11 +48,12 @@ class ZippayService implements \Magestore\WebposZippay\Api\ZippayServiceInterfac
 
     /**
      * ZippayService constructor.
+     *
      * @param \Magestore\WebposZippay\Helper\Data $zippay
-     * @param \Magestore\WebposZippay\Model\Data\ZippayErrorFactory $zippayErrorFactory
-     * @param \Magestore\WebposZippay\Model\Data\ZippayErrorFieldFactory $zippayErrorFieldFactory
-     * @param \Magestore\WebposZippay\Model\Data\ZippayPurchaseResponseFactory $zippayPurchaseResponseFactory
-     * @param \Magestore\WebposZippay\Model\Data\ZippayResponseFactory $zippayResponseFactory
+     * @param Data\ZippayErrorFactory $zippayErrorFactory
+     * @param Data\ZippayErrorFieldFactory $zippayErrorFieldFactory
+     * @param Data\ZippayPurchaseResponseFactory $zippayPurchaseResponseFactory
+     * @param Data\ZippayResponseFactory $zippayResponseFactory
      */
     public function __construct(
         \Magestore\WebposZippay\Helper\Data $zippay,
@@ -65,31 +70,39 @@ class ZippayService implements \Magestore\WebposZippay\Api\ZippayServiceInterfac
     }
 
     /**
+     * Is Enable
+     *
      * @return bool
      */
-    public function isEnable(){
+    public function isEnable()
+    {
         $configs = $this->zippay->getZippayConfig();
-        return $configs['enable'] && !empty($configs['api_url']) && !empty($configs['api_key'])?true:false;
+        return $configs['enable'] && !empty($configs['api_url']) && !empty($configs['api_key']) ? true : false;
     }
 
     /**
+     * Get Configuration Error
+     *
      * @return string
      */
-    public function getConfigurationError(){
+    public function getConfigurationError()
+    {
         $message = '';
         $configs = $this->zippay->getZippayConfig();
-        if($configs['enable']){
-            if(empty($configs['api_url']) || empty($configs['api_key'])){
+        if ($configs['enable']) {
+            if (empty($configs['api_url']) || empty($configs['api_key'])) {
                 $message = __('Zippay application api url and api key are required');
             }
-        }else{
+        } else {
             $message = __('Zippay integration is disabled');
         }
         return $message;
     }
 
     /**
-     * @param $webposLocationId
+     * Get Zip Location Id
+     *
+     * @param int $webposLocationId
      * @return bool|false|int|string
      */
     private function getZipLocationId($webposLocationId)
@@ -111,149 +124,163 @@ class ZippayService implements \Magestore\WebposZippay\Api\ZippayServiceInterfac
     }
 
     /**
-     * @param $api_url
-     * @param $api_key
+     * Test Api
+     *
+     * @param string $api_url
+     * @param string $api_key
      * @return array
      */
-    private function testApi($api_url, $api_key) {
-
+    private function testApi($api_url, $api_key)
+    {
         try {
-            $curl = curl_init();
+            $curl = curl_init(); // phpcs:ignore Magento2.Functions.DiscouragedFunction
 
-            curl_setopt_array($curl, array(
-                CURLOPT_URL => $api_url . "/purchaserequests",
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => "",
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 30,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => "GET",
-                CURLOPT_POSTFIELDS => "{}",
-                CURLOPT_HTTPHEADER => array(
-                    "authorization: Basic ". base64_encode($api_key. ":"),
-                    "content-type: application/json"
-                ),
-            ));
+            curl_setopt_array( // phpcs:ignore Magento2.Functions.DiscouragedFunction
+                $curl,
+                [
+                    CURLOPT_URL => $api_url . "/purchaserequests",
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => "",
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 30,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => "GET",
+                    CURLOPT_POSTFIELDS => "{}",
+                    CURLOPT_HTTPHEADER => [
+                        "authorization: Basic " . base64_encode($api_key . ":"),
+                        "content-type: application/json"
+                    ],
+                ]
+            );
 
-            $response = curl_exec($curl);
-            $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-            curl_error($curl);
+            $response = curl_exec($curl); // phpcs:ignore Magento2.Functions.DiscouragedFunction
+            $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE); // phpcs:ignore Magento2.Functions.DiscouragedFunction
+            curl_error($curl); // phpcs:ignore Magento2.Functions.DiscouragedFunction
 
-            curl_close($curl);
+            curl_close($curl); // phpcs:ignore Magento2.Functions.DiscouragedFunction
         } catch (\Exception $e) {
-            return array(
+            return [
                 'httpCode' => 500,
                 'response' => false
-            );
+            ];
         }
 
         // time out
         if ($httpCode === 0) {
-            return array(
+            return [
                 'httpCode' => $httpCode,
                 'response' => '{
                     "message": "' . self::TIME_OUT_EXCEPTION_MESSAGE . '"
                 }'
-            );
+            ];
         }
 
-        return array(
+        return [
             'httpCode' => $httpCode,
             'response' => $response
-        );
+        ];
     }
 
     /**
-     * @param $endpoint
+     * Call Api
+     *
+     * @param string $endpoint
      * @param string $method
      * @param string $param
      * @param int $timeout
      * @return array
      */
-    private function callApi($endpoint, $method = "GET", $param = "{}", $timeout = 30) {
+    private function callApi($endpoint, $method = "GET", $param = "{}", $timeout = 30)
+    {
         if (!$timeout) {
-            return array(
+            return [
                 'httpCode' => 0,
                 'response' => '{
                     "message": "' . self::TIME_OUT_EXCEPTION_MESSAGE . '"
                 }'
-            );
+            ];
         }
 
         try {
-            $curl = curl_init();
+            $curl = curl_init(); // phpcs:ignore Magento2.Functions.DiscouragedFunction
 
-            curl_setopt_array($curl, array(
-                CURLOPT_URL => $this->zippay->getApiUrl() . $endpoint,
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => "",
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => $timeout,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => $method,
-                CURLOPT_POSTFIELDS => $param,
-                CURLOPT_HTTPHEADER => array(
-                    "authorization: Basic ". base64_encode($this->zippay->getApiKey() . ":"),
-                    "content-type: application/json"
-                ),
-            ));
+            curl_setopt_array( // phpcs:ignore Magento2.Functions.DiscouragedFunction
+                $curl,
+                [
+                    CURLOPT_URL => $this->zippay->getApiUrl() . $endpoint,
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => "",
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => $timeout,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => $method,
+                    CURLOPT_POSTFIELDS => $param,
+                    CURLOPT_HTTPHEADER => [
+                        "authorization: Basic " . base64_encode($this->zippay->getApiKey() . ":"),
+                        "content-type: application/json"
+                    ],
+                ]
+            );
 
-            $response = curl_exec($curl);
-            $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-            curl_error($curl);
+            $response = curl_exec($curl); // phpcs:ignore Magento2.Functions.DiscouragedFunction
+            $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE); // phpcs:ignore Magento2.Functions.DiscouragedFunction
+            curl_error($curl); // phpcs:ignore Magento2.Functions.DiscouragedFunction
 
-            curl_close($curl);
+            curl_close($curl); // phpcs:ignore Magento2.Functions.DiscouragedFunction
         } catch (\Exception $e) {
-            return array(
+            return [
                 'httpCode' => 500,
                 'response' => false
-            );
+            ];
         }
 
         // time out
         if ($httpCode === 0) {
-            return array(
+            return [
                 'httpCode' => $httpCode,
                 'response' => '{
                     "message": "' . self::TIME_OUT_EXCEPTION_MESSAGE . '"
                 }'
-            );
+            ];
         }
 
-        return array(
+        return [
             'httpCode' => $httpCode,
             'response' => $response
-        );
+        ];
     }
 
     /**
+     * Can Connect To Api
+     *
      * @param null|string $apiUrl
      * @param null|string $apiKey
      * @return bool
      */
     public function canConnectToApi($apiUrl = null, $apiKey = null)
     {
-       try {
-           /**
-            *  test api
-            */
-           if ($apiUrl && $apiKey) {
-               $testConnect = $this->testApi($apiUrl , $apiKey);
-           } else {
-               $testConnect = $this->callApi("/purchaserequests");
-           }
+        try {
+            /**
+             * Test api
+             */
+            if ($apiUrl && $apiKey) {
+                $testConnect = $this->testApi($apiUrl, $apiKey);
+            } else {
+                $testConnect = $this->callApi("/purchaserequests");
+            }
 
-           return $testConnect['httpCode'] === 200;
-       } catch (\Exception $exception) {
-           return false;
-       }
+            return $testConnect['httpCode'] === 200;
+        } catch (\Exception $exception) {
+            return false;
+        }
     }
 
-
     /**
-     * @param $storeCode
+     * PurchaserRequests
+     *
+     * @param string $storeCode
      * @param \Magestore\Webpos\Api\Data\Checkout\OrderInterface $order
-     * @return \Magestore\WebposZippay\Api\Data\ZippayErrorInterface|\Magestore\WebposZippay\Api\Data\ZippayPurchaseResponseInterface
+     * @return \Magestore\WebposZippay\Api\Data\ZippayErrorInterface|ZippayPurchaseResponseInterface
      */
     public function purchaserRequests($storeCode, $order)
     {
@@ -268,28 +295,30 @@ class ZippayService implements \Magestore\WebposZippay\Api\ZippayServiceInterfac
         /** @var \Magestore\Webpos\Api\Data\Checkout\Order\PaymentInterface $zipPayment */
         $zipPayment = $payments[$zipPaymentIndex];
 
-
         $webposLocationId = $order->getPosLocationId();
         $zipLocationId = $this->getZipLocationId($webposLocationId);
 
         if (!$zipLocationId) {
-            $purchaseResponse->setError($this->makeError(array(
-                'message' => self::STORE_LOCATION_EXCEPTION_MESSAGE
-            )));
+            $purchaseResponse->setError(
+                $this->makeError(
+                    [
+                        'message' => self::STORE_LOCATION_EXCEPTION_MESSAGE
+                    ]
+                )
+            );
             return $purchaseResponse;
         }
 
-
         $amountPaid = $zipPayment->getAmountPaid();
-        $items = array(
-            array(
-                "name" => array(),
+        $items = [
+            [
+                "name" => [],
                 "quantity" => 1,
                 "amount" => $amountPaid,
-                "sku" => array(),
-                "refCode" => array(),
-            )
-        );
+                "sku" => [],
+                "refCode" => []
+            ]
+        ];
 
         foreach ($order->getItems() as $item) {
             $items[0]['name'][] = $item->getQtyOrdered() . ' x ' . $item->getName();
@@ -301,28 +330,28 @@ class ZippayService implements \Magestore\WebposZippay\Api\ZippayServiceInterfac
         $items[0]['sku'] = $this->checkAndCut(implode(", ", $items[0]['sku']));
         $items[0]['refCode'] = $this->checkAndCut(implode(", ", $items[0]['refCode']), 50);
 
-        $payload = array(
-            "originator" => array(
+        $payload = [
+            "originator" => [
                 "locationId" => $zipLocationId,
                 "deviceRefCode" => $order->getPosId(),
-                "staffActor" => array(
-                    "refCode" => $order->getPosStaffId() ? : ''
-                )
-            ),
+                "staffActor" => [
+                    "refCode" => $order->getPosStaffId() ?: ''
+                ]
+            ],
             "refCode" => $order->getIncrementId(),
             "payAmount" => $amountPaid,
-            "accountIdentifier" => array(
+            "accountIdentifier" => [
                 "method" => "token",
                 "value" => $storeCode
-            ),
+            ],
             "requiresAck" => 'false',
-            "order" => array(
+            "order" => [
                 "totalAmount" => $amountPaid,
                 "shippingAmount" => 0,
                 "taxAmount" => 0,
                 "items" => $items
-            )
-        );
+            ]
+        ];
 
         $purchaseRequest = $this->callApi("/purchaserequests", "POST", json_encode($payload));
 
@@ -345,34 +374,40 @@ class ZippayService implements \Magestore\WebposZippay\Api\ZippayServiceInterfac
         }
 
         return $purchaseResponse;
-
     }
 
     /**
-     * @param $id
-     * @param $refCode
-     * @param $refundAmount
+     * Purchaser Requests Refund
+     *
+     * @param int $id
+     * @param string $refCode
+     * @param float $refundAmount
      * @param \Magestore\WebposZippay\Api\Data\ZippayOriginatorInterface $originator
-     * @return \Magestore\WebposZippay\Api\Data\ZippayErrorFieldInterface|\Magestore\WebposZippay\Api\Data\ZippayResponseInterface
+     * @return \Magestore\WebposZippay\Api\Data\ZippayErrorFieldInterface|ZippayResponseInterface
      */
     public function purchaserRequestsRefund($id, $refCode, $refundAmount, $originator)
     {
-
         /**
-         * @var \Magestore\WebposZippay\Api\Data\ZippayResponseInterface $responseCancel
+         * @var ZippayResponseInterface $responseCancel
          */
         $responseRefund = $this->zippayResponseFactory->create();
-        $response = $this->callApi("/purchaserequests/" . $id . "/refund", "POST", json_encode(array(
-            "refCode" => $refCode,
-            "refundAmount" => $refundAmount,
-            "originator" => array(
-                "locationId" =>  $originator->getLocationId(),
-                "deviceRefCode" =>  $originator->getDeviceRefCode(),
-                "staffActor" => array(
-                    "refCode" => $originator->getStaffActor()->getRefCode(),
-                )
+        $response = $this->callApi(
+            "/purchaserequests/" . $id . "/refund",
+            "POST",
+            json_encode(
+                [
+                    "refCode" => $refCode,
+                    "refundAmount" => $refundAmount,
+                    "originator" => [
+                        "locationId" => $originator->getLocationId(),
+                        "deviceRefCode" => $originator->getDeviceRefCode(),
+                        "staffActor" => [
+                            "refCode" => $originator->getStaffActor()->getRefCode(),
+                        ]
+                    ]
+                ]
             )
-        )));
+        );
 
         if ($response['httpCode'] === 204) {
             $responseRefund->setError(0);
@@ -386,16 +421,19 @@ class ZippayService implements \Magestore\WebposZippay\Api\ZippayServiceInterfac
             return $responseRefund;
         }
 
-
         $responseRefund->setError(self::UNKNOWN_EXCEPTION_MESSAGE);
         return $responseRefund;
     }
 
+    /**
+     * Fetch Transaction
+     *
+     * @param float|string $id
+     * @return ZippayPurchaseResponseInterface
+     */
     public function fetchTransaction($id)
     {
-
-//        $fetchRequest = $this->callApi("/purchaserequests/". $id, "GET", "{}", 0);
-        $fetchRequest = $this->callApi("/purchaserequests/". $id);
+        $fetchRequest = $this->callApi("/purchaserequests/" . $id);
         /**
          * @var ZippayPurchaseResponseInterface $fetchResponse
          */
@@ -426,28 +464,35 @@ class ZippayService implements \Magestore\WebposZippay\Api\ZippayServiceInterfac
     }
 
     /**
+     * Cancel Purchaser Requests
+     *
      * @param float|string $refCode
      * @param \Magestore\WebposZippay\Api\Data\ZippayOriginatorInterface $originator
-     * @return \Magestore\WebposZippay\Api\Data\ZippayErrorFieldInterface|\Magestore\WebposZippay\Api\Data\ZippayResponseInterface
+     * @return \Magestore\WebposZippay\Api\Data\ZippayErrorFieldInterface|ZippayResponseInterface
      */
     public function cancelPurchaserRequests($refCode, $originator)
     {
-
         /**
-         * @var \Magestore\WebposZippay\Api\Data\ZippayResponseInterface $responseCancel
+         * @var ZippayResponseInterface $responseCancel
          */
         $responseCancel = $this->zippayResponseFactory->create();
 
-        $response = $this->callApi("/purchaserequests/void", "POST", json_encode(array(
-            "refCode" => $refCode,
-            "originator" => array(
-                "locationId" =>  $originator->getLocationId(),
-                "deviceRefCode" =>  $originator->getDeviceRefCode(),
-                "staffActor" => array(
-                    "refCode" => $originator->getStaffActor()->getRefCode(),
-                )
+        $response = $this->callApi(
+            "/purchaserequests/void",
+            "POST",
+            json_encode(
+                [
+                    "refCode" => $refCode,
+                    "originator" => [
+                        "locationId" => $originator->getLocationId(),
+                        "deviceRefCode" => $originator->getDeviceRefCode(),
+                        "staffActor" => [
+                            "refCode" => $originator->getStaffActor()->getRefCode(),
+                        ]
+                    ]
+                ]
             )
-        )));
+        );
 
         if ($response['httpCode'] === 204) {
             $responseCancel->setError(0);
@@ -461,35 +506,42 @@ class ZippayService implements \Magestore\WebposZippay\Api\ZippayServiceInterfac
             return $responseCancel;
         }
 
-
         $responseCancel->setError(self::UNKNOWN_EXCEPTION_MESSAGE);
         return $responseCancel;
     }
 
-
     /**
-     * @param $id
-     * @param $refCode
-     * @param $refundAmount
+     * CancelRefundRequests
+     *
+     * @param int $id
+     * @param string $refCode
+     * @param float $refundAmount
      * @param \Magestore\WebposZippay\Api\Data\ZippayOriginatorInterface $originator
-     * @return \Magestore\WebposZippay\Api\Data\ZippayErrorFieldInterface|\Magestore\WebposZippay\Api\Data\ZippayResponseInterface
+     * @return \Magestore\WebposZippay\Api\Data\ZippayErrorFieldInterface|ZippayResponseInterface
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function cancelRefundRequests($id, $refCode, $refundAmount, $originator)
     {
         /**
-         * @var \Magestore\WebposZippay\Api\Data\ZippayResponseInterface $responseRefund
+         * @var ZippayResponseInterface $responseRefund
          */
         $responseRefund = $this->zippayResponseFactory->create();
-        $response = $this->callApi("/purchaserequests/" . $id . "/refund/void", "POST", json_encode(array(
-            "refCode" => $refCode,
-            "originator" => array(
-                "locationId" =>  $originator->getLocationId(),
-                "deviceRefCode" =>  $originator->getDeviceRefCode(),
-                "staffActor" => array(
-                    "refCode" => $originator->getStaffActor()->getRefCode(),
-                )
+        $response = $this->callApi(
+            "/purchaserequests/" . $id . "/refund/void",
+            "POST",
+            json_encode(
+                [
+                    "refCode" => $refCode,
+                    "originator" => [
+                        "locationId" => $originator->getLocationId(),
+                        "deviceRefCode" => $originator->getDeviceRefCode(),
+                        "staffActor" => [
+                            "refCode" => $originator->getStaffActor()->getRefCode(),
+                        ]
+                    ]
+                ]
             )
-        )));
+        );
 
         if ($response['httpCode'] === 204) {
             $responseRefund->setError(0);
@@ -503,12 +555,19 @@ class ZippayService implements \Magestore\WebposZippay\Api\ZippayServiceInterfac
             return $responseRefund;
         }
 
-
         $responseRefund->setError(self::UNKNOWN_EXCEPTION_MESSAGE);
         return $responseRefund;
     }
 
-    private function checkAndCut($string, $max = 150) {
+    /**
+     * Check And Cut
+     *
+     * @param string $string
+     * @param int $max
+     * @return string
+     */
+    private function checkAndCut($string, $max = 150)
+    {
         if (strlen($string) <= $max) {
             return $string;
         }
@@ -517,19 +576,21 @@ class ZippayService implements \Magestore\WebposZippay\Api\ZippayServiceInterfac
     }
 
     /**
-     * @param $errorData
+     * Make Error
+     *
+     * @param array $errorData
      * @return ZippayErrorInterface
      */
-    private function makeError($errorData) {
+    private function makeError($errorData)
+    {
         /**
          * @var ZippayErrorInterface $error
          */
-
         $error = $this->zippayErrorFactory->create();
         $error->setData($errorData);
 
         if (!empty($response['items'])) {
-            $errorItems = array();
+            $errorItems = [];
             foreach ($response['items'] as $item) {
                 $errorItems[] = $this->zippayErrorFieldFactory
                     ->create()
@@ -539,7 +600,5 @@ class ZippayService implements \Magestore\WebposZippay\Api\ZippayServiceInterfac
         }
 
         return $error;
-
     }
-
 }

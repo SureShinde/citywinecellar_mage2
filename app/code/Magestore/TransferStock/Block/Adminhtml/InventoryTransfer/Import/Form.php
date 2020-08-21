@@ -4,12 +4,20 @@
  * See COPYING.txt for license details.
  */
 namespace Magestore\TransferStock\Block\Adminhtml\InventoryTransfer\Import;
-/**
- * Class Form
- * @package Magestore\TransferStock\Block\Adminhtml\InventoryTransfer\Import
- */
-class Form  extends  \Magento\Backend\Block\Widget\Form\Generic {
 
+/**
+ * Import form
+ */
+class Form extends \Magento\Backend\Block\Widget\Form\Generic
+{
+    /**
+     * Form constructor.
+     *
+     * @param \Magento\Backend\Block\Template\Context $context
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Framework\Data\FormFactory $formFactory
+     * @param array $data
+     */
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
         \Magento\Framework\Registry $registry,
@@ -25,12 +33,15 @@ class Form  extends  \Magento\Backend\Block\Widget\Form\Generic {
      *
      * @return mixed
      */
-    public function getCsvSampleLink() {
-        $url = $this->getUrl('transferstock/inventoryTransfer/downloadsample',
-                array(
-                    '_secure' => true,
-                    'id' => $this->getRequest()->getParam('id')
-                ));
+    public function getCsvSampleLink()
+    {
+        $url = $this->getUrl(
+            'transferstock/inventoryTransfer/downloadsample',
+            [
+                '_secure' => true,
+                'id' => $this->getRequest()->getParam('id')
+            ]
+        );
         return $url;
     }
 
@@ -39,8 +50,10 @@ class Form  extends  \Magento\Backend\Block\Widget\Form\Generic {
      *
      * @return string
      */
-    public function getContent() {
-        return 'Please choose a CSV file to  upload product list with a maximum of 1000 SKUs. You can download this sample CSV file.';
+    public function getContent()
+    {
+        return 'Please choose a CSV file to  upload product list with a maximum of 1000 SKUs. '
+            . 'You can download this sample CSV file.';
     }
 
     /**
@@ -48,12 +61,15 @@ class Form  extends  \Magento\Backend\Block\Widget\Form\Generic {
      *
      * @return mixed
      */
-    public function getImportLink() {
-        return $this->getUrl('transferstock/inventoryTransfer/import',
-                array(
-                    '_secure' => true,
-                    'id' => $this->getRequest()->getParam('id')
-                ));
+    public function getImportLink()
+    {
+        return $this->getUrl(
+            'transferstock/inventoryTransfer/import',
+            [
+                '_secure' => true,
+                'id' => $this->getRequest()->getParam('id')
+            ]
+        );
     }
 
     /**
@@ -61,8 +77,8 @@ class Form  extends  \Magento\Backend\Block\Widget\Form\Generic {
      *
      * @return string
      */
-    public function getTitle() {
+    public function getTitle()
+    {
         return 'Upload Product List';
     }
-
 }

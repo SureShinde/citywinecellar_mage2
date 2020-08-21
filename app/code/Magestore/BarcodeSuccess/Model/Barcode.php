@@ -8,8 +8,12 @@ namespace Magestore\BarcodeSuccess\Model;
 
 use Magestore\BarcodeSuccess\Api\Data\BarcodeInterface;
 
-class Barcode  extends \Magento\Framework\Model\AbstractModel implements BarcodeInterface
+/**
+ * Model barcode
+ */
+class Barcode extends \Magento\Framework\Model\AbstractModel implements BarcodeInterface
 {
+    protected $_eventPrefix = 'barcode_success';
 
     /**
      * @var \Magento\Framework\Stdlib\DateTime\DateTime
@@ -38,9 +42,22 @@ class Barcode  extends \Magento\Framework\Model\AbstractModel implements Barcode
      */
     protected function _construct()
     {
-        $this->_init('Magestore\BarcodeSuccess\Model\ResourceModel\Barcode');
+        $this->_init(\Magestore\BarcodeSuccess\Model\ResourceModel\Barcode::class);
     }
 
+    /**
+     * Barcode constructor.
+     *
+     * @param \Magento\Framework\Model\Context $context
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Framework\Stdlib\DateTime $date
+     * @param \Magento\Framework\Stdlib\DateTime\DateTime $dateTime
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param \Magento\Framework\Model\ResourceModel\AbstractResource|null $resource
+     * @param \Magento\Framework\Data\Collection\AbstractDb|null $resourceCollection
+     * @param array $data
+     */
     public function __construct(
         \Magento\Framework\Model\Context $context,
         \Magento\Framework\Registry $registry,
@@ -65,12 +82,13 @@ class Barcode  extends \Magento\Framework\Model\AbstractModel implements Barcode
         );
     }
 
-        /**
+    /**
      * Barcode id
      *
      * @return int|null
      */
-    public function getId(){
+    public function getId()
+    {
         return $this->_getData(self::ID);
     }
 
@@ -80,16 +98,18 @@ class Barcode  extends \Magento\Framework\Model\AbstractModel implements Barcode
      * @param int $id
      * @return $this
      */
-    public function setId($id){
+    public function setId($id)
+    {
         return $this->setData(self::ID, $id);
     }
 
     /**
-     * barcode
+     * Barcode
      *
      * @return string
      */
-    public function getBarcode(){
+    public function getBarcode()
+    {
         return $this->_getData(self::BARCODE);
     }
 
@@ -99,16 +119,18 @@ class Barcode  extends \Magento\Framework\Model\AbstractModel implements Barcode
      * @param string $barcode
      * @return $this
      */
-    public function setBarcode($barcode){
+    public function setBarcode($barcode)
+    {
         return $this->setData(self::BARCODE, $barcode);
     }
 
     /**
-     * barcode name
+     * Barcode name
      *
      * @return string|null
      */
-    public function getQty(){
+    public function getQty()
+    {
         return $this->_getData(self::QTY);
     }
 
@@ -118,16 +140,18 @@ class Barcode  extends \Magento\Framework\Model\AbstractModel implements Barcode
      * @param string $qty
      * @return $this
      */
-    public function setQty($qty){
+    public function setQty($qty)
+    {
         return $this->setData(self::QTY, $qty);
     }
 
     /**
-     * barcode product id
+     * Barcode product id
      *
      * @return string|null
      */
-    public function getProductId(){
+    public function getProductId()
+    {
         return $this->_getData(self::PRODUCT_ID);
     }
 
@@ -137,16 +161,18 @@ class Barcode  extends \Magento\Framework\Model\AbstractModel implements Barcode
      * @param string $productId
      * @return $this
      */
-    public function setProductId($productId){
+    public function setProductId($productId)
+    {
         return $this->setData(self::PRODUCT_ID, $productId);
     }
 
     /**
-     * barcode product sku
+     * Barcode product sku
      *
      * @return string|null
      */
-    public function getProductSku(){
+    public function getProductSku()
+    {
         return $this->_getData(self::PRODUCT_SKU);
     }
 
@@ -156,16 +182,18 @@ class Barcode  extends \Magento\Framework\Model\AbstractModel implements Barcode
      * @param string $productSku
      * @return $this
      */
-    public function setProductSku($productSku){
+    public function setProductSku($productSku)
+    {
         return $this->setData(self::PRODUCT_SKU, $productSku);
     }
 
     /**
-     * barcode supplier id
+     * Barcode supplier id
      *
      * @return string|null
      */
-    public function getSupplierId(){
+    public function getSupplierId()
+    {
         return $this->_getData(self::SUPPLIER_ID);
     }
 
@@ -175,16 +203,18 @@ class Barcode  extends \Magento\Framework\Model\AbstractModel implements Barcode
      * @param string $supplierId
      * @return $this
      */
-    public function setSupplierId($supplierId){
+    public function setSupplierId($supplierId)
+    {
         return $this->setData(self::SUPPLIER_ID, $supplierId);
     }
 
     /**
-     * barcode supplier code
+     * Barcode supplier code
      *
      * @return string|null
      */
-    public function getSupplierCode(){
+    public function getSupplierCode()
+    {
         return $this->_getData(self::SUPPLIER_CODE);
     }
 
@@ -194,16 +224,18 @@ class Barcode  extends \Magento\Framework\Model\AbstractModel implements Barcode
      * @param string $supplierCode
      * @return $this
      */
-    public function setSupplierCode($supplierCode){
+    public function setSupplierCode($supplierCode)
+    {
         return $this->setData(self::SUPPLIER_CODE, $supplierCode);
     }
 
     /**
-     * barcode $purchasedId
+     * Barcode $purchasedId
      *
      * @return string|null
      */
-    public function getPurchasedId(){
+    public function getPurchasedId()
+    {
         return $this->_getData(self::PURCHASED_ID);
     }
 
@@ -213,16 +245,18 @@ class Barcode  extends \Magento\Framework\Model\AbstractModel implements Barcode
      * @param string $purchasedId
      * @return $this
      */
-    public function setPurchasedId($purchasedId){
+    public function setPurchasedId($purchasedId)
+    {
         return $this->setData(self::PURCHASED_ID, $purchasedId);
     }
 
     /**
-     * barcode $purchasedTime
+     * Barcode $purchasedTime
      *
      * @return string|null
      */
-    public function getPurchasedTime(){
+    public function getPurchasedTime()
+    {
         return $this->_getData(self::PURCHASED_TIME);
     }
 
@@ -232,17 +266,18 @@ class Barcode  extends \Magento\Framework\Model\AbstractModel implements Barcode
      * @param string $purchasedTime
      * @return $this
      */
-    public function setPurchasedTime($purchasedTime){
+    public function setPurchasedTime($purchasedTime)
+    {
         return $this->setData(self::PURCHASED_TIME, $purchasedTime);
     }
 
-
     /**
-     * barcode $historyId
+     * Barcode $historyId
      *
      * @return string|null
      */
-    public function getCreatedAt(){
+    public function getCreatedAt()
+    {
         return $this->_getData(self::CREATE_AT);
     }
 
@@ -252,10 +287,16 @@ class Barcode  extends \Magento\Framework\Model\AbstractModel implements Barcode
      * @param string $createdAt
      * @return $this
      */
-    public function setCreatedAt($createdAt){
+    public function setCreatedAt($createdAt)
+    {
         return $this->setData(self::CREATE_AT, $createdAt);
     }
 
+    /**
+     * After save
+     *
+     * @return $this|Barcode
+     */
     public function afterSave()
     {
         parent::afterSave();
@@ -266,7 +307,10 @@ class Barcode  extends \Magento\Framework\Model\AbstractModel implements Barcode
             $productTable = $this->getResource()->getTable('catalog_product_entity');
             $this->getResource()->updateUpdatedTimeOfProduct($productTable, $updatedAt, $productId);
 
-            $isEnabledFlatCatalog = $this->scopeConfig->isSetFlag(\Magento\Catalog\Model\Indexer\Product\Flat\State::INDEXER_ENABLED_XML_PATH, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+            $isEnabledFlatCatalog = $this->scopeConfig->isSetFlag(
+                \Magento\Catalog\Model\Indexer\Product\Flat\State::INDEXER_ENABLED_XML_PATH,
+                \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+            );
             if ($isEnabledFlatCatalog) {
                 $storeManagerDataList = $this->storeManager->getStores();
                 foreach ($storeManagerDataList as $store) {

@@ -1,19 +1,27 @@
 <?php
 namespace Magestore\Rewardpoints\Model\ResourceModel;
 
+/**
+ * Transaction model
+ */
 class Transaction extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
 {
     /**
      * @var \Magestore\Rewardpoints\Helper\Customer
      */
-     protected $_helperCustomer;
+    protected $_helperCustomer;
+    /**
+     * @var \Magento\Framework\Stdlib\DateTime\DateTime
+     */
+    protected $_date;
 
     /**
-     * Construct
+     * Transaction constructor.
      *
      * @param \Magento\Framework\Model\ResourceModel\Db\Context $context
      * @param \Magento\Framework\Stdlib\DateTime\DateTime $date
-     * @param string|null $resourcePrefix
+     * @param \Magestore\Rewardpoints\Helper\Customer $helperCustomer
+     * @param null|string $resourcePrefix
      */
     public function __construct(
         \Magento\Framework\Model\ResourceModel\Db\Context $context,
@@ -36,13 +44,16 @@ class Transaction extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
         $this->_init('rewardpoints_transaction', 'transaction_id');
     }
 
-
     /**
-     * import point from CSV
-     * @param type $customers
-     * @throws Exception
+     * Import point from CSV
+     *
+     * @param array $customers
+     * @throws \Exception
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
-    public function importPointFromCsv($customers) {
+    public function importPointFromCsv($customers)
+    {
         $write = $this->getConnection();
         $write->beginTransaction();
         try {
@@ -56,10 +67,11 @@ class Transaction extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
                 } else {
                     $expireDate = date('Y-m-d H:i:s', time() + $expireAfter * 3600 * 24);
                 }
-                if (!$point_amount)
+                if (!$point_amount) {
                     continue;
+                }
                 $store_id = $customerReward->getStoreId();
-                $preTransaction = array(
+                $preTransaction = [
                     'customer_id' => $customer_id,
                     'customer_email' => $customer_email,
                     'title' => __('Import Points Balance from CSV'),
@@ -73,8 +85,8 @@ class Transaction extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
                     'expiration_date' => $expireDate,
                     'created_time' => date('Y-m-d H:i:s', time()),
                     'updated_time' => date('Y-m-d H:i:s', time()),
-                );
-                $preReward = array();
+                ];
+                $preReward = [];
 
                 $rewardAccount = $this->_helperCustomer->getAccountByCustomerId($customer_id);
                 if (!$rewardAccount->getId()) {
@@ -101,13 +113,14 @@ class Transaction extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
                 } else {
                     $preReward['point_balance'] = $point_balance + $point_amount;
                 }
-                if ($preReward['point_balance'] < 0)
+                if ($preReward['point_balance'] < 0) {
                     $preReward['point_balance'] = 0;
+                }
                 $dataTransaction[] = $preTransaction;
                 $write->update($this->getTable('rewardpoints_customer'), $preReward, "customer_id = $customer_id");
                 if (count($dataTransaction) >= 1000) {
                     $write->insertMultiple($this->getTable('rewardpoints_transaction'), $dataTransaction);
-                    $dataTransaction = array();
+                    $dataTransaction = [];
                 }
             }
             if (!empty($dataTransaction)) {
@@ -127,7 +140,8 @@ class Transaction extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
      * @param \Magestore\Rewardpoints\Model\Transaction $transaction
      * @return \Magestore\Rewardpoints\Model\ResourceModel\Transaction
      */
-    public function updatePointUsed($transaction) {
+    public function updatePointUsed($transaction)
+    {
         $totalAmount = -$transaction->getPointAmount();
         if ($totalAmount <= 0) {
             return $this;
@@ -138,17 +152,17 @@ class Transaction extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
 
         // Select all available transactions
         $selectSql = $read->select()->reset()
-            ->from(array('t' => $this->getMainTable()), array('transaction_id', 'point_amount', 'point_used'))
+            ->from(['t' => $this->getMainTable()], ['transaction_id', 'point_amount', 'point_used'])
             ->where('customer_id = ?', $transaction->getCustomerId())
             ->where('point_amount > point_used')
-            ->where('status = ?', \Magestore\RewardPoints\Model\Transaction::STATUS_COMPLETED)
+            ->where('status = ?', \Magestore\Rewardpoints\Model\Transaction::STATUS_COMPLETED)
             ->order(new \Zend_Db_Expr('ISNULL(expiration_date) ASC, expiration_date ASC'));
 
         $trans = $read->fetchAll($selectSql);
         if (empty($trans) || !is_array($trans)) {
             return $this;
         }
-        $usedIds = array();
+        $usedIds = [];
         $lastId = 0;
         $lastUse = 0;
         foreach ($trans as $tran) {
@@ -167,18 +181,18 @@ class Transaction extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
 
         // Update all depend transactions
         if (count($usedIds)) {
-            $write->update($this->getMainTable(), array(
-                'point_used' => new \Zend_Db_Expr('point_amount')
-            ), array(
-                new \Zend_Db_Expr('transaction_id IN ( ' . implode(' , ', $usedIds) . ' )')
-            ));
+            $write->update(
+                $this->getMainTable(),
+                ['point_used' => new \Zend_Db_Expr('point_amount')],
+                [new \Zend_Db_Expr('transaction_id IN ( ' . implode(' , ', $usedIds) . ' )')]
+            );
         }
         if ($lastId) {
-            $write->update($this->getMainTable(), array(
-                'point_used' => new \Zend_Db_Expr((string) $lastUse)
-            ), array(
-                'transaction_id = ?' => $lastId
-            ));
+            $write->update(
+                $this->getMainTable(),
+                ['point_used' => new \Zend_Db_Expr((string) $lastUse)],
+                ['transaction_id = ?' => $lastId]
+            );
         }
 
         return $this;
@@ -186,12 +200,15 @@ class Transaction extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
 
     /**
      * Update real points and point used for holding transaction
-     * by reduce holding transaction real points and increase point used
      *
-     * @param Magestore_RewardPoints_Model_Transaction $transaction
-     * @return Magestore_RewardPoints_Model_Mysql4_Transaction
+     * By reduce holding transaction real points and increase point used
+     *
+     * @param \Magestore\Rewardpoints\Model\Transaction $transaction
+     * @return $this
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function updateRealPointHolding($transaction) {
+    public function updateRealPointHolding($transaction)
+    {
         $totalAmount = -$transaction->getPointAmount();
         if ($totalAmount <= 0) {
             return $this;
@@ -202,20 +219,18 @@ class Transaction extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
 
         // Select all holding transactions
         $selectSql = $read->select()->reset()
-            ->from(array('t' => $this->getMainTable()), array(
-                'transaction_id', 'point_amount', 'point_used'
-            ))
+            ->from(['t' => $this->getMainTable()], ['transaction_id', 'point_amount', 'point_used'])
             ->where('customer_id = ?', $transaction->getCustomerId())
             ->where('order_id = ?', $transaction->getOrderId())
-            ->where('action_type = ?', \Magestore\RewardPoints\Model\Transaction::ACTION_TYPE_EARN)
+            ->where('action_type = ?', \Magestore\Rewardpoints\Model\Transaction::ACTION_TYPE_EARN)
             ->where('point_amount > point_used')
-            ->where('status = ?', \Magestore\RewardPoints\Model\Transaction::STATUS_ON_HOLD);
+            ->where('status = ?', \Magestore\Rewardpoints\Model\Transaction::STATUS_ON_HOLD);
 
         $trans = $read->fetchAll($selectSql);
         if (empty($trans) || !is_array($trans)) {
             return $this;
         }
-        $usedIds = array();
+        $usedIds = [];
         $lastId = 0;
         $lastUse = 0;
         $lastReal = 0;
@@ -236,20 +251,24 @@ class Transaction extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
 
         // Update all depend transactions
         if (count($usedIds)) {
-            $write->update($this->getMainTable(), array(
-                'point_used' => new \Zend_Db_Expr('point_amount'),
-                'real_point' => new \Zend_Db_Expr('0'),
-            ), array(
-                new \Zend_Db_Expr('transaction_id IN ( ' . implode(' , ', $usedIds) . ' )')
-            ));
+            $write->update(
+                $this->getMainTable(),
+                [
+                    'point_used' => new \Zend_Db_Expr('point_amount'),
+                    'real_point' => new \Zend_Db_Expr('0'),
+                ],
+                [new \Zend_Db_Expr('transaction_id IN ( ' . implode(' , ', $usedIds) . ' )')]
+            );
         }
         if ($lastId) {
-            $write->update($this->getMainTable(), array(
-                'point_used' => new \Zend_Db_Expr((string) $lastUse),
-                'real_point' => new \Zend_Db_Expr((string) $lastReal),
-            ), array(
-                'transaction_id = ?' => $lastId
-            ));
+            $write->update(
+                $this->getMainTable(),
+                [
+                    'point_used' => new \Zend_Db_Expr((string) $lastUse),
+                    'real_point' => new \Zend_Db_Expr((string) $lastReal),
+                ],
+                ['transaction_id = ?' => $lastId]
+            );
         }
 
         return $this;
@@ -257,12 +276,15 @@ class Transaction extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
 
     /**
      * Update real points for complete transaction
-     * by reduce complete transaction real points
      *
-     * @param Magestore_RewardPoints_Model_Transaction $transaction
-     * @return Magestore_RewardPoints_Model_Mysql4_Transaction
+     * By reduce complete transaction real points
+     *
+     * @param \Magestore\Rewardpoints\Model\Transaction $transaction
+     * @return $this
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function updateRealPoint($transaction) {
+    public function updateRealPoint($transaction)
+    {
         $totalAmount = -$transaction->getPointAmount();
         if ($totalAmount <= 0) {
             return $this;
@@ -273,19 +295,17 @@ class Transaction extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
 
         // Select all completed transactions
         $selectSql = $read->select()->reset()
-            ->from(array('t' => $this->getMainTable()), array(
-                'transaction_id', 'real_point'
-            ))
+            ->from(['t' => $this->getMainTable()], ['transaction_id', 'real_point'])
             ->where('customer_id = ?', $transaction->getCustomerId())
             ->where('order_id = ?', $transaction->getOrderId())
-            ->where('action_type = ?', \Magestore\RewardPoints\Model\Transaction::ACTION_TYPE_EARN)
+            ->where('action_type = ?', \Magestore\Rewardpoints\Model\Transaction::ACTION_TYPE_EARN)
             ->where('real_point > 0');
 
         $trans = $read->fetchAll($selectSql);
         if (empty($trans) || !is_array($trans)) {
             return $this;
         }
-        $usedIds = array();
+        $usedIds = [];
         $lastId = 0;
         $lastReal = 0;
         foreach ($trans as $tran) {
@@ -303,42 +323,43 @@ class Transaction extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
 
         // Update all depend transactions
         if (count($usedIds)) {
-            $write->update($this->getMainTable(), array(
-                'real_point' => new \Zend_Db_Expr('0')
-            ), array(
-                new \Zend_Db_Expr('transaction_id IN ( ' . implode(' , ', $usedIds) . ' )')
-            ));
+            $write->update(
+                $this->getMainTable(),
+                ['real_point' => new \Zend_Db_Expr('0')],
+                [new \Zend_Db_Expr('transaction_id IN ( ' . implode(' , ', $usedIds) . ' )')]
+            );
         }
         if ($lastId) {
-            $write->update($this->getMainTable(), array(
-                'real_point' => new \Zend_Db_Expr((string) $lastReal),
-            ), array(
-                'transaction_id = ?' => $lastId
-            ));
+            $write->update(
+                $this->getMainTable(),
+                ['real_point' => new \Zend_Db_Expr((string) $lastReal)],
+                ['transaction_id = ?' => $lastId]
+            );
         }
 
         return $this;
     }
 
     /**
-     * increase field expire_email for transactions
+     * Increase field expire_email for transactions
      *
      * @param array $transIds
-     * @return Magestore_RewardPoints_Model_Mysql4_Transaction
+     * @return $this
      */
-    public function increaseExpireEmail($transIds) {
-        $this->_getWriteAdapter()->update($this->getMainTable(), array(
-            'expire_email' => new \Zend_Db_Expr('expire_email + 1')
-        ), array(
-            new \Zend_Db_Expr('transaction_id IN ( ' . implode(' , ', $transIds) . ' )')
-        ));
+    public function increaseExpireEmail($transIds)
+    {
+        $this->_getWriteAdapter()->update(
+            $this->getMainTable(),
+            ['expire_email' => new \Zend_Db_Expr('expire_email + 1')],
+            [new \Zend_Db_Expr('transaction_id IN ( ' . implode(' , ', $transIds) . ' )')]
+        );
         return $this;
     }
 
     /**
      * Retrieve connection for read data
      *
-     * @return Varien_Db_Adapter_Interface
+     * @return \Magento\Framework\DB\Adapter\AdapterInterface
      */
     public function _getReadAdapter()
     {
@@ -353,13 +374,10 @@ class Transaction extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
     /**
      * Retrieve connection for write data
      *
-     * @return Varien_Db_Adapter_Interface
+     * @return \Magento\Framework\DB\Adapter\AdapterInterface
      */
     public function _getWriteAdapter()
     {
         return $this->_getConnection('write');
     }
-
-    
-
 }

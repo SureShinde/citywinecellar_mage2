@@ -13,8 +13,8 @@ use Psr\Log\LoggerInterface as Logger;
 use Magestore\TransferStock\Model\ResourceModel\InventoryTransfer\InventoryTransferProduct\CollectionFactory;
 
 /**
- * Class Collection
- * @package Magestore\TransferStock\Model\ResourceModel\InventoryTransfer\Grid
+ * Inventory tranfer - Grid shortfall collection
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ShortFall extends \Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult
 {
@@ -41,6 +41,7 @@ class ShortFall extends \Magento\Framework\View\Element\UiComponent\DataProvider
 
     /**
      * ShortFall constructor.
+     *
      * @param EntityFactory $entityFactory
      * @param Logger $logger
      * @param FetchStrategy $fetchStrategy
@@ -49,9 +50,12 @@ class ShortFall extends \Magento\Framework\View\Element\UiComponent\DataProvider
      * @param CollectionFactory $collectionFactory
      * @param \Magestore\TransferStock\Model\InventoryTransferFactory $inventoryTransferFactory
      * @param \Magento\Framework\ObjectManagerInterface $objectManager
+     * @param \Magento\Catalog\Model\Product\Type $type
      * @param string $mainTable
      * @param string $resourceModel
+     *
      * @throws \Magento\Framework\Exception\LocalizedException
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
         EntityFactory $entityFactory,
@@ -64,7 +68,7 @@ class ShortFall extends \Magento\Framework\View\Element\UiComponent\DataProvider
         \Magento\Framework\ObjectManagerInterface $objectManager,
         \Magento\Catalog\Model\Product\Type $type,
         $mainTable = 'os_inventorytransfer_product',
-        $resourceModel = 'Magestore\TransferStock\Model\ResourceModel\InventoryTransfer\InventoryTransferProduct'
+        $resourceModel = \Magestore\TransferStock\Model\ResourceModel\InventoryTransfer\InventoryTransferProduct::class
     ) {
         parent::__construct($entityFactory, $logger, $fetchStrategy, $eventManager, $mainTable, $resourceModel);
         $this->request = $request;
@@ -75,9 +79,15 @@ class ShortFall extends \Magento\Framework\View\Element\UiComponent\DataProvider
         $this->prepareCollection();
     }
 
-    public function prepareCollection() {
+    /**
+     * Prepare Collection
+     *
+     * @return ShortFall|void
+     */
+    public function prepareCollection()
+    {
         $inventorytransfer_id = $this->request->getParam('inventorytransfer_id');
-        if(!$inventorytransfer_id) {
+        if (!$inventorytransfer_id) {
             return;
         }
 
@@ -85,29 +95,29 @@ class ShortFall extends \Magento\Framework\View\Element\UiComponent\DataProvider
         $this->getSelect()->where('qty_transferred - qty_received > 0');
         // get image
         $storeManager = \Magento\Framework\App\ObjectManager::getInstance()
-            ->get('Magento\Store\Model\StoreManagerInterface');
+            ->get(\Magento\Store\Model\StoreManagerInterface::class);
         $path = $storeManager->getStore()->getBaseUrl(
             \Magento\Framework\UrlInterface::URL_TYPE_MEDIA
         );
         $path .= 'catalog/product';
         $edition = \Magento\Framework\App\ObjectManager::getInstance()
-            ->get('Magento\Framework\App\ProductMetadataInterface')
+            ->get(\Magento\Framework\App\ProductMetadataInterface::class)
             ->getEdition();
         $rowId = strtolower($edition) == 'enterprise' ? 'row_id' : 'entity_id';
-        /** @var \Magento\Eav\Model\ResourceModel\Entity\Attribute $eavAttribute */
+        /* @var \Magento\Eav\Model\ResourceModel\Entity\Attribute $eavAttribute */
         $eavAttribute = \Magento\Framework\App\ObjectManager::getInstance()
-            ->create('Magento\Eav\Model\ResourceModel\Entity\Attribute');
+            ->create(\Magento\Eav\Model\ResourceModel\Entity\Attribute::class);
         $productImagesAttributeId = $eavAttribute->getIdByCode(\Magento\Catalog\Model\Product::ENTITY, 'thumbnail');
         $this->getSelect()->joinLeft(
-            array('catalog_product_entity_varchar_img' => $this->getTable('catalog_product_entity_varchar')),
+            ['catalog_product_entity_varchar_img' => $this->getTable('catalog_product_entity_varchar')],
             "main_table.product_id = catalog_product_entity_varchar_img.$rowId && 
                 catalog_product_entity_varchar_img.attribute_id = $productImagesAttributeId && 
                 catalog_product_entity_varchar_img.store_id = 0",
-            array('')
-        )->columns(array(
+            ['']
+        )->columns([
             'image' => 'catalog_product_entity_varchar_img.value',
             'image_url' => 'CONCAT("'.$path.'", catalog_product_entity_varchar_img.value)'
-        ));
+        ]);
 
         $resource = $this->getResource();
 
@@ -125,15 +135,18 @@ class ShortFall extends \Magento\Framework\View\Element\UiComponent\DataProvider
         return $collection;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getData()
     {
         $data = parent::getData();
-        if($this->request->getParam('inventorytransfer_id')) {
+        if ($this->request->getParam('inventorytransfer_id')) {
             /** @var \Magento\Catalog\Helper\Image $imageCalalogHelper */
             $imageCalalogHelper = $this->_objectManager->get(\Magento\Catalog\Helper\Image::class);
             $productTypes = $this->type->getOptionArray();
             foreach ($data as &$item) {
-                if(isset($productTypes[$item['type_id']])) {
+                if (isset($productTypes[$item['type_id']])) {
                     $item['type_id'] = $productTypes[$item['type_id']];
                 }
                 $item['qty_transferred'] = (float)$item['qty_transferred'];

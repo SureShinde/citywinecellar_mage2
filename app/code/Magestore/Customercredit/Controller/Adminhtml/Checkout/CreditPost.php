@@ -24,9 +24,15 @@ namespace Magestore\Customercredit\Controller\Adminhtml\Checkout;
 
 use Magento\Backend\App\Action\Context;
 use Magento\Directory\Model\PriceCurrency;
+use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\View\Result\PageFactory;
 
-class CreditPost extends \Magento\Backend\App\Action
+/**
+ * Class CreditPost
+ *
+ * Checkout credit post controller
+ */
+class CreditPost extends \Magento\Backend\App\Action implements HttpPostActionInterface
 {
     /**
      * @var PageFactory
@@ -55,13 +61,16 @@ class CreditPost extends \Magento\Backend\App\Action
      * @var \Magento\Framework\Json\Helper\Data
      */
     protected $_helperJson;
+
     /**
+     * CreditPost constructor.
+     *
      * @param Context $context
      * @param PageFactory $resultPageFactory
      * @param \Magento\Backend\Model\Session\Quote $sessionQuote
      * @param \Magento\Checkout\Model\Session $checkoutSession
      * @param \Magento\Framework\Json\Helper\Data $helperJson
-     * @param PriceCurrency $priceCurrency
+     * @param \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency
      * @param \Magestore\Customercredit\Model\CustomercreditFactory $customercreditFactory
      */
     public function __construct(
@@ -72,8 +81,7 @@ class CreditPost extends \Magento\Backend\App\Action
         \Magento\Framework\Json\Helper\Data $helperJson,
         \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency,
         \Magestore\Customercredit\Model\CustomercreditFactory $customercreditFactory
-    )
-    {
+    ) {
         parent::__construct($context);
         $this->_sessionQuote = $sessionQuote;
         $this->_checkoutSession = $checkoutSession;
@@ -84,31 +92,30 @@ class CreditPost extends \Magento\Backend\App\Action
     }
 
     /**
-     * Index action
-     *
-     * @return \Magento\Backend\Model\View\Result\Page
+     * @inheritDoc
      */
     public function execute()
     {
         $request = $this->getRequest();
         $session = $this->_checkoutSession;
-        $result = array();
+        $result = [];
 
         $customer_id = $this->_sessionQuote->getCustomerId();
         $credit_available = $this->_creditModel->create()->load($customer_id, 'customer_id')->getCreditBalance();
 
         if ($request->isPost()) {
             $creditvalue = $request->getParam('credit_value');
-            if($creditvalue <= $credit_available) {
+            if ($creditvalue <= $credit_available) {
                 $this->_checkoutSession->setData('customer_credit_amount_entered', $creditvalue);
                 $creditvalue = $creditvalue / $this->priceCurrency->convert(1, false, false);
-                if ($creditvalue < 0.0001)
+                if ($creditvalue < 0.0001) {
                     $creditvalue = 0;
+                }
                 $session->setCustomerCreditAmount($creditvalue);
                 $this->_checkoutSession->setUseCustomerCredit(true);
                 $result['creditvalue'] = $this->_checkoutSession->getCreditdiscountAmount();
             }
         }
-        $this->getResponse()->setBody($this->_helperJson->jsonEncode($result));
+        return $this->getResponse()->setBody($this->_helperJson->jsonEncode($result));
     }
 }
