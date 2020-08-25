@@ -8,6 +8,7 @@
         <arguments>
             <argument name="commands" xsi:type="array">
                 <item name="import_amasty_rates" xsi:type="object">Laconica\Catalog\Console\Command\ImportAmastyRates</item>
+                <item name="la_catalog_update_product" xsi:type="object">Laconica\Catalog\Console\Command\UpdateProduct</item>
             </argument>
         </arguments>
     </type>
