@@ -796,6 +796,23 @@ ul {
           }
     }
 
+    #minusQty, #addQty {
+        display: none;
+        vertical-align: middle;
+        width: 22px;
+        height: 31px;
+        font-size: 22px;
+        background-color: #562e37;
+        color: #fff;
+        text-align: center;
+        cursor: pointer;
+        line-height: 30px;
+        font-weight: bold;
+        @media (max-width: 900px) {
+            display: inline-block;
+        }
+    }
+
     .product.left {
         float: left;
         width: 30%;
@@ -882,6 +899,7 @@ ul {
                          width: 100px;
                          height: 35px;
                          border: none;
+                         vertical-align: middle;
                      }
                  }
              }

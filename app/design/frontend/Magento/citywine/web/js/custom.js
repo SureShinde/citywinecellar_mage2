@@ -33,6 +33,17 @@ require([
         });
 
 
+        $('#minusQty').click(function () {
+            $('#qty').val(parseInt($('#qty').val())-1);
+            if($('#qty').val() < 0) $('#qty').val("0");
+        });
+
+            $('#addQty').click(function () {
+                $('#qty').val(parseInt($('#qty').val())+1);
+            });
+
+
+
         // newsletter Popup
 
         $(".newsletter a, .newsletter-overlay, .newsletter-close").click(function(event){
