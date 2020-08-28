@@ -257,6 +257,7 @@ class ComposerStaticInitfabeccfb0b2fd0dfa4b82eda2300a2fd
         '3109cb1a231dcd04bee1f9f620d46975' => __DIR__ . '/..' . '/paragonie/sodium_compat/autoload.php',
         'aa75ea0761a2f40c1f3b32ad314f86c4' => __DIR__ . '/..' . '/phpseclib/mcrypt_compat/lib/mcrypt.php',
         '153a7817726e1caca4e6c3b7bc76f329' => __DIR__ . '/..' . '/temando/module-shipping-m2/registration.php',
+        'b84fe13d49a553e659e2c529c4c028c3' => __DIR__ . '/..' . '/hps/heartland-php/Hps.php',
         'b9aadd33005ad499392449d63f246638' => __DIR__ . '/..' . '/klaviyo/magento2-extension/registration.php',
         'eda65932675b68b5aee4503e0762d64d' => __DIR__ . '/..' . '/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/_bootstrap.php',
         'b4cf39431a4b949eea8aa69ebb3d39da' => __DIR__ . '/../..' . '/app/etc/NonComposerComponentRegistration.php',

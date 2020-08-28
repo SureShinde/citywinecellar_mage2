@@ -11,6 +11,7 @@
         "sort-packages": true
     },
     "require": {
+        "hps/heartland-php": "^3.0",
         "hybridauth/hybridauth": "^2.15.1",
         "klaviyo/magento2-extension": "^1.2",
         "magento/product-community-edition": "2.3.1",
