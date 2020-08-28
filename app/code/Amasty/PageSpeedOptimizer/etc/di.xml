@@ -13,20 +13,20 @@
     <preference for="Amasty\PageSpeedOptimizer\Api\ImageSettingRepositoryInterface" type="Amasty\PageSpeedOptimizer\Model\Image\Repository"/>
     <preference for="Amasty\PageSpeedOptimizer\Api\Data\ImageSettingInterface" type="Amasty\PageSpeedOptimizer\Model\Image\ImageSetting"/>
 
-    <type name="Magento\Framework\Console\CommandList">
-        <arguments>
-            <argument name="commands" xsi:type="array">
-                <item name="amopt_optimize" xsi:type="object">Amasty\PageSpeedOptimizer\Console\Command\OptimizeCommand2</item>
-            </argument>
-        </arguments>
-    </type>
+<!--    <type name="Magento\Framework\Console\CommandList">-->
+<!--        <arguments>-->
+<!--            <argument name="commands" xsi:type="array">-->
+<!--                <item name="amopt_optimize" xsi:type="object">Amasty\PageSpeedOptimizer\Console\Command\OptimizeCommand2</item>-->
+<!--            </argument>-->
+<!--        </arguments>-->
+<!--    </type>-->
 
-    <type name="Amasty\PageSpeedOptimizer\Console\Command\OptimizeCommand2">
-        <arguments>
-            <argument name="configProvider" xsi:type="object">Amasty\PageSpeedOptimizer\Model\ConfigProvider\Proxy</argument>
-            <argument name="optimizeCommand" xsi:type="object">Amasty\PageSpeedOptimizer\Console\Command\Operation\Optimize\Proxy</argument>
-        </arguments>
-    </type>
+<!--    <type name="Amasty\PageSpeedOptimizer\Console\Command\OptimizeCommand2">-->
+<!--        <arguments>-->
+<!--            <argument name="configProvider" xsi:type="object">Amasty\PageSpeedOptimizer\Model\ConfigProvider\Proxy</argument>-->
+<!--            <argument name="optimizeCommand" xsi:type="object">Amasty\PageSpeedOptimizer\Console\Command\Operation\Optimize\Proxy</argument>-->
+<!--        </arguments>-->
+<!--    </type>-->
 
     <preference for="Amasty\PageSpeedOptimizer\Model\Output\OutputChainInterface" type="Amasty\PageSpeedOptimizer\Model\Output\OutputChain"/>
     <type name="Amasty\PageSpeedOptimizer\Model\Output\OutputChain">
