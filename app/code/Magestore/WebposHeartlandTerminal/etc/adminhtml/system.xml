@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+
+<!--
+  ~ Copyright © 2018 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="webpos">
+            <group id="payment">
+                <group id="heartlandterminal" translate="label" sortOrder="100" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Heartland Terminal</label>
+                    <field id="enable" translate="label" sortOrder="10" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Enabled</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    </field>
+                    <field id="title" translate="label" sortOrder="20" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Title</label>
+                        <validate>required-entry</validate>
+                        <depends>
+                            <field id="*/*/*/enable">1</field>
+                        </depends>
+                    </field>
+                    <field id="sort_order" translate="label" sortOrder="90" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Sort Order</label>
+                        <depends>
+                            <field id="*/*/*/enable">1</field>
+                        </depends>
+                    </field>
+                </group>
+            </group>
+        </section>
+    </system>
+</config>

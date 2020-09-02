@@ -132,44 +132,12 @@ class PrintBarcode extends \Magestore\BarcodeSuccess\Controller\Adminhtml\Abstra
         if(isset($templateId)){
             $template = $this->helper->getModel('Magestore\BarcodeSuccess\Api\Data\BarcodeTemplateInterface');
             $this->templateResource->load($template, $templateId);
-            //CUSTOM CODE
-            if ($template->getName() == 'Print barcode with price') {
-                return $this->getCustomResult($barcodeCollection, $resultJson);
-            }
-            //END CUSTOM CODE
             $data = $template->getData();
             $block->setData('template_data', $data);
         }
         $html .= $block->toHtml();
         $resultJson->setData([
             'html' => $html,
-            'success' => true
-        ]);
-        return $resultJson;
-    }
-
-    /**
-     * @param $barcodeCollection
-     * @param $resultJson
-     * @return mixed
-     */
-    protected function getCustomResult($barcodeCollection, $resultJson)
-    {
-        $barcodes = [];
-        foreach ($barcodeCollection as $barcodeModel) {
-            $barcodes[] = $barcodeModel->getBarcode();
-        }
-
-        $this->getRequest()->setParams(['barcodes' => $barcodes]);
-
-        $block = $this->createBlock(
-            'Laconica\BarcodeSuccess\Block\Product\View\BarcodePrint',
-            '',
-            'Laconica_BarcodeSuccess::barcode/print/template.phtml'
-        );
-
-        $resultJson->setData([
-            'html' => $block->toHtml(),
             'success' => true
         ]);
         return $resultJson;

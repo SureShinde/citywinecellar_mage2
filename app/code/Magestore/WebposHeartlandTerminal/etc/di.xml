@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ Copyright © 2018 Magestore. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Magestore\WebposHeartlandTerminal\Api\TerminalServiceInterface" type="Magestore\WebposHeartlandTerminal\Model\TerminalService"/>
+    <preference for="Magestore\WebposHeartlandTerminal\Api\Data\ConnectedReaderInterface" type="Magestore\WebposHeartlandTerminal\Model\ConnectedReader\ConnectedReader" />
+    <preference for="Magestore\WebposHeartlandTerminal\Api\ConnectedReaderRepositoryInterface" type="Magestore\WebposHeartlandTerminal\Model\ConnectedReader\ConnectedReaderRepository" />
+    <preference for="Magestore\WebposHeartlandTerminal\Api\Data\ConnectedReaderSearchResultsInterface" type="Magestore\WebposHeartlandTerminal\Model\ResourceModel\ConnectedReader\Collection" />
+    <!-- Config -->
+    <type name="Magestore\Webpos\Model\Config\Config">
+        <plugin name="webpos_heartlandterminal_config" type="Magestore\WebposHeartlandTerminal\Plugin\Data\Config" />
+    </type>
+    <!-- Config -->
+    <type name="Magestore\Payment\Model\Payment\Type\TerminalPayments">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="heartlandterminal_integration" xsi:type="string">heartlandterminal_integration</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magestore\WebposHeartlandTerminal\Model\ConnectedReader\ConnectedReader">
+        <arguments>
+            <argument name="resource" xsi:type="object">Magestore\WebposHeartlandTerminal\Model\ResourceModel\ConnectedReader</argument>
+            <argument name="resourceCollection" xsi:type="object">Magestore\WebposHeartlandTerminal\Model\ResourceModel\ConnectedReader\Collection</argument>
+        </arguments>
+    </type>
+    <type name="Magestore\Payment\Model\Payment\Type\InternetTerminalPayments">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="heartlandterminal_integration" xsi:type="string">heartlandterminal_integration</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magestore\Payment\Model\Payment\Type\PreventCancelOrderRulePayments">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="heartlandterminal_integration" xsi:type="string">heartlandterminal_integration</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magestore\Payment\Model\Payment\RefundType\AcceptedPayments">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="heartlandterminal_integration" xsi:type="string">heartlandterminal_integration</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magestore\Payment\Model\Payment\RefundType\UseTransactionPayments">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="heartlandterminal_integration" xsi:type="string">heartlandterminal_integration</item>
+            </argument>
+        </arguments>
+    </type>
+</config>
