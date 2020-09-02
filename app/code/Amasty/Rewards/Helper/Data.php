@@ -32,6 +32,8 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
 
     const ADMIN_ACTION = 'admin';
 
+    const TRANSFER_ACTION = 'transfer'; // CUSTOM CODE
+
     const REWARDS_SPEND_ACTION = 'rewards_spend';
 
     const REWARDS_EXPIRED_ACTION = 'rewards_expired';
