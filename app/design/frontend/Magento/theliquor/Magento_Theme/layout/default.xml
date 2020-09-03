@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+
+
+        <referenceContainer name="header.container">
+            <container name="header.panel.wrapper" htmlClass="panel wrapper" htmlTag="div" after="-">
+                <container name="header.panel" label="Page Header Panel" htmlTag="div" htmlClass="panel bottom">
+
+                </container>
+            </container>
+            <container name="top.right" label="Page Header" as="top.right" htmlTag="div" htmlClass="top-right">
+                <block class="Magento\Cms\Block\Block" name="profile-top">
+                    <arguments>
+                        <argument name="block_id" xsi:type="string">profile-top</argument>
+                    </arguments>
+                </block>
+            </container>
+        </referenceContainer>
+
+        <referenceContainer name="footer-container">
+            <container name="footer" as="footer" label="Page Footer" htmlTag="div" htmlClass="footer content">
+                <block class="Magento\Cms\Block\Block" name="footer-left">
+                    <arguments>
+                        <argument name="block_id" xsi:type="string">footer-left</argument>
+                    </arguments>
+                </block>
+                <block class="Magento\Cms\Block\Block" name="footer-right">
+                    <arguments>
+                        <argument name="block_id" xsi:type="string">footer-right-tls</argument>
+                    </arguments>
+                </block>
+            </container>
+        </referenceContainer>
+
+
+        <referenceBlock name="top.links" remove="true"/>
+        <referenceBlock name="navigation.sections" remove="true"/>
+        <referenceBlock name="footer_links" remove="true"/>
+        <referenceBlock name="copyright" remove="true"/>
+        <referenceBlock name="report.bugs" remove="true"/>
+        <referenceBlock name="div.sidebar.additional" remove="true"/>
+        <move element="top.right" destination="header-wrapper" />
+        <move element="minicart" destination="top.right"/>
+        <move element="profile-top" destination="top.right" after="minicart"/>
+        <move element="top.search" destination="header-wrapper" before="-"/>
+        <move element="store.menu" destination="header.panel"  after="-"/>
+        <referenceBlock name="catalog.compare.sidebar" remove="true"/>
+        <referenceBlock name="wishlist_sidebar" remove="true" />
+
+
+
+
+
+    </body>
+</page>
+
+
