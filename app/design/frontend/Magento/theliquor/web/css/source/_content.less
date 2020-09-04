@@ -214,6 +214,7 @@ a.btn {
     top: 20%;
     padding: 10px 30px;
     left: calc(50% - 245px);
+    background: rgba(255,255,250,0.6);
 }
 .home-module .info-box.to-right {
     right: 7%;
@@ -226,7 +227,7 @@ a.btn {
     }
 }
 .home-module .info-box .tit {
-    font-family: "Josefin Sans",arial, sans-serif;
+    font-family: "Roboto",Arial,sans-serif;
     font-weight: 600;
     font-weight: normal;
     font-style: normal;
@@ -234,25 +235,6 @@ a.btn {
     line-height: 36px;
     color: white;
     letter-spacing: 1px;
-}
-.home-module .info-box .desc {
-    margin-top: 30px;
-    font-family: "Roboto",Arial,sans-serif;
-    font-style: normal;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    font-size: 16px;
-    line-height: 19px;
-    color: white;
-    letter-spacing: 0;
-    font-weight: 300;
-    @media (max-width: 767px) {
-        display: none;
-    }
-}
-.home-module .info-box.to-right .desc {
-    float: right;
-    clear: both;
 }
 .home-module .info-box .reviewer {
     font-family: "Roboto",Arial,sans-serif;
@@ -387,11 +369,6 @@ a.btn {
 .big-banner {
     position: relative;
 }
-
-.home-module .hero-slider .info-box, .home-module .big-banner .info-box {
-    max-width: 700px;
-    width: auto;
-}
 .cms-index-index {
     .hero-slider {
         @media (max-width: 1500px) {
@@ -403,7 +380,6 @@ a.btn {
 
 .home-module .info-box.to-left {
     left: 10%;
-    text-align: left;
     @media (max-width: 767px) {
         text-align: center;
         left: 0;
@@ -420,72 +396,60 @@ a.btn {
         display: inline-block;
         vertical-align: top;
         width: 24%;
-        padding: 50px 1% 30px;
+        padding: 50px 1% 0;
+        height: 380px;
+        margin-bottom: 100px;
         @media (max-width: 840px) {
             width: 49%;
+            margin-bottom: 150px;
+            height: 380px;
         }
         @media (max-width: 630px) {
-            padding: 0 1% 0;
-        }
-        @media (max-width: 450px) {
-            width: 100%;
+            height: 180px;
         }
     }
     .wines-top {
         text-align: center;
-        border-top: 1px solid #e8e8e8;
-        padding: 40px 6%;
-        min-height: 300px;
-        height: auto;
-        border-bottom: 1px solid #e8e8e8;
-    }
-    .wine-top-fly {
-        position: relative;
-        min-height: 300px;
-        @media (max-width: 450px) {
-            min-height: 200px;
+        border-top: 1px solid #e7e7e7;
+        border-left: 1px solid #e7e7e7;
+        border-right: 1px solid #e7e7e7;
+        padding: 6%;
+        height: 380px;
+        @media (max-width: 1200px) {
+            height: 420px;
+        }
+        @media (max-width: 840px) {
+            height: 380px;
+        }
+        @media (max-width: 640px) {
+            height: 165px;
         }
     }
-    img {
-        max-width: 60px;
-        margin: auto;
-    }
     .wines-top-title {
-        font-family: "Josefin Sans",arial, sans-serif;
-        font-weight: 600;
+        font-family: "Lora",serif;
         font-weight: normal;
         font-style: normal;
-        font-size: 24px;
+        font-size: 34px;
         line-height: 36px;
-        color: black;
+        color: #572f38;
         letter-spacing: 1px;
     }
     .wines-desc {
         font-family: "Roboto",Arial,sans-serif;
-        font-weight: 300;
+        font-weight: normal;
         font-style: normal;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         font-size: 14px;
         line-height: 17px;
-        color: black;
+        color: #999;
         letter-spacing: 0;
-        margin-top: 10px;
-    }
-}
-
-.wines .wines-cta {
-    margin: 30px auto 0;
-    border-color: black;
-    color: black;
-    display: block;
-    &:hover {
-        color: white;
     }
 }
 
 .home-module .product-slide .info-box .tit.big {
     font-size: 60px;
+    color: #fff;
     small {
         font-weight: bold;
         line-height: 1;
@@ -502,23 +466,6 @@ a.btn {
         font-size: 39px;
         padding-top: 0;
         margin-top: 0;
-    }
-}
-.home-module .product-slide .info-box .desc {
-    margin-top: 30px;
-    font-family: "Roboto",Arial,sans-serif;
-    font-style: normal;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    font-size: 28px;
-    line-height: 34px;
-    color: white;
-    letter-spacing: 0;
-    font-weight: 600;
-    @media (max-width: 1300px) {
-        margin-top: 6px;
-        font-size: 18px;
-        line-height: 19px;
     }
 }
 .home-module .product-slide {
@@ -551,13 +498,12 @@ ul {
 }
 
 .product-slider .product-slider-title {
-    font-family: "Josefin Sans",arial, sans-serif;
-    font-weight: 600;
+    font-family: "Lora",serif;
     font-weight: normal;
     font-style: normal;
-    font-size: 22px;
+    font-size: 34px;
     line-height: 36px;
-    color: black;
+    color: #572f38;
     letter-spacing: 1px;
     text-align: center;
     width: 40%;
@@ -565,20 +511,19 @@ ul {
 }
 .product-slider .product-slider-desc {
     width: 60%;
-    margin: 10px auto 30px;
+    margin: 20px auto 30px;
     font-family: "Roboto",Arial,sans-serif;
-    font-weight: 300;
+    font-weight: normal;
     font-style: normal;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-size: 14px;
     line-height: 17px;
-    color: black;
+    color: #666;
     letter-spacing: 0;
     text-align: center;
 }
 .home-module .product-slide .info-box {
-    top: 10%;
     @media (max-width: 1300px) {
         top: 4%;
     }
@@ -696,7 +641,7 @@ ul {
 
 .catalog-category-view {
     h1.page-title {
-        font-family: "Josefin Sans",arial, sans-serif;
+        font-family: "Roboto",Arial,sans-serif;
         font-style: normal;
         line-height: 36px;
         color: #7C0040;
@@ -770,7 +715,7 @@ ul {
 }
 .account {
     .page-title {
-        font-family: "Josefin Sans",arial, sans-serif;
+        font-family: "Roboto",Arial,sans-serif;
         font-weight: 600;
         font-weight: normal;
         font-style: normal;
@@ -1485,7 +1430,7 @@ ul {
     }
   &.cms-contacts h1 {
         display: block !important;
-        font-family: "Josefin Sans",arial, sans-serif;
+        font-family: "Roboto",Arial,sans-serif;
         font-weight: normal;
         font-style: normal;
         font-size: 25px;
@@ -1523,32 +1468,7 @@ ul {
     visibility: visible;
     opacity: 1; }
 
-.home-module {
-    /*.big-banner:after{
-          position: absolute;
-          width: 100%;
-          content: "";
-          top: 6px;
-          left: 0;
-          border-top: 3px solid hsl(0, 0%, 100%);
-      }*/ }
-.home-module .hero-slider, .home-module .big-banner {
-    /*.slick-slide.slick-active:after{
-		    position: absolute;
-		    width: 100%;
-		    content: "";
-		    top: 6px;
-		    left: 0;
-		    border-top: 3px solid hsl(0, 0%, 100%);
-		}*/ }
-.home-module .hero-slider .info-box, .home-module .big-banner .info-box {
-    max-width: 700px;
-    width: auto; }
-.home-module .hero-slider .info-box .desc, .home-module .big-banner .info-box .desc {
-    max-width: 350px; }
 .home-module .info-box {
-    visibility: hidden;
-    opacity: 0;
     transition: visibility 0.5s,opacity 0.5s;
     text-align: center;
     z-index: 10;
@@ -1556,14 +1476,29 @@ ul {
     /*background: rgba(255, 255, 250, 0.6);*/
     position: absolute;
     top: 20%;
-    padding: 10px 30px;
+    padding: 50px 70px;
     left: calc(50% - 245px); }
+.home-module .info-box .desc {
+    margin-top: 30px;
+    font-family: "Roboto", Arial, sans-serif;
+    font-weight: normal;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 14px;
+    line-height: 17px;
+    color: black;
+    letter-spacing: 0;
+}
+.home-module .info-box .points {
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 1.2;
+}
+
 @media (max-width: 840px) {
     .home-module .info-box {
         top: 10%; } }
-.home-module .info-box.to-right .desc {
-    float: right;
-    clear: both; }
 .home-module .info-box.to-right .cta-filling {
     clear: both;
     display: block;
@@ -1574,12 +1509,12 @@ ul {
 .home-module .info-box.to-right {
     right: 10%;
     left: auto;
-    text-align: right; }
+    text-align: center; }
 .home-module .info-box.to-left {
     left: 10%;
-    text-align: left; }
+ }
 .home-module .info-box .tit {
-    font-family: "Josefin Sans",arial, sans-serif;
+    font-family: "Roboto",Arial,sans-serif;
     font-weight: 600;
     font-weight: normal;
     font-style: normal;
@@ -1590,19 +1525,6 @@ ul {
 @media (max-width: 640px) {
     .home-module .info-box .tit {
         font-size: 20px; } }
-.home-module .info-box .desc {
-    margin-top: 30px;
-    /*font-family:  "Neuzeit Grot Regular", Arial, serif;*/
-    font-family: "Josefin Sans", Arial, sans-serif;
-    font-weight: 300;
-    font-style: normal;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    font-size: 16px;
-    line-height: 19px;
-    color: white;
-    letter-spacing: 0;
-    font-weight: 300; }
 @media (max-width: 640px) {
     .home-module .info-box .desc {
         font-size: 16px;
@@ -1653,21 +1575,6 @@ ul {
     .home-module .info-box .tit, .home-module .info-box.to-right .tit, .home-module .info-box.to-left .tit {
         position: relative;
         top: 4%; } }
-.home-module .product-slide .info-box {
-    top: 10%; }
-.home-module .product-slide .info-box .desc {
-    margin-top: 15px;
-    /*font-family:  "Neuzeit Grot Regular", Arial, serif;*/
-    font-family: "Josefin Sans", Arial, sans-serif;
-    font-weight: 300;
-    font-style: normal;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    font-size: 28px;
-    line-height: 34px;
-    color: white;
-    letter-spacing: 0;
-    font-weight: 600; }
 @media (max-width: 640px) {
     .home-module .product-slide .info-box .desc {
         font-size: 16px;
@@ -1792,30 +1699,11 @@ ul {
         margin-bottom: 50px; } }
 
 .wines {
-    padding: 0 5% 5%; }
-.wines .wine-block {
-    display: inline-block;
-    vertical-align: top;
-    width: 24%;
-    /*height: 380px;
-		@include respond-to(max-width, 1200px) {
-			height: 420px;
-		}
-		@include respond-to(max-width, 840px) {
-			height: 380px;
-		}
-		@include respond-to(max-width, $resMobileWidth) {
-			height: 180px;
-		}*/ }
-@media (max-width: 840px) {
-    .wines .wine-block {
-        width: 49%;
-        /*margin-bottom: 150px;*/ } }
-@media (min-width: 640px) {
-    .wines .wine-block {
-        padding: 50px 1% 30px; } }
+    padding: 5%;
+}
+
 .wines .wines-top-title {
-    font-family: "Josefin Sans",arial, sans-serif;
+    font-family: "Roboto",Arial,sans-serif;
     font-weight: 600;
     font-weight: normal;
     font-style: normal;
@@ -1826,45 +1714,69 @@ ul {
 @media (max-width: 640px) {
     .wines .wines-top-title {
         font-size: 20px; } }
-.wines .wines-desc {
-    /*font-family:  "Neuzeit Grot Regular", Arial, serif;*/
-    font-family: "Josefin Sans", Arial, sans-serif;
-    font-weight: 300;
-    font-style: normal;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    font-size: 14px;
-    line-height: 17px;
-    color: black;
-    letter-spacing: 0; }
 @media (max-width: 640px) {
     .wines .wines-desc {
         font-size: 16px;
         line-height: 20px; } }
-.wines .wines-cta {
-    margin: 30px auto 0;
-    border-color: black;
-    color: black;
-    display: block; }
+
 .wines .wines-cta:hover {
     color: white; }
-.wines .wines-top {
+    .home-module .info-box .tit {
+        font-family: "Lora",serif;
+        font-weight: normal;
+        font-style: normal;
+        font-size: 34px;
+        line-height: 36px;
+        color: #572f38;
+        letter-spacing: 1px;
+        font-weight: bold;
+    }
+.cta {
+    display: block;
+    cursor: pointer;
     text-align: center;
-    border-top: 1px solid #e8e8e8;
-    padding: 40px 6%;
-    min-height: 300px;
-    height: auto;
-    border-bottom: 1px solid #e8e8e8;
-    /*height: 380px;
-		@include respond-to(max-width, 1200px) {
-			height: 420px;
-		}
-		@include respond-to(max-width, 840px) {
-			height: 380px;
-		}
-		@include respond-to(max-width, $resMobileWidth) {
-			height: 165px;
-		}*/ }
+    text-transform: uppercase;
+    padding: 0;
+    width: 120px;
+    background: white;
+    border: 1px solid #ccc;
+    line-height: 35px;
+    font-size: 1em;
+    font-family: "Roboto",Arial,sans-serif;
+    font-weight: normal;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 12px;
+    line-height: 33px;
+    color: #666;
+    letter-spacing: 0.05em;
+    color: #666;
+    transition: all 0.45s;
+    -moz-transition: all 0.45s;
+    -webkit-transition: all 0.45s;
+    -ms-transition: all 0.45s;
+    -o-transition: all 0.45s;
+}
+    .home-module .info-box .cta {
+        background-color: #572f38;
+        margin: 30px auto 0;
+        color: white;
+        border: none;
+        padding: 5px 0;
+        display: block;
+        width: 200px;
+        font-size: 12px;
+        line-height: 33px;
+        text-align: center;
+    }
+.wines .wines-cta {
+    background-color: #562e37;
+    color: white;
+    border: none;
+    width: 100%;
+    padding: 5px 0;
+}
 .wines .wines-top-title {
     margin-top: 20px; }
 .wines .wines-desc {
@@ -1873,26 +1785,10 @@ ul {
     .wines .wines-desc {
         display: none; } }
 .wines .wine-top-fly {
-    position: relative; }
-@media (min-width: 640px) {
-    .wines .wine-top-fly {
-        min-height: 300px; } }
-.wines .wine-top-fly img {
-    max-width: 60px;
-    margin: auto; }
+    position: relative;
+    bottom: 100px;
+}
 
-.product-slider .product-slider-title {
-    font-family: "Josefin Sans",arial, sans-serif;
-    font-weight: 600;
-    font-weight: normal;
-    font-style: normal;
-    font-size: 22px;
-    line-height: 36px;
-    color: black;
-    letter-spacing: 1px;
-    text-align: center;
-    width: 40%;
-    margin: auto; }
 @media (max-width: 640px) {
     .product-slider .product-slider-title {
         font-size: 20px; } }
@@ -1900,21 +1796,6 @@ ul {
     .product-slider .product-slider-title {
         width: 70%;
         margin-bottom: 20px; } }
-
-.product-slider .product-slider-desc {
-    width: 60%;
-    margin: 10px auto 30px;
-    /*font-family:  "Neuzeit Grot Regular", Arial, serif;*/
-    font-family: "Josefin Sans", Arial, sans-serif;
-    font-weight: 300;
-    font-style: normal;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    font-size: 14px;
-    line-height: 17px;
-    color: black;
-    letter-spacing: 0;
-    text-align: center; }
 @media (max-width: 640px) {
     .product-slider .product-slider-desc {
         font-size: 16px;
