@@ -59,6 +59,7 @@
         <move element="filter.link" destination="content" before="category.products"/>
 
 
+        <referenceBlock name="category.product.addto" remove="true" />
 
     </body>
 </page>

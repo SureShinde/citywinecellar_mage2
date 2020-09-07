@@ -558,7 +558,7 @@ ul {
                 overflow: hidden;
                 text-align: center;
                 padding: 10px;
-                .product-image-photo {
+                .product-image-container {
                     transition: transform 0.45s;
                     -moz-transition: transform 0.45s;
                     -webkit-transition: transform 0.45s;
@@ -619,16 +619,22 @@ ul {
     }
 .page-wrapper>.breadcrumbs {
     padding: 15px 0;
-    text-align: center;
-    font-size: 16px;
+    letter-spacing: 0.05em;
+    line-height: 20px;
+    color: #999;
+    font-size: 11px;
+    margin-top: 10px;
     ul.items {
-        font-size: 16px;
+      color: #999;
+      font-size: 11px;
         a, li {
-            font-size: 16px;
+          color: #999;
+          font-size: 11px;
+            line-height: 20px;
             strong {
-                font-size: 0.9166em;
-                color: #212121;
-                font-weight: normal;
+              font-size: 11px;
+              color: #212121;
+              font-weight: normal;
             }
         }
         .item:not(:last-child):after {
@@ -641,16 +647,24 @@ ul {
 
 .catalog-category-view {
     h1.page-title {
-        font-family: "Roboto",Arial,sans-serif;
+        font-family: "Lora",serif;
+        font-weight: normal;
         font-style: normal;
-        line-height: 36px;
-        color: #7C0040;
+        color: #572f38;
         letter-spacing: 1px;
         font-size: 27px;
         text-align: center;
         margin: 20px auto 30px;
-        font-weight: 600;
+        line-height: 36px;
         display: block !important;
+    }
+    .filter-options-content {
+        a {
+            color: #666;
+        }
+        .item {
+            margin-bottom: 1px;
+        }
     }
     .toolbar-products {
         border-bottom: 1px solid #cccccc;
@@ -664,10 +678,10 @@ ul {
         display: block;
     }
     .product-item .price-box .price {
-        font-weight: 300;
-        color: #666;
         font-size: 15px;
         line-height: 17px;
+        color: #666;
+        font-weight: bold;
     }
     .click-to-filter-by {
         position: absolute;
@@ -730,16 +744,33 @@ ul {
 }
 .catalog-product-view {
     .page-title {
-        font-style: normal;
-        font-size: 33px;
-        line-height: 46px !important;
-        color: black;
-        letter-spacing: 1px;
+        font-family: "Lora",serif;
         font-weight: normal;
+        font-style: normal;
+        font-size: 34px;
+        line-height: 36px;
+        color: #572f38;
+        letter-spacing: 1px;
         margin-top: 0 !important;
         @media (max-width: 767px) {
             font-size: 24px;
             line-height: 31px !important;
+        }
+    }
+    #minusQty, #addQty {
+        display: none;
+        vertical-align: middle;
+        width: 22px;
+        height: 31px;
+        font-size: 22px;
+        background-color: #562e37;
+        color: #fff;
+        text-align: center;
+        cursor: pointer;
+        line-height: 30px;
+        font-weight: bold;
+        @media (max-width: 900px) {
+            display: inline-block;
         }
     }
     .product.right {
@@ -766,7 +797,7 @@ ul {
         .product.data.items>.item.content {
             border-bottom: 1px solid #d1d1d1;
             border-top: 0;
-            background: #f4f4f4;
+            background: #fff;
             padding: 0;
             @media (max-width: 768px) {
                 border: none;
@@ -800,14 +831,14 @@ ul {
         line-height: 20px;
         color: black;
         letter-spacing: 0.05em;
-        font-weight: 600;
+        font-weight: 500;
         margin: 5px auto 8px;
          span {
             font-size: 26px !important;
             line-height: 20px;
             color: black;
             letter-spacing: 0.05em;
-            font-weight: 600 !important;
+            font-weight: 500 !important;
             margin: 5px auto 8px;
         }
         .price {
@@ -858,7 +889,7 @@ ul {
                      text-transform: uppercase;
                      padding: 0;
                      width: 237px;
-                     border-radius: 10px;
+                     border-radius: 0;
                  }
              }
          }
@@ -913,7 +944,7 @@ ul {
         }
     }
       .product.attribute {
-          font-size: 16px;
+          font-size: 14px;
           margin-top: 5px;
           margin-bottom: 20px;
           @media (max-width: 768px) {
@@ -1021,12 +1052,13 @@ ul {
             letter-spacing: 0.05em;
             text-transform: uppercase;
             font-weight: bold;
+            margin-right: 10px;
         }
         a {
             font-family: "theliquorstore Icon Font";
             font-size: 13px;
             margin-right: 10px;
-            color: #333333;
+            color: #999;
             display: inline-block;
             vertical-align: baseline;
                 &.facebook:before {
@@ -1038,7 +1070,7 @@ ul {
                     text-transform: none;
                     -webkit-font-smoothing: antialiased;
                     -moz-osx-font-smoothing: grayscale;
-                    color: #333333;
+                    color: #999;
                     font-size: 14px;
                     display: inline-block;
                     vertical-align: baseline;
@@ -1052,7 +1084,7 @@ ul {
                     text-transform: none;
                     -webkit-font-smoothing: antialiased;
                     -moz-osx-font-smoothing: grayscale;
-                    color: #333333;
+                    color: #999;
                     font-size: 14px;
                     display: inline-block;
                     vertical-align: baseline;
@@ -1066,11 +1098,17 @@ ul {
                     text-transform: none;
                     -webkit-font-smoothing: antialiased;
                     -moz-osx-font-smoothing: grayscale;
-                    color: #333333;
+                    color: #999;
                     font-size: 14px;
                     display: inline-block;
                     vertical-align: baseline;
                 }
+            &:hover{
+                color: black;
+                &:before {
+                    color: black;
+                }
+            }
         }
     }
 }
@@ -1129,7 +1167,7 @@ ul {
     }
 }
 .authentication-wrapper {
-    margin-top: -94px;
+    margin-top: -50px;
     button {
         line-height: 34px;
         font-size: 12px;
@@ -1297,6 +1335,10 @@ ul {
 //  _____________________________________________
 
 .page-layout-checkout {
+    legend {
+        border-bottom: 0;
+    }
+
     .opc-wrapper {
         width: 54.666667%;
         @media (max-width: 800px) {
@@ -1311,6 +1353,9 @@ ul {
             left: auto;
             right: 0;
             width: 90%;
+        }
+        .modal-header {
+            border-bottom: 0;
         }
     }
     .minicart-items .product-item-details {
@@ -1362,6 +1407,9 @@ ul {
     .list-store-to-pickup {
         display: block;
         margin-bottom: 8px;
+    }
+    .opc-block-summary {
+        background: #ffffff;
     }
     @media (max-width: 800px) {
         .opc-block-summary {
@@ -1514,14 +1562,14 @@ ul {
     left: 10%;
  }
 .home-module .info-box .tit {
-    font-family: "Roboto",Arial,sans-serif;
-    font-weight: 600;
-    font-weight: normal;
+    font-family: "Lora",serif;
     font-style: normal;
-    font-size: 40px;
+    font-size: 34px;
     line-height: 36px;
-    color: white;
-    letter-spacing: 1px; }
+    color: #572f38;
+    letter-spacing: 1px;
+    font-weight: bold;
+}
 @media (max-width: 640px) {
     .home-module .info-box .tit {
         font-size: 20px; } }
@@ -1700,6 +1748,9 @@ ul {
 
 .wines {
     padding: 5%;
+    @media (max-width: 737px) {
+        margin-top: 35px;
+    }
 }
 
 .wines .wines-top-title {
@@ -1721,16 +1772,6 @@ ul {
 
 .wines .wines-cta:hover {
     color: white; }
-    .home-module .info-box .tit {
-        font-family: "Lora",serif;
-        font-weight: normal;
-        font-style: normal;
-        font-size: 34px;
-        line-height: 36px;
-        color: #572f38;
-        letter-spacing: 1px;
-        font-weight: bold;
-    }
 .cta {
     display: block;
     cursor: pointer;

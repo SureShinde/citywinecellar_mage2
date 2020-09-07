@@ -37,7 +37,7 @@ a:hover, .alink:hover {
 .page-header .header.panel, .header.content, .footer.content,
 .page-wrapper>.widget, .page-wrapper>.page-bottom,
 .block.category.event, .top-container, .page-main {
-    max-width: 1500px;
+    max-width: 1200px;
 }
 .catalog-category-view .page-main,
 .catalog-product-view .page-main,
@@ -48,14 +48,16 @@ a:hover, .alink:hover {
     .page-main {
         padding-left: 0;
         padding-right: 0;
+        max-width: 1500px;
     }
 }
 
 .header.content {
     padding: 5px 20px 0;
-    height: 96px;
+    height: 80px;
     @media (max-width:800px) {
         padding: 5px 0 0;
+        height: 52px;
     }
 }
 .page-header {
@@ -153,7 +155,8 @@ a:hover, .alink:hover {
         background-color: #fff;
         width: 100%;
         text-align: center;
-        max-width: 1376px;
+        max-width: 1200px;
+        border-bottom: 1px solid #eee;
         .sticky &:before {
             background-image: url("../images/logoscroll.png");
             content: "";
@@ -183,7 +186,7 @@ a:hover, .alink:hover {
                     white-space: nowrap;
                     font-family: "Roboto",Arial,sans-serif;
                     font-style: normal;
-                    font-size: 16px;
+                    font-size: 15px;
                     letter-spacing: 0.05em;
                     text-transform: uppercase;
                     -webkit-font-smoothing: subpixel-antialiased;
@@ -432,14 +435,17 @@ a:hover, .alink:hover {
                     font-weight: 300;
                     width: 350px;
                     .action.primary.checkout {
-                        background-color: #42242a;
+                        background-color: #562e37;
                         border: none;
                         padding: 1px 17px;
                         font-size: 12px;
                         line-height: 33px;
                         letter-spacing: 0.05em;
-                        border-radius: 14px;
+                        border-radius: 0;
                         text-transform: uppercase;
+                        &:hover {
+                            background-color: #42242a;
+                        }
                     }
                     a {
                         color: #000;
@@ -656,16 +662,14 @@ a:hover, .alink:hover {
             margin-left: -125px;
             top: 15px;
             @media (max-width: 800px) {
-                float: none;
-                margin: 0 auto;
-                width: 120px;
-                margin-top: 0 !important;
-                display: block;
+                width: 200px;
+                margin-left: -100px;
+                top: 5px;
             }
-            img {
-                @media (max-width: 500px) {
-                    width: 161px;
-                }
+            @media (max-width: 400px) {
+                margin-left: -86px;
+                top: 10px;
+                width: 152px;
             }
         }
 
@@ -741,10 +745,10 @@ a:hover, .alink:hover {
     }
 }
 .action.primary {
-    background: #572f38;
-    border-color: #572f38;
+    background: #562e37;
+    border-color: #562e37;
     &:hover {
-        background: #650835 !important;
+        background: #42242a !important;
     }
 }
 .top-right {
