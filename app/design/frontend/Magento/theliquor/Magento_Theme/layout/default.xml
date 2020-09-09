@@ -10,9 +10,11 @@
                 </container>
             </container>
             <container name="top.right" label="Page Header" as="top.right" htmlTag="div" htmlClass="top-right">
-                <block class="Magento\Cms\Block\Block" name="profile-top">
+                <block class="Laconica\Theme\Block\Cms\Block" name="profile-top" >
                     <arguments>
-                        <argument name="block_id" xsi:type="string">profile-top</argument>
+                        <argument name="template" xsi:type="string">Laconica_Theme::profile-top.phtml</argument>
+                        <argument name="guest_block_id" xsi:type="string">profile-top</argument>
+                        <argument name="customer_block_id" xsi:type="string">profile-top-logged</argument>
                     </arguments>
                 </block>
             </container>

@@ -621,11 +621,11 @@ a:hover, .alink:hover {
                 margin: 0 auto;
                 padding: 0 15px 2px;
             }
-            .profile-top {
+            .profile-top, .profile-top-logged {
                 float: right;
                 a {
                     position: relative;
-                    display: block;
+                    display: inline-block;
                     vertical-align: middle;
                     margin: 0;
                     visibility: visible;
@@ -648,6 +648,9 @@ a:hover, .alink:hover {
                     color: #444;
                     text-transform: uppercase;
                     height: auto;
+                }
+                .profile-top-ml{
+                    margin-left: 26px;
                 }
                 @media (max-width: 800px) {
                     display: none;
