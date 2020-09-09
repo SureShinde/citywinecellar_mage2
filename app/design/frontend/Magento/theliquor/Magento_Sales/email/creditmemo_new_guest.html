@@ -76,7 +76,7 @@
                     {{depend order.getIsNotVirtual()}}
                     <td class="method-info">
                         <h6>Shipping method:</h6>
-                        <p>{{var order.getShippingDescription()}}</p>
+                        <p>{{var order.getShippingDescription()|raw}}</p>
                     </td>
                     {{/depend}}
                     <td class="method-info">

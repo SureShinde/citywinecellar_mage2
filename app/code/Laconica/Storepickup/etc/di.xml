@@ -3,4 +3,5 @@
     <type name="Magento\Sales\Block\Order\Totals">
         <plugin name="invoice_tips_init_plugin" type="Laconica\Storepickup\Plugin\OrderAddTipsPlugin" sortOrder="10"/>
     </type>
+    <preference for="Magestore\Storepickup\Observer\SaveStorepickupDecription" type="Laconica\Storepickup\Rewrite\Observer\SaveStorepickupDecription" />
 </config>
