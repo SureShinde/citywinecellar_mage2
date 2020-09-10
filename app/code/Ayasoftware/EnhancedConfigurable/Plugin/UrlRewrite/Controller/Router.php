@@ -72,11 +72,13 @@ class Router
             $path = trim($request->getPathInfo(), '/');
             $withoutExt = preg_replace('/\\.[^.\\s]{3,4}$/', '', $path);
             $pathInfo = explode('/', $withoutExt);
-            if(isset($pathInfo[1])) {
-                $path = $pathInfo[1];
+            //CUSTOM CODE
+            if(count($pathInfo) > 1) {
+                $path = $pathInfo[count($pathInfo) - 1];
             } else {
                 $path = $withoutExt;
             }
+            //END CUSTOM CODE
             $product = $this->objectManager->create('Magento\Catalog\Model\Product')->getCollection()
                 ->addAttributeToSelect('*')->addAttributeToFilter('url_key', $path)->getFirstItem();
             if($product->getId()) {
