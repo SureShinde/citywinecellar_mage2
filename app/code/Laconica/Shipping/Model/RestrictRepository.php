@@ -33,7 +33,7 @@ class RestrictRepository
 
         $hasRestrictions = $this->connection->fetchCol($select);
         $hasRestrictions = $hasRestrictions[0] ?? false;
-        $hasRestrictions = $this->getCarrierRestrictions($carrierCode, $request, $hasRestrictions);
+        //$hasRestrictions = $this->getCarrierRestrictions($carrierCode, $request, $hasRestrictions);
 
         //$time = microtime(true) - $start;
         //$this->logger->critical($carrierCode . ' : ' . $time);
