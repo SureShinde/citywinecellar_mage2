@@ -9,6 +9,7 @@ class Config
     const GTM_ID_XML_PATH = 'google/gtm/id';
     const GTM_ENABLED_XML_PATH = 'google/gtm/enable';
     const GTM_QUOTE_PAGES_XML_PATH = 'google/gtm/quote_pages';
+    const GTM_EXPRESSIONS_LIMIT_XML_PATH = 'google/gtm/expressions_limit';
 
     /**
      * @var \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
@@ -18,6 +19,7 @@ class Config
     private $gtmId;
     private $enabled;
     private $quotePages;
+    private $expressionsLimit;
 
     public function __construct(
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
@@ -49,6 +51,14 @@ class Config
             $this->quotePages = array_map('trim', explode(',', $pages));
         }
         return $this->quotePages;
+    }
+
+    public function getExpressionsLimit(){
+        if ($this->expressionsLimit === null) {
+            $limit = $this->scopeConfig->getValue(self::GTM_EXPRESSIONS_LIMIT_XML_PATH, \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+            $this->expressionsLimit = intval($limit);
+        }
+        return $this->expressionsLimit;
     }
 
     /**

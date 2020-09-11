@@ -19,6 +19,10 @@
                        showInStore="0">
                     <label>Send Quote Pages:</label>
                 </field>
+                <field id="expressions_limit" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Products Expressions Limit:</label>
+                </field>
             </group>
         </section>
     </system>

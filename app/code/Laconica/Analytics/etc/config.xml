@@ -6,6 +6,7 @@
             <gtm>
                 <enable>0</enable>
                 <quote_pages>checkout/index/index</quote_pages>
+                <expressions_limit>3</expressions_limit>
             </gtm>
         </google>
     </default>

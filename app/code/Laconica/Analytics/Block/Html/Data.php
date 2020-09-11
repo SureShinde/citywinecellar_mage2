@@ -21,10 +21,16 @@ class Data extends Gtm
      */
     protected $checkoutSession;
 
+    /**
+     * @var \Magento\Framework\Registry $registry
+     */
+    protected $registry;
+
     public function __construct(
         Template\Context $context,
         \Laconica\Analytics\Helper\Config $configHelper,
         \Magento\Customer\Model\Session $customerSession,
+        \Magento\Framework\Registry $registry,
         \Magento\Customer\Api\GroupRepositoryInterface $groupRepository,
         \Magento\Checkout\Model\Session $checkoutSession,
         array $data = []
@@ -35,9 +41,13 @@ class Data extends Gtm
         $this->customerSession = $customerSession;
         $this->groupRepository = $groupRepository;
         $this->checkoutSession = $checkoutSession;
+        $this->registry = $registry;
     }
 
 
+    /**
+     * @return false|string
+     */
     public function getPushJson()
     {
         $moduleName = $this->_request->getModuleName();
@@ -49,12 +59,17 @@ class Data extends Gtm
         ];
         $customerInformation = $this->getCustomerInformation();
         $data = array_merge($data, $customerInformation);
+        $categoryInformation = $this->getCategoryInformation();
+        $data = array_merge($data, $categoryInformation);
         $cartInformation = $this->getTransactionInformation($data['pageType']);
         $data = array_merge($data, $cartInformation);
 
         return json_encode($data);
     }
 
+    /**
+     * @return array
+     */
     protected function getCustomerInformation()
     {
         try {
@@ -70,6 +85,50 @@ class Data extends Gtm
             "customerGroupCode" => mb_strtoupper($groupCode)
         ];
         return $customerInformation;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getCategoryInformation(){
+        /** @var \Magento\Catalog\Model\Category $category */
+        $category = $this->registry->registry('current_category');
+        if (!$category) {
+            return [];
+        }
+        $productListBlock = $this->_layout->getBlock('category.products.list');
+
+        if (empty($productListBlock)) {
+            return [];
+        }
+
+        $categoryProducts = $productListBlock->getLoadedProductCollection();
+        $productPosition = $category->getProductsPosition();
+        $impressions = [];
+        $counter = 0;
+        foreach ($categoryProducts as $product) {
+            if($counter > $this->configHelper->getExpressionsLimit()){
+                break;
+            }
+            if(!$product || !$product->getId()){
+                continue;
+            }
+            array_push($impressions, [
+                'id' => $product->getId(),
+                'name' => $product->getName(),
+                'sku' => $product->getSku(),
+                'price' => $this->configHelper->formatPrice($product->getPrice()),
+                'category' => $product->getCategory()->getName(),
+                'position' => $counter
+            ]);
+            $counter++;
+        }
+        return [
+            'categoryId' => $category->getId(),
+            'categoryName' => $category->getName(),
+            'categorySize' => count($productPosition),
+            'categoryProducts' => $impressions
+        ];
     }
 
     /**
