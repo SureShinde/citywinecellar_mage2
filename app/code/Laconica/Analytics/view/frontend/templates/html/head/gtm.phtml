@@ -1,7 +1,11 @@
 <?php
-/** @var Laconica\Theme\Block\Html\Gtm $this */
-$gtmId = $this->getGtmId();
-if($this->isEnabled() && $gtmId): ?>
+/** @var Laconica\Analytics\Block\Html\Gtm $this */
+
+$configs = $this->getConfigHelper();
+$gtmId = $configs->getGtmId();
+if (!$configs->isEnabled() || !$gtmId) {
+    return;
+} ?>
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
             new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -9,4 +13,3 @@ if($this->isEnabled() && $gtmId): ?>
         'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','<?php echo $gtmId ?>');</script>
 <!-- End Google Tag Manager -->
-<?php endif; ?>

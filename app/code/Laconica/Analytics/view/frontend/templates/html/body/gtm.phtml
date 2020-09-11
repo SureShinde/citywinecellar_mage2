@@ -1,9 +1,13 @@
 <?php
-/** @var Laconica\Theme\Block\Html\Gtm $this */
-$gtmId = $this->getGtmId();
-if($this->isEnabled() && $gtmId): ?>
+/** @var Laconica\Analytics\Block\Html\Gtm $this */
+
+$configs = $this->getConfigHelper();
+$gtmId = $configs->getGtmId();
+if (!$configs->isEnabled() || !$gtmId) {
+    return;
+}
+?>
 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=<?php echo $gtmId; ?>"
                   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
-<?php endif; ?>

@@ -15,6 +15,10 @@
                        showInStore="1">
                     <label>Container ID:</label>
                 </field>
+                <field id="quote_pages" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="0"
+                       showInStore="0">
+                    <label>Send Quote Pages:</label>
+                </field>
             </group>
         </section>
     </system>

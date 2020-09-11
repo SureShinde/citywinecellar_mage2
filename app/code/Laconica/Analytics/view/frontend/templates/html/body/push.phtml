@@ -1,0 +1,10 @@
+<?php
+$configs = $this->getConfigHelper();
+$dataLayerJson = $this->getPushJson();
+if (!$configs->isEnabled() || !$dataLayerJson) {
+    return;
+}
+?>
+<script>
+    dataLayer.push(<?php echo $dataLayerJson; ?>);
+</script>
