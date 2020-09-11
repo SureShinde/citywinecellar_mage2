@@ -61,6 +61,8 @@ class Data extends Gtm
         $data = array_merge($data, $customerInformation);
         $categoryInformation = $this->getCategoryInformation();
         $data = array_merge($data, $categoryInformation);
+        $productInformation = $this->getProductInformation();
+        $data = array_merge($data, $productInformation);
         $cartInformation = $this->getTransactionInformation($data['pageType']);
         $data = array_merge($data, $cartInformation);
 
@@ -113,12 +115,13 @@ class Data extends Gtm
             if(!$product || !$product->getId()){
                 continue;
             }
+            $productCategory = $product->getCategory();
             array_push($impressions, [
                 'id' => $product->getId(),
                 'name' => $product->getName(),
                 'sku' => $product->getSku(),
                 'price' => $this->configHelper->formatPrice($product->getPrice()),
-                'category' => $product->getCategory()->getName(),
+                'category' => ($productCategory) ? $productCategory->getName() : '',
                 'position' => $counter
             ]);
             $counter++;
@@ -129,6 +132,27 @@ class Data extends Gtm
             'categorySize' => count($productPosition),
             'categoryProducts' => $impressions
         ];
+    }
+
+    /**
+     * @return array
+     */
+    protected function getProductInformation(){
+        /** @var \Magento\Catalog\Model\Product $product */
+        $product = $this->registry->registry('current_product');
+        if (!$product) {
+            return [];
+        }
+        $productCategory = $product->getCategory();
+        $data = [
+            'productId' => $product->getId(),
+            'productName' => $product->getName(),
+            'productSku' => $product->getSku(),
+            'productPrice' => $this->configHelper->formatPrice($product->getPrice()),
+            'categoryId' => ($productCategory) ? $productCategory->getId() : 0,
+            'categoryName' => ($productCategory) ? $productCategory->getName() : ''
+        ];
+        return $data;
     }
 
     /**
