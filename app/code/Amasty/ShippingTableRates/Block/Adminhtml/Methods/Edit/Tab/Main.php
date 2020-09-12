@@ -140,6 +140,18 @@ class Main extends Generic implements TabInterface
                 'options' => $this->statuses->toOptionArray(),
             ]
         );
+        //CUSTOM CODE
+        $fieldsetGeneral->addField(
+            'is_tips',
+            'select',
+            [
+                'name' => 'is_tips',
+                'label' => __('Tips'),
+                'title' => __('Tips'),
+                'options' => $this->statuses->toOptionArray(),
+            ]
+        );
+        //END CUSTOM CODE
 
         $fieldsetRates = $form->addFieldset('rates_fieldset', ['legend' => __('Rates')]);
 

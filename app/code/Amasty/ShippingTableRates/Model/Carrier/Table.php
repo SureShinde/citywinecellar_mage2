@@ -117,6 +117,10 @@ class Table extends \Magento\Shipping\Model\Carrier\AbstractCarrier implements
                 // record method information
                 $method->setMethod($this->_code . $customMethod->getId());
                 $label = $customLabelData->getLabel();
+                //CUSTOM CODE
+                $method->setIsTips($customMethod->getIsTips());
+                $rates[$customMethod->getId()]['is_tips'] = $customMethod->getIsTips();
+                 //END CUSTOM CODE
 
                 if ($label === null || $label === '') {
                     $methodTitle = __($customMethod->getName());

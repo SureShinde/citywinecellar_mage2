@@ -3,4 +3,10 @@
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="Amasty\ShippingTableRates\Model\Carrier\Table"
                 type="Laconica\ShippingTableRates\Model\Carrier\Table"/>
+    <type name="Magento\Quote\Model\Quote\Address\Rate">
+        <plugin name="la_amrate_is_tips" type="Laconica\ShippingTableRates\Plugin\Rate" />
+    </type>
+    <type name="Magento\Quote\Model\Cart\ShippingMethodConverter">
+        <plugin name="add_description_to_carrier" type="Laconica\ShippingTableRates\Plugin\Carrier\Rate" disabled="false" sortOrder="30"/>
+    </type>
 </config>
