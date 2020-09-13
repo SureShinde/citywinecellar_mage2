@@ -11,6 +11,12 @@ class Gtm extends Template
      */
     protected $configHelper;
 
+    /**
+     * Gtm constructor.
+     * @param Template\Context $context
+     * @param \Laconica\Analytics\Helper\Config $configHelper
+     * @param array $data
+     */
     public function __construct(
         Template\Context $context,
         \Laconica\Analytics\Helper\Config $configHelper,
@@ -21,6 +27,9 @@ class Gtm extends Template
         $this->configHelper = $configHelper;
     }
 
+    /**
+     * @return \Laconica\Analytics\Helper\Config
+     */
     public function getConfigHelper()
     {
         return $this->configHelper;

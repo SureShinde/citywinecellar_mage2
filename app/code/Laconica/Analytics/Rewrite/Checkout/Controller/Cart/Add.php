@@ -14,6 +14,7 @@ class Add extends \Magento\Checkout\Controller\Cart\Add
      * @param string $backUrl
      * @param \Magento\Catalog\Model\Product $product
      * @return $this|\Magento\Framework\Controller\Result\Redirect
+     * @throws NoSuchEntityException
      */
     protected function goBack($backUrl = null, $product = null)
     {
@@ -54,6 +55,10 @@ class Add extends \Magento\Checkout\Controller\Cart\Add
         );
     }
 
+    /**
+     * @return bool|\Magento\Catalog\Api\Data\ProductInterface
+     * @throws NoSuchEntityException
+     */
     protected function getProduct(){
         $productId = $this->getRequest()->getParam('selected_configurable_option', false);
         if ($productId) {

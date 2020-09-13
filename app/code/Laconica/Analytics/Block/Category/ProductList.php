@@ -8,18 +8,25 @@ class ProductList extends \Laconica\Analytics\Block\Html\Gtm
 {
 
     /**
-     * @var \Magento\Framework\Registry $registry
+     * @var \Laconica\Analytics\Helper\Catalog $catalogHelper
      */
-    protected $registry;
+    protected $catalogHelper;
 
+    /**
+     * ProductList constructor.
+     * @param Template\Context $context
+     * @param \Laconica\Analytics\Helper\Catalog $catalogHelper
+     * @param \Laconica\Analytics\Helper\Config $configHelper
+     * @param array $data
+     */
     public function __construct(
         Template\Context $context,
-        \Magento\Framework\Registry $registry,
+        \Laconica\Analytics\Helper\Catalog $catalogHelper,
         \Laconica\Analytics\Helper\Config $configHelper,
         array $data = [])
     {
         parent::__construct($context, $configHelper, $data);
-        $this->registry = $registry;
+        $this->catalogHelper = $catalogHelper;
     }
 
     /**
@@ -31,31 +38,40 @@ class ProductList extends \Laconica\Analytics\Block\Html\Gtm
         if (!$productList) {
             return false;
         }
-        $data = [
-            'event' => 'productList',
-            'ecommerce' => [
-                'currencyCode' => $this->_storeManager->getStore()->getCurrentCurrency()->getCode(),
-                'impressions' => $productList
-            ]
-        ];
-        return json_encode($data);
+        try {
+            $data = [
+                'event' => 'productList',
+                'ecommerce' => [
+                    'currencyCode' => $this->_storeManager->getStore()->getCurrentCurrency()->getCode(),
+                    'impressions' => $productList
+                ]
+            ];
+            return json_encode($data);
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 
+    /**
+     * @return array
+     */
     protected function getProductList()
     {
         /** @var \Magento\Catalog\Model\Category $category */
-        $category = $this->registry->registry('current_category');
-        if (!$category) {
-            return [];
-        }
-
+        $category = $this->catalogHelper->getCurrentCategory();
         $productListBlock = $this->_layout->getBlock('category.products.list');
-
-        if (empty($productListBlock)) {
-            return [];
-        }
-        $categoryProducts = $productListBlock->getLoadedProductCollection();
         $products = [];
+
+        if (!$category || !$productListBlock) {
+            return $products;
+        }
+
+        $categoryProducts = $productListBlock->getLoadedProductCollection();
+
+        if (!$categoryProducts || $categoryProducts->getSize() <= 0) {
+            return $products;
+        }
+
         foreach ($categoryProducts as $product) {
             if (!$product || !$product->getId()) {
                 continue;
@@ -66,6 +82,7 @@ class ProductList extends \Laconica\Analytics\Block\Html\Gtm
                 'price' => $this->configHelper->formatPrice($product->getFinalPrice())
             ]);
         }
+
         return $products;
     }
 }

@@ -7,18 +7,25 @@ use Magento\Framework\View\Element\Template;
 class Ecommerce extends Gtm
 {
     /**
-     * @var \Magento\Framework\Registry $registry
+     * @var \Laconica\Analytics\Helper\Catalog $catalogHelper
      */
-    protected $registry;
+    protected $catalogHelper;
 
+    /**
+     * Ecommerce constructor.
+     * @param Template\Context $context
+     * @param \Laconica\Analytics\Helper\Catalog $catalogHelper
+     * @param \Laconica\Analytics\Helper\Config $configHelper
+     * @param array $data
+     */
     public function __construct(
         Template\Context $context,
-        \Magento\Framework\Registry $registry,
+        \Laconica\Analytics\Helper\Catalog $catalogHelper,
         \Laconica\Analytics\Helper\Config $configHelper,
         array $data = [])
     {
         parent::__construct($context, $configHelper, $data);
-        $this->registry = $registry;
+        $this->catalogHelper = $catalogHelper;
     }
 
     /**
@@ -44,26 +51,26 @@ class Ecommerce extends Gtm
     protected function getCategoryInformation($defaultData)
     {
         /** @var \Magento\Catalog\Model\Category $category */
-        $category = $this->registry->registry('current_category');
-        if (!$category) {
-            return $defaultData;
-        }
-
+        $category = $this->catalogHelper->getCurrentCategory();
         $productListBlock = $this->_layout->getBlock('category.products.list');
 
-        if (empty($productListBlock)) {
+        if (!$category || !$productListBlock) {
             return $defaultData;
         }
 
         $categoryProducts = $productListBlock->getLoadedProductCollection();
 
+        if (!$categoryProducts || $categoryProducts->getSize() <= 0) {
+            return $defaultData;
+        }
+
         $impressions = [];
         $counter = 0;
         foreach ($categoryProducts as $product) {
-            if($counter > $this->configHelper->getExpressionsLimit()){
+            if ($counter > $this->configHelper->getExpressionsLimit()) {
                 break;
             }
-            if(!$product || !$product->getId()){
+            if (!$product || !$product->getId()) {
                 continue;
             }
             $productCategory = $product->getCategory();
@@ -87,9 +94,10 @@ class Ecommerce extends Gtm
      * @param $defaultData
      * @return array
      */
-    protected function getProductInformation($defaultData){
+    protected function getProductInformation($defaultData)
+    {
         /** @var \Magento\Catalog\Model\Product $product */
-        $product = $this->registry->registry('current_product');
+        $product = $this->catalogHelper->getCurrentProduct();
         if (!$product) {
             return $defaultData;
         }

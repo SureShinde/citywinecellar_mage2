@@ -7,6 +7,8 @@
                 <enable>0</enable>
                 <quote_pages>checkout/index/index</quote_pages>
                 <expressions_limit>3</expressions_limit>
+                <transaction_affiliation>Main Website</transaction_affiliation>
+                <affiliation>Online Store</affiliation>
             </gtm>
         </google>
     </default>

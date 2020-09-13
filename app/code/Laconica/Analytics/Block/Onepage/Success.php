@@ -11,6 +11,15 @@ class Success extends ParentSuccess
      */
     protected $configHelper;
 
+    /**
+     * Success constructor.
+     * @param \Magento\Framework\View\Element\Template\Context $context
+     * @param \Magento\Checkout\Model\Session $checkoutSession
+     * @param \Magento\Sales\Model\Order\Config $orderConfig
+     * @param \Magento\Framework\App\Http\Context $httpContext
+     * @param \Laconica\Analytics\Helper\Config $configHelper
+     * @param array $data
+     */
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
         \Magento\Checkout\Model\Session $checkoutSession,
@@ -24,11 +33,18 @@ class Success extends ParentSuccess
         $this->configHelper = $configHelper;
     }
 
+    /**
+     * @return \Laconica\Analytics\Helper\Config
+     */
     public function getConfigHelper()
     {
         return $this->configHelper;
     }
 
+
+    /**
+     * @return array|string
+     */
     public function getOnepageSuccessJson()
     {
         try {
@@ -38,8 +54,11 @@ class Success extends ParentSuccess
                 return $products;
             }
             $orderProducts = $order->getAllItems();
+            if (!$orderProducts && !is_array($orderProducts)) {
+                return $products;
+            }
             foreach ($orderProducts as $product) {
-                if ($product->getProductType() !== 'simple') {
+                if (!$product || !$product->getId() || $product->getProductType() !== 'simple') {
                     continue;
                 }
                 array_push($products, [
@@ -57,7 +76,7 @@ class Success extends ParentSuccess
                     'purchase' => [
                         'actionField' => [
                             'id' => $order->getIncrementId(),
-                            'affiliation' => 'Online Store',
+                            'affiliation' => $this->configHelper->getAffiliation(),
                             'revenue' => $this->configHelper->formatPrice($order->getGrandTotal()), // Total transaction value (incl. tax and shipping)
                             'tax' => $this->configHelper->formatPrice($order->getTaxAmount()),
                             'shipping' => $this->configHelper->formatPrice($order->getShippingAmount()),
@@ -71,7 +90,7 @@ class Success extends ParentSuccess
             return json_encode($dataLayer);
         } catch (\Exception $e) {
             $this->_logger->error($e->getMessage(), $e->getTrace());
-            return false;
+            return [];
         }
     }
 

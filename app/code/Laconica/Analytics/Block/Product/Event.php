@@ -7,31 +7,42 @@ use Magento\Framework\View\Element\Template;
 class Event extends \Laconica\Analytics\Block\Html\Gtm
 {
     /**
-     * @var \Magento\Framework\Registry $registry
+     * @var \Laconica\Analytics\Helper\Catalog $catalogHelper
      */
-    protected $registry;
+    protected $catalogHelper;
 
     /**
      * @var \Magento\Customer\Model\Session $customerSession
      */
     protected $customerSession;
 
+    /**
+     * Event constructor.
+     * @param Template\Context $context
+     * @param \Laconica\Analytics\Helper\Catalog $catalogHelper
+     * @param \Laconica\Analytics\Helper\Config $configHelper
+     * @param \Magento\Customer\Model\Session $customerSession
+     * @param array $data
+     */
     public function __construct(
         Template\Context $context,
-        \Magento\Framework\Registry $registry,
+        \Laconica\Analytics\Helper\Catalog $catalogHelper,
         \Laconica\Analytics\Helper\Config $configHelper,
         \Magento\Customer\Model\Session $customerSession,
         array $data = [])
     {
         parent::__construct($context, $configHelper, $data);
-        $this->registry = $registry;
+        $this->catalogHelper = $catalogHelper;
         $this->customerSession = $customerSession;
     }
 
+    /**
+     * @return bool|false|string
+     */
     public function getProductInfoJson()
     {
         /** @var \Magento\Catalog\Model\Product $product */
-        $product = $this->registry->registry('current_product');
+        $product = $this->catalogHelper->getCurrentProduct();
         if (!$product) {
             return false;
         }
@@ -45,7 +56,11 @@ class Event extends \Laconica\Analytics\Block\Html\Gtm
         return json_encode($data);
     }
 
-    public function isCustomerLoggedIn(){
+    /**
+     * @return bool
+     */
+    public function isCustomerLoggedIn()
+    {
         return $this->customerSession->isLoggedIn();
     }
 }

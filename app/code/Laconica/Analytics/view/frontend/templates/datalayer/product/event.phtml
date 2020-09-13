@@ -1,5 +1,5 @@
 <?php
-/** @var \Laconica\Analytics\Block\Onepage\Success $this */
+/** @var \Laconica\Analytics\Block\Product\Event $this */
 
 $configs = $this->getConfigHelper();
 $productInfoJson = $this->getProductInfoJson();
@@ -13,8 +13,9 @@ if (!$configs->isEnabled() || !$productInfoJson) {
             return;
         }
 
+        let bodyElement = $('body');
         // Trigger Social Media Event
-        $('body').on('click', '.social-media-icons a', function () {
+        bodyElement.on('click', '.social-media-icons a', function () {
             let type = $(this).attr('class');
             type = (typeof type === 'string') ? type.replace(/(\r\n|\n|\r)/gm, "").trim() : null;
             let event = "productLike";
@@ -33,7 +34,7 @@ if (!$configs->isEnabled() || !$productInfoJson) {
         });
 
         <?php if ($this->isCustomerLoggedIn()): ?>
-        $('body').on('click', '.product-addto-links .towishlist', function () {
+        bodyElement.on('click', '.product-addto-links .towishlist', function () {
             dataLayer.push({
                 "event": "addToWishlist",
                 "product": <?php echo $productInfoJson; ?>

@@ -22,15 +22,25 @@ class Data extends Gtm
     protected $checkoutSession;
 
     /**
-     * @var \Magento\Framework\Registry $registry
+     * @var \Laconica\Analytics\Helper\Catalog $catalogHelper
      */
-    protected $registry;
+    protected $catalogHelper;
 
+    /**
+     * Data constructor.
+     * @param Template\Context $context
+     * @param \Laconica\Analytics\Helper\Config $configHelper
+     * @param \Magento\Customer\Model\Session $customerSession
+     * @param \Laconica\Analytics\Helper\Catalog $catalogHelper
+     * @param \Magento\Customer\Api\GroupRepositoryInterface $groupRepository
+     * @param \Magento\Checkout\Model\Session $checkoutSession
+     * @param array $data
+     */
     public function __construct(
         Template\Context $context,
         \Laconica\Analytics\Helper\Config $configHelper,
         \Magento\Customer\Model\Session $customerSession,
-        \Magento\Framework\Registry $registry,
+        \Laconica\Analytics\Helper\Catalog $catalogHelper,
         \Magento\Customer\Api\GroupRepositoryInterface $groupRepository,
         \Magento\Checkout\Model\Session $checkoutSession,
         array $data = []
@@ -41,7 +51,7 @@ class Data extends Gtm
         $this->customerSession = $customerSession;
         $this->groupRepository = $groupRepository;
         $this->checkoutSession = $checkoutSession;
-        $this->registry = $registry;
+        $this->catalogHelper = $catalogHelper;
     }
 
 
@@ -92,27 +102,31 @@ class Data extends Gtm
     /**
      * @return array
      */
-    protected function getCategoryInformation(){
+    protected function getCategoryInformation()
+    {
         /** @var \Magento\Catalog\Model\Category $category */
-        $category = $this->registry->registry('current_category');
-        if (!$category) {
-            return [];
-        }
+        $category = $this->catalogHelper->getCurrentCategory();
         $productListBlock = $this->_layout->getBlock('category.products.list');
+        $impressions = [];
 
-        if (empty($productListBlock)) {
-            return [];
+        if (!$category || !$productListBlock) {
+            return $impressions;
         }
 
         $categoryProducts = $productListBlock->getLoadedProductCollection();
+
+        if (!$categoryProducts || $categoryProducts->getSize() <= 0) {
+            return $impressions;
+        }
+
         $productPosition = $category->getProductsPosition();
-        $impressions = [];
         $counter = 0;
+
         foreach ($categoryProducts as $product) {
-            if($counter > $this->configHelper->getExpressionsLimit()){
+            if ($counter > $this->configHelper->getExpressionsLimit()) {
                 break;
             }
-            if(!$product || !$product->getId()){
+            if (!$product || !$product->getId()) {
                 continue;
             }
             $productCategory = $product->getCategory();
@@ -122,10 +136,11 @@ class Data extends Gtm
                 'sku' => $product->getSku(),
                 'price' => $this->configHelper->formatPrice($product->getFinalPrice()),
                 'category' => ($productCategory) ? $productCategory->getName() : '',
-                'position' => $counter
+                'position' => $counter // on old site like this
             ]);
             $counter++;
         }
+
         return [
             'categoryId' => $category->getId(),
             'categoryName' => $category->getName(),
@@ -137,9 +152,10 @@ class Data extends Gtm
     /**
      * @return array
      */
-    protected function getProductInformation(){
+    protected function getProductInformation()
+    {
         /** @var \Magento\Catalog\Model\Product $product */
-        $product = $this->registry->registry('current_product');
+        $product = $this->catalogHelper->getCurrentProduct();
         if (!$product) {
             return [];
         }
@@ -167,13 +183,16 @@ class Data extends Gtm
 
         if ($order && $order->getId()) {
             $payment = $order->getPayment();
+            if (!$payment) {
+                return $transactionInformation;
+            }
             $method = $payment->getMethodInstance();
             $methodTitle = ($method) ? $method->getTitle() : "";
             $transactionInformation = [
                 'transactionEntity' => 'ORDER',
                 'transactionId' => $order->getIncrementId(),
                 'transactionDate' => $order->getCreatedAt(),
-                'transactionAffiliation' => 'Main Website',
+                'transactionAffiliation' => $this->configHelper->getTransactionAffiliation(),
                 'transactionTotal' => $this->configHelper->formatPrice($order->getGrandTotal()),
                 'transactionSubtotal' => $this->configHelper->formatPrice($order->getSubtotal()),
                 'transactionTax' => $this->configHelper->formatPrice($order->getTaxAmount()),
@@ -191,7 +210,7 @@ class Data extends Gtm
             $transactionInformation = [
                 'transactionEntity' => 'QUOTE',
                 'transactionId' => $currentQuote->getId(),
-                'transactionAffiliation' => 'Main Website',
+                'transactionAffiliation' => $this->configHelper->getTransactionAffiliation(),
                 'transactionTotal' => $this->configHelper->formatPrice($currentQuote->getGrandTotal()),
                 'transactionTax' => $this->configHelper->formatPrice($taxAmount),
                 'transactionProducts' => $this->getQuoteProducts($currentQuote->getAllItems())
@@ -226,7 +245,7 @@ class Data extends Gtm
             ];
             if ($isOrder) {
                 $productCategories = $item->getProduct()->getCategoryIds();
-                $product['category'] = (!empty($productCategories)) ? array_shift($productCategories) : 0;
+                $product['category'] = (!empty($productCategories) && is_array($productCategories)) ? array_shift($productCategories) : 0;
             }
             array_push($products, $product);
         }

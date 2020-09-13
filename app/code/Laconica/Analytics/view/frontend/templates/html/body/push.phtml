@@ -1,4 +1,6 @@
 <?php
+/** @var \Laconica\Analytics\Block\Html\Gtm $this */
+
 $configs = $this->getConfigHelper();
 $dataLayerJson = $this->getPushJson();
 if (!$configs->isEnabled() || !$dataLayerJson) {

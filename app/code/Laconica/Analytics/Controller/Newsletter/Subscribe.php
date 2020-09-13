@@ -37,6 +37,17 @@ class Subscribe extends SubscriberController implements HttpPostActionInterface
      */
     private $resultJsonFactory;
 
+    /**
+     * Subscribe constructor.
+     * @param Context $context
+     * @param SubscriberFactory $subscriberFactory
+     * @param Session $customerSession
+     * @param StoreManagerInterface $storeManager
+     * @param CustomerUrl $customerUrl
+     * @param CustomerAccountManagement $customerAccountManagement
+     * @param JsonFactory $resultJsonFactory
+     * @param EmailValidator|null $emailValidator
+     */
     public function __construct(
         Context $context,
         SubscriberFactory $subscriberFactory,
