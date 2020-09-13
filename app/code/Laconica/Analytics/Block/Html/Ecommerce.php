@@ -71,7 +71,7 @@ class Ecommerce extends Gtm
                 'id' => $product->getId(),
                 'name' => $product->getName(),
                 'sku' => $product->getSku(),
-                'price' => $this->configHelper->formatPrice($product->getPrice()),
+                'price' => $this->configHelper->formatPrice($product->getFinalPrice()),
                 'category' => ($productCategory) ? $productCategory->getName() : '',
                 'position' => $counter
             ]);
@@ -102,7 +102,7 @@ class Ecommerce extends Gtm
                 'detail' => [
                     'name' => $product->getName(),
                     'id' => $product->getId(),
-                    'price' => $this->configHelper->formatPrice($product->getPrice()),
+                    'price' => $this->configHelper->formatPrice($product->getFinalPrice()),
                     'brand' => (string)$product->getAttributeText('manufacturer'),
                     'category' => ($productCategory) ? $productCategory->getName() : ''
                 ]

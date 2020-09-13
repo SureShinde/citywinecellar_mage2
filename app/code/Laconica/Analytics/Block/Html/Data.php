@@ -120,7 +120,7 @@ class Data extends Gtm
                 'id' => $product->getId(),
                 'name' => $product->getName(),
                 'sku' => $product->getSku(),
-                'price' => $this->configHelper->formatPrice($product->getPrice()),
+                'price' => $this->configHelper->formatPrice($product->getFinalPrice()),
                 'category' => ($productCategory) ? $productCategory->getName() : '',
                 'position' => $counter
             ]);
@@ -148,7 +148,7 @@ class Data extends Gtm
             'productId' => $product->getId(),
             'productName' => $product->getName(),
             'productSku' => $product->getSku(),
-            'productPrice' => $this->configHelper->formatPrice($product->getPrice()),
+            'productPrice' => $this->configHelper->formatPrice($product->getFinalPrice()),
             'categoryId' => ($productCategory) ? $productCategory->getId() : 0,
             'categoryName' => ($productCategory) ? $productCategory->getName() : ''
         ];
@@ -221,7 +221,7 @@ class Data extends Gtm
             $product = [
                 'sku' => $item->getSku(),
                 'name' => $item->getName(),
-                'price' => $this->configHelper->formatPrice($item->getProduct()->getPrice()),
+                'price' => $this->configHelper->formatPrice($item->getProduct()->getFinalPrice()),
                 'quantity' => intval($qty)
             ];
             if ($isOrder) {

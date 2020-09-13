@@ -6,5 +6,11 @@ if (!$configs->isEnabled() || !$dataLayerJson) {
 }
 ?>
 <script>
-    dataLayer.push(<?php echo $dataLayerJson; ?>);
+    require(['domReady'], function (domReady) {
+        domReady(function () {
+            if (dataLayer) {
+                dataLayer.push(<?php echo $dataLayerJson; ?>);
+            }
+        });
+    });
 </script>

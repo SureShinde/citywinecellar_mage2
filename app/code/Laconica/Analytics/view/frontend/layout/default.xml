@@ -11,6 +11,10 @@
                    template="Laconica_Analytics::html/body/push.phtml"/>
             <block class="Laconica\Analytics\Block\Html\Ecommerce" name="gtm_ecommerce_push" cacheable="false"
                    template="Laconica_Analytics::html/body/push.phtml"/>
+            <block class="Laconica\Analytics\Block\Html\Gtm" name="gtm_click_through"
+                   template="Laconica_Analytics::html/body/click_through.phtml"/>
+            <block class="Laconica\Analytics\Block\Newsletter\Subscribe" name="gtm_newsletter_submit"
+                   template="Laconica_Analytics::newsletter/catch_subscribe.phtml"/>
         </referenceContainer>
     </body>
 </page>

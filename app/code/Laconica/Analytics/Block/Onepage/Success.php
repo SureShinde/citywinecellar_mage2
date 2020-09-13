@@ -45,7 +45,7 @@ class Success extends ParentSuccess
                 array_push($products, [
                     'name' => $product->getName(),
                     'id' => $product->getId(),
-                    'price' => $this->configHelper->formatPrice($product->getProduct()->getPrice()),
+                    'price' => $this->configHelper->formatPrice($product->getProduct()->getFinalPrice()),
                     'size' => (string)$product->getProduct()->getAttributeText('size'),
                     'color' => (string)$product->getProduct()->getAttributeText('color'),
                     'quantity' => intval($product->getQtyOrdered())

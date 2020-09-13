@@ -1,0 +1,33 @@
+<?php
+$configs = $this->getConfigHelper();
+if (!$configs->isEnabled()) {
+    return;
+}
+?>
+<script>
+    require(['jquery'], function ($) {
+        $('body').on('click', '.product-item a', function () {
+            let productItem = $(this).closest('.product-item');
+
+            if (!productItem) {
+                return;
+            }
+
+            let productName = productItem.find('.product-item-name a').text();
+            productName = (typeof productName === 'string') ? productName.replace(/(\r\n|\n|\r)/gm, "").trim() : null;
+
+            let productPrice = productItem.find('.price-final_price .price').text();
+            productPrice = (typeof productPrice === 'string') ? Number(productPrice.replace(/[^0-9\.]+/g, "")) : null;
+
+            if (dataLayer && productName && productPrice) {
+                dataLayer.push({
+                    "event": "productClickthrough",
+                    "product": {
+                        "name": productName,
+                        "price": productPrice
+                    }
+                });
+            }
+        });
+    });
+</script>

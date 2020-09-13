@@ -1,0 +1,47 @@
+<?php
+/** @var \Laconica\Analytics\Block\Newsletter\Subscribe $this */
+
+$configs = $this->getConfigHelper();
+if (!$configs->isEnabled()) {
+    return;
+}
+?>
+<script>
+    require(['jquery'], function ($) {
+        if (!dataLayer) {
+            return;
+        }
+
+        let bodyElement = $('body');
+        let newsletterFormId = "#newsletter-validate-detail";
+
+        bodyElement.on('click', '.footer-menu .newsletter a', function () {
+            dataLayer.push({
+                "event": "emailModalTrigger",
+            });
+        });
+
+        bodyElement.on('submit', newsletterFormId, function (event) {
+            event.preventDefault();
+            $.ajax({
+                type: "POST",
+                url: "<?php echo $this->getSubscribeUrl(); ?>",
+                dataType: "json",
+                data: $(this).serialize(),
+                success: function (response) {
+                    let status = parseInt(response.success);
+                    if (status !== 0 && !isNaN(status)) {
+                        dataLayer.push({
+                            "event": "emailModalSubmit",
+                        });
+                    }
+                    location.reload();
+                },
+                error: function (response) {
+                    location.reload();
+                }
+            });
+
+        });
+    })
+</script>
