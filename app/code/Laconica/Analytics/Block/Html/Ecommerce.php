@@ -111,7 +111,7 @@ class Ecommerce extends Gtm
                     'name' => $product->getName(),
                     'id' => $product->getId(),
                     'price' => $this->configHelper->formatPrice($product->getFinalPrice()),
-                    'brand' => (string)$product->getAttributeText('manufacturer'),
+                    'brand' => (string)$product->getAttributeText('producer'),
                     'category' => ($productCategory) ? $productCategory->getName() : ''
                 ]
             ]
