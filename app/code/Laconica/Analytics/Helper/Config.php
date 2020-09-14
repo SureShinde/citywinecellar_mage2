@@ -11,6 +11,7 @@ class Config
     const GTM_ENABLED_XML_PATH = 'google/gtm/enable';
     const GTM_QUOTE_PAGES_XML_PATH = 'google/gtm/quote_pages';
     const GTM_EXPRESSIONS_LIMIT_XML_PATH = 'google/gtm/expressions_limit';
+    const GTM_WIDGET_EXPRESSIONS_LIMIT_XML_PATH = 'google/gtm/widget_expressions_limit';
     const GTM_TRANSACTION_AFFILIATION_XML_PATH = 'google/gtm/transaction_affiliation';
     const GTM_AFFILIATION_XML_PATH = 'google/gtm/affiliation';
 
@@ -23,6 +24,7 @@ class Config
     private $enabled;
     private $quotePages;
     private $expressionsLimit;
+    private $widgetExpressionsLimit;
     private $transactionAffiliation;
     private $affiliation;
 
@@ -83,15 +85,35 @@ class Config
         return $this->expressionsLimit;
     }
 
-    public function getTransactionAffiliation(){
-        if($this->transactionAffiliation === null){
+    /**
+     * @return int
+     */
+    public function getWidgetExpressionsLimit()
+    {
+        if ($this->widgetExpressionsLimit === null) {
+            $limit = $this->scopeConfig->getValue(self::GTM_WIDGET_EXPRESSIONS_LIMIT_XML_PATH, ScopeInterface::SCOPE_STORE);
+            $this->widgetExpressionsLimit = intval($limit);
+        }
+        return $this->widgetExpressionsLimit;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTransactionAffiliation()
+    {
+        if ($this->transactionAffiliation === null) {
             $this->transactionAffiliation = $this->scopeConfig->getValue(self::GTM_TRANSACTION_AFFILIATION_XML_PATH, ScopeInterface::SCOPE_STORE);
         }
         return $this->transactionAffiliation;
     }
 
-    public function getAffiliation(){
-        if($this->affiliation === null){
+    /**
+     * @return mixed
+     */
+    public function getAffiliation()
+    {
+        if ($this->affiliation === null) {
             $this->affiliation = $this->scopeConfig->getValue(self::GTM_AFFILIATION_XML_PATH, ScopeInterface::SCOPE_STORE);
         }
         return $this->affiliation;

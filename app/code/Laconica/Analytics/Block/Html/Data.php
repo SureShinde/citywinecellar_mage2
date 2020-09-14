@@ -236,7 +236,7 @@ class Data extends Gtm
             if ($item->getProductType() !== 'simple') {
                 continue;
             }
-            $qty = ($isOrder) ? $item->getQtyOrdered() : $item->getQty();
+            $qty = ($isOrder) ? $item->getQtyOrdered() : $item->getTotalQty();
             $product = [
                 'sku' => $item->getSku(),
                 'name' => $item->getName(),

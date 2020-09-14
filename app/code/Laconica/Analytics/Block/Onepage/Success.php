@@ -82,9 +82,9 @@ class Success extends ParentSuccess
                             'shipping' => $this->configHelper->formatPrice($order->getShippingAmount()),
                             'coupon' => $this->configHelper->formatPrice($order->getDiscountAmount()),
                             'giftcard' => $this->configHelper->formatPrice($order->getGiftVoucherDiscount())
-                        ]
-                    ],
-                    'products' => $products
+                        ],
+                        'products' => $products
+                    ]
                 ]
             ];
             return json_encode($dataLayer);

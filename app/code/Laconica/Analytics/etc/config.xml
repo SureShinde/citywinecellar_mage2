@@ -7,6 +7,7 @@
                 <enable>0</enable>
                 <quote_pages>checkout/index/index</quote_pages>
                 <expressions_limit>3</expressions_limit>
+                <widget_expressions_limit>1</widget_expressions_limit>
                 <transaction_affiliation>Main Website</transaction_affiliation>
                 <affiliation>Online Store</affiliation>
             </gtm>
