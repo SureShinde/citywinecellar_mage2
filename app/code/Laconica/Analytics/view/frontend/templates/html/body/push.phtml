@@ -1,0 +1,18 @@
+<?php
+/** @var \Laconica\Analytics\Block\Html\Gtm $this */
+
+$configs = $this->getConfigHelper();
+$dataLayerJson = $this->getPushJson();
+if (!$configs->isEnabled() || !$dataLayerJson) {
+    return;
+}
+?>
+<script>
+    require(['domReady'], function (domReady) {
+        domReady(function () {
+            if (dataLayer) {
+                dataLayer.push(<?php echo $dataLayerJson; ?>);
+            }
+        });
+    });
+</script>

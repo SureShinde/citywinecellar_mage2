@@ -70,4 +70,10 @@ use Magento\Framework\App\Action\Action;
             <?= $block->getPagerHtml() ?>
         </div>
     </div>
+    <?php
+    echo $block->getLayout()->createBlock('Laconica\Analytics\Block\Product\Items')
+        ->setTemplate('Laconica_Analytics::html/body/push.phtml')
+        ->setData('products', $items)
+        ->toHtml();
+    ?>
 <?php endif;?>

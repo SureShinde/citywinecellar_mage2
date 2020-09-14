@@ -1,0 +1,25 @@
+<?php
+/** @var \Laconica\Analytics\Block\Onepage\Facebook $this */
+
+$trackId = $this->getTrackId();
+$pushJson = $this->getPushJson();
+if (!$this->isEnabled() || !$trackId || !$pushJson) {
+    return;
+}
+?>
+<!-- Facebook Conversion Code for Checkouts - theliquorstore 2015 -->
+<script>(function() {
+        var _fbq = window._fbq || (window._fbq = []);
+        if (!_fbq.loaded) {
+            var fbds = document.createElement('script');
+            fbds.async = true;
+            fbds.src = '//connect.facebook.net/en_US/fbds.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(fbds, s);
+            _fbq.loaded = true;
+        }
+    })();
+    window._fbq = window._fbq || [];
+    window._fbq.push(['track', '<?php echo $trackId; ?>', <?php echo $pushJson; ?>]);
+</script>
+<noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?ev=<?php echo $trackId; ?>&amp;cd[value]=<?php echo $this->getGrandTotal(); ?>&amp;cd[currency]=<?php echo $this->getCurrencyCode(); ?>&amp;noscript=1" /></noscript>

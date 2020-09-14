@@ -1,0 +1,45 @@
+<?php
+/** @var \Laconica\Analytics\Block\Product\Event $this */
+
+$configs = $this->getConfigHelper();
+$productInfoJson = $this->getProductInfoJson();
+if (!$configs->isEnabled() || !$productInfoJson) {
+    return;
+}
+?>
+<script>
+    require(['jquery'], function ($) {
+        if (!dataLayer) {
+            return;
+        }
+
+        let bodyElement = $('body');
+        // Trigger Social Media Event
+        bodyElement.on('click', '.social-media-icons a', function () {
+            let type = $(this).attr('class');
+            type = (typeof type === 'string') ? type.replace(/(\r\n|\n|\r)/gm, "").trim() : null;
+            let event = "productLike";
+            switch (type) {
+                case 'twitter':
+                    event = 'productTweet';
+                    break;
+                case 'pinterest':
+                    event = 'productPin';
+                    break;
+            }
+            dataLayer.push({
+                "event": event,
+                "product": <?php echo $productInfoJson; ?>
+            });
+        });
+
+        <?php if ($this->isCustomerLoggedIn()): ?>
+        bodyElement.on('click', '.product-addto-links .towishlist', function () {
+            dataLayer.push({
+                "event": "addToWishlist",
+                "product": <?php echo $productInfoJson; ?>
+            });
+        });
+        <?php endif; ?>
+    })
+</script>
