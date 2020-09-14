@@ -125,6 +125,6 @@ class Config
      */
     public function formatPrice($price)
     {
-        return number_format($price, PriceCurrencyInterface::DEFAULT_PRECISION, '.', '');
+        return floatval(number_format($price, PriceCurrencyInterface::DEFAULT_PRECISION, '.', ''));
     }
 }
