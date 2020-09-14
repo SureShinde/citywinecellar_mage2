@@ -19,17 +19,32 @@
                        showInStore="0">
                     <label>Send Quote Pages:</label>
                 </field>
-                <field id="expressions_limit" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1"
+                <field id="expressions_limit" translate="label" type="text" sortOrder="2" showInDefault="1"
+                       showInWebsite="1"
                        showInStore="1">
                     <label>Products Expressions Limit:</label>
                 </field>
-                <field id="transaction_affiliation" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1"
+                <field id="transaction_affiliation" translate="label" type="text" sortOrder="2" showInDefault="1"
+                       showInWebsite="1"
                        showInStore="1">
                     <label>Transaction Affiliation:</label>
                 </field>
                 <field id="affiliation" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1"
                        showInStore="1">
                     <label>Affiliation:</label>
+                </field>
+            </group>
+            <group id="facebook_conversion" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1"
+                   showInStore="0">
+                <label>Facebook Conversion</label>
+                <field id="enable" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Enable:</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="id" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Track ID:</label>
                 </field>
             </group>
         </section>

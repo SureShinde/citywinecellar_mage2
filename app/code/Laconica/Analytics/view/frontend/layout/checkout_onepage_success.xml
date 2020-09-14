@@ -6,5 +6,9 @@
             <block class="Laconica\Analytics\Block\Onepage\Success" name="datalayer_onepage_success" cacheable="false"
                    template="Laconica_Analytics::datalayer/onepage/success.phtml"/>
         </referenceContainer>
+        <referenceContainer name="head.additional">
+            <block class="Laconica\Analytics\Block\Onepage\Facebook" name="datalayer_onepage_facebook" cacheable="false"
+                   template="Laconica_Analytics::datalayer/onepage/facebook.phtml"/>
+        </referenceContainer>
     </body>
 </page>

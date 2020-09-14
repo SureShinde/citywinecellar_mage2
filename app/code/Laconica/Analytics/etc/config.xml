@@ -10,6 +10,9 @@
                 <transaction_affiliation>Main Website</transaction_affiliation>
                 <affiliation>Online Store</affiliation>
             </gtm>
+            <facebook_conversion>
+                <enable>0</enable>
+            </facebook_conversion>
         </google>
     </default>
 </config>
