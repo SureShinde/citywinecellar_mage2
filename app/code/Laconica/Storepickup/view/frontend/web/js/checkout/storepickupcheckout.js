@@ -25,11 +25,6 @@ define(
             });
             $wrapperelectHtml.append($selectStoreHtml);
 
-            //CUSTOM CODE
-            $wrapperelectHtml.append('<label>You can leave some tips:</label>');
-            $wrapperelectHtml.append('<input type="number" id="tips" name="gratuity" min="0" step="0.01" class="disable-ul list-store-select" onblur="updateTipsMethod()" placeholder="tips" style="max-width: 200px;">');
-            //END CUSTOM CODE
-
             return $wrapperelectHtml;
         }
         quote.paymentMethod.subscribe(function () {
