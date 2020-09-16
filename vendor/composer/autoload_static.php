@@ -252,6 +252,7 @@ class ComposerStaticInitfabeccfb0b2fd0dfa4b82eda2300a2fd
         '2451819c9c2b818eb9be5f36b51585ea' => __DIR__ . '/..' . '/magento/module-wishlist-graph-ql/registration.php',
         'd04d5084d3db908d3544ed506541866a' => __DIR__ . '/..' . '/magento/theme-adminhtml-backend/registration.php',
         '7102f9cf0d2c08bc731a7e185c1c8bfc' => __DIR__ . '/..' . '/magento/theme-frontend-luma/registration.php',
+        '6b5b87bda6fedcf6ef8605219c8b67f2' => __DIR__ . '/..' . '/mageplaza/module-core/registration.php',
         'c0b4e657bfc52b8949a8980203e7ae6e' => __DIR__ . '/..' . '/msp/recaptcha/registration.php',
         'aa99edf9b0e88f2dccf8ffaddff1ce2b' => __DIR__ . '/..' . '/msp/twofactorauth/registration.php',
         '3109cb1a231dcd04bee1f9f620d46975' => __DIR__ . '/..' . '/paragonie/sodium_compat/autoload.php',
@@ -260,6 +261,7 @@ class ComposerStaticInitfabeccfb0b2fd0dfa4b82eda2300a2fd
         'b84fe13d49a553e659e2c529c4c028c3' => __DIR__ . '/..' . '/hps/heartland-php/Hps.php',
         'b9aadd33005ad499392449d63f246638' => __DIR__ . '/..' . '/klaviyo/magento2-extension/registration.php',
         'eda65932675b68b5aee4503e0762d64d' => __DIR__ . '/..' . '/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/_bootstrap.php',
+        'b82d25554bf1e93610f52945f4b2daa9' => __DIR__ . '/..' . '/mageplaza/module-two-factor-authentication/registration.php',
         'b4cf39431a4b949eea8aa69ebb3d39da' => __DIR__ . '/../..' . '/app/etc/NonComposerComponentRegistration.php',
     );
 
@@ -356,6 +358,7 @@ class ComposerStaticInitfabeccfb0b2fd0dfa4b82eda2300a2fd
             'Symfony\\Component\\Console\\' => 26,
             'Symfony\\Component\\Config\\' => 25,
             'Symfony\\Component\\BrowserKit\\' => 29,
+            'Sinergi\\BrowserDetector\\' => 24,
             'SelfUpdate\\' => 11,
             'Seld\\PharUtils\\' => 15,
             'Seld\\JsonLint\\' => 14,
@@ -389,6 +392,8 @@ class ComposerStaticInitfabeccfb0b2fd0dfa4b82eda2300a2fd
         array (
             'MyCLabs\\Enum\\' => 13,
             'Monolog\\' => 8,
+            'Mageplaza\\TwoFactorAuth\\' => 24,
+            'Mageplaza\\Core\\' => 15,
             'Magento\\Wishlist\\' => 17,
             'Magento\\WishlistGraphQl\\' => 24,
             'Magento\\WishlistAnalytics\\' => 26,
@@ -630,6 +635,7 @@ class ComposerStaticInitfabeccfb0b2fd0dfa4b82eda2300a2fd
             'Grasmash\\YamlExpander\\' => 22,
             'Grasmash\\Expander\\' => 18,
             'GraphQL\\' => 8,
+            'Google\\Authenticator\\' => 21,
         ),
         'F' => 
         array (
@@ -974,6 +980,10 @@ class ComposerStaticInitfabeccfb0b2fd0dfa4b82eda2300a2fd
         array (
             0 => __DIR__ . '/..' . '/symfony/browser-kit',
         ),
+        'Sinergi\\BrowserDetector\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/sinergi/browser-detector/src',
+        ),
         'SelfUpdate\\' => 
         array (
             0 => __DIR__ . '/..' . '/consolidation/self-update/src',
@@ -1057,6 +1067,14 @@ class ComposerStaticInitfabeccfb0b2fd0dfa4b82eda2300a2fd
         'Monolog\\' => 
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
+        ),
+        'Mageplaza\\TwoFactorAuth\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mageplaza/module-two-factor-authentication',
+        ),
+        'Mageplaza\\Core\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mageplaza/module-core',
         ),
         'Magento\\Wishlist\\' => 
         array (
@@ -1962,6 +1980,10 @@ class ComposerStaticInitfabeccfb0b2fd0dfa4b82eda2300a2fd
         'GraphQL\\' => 
         array (
             0 => __DIR__ . '/..' . '/webonyx/graphql-php/src',
+        ),
+        'Google\\Authenticator\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/sonata-project/google-authenticator/src',
         ),
         'Faker\\' => 
         array (
