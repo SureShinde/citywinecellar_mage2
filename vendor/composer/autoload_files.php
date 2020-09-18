@@ -251,6 +251,7 @@ return array(
     '2451819c9c2b818eb9be5f36b51585ea' => $vendorDir . '/magento/module-wishlist-graph-ql/registration.php',
     'd04d5084d3db908d3544ed506541866a' => $vendorDir . '/magento/theme-adminhtml-backend/registration.php',
     '7102f9cf0d2c08bc731a7e185c1c8bfc' => $vendorDir . '/magento/theme-frontend-luma/registration.php',
+    '6b5b87bda6fedcf6ef8605219c8b67f2' => $vendorDir . '/mageplaza/module-core/registration.php',
     'c0b4e657bfc52b8949a8980203e7ae6e' => $vendorDir . '/msp/recaptcha/registration.php',
     'aa99edf9b0e88f2dccf8ffaddff1ce2b' => $vendorDir . '/msp/twofactorauth/registration.php',
     '3109cb1a231dcd04bee1f9f620d46975' => $vendorDir . '/paragonie/sodium_compat/autoload.php',
@@ -259,5 +260,6 @@ return array(
     'b84fe13d49a553e659e2c529c4c028c3' => $vendorDir . '/hps/heartland-php/Hps.php',
     'b9aadd33005ad499392449d63f246638' => $vendorDir . '/klaviyo/magento2-extension/registration.php',
     'eda65932675b68b5aee4503e0762d64d' => $vendorDir . '/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/_bootstrap.php',
+    'b82d25554bf1e93610f52945f4b2daa9' => $vendorDir . '/mageplaza/module-two-factor-authentication/registration.php',
     'b4cf39431a4b949eea8aa69ebb3d39da' => $baseDir . '/app/etc/NonComposerComponentRegistration.php',
 );

@@ -15,6 +15,7 @@
         "hybridauth/hybridauth": "^2.15.1",
         "klaviyo/magento2-extension": "^1.2",
         "magento/product-community-edition": "2.3.1",
+        "mageplaza/module-two-factor-authentication": "^4.0",
         "picqer/php-barcode-generator": "^2.0"
     },
     "require-dev": {
