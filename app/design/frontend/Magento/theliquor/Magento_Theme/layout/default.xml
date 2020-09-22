@@ -34,7 +34,13 @@
                 </block>
             </container>
         </referenceContainer>
-
+        <referenceBlock name="catalog.topnav">
+            <block class="Magento\Cms\Block\Block" name="catalog.topnav.profile-top">
+                <arguments>
+                    <argument name="block_id" xsi:type="string">profile-top-mobile</argument>
+                </arguments>
+            </block>
+        </referenceBlock>
 
         <referenceBlock name="top.links" remove="true"/>
         <referenceBlock name="navigation.sections" remove="true"/>
