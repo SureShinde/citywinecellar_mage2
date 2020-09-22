@@ -10,6 +10,7 @@ class StateConfig
     const SPECIFIC_ALLOWED_STATE_PATH = 'checkout/state_filter/specific_allowed_states';
     const STATE_FILTER_ENABLED = 'checkout/state_filter/enabled';
     const INVALID_CATEGORIES_LIST = 'checkout/state_filter/invalid_category';
+    const JS_ERROR_MESSAGE_PATH = 'checkout/state_filter/js_error_message';
 
     /**
      * @var \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
@@ -70,5 +71,14 @@ class StateConfig
     {
         $specificAllowedStates = $this->scopeConfig->getValue(self::SPECIFIC_ALLOWED_STATE_PATH, ScopeInterface::SCOPE_WEBSITE);
         return explode(",", $specificAllowedStates);
+    }
+
+    /**
+     * Returns js error message text
+     * @return mixed
+     */
+    public function getJsMessageText()
+    {
+        return $this->scopeConfig->getValue(self::JS_ERROR_MESSAGE_PATH, ScopeInterface::SCOPE_STORE);
     }
 }

@@ -33,6 +33,10 @@
                     <label>Specific Allowed US States</label>
                     <source_model>Laconica\Checkout\Model\Config\Source\RegionInformationProvider</source_model>
                 </field>
+                <field id="js_error_message" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Invalid state message</label>
+                </field>
             </group>
         </section>
     </system>
