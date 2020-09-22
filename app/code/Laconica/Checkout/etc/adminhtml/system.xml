@@ -10,15 +10,32 @@
             </group>
         </section>
         <section id="checkout">
-            <group id="state_filter" translate="label" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+            <group id="state_filter" translate="label" sortOrder="20" showInDefault="1" showInWebsite="1"
+                   showInStore="1">
                 <label>Allowed US States in Checkout</label>
-                <field id="enabled" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1"
+                       showInStore="0" canRestore="1" >
                     <label>Enabled State Filter</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="allowed_states" translate="label comment" type="multiselect" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
-                    <label>Allowed US States in Checkout </label>
-                    <source_model>Laconica\Checkout\Model\Config\Region\RegionInformationProvider</source_model>
+                <field id="common_allowed_states" translate="label" type="multiselect" sortOrder="20" showInDefault="1"
+                       showInWebsite="1" showInStore="0" canRestore="1">
+                    <label>Common Allowed US States</label>
+                    <source_model>Laconica\Checkout\Model\Config\Source\RegionInformationProvider</source_model>
+                </field>
+                <field id="invalid_category" translate="label" type="multiselect"
+                       sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Invalid Categories For Specific Countries</label>
+                    <source_model>Laconica\Checkout\Model\Config\Source\Category</source_model>
+                </field>
+                <field id="specific_allowed_states" translate="label" type="multiselect" sortOrder="40"
+                       showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                    <label>Specific Allowed US States</label>
+                    <source_model>Laconica\Checkout\Model\Config\Source\RegionInformationProvider</source_model>
+                </field>
+                <field id="js_error_message" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Invalid state message</label>
                 </field>
             </group>
         </section>

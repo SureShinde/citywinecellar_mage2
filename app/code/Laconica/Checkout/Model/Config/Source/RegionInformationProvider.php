@@ -1,6 +1,6 @@
 <?php
 
-namespace Laconica\Checkout\Model\Config\Region;
+namespace Laconica\Checkout\Model\Config\Source;
 
 class RegionInformationProvider implements \Magento\Framework\Data\OptionSourceInterface
 {
@@ -21,15 +21,18 @@ class RegionInformationProvider implements \Magento\Framework\Data\OptionSourceI
         $countries = $this->countryInformationAcquirer->getCountriesInfo();
         $regions = [];
         foreach ($countries as $country) {
-            if ($country->getId() === "US") {
-                $availableRegions = $country->getAvailableRegions();
-                foreach ($availableRegions as $region) {
-                    $regions[] = [
-                        'label' => $region->getName(),
-                        'value' => $region->getId()
-                    ];
-                }
+            if ($country->getId() !== "US") {
+                continue;
             }
+
+            $availableRegions = $country->getAvailableRegions();
+            foreach ($availableRegions as $region) {
+                $regions[] = [
+                    'label' => $region->getName(),
+                    'value' => $region->getId()
+                ];
+            }
+
         }
         return $regions;
     }

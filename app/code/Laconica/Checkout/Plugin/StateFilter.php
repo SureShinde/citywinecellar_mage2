@@ -4,42 +4,87 @@ namespace Laconica\Checkout\Plugin;
 
 class StateFilter
 {
-    const STATE_FILTER_PATH = 'checkout/state_filter/allowed_states';
-    const STATE_FILTER_ENABLED = 'checkout/state_filter/enabled';
+    /**
+     * @var \Laconica\Checkout\Helper\StateConfig stateConfigHelper
+     */
+    private $stateConfigHelper;
 
     /**
-     * @var \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @var \Magento\Checkout\Model\Session $checkoutSession
      */
-    private $scopeConfig;
+    private $checkoutSession;
 
-    private $allowedUsStates;
+    private $canShowSpecific = false;
 
     public function __construct(
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
-    ) {
-        $this->scopeConfig = $scopeConfig;
+        \Laconica\Checkout\Helper\StateConfig $stateConfigHelper,
+        \Magento\Checkout\Model\Session $checkoutSession
+    )
+    {
+        $this->stateConfigHelper = $stateConfigHelper;
+        $this->checkoutSession = $checkoutSession;
+        $this->canShowSpecific = $this->canShowSpecificStates();
     }
 
     public function afterToOptionArray(
         \Magento\Directory\Model\ResourceModel\Region\Collection $subject,
         $options
-    ) {
-        if (!$this->isEnabled()) {
+    )
+    {
+        if (!$this->stateConfigHelper->isEnabled()) {
             return $options;
         }
-        $allowedStates = $this->scopeConfig->getValue(self::STATE_FILTER_PATH, \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE);
-        $this->allowedUsStates = explode(",", $allowedStates);
-        $result[] = (isset($options[0]) && is_array($options)) ? array_shift($options) : [];
+
+        $allowedUsStates = $this->stateConfigHelper->getCommonAllowedStates();
+
+        if ($this->canShowSpecific) {
+            $specificStates = $this->stateConfigHelper->getSpecificAllowedStates();
+            $allowedUsStates = array_merge($allowedUsStates, $specificStates);
+        }
+
+        $result[] = (is_array($options) && isset($options[0])) ? array_shift($options) : [];
+
         foreach ($options as $option) {
-            if (isset($option['value']) && in_array($option['value'], $this->allowedUsStates)) {
+            if (isset($option['value']) && in_array($option['value'], $allowedUsStates)) {
                 array_push($result, $option);
             }
         }
+
         return $result;
     }
 
-    public function isEnabled()
+
+    /**
+     * Check if exist product in cart form invalid category
+     *
+     * @return bool
+     */
+    private function canShowSpecificStates()
     {
-        return $this->scopeConfig->getValue(self::STATE_FILTER_ENABLED, \Magento\Store\Model\ScopeInterface::SCOPE_WEBSITE);
+        $cartItems = $this->checkoutSession->getQuote()->getAllItems();
+        $inValidCategories = $this->stateConfigHelper->getInValidCategories();
+
+        foreach ($cartItems as $item) {
+            /** @var \Magento\Quote\Model\Quote\Item $item */
+
+            $product = $item->getProduct();
+
+            if (!$product || !$product->getId()) {
+                continue;
+            }
+
+            $categoriesIds = $product->getCategoryIds();
+
+            if (!$categoriesIds) {
+                continue;
+            }
+
+            foreach ($categoriesIds as $categoryId) {
+                if (in_array($categoryId, $inValidCategories)) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }
