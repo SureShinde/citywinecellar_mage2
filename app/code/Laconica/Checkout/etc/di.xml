@@ -3,4 +3,7 @@
     <type name="Magento\OfflinePayments\Model\Cashondelivery">
         <plugin name="check_money_enabled_admin" type="Laconica\Checkout\Plugin\Cashondelivery" sortOrder="10"/>
     </type>
+    <type name="Magento\Directory\Model\ResourceModel\Region\Collection">
+        <plugin name="us_state_filter_plugin" type="Laconica\Checkout\Plugin\StateFilter" sortOrder="10"/>
+    </type>
 </config>
