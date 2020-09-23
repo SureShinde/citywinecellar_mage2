@@ -37,6 +37,15 @@
                        showInStore="1">
                     <label>Invalid state message</label>
                 </field>
+                <field id="enabled_zip" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1"
+                       showInStore="0" canRestore="1" >
+                    <label>Enabled ZIP Validation</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="zip_js_error_message" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Invalid zip message</label>
+                </field>
             </group>
         </section>
     </system>
