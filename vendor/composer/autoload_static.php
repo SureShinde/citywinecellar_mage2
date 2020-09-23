@@ -120,6 +120,7 @@ class ComposerStaticInitfabeccfb0b2fd0dfa4b82eda2300a2fd
         'a9ed0d27b5a698798a89181429f162c5' => __DIR__ . '/..' . '/khanamiryan/qrcode-detector-decoder/lib/Common/customFunctions.php',
         '71bec2022ce7910b2a55f98bbf437063' => __DIR__ . '/..' . '/magento/framework-amqp/registration.php',
         'c15dd04b8a7893b89b5f554d9cb0778e' => __DIR__ . '/..' . '/magento/framework-message-queue/registration.php',
+        '1158fd4355efa1508f87cf82bdcd70ac' => __DIR__ . '/..' . '/magento/module-admin-notification/registration.php',
         'f0a367f3327072458afd08ec8891b227' => __DIR__ . '/..' . '/magento/module-google-analytics/registration.php',
         '7262a266e3433bc7d1f53ddcb1dab374' => __DIR__ . '/..' . '/magento/module-multishipping/registration.php',
         'e42c867a02490ee966c620d4af2bd81f' => __DIR__ . '/..' . '/magento/module-robots/registration.php',
@@ -177,7 +178,6 @@ class ComposerStaticInitfabeccfb0b2fd0dfa4b82eda2300a2fd
         '10715a404306a4a0101bb75402cc0c4f' => __DIR__ . '/..' . '/magento/language-nl_nl/registration.php',
         '1333e9398ed91c6506c6cfdd4bd91013' => __DIR__ . '/..' . '/magento/language-pt_br/registration.php',
         '2c05a36d82e2b7ee5f7251e6c0fe6974' => __DIR__ . '/..' . '/magento/language-zh_hans_cn/registration.php',
-        '1158fd4355efa1508f87cf82bdcd70ac' => __DIR__ . '/..' . '/magento/module-admin-notification/registration.php',
         '4137e072aca869574ccb2dd0da693e02' => __DIR__ . '/..' . '/magento/module-advanced-pricing-import-export/registration.php',
         'bddee0bd00fac58050c82815d72d3e88' => __DIR__ . '/..' . '/magento/module-amqp/registration.php',
         'fe60032170052cc0b3c0fbfff3e3af81' => __DIR__ . '/..' . '/magento/module-authorizenet/registration.php',
@@ -255,6 +255,7 @@ class ComposerStaticInitfabeccfb0b2fd0dfa4b82eda2300a2fd
         '6b5b87bda6fedcf6ef8605219c8b67f2' => __DIR__ . '/..' . '/mageplaza/module-core/registration.php',
         'c0b4e657bfc52b8949a8980203e7ae6e' => __DIR__ . '/..' . '/msp/recaptcha/registration.php',
         'aa99edf9b0e88f2dccf8ffaddff1ce2b' => __DIR__ . '/..' . '/msp/twofactorauth/registration.php',
+        '9b926c72f05f2fc6248ea8d56cc103cb' => __DIR__ . '/..' . '/paradoxlabs/tokenbase/registration.php',
         '3109cb1a231dcd04bee1f9f620d46975' => __DIR__ . '/..' . '/paragonie/sodium_compat/autoload.php',
         'aa75ea0761a2f40c1f3b32ad314f86c4' => __DIR__ . '/..' . '/phpseclib/mcrypt_compat/lib/mcrypt.php',
         '153a7817726e1caca4e6c3b7bc76f329' => __DIR__ . '/..' . '/temando/module-shipping-m2/registration.php',
@@ -262,6 +263,7 @@ class ComposerStaticInitfabeccfb0b2fd0dfa4b82eda2300a2fd
         'b9aadd33005ad499392449d63f246638' => __DIR__ . '/..' . '/klaviyo/magento2-extension/registration.php',
         'eda65932675b68b5aee4503e0762d64d' => __DIR__ . '/..' . '/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/_bootstrap.php',
         'b82d25554bf1e93610f52945f4b2daa9' => __DIR__ . '/..' . '/mageplaza/module-two-factor-authentication/registration.php',
+        'd890e4a2bbfd3f9d53911b923b41ca53' => __DIR__ . '/..' . '/paradoxlabs/authnetcim/registration.php',
         'b4cf39431a4b949eea8aa69ebb3d39da' => __DIR__ . '/../..' . '/app/etc/NonComposerComponentRegistration.php',
     );
 
@@ -382,6 +384,8 @@ class ComposerStaticInitfabeccfb0b2fd0dfa4b82eda2300a2fd
             'PhpAmqpLib\\' => 11,
             'Pelago\\' => 7,
             'ParagonIE\\ConstantTime\\' => 23,
+            'ParadoxLabs\\TokenBase\\' => 22,
+            'ParadoxLabs\\Authnetcim\\' => 23,
             'PDepend\\' => 8,
         ),
         'O' => 
@@ -1051,6 +1055,14 @@ class ComposerStaticInitfabeccfb0b2fd0dfa4b82eda2300a2fd
         'ParagonIE\\ConstantTime\\' => 
         array (
             0 => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src',
+        ),
+        'ParadoxLabs\\TokenBase\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/paradoxlabs/tokenbase',
+        ),
+        'ParadoxLabs\\Authnetcim\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/paradoxlabs/authnetcim',
         ),
         'PDepend\\' => 
         array (

@@ -12973,6 +12973,79 @@
         "abandoned": true
     },
     {
+        "name": "paradoxlabs/authnetcim",
+        "version": "4.3.1",
+        "version_normalized": "4.3.1.0",
+        "dist": {
+            "type": "zip",
+            "url": "https://repo.magento.com/archives/paradoxlabs/authnetcim/paradoxlabs-authnetcim-4.3.1.0.zip",
+            "shasum": "4b0a1abc9a9dbc514b8b762fd520a34d547bdb3e"
+        },
+        "require": {
+            "paradoxlabs/tokenbase": "~4.3.1"
+        },
+        "time": "2020-08-05T00:00:00-05:00",
+        "type": "magento2-module",
+        "installation-source": "dist",
+        "autoload": {
+            "files": [
+                "registration.php"
+            ],
+            "psr-4": {
+                "ParadoxLabs\\Authnetcim\\": ""
+            }
+        },
+        "license": [
+            "proprietary"
+        ],
+        "description": "Authorize.Net CIM payment method for Magento 2.x by Paradox Labs",
+        "keywords": [
+            "authorize.net",
+            "payment",
+            "tokenization"
+        ]
+    },
+    {
+        "name": "paradoxlabs/tokenbase",
+        "version": "4.3.1",
+        "version_normalized": "4.3.1.0",
+        "dist": {
+            "type": "zip",
+            "url": "https://repo.magento.com/archives/paradoxlabs/tokenbase/paradoxlabs-tokenbase-4.3.1.0.zip",
+            "shasum": "81ae10da271a1829bec73e1884b70b64a2f9651c"
+        },
+        "require": {
+            "ext-json": "*",
+            "magento/framework": "^100.0||^101.0||^102.0||^103.0",
+            "magento/module-admin-notification": "^100.0",
+            "magento/module-backend": "^100.0||^101.0||^102.0",
+            "magento/module-checkout": "^100.0",
+            "magento/module-config": "^100.0||^101.0",
+            "magento/module-customer": "^100.0||^101.0||^102.0||^103.0",
+            "magento/module-directory": "^100.0",
+            "magento/module-payment": "^100.0",
+            "magento/module-quote": "^100.0||^101.0",
+            "magento/module-sales": "^100.0||^101.0||^102.0||^103.0",
+            "magento/module-store": "^100.0||^101.0",
+            "monolog/monolog": "^1.11"
+        },
+        "time": "2020-08-04T00:00:00-05:00",
+        "type": "magento2-module",
+        "installation-source": "dist",
+        "autoload": {
+            "files": [
+                "registration.php"
+            ],
+            "psr-4": {
+                "ParadoxLabs\\TokenBase\\": ""
+            }
+        },
+        "license": [
+            "proprietary"
+        ],
+        "description": "Base module for ParadoxLabs tokenization payment methods."
+    },
+    {
         "name": "paragonie/constant_time_encoding",
         "version": "v2.3.0",
         "version_normalized": "2.3.0.0",

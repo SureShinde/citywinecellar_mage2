@@ -96,6 +96,8 @@ return array(
     'PhpAmqpLib\\' => array($vendorDir . '/php-amqplib/php-amqplib/PhpAmqpLib'),
     'Pelago\\' => array($vendorDir . '/pelago/emogrifier/src'),
     'ParagonIE\\ConstantTime\\' => array($vendorDir . '/paragonie/constant_time_encoding/src'),
+    'ParadoxLabs\\TokenBase\\' => array($vendorDir . '/paradoxlabs/tokenbase'),
+    'ParadoxLabs\\Authnetcim\\' => array($vendorDir . '/paradoxlabs/authnetcim'),
     'PDepend\\' => array($vendorDir . '/pdepend/pdepend/src/main/php/PDepend'),
     'OTPHP\\' => array($vendorDir . '/spomky-labs/otphp/src'),
     'MyCLabs\\Enum\\' => array($vendorDir . '/myclabs/php-enum/src'),
