@@ -2,4 +2,5 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="../../../../../../lib/internal/Magento/Framework/ObjectManager/etc/config.xsd">
     <preference for="HPS\Heartland\Model\Order\Payment" type="Laconica\Heartland\Model\Order\Payment"/>
+    <preference for="HPS\Heartland\Model\Payment" type="Laconica\Heartland\Model\Payment"/>
 </config>
