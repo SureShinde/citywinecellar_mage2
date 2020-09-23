@@ -31,7 +31,9 @@ class ShippingJs extends Template
     {
         $data = [
             'enabled' => intval($this->stateConfigHelper->isEnabled()),
-            'error_message' => $this->stateConfigHelper->getJsMessageText()
+            'zip_enabled' => intval($this->stateConfigHelper->isZipValidationEnabled()),
+            'error_message' => $this->stateConfigHelper->getJsMessageText(),
+            'zip_error_message' => $this->stateConfigHelper->getZipJsMessageText()
         ];
         return json_encode($data);
     }

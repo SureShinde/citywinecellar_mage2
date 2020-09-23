@@ -59,6 +59,8 @@ define(
                     return this._super();
                 }
 
+                let messageContainer = registry.get('checkout.errors').messageContainer;
+
                 // Collect valid regions
                 jQuery("select[name='region_id'] option").each(function (index, el) {
                     let regionId = parseInt(jQuery(el).val());
@@ -70,7 +72,35 @@ define(
                 // Check if selected region is valid
                 if (!regions.includes(selectedRegionId)) {
                     let messageText = window.valuesConfig.error_message;
-                    let messageContainer = registry.get('checkout.errors').messageContainer;
+                    this.errorValidationMessage(
+                        $t(messageText)
+                    );
+                    messageContainer.addErrorMessage({
+                        message: $t(messageText)
+                    });
+                    return false;
+                }
+
+                // Additional zip validation
+                let enteredZipCode = quote.shippingAddress().postcode;
+                if (!enteredZipCode || typeof window.valuesConfig === "undefined" || !window.valuesConfig.zip_enabled) {
+                    return this._super();
+                }
+
+                let responseResult = [];
+                $.ajax({
+                    type: "POST",
+                    url: BASE_URL + "la_checkout/connection/zip",
+                    dataType: 'json',
+                    async: false,
+                    data: {zip: enteredZipCode, region: selectedRegionId},
+                    success: function (data) {
+                        responseResult = data;
+                    }
+                });
+
+                if (!responseResult['region_common'] && !responseResult['status']) {
+                    let messageText = window.valuesConfig.zip_error_message;
                     this.errorValidationMessage(
                         $t(messageText)
                     );

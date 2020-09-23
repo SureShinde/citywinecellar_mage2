@@ -6,4 +6,11 @@
     <type name="Magento\Directory\Model\ResourceModel\Region\Collection">
         <plugin name="us_state_filter_plugin" type="Laconica\Checkout\Plugin\StateFilter" sortOrder="10"/>
     </type>
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="la_checkout_import_zip_codes" xsi:type="object">Laconica\Checkout\Console\Command\ImportPostCodes</item>
+            </argument>
+        </arguments>
+    </type>
 </config>
