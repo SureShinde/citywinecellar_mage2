@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="laconica" translate="label" sortOrder="10000">
+            <label>Laconica</label>
+        </tab>
+        <section id="la_sales_grid" translate="label" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="1">
+            <class>separator-top</class>
+            <label>Order grid</label>
+            <tab>laconica</tab>
+            <resource>Laconica_Sales::conf</resource>
+            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                <label>Configuration</label>
+                <field id="filter_list" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Filter List</label>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>
