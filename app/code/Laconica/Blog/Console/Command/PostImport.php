@@ -378,7 +378,7 @@ class PostImport extends Command
         $description = trim(strip_tags($description, 'p'));
         $firsPos = strpos($description, '.') + 1;
         $shortContentLength = (strlen($description) > $firsPos) ? strpos($description, '.', $firsPos) : self::SHORT_CONTENT_LENGTH;
-        return trim(substr($description, 0, $shortContentLength)) . ".";
+        return ltrim(substr($description, 0, $shortContentLength), '&nbsp;') . ".";
     }
 
     /**
