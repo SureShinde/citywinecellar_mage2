@@ -24,13 +24,13 @@ class Item
     )
     {
         if ($this->isEnabled()) {
-            return Stock::BACKORDERS_NO;
+            return Stock::BACKORDERS_YES_NONOTIFY;
         }
         return $result;
     }
 
     private function isEnabled()
     {
-        return $this->scopeConfig->getValue('cataloginventory/item_options/disable_backorders_frontend');
+        return $this->scopeConfig->getValue('cataloginventory/item_options/enable_backorders_backend');
     }
 }
