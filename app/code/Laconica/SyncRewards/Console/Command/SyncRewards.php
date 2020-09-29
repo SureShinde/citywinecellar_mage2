@@ -79,6 +79,11 @@ class SyncRewards extends Command
         $output->writeln('<info>Count of customers: ' . $posCustomerCollection->getSize() . '</info>');
         $connection = $this->resource->getConnection();
 
+        // Delete previous items
+        $connection->delete($connection->getTableName('amasty_rewards_rewards'), [
+            'action = ?' => Data::TRANSFER_ACTION
+        ]);
+
         $transferred = 0;
         foreach ($posCustomerCollection as $item) {
             $customerId = $item->getCustomerId();
@@ -90,25 +95,33 @@ class SyncRewards extends Command
             )->where(
                 'customer_id = ?',
                 (int)$customerId
-            ) ->where('action like ?' , Data::TRANSFER_ACTION);
+            )->where('action like ?', Data::TRANSFER_ACTION);
 
             $result = $connection->fetchRow($select);
-            if (isset($result['count']) && $result['count'] == '0') {
-                $expire = $this->expirationArgFactory->create();
-                $expire->setIsExpire(false);
-                $amount = $item->getPointBalance();
-                if (intval($amount) > 0) {
-                    try {
-                        $this->rewardsProvider->addPoints($amount, $customerId, Data::TRANSFER_ACTION, '', $expire);
-                        $transferred++;
-                    } catch (\Exception $exception) {
-                        $message = "Could not save info to customer with id = $customerId";
-                        $output->writeln("<error>$message</error>");
-                        $this->logger->error($message);
-                        $this->logger->error($exception->getMessage());
-                    }
-                }
+
+            if (!isset($result['count']) || intval($result['count']) > 0) {
+                continue;
             }
+
+            $expire = $this->expirationArgFactory->create();
+            $expire->setIsExpire(false);
+            $amount = $item->getPointBalance();
+
+            if (intval($amount) <= 0) {
+                continue;
+            }
+
+            try {
+                $this->rewardsProvider->addPoints($amount, $customerId, Data::TRANSFER_ACTION, '', $expire);
+                $transferred++;
+            } catch (\Exception $exception) {
+                $message = "Could not save info to customer with id = $customerId";
+                $output->writeln("<error>$message</error>");
+                $this->logger->error($message);
+                $this->logger->error($exception->getMessage());
+            }
+
+
         }
         $output->writeln('<info>Transfer has finished. Total count transfered customers\' points: ' . $transferred . '</info>');
     }
