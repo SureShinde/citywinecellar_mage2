@@ -22,13 +22,18 @@ require([
             }
         }
 
-
+        let filterOpen = parseInt(localStorage.getItem('hide-filter'));
+        if(filterOpen === 1){
+            $(".columns").removeClass('hide-filter');
+        }
 
         $(".mobile-mnu").click(function(){
             $(this).parents().toggleClass('open');
         });
 
         $(".js-filter").click(function(){
+            let filterStatus = ($(".columns").hasClass('hide-filter')) ? "1" : "0";
+            localStorage.setItem('hide-filter', filterStatus);
             $(".columns").toggleClass('hide-filter');
         });
 

@@ -58,7 +58,7 @@
 
 
 
-
+        <referenceContainer name="columns" htmlClass="columns hide-filter" />
 
     </body>
 </page>

@@ -57,7 +57,7 @@
         <referenceBlock name="wishlist_sidebar" remove="true" />
 
 
-
+        <referenceContainer name="columns" htmlClass="columns hide-filter" />
 
 
     </body>
