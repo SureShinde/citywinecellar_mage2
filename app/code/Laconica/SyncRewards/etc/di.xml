@@ -4,6 +4,7 @@
         <arguments>
             <argument name="commands" xsi:type="array">
                 <item name="sync_rewards" xsi:type="object">Laconica\SyncRewards\Console\Command\SyncRewards</item>
+                <item name="sync_rewards_expire_date" xsi:type="object">Laconica\SyncRewards\Console\Command\SyncRewardsExpireDate</item>
             </argument>
         </arguments>
     </type>
