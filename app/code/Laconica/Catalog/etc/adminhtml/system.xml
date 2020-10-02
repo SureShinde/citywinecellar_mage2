@@ -6,7 +6,12 @@
             <group id="item_options">
                 <field id="enable_backorders_backend" translate="label" type="select" sortOrder="3" showInDefault="1" showInWebsite="0"
                        showInStore="0">
-                    <label>Enabke Backorders For Backend</label>
+                    <label>Enable Backorders For Backend</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="skip_stock_manage_shipment" translate="label" type="select" sortOrder="3" showInDefault="1" showInWebsite="0"
+                       showInStore="0">
+                    <label>Skip Stock Manage For Shipment</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
             </group>

@@ -5,6 +5,7 @@
         <cataloginventory>
             <item_options>
                 <enable_backorders_backend>1</enable_backorders_backend>
+                <skip_stock_manage_shipment>1</skip_stock_manage_shipment>
             </item_options>
         </cataloginventory>
     </default>

@@ -4,4 +4,6 @@
     <type name="Magento\CatalogInventory\Model\Stock\Item">
         <plugin name="disable_backorders_frontend" type="Laconica\Catalog\Plugin\Model\Stock\Item" sortOrder="10"/>
     </type>
+    <preference for="Magento\InventorySourceDeductionApi\Model\SourceDeductionService"
+                type="Laconica\Catalog\Model\SourceDeductionService"/>
 </config>
