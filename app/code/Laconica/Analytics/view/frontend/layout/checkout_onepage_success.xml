@@ -3,11 +3,11 @@
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
         <referenceContainer name="before.body.end">
-            <block class="Laconica\Analytics\Block\Onepage\Success" name="datalayer_onepage_success" cacheable="false"
+            <block class="Laconica\Analytics\Block\Onepage\Success" name="datalayer_onepage_success"
                    template="Laconica_Analytics::datalayer/onepage/success.phtml"/>
         </referenceContainer>
         <referenceContainer name="head.additional">
-            <block class="Laconica\Analytics\Block\Onepage\Facebook" name="datalayer_onepage_facebook" cacheable="false"
+            <block class="Laconica\Analytics\Block\Onepage\Facebook" name="datalayer_onepage_facebook"
                    template="Laconica_Analytics::datalayer/onepage/facebook.phtml"/>
         </referenceContainer>
     </body>

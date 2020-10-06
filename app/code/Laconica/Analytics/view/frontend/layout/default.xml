@@ -7,9 +7,9 @@
                    template="Laconica_Analytics::html/body/gtm.phtml"/>
         </referenceContainer>
         <referenceContainer name="before.body.end">
-            <block class="Laconica\Analytics\Block\Html\Data" name="gtm_data_push" cacheable="false"
+            <block class="Laconica\Analytics\Block\Html\Data" name="gtm_data_push"
                    template="Laconica_Analytics::html/body/push.phtml"/>
-            <block class="Laconica\Analytics\Block\Html\Ecommerce" name="gtm_ecommerce_push" cacheable="false"
+            <block class="Laconica\Analytics\Block\Html\Ecommerce" name="gtm_ecommerce_push"
                    template="Laconica_Analytics::html/body/push.phtml"/>
             <block class="Laconica\Analytics\Block\Html\Gtm" name="gtm_click_through"
                    template="Laconica_Analytics::html/body/click_through.phtml"/>
