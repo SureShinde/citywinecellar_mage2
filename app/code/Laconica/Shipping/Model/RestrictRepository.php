@@ -21,11 +21,8 @@ class RestrictRepository
 
     public function hasRestrictions($carrierCode, $request)
     {
-        //$start = microtime(true);
-
         $select = $this->connection->select()->from(['main_table' => 'la_table_rate_excluded'], ['count' => 'count(main_table.id)']);
         $this->addZipFromFilter($select, $request->getDestPostcode());
-        $this->addZipToFilter($select, $request->getDestPostcode());
         $this->addZipToFilter($select, $request->getDestPostcode());
         $this->addStateFilter($select, $request->getDestRegionId());
         $this->addCityFilter($select, $request->getDestRegionId());
@@ -33,10 +30,6 @@ class RestrictRepository
 
         $hasRestrictions = $this->connection->fetchCol($select);
         $hasRestrictions = $hasRestrictions[0] ?? false;
-        //$hasRestrictions = $this->getCarrierRestrictions($carrierCode, $request, $hasRestrictions);
-
-        //$time = microtime(true) - $start;
-        //$this->logger->critical($carrierCode . ' : ' . $time);
 
         return $hasRestrictions;
     }
@@ -50,13 +43,10 @@ class RestrictRepository
         $select = $this->connection->select()->from(['main_table' => 'amasty_table_rate'], ['count' => 'count(main_table.id)']);
         $this->addZipFromFilter($select, $request->getDestPostcode());
         $this->addZipToFilter($select, $request->getDestPostcode());
-        $this->addZipToFilter($select, $request->getDestPostcode());
         $this->addStateFilter($select, $request->getDestRegionId());
         $this->addCityFilter($select, $request->getDestRegionId());
         $this->addStoresFilter($select, $request->getStoreId());
         $this->addLocalDeliveryFilter($select);
-
-        //$this->logger->critical($carrierCode . ' : ' . (string)$select);
 
         $hasRestrictions = $this->connection->fetchCol($select);
         $hasRestrictions = $hasRestrictions[0] ?? false;
@@ -66,11 +56,13 @@ class RestrictRepository
 
     protected function addZipFromFilter($select, $postcode)
     {
+        $postcode = intval($postcode);
         $select->where("(`num_zip_from` <= {$postcode} OR `zip_from` = '')");
     }
 
     protected function addZipToFilter($select, $postcode)
     {
+        $postcode = intval($postcode);
         $select->where("(`num_zip_to` >= {$postcode} OR `zip_to` = '')");
     }
 
@@ -81,6 +73,7 @@ class RestrictRepository
 
     protected function addStateFilter($select, $state)
     {
+        $state = intval($state);
         $select->where("(((`state` = {$state}) or (`state` = '0') or (`state` = '')))");
     }
 
@@ -97,7 +90,7 @@ class RestrictRepository
             []
         );
 
-        $select->where('stores="" OR FIND_IN_SET("' . $storeId . '", `stores`)');
+        $select->where('stores="" OR FIND_IN_SET("' . (int)$storeId . '", `stores`)');
     }
 
     protected function addLocalDeliveryFilter($select)
@@ -112,7 +105,7 @@ class RestrictRepository
                 continue;
             }
 
-            $select->where('name_delivery like "%' . $name . '%"');
+            $select->where('name_delivery like "%' . (string)$name . '%"');
         }
     }
 }
