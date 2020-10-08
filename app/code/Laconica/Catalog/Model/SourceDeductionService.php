@@ -10,7 +10,7 @@ use Magento\InventorySourceDeductionApi\Model\SourceDeductionRequestInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Laconica\Catalog\Helper\Config;
 
-class SourceDeductionService implements \Magento\InventorySourceDeductionApi\Model\SourceDeductionServiceInterface
+class SourceDeductionService extends \Magento\InventorySourceDeductionApi\Model\SourceDeductionService
 {
     /**
      * @var SourceItemsSaveInterface
