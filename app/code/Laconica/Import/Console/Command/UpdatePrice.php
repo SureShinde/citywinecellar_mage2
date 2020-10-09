@@ -65,8 +65,8 @@ class UpdatePrice extends Command
         $output->writeln('Started');
         $start = microtime(true);
 
-        $this->process('cwc');
-        //$this->process('tls');
+        //$this->process('cwc');
+        $this->process('tls');
 
         $end = gmdate("H:i:s", microtime(true) - $start);
         $output->writeln($end);
