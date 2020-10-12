@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="CreateCustomerRequired">
+        <arguments>
+            <argument name="customer" defaultValue="new_customer_with_required"/>
+        </arguments>
+        <conditionalClick selector="{{CustomerListSection.remove}}" dependentSelector="{{CustomerListSection.remove}}" visible="true" stepKey="clickRemove"/>
+        <click selector="{{CustomerListSection.add_button}}" stepKey="clickAddButton"/>
+        <click selector="{{CustomerListSection.create_button}}" stepKey="clickCreateButton"/>
+        <wait time="2" stepKey="waitToLoad"/>
+        <selectOption userInput="{{customer.prefixName}}" selector="{{CustomerFormSection.prefixName}}" stepKey="fillPrefixName" />
+        <fillField userInput="{{customer.firstName}}" selector="{{CustomerFormSection.firstName}}" stepKey="fillFirstName"/>
+        <fillField userInput="{{customer.middleName}}" selector="{{CustomerFormSection.middleName}}" stepKey="fillMiddleName"/>
+        <fillField userInput="{{customer.lastName}}" selector="{{CustomerFormSection.lastName}}" stepKey="fillLastName"/>
+        <selectOption userInput="{{customer.suffixName}}" selector="{{CustomerFormSection.suffixName}}" stepKey="fillSuffixName" />
+        <fillField userInput="{{customer.email}}" selector="{{CustomerFormSection.email}}" stepKey="fillEmail"/>
+        <executeJS function="var dateTime = document.getElementsByClassName('date-time')[0];
+            Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value')
+                .set.bind(dateTime)('{{customer.dob}}');
+            dateTime.dispatchEvent(new Event('change', {}));" stepKey="fillDob"/>
+        <fillField userInput="{{customer.taxvat}}" selector="{{CustomerFormSection.taxvat}}" stepKey="fillTaxvat"/>
+        <selectOption userInput="{{customer.gender}}" selector="{{CustomerFormSection.gender}}" stepKey="fillGender" />
+        <fillField userInput="{{customer.telephone}}" selector="{{CustomerFormSection.telephone}}" stepKey="fillTelephone"/>
+    </actionGroup>
+</actionGroups>

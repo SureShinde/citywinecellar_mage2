@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="GoToFirstOrderDetailBackend">
+        <arguments>
+            <argument name="orderId" defaultValue="" type="string"/>
+        </arguments>
+        <!--<openNewTab stepKey="openNewTabForTestBackend" />-->
+        <amOnPage url="{{AdminLoginPage.url}}" stepKey="amOnAdminLoginPage"/>
+        <fillField selector="{{AdminLoginFormSection.username}}" userInput="{{_ENV.MAGENTO_ADMIN_USERNAME}}" stepKey="fillUsername"/>
+        <fillField selector="{{AdminLoginFormSection.password}}" userInput="{{_ENV.MAGENTO_ADMIN_PASSWORD}}" stepKey="fillPassword"/>
+        <click selector="{{AdminLoginFormSection.signIn}}" stepKey="clickOnSignIn"/>
+        <closeAdminNotification stepKey="closeAdminNotification"/>
+        <seeInCurrentUrl url="{{AdminLoginPage.url}}" stepKey="seeAdminLoginUrl"/>
+
+        <amOnPage stepKey="goToOrderListPage" url="{{OrdersPage.url}}"/>
+        <waitForPageLoad stepKey="waitOrderListLoaded"/>
+
+        <waitForLoadingMaskToDisappear stepKey="waitForLoadingMaskToDisappearOnAdminOrdersPage"/>
+        <waitForElementVisible selector="{{OrdersGridSection.search}}" time="180" stepKey="waitForElementSearchVisibleOnAdminSalesOrderPage" after="waitForLoadingMaskToDisappearOnAdminOrdersPage"/>
+        <fillField selector="{{OrdersGridSection.search}}" userInput="{{orderId}}" stepKey="fillOrderNum"/>
+        <click selector="{{OrdersGridSection.submitSearch}}" stepKey="submitSearchOrderNum"/>
+        <waitForLoadingMaskToDisappear stepKey="waitForLoadingMaskToDisappearOnSearch"/>
+
+        <click stepKey="clickViewFirstOrder" selector="{{OrdersGridSection.firstRow}}" />
+
+        <seeInCurrentUrl url="{{OrderDetailsPage.url}}" stepKey="seeOrderDetailUrl"/>
+        <waitForPageLoad stepKey="waitOrderDetailLoaded"/>
+    </actionGroup>
+</actionGroups>

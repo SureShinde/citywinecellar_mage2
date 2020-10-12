@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="LoginPos">
+        <arguments>
+            <argument name="staff" defaultValue="defaultStaff"/>
+        </arguments>
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <wait time="1" stepKey="waitToLoad"/>
+        <executeJS function="if (document.getElementById('username')) {
+            document.getElementById('username').value = '{{staff.username}}';
+            var password = document.getElementById('password');
+            Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value')
+                .set.bind(password)('{{staff.password}}');
+            password.dispatchEvent(new Event('input', {bubbles: true}));
+        }" stepKey="fillUsernamePassword"/>
+        <conditionalClick selector="{{PosLoginFormSection.signIn}}" dependentSelector="{{PosLoginFormSection.signIn}}" visible="true" stepKey="clickLogin"/>
+        <conditionalClick selector="{{PosLoginFormSection.continueLogin}}" dependentSelector="{{PosLoginFormSection.continueLogin}}" visible="true" stepKey="clickContinueLogin"/>
+    </actionGroup>
+</actionGroups>

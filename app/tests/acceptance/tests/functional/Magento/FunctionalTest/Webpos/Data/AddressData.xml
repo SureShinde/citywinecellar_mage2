@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/DataGenerator/etc/dataProfileSchema.xsd">
+    <entity name="new_address" type="address">
+        <data key="firstName">Auto</data>
+        <data key="lastName">Test</data>
+        <data key="company">Magestore</data>
+        <data key="street">Magestore</data>
+        <data key="city">Magestore</data>
+        <data key="telephone">0123456789</data>
+        <data key="fax">0123456789</data>
+        <data key="postcode">100000</data>
+    </entity>
+
+    <entity name="required_new_address" type="address">
+        <data key="prefixName">ms</data>
+        <data key="firstName">Auto</data>
+        <data key="middleName">Middle</data>
+        <data key="lastName">Test</data>
+        <data key="suffixName">sr</data>
+        <data key="company">Magestore</data>
+        <data key="street">Magestore</data>
+        <data key="city">Magestore</data>
+        <data key="telephone">0123456789</data>
+        <data key="fax">0123456789</data>
+        <data key="postcode">100000</data>
+        <data key="vat_id">0123456789</data>
+        <data key="country_id">US</data>
+        <data key="country">United States</data>
+        <data key="region_id">33</data>
+        <data key="region">Michigan</data>
+    </entity>
+
+    <entity name="default_customer_address_info" type="address">
+        <data key="firstname">Veronica</data>
+        <data key="lastname">Costello</data>
+        <array key="street">
+            <item>6146 Honey Bluff Parkway</item>
+        </array>
+        <data key="city">Calder</data>
+        <data key="country">United States</data>
+        <data key="country_id">US</data>
+        <data key="postcode">49628-7978</data>
+        <data key="telephone">(555) 229-3326</data>
+        <data key="default_billing">Yes</data>
+        <data key="default_shipping">Yes</data>
+        <requiredEntity type="region">default_customer_address_region_info</requiredEntity>
+    </entity>
+
+    <entity name="default_customer_address_region_info" type="region">
+        <data key="region">Michigan</data>
+        <data key="region_code">MI</data>
+        <data key="region_id">33</data>
+    </entity>
+</entities>

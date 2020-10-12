@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/DataGenerator/etc/dataProfileSchema.xsd">
+    <entity name="default_customer" type="customer">
+        <data key="searchKey">Veronica Costello</data>
+        <data key="fullName">Veronica Costello</data>
+    </entity>
+    <entity name="new_customer" type="customer">
+        <data key="firstName">Auto</data>
+        <data key="lastName">Test</data>
+        <data key="fullName">Auto Test</data>
+        <data key="email" unique="prefix">_autocustomer@example.com</data>
+        <data key="telephone">0123456789</data>
+    </entity>
+
+    <entity name="new_customer_with_required" type="customer">
+        <data key="prefixName">ms</data>
+        <data key="firstName">Auto</data>
+        <data key="middleName">Middle</data>
+        <data key="lastName">Test</data>
+        <data key="suffixName">sr</data>
+        <data key="fullNameAtPos">Auto Test</data>
+        <data key="fullName">Auto Test</data>
+        <data key="email" unique="prefix">_autocustomer@example.com</data>
+        <data key="telephone">0123456789</data>
+        <data key="taxvat">0123456789</data>
+        <data key="gender">1</data>
+        <data key="genderText">Male</data>
+        <data key="dob">11/11/1991</data>
+    </entity>
+
+    <!-- Admin config -->
+    <entity name="config_is_enable_guest" type="pwa_config">
+        <data key="path">webpos/guest_checkout/guest_status</data>
+        <data key="value">1</data>
+    </entity>
+
+    <!-- Veronica information -->
+    <entity name="default_customer_info" type="customer">
+        <data key="group">General</data>
+        <data key="default_billing">true</data>
+        <data key="default_shipping">true</data>
+        <data key="email">roni_cost@example.com</data>
+        <data key="firstname">Veronica</data>
+        <data key="lastname">Costello</data>
+        <data key="fullname">Veronica Costello</data>
+        <data key="store_id">1</data>
+        <data key="website_id">1</data>
+        <requiredEntity type="address">default_customer_address_info</requiredEntity>
+    </entity>
+</entities>

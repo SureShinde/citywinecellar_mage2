@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="CreateNewOfflinePaymentMethod">
+        <amOnPage url="admin/admin/system_config/edit/section/webpos/" stepKey="navigateToPosSetting"/>
+        <waitForPageLoad stepKey="waitForPageLoad" />
+        <click selector="{{PaymentOfflineSettingSection.payment_section}}" stepKey="openPaymentSetting"/>
+        <waitForElementVisible selector="{{PaymentOfflineSettingSection.add_more_payment}}" time="5" stepKey="waitAddMorePaymentVisible"/>
+
+        <!-- Add Offline Payment Method 1-->
+        <click selector="{{PaymentOfflineSettingSection.add_more_payment}}" stepKey="clickAddMorePayment1"/>
+        <wait time="3" stepKey="waitPaymentMethodOfflineFormVisible1"/>
+        <selectOption userInput="1" selector="{{PaymentOfflineSettingSection.enable}}" stepKey="fillEnable1" />
+        <fillField userInput="Offline Payment Method 1" selector="{{PaymentOfflineSettingSection.title}}" stepKey="fillTitle1"/>
+        <selectOption userInput="1" selector="{{PaymentOfflineSettingSection.reference_number}}" stepKey="fillReferenceNumber1" />
+        <selectOption userInput="1" selector="{{PaymentOfflineSettingSection.pay_later}}" stepKey="fillPayLater1" />
+
+        <!-- Add Offline Payment Method 2-->
+        <click selector="{{PaymentOfflineSettingSection.add_more_payment}}" stepKey="clickAddMorePayment2"/>
+        <wait time="3" stepKey="waitPaymentMethodOfflineFormVisible2"/>
+        <selectOption userInput="1" selector="{{PaymentOfflineSettingSection.enable}}" stepKey="fillEnable2" />
+        <fillField userInput="Offline Payment Method 2" selector="{{PaymentOfflineSettingSection.title}}" stepKey="fillTitle2"/>
+        <selectOption userInput="1" selector="{{PaymentOfflineSettingSection.reference_number}}" stepKey="fillReferenceNumber2" />
+        <selectOption userInput="1" selector="{{PaymentOfflineSettingSection.pay_later}}" stepKey="fillPayLater2" />
+
+        <!-- Add Offline Payment Method 3-->
+        <click selector="{{PaymentOfflineSettingSection.add_more_payment}}" stepKey="clickAddMorePayment3"/>
+        <wait time="3" stepKey="waitPaymentMethodOfflineFormVisible3"/>
+        <selectOption userInput="1" selector="{{PaymentOfflineSettingSection.enable}}" stepKey="fillEnable3" />
+        <fillField userInput="Offline Payment Method 3" selector="{{PaymentOfflineSettingSection.title}}" stepKey="fillTitle3"/>
+        <selectOption userInput="1" selector="{{PaymentOfflineSettingSection.reference_number}}" stepKey="fillReferenceNumber3" />
+        <selectOption userInput="0" selector="{{PaymentOfflineSettingSection.pay_later}}" stepKey="fillPayLater3" />
+
+        <wait time="3" stepKey="waitAfterFillAllPayment"/>
+        <click selector="{{PaymentOfflineSettingSection.payment_section}}" stepKey="closePaymentSection"/>
+        <wait time="1" stepKey="waitAfterClosePaymentSection"/>
+        <click selector="{{PaymentOfflineSettingSection.save_config}}" stepKey="saveConfig"/>
+    </actionGroup>
+</actionGroups>

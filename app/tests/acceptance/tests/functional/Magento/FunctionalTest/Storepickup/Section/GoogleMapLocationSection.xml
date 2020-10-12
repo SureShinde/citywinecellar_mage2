@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Page/etc/SectionObject.xsd">
+    <section name="GoogleMapLocationSection">
+        <!-- Begin Location information -->
+        <element name="country" type="select" selector="//*[@id='store_country_id']"/>
+        <element name="state" type="text" selector="//*[@id='state']"/>
+        <element name="stateId" type="text" selector="//*[@id='state_id']"/>
+        <element name="storeCity" type="text" selector="//*[@id='store_city']"/>
+        <element name="storeAddress" type="text" selector="//*[@id='store_address']"/>
+        <element name="storeZipcode" type="text" selector="//*[@id='store_zipcode']"/>
+        <element name="storeLatitude" type="text" selector="//*[@id='store_latitude']"/>
+        <element name="storeLongitude" type="text" selector="//*[@id='store_longitude']"/>
+        <element name="storeZoomLevel" type="text" selector="//*[@id='store_zoom_level']"/>
+        <!-- End Location information -->
+    </section>
+</sections>

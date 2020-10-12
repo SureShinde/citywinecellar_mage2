@@ -122,7 +122,7 @@ class CatalogProductSaveAfter implements ObserverInterface
                 ->getFirstItem()
                 ->getId();
             if ($barcodeId) {
-                return $this->messageManager->addErrorMessage(__('Barcode has been existed.'));
+                return $this;//$this->messageManager->addErrorMessage(__('Barcode has been existed.'));
             }
             $barcodeModel->getResource()->load($barcodeModel, $product->getId(), 'product_id');
             if ((string)$barcode !== (string)$barcodeModel->getBarcode()) {

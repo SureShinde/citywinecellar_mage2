@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+    <test name="AdminAddStoreDefaultSourceTest">
+        <annotations>
+            <features value="Add new store"/>
+            <stories value="Add new store"/>
+            <title value="Add new store"/>
+            <description value="Check create new store for Default Source"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="ANS05"/>
+            <group value="storepickup"/>
+            <group value="pwapos"/>
+        </annotations>
+        <before>
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <amOnPage url="{{AddNewStoreStorePickupAdminPage.url}}" stepKey="gotoAddNew"/>
+            <waitForPageLoad stepKey="waitpageload1"/>
+        </before>
+        <after>
+            <amOnPage url="admin/admin/auth/logout/" stepKey="amOnLogoutPage"/>
+        </after>
+        <!-- Begin check -->
+        <selectOption selector="{{GeneralInformationSection.sourceCode}}" userInput="{{default_source.code}}" stepKey="selectOptionSourceCode2"/>
+        <fillField userInput="{{store172.name}}" selector="{{GeneralInformationSection.storeName}}" stepKey="fillStoreName2"/>
+        <fillField userInput="{{store172.contact_name}}" selector="{{GeneralInformationSection.contactName}}" stepKey="fillContactName1"/>
+        <fillField userInput="{{store172.contact_email}}" selector="{{GeneralInformationSection.email}}" stepKey="fillContactEmail1"/>
+        <fillField userInput="{{store172.contact_phone}}" selector="{{GeneralInformationSection.phone}}" stepKey="fillContactPhone1"/>
+        <scrollTo selector="{{StoreActionsSection.generalTab}}" x="0" y="0" stepKey="scrollToGeneralTab1"/>
+        <click selector="{{StoreActionsSection.gmapTab}}" stepKey="clickGmapTab2"/>
+        <selectOption userInput="{{source171.country}}" selector="{{GoogleMapLocationSection.country}}" stepKey="selectOptionCountry2"/>
+        <selectOption userInput="{{source171.region_id}}" selector="{{GoogleMapLocationSection.stateId}}" stepKey="fillRegion2"/>
+        <fillField userInput="{{source171.city}}" selector="{{GoogleMapLocationSection.storeCity}}" stepKey="fillStoreCity2"/>
+        <fillField userInput="{{source171.street}}" selector="{{GoogleMapLocationSection.storeAddress}}" stepKey="fillStoreAddress2"/>
+        <fillField userInput="{{source171.postcode}}" selector="{{GoogleMapLocationSection.storeZipcode}}" stepKey="fillStoreZipcode2"/>
+        <click selector="{{StoreActionsSection.saveButton}}" stepKey="clickSaveButton4"/>
+        <see selector="{{AdminMessagesStorePickupSection.success}}" userInput="The Store has been saved." stepKey="seeSuccess1"/>
+        <waitForPageLoad time="30" stepKey="waitForPageLoad1"/>
+        <actionGroup ref="AdminGridFilterSearchResultsByInput" stepKey="filterSearchResults1">
+            <argument name="selector" value="AdminManageStoresGridFilterControls.name"/>
+            <argument name="value" value="{{store172.name}}"/>
+        </actionGroup>
+        <see userInput="{{store172.name}}" selector="{{AdminGridRow.rowOne}}" stepKey="seeNameInRow1"/>
+        <see userInput="{{default_source.name}}" selector="{{AdminGridRow.rowOne}}" stepKey="seeSourceInRow1"/>
+        <see userInput="{{source171.city}}" selector="{{AdminGridRow.rowOne}}" stepKey="seeCityInRow1"/>
+        <see userInput="{{source171.region}}" selector="{{AdminGridRow.rowOne}}" stepKey="seeStateInRow1"/>
+        <see userInput="{{source171.countryName}}" selector="{{AdminGridRow.rowOne}}" stepKey="seeCountryInRow1"/>
+        <see userInput="{{source171.postcode}}" selector="{{AdminGridRow.rowOne}}" stepKey="seeZipcodeInRow1"/>
+        <!-- End check  -->
+    </test>
+</tests>

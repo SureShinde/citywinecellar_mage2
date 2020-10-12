@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="GoToFirstOrderDetailFrontend">
+        <arguments>
+            <argument name="orderId" defaultValue="" type="string"/>
+        </arguments>
+        <click selector="{{MenuSection.menuButton}}" stepKey="clickMenuButton" />
+        <wait time="2" stepKey="loadMenu"/>
+        <waitForElementVisible selector="{{MenuSection.menuItem('item-order')}}" time="120" stepKey="waitMenuOrderShow" />
+        <click selector="{{MenuSection.menuItem('item-order')}}" stepKey="goToOrderHistoryPage" />
+
+        <waitForElementVisible selector="{{OrderListSection.firstItem}}" time="120" stepKey="waitFirstOrderShow" />
+
+        <fillField selector="{{OrderListSection.inputSearch}}" userInput="{{orderId}}" stepKey="searchOrder" />
+        <wait time="3" stepKey="loadSearch"/>
+        <waitForElementVisible selector="{{OrderListSection.firstItem}}" time="120" stepKey="waitFirstOrderShowAfterSearch" />
+
+        <click selector="{{OrderListSection.firstItem}}" stepKey="clickOnFirstOrder"/>
+        <wait time="2" stepKey="loadOrder"/>
+        <waitForElementVisible selector="{{OrderDetailSection.orderId(orderId)}}" time="120" stepKey="waitShowOrderDetail" />
+    </actionGroup>
+</actionGroups>

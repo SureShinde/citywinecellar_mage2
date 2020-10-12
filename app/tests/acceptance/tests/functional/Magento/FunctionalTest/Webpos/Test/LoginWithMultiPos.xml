@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+    <test name="A1_LoginWithMultiPosTest">
+        <annotations>
+            <features value="Login"/>
+            <stories value="Login"/>
+            <title value="Check login success with multi pos."/>
+            <description value="Login with correct username and password."/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-02"/>
+            <group value="pwaloginmulti"/>
+            <group value="pwapos"/>
+        </annotations>
+        <before>
+            <createData stepKey="forceSignOut" entity="force_staff_with_one_location_one_pos" />
+            <createData stepKey="forceSignOutMulti" entity="force_staff_with_multi_pos" />
+            <amOnPage url="{{PosLoginPage.url}}" stepKey="reloadPage"/>
+            <waitForElementVisible selector="{{PosLoginFormSection.username}}" time="120" stepKey="waitUserNameVisible"/>
+            <waitForElementVisible selector="{{PosLoginFormSection.password}}" time="120" stepKey="waitPasswordVisible"/>
+        </before>
+        <actionGroup ref="LoginPos" stepKey="LoginPos">
+            <argument name="staff" value="staff_with_multi_pos" />
+        </actionGroup>
+        <actionGroup ref="SelectLocation" stepKey="SelectLocationAndPos" />
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" time="90" stepKey="waitForFirstProductVisible"/>
+    </test>
+</tests>

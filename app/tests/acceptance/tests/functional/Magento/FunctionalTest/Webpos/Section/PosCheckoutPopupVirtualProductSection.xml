@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Page/etc/SectionObject.xsd">
+    <section name="PosCheckoutPopupVirtualProductSection">
+        <element name="popup" type="text" selector="//div[@id='popup-virtual-product']]"/>
+        <element name="customOptionInputBox" type="text" selector="//div[@id='popup-virtual-product']//div[contains(@class, 'product-custom-wrapper')]/div[contains(@class, 'product-options-attribute')][1]/div[contains(@class, 'attribute-options')]/input" />
+        <element name="buttonAddCart" type="button" selector="//div[@id='popup-virtual-product']//div[contains(@class, 'product-custom-wrapper')]/div[contains(@class, 'product-options-attribute')][1]/../../../..//div[contains(@class, 'modal-bottom')]//button[contains(@class, 'addtocart')]" />
+    </section>
+</sections>

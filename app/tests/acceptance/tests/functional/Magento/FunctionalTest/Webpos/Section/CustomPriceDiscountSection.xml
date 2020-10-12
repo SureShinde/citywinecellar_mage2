@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Page/etc/SectionObject.xsd">
+    <section name="CustomPriceDiscountSection">
+        <element name="customPriceDiscountPopup" type="text" selector=".set-custom-price-popup"/>
+        <element name="discountTab" type="button" selector="#custom-price-container-tab-custom_discount_price"/>
+        <element name="customPriceTab" type="button" selector="#custom-price-container-tab-custom_price"/>
+        <element name="percentageType" type="button" selector="#custom-price-container-pane-custom_discount_price span.percent"/>
+        <element name="fixedType" type="button" selector="#custom-price-container-pane-custom_discount_price span.price"/>
+        <element name="addAmountField" type="input" selector="#custom-price-container .custom-price-discount-amount" />
+        <element name="addReasonField" type="input" selector=".set-custom-price-popup .custom-price-reason-wrapper .input-reason" />
+        <element name="confirm" type="button" selector=".set-custom-price-popup .list-action .confirm" />
+        <element name="cancel" type="button" selector=".set-custom-price-popup .list-action .cancel" />
+        <element name="numpad" type="input" selector="body" />
+
+        <element name="orderItemPrice" type="text" selector=".edit-order-table .col-price .price" />
+        <element name="orderItemOriginalPrice" type="text" selector=".edit-order-table .col-price-original .price" />
+        <element name="orderItemCustomReason" type="text" selector=".edit-order-table .col-price .custom-price-reason-block" />
+    </section>
+</sections>

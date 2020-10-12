@@ -10,12 +10,14 @@ namespace Magestore\Webpos\Model\Catalog;
 use Magento\Catalog\Api\CategoryRepositoryInterface;
 use Magento\Catalog\Model\Product\Attribute\Backend\Media\EntryConverterPool;
 use Magento\Framework\Api\AttributeValueFactory;
-use Magestore\Webpos\Helper\Profiler;
+use Magento\InventoryApi\Api\Data\SourceItemInterface;
+use Magento\InventoryApi\Api\SourceItemRepositoryInterface;
 use Magestore\Webpos\Api\Data\Catalog\Option\GiftCardPriceOptionsInterface;
 use Magestore\Webpos\Api\Data\Catalog\Option\ProductOptionsInterface;
 use Magestore\Webpos\Model\ResourceModel\CatalogRule\Product\Price\CollectionFactory as PriceCollectionFactory;
 use Magestore\Webpos\Api\Data\Catalog\Option\GiftCardPriceOptionsInterfaceFactory;
 use Magestore\Webpos\Api\Data\Catalog\Option\GiftCardTemplateInterfaceFactory;
+use Magestore\Webpos\Helper\Profiler;
 
 /**
  * Catalog product model
@@ -688,7 +690,20 @@ class Product extends \Magento\Catalog\Model\Product implements \Magestore\Webpo
                 $sourceCodes = $this->stockManagement->getLinkedSourceCodesByStockId($stockId);
                 if (!empty($sourceCodes) && count($sourceCodes)) {
                     if (!$this->isComposite()) {
-                        $stockItem->setQuantity($stockItem->getQty());
+                        $searchCriteria = $this->_searchCriteriaBuilder
+                            ->addFilter(SourceItemInterface::SKU, $this->getSku())
+                            ->addFilter(SourceItemInterface::SOURCE_CODE, current($sourceCodes))
+                            ->create();
+                        /** @var SourceItemRepositoryInterface $sourceItemRepository */
+                        $sourceItemRepository = $this->objectManager->create(SourceItemRepositoryInterface::class);
+                        $sourceItemsOfProduct = $sourceItemRepository->getList($searchCriteria)->getItems();
+                        if (count($sourceItemsOfProduct)) {
+                            $stockItem->setQuantity(
+                                current($sourceItemsOfProduct)->getQuantity()
+                            );
+                        } else {
+                            $stockItem->setQuantity(0);
+                        }
                     } else {
                         $stockItem->setQuantity(0);
                     }
@@ -791,6 +806,8 @@ class Product extends \Magento\Catalog\Model\Product implements \Magestore\Webpo
         if (!is_array($this->_getData('category_ids'))) {
             return $this->_getData('category_ids');
         }
+
+        return '';
     }
 
     /**

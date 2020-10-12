@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="SearchCustomer">
+        <arguments>
+            <argument name="customer" defaultValue="default_customer"/>
+        </arguments>
+        <conditionalClick selector="{{CustomerListSection.remove}}" dependentSelector="{{CustomerListSection.remove}}" visible="true" stepKey="clickRemove"/>
+        <click selector="{{CustomerListSection.add_button}}" stepKey="clickAddButton"/>
+        <fillField userInput="{{customer.name}}" selector="{{CustomerListSection.search_form}}" stepKey="fillSearchForm"/>
+        <wait time="2" stepKey="waitStartSearchCustomer" />
+        <waitForElementVisible selector="{{CustomerListSection.customer_item}}" time="120" stepKey="waitForCustomerVisible"/>
+    </actionGroup>
+</actionGroups>

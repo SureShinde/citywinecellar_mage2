@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/DataGenerator/etc/dataProfileSchema.xsd">
+    <entity name="require_customer_config" type="customer_config">
+        <requiredEntity type="prefix_show">enable_prefix_show</requiredEntity>
+        <requiredEntity type="prefix_options">enable_prefix_options</requiredEntity>
+        <requiredEntity type="middlename_show">enable_middlename_show</requiredEntity>
+        <requiredEntity type="suffix_show">enable_suffix_show</requiredEntity>
+        <requiredEntity type="suffix_options">enable_suffix_options</requiredEntity>
+        <requiredEntity type="dob_show">enable_dob_show</requiredEntity>
+        <requiredEntity type="taxvat_show">enable_taxvat_show</requiredEntity>
+        <requiredEntity type="gender_show">enable_gender_show</requiredEntity>
+        <requiredEntity type="telephone_show">enable_telephone_show</requiredEntity>
+        <requiredEntity type="company_show">enable_company_show</requiredEntity>
+        <requiredEntity type="fax_show">enable_fax_show</requiredEntity>
+    </entity>
+
+    <entity name="default_customer_config" type="customer_config">
+        <requiredEntity type="prefix_show">default_prefix_show</requiredEntity>
+        <requiredEntity type="prefix_options">default_prefix_options</requiredEntity>
+        <requiredEntity type="middlename_show">default_middlename_show</requiredEntity>
+        <requiredEntity type="suffix_show">default_suffix_show</requiredEntity>
+        <requiredEntity type="suffix_options">default_suffix_options</requiredEntity>
+        <requiredEntity type="dob_show">default_dob_show</requiredEntity>
+        <requiredEntity type="taxvat_show">default_taxvat_show</requiredEntity>
+        <requiredEntity type="gender_show">default_gender_show</requiredEntity>
+        <requiredEntity type="telephone_show">default_telephone_show</requiredEntity>
+        <requiredEntity type="company_show">default_company_show</requiredEntity>
+        <requiredEntity type="fax_show">default_fax_show</requiredEntity>
+    </entity>
+
+    <entity name="enable_prefix_show" type="prefix_show">
+        <data key="value">req</data>
+    </entity>
+    <entity name="enable_prefix_options" type="prefix_options">
+        <data key="value">mr;mrs;ms</data>
+    </entity>
+    <entity name="enable_middlename_show" type="middlename_show">
+        <data key="value">1</data>
+    </entity>
+    <entity name="enable_suffix_show" type="suffix_show">
+        <data key="value">req</data>
+    </entity>
+    <entity name="enable_suffix_options" type="suffix_options">
+        <data key="value">jr;sr</data>
+    </entity>
+    <entity name="enable_dob_show" type="dob_show">
+        <data key="value">req</data>
+    </entity>
+    <entity name="enable_taxvat_show" type="taxvat_show">
+        <data key="value">req</data>
+    </entity>
+    <entity name="enable_gender_show" type="gender_show">
+        <data key="value">req</data>
+    </entity>
+    <entity name="enable_telephone_show" type="telephone_show">
+        <data key="value">req</data>
+    </entity>
+    <entity name="enable_company_show" type="company_show">
+        <data key="value">req</data>
+    </entity>
+    <entity name="enable_fax_show" type="fax_show">
+        <data key="value">req</data>
+    </entity>
+
+
+    <entity name="default_prefix_show" type="prefix_show">
+        <data key="value">0</data>
+    </entity>
+    <entity name="default_prefix_options" type="prefix_options">
+        <data key="value">mr;mrs;ms</data>
+    </entity>
+    <entity name="default_middlename_show" type="middlename_show">
+        <data key="value">0</data>
+    </entity>
+    <entity name="default_suffix_show" type="suffix_show">
+        <data key="value">0</data>
+    </entity>
+    <entity name="default_suffix_options" type="suffix_options">
+        <data key="value">jr;sr</data>
+    </entity>
+    <entity name="default_dob_show" type="dob_show">
+        <data key="value">0</data>
+    </entity>
+    <entity name="default_taxvat_show" type="taxvat_show">
+        <data key="value">0</data>
+    </entity>
+    <entity name="default_gender_show" type="gender_show">
+        <data key="value">0</data>
+    </entity>
+    <entity name="default_telephone_show" type="telephone_show">
+        <data key="value">req</data>
+    </entity>
+    <entity name="default_company_show" type="company_show">
+        <data key="value">opt</data>
+    </entity>
+    <entity name="default_fax_show" type="fax_show">
+        <data key="value">0</data>
+    </entity>
+</entities>

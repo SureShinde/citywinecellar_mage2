@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/DataGenerator/etc/dataProfileSchema.xsd">
+    <entity name="product_1" type="product">
+        <data key="sku">24-WG01</data>
+        <data key="qty_test">1</data>
+        <data key="qty_after_return">100</data>
+    </entity>
+    <entity name="product_2" type="product">
+        <data key="sku">24-WG02</data>
+        <data key="qty_test">1</data>
+        <data key="qty_after_return">99</data>
+    </entity>
+
+    <entity name="product_in_supplier_1" type="product">
+        <data key="sku">24-UG04</data>
+        <data key="name">Zing Jump Rope</data>
+        <data key="qty">-1.0000</data>
+    </entity>
+</entities>
+

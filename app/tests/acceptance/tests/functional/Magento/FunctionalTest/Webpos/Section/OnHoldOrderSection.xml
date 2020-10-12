@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Page/etc/SectionObject.xsd">
+    <section name="OnHoldOrderSection">
+        <element name="holdOrderDetail" type="text" selector="//div[contains(@class, 'wrapper-onhold-details')]"/>
+        <element name="customerName" type="text" selector="//div[contains(@class, 'wrapper-onhold-details')]//div[contains(@class, 'order-detail')]//div[contains(text(), 'Customer:') and contains(text(), '{{val1}}')]" parameterized="true"/>
+        <element name="firstItemName" type="text" selector="//div[contains(@class, 'wrapper-onhold-details')]//div[contains(@class, 'item-ordered')][1]//div[contains(@class, 'name') and contains(text(), '{{val1}}')]" parameterized="true"/>
+
+        <element name="checkoutButton" type="text" selector="//div[contains(@class, 'wrapper-onhold-details')]//div[contains(@class, 'block-actions')]//button[contains(@class, 'btn-default')]"/>
+
+        <element name="firstOnHoldOrder" type="text" selector="//div[contains(@class, 'block-order-list')]//ul[contains(@class, 'item-list')][1]//li[1]"/>
+        <element name="firstOnHoldOrderId" type="text" selector="//div[contains(@class, 'block-order-list')]//ul[contains(@class, 'item-list')][1]//li[1]//div[contains(@class, 'item-info')]/div[contains(@class, 'name')]//span"/>
+
+        <element name="searchBox" type="text" selector="//div[contains(@class, 'block-order-list')]/..//div[contains(@class, 'box-search')]/input" />
+    </section>
+</sections>

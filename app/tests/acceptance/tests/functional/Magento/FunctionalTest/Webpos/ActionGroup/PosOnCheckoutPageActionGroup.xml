@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="PosOnCheckoutPage">
+        <arguments>
+            <argument name="staff" defaultValue="staff_with_one_location_one_pos"/>
+        </arguments>
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <wait time="1" stepKey="waitToLoad"/>
+        <executeJS function="if (document.getElementById('username')) {
+            document.getElementById('username').value = '{{staff.username}}';
+            var password = document.getElementById('password');
+            Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value')
+                .set.bind(password)('{{staff.password}}');
+            password.dispatchEvent(new Event('input', {bubbles: true}));
+        }" stepKey="fillUsernamePassword"/>
+        <conditionalClick selector="{{PosLoginFormSection.signIn}}" dependentSelector="{{PosLoginFormSection.signIn}}" visible="true" stepKey="clickLogin"/>
+        <conditionalClick selector="{{PosLoginFormSection.continueLogin}}" dependentSelector="{{PosLoginFormSection.continueLogin}}" visible="true" stepKey="clickContinueLogin"/>
+        <waitForElementNotVisible selector=".wrapper-circular" time="90" stepKey="waitForCloseLoading"/>
+
+        <conditionalClick selector="{{MenuSection.backButton}}" dependentSelector="{{MenuSection.backButton}}" visible="true" stepKey="clickBackButton1"/>
+        <conditionalClick selector="{{MenuSection.backButton}}" dependentSelector="{{MenuSection.backButton}}" visible="true" stepKey="clickBackButton2"/>
+        <conditionalClick selector="{{MenuSection.backButton}}" dependentSelector="{{MenuSection.backButton}}" visible="true" stepKey="clickBackButton3"/>
+        <conditionalClick selector="{{MenuSection.menuButton}}" dependentSelector="{{CartSection.minicart}}" visible="false" stepKey="clickMenuButton"/>
+        <conditionalClick selector="{{MenuSection.menuItem('item-checkout')}}" dependentSelector="{{CartSection.minicart}}" visible="false" stepKey="clickMenuCheckout"/>
+
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" time="90" stepKey="waitForFirstProductVisible"/>
+        <wait time="2" stepKey="waitForReloadConfig"/>
+    </actionGroup>
+</actionGroups>

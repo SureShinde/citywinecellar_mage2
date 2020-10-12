@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+    <test name="PurchaseOrderTest">
+        <annotations>
+            <features value="Purchase Order"/>
+            <stories value="Transfer items"/>
+            <title value="Test create and transfer item on purchase order"/>
+            <description value="Test create and transfer item on purchase order"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="PO-05"/>
+            <group value="purchaseorder"/>
+            <group value="pwapos"/>
+        </annotations>
+
+        <before>
+            <!-- Login to backend magento -->
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
+        </before>
+
+        <after>
+            <amOnPage url="admin/admin/auth/logout/" stepKey="amOnLogoutPage"/>
+        </after>
+
+        <!-- Go to create purchase order page -->
+        <amOnPage url="admin/purchaseordersuccess/purchaseOrder/new/" stepKey="amOnCreatePurchaseOrderPage"/>
+        <waitForPageLoad stepKey="waitNewPurchaseOrderLoaded"/>
+        <selectOption userInput="{{supplier.id}}" selector="{{PurchaseOrderDetailSection.supplierIdField}}" stepKey="fillSupplierId"/>
+        <click stepKey="clickToStartPrepareProducts" selector="{{PurchaseOrderDetailSection.prepareProductButton}}" />
+        <waitForPageLoad stepKey="waitNewPurchaseOrderStepPendingLoaded"/>
+
+        <!-- prepare product -->
+        <click stepKey="clickToAddProductsFromSupplier" selector="{{PurchaseOrderDetailSection.allProductsButton}}" />
+        <waitForPageLoad stepKey="waitForModalIsLoadedSuccessfully"/>
+        <click stepKey="clickFilterButtonOnAllProductsList" selector="{{PurchaseOrderDetailSection.allProductListFilterButton}}"/>
+        <fillField selector="{{PurchaseOrderDetailSection.filterFieldProductSku}}" userInput="24-WG" stepKey="fillProductSkuToFilter"/>
+        <click stepKey="clickApplyFilterButtonOnAllProductsList" selector="{{PurchaseOrderDetailSection.buttonApplyFilterAllProductGrid}}"/>
+        <waitForPageLoad stepKey="waitForFilterOnModalIsLoadedSuccessfully"/>
+        <click stepKey="clickToChooseAllProductThatFoundOnList" selector="{{PurchaseOrderDetailSection.inputChooseAllProductOnPrepareProductList}}"/>
+        <click stepKey="clickToAddProductsToPurchaseOrder" selector="{{PurchaseOrderDetailSection.buttonAllProductToPurchaseOrder}}"/>
+        <wait time="2" stepKey="wait2SecondsBeforeContinuePrepare" />
+        <waitForPageLoad stepKey="waitForDynamicGridProductIsLoadedSuccessfully"/>
+
+        <!-- Complete prepare product -->
+        <fillField selector="{{PurchaseOrderDetailSection.qtyOrderedInputOnDynamicGrid(product_1.sku)}}" stepKey="fillQtyOrderedForProductWhoseSkuIs24WG01" userInput="1" />
+        <fillField selector="{{PurchaseOrderDetailSection.qtyOrderedInputOnDynamicGrid(product_2.sku)}}" stepKey="fillQtyOrderedForProductWhoseSkuIs24WG02" userInput="1" />
+        <click stepKey="clickToConfirmProductsToPurchaseOrder" selector="{{PurchaseOrderDetailSection.buttonConfirmPurchaseOrder}}"/>
+        <waitForPageLoad stepKey="waitForConfirmationIsLoadedSuccessfully"/>
+
+        <!-- Receive Item -->
+        <click stepKey="clickToSectionReceivedItem" selector="{{PurchaseOrderDetailSection.receivedItemSection}}"/>
+        <waitForPageLoad stepKey="waitForReceiveSectionLoadedSuccessfully"/>
+        <click stepKey="clickToReceiveAllItem" selector="{{PurchaseOrderDetailSection.receivedAllItemButton}}"/>
+        <wait time="2" stepKey="wait2SecondsBeforeContinueReceive" />
+        <waitForPageLoad stepKey="waitForReceiveAllItemsSuccessfully"/>
+
+        <!-- Transfer Item -->
+        <click stepKey="clickToTransferItemButton" selector="{{PurchaseOrderDetailSection.buttonTransferItemPurchaseOrder}}"/>
+        <waitForPageLoad stepKey="waitForTransferModalLoadedSuccessfully"/>
+        <selectOption userInput="{{testing_source.code}}" selector="{{PurchaseOrderDetailSection.fieldSourceOnTransferItemModal}}" stepKey="selectSourceWhenTransferItem"/>
+        <click stepKey="clickToSelectProductToTransferItemButton" selector="{{PurchaseOrderDetailSection.buttonSelectProductTransferProduct}}"/>
+        <waitForPageLoad stepKey="waitForModalSelectProductLoadedSuccessfully"/>
+        <click stepKey="clickToChooseProductWhoseSkuIs24WG01ToTransfer" selector="{{PurchaseOrderDetailSection.selectProductToTransfer(product_1.sku)}}"/>
+        <click stepKey="clickToChooseProductWhoseSkuIs24WG02ToTransfer" selector="{{PurchaseOrderDetailSection.selectProductToTransfer(product_2.sku)}}"/>
+        <click stepKey="clickToSaveTransferredItem" selector="{{PurchaseOrderDetailSection.saveTransferProductButton}}"/>
+        <waitForPageLoad stepKey="waitForTransferredItemsAreSelected"/>
+        <fillField selector="{{PurchaseOrderDetailSection.fieldTransferQty(product_1.sku)}}" stepKey="fillQtyTransferredForProductWhoseSkuIs24WG01" userInput="1" />
+        <fillField selector="{{PurchaseOrderDetailSection.fieldTransferQty(product_2.sku)}}" stepKey="fillQtyTransferredForProductWhoseSkuIs24WG02" userInput="1" />
+        <click stepKey="clickToStartTransferItem" selector="{{PurchaseOrderDetailSection.saveTransferButton}}"/>
+        <waitForPageLoad stepKey="waitForTransferProductsSuccessfully"/>
+
+        <!-- Check source of product after created PO -->
+        <amOnPage url="admin/catalog/product/" stepKey="amOnProductListPage"/>
+        <waitForPageLoad stepKey="waitForProductListLoadedSuccessfully"/>
+        <fillField selector="{{ProductSection.inputSearchProduct}}" stepKey="fillSkuForSearch" userInput="24-WG0" />
+        <click stepKey="clickToSearchProduct" selector="{{ProductSection.buttonSearchProduct}}"/>
+        <waitForPageLoad stepKey="waitForSearchProductSuccessfully"/>
+        <!-- Check stock -->
+        <seeElementInDOM stepKey="checkStockOfProductWhoseSkuIs24WG01OnSource" selector="{{ProductSection.checkSourceProduct(product_1.sku, testing_source.name, product_1.qty_test)}}" />
+        <seeElementInDOM stepKey="checkStockOfProductWhoseSkuIs24WG02OnSource" selector="{{ProductSection.checkSourceProduct(product_2.sku, testing_source.name, product_2.qty_test)}}" />
+    </test>
+</tests>

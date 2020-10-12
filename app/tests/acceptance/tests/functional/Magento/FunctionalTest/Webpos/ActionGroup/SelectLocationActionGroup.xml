@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="SelectLocation">
+        <arguments>
+            <argument name="location_pos" defaultValue="default_location_pos"/>
+        </arguments>
+        <waitForElementVisible selector="{{PosLocationFormSection.location}}" time="120" stepKey="waitLocation"/>
+        <waitForElementVisible selector="{{PosLocationFormSection.pos}}" time="120" stepKey="waitPos"/>
+        <wait time="2" stepKey="waitToLoad"/>
+        <conditionalClick selector="{{PosLocationFormSection.location}}" dependentSelector="{{PosLocationFormSection.location}}" visible="true" stepKey="clickLocation"/>
+        <conditionalClick selector="{{PosLocationFormSection.locationItem('Location_MultiPOS')}}" dependentSelector="{{PosLocationFormSection.locationItem('Location_MultiPOS')}}" visible="true" stepKey="selectLocation" />
+        <conditionalClick selector="{{PosLocationFormSection.pos}}" dependentSelector="{{PosLocationFormSection.pos}}" visible="true" stepKey="clickPos"/>
+        <conditionalClick selector="{{PosLocationFormSection.posItem('POS_MultiPOS1')}}" dependentSelector="{{PosLocationFormSection.posItem('POS_MultiPOS1')}}" visible="true" stepKey="selectPos" />
+        <conditionalClick selector="{{PosLocationFormSection.enterPos}}" dependentSelector="{{PosLocationFormSection.enterPos}}" visible="true" stepKey="clickEnterPos"/>
+    </actionGroup>
+</actionGroups>

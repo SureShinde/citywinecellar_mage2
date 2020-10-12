@@ -1,0 +1,1423 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+
+    <test name="Reload0_0">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <actionGroup ref="LoginPos" stepKey="LoginPos">
+            <argument name="staff" value="staff_with_one_location_one_pos"/>
+        </actionGroup>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload0_1">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload0_2">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload0_3">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload0_4">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload0_5">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload0_6">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload0_7">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload0_8">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload0_9">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+
+    <test name="Reload1_0">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload1_1">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload1_2">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload1_3">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload1_4">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload1_5">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload1_6">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload1_7">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload1_8">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload1_9">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+
+    <test name="Reload2_0">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload2_1">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload2_2">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload2_3">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload2_4">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload2_5">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload2_6">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload2_7">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload2_8">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload2_9">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+
+    <test name="Reload3_0">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload3_1">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload3_2">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload3_3">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload3_4">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload3_5">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload3_6">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload3_7">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload3_8">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload3_9">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+
+    <test name="Reload4_0">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload4_1">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload4_2">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload4_3">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload4_4">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload4_5">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload4_6">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload4_7">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload4_8">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload4_9">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+
+    <test name="Reload5_0">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload5_1">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload5_2">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload5_3">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload5_4">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload5_5">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload5_6">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload5_7">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload5_8">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload5_9">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+
+    <test name="Reload6_0">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload6_1">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload6_2">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload6_3">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload6_4">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload6_5">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload6_6">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload6_7">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload6_8">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload6_9">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+
+    <test name="Reload7_0">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload7_1">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload7_2">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload7_3">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload7_4">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload7_5">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload7_6">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload7_7">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload7_8">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload7_9">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+
+    <test name="Reload8_0">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload8_1">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload8_2">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload8_3">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload8_4">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload8_5">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload8_6">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload8_7">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload8_8">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload8_9">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+
+    <test name="Reload9_0">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload9_1">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload9_2">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload9_3">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload9_4">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload9_5">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload9_6">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload9_7">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload9_8">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+    <test name="Reload9_9">
+        <annotations>
+            <features value="Reload"/>
+            <stories value="Reload"/>
+            <title value="Check reload"/>
+            <description value="Check reload"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="LI-R"/>
+            <group value="pwareload"/>
+        </annotations>
+
+        <amOnPage url="{{PosLoginPage.url}}" stepKey="navigateToPos"/>
+        <waitForElementVisible selector="{{ProductListSection.firstProduct}}" stepKey="waitForFirstProductVisible"/>
+    </test>
+</tests>

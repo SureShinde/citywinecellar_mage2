@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+    <test name="TotalTest">
+        <annotations>
+            <features value="Grand Total"/>
+            <stories value="Display Grand Total"/>
+            <title value="Display exactly the amount of Grand Total when the order has tax, discount and shipping amount"/>
+            <description value="Display exactly the amount of Grand Total when the order has tax, discount and shipping amount"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="CGT-05"/>
+            <group value="checkGrandTotalTax"/>
+            <group value="pwapos"/>
+        </annotations>
+
+        <before>
+            <createData entity="EnableFlatRateShippingMethod" stepKey="enableShippingMethod"/>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart"/>
+
+        <actionGroup ref="SearchAndClickProductBySku" stepKey="SearchProduct">
+            <argument name="dataProduct" value="pos_simple_product_with_tax"/>
+        </actionGroup>
+
+        <wait time="10" stepKey="wait10SecondsBeforeAddCustomerToCart" />
+        <actionGroup ref="SearchCustomerAndAdd" stepKey="addCustomerToCart"/>
+
+        <click selector="{{CartSection.chargeButton}}" stepKey="clickCharge"/>
+        <waitForElementVisible selector="{{PosCheckoutCartTotalsSection.cartTotalsBlock}}" time="120" stepKey="waitForCartTotalsVisible"/>
+
+        <actionGroup ref="AddShippingActionGroup" stepKey="addShipping">
+            <argument name="shippingMethod" value="Flat Rate - Fixed"/>
+        </actionGroup>
+
+        <waitForElementNotVisible selector="{{PosCheckoutPopupAddShippingSection.shippingPopup}}" time="15" stepKey="waitForAddShippingPopupNotVisible"/>
+
+
+        <actionGroup ref="AddCustomDiscount" stepKey="addDiscount">
+            <argument name="amount" value="{{total_pos_simple_product_with_tax_2.discountAmount}}"/>
+        </actionGroup>
+
+        <grabTextFrom selector="{{PosCheckoutCartTotalsSection.subTotal}}" stepKey="grabSubtotal"/>
+
+        <assertEquals message="Assert the Subtotal is correct" stepKey="assertSubtotalIsCorrect">
+            <expectedResult type="string">{{total_pos_simple_product_with_tax_2.subTotal}}</expectedResult>
+            <actualResult type="variable">grabSubtotal</actualResult>
+        </assertEquals>
+
+        <grabTextFrom selector="{{PosCheckoutCartTotalsSection.shippingTotal}}" stepKey="grabShippingTotal"/>
+
+        <assertEquals message="Assert the Shipping fee is correct" stepKey="assertShippingFeeIsCorrect">
+            <expectedResult type="string">{{total_pos_simple_product_with_tax_2.shippingFee}}</expectedResult>
+            <actualResult type="variable">grabShippingTotal</actualResult>
+        </assertEquals>
+
+
+        <waitForElement selector="{{PosCheckoutCartTotalsSection.discountTotal}}" time="120" stepKey="waitDiscount"/>
+        <grabTextFrom selector="{{PosCheckoutCartTotalsSection.discountTotal}}" stepKey="grabDiscount"/>
+
+        <assertEquals message="Assert the Discount is correct" stepKey="assertDiscountIsCorrect">
+            <expectedResult type="string">{{total_pos_simple_product_with_tax_2.customDiscount}}</expectedResult>
+            <actualResult type="variable">grabDiscount</actualResult>
+        </assertEquals>
+
+        <grabTextFrom selector="{{PosCheckoutCartTotalsSection.taxTotal}}" stepKey="grabTax"/>
+
+        <assertEquals message="Assert the Tax is correct" stepKey="assertTaxIsCorrect">
+            <expectedResult type="string">{{total_pos_simple_product_with_tax_2.tax}}</expectedResult>
+            <actualResult type="variable">grabTax</actualResult>
+        </assertEquals>
+
+        <grabTextFrom selector="{{PosCheckoutCartTotalsSection.grandTotal}}" stepKey="grabGrandTotal"/>
+
+        <assertEquals message="Assert the Grand Total is correct" stepKey="assertGrandTotalIsCorrect">
+            <expectedResult type="string">{{total_pos_simple_product_with_tax_2.grandTotal}}</expectedResult>
+            <actualResult type="variable">grabGrandTotal</actualResult>
+        </assertEquals>
+
+    </test>
+</tests>

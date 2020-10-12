@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/DataGenerator/etc/dataProfileSchema.xsd">
+    <!-- Admin config -->
+    <entity name="config_enable_credit_card" type="pwa_config">
+        <data key="path">webpos/payment/ccforpos/active</data>
+        <data key="value">1</data>
+    </entity>
+
+    <!-- Admin config authorize.net -->
+    <entity name="config_authorize_enable" type="pwa_config">
+        <data key="path">webpos/payment/authorizenet/enable</data>
+        <data key="value">1</data>
+    </entity>
+    <entity name="config_authorize_api_login" type="pwa_config">
+        <data key="path">webpos/payment/authorizenet/api_login</data>
+        <data key="value">6G5pK9EHvnb</data>
+    </entity>
+    <entity name="config_authorize_transaction_key" type="pwa_config">
+        <data key="path">webpos/payment/authorizenet/transaction_key</data>
+        <data key="value">3utU53N3Yqz3SY9a</data>
+    </entity>
+    <entity name="config_authorize_client_id" type="pwa_config">
+        <data key="path">webpos/payment/authorizenet/client_id</data>
+        <data key="value">8s24n8n65739xcJ2m29MNzjLCWgemrm46WYqmERHqxm7NXF3skZj29a7RsvenEXk</data>
+    </entity>
+    <entity name="config_authorize_is_sandbox" type="pwa_config">
+        <data key="path">webpos/payment/authorizenet/is_sandbox</data>
+        <data key="value">1</data>
+    </entity>
+
+    <entity name="stripe_full_pos_simple_product_2" type="payment">
+        <data key="fullPayment">$34.64</data>
+        <data key="remaining">$0.00</data>
+    </entity>
+
+    <entity name="stripe_partial_pos_simple_product_2" type="payment">
+        <data key="fullPayment">$34.64</data>
+        <data key="partialAmount">10.00</data>
+        <data key="remaining">$24.64</data>
+    </entity>
+
+    <!--Data Test: PayPal-->
+    <entity name="paypal_full_pos_simple_product_2" type="payment">
+        <data key="fullPayment">$34.64</data>
+        <data key="remaining">$0.00</data>
+    </entity>
+
+    <entity name="paypal_partial_pos_simple_product_2" type="payment">
+        <data key="fullPayment">$34.64</data>
+        <data key="partialAmount">10.00</data>
+        <data key="paymentValue">$10.00</data>
+        <data key="remaining">$24.64</data>
+    </entity>
+    <!--End: Data Test: PayPal-->
+
+    <!--Take Payment - Data Test: Cash-->
+    <entity name="cash_take_payment_full_pos_simple_product_2" type="payment">
+        <data key="prePaidAmount">5.00</data>
+        <data key="remaining">$0.00</data>
+        <data key="message">Payment has been received and Invoice is created successfully</data>
+        <data key="paymentStatus">Paid</data>
+    </entity>
+
+    <entity name="cash_take_payment_partial_pos_simple_product_2" type="payment">
+        <data key="prePaidAmount">5.00</data>
+        <data key="partialAmount">10.00</data>
+        <data key="remaining">$19.64</data>
+        <data key="totalPaid">$15.00</data>
+        <data key="message">Payment has been received successfully</data>
+        <data key="paymentStatus">Partially Paid</data>
+    </entity>
+    <!--End: Take Payment - Data Test: Cash-->
+
+    <!--Take Payment - Data Test: Credit Card-->
+    <entity name="credit_card_take_payment_full_pos_simple_product_2" type="payment">
+        <data key="prePaidAmount">5.00</data>
+        <data key="remaining">$0.00</data>
+        <data key="message">Payment has been received and Invoice is created successfully</data>
+        <data key="paymentStatus">Paid</data>
+    </entity>
+
+    <entity name="credit_card_take_payment_partial_pos_simple_product_2" type="payment">
+        <data key="prePaidAmount">5.00</data>
+        <data key="partialAmount">10.00</data>
+        <data key="paymentValue">$10.00</data>
+        <data key="remaining">$19.64</data>
+        <data key="totalPaid">$15.00</data>
+        <data key="message">Payment has been received successfully</data>
+        <data key="paymentStatus">Partially Paid</data>
+    </entity>
+    <!--End: Take Payment - Data Test: Credit Card-->
+
+    <!--Take Payment - Data Test: PayPal-->
+    <entity name="paypal_take_payment_full_pos_simple_product_2" type="payment">
+        <data key="prePaidAmount">5.00</data>
+        <data key="remaining">$0.00</data>
+        <data key="message">Payment has been received and Invoice is created successfully</data>
+        <data key="paymentStatus">Paid</data>
+    </entity>
+
+    <entity name="paypal_take_payment_partial_pos_simple_product_2" type="payment">
+        <data key="prePaidAmount">5.00</data>
+        <data key="partialAmount">10.00</data>
+        <data key="paymentValue">$10.00</data>
+        <data key="remaining">$19.64</data>
+        <data key="totalPaid">$15.00</data>
+        <data key="message">Payment has been received successfully</data>
+        <data key="paymentStatus">Partially Paid</data>
+    </entity>
+    <!--End: Take Payment - Data Test: PayPal-->
+
+    <!--Take Payment - Data Test: Authorize-->
+    <entity name="authorize_take_payment_full_pos_simple_product_2" type="payment">
+        <data key="prePaidAmount">5.00</data>
+        <data key="remaining">$0.00</data>
+        <data key="message">Payment has been received and Invoice is created successfully</data>
+        <data key="paymentStatus">Paid</data>
+    </entity>
+
+    <entity name="authorize_take_payment_partial_pos_simple_product_2" type="payment">
+        <data key="prePaidAmount">5.00</data>
+        <data key="partialAmount">10.00</data>
+        <data key="paymentValue">$10.00</data>
+        <data key="remaining">$19.64</data>
+        <data key="totalPaid">$15.00</data>
+        <data key="message">Payment has been received successfully</data>
+        <data key="paymentStatus">Partially Paid</data>
+    </entity>
+    <!--End: Take Payment - Data Test: Authorize-->
+
+    <!--Take Payment - Data Test: Stripe-->
+    <entity name="stripe_take_payment_full_pos_simple_product_2" type="payment">
+        <data key="prePaidAmount">5.00</data>
+        <data key="remaining">$0.00</data>
+        <data key="message">Payment has been received and Invoice is created successfully</data>
+        <data key="paymentStatus">Paid</data>
+    </entity>
+
+    <entity name="stripe_take_payment_partial_pos_simple_product_2" type="payment">
+        <data key="prePaidAmount">5.00</data>
+        <data key="partialAmount">10.00</data>
+        <data key="paymentValue">$10.00</data>
+        <data key="remaining">$19.64</data>
+        <data key="totalPaid">$15.00</data>
+        <data key="message">Payment has been received successfully</data>
+        <data key="paymentStatus">Partially Paid</data>
+    </entity>
+    <!--End: Take Payment - Data Test: Stripe-->
+
+    <!--Take Payment - Data Test: Multi Payment-->
+    <entity name="multi_payment_take_payment_partial_pos_simple_product_2" type="payment">
+        <data key="prePaidAmount">5.00</data>
+        <data key="cashPartialAmount">10.00</data>
+        <data key="cashPaymentValue">$10.00</data>
+        <data key="authorizePartialAmount">10.00</data>
+        <data key="authorizePaymentValue">$10.00</data>
+        <data key="remaining">$9.64</data>
+        <data key="totalPaid">$25.00</data>
+        <data key="message">Payment has been received successfully</data>
+        <data key="paymentStatus">Partially Paid</data>
+    </entity>
+    <!--End: Take Payment - Data Test: Multi Payment-->
+</entities>

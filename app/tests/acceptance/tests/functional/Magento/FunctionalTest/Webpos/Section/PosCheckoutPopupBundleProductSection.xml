@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Page/etc/SectionObject.xsd">
+    <section name="PosCheckoutPopupBundleProductSection">
+        <element name="product1" type="button" selector=".product-bundle-wrapper .bundle-item:nth-child(1) .bundle-option:nth-last-child(1)"/>
+        <element name="product2" type="button" selector=".product-bundle-wrapper .bundle-item:nth-child(2) .bundle-option:nth-last-child(1)"/>
+        <element name="addToCart" type="button" selector='.modal-content:not([style*="display: none"]) .addtocart'/>
+        <element name="popupBundleBlock" type="text" selector='#popup-bundle-product'/>
+        <element name="loaderOption" type="text" selector='.loader-product'/>
+    </section>
+</sections>

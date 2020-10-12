@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+    <test name="PayPalFullPaymentTest">
+        <annotations>
+            <features value="Payment"/>
+            <stories value="PayPal - Full payment"/>
+            <title value="Able to fully pay with payment method: PayPal"/>
+            <description value="Able to fully pay with payment method: PayPal"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="SPM-05"/>
+            <!-- <group value="payment"/>
+            <group value="paypal"/>
+            <group value="pwapos"/> -->
+        </annotations>
+
+        <before>
+            <createData entity="default_webpos_config" stepKey="payPalConfig"/>
+
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <actionGroup ref="AddProductAndCharge" stepKey="AddProductAndCharge">
+                <argument name="dataProduct" value="pos_simple_product_2" />
+            </actionGroup>
+            <waitForElementVisible selector="{{PosCheckoutCartTotalsSection.cartTotalsBlock}}" time="120" stepKey="waitForCartTotalsVisible"/>
+        </before>
+
+        <waitForElementVisible selector="{{PosCheckoutPaymentSection.payPal}}" time="120" stepKey="waitForPayPalVisible"/>
+        <click selector="{{PosCheckoutPaymentSection.payPal}}" stepKey="clickPayPal"/>
+        <waitForElementVisible selector="{{PosCheckoutPaymentSection.amount}}" time="120" stepKey="waitForEditPaymentPageVisible"/>
+
+        <actionGroup ref="FillCreditCard" stepKey="FillCreditCard">
+            <argument name="credit_card" value="paypal_card_info" />
+        </actionGroup>
+
+        <waitForElementVisible selector="{{CheckoutSection.CompleteOrder}}" time="120" stepKey="waitCompleteOrderPageVisible"/>
+
+        <!-- Check: Display Remaining amount = $0.00 -->
+        <grabTextFrom selector="{{PosCheckoutPaymentSection.totalLabel}}" stepKey="grabTotalPaymentLabel"/>
+        <grabTextFrom selector="{{PosCheckoutPaymentSection.totalValue}}" stepKey="grabTotalPaymentValue"/>
+        <assertEquals message="Remaining total label is correct." stepKey="compareRemainingTotalLabel">
+            <expectedResult type="string">Remaining</expectedResult>
+            <actualResult type="variable">grabTotalPaymentLabel</actualResult>
+        </assertEquals>
+        <assertEquals message="Remaining total value is correct." stepKey="compareRemainingTotalValue">
+            <expectedResult type="string">{{paypal_full_pos_simple_product_2.remaining}}</expectedResult>
+            <actualResult type="variable">grabTotalPaymentValue</actualResult>
+        </assertEquals>
+        <!-- End Check: Display Remaining amount = $0.00 -->
+
+        <!--Check PayPal Item-->
+        <seeElement selector="{{CheckoutSection.payPayItem}}" stepKey="checkPayPayItemVisible"/>
+
+        <grabTextFrom selector="{{TotalSection.grandTotal}}" stepKey="grabGrandTotal"/>
+        <grabTextFrom selector="{{CheckoutSection.payPayValue}}" stepKey="grabPayPalValue"/>
+        <assertEquals message="Check PayPal's value is correct" stepKey="assertPayPalValue">
+            <expectedResult type="variable">grabGrandTotal</expectedResult>
+            <actualResult type="variable">grabPayPalValue</actualResult>
+        </assertEquals>
+        <!--End: Check PayPal Item-->
+
+        <!-- Check: Show the button that named as Complete Order -->
+        <grabTextFrom selector="{{CheckoutSection.CompleteOrder}}" stepKey="grabCompleteButtonLabel"/>
+        <assertEquals message="Complete button label is correct." stepKey="compareCompleteButtonLabel">
+            <expectedResult type="string">Complete Order</expectedResult>
+            <actualResult type="variable">grabCompleteButtonLabel</actualResult>
+        </assertEquals>
+        <!-- End Check: Show the button that named as Complete Order -->
+
+        <!--Checkout Order-->
+        <actionGroup ref="DisablePrintPopup" stepKey="DisablePrintPopup"/>
+        <click selector="{{CheckoutSection.CompleteOrder}}" stepKey="clickCompleteOrder"/>
+
+        <waitForElementVisible selector="{{CheckoutSection.payPayLoader}}" time="120" stepKey="waitPayPalLoaderVisible"/>
+        <waitForElementNotVisible selector="{{CheckoutSection.payPayLoader}}" time="120" stepKey="waitPayPalLoaderNotVisible"/>
+
+
+        <!--Check place order success massage-->
+        <waitForElementVisible selector="{{ToastSection.message}}" time="120" stepKey="waitForSuccessMessage"/>
+        <grabTextFrom selector="{{ToastSection.message}}" stepKey="grabMessageText"/>
+        <assertContains message="Check message is correct." stepKey="checkMassageIsCorrect1">
+            <expectedResult type="string">Order #</expectedResult>
+            <actualResult type="variable">grabMessageText</actualResult>
+        </assertContains>
+        <assertContains message="Check message is correct." stepKey="checkMassageIsCorrect2">
+            <expectedResult type="string">has been created successfully!</expectedResult>
+            <actualResult type="variable">grabMessageText</actualResult>
+        </assertContains>
+        <!--End: Check place order success massage-->
+    </test>
+
+    <test name="PayPalPartialPaymentTest">
+        <annotations>
+            <features value="Payment"/>
+            <stories value="PayPal - Partial payment"/>
+            <title value="Able to partially pay with payment method: PayPal"/>
+            <description value="Able to partially pay with payment method: PayPal"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="SPM-06"/>
+            <!-- <group value="payment"/>
+            <group value="paypal"/>
+            <group value="pwapos"/> -->
+        </annotations>
+
+        <before>
+            <createData entity="default_webpos_config" stepKey="payPalConfig"/>
+
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <actionGroup ref="AddProductAndCharge" stepKey="AddProductAndCharge">
+                <argument name="dataProduct" value="pos_simple_product_2" />
+            </actionGroup>
+            <waitForElementVisible selector="{{PosCheckoutCartTotalsSection.cartTotalsBlock}}" time="120" stepKey="waitForCartTotalsVisible"/>
+        </before>
+
+        <waitForElementVisible selector="{{PosCheckoutPaymentSection.payPal}}" time="120" stepKey="waitForPayPalVisible"/>
+        <click selector="{{PosCheckoutPaymentSection.payPal}}" stepKey="clickPayPal"/>
+        <waitForElementVisible selector="{{PosCheckoutPaymentSection.amount}}" time="120" stepKey="waitForEditPaymentPageVisible"/>
+
+        <actionGroup ref="PaymentEnterAmountAndFillCreditCard" stepKey="EnterAmountAndFillCreditCard">
+            <argument name="amount" value="{{paypal_partial_pos_simple_product_2.partialAmount}}" />
+            <argument name="credit_card" value="paypal_card_info" />
+        </actionGroup>
+
+        <waitForElementVisible selector="{{CheckoutSection.CompleteOrder}}" time="120" stepKey="waitCompleteOrderPageVisible"/>
+
+        <!-- Check: Display Remaining amount -->
+        <grabTextFrom selector="{{PosCheckoutPaymentSection.totalLabel}}" stepKey="grabTotalPaymentLabel"/>
+        <grabTextFrom selector="{{PosCheckoutPaymentSection.totalValue}}" stepKey="grabTotalPaymentValue"/>
+        <assertEquals message="Remaining total label is correct." stepKey="compareRemainingTotalLabel">
+            <expectedResult type="string">Remaining</expectedResult>
+            <actualResult type="variable">grabTotalPaymentLabel</actualResult>
+        </assertEquals>
+        <assertEquals message="Remaining total value is correct." stepKey="compareRemainingTotalValue">
+            <expectedResult type="string">{{paypal_partial_pos_simple_product_2.remaining}}</expectedResult>
+            <actualResult type="variable">grabTotalPaymentValue</actualResult>
+        </assertEquals>
+        <!-- End Check: Display Remaining amount -->
+
+        <!--Check PayPal Item-->
+        <seeElement selector="{{CheckoutSection.payPayItem}}" stepKey="checkPayPayItemVisible"/>
+
+        <grabTextFrom selector="{{CheckoutSection.payPayValue}}" stepKey="grabPayPalValue"/>
+        <assertEquals message="Check PayPal's value is correct" stepKey="assertPayPalValue">
+            <expectedResult type="string">{{paypal_partial_pos_simple_product_2.paymentValue}}</expectedResult>
+            <actualResult type="variable">grabPayPalValue</actualResult>
+        </assertEquals>
+        <!--End: Check PayPal Item-->
+
+        <seeElement selector="{{CheckoutSection.addPaymentButton}}" stepKey="checkAddPaymentButtonIsVisible"/>
+
+        <!-- Check: Show the button that named as Mark as Partial -->
+        <grabTextFrom selector="{{CheckoutSection.CompleteOrder}}" stepKey="grabCompleteButtonLabel"/>
+        <assertEquals message="Complete button label is correct." stepKey="compareCompleteButtonLabel">
+            <expectedResult type="string">Mark as Partial</expectedResult>
+            <actualResult type="variable">grabCompleteButtonLabel</actualResult>
+        </assertEquals>
+        <!-- End Check: Show the button that named as Mark as Partial -->
+
+        <!--Checkout Order-->
+        <actionGroup ref="DisablePrintPopup" stepKey="DisablePrintPopup"/>
+        <click selector="{{CheckoutSection.CompleteOrder}}" stepKey="clickMarkAsPartial"/>
+
+        <waitForElementVisible selector="{{CheckoutSection.popupConfirmPartial}}" time="120" stepKey="waitPopupConfirmedPartial"/>
+        <waitForElementVisible selector="{{CheckoutSection.popupConfirmPartialButtonComplete}}" time="120" stepKey="waitButtonCompleteButtonVisible"/>
+        <click selector="{{CheckoutSection.popupConfirmPartialButtonComplete}}" stepKey="clickToCompleteButton"/>
+
+        <waitForElementNotVisible selector="{{CheckoutSection.popupConfirmPartial}}" time="120" stepKey="waitPopupConfirmedPartialClose"/>
+
+        <waitForElementVisible selector="{{CheckoutSection.payPayLoader}}" time="120" stepKey="waitPayPalLoaderVisible"/>
+
+        <waitForElementNotVisible selector="{{CheckoutSection.payPayLoader}}" time="120" stepKey="waitPayPalLoaderNotVisible"/>
+
+        <!--Check place order success massage-->
+        <waitForElementVisible selector="{{ToastSection.message}}" time="120" stepKey="waitForSuccessMessage"/>
+        <grabTextFrom selector="{{ToastSection.message}}" stepKey="grabMessageText"/>
+        <assertContains message="Check message is correct." stepKey="checkMassageIsCorrect1">
+            <expectedResult type="string">Order #</expectedResult>
+            <actualResult type="variable">grabMessageText</actualResult>
+        </assertContains>
+        <assertContains message="Check message is correct." stepKey="checkMassageIsCorrect2">
+            <expectedResult type="string">has been created successfully!</expectedResult>
+            <actualResult type="variable">grabMessageText</actualResult>
+        </assertContains>
+        <!--End: Check place order success massage-->
+    </test>
+</tests>

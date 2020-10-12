@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+    <test name="PaymentUseAuthorizePaymentFullyTest">
+        <annotations>
+            <features value="Payment"/>
+            <stories value="Authorize.net - Full payment"/>
+            <title value="Able to fully pay with payment method: Authorize.net"/>
+            <description value="Able to fully pay with payment method: Authorize.net"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="SPM-07"/>
+            <!-- <group value="useAuthorizeForPayFully"/>
+            <group value="useAuthorize"/>
+            <group value="pwapos"/> -->
+        </annotations>
+
+        <before>
+            <createData stepKey="configAuthorizeEnable" entity="config_authorize_enable" />
+            <createData stepKey="configAuthorizeApiLogin" entity="config_authorize_api_login" />
+            <createData stepKey="configAuthorizeTransactionKey" entity="config_authorize_transaction_key" />
+            <createData stepKey="configAuthorizeClientId" entity="config_authorize_client_id" />
+            <createData stepKey="configAuthorizeSandBox" entity="config_authorize_is_sandbox" />
+
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <actionGroup ref="AddProductAndCharge" stepKey="AddProductAndCharge">
+                <argument name="dataProduct" value="pos_simple_product_2" />
+            </actionGroup>
+            <waitForElementVisible selector="{{PosCheckoutCartTotalsSection.cartTotalsBlock}}" time="120" stepKey="waitForCartTotalsVisible"/>
+        </before>
+
+        <waitForElementVisible selector="{{PosCheckoutPaymentSection.authorize}}" time="120" stepKey="waitAuthorizePaymentVisible"/>
+        <click selector="{{PosCheckoutPaymentSection.authorize}}" stepKey="clickAuthorize"/>
+
+        <!-- Check: Amount box of Credit Card is auto filled = total amount of order  -->
+        <grabTextFrom selector="{{PosCheckoutPaymentSection.amountValue}}" stepKey="grabPaymentAmount"/>
+        <grabTextFrom selector="{{TotalSection.grandTotal}}" stepKey="grabGrandTotal"/>
+        <assertEquals message="Payment amount is correct." stepKey="compareAmountPayment">
+            <expectedResult type="variable">grabGrandTotal</expectedResult>
+            <actualResult type="variable">grabPaymentAmount</actualResult>
+        </assertEquals>
+        <!-- End check: Amount box of Credit Card is auto filled = total amount of order  -->
+
+        <actionGroup ref="FillCreditCard" stepKey="findCreditCardNumber">
+            <argument name="credit_card" value="authorize_credit_card"/>
+        </actionGroup>
+
+        <waitForElementVisible selector="{{PosCheckoutPaymentSection.complete}}" time="120" stepKey="waitCompleteOrderPageVisible"/>
+
+        <seeElement selector="{{PosCheckoutPaymentSection.iconAuthorizeForPos}}" stepKey="findAuthorizeOnPaymentList" />
+        <!-- Check: Display Remaining amount = $0.00 -->
+        <grabTextFrom selector="{{PosCheckoutPaymentSection.totalLabel}}" stepKey="grabTotalPaymentLabel"/>
+        <grabTextFrom selector="{{PosCheckoutPaymentSection.totalValue}}" stepKey="grabTotalPaymentValue"/>
+        <assertEquals message="Remaining total label is correct." stepKey="compareRemainingTotalLabel">
+            <expectedResult type="string">Remaining</expectedResult>
+            <actualResult type="variable">grabTotalPaymentLabel</actualResult>
+        </assertEquals>
+        <assertEquals message="Remaining total value is correct." stepKey="compareRemainingTotalValue">
+            <expectedResult type="string">$0.00</expectedResult>
+            <actualResult type="variable">grabTotalPaymentValue</actualResult>
+        </assertEquals>
+        <!-- End Check: Display Remaining amount = $0.00 -->
+        <!-- Check: Show the button that named as Complete Order -->
+        <grabTextFrom selector="{{PosCheckoutPaymentSection.complete}}" stepKey="grabCompleteButtonLabel"/>
+        <assertEquals message="Complete button label is correct." stepKey="compareCompleteButtonLabel">
+            <expectedResult type="string">Complete Order</expectedResult>
+            <actualResult type="variable">grabCompleteButtonLabel</actualResult>
+        </assertEquals>
+        <!-- End Check: Show the button that named as Complete Order -->
+        <actionGroup ref="DisablePrintPopup" stepKey="DisablePrintPopup"/>
+        <click selector="{{PosCheckoutPaymentSection.complete}}" stepKey="clickToCompleteButton" />
+        <waitForElementVisible selector="{{CheckoutSection.authorizeLoader}}" time="120" stepKey="waitPayPalLoaderVisible"/>
+        <waitForElementNotVisible selector="{{CheckoutSection.authorizeLoader}}" time="120" stepKey="waitPayPalLoaderNotVisible"/>
+
+        <waitForElementVisible selector="{{ProductListSection.toastSuccessMessage}}" time="120" stepKey="seeToastSuccessShow"/>
+        <seeElement selector="{{ProductListSection.contentSuccessMessage('Order #', 'has been created successfully!')}}" stepKey="checkSuccessMessage"/>
+    </test>
+    <test name="PaymentUseAuthorizePaymentPartialTest">
+        <annotations>
+            <features value="Payment"/>
+            <stories value="Authorize.net - Partial payment"/>
+            <title value="Able to partially pay with payment method: Authorize.net"/>
+            <description value="Able to partially pay with payment method: Authorize.net"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="SPM-08"/>
+            <!-- <group value="useAuthorizeForPayPartial"/>
+            <group value="useAuthorize"/>
+            <group value="pwapos"/>
+            <group value="demo"/> -->
+        </annotations>
+
+        <before>
+            <createData stepKey="configAuthorizeEnable" entity="config_authorize_enable" />
+            <createData stepKey="configAuthorizeApiLogin" entity="config_authorize_api_login" />
+            <createData stepKey="configAuthorizeTransactionKey" entity="config_authorize_transaction_key" />
+            <createData stepKey="configAuthorizeClientId" entity="config_authorize_client_id" />
+            <createData stepKey="configAuthorizeSandBox" entity="config_authorize_is_sandbox" />
+
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <actionGroup ref="AddProductAndCharge" stepKey="AddProductAndCharge">
+                <argument name="dataProduct" value="pos_simple_product_2" />
+            </actionGroup>
+            <waitForElementVisible selector="{{PosCheckoutCartTotalsSection.cartTotalsBlock}}" time="120" stepKey="waitForCartTotalsVisible"/>
+        </before>
+
+        <waitForElementVisible selector="{{PosCheckoutPaymentSection.authorize}}" time="120" stepKey="waitAuthorizePaymentVisible"/>
+        <click selector="{{PosCheckoutPaymentSection.authorize}}" stepKey="clickAuthorize"/>
+
+        <!-- Check: Amount box of Credit Card is auto filled = total amount of order  -->
+        <grabTextFrom selector="{{PosCheckoutPaymentSection.amountValue}}" stepKey="grabPaymentAmount"/>
+        <grabTextFrom selector="{{TotalSection.grandTotal}}" stepKey="grabGrandTotal"/>
+        <assertEquals message="Payment amount is correct." stepKey="compareAmountPayment">
+            <expectedResult type="variable">grabGrandTotal</expectedResult>
+            <actualResult type="variable">grabPaymentAmount</actualResult>
+        </assertEquals>
+        <!-- End check: Amount box of Credit Card is auto filled = total amount of order  -->
+
+        <actionGroup ref="PosPaymentEnterAuthorize" stepKey="findAmount">
+            <argument name="amount" value="10.00"/>
+        </actionGroup>
+        <actionGroup ref="FillCreditCard" stepKey="findCreditCardNumber">
+            <argument name="credit_card" value="authorize_credit_card"/>
+        </actionGroup>
+
+        <waitForElementVisible selector="{{PosCheckoutPaymentSection.complete}}" time="120" stepKey="waitCompleteOrderPageVisible"/>
+
+        <seeElement selector="{{PosCheckoutPaymentSection.iconAuthorizeForPos}}" stepKey="findAuthorizeOnPaymentList" />
+        <!-- Check button add payment -->
+        <seeElement selector="{{PosCheckoutPaymentSection.add}}" stepKey="findButtonAddPayment" />
+        <!-- Check: Display Remaining amount = $24.64 -->
+        <grabTextFrom selector="{{PosCheckoutPaymentSection.totalLabel}}" stepKey="grabTotalPaymentLabel"/>
+        <grabTextFrom selector="{{PosCheckoutPaymentSection.totalValue}}" stepKey="grabTotalPaymentValue"/>
+        <assertEquals message="Remaining total label is correct." stepKey="compareRemainingTotalLabel">
+            <expectedResult type="string">Remaining</expectedResult>
+            <actualResult type="variable">grabTotalPaymentLabel</actualResult>
+        </assertEquals>
+        <assertEquals message="Remaining total value is correct." stepKey="compareRemainingTotalValue">
+            <expectedResult type="string">$24.64</expectedResult>
+            <actualResult type="variable">grabTotalPaymentValue</actualResult>
+        </assertEquals>
+        <!-- End Check: Display Remaining amount = $24.64 -->
+        <!-- Check: Show the button that named as Mark as Partial -->
+        <grabTextFrom selector="{{PosCheckoutPaymentSection.complete}}" stepKey="grabCompleteButtonLabel"/>
+        <assertEquals message="Mark as partial button label is correct." stepKey="compareCompleteButtonLabel">
+            <expectedResult type="string">Mark as Partial</expectedResult>
+            <actualResult type="variable">grabCompleteButtonLabel</actualResult>
+        </assertEquals>
+        <!-- End Check: Show the button that named as Mark as Partial -->
+        <actionGroup ref="DisablePrintPopup" stepKey="DisablePrintPopup"/>
+        <click selector="{{PosCheckoutPaymentSection.partial}}" stepKey="clickToMarkAsPartialButton" />
+        <waitForElementVisible selector="{{CheckoutSection.popupConfirmPartial}}" time="120" stepKey="waitPopupConfirmedPartial"/>
+        <waitForElementVisible selector="{{CheckoutSection.popupConfirmPartialButtonComplete}}" time="120" stepKey="waitButtonCompleteButtonVisible"/>
+        <click selector="{{CheckoutSection.popupConfirmPartialButtonComplete}}" stepKey="clickToCompleteButton"/>
+
+        <waitForElementVisible selector="{{CheckoutSection.authorizeLoader}}" time="120" stepKey="waitPayPalLoaderVisible"/>
+        <waitForElementNotVisible selector="{{CheckoutSection.authorizeLoader}}" time="120" stepKey="waitPayPalLoaderNotVisible"/>
+
+        <waitForElementVisible selector="{{ProductListSection.toastSuccessMessage}}" time="120" stepKey="seeToastSuccessShow"/>
+        <seeElement selector="{{ProductListSection.contentSuccessMessage('Order #', 'has been created successfully!')}}" stepKey="checkSuccessMessage"/>
+    </test>
+</tests>

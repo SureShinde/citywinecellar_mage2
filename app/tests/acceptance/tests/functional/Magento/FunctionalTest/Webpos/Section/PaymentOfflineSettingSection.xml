@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Page/etc/SectionObject.xsd">
+    <section name="PaymentOfflineSettingSection">
+        <element name="payment_section" type="button" selector="#webpos_payment-head"/>
+        <element name="add_more_payment" type="button" selector="#row_webpos_payment_payment_offline_button div"/>
+        <element name="payment_method_offline_form" type="button" selector="//fieldset[@id='webpos_payment']//tbody//tr[contains(@id, 'title')]//input[contains(@id, 'title')][@value='']"/>
+        <element name="enable" type="input" selector="#webpos_payment tbody tr:nth-child(4) tbody tr:nth-child(1) .value select"/>
+        <element name="title" type="input" selector="#webpos_payment tbody tr:nth-child(4) tbody tr:nth-child(2) .value input"/>
+        <element name="reference_number" type="input" selector="#webpos_payment tbody tr:nth-child(4) tbody tr:nth-child(3) .value select"/>
+        <element name="pay_later" type="input" selector="#webpos_payment tbody tr:nth-child(4) tbody tr:nth-child(5) .value select"/>
+        <element name="save_config" type="button" selector="#anchor-content #save"/>
+    </section>
+</sections>

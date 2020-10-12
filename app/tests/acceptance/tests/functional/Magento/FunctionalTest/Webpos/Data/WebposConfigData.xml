@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/DataGenerator/etc/dataProfileSchema.xsd">
+    <entity name="default_webpos_config" type="webpos_config">
+        <!--Stripe-->
+        <requiredEntity type="stripe_enable">default_stripe_enable</requiredEntity>
+        <requiredEntity type="stripe_title">default_stripe_title</requiredEntity>
+        <requiredEntity type="stripe_api_key">default_stripe_api_key</requiredEntity>
+        <requiredEntity type="stripe_publishable_key">default_stripe_publishable_key</requiredEntity>
+        <requiredEntity type="stripe_is_sandbox">default_stripe_is_sandbox</requiredEntity>
+        <requiredEntity type="stripe_sort_order">default_stripe_sort_order</requiredEntity>
+        <!--End Stripe-->
+
+        <!--PayPal-->
+        <requiredEntity type="paypal_enable">default_paypal_enable</requiredEntity>
+        <requiredEntity type="paypal_title">default_paypal_title</requiredEntity>
+        <requiredEntity type="paypal_api_username">default_paypal_api_username</requiredEntity>
+        <requiredEntity type="paypal_api_password">default_paypal_api_password</requiredEntity>
+        <requiredEntity type="paypal_api_signature">default_paypal_api_signature</requiredEntity>
+        <requiredEntity type="paypal_is_sandbox">default_paypal_is_sandbox</requiredEntity>
+        <requiredEntity type="paypal_payment_action">default_paypal_payment_action</requiredEntity>
+        <requiredEntity type="paypal_sort_order">default_paypal_sort_order</requiredEntity>
+        <requiredEntity type="enable_send_invoice">default_enable_send_invoice</requiredEntity>
+        <!--End: PayPal-->
+    </entity>
+    <!--Stripe Config-->
+    <entity name="default_stripe_enable" type="stripe_enable">
+        <data key="value">1</data>
+    </entity>
+    <entity name="default_stripe_title" type="stripe_title">
+        <data key="value">Stripe</data>
+    </entity>
+    <entity name="default_stripe_api_key" type="stripe_api_key">
+        <data key="value">sk_test_cH3ir9fqlpfuOa3S8uinEYdn</data>
+    </entity>
+    <entity name="default_stripe_publishable_key" type="stripe_publishable_key">
+        <data key="value">pk_test_gQx6UvmrWJvlDhMML2yvvxkj</data>
+    </entity>
+    <entity name="default_stripe_is_sandbox" type="stripe_is_sandbox">
+        <data key="value">1</data>
+    </entity>
+    <entity name="default_stripe_sort_order" type="stripe_sort_order">
+        <data key="value">5</data>
+    </entity>
+    <!--End: Stripe Config-->
+
+    <!--PayPal Config-->
+    <entity name="default_paypal_enable" type="paypal_enable">
+        <data key="value">1</data>
+    </entity>
+    <entity name="default_paypal_title" type="paypal_title">
+        <data key="value">PayPal</data>
+    </entity>
+    <entity name="default_paypal_api_username" type="paypal_api_username">
+        <data key="value">chihoangvuong94-facilitator_api1.gmail.com</data>
+    </entity>
+    <entity name="default_paypal_api_password" type="paypal_api_password">
+        <data key="value">ZCEWVV7BBM4AQBLZ</data>
+    </entity>
+    <entity name="default_paypal_api_signature" type="paypal_api_signature">
+        <data key="value">AFcWxV21C7fd0v3bYYYRCpSSRl31AgRTVQspNBXYt9zF-irQn5fWR2Mh</data>
+    </entity>
+    <entity name="default_paypal_is_sandbox" type="paypal_is_sandbox">
+        <data key="value">1</data>
+    </entity>
+    <entity name="default_paypal_payment_action" type="paypal_payment_action">
+        <data key="value">Sale</data>
+    </entity>
+    <entity name="default_paypal_sort_order" type="paypal_sort_order">
+        <data key="value">4</data>
+    </entity>
+    <entity name="default_enable_send_invoice" type="enable_send_invoice">
+        <data key="value">0</data>
+    </entity>
+    <!--End: PayPal Config-->
+</entities>

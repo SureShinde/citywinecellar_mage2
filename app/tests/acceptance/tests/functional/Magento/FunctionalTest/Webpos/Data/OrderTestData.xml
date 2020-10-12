@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/DataGenerator/etc/dataProfileSchema.xsd">
+    <entity name="default_order_total" type="order_total">
+        <data key="subTotal">$90.00</data>
+        <data key="shippingFee">$10.00</data>
+        <data key="customDiscount">-$8.00</data>
+        <data key="fpt">$0.00</data>
+        <data key="tax">$6.77</data>
+        <data key="grandTotal">$98.77</data>
+        <data key="totalPaid">$98.77</data>
+        <data key="totalRefund">$0.00</data>
+        <data key="totalDue">$0.00</data>
+        <data key="itemRowTotal">$88.77</data>
+    </entity>
+
+    <entity name="default_order_total_no_shipping_fee" type="order_total">
+        <data key="subTotal">$90.00</data>
+        <data key="shippingFee">$0.00</data>
+        <data key="customDiscount">-$8.00</data>
+        <data key="fpt">$0.00</data>
+        <data key="tax">$6.77</data>
+        <data key="grandTotal">$88.77</data>
+        <data key="totalPaid">$88.77</data>
+        <data key="totalRefund">$0.00</data>
+        <data key="totalDue">$0.00</data>
+        <data key="itemRowTotal">$88.77</data>
+    </entity>
+
+    <entity name="multiple_currency_order_total" type="order_total">
+        <data key="subTotal">€45.00</data>
+        <data key="shippingFee">€5.00</data>
+        <data key="customDiscount">-€8.00</data>
+        <data key="fpt">€0.00</data>
+        <data key="tax">€3.05</data>
+        <data key="grandTotal">€45.05</data>
+        <data key="totalPaid">€45.05</data>
+        <data key="totalRefund">€25.03</data>
+        <data key="totalDue">$0.00</data>
+        <data key="productPrice">€22.50</data>
+        <data key="itemRowTotal">€40.05</data>
+    </entity>
+
+    <entity name="total_pos_simple_product_with_tax" type="order_total">
+        <data key="shippingMethod">Flat Rate - Fixed</data>
+        <data key="subTotal">$34.00</data>
+        <data key="shippingFee">$5.00</data>
+        <data key="discountAmount">3.00</data>
+        <data key="customDiscount">-$3.00</data>
+        <data key="tax">$2.56</data>
+        <data key="grandTotal">$38.56</data>
+    </entity>
+
+    <entity name="total_pos_simple_product_with_tax_2" type="order_total">
+        <data key="shippingMethod">Flat Rate - Fixed</data>
+        <data key="subTotal">$7.00</data>
+        <data key="shippingFee">$5.00</data>
+        <data key="discountAmount">3.00</data>
+        <data key="customDiscount">-$3.00</data>
+        <data key="tax">$0.33</data>
+        <data key="grandTotal">$9.33</data>
+    </entity>
+</entities>

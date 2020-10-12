@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="PaymentEnterAmountAndFillCreditCard">
+        <arguments>
+            <argument name="amount" defaultValue="1.00" type="string"/>
+            <argument name="credit_card" defaultValue="default_credit_card"/>
+        </arguments>
+        <!--Enter payment amount-->
+        <click selector="{{PosCheckoutPaymentSection.amount}}" stepKey="clickCashAmount"/>
+        <pressKey selector="{{PosCheckoutPaymentSection.numpad}}" userInput="{{amount}}" stepKey="enterAmount"/>
+        <click selector="{{PosCheckoutPaymentSection.closeNumpad}}" stepKey="clickCloseNumpad"/>
+
+        <!--Fill credit cart info-->
+        <fillField userInput="{{credit_card.name}}" selector="{{CreditCardSection.name}}" stepKey="fillName"/>
+        <fillField userInput="{{credit_card.ccNumber}}" selector="{{CreditCardSection.ccNumber}}" stepKey="fillNumber"/>
+        <fillField userInput="{{credit_card.ccExpDate}}" selector="{{CreditCardSection.ccExpDate}}" stepKey="fillDate"/>
+        <fillField userInput="{{credit_card.ccCID}}" selector="{{CreditCardSection.ccCID}}" stepKey="fillCvv"/>
+
+        <click selector="{{CreditCardSection.accept}}" stepKey="clickAcceptButton"/>
+    </actionGroup>
+</actionGroups>

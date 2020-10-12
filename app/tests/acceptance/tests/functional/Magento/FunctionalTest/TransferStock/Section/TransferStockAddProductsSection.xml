@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../../../../../vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Page/etc/SectionObject.xsd">
+    <section name="TransferStockAddProductsSection">
+        <!-- Add product modal -->
+        <element name="addProductButton" type="button" selector="button[data-index='add_products_button']"/>
+        <element name="addProductModal" type="text" selector="//aside[contains(@class, 'os_inventorytransfer_edit_form_areas_transfer_summary_transfer_summary_product_list_modal_button_product_stock_modal')]"/>
+        <element name="buttonAddSelectedProducts" type="button" selector="//aside[contains(@class, 'os_inventorytransfer_edit_form_areas_transfer_summary_transfer_summary_product_list_modal_button_product_stock_modal')]//div[@class = 'page-actions-buttons']/button[@class='action-primary']"/>
+        <element name="buttonFilters" type="button" selector="//aside[contains(@class, 'os_inventorytransfer_edit_form_areas_transfer_summary_transfer_summary_product_list_modal_button_product_stock_modal')]//div[@class = 'data-grid-filters-action-wrap']/button[text()='Filters']"/>
+        <element name="filterInputSku" type="input" selector="//aside[contains(@class, 'os_inventorytransfer_edit_form_areas_transfer_summary_transfer_summary_product_list_modal_button_product_stock_modal')]//input[@name = 'sku']"/>
+        <element name="applyFiltersButton" type="button" selector="//aside[contains(@class, 'os_inventorytransfer_edit_form_areas_transfer_summary_transfer_summary_product_list_modal_button_product_stock_modal')]//span[text()='Apply Filters']/.."/>
+        <element name="checkboxButton" type="input" selector="//aside[contains(@class, 'os_inventorytransfer_edit_form_areas_transfer_summary_transfer_summary_product_list_modal_button_product_stock_modal')]//div[@class='data-grid-cell-content' and text()='{{var1}}']/../..//input[@data-action='select-row']" parameterized="true"/>
+
+        <!-- dynamic grid -->
+        <element name="qtyToSendInPutOfFirstProduct" type="input" selector="//input[@name='transfer_summary[product_list][product_dynamic_grid][links][product_list][0][qty_transferred]']"/>
+        <element name="sendButton" type="button" selector="//button[@id='send']"/>
+        <element name="confirmPopupOK" type="button" selector="//div[@class='modal-inner-wrap']//button[contains(@class, 'action-primary action-accept')]"/>
+        <element name="sendSuccessfullyMessage" type="text" selector="//div[@data-ui-id='messages-message-success' and contains[text(), 'The stock has been sent sucessfully.']]"/>
+    </section>
+</sections>

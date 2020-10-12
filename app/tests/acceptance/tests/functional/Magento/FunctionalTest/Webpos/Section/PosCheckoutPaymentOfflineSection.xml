@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Page/etc/SectionObject.xsd">
+  <section name="PosCheckoutPaymentOfflineSection">
+      <element name="iconFirstOfflinePayment" type="button" selector="//ul[@class='payment-list']/li/span[@class='text'][contains(text(), 'Offline Payment Method 1')]/../span[contains(@class, 'img')]"/>
+      <element name="iconSecondOfflinePayment" type="button" selector="//ul[@class='payment-list']/li/span[@class='text'][contains(text(), 'Offline Payment Method 2')]/../span[contains(@class, 'img')]"/>
+      <element name="iconThirdOfflinePayment" type="button" selector="//ul[@class='payment-list']/li/span[@class='text'][contains(text(), 'Offline Payment Method 3')]/../span[contains(@class, 'img')]"/>
+      <element name="CompleteOrder" type="button" selector="//div[@id='popup-completeOrder']/div[@class='modal-footer']/a[text()='Complete Order']"/>
+
+      <element name="refundFirstOfflinePayment" type="text" selector="//div[contains(@class ,'wrapper-refund-order')]//div[contains(@class ,'block-content')]//div[contains(@class, 'block-refund-payment')]//div[contains(@class, 'payment-full-amount')][1]//span[contains(text(), 'Offline Payment Method 3')]" />
+      <element name="refundFirstOfflinePaymentAmount" type="text" selector="//div[contains(@class ,'wrapper-refund-order')]//div[contains(@class ,'block-content')]//div[contains(@class, 'block-refund-payment')]//div[contains(@class, 'payment-full-amount')][1]//span[contains(text(), 'Offline Payment Method 3')]/../input" />
+  </section>
+</sections>

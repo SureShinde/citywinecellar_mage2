@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Page/etc/SectionObject.xsd">
+    <section name="CustomerFormSection">
+        <element name="add_customer_form" type="input" selector=".popup-create-customer .modal-content"/>
+        <element name="prefixName" type="input" selector="//label[contains(text(),'Name Prefix')]/../select[contains(@class, 'form-control')]"/>
+        <element name="firstName" type="input" selector="#firstname"/>
+        <element name="middleName" type="input" selector="#middlename"/>
+        <element name="lastName" type="input" selector="#lastname"/>
+        <element name="suffixName" type="input" selector="//label[contains(text(),'Name Suffix')]/../select[contains(@class, 'form-control')]"/>
+        <element name="email" type="input" selector="#email"/>
+        <element name="dob" type="input" selector="#datepicker-dob"/>
+        <element name="dobButton" type="input" selector="#datepicker-dob"/>
+        <element name="taxvat" type="input" selector="#taxvat"/>
+        <element name="gender" type="input" selector="//label[contains(text(),'Gender')]/../select[contains(@class, 'form-control')]"/>
+        <element name="telephone" type="input" selector="#telephone"/>
+        <element name="saveCustomer" type="button" selector=".popup-edit-customer .modal-lg .save" />
+        <element name="title" type="button" selector=".popup-edit-customer .modal-lg .modal-header .modal-title"/>
+    </section>
+</sections>

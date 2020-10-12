@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+    <test name="AdjustStockTest">
+        <annotations>
+            <testCaseId value="SA-01"/>
+            <features value="Stock Adjustment"/>
+            <stories value="Stock Adjustment"/>
+            <title value="Functional test for main flow"/>
+            <description value="Functional test for main flow"/>
+            <severity value="CRITICAL"/>
+            <group value="pwapos"/>
+            <group value="adjustStock"/>
+        </annotations>
+
+        <before>
+            <!-- Login to backend magento -->
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
+        </before>
+
+        <after>
+            <amOnPage url="admin/admin/auth/logout/" stepKey="amOnLogoutPage"/>
+        </after>
+        <!-- Create new adjustment -->
+        <amOnPage url="{{NewAdjustStockPage.url}}" stepKey="amOnNewAdjustStockPage"/>
+        <waitForPageLoad stepKey="waitNewAdjustStockPageLoaded"/>
+        <waitForElementNotVisible selector=".admin__form-loading-mask" time="60" stepKey="waitForLoadingMask"/>
+        <click stepKey="clickStartAdjustStock" selector="{{AdjustStockActionsSection.startAdjustStockButton}}" />
+        <waitForPageLoad stepKey="waitEditAdjustStockPageLoaded"/>
+        <seeElement selector="{{AdjustStockActionsSection.contentSuccessMessage('The adjustment has been saved.')}}" stepKey="checkSuccessMessage"/>
+
+        <!-- Add Product to Adjustment -->
+        <click stepKey="clickToAddProducts" selector="{{AdjustStockProductListSection.addProductToAdjustStockButton}}" />
+        <waitForPageLoad stepKey="waitForModalIsLoadedSuccessfully"/>
+
+        <seeElement selector="{{AddProductsToAdjustStockModalSection.modal}}" stepKey="checkAddProductModalVisible"/>
+        <!-- Filter Product-->
+        <click stepKey="clickFilterButtonInAddProductsModal" selector="{{AddProductsToAdjustStockModalSection.filterButton}}" />
+        <fillField selector="{{AddProductsToAdjustStockModalSection.skuFilterInput}}" userInput="{{product_24WB01.sku}}" stepKey="fillProductSkuToFilter"/>
+        <click stepKey="clickApplyFilterButtonInAddProductsModal" selector="{{AddProductsToAdjustStockModalSection.applyFilterButton}}" />
+        <waitForPageLoad stepKey="waitForFilterOnModalIsLoadedSuccessfully"/>
+
+        <click stepKey="selectFirstProduct" selector="{{AddProductsToAdjustStockModalSection.firstProductCheckbox}}" />
+
+        <click stepKey="clickAddSelectedProductsButton" selector="{{AddProductsToAdjustStockModalSection.addSelectedProductsButton}}" />
+        <waitForElementNotVisible selector="{{AddProductsToAdjustStockModalSection.modal}}" time="120" stepKey="waitForAddProductModalNotVisible"/>
+
+        <!-- Change Adjust Qty -->
+        <waitForElementVisible selector="{{AdjustStockProductListSection.adjustInputOfFirstProduct}}" time="120" stepKey="waitForProductVisibleInGrid"/>
+        <click selector="{{AdjustStockProductListSection.adjustInputOfFirstProduct}}" stepKey="clickToForAdjustQty"/>
+        <pressKey selector="{{AdjustStockProductListSection.adjustInputOfFirstProduct}}" parameterArray="[\Facebook\WebDriver\WebDriverKeys::BACKSPACE]"  stepKey="clearAmountQty"/>
+        <pressKey userInput="5" selector="{{AdjustStockProductListSection.adjustInputOfFirstProduct}}" stepKey="press5"/>
+        <pressKey selector="{{AdjustStockProductListSection.adjustInputOfFirstProduct}}" parameterArray="[\Facebook\WebDriver\WebDriverKeys::ENTER]"  stepKey="pressEnter"/>
+
+        <grabValueFrom selector="{{AdjustStockProductListSection.newQtyInputOfFirstProduct}}" stepKey="grabNewQtyValue"/>
+        <assertEquals stepKey="assertNewQty" message="Assert New Qty Value">
+            <expectedResult type="string">{{product_24WB01.new_qty}}</expectedResult>
+            <actualResult type="variable">grabNewQtyValue</actualResult>
+        </assertEquals>
+
+        <!-- Apply Adjustment -->
+        <click stepKey="clickSaveAndApplyButton" selector="{{AdjustStockActionsSection.saveAndApplyButton}}" />
+        <waitForElementVisible selector="{{AdjustStockActionsSection.acceptButton}}" time="120" stepKey="waitForConfirmPopup"/>
+        <click stepKey="clickAcceptButton" selector="{{AdjustStockActionsSection.acceptButton}}" />
+        <waitForPageLoad stepKey="waitForAdjustmentApplySuccessfully"/>
+
+        <seeElement selector="{{AdjustStockActionsSection.contentSuccessMessage('The stock adjustment has been successfully applied.')}}" stepKey="checkApplySuccessMessage"/>
+        <wait time="3" stepKey="wait3SecondsBeforeCheckProductStock"/>
+
+        <!-- Check product qty in source -->
+        <amOnPage url="{{EditProductPage.url(product_24WB01.id)}}" stepKey="amOnEditProductPage"/>
+        <waitForPageLoad stepKey="waitForEditProductPage"/>
+
+        <grabValueFrom selector="{{ProductSourceDetailSection.qtyInputOfFirstSource}}" stepKey="grabSourceQtyValue"/>
+        <assertEquals stepKey="assertSourceQty" message="Assert Source Qty Value">
+            <expectedResult type="string">{{product_24WB01.new_qty}}</expectedResult>
+            <actualResult type="variable">grabSourceQtyValue</actualResult>
+        </assertEquals>
+    </test>
+</tests>

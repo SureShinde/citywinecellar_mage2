@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+    <test name="SelectGuestCustomerTest">
+        <annotations>
+            <features value="Customer"/>
+            <stories value="Select Customer"/>
+            <title value="Checkout as guest."/>
+            <description value="Select guest."/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="CWC-01"/>
+            <group value="selectGuestCustomer"/>
+            <group value="pwapos"/>
+        </annotations>
+        <before>
+            <createData stepKey="enableGuest" entity="config_is_enable_guest" />
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+
+        <grabTextFrom selector="{{CustomerListSection.customer_name}}" stepKey="grabCustomerName"/>
+        <assertContains message="Customer name is correct." stepKey="compareCustomerName">
+            <expectedResult type="string">Guest</expectedResult>
+            <actualResult type="variable">grabCustomerName</actualResult>
+        </assertContains>
+    </test>
+</tests>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="PosPaymentEnterCC">
+        <arguments>
+            <argument name="amount" defaultValue="1.00" type="string"/>
+            <argument name="referenceNo" defaultValue="1" type="string" />
+        </arguments>
+        <click selector="{{PosCheckoutPaymentSection.amount}}" stepKey="clickCCAmount"/>
+        <pressKey selector="{{PosCheckoutPaymentSection.numpad}}" userInput="{{amount}}" stepKey="enterAmount"/>
+        <click selector="{{PosCheckoutPaymentSection.closeNumpad}}" stepKey="clickCloseNumpad"/>
+        <fillField selector="{{PosCheckoutPaymentCCSection.referenceNo}}" userInput="{{referenceNo}}" stepKey="enterReferenceNo"/>
+    </actionGroup>
+</actionGroups>

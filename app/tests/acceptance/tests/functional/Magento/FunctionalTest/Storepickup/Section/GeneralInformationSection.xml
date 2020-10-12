@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Page/etc/SectionObject.xsd">
+    <section name="GeneralInformationSection">
+        <!-- Begin General information -->
+        <element name="heading" type="text" selector="//*[@id='store_general_fieldset-wrapper']/div[1]/strong/span"/>
+        <element name="sourceCode" type="select" selector="//*[@id='store_source_code']"/>
+        <element name="sourceCodeError" type="text" selector="//*[@id='store_source_code-error']"/>
+        <element name="newSourceCode" type="text" selector="//*[@id='store_new_source_code']"/>
+        <element name="newSourceCodeError" type="text" selector="//*[@id='store_new_source_code-error']"/>
+        <element name="storeName" type="text" selector="//*[@id='store_store_name']"/>
+        <element name="storeNameError" type="text" selector="//*[@id='store_store_name-error']"/>
+        <element name="description" type="textarea" selector="//*[@id='store_description']"/>
+        <element name="status" type="select" selector="//*[@id='store_status']"/>
+        <element name="link" type="text" selector="//*[@id='store_link']"/>
+        <element name="sortOrder" type="text" selector="//*[@id='store_sort_order']"/>
+        <!-- End General information -->
+        <!-- Begin Contact information -->
+        <element name="contactName" type="text" selector="//*[@id='store_contact_name']"/>
+        <element name="email" type="text" selector="//*[@id='store_email']"/>
+        <element name="phone" type="text" selector="//*[@id='store_phone']"/>
+        <element name="fax" type="text" selector="//*[@id='store_fax']"/>
+        <!-- End Contact information -->
+        <!-- Begin Owner information -->
+        <element name="ownerName" type="text" selector="//*[@id='store_owner_name']"/>
+        <element name="ownerEmail" type="text" selector="//*[@id='store_owner_email']"/>
+        <element name="ownerPhone" type="text" selector="//*[@id='store_owner_phone']"/>
+        <!-- End Owner information -->
+        <!-- Begin Meta information -->
+        <element name="URLKey" type="text" selector="//*[@id='store_rewrite_request_path']"/>
+        <element name="metaTitle" type="text" selector="//*[@id='store_meta_title']"/>
+        <element name="metaKeywords" type="textarea" selector="//*[@id='store_meta_keywords']"/>
+        <element name="metaDescription" type="textarea" selector="//*[@id='store_meta_description']"/>
+        <!-- End Meta information -->
+    </section>
+</sections>

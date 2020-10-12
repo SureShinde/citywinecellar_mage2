@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Page/etc/SectionObject.xsd">
+    <section name="RefundSection">
+        <!-- Refund popup -->
+        <element name="popupLabel" type="text" selector="//div[contains(@class ,'wrapper-refund-order')]//div[contains(@class ,'block-title')]/strong[contains(text(), '{{val1}}')]" parameterized="true" />
+
+        <element name="firstItemOnRefundList" type="text" selector="//div[contains(@class ,'wrapper-refund-order')]//div[contains(@class ,'block-content')]//table[contains(@class, 'table-order')]/tbody/tr[1]" />
+        <element name="qtyRefundBox" type="text" selector="//div[contains(@class ,'wrapper-refund-order')]//div[contains(@class ,'block-content')]//table[contains(@class, 'table-order')]/tbody/tr[1]/td[contains(@class, 't-qtyrefund')]//span[contains(@class, 'form-control qty')]" />
+        <element name="increaseQtyRefundButton" type="text" selector="//div[contains(@class ,'wrapper-refund-order')]//div[contains(@class ,'block-content')]//table[contains(@class, 'table-order')]/tbody/tr[1]/td[contains(@class, 't-qtyrefund')]//a[contains(@class, 'qtyplus')]" />
+
+        <element name="buttonBottom" type="text" selector="//div[contains(@class ,'wrapper-refund-order')]//div[contains(@class ,'block-bottom')]//button[contains(text(), '{{val1}}')]" parameterized="true" />
+
+        <!-- Refund Adjustments -->
+        <element name="refundTotalValue" type="text" selector="//div[contains(@class ,'wrapper-refund-order')]//div[contains(@class ,'block-content')]//div[contains(@class, 'block-refund-totals')]//span[contains(text(), '{{val1}}')]/../span[contains(@class, 'value')]" parameterized="true" />
+        <element name="refundAdjustmentsValue" type="text" selector="//div[contains(@class ,'wrapper-refund-order')]//div[contains(@class ,'block-content')]//div[contains(@class, 'block-refund-adjustments')]//label[contains(text(), '{{val1}}')]/../div[contains(@class, 'control')]/span[contains(@class, 'form-control')]" parameterized="true" />
+        <element name="refundAdjustmentsSymbol" type="text" selector="//div[contains(@class ,'wrapper-refund-order')]//div[contains(@class ,'block-content')]//div[contains(@class, 'block-refund-adjustments')]//label[contains(text(), '{{val1}}')]/../div[contains(@class, 'control')]/span[contains(@class, 'label')]" parameterized="true" />
+
+        <!-- Refund payment method -->
+        <element name="remainingTotalValue" type="text" selector="//div[contains(@class ,'wrapper-refund-order')]//div[contains(@class ,'block-content')]//div[contains(@class, 'block-refund-payment')]//strong[contains(text(), 'Remaining')]/../span[contains(@class, 'price')]" />
+        <element name="firstCashPayment" type="text" selector="//div[contains(@class ,'wrapper-refund-order')]//div[contains(@class ,'block-content')]//div[contains(@class, 'block-refund-payment')]//div[contains(@class, 'payment-full-amount')][1]//span[contains(text(), 'Cash')]" />
+        <element name="firstCashPaymentAmount" type="text" selector="//div[contains(@class ,'wrapper-refund-order')]//div[contains(@class ,'block-content')]//div[contains(@class, 'block-refund-payment')]//div[contains(@class, 'payment-full-amount')][1]//span[contains(text(), 'Cash')]/../input" />
+
+        <!-- Numpad -->
+        <element name="numpad" type="input" selector="body"/>
+        <element name="closeNumpad" type="button" selector="body > div.modal-backdrop:nth-last-child(1)"/>
+
+        <!-- Popup message -->
+        <element name="popupMessage" type="text" selector="//div[contains(@class ,'wrapper-refund-order')]//div[contains(@class ,'popup-messages')]//div[contains(@class, 'modal-body')]/p[contains(text(), '{{val1}}')]" parameterized="true" />
+        <element name="popupButton" type="text" selector="//div[contains(@class ,'wrapper-refund-order')]//div[contains(@class ,'popup-messages')]//div[contains(@class, 'modal-footer')]//a[contains(text(), '{{val1}}')]" parameterized="true" />
+    </section>
+</sections>

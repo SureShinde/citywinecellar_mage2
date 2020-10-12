@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+    <test name="AddShippingPickupAtStore">
+        <annotations>
+            <features value="Shipping"/>
+            <stories value="Add Shipping"/>
+            <title value="Select shipping method as pickup at store"/>
+            <description value="Checkout without selecting shipping"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="ASM-01"/>
+            <group value="addShipping"/>
+            <group value="pwapos"/>
+        </annotations>
+
+        <before>
+            <createData entity="EnableAllShippingMethod" stepKey="enableShippingMethod"/>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+
+        <actionGroup ref="SearchAndClickProduct" stepKey="SearchAndClickProduct">
+            <argument name="dataProduct" value="pos_simple_product"/>
+        </actionGroup>
+
+        <waitForElementVisible selector="{{CartSection.productFoundOnCartByName(pos_simple_product.name)}}" time="120" stepKey="waitProductIsAddedToCartSuccessfully"/>
+        <click selector="{{CartSection.chargeButton}}" stepKey="clickChargeButton"/>
+        <waitForElementVisible selector="{{TotalSection.cartTotalBlock}}" time="120" stepKey="waitAddChargeSuccessFully"/>
+        <waitForElementVisible selector="{{TotalSection.shippingLabel}}" time="120" stepKey="waitForText"/>
+        <grabTextFrom selector="{{TotalSection.shippingLabel}}" stepKey="grabTextOfShipping"/>
+        <assertEquals message="Shipping label is correct." stepKey="compareText">
+            <expectedResult type="string">Add Shipping</expectedResult>
+            <actualResult type="variable">grabTextOfShipping</actualResult>
+        </assertEquals>
+    </test>
+
+    <test name="AddShippingFlatRateTest">
+        <annotations>
+            <features value="Shipping"/>
+            <stories value="Add Shipping"/>
+            <title value="Select shipping method as flat rate"/>
+            <description value="Checkout with selecting shipping - flat rate"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="ASM-02"/>
+            <group value="addShipping"/>
+            <group value="pwapos"/>
+        </annotations>
+
+        <before>
+            <createData entity="EnableAllShippingMethod" stepKey="enableShippingMethod"/>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart"/>
+
+        <actionGroup ref="SearchAndClickProductBySku" stepKey="SearchProduct">
+            <argument name="dataProduct" value="pos_simple_product"/>
+        </actionGroup>
+
+        <waitForElementVisible selector="{{CartSection.productFoundOnCartByName(pos_simple_product.name)}}" time="120" stepKey="waitForItemVisibleInCart"/>
+
+        <click stepKey="clickOnFoundProductAgain" selector="{{ProductListSection.firstProduct}}"/>
+        <waitForElementVisible selector="{{CartSection.productQtyInCart(pos_simple_product.name)}}" time="120" stepKey="waitForQtyOfItemVisible"/>
+
+        <actionGroup ref="SearchCustomerAndAdd" stepKey="addCustomerToCart"/>
+
+        <click selector="{{CartSection.chargeButton}}" stepKey="clickCharge"/>
+        <waitForElementVisible selector="{{PosCheckoutCartTotalsSection.cartTotalsBlock}}" time="120" stepKey="waitForCartTotalsVisible"/>
+
+        <actionGroup ref="AddShippingActionGroup" stepKey="addShipping">
+            <argument name="shippingMethod" value="Flat Rate - Fixed"/>
+        </actionGroup>
+
+        <waitForElementNotVisible selector="{{PosCheckoutPopupAddShippingSection.shippingPopup}}" time="15" stepKey="waitForAddShippingPopupNotVisible"/>
+
+        <grabTextFrom selector="{{PosCheckoutCartTotalsSection.shippingTotal}}" stepKey="grabShippingTotal"/>
+        <assertEquals message="Assert the Shipping fee is correct" stepKey="assertShippingFeeIsCorrect">
+            <expectedResult type="variable">grabShippingMethodValueAddShipping</expectedResult>
+            <actualResult type="variable">grabShippingTotal</actualResult>
+        </assertEquals>
+    </test>
+
+    <test name="AddShippingTableRateTest">
+        <annotations>
+            <features value="Shipping"/>
+            <stories value="Add Shipping"/>
+            <title value="Select shipping method as table rate"/>
+            <description value="Checkout without adding shipping- table rate"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="ASM-03"/>
+            <group value="addShipping"/>
+            <group value="pwapos"/>
+        </annotations>
+
+        <before>
+            <createData entity="EnableAllShippingMethod" stepKey="enableShippingMethod"/>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart"/>
+
+        <actionGroup ref="SearchAndClickProductBySku" stepKey="SearchProduct">
+            <argument name="dataProduct" value="pos_simple_product"/>
+        </actionGroup>
+
+        <waitForElementVisible selector="{{CartSection.productFoundOnCartByName(pos_simple_product.name)}}" time="120" stepKey="waitForItemVisibleInCart"/>
+
+        <click stepKey="clickOnFoundProductAgain" selector="{{ProductListSection.firstProduct}}"/>
+        <waitForElementVisible selector="{{CartSection.productQtyInCart(pos_simple_product.name)}}" time="120" stepKey="waitForQtyOfItemVisible"/>
+
+        <actionGroup ref="SearchCustomerAndAdd" stepKey="addCustomerToCart"/>
+
+        <click selector="{{CartSection.chargeButton}}" stepKey="clickCharge"/>
+        <waitForElementVisible selector="{{PosCheckoutCartTotalsSection.cartTotalsBlock}}" time="120" stepKey="waitForCartTotalsVisible"/>
+
+        <actionGroup ref="AddShippingActionGroup" stepKey="addShipping">
+            <argument name="shippingMethod" value="Best Way - Table Rate"/>
+        </actionGroup>
+
+        <waitForElementNotVisible selector="{{PosCheckoutPopupAddShippingSection.shippingPopup}}" time="15" stepKey="waitForAddShippingPopupNotVisible"/>
+
+        <grabTextFrom selector="{{PosCheckoutCartTotalsSection.shippingTotal}}" stepKey="grabShippingTotal"/>
+        <assertEquals message="Assert the Shipping fee is correct" stepKey="assertShippingFeeIsCorrect">
+            <expectedResult type="variable">grabShippingMethodValueAddShipping</expectedResult>
+            <actualResult type="variable">grabShippingTotal</actualResult>
+        </assertEquals>
+    </test>
+
+    <test name="AddShippingFreeShippingTest">
+        <annotations>
+            <features value="Shipping"/>
+            <stories value="Add Shipping"/>
+            <title value="Select shipping method as free shipping"/>
+            <description value="Checkout with adding shipping- free shipping"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="ASM-04"/>
+            <group value="addShipping"/>
+            <group value="pwapos"/>
+        </annotations>
+
+        <before>
+            <createData entity="EnableAllShippingMethod" stepKey="enableShippingMethod"/>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+
+        <actionGroup ref="ClearCart" stepKey="ClearCart"/>
+
+        <actionGroup ref="SearchAndClickProductBySku" stepKey="SearchProduct">
+            <argument name="dataProduct" value="pos_simple_product"/>
+        </actionGroup>
+
+        <waitForElementVisible selector="{{CartSection.productFoundOnCartByName(pos_simple_product.name)}}" time="120" stepKey="waitForItemVisibleInCart"/>
+
+        <click stepKey="clickOnFoundProductAgain" selector="{{ProductListSection.firstProduct}}"/>
+        <waitForElementVisible selector="{{CartSection.productQtyInCart(pos_simple_product.name)}}" time="120" stepKey="waitForQtyOfItemVisible"/>
+
+        <actionGroup ref="SearchCustomerAndAdd" stepKey="addCustomerToCart"/>
+
+        <click selector="{{CartSection.chargeButton}}" stepKey="clickCharge"/>
+        <waitForElementVisible selector="{{PosCheckoutCartTotalsSection.cartTotalsBlock}}" time="120" stepKey="waitForCartTotalsVisible"/>
+
+        <actionGroup ref="AddShippingActionGroup" stepKey="addShipping">
+            <argument name="shippingMethod" value="Free Shipping - Free"/>
+        </actionGroup>
+
+        <waitForElementNotVisible selector="{{PosCheckoutPopupAddShippingSection.shippingPopup}}" time="15" stepKey="waitForAddShippingPopupNotVisible"/>
+
+        <grabTextFrom selector="{{PosCheckoutCartTotalsSection.shippingTotal}}" stepKey="grabShippingTotal"/>
+        <assertEquals message="Assert the Shipping fee is correct" stepKey="assertShippingFeeIsCorrect">
+            <expectedResult type="variable">grabShippingMethodValueAddShipping</expectedResult>
+            <actualResult type="variable">grabShippingTotal</actualResult>
+        </assertEquals>
+    </test>
+</tests>

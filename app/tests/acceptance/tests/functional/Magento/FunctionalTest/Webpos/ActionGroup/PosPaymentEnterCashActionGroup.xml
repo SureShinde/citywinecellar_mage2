@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="PosPaymentEnterCash">
+        <arguments>
+            <argument name="amount" defaultValue="1.00" type="string"/>
+        </arguments>
+        <click selector="{{PosCheckoutPaymentSection.cash}}" stepKey="clickCash"/>
+        <click selector="{{PosCheckoutPaymentSection.amount}}" stepKey="clickCashAmount"/>
+        <pressKey selector="{{PosCheckoutPaymentSection.numpad}}" userInput="{{amount}}" stepKey="enterAmount"/>
+        <click selector="{{PosCheckoutPaymentSection.closeNumpad}}" stepKey="clickCloseNumpad"/>
+        <click selector="{{PosCheckoutPaymentSection.accept}}" stepKey="clickAccept"/>
+    </actionGroup>
+</actionGroups>

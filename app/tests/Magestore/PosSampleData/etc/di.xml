@@ -18,35 +18,4 @@
 
     <preference for="Magestore\PosSampleData\Api\Data\ProductInterface" type="Magestore\PosSampleData\Model\Product"/>
     <preference for="Magestore\PosSampleData\Api\ProductRepositoryInterface" type="Magestore\PosSampleData\Model\ProductRepository"/>
-
-    <type name="Magento\Framework\Console\CommandList">
-        <arguments>
-            <argument name="commands" xsi:type="array">
-                <item name="productSampleCommand" xsi:type="object">Magestore\PosSampleData\Console\Command\GenerateProduct</item>
-                <item name="customerSampleCommand" xsi:type="object">Magestore\PosSampleData\Console\Command\GenerateCustomer</item>
-                <item name="orderSampleCommand" xsi:type="object">Magestore\PosSampleData\Console\Command\GenerateOrder</item>
-            </argument>
-        </arguments>
-    </type>
-
-    <type name="Magestore\PosSampleData\Model\FixtureGenerator\Product\Type\ProductTemplateGeneratorFactory">
-        <arguments>
-            <argument name="templateObjects" xsi:type="array">
-                <item name="simple" xsi:type="object">Magestore\PosSampleData\Model\FixtureGenerator\Product\Type\SimpleProductTemplateGenerator</item>
-                <item name="fixture-simple" xsi:type="object">Magestore\PosSampleData\Model\FixtureGenerator\Product\Type\SimpleProductsFixture</item>
-                <item name="virtual" xsi:type="object">Magestore\PosSampleData\Model\FixtureGenerator\Product\Type\VirtualProductTemplateGenerator</item>
-                <item name="fixture-virtual" xsi:type="object">Magestore\PosSampleData\Model\FixtureGenerator\Product\Type\VirtualProductsFixture</item>
-                <item name="bundle" xsi:type="object">Magestore\PosSampleData\Model\FixtureGenerator\Product\Type\BundleProductTemplateGenerator</item>
-                <item name="grouped" xsi:type="object">Magestore\PosSampleData\Model\FixtureGenerator\Product\Type\GroupedProductTemplateGenerator</item>
-                <item name="configurable" xsi:type="object">Magestore\PosSampleData\Model\FixtureGenerator\Product\Type\ConfigurableProductTemplateGenerator</item>
-                <item name="downloadable" xsi:type="object">Magestore\PosSampleData\Model\FixtureGenerator\Product\Type\DownloadableProductTemplateGenerator</item>
-                <item name="fixture-downloadable" xsi:type="object">Magestore\PosSampleData\Model\FixtureGenerator\Product\Type\DownloadableProductsFixture</item>
-                <item name="giftvoucher" xsi:type="object">Magestore\PosSampleData\Model\FixtureGenerator\Product\Type\GiftcardProductTemplateGenerator</item>
-            </argument>
-        </arguments>
-    </type>
-
-    <type name="Magento\Setup\Model\FixtureGenerator\ProductTemplateGeneratorFactory">
-        <plugin name="product-template-generator" type="Magestore\PosSampleData\Model\FixtureGenerator\ProductTemplateGeneratorFactory" sortOrder="1" />
-    </type>
 </config>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+<operations xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/DataGenerator/etc/dataOperation.xsd">
+    <operation name="ChangeCurrencyRate" dataType="change_currency_rate" type="create" auth="adminOauth" url="/V1/pwasampledata/changeCurrencyRate" method="POST">
+        <contentType>application/json</contentType>
+        <object key="currencyRate" dataType="change_currency_rate">
+            <field key="currency_code">string</field>
+            <field key="currency_to">string</field>
+            <field key="rate">number</field>
+        </object>
+    </operation>
+</operations>

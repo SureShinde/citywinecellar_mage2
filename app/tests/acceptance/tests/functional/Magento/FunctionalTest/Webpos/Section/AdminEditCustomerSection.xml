@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Page/etc/SectionObject.xsd">
+    <section name="AdminEditCustomerSection">
+        <element name="account_information" type="input" selector="#tab_customer"/>
+        <element name="address_information" type="input" selector="#tab_address"/>
+        <element name="address_first" type="input" selector=".customer-default-address-wrapper address"/>
+        <element name="prefix" type="input" selector="input[name='customer[prefix]']"/>
+        <element name="firstName" type="input" selector="input[name='customer[firstname]']"/>
+        <element name="middleName" type="input" selector="input[name='customer[middlename]']"/>
+        <element name="lastName" type="input" selector="input[name='customer[lastname]']"/>
+        <element name="suffix" type="input" selector="input[name='customer[suffix]']"/>
+        <element name="email" type="input" selector="input[name='customer[email]']"/>
+        <element name="dob" type="input" selector="input[name='customer[dob]']"/>
+        <element name="taxvat" type="input" selector="input[name='customer[taxvat]']"/>
+        <element name="gender" type="input" selector="select[name='customer[gender]']"/>
+    </section>
+</sections>

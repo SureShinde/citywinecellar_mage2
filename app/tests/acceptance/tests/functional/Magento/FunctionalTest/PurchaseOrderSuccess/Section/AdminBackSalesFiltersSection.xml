@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../../../../../vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Page/etc/SectionObject.xsd">
+    <section name="AdminBackSalesFiltersSection">
+        <element name="filtersButton" type="button" selector=".data-grid-filters-action-wrap .action-default" timeout="30"/>
+        <element name="productSkuInput" type="input" selector="div.os_purchase_order_form_os_purchase_order_form_purchase_sumary_back_order_product_modal_os_purchase_order_back_order_product input[name=product_sku]"/>
+        <element name="apply" type="button" selector="div.os_purchase_order_form_os_purchase_order_form_purchase_sumary_back_order_product_modal_os_purchase_order_back_order_product button.action-secondary" timeout="30"/>
+        <element name="firstRow" type="input" selector="div.os_purchase_order_form_os_purchase_order_form_purchase_sumary_back_order_product_modal_os_purchase_order_back_order_product .data-row:nth-child(1)" />
+    </section>
+</sections>

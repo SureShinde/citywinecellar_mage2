@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+    <test name="ReturnRequestTest">
+        <annotations>
+            <features value="Return Request"/>
+            <stories value="Transfer items"/>
+            <title value="Test create and transfer item on return request"/>
+            <description value="Test create and transfer item on return request"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="PO-06"/>
+            <group value="returnrequest"/>
+            <group value="pwapos"/>
+        </annotations>
+
+        <before>
+            <!-- Login to backend magento -->
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
+        </before>
+
+        <after>
+            <amOnPage url="admin/admin/auth/logout/" stepKey="amOnLogoutPage"/>
+        </after>
+
+        <!-- Go to create return request page -->
+        <amOnPage url="admin/purchaseordersuccess/returnOrder/new/" stepKey="amOnCreateReturnRequestPage"/>
+        <waitForPageLoad stepKey="waitNewReturnRequestLoaded"/>
+        <selectOption userInput="{{supplier.id}}" selector="{{ReturnRequestDetailSection.supplierIdField}}" stepKey="fillSupplierId"/>
+        <selectOption userInput="{{default_source.code}}" selector="{{ReturnRequestDetailSection.sourceField}}" stepKey="fillSource"/>
+        <click stepKey="clickToStartPrepareProducts" selector="{{ReturnRequestDetailSection.prepareProductButton}}" />
+        <waitForPageLoad stepKey="waitNewReturnRequestStepPendingLoaded"/>
+
+        <!-- prepare product -->
+        <click stepKey="clickToAddProductsFromSupplier" selector="{{ReturnRequestDetailSection.allProductsButton}}" />
+        <waitForPageLoad stepKey="waitForModalIsLoadedSuccessfully"/>
+        <click stepKey="clickFilterButtonOnAllProductsList" selector="{{ReturnRequestDetailSection.allProductListFilterButton}}"/>
+        <fillField selector="{{ReturnRequestDetailSection.filterFieldProductSku}}" userInput="24-WG" stepKey="fillProductSkuToFilter"/>
+        <click stepKey="clickApplyFilterButtonOnAllProductsList" selector="{{ReturnRequestDetailSection.buttonApplyFilterAllProductGrid}}"/>
+        <waitForPageLoad stepKey="waitForFilterOnModalIsLoadedSuccessfully"/>
+        <click stepKey="clickToChooseAllProductThatFoundOnList" selector="{{ReturnRequestDetailSection.inputChooseAllProductOnPrepareProductList}}"/>
+        <click stepKey="clickToAddProductsToReturnRequest" selector="{{ReturnRequestDetailSection.buttonAddProductToReturnRequest}}"/>
+        <wait time="2" stepKey="wait2SecondsBeforeContinuePrepare" />
+        <waitForPageLoad stepKey="waitForDynamicGridProductIsLoadedSuccessfully"/>
+
+        <!-- Complete prepare product -->
+        <fillField selector="{{ReturnRequestDetailSection.qtyOrderedInputOnDynamicGrid(product_1.sku)}}" stepKey="fillQtyOrderedForProductWhoseSkuIs24WG01" userInput="1" />
+        <fillField selector="{{ReturnRequestDetailSection.qtyOrderedInputOnDynamicGrid(product_2.sku)}}" stepKey="fillQtyOrderedForProductWhoseSkuIs24WG02" userInput="1" />
+        <click stepKey="clickToConfirmProductsToReturnRequest" selector="{{ReturnRequestDetailSection.buttonConfirmReturnRequest}}"/>
+        <waitForPageLoad stepKey="waitForConfirmationIsLoadedSuccessfully"/>
+
+        <!-- Transfer Item -->
+        <actionGroup ref="ReturnRequestDeliveryItemWithoutSubtractActionGroup" stepKey="deliverProduct1WithoutSubtractStock" />
+        <actionGroup ref="ReturnRequestDeliveryItemWithSubtractActionGroup" stepKey="deliverProduct1WithSubtractStock" />
+
+        <!-- Check source of product after created PO -->
+        <amOnPage url="admin/catalog/product/" stepKey="amOnProductListPage"/>
+        <waitForPageLoad stepKey="waitForProductListLoadedSuccessfully"/>
+        <fillField selector="{{ProductSection.inputSearchProduct}}" stepKey="fillSkuForSearch" userInput="24-WG0" />
+        <click stepKey="clickToSearchProduct" selector="{{ProductSection.buttonSearchProduct}}"/>
+        <waitForPageLoad stepKey="waitForSearchProductSuccessfully"/>
+        <!-- Check stock -->
+        <seeElementInDOM stepKey="checkStockOfProductWhoseSkuIs24WG01OnSource" selector="{{ProductSection.checkSourceProduct(product_1.sku, default_source.name, product_1.qty_after_return)}}" />
+        <seeElementInDOM stepKey="checkStockOfProductWhoseSkuIs24WG02OnSource" selector="{{ProductSection.checkSourceProduct(product_2.sku, default_source.name, product_2.qty_after_return)}}" />
+    </test>
+</tests>

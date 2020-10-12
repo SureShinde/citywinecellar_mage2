@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+    <test name="AdminAddStoreFormUIGeneralSectionTest">
+        <annotations>
+            <features value="Add new store"/>
+            <stories value="Add new store"/>
+            <title value="Add new store"/>
+            <description value="Check UI general section"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="ANS02"/>
+            <group value="storepickup"/>
+            <group value="pwapos"/>
+        </annotations>
+        <before>
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <amOnPage url="{{AddNewStoreStorePickupAdminPage.url}}" stepKey="gotoAddNew"/>
+            <waitForPageLoad stepKey="waitpageload1"/>
+        </before>
+        <after>
+            <amOnPage url="admin/admin/auth/logout/" stepKey="amOnLogoutPage"/>
+        </after>
+        <!-- Begin check require fields -->
+        <see selector="{{GeneralInformationSection.sourceCode}}" userInput="---Please select---" stepKey="assertRequireField1"/>
+        <grabTextFrom selector="{{GeneralInformationSection.storeName}}" stepKey="stepKeyOfGrab1"/>
+        <assertEmpty message="Name Store must be empty" stepKey="assertRequireField2">
+            <actualResult type="string">{$stepKeyOfGrab1}</actualResult>
+        </assertEmpty>
+        <click selector="{{StoreActionsSection.saveButton}}" stepKey="clickSaveButton1"/>
+        <click selector="{{StoreActionsSection.generalTab}}" stepKey="clickGeneralTab1"/>
+        <see selector="{{GeneralInformationSection.sourceCodeError}}" userInput="This is a required field." stepKey="seeNameRequired1"/>
+        <see selector="{{GeneralInformationSection.storeNameError}}" userInput="This is a required field." stepKey="seeNameRequired2"/>
+
+        <!-- End check require fields -->
+        <!-- Begin check select Source Selection dropdown -->
+        <selectOption selector="{{GeneralInformationSection.sourceCode}}" userInput="Create a new one" stepKey="assertRequireField3"/>
+        <see selector="{{GeneralInformationSection.sourceCode}}" userInput="Create a new one" stepKey="assertRequireField4"/>
+        <selectOption selector="{{GeneralInformationSection.sourceCode}}" userInput="default" stepKey="assertRequireField5"/>
+        <see selector="{{GeneralInformationSection.sourceCode}}" userInput="Default Source" stepKey="assertRequireField6"/>
+        <selectOption selector="{{GeneralInformationSection.sourceCode}}" userInput="Create a new one" stepKey="assertRequireField7"/>
+        <grabTextFrom selector="{{GeneralInformationSection.newSourceCode}}" stepKey="stepKeyOfGrab2"/>
+        <assertEmpty message="New Source Code must be empty" stepKey="assertRequireField8">
+            <actualResult type="string">{$stepKeyOfGrab2}</actualResult>
+        </assertEmpty>
+        <!-- End check select Source Selection dropdown -->
+    </test>
+</tests>

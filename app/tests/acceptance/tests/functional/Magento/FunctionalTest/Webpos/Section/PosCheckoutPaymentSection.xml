@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Page/etc/SectionObject.xsd">
+    <section name="PosCheckoutPaymentSection">
+        <element name="wrapperPayment" type="text" selector=".wrapper-payment" />
+
+        <element name="remove" type="button" selector=".wrapper-payment .remove-cash"/>
+        <element name="add" type="button" selector=".wrapper-payment .add-payment"/>
+
+        <element name="cash" type="button" selector=".payment-list .image-cashforpos"/>
+        <element name="cc" type="button" selector=".payment-list .image-ccforpos"/>
+        <element name="payPal" type="button" selector=".payment-list .image-ppdirectpayment_integration"/>
+        <element name="authorize" type="button" selector=".payment-list .image-authorizenet_integration"/>
+
+        <element name="amount" type="button" selector=".wrapper-payment .payment-amount"/>
+        <element name="amountValue" type="button" selector=".wrapper-payment .payment-amount .value"/>
+        <element name="numpad" type="input" selector="body"/>
+        <element name="closeNumpad" type="button" selector="body > div:last-child div ul li:last-child a span"/>
+
+        <element name="back" type="button" selector=".wrapper-payment .btn-cannel"/>
+        <element name="accept" type="button" selector=".wrapper-payment .btn-accept"/>
+        <element name="complete" type="button" selector=".wrapper-payment .btn-complete"/>
+        <element name="partial" type="button" selector=".wrapper-payment .btn-complete"/>
+
+        <element name="total" type="text" selector=".wrapper-payment .payment-total li.total" />
+        <element name="totalLabel" type="text" selector=".wrapper-payment .payment-total li.total .label" />
+        <element name="totalValue" type="text" selector=".wrapper-payment .payment-total li.total .value" />
+
+        <!-- Payment icon -->
+        <element name="iconCCForPos" type="text" selector=".wrapper-payment .image-ccforpos"/>
+        <element name="iconAuthorizeForPos" type="text" selector=".wrapper-payment .image-authorizenet_integration"/>
+
+        <!-- Reference number of authorize.net on checkout page -->
+        <element name="authorizeReferenceNumber" type="text" selector="//div[contains(@class, 'wrapper-payment')]//span[contains(@class, 'image-authorizenet_integration')]/..//div[contains(@class, 'reference')]/span[contains(text(), 'Reference No')]"/>
+        <element name="iconCashForPos" type="text" selector=".wrapper-payment .image-cashforpos"/>
+
+        <!--Add payment-->
+        <element name="addPayment" type="text" selector=".add-payment"/>
+
+        <!--Popup complete order-->
+        <element name="popupCompleteOrder" type="text" selector="#popup-completeOrder"/>
+        <element name="confirmOrderBtn" type="text" selector="#popup-completeOrder .modal-footer a:nth-child(2)"/>
+
+        <!-- Create shipment button -->
+        <element name="createShipmentBtn" type="button" selector=".shipping-toggle-button .checkbox"/>
+    </section>
+</sections>

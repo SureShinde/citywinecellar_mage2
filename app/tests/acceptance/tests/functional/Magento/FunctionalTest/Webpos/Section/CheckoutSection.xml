@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Page/etc/SectionObject.xsd">
+    <section name="CheckoutSection">
+        <element name="CompleteOrder" type="button" selector=".actions-accept .btn-complete"/>
+
+        <element name="totalLabel" type="text" selector="#wrapper-payment3 .payment-total .total .label"/>
+        <element name="totalValue" type="text" selector="#wrapper-payment3 .payment-total .total .value"/>
+
+        <element name="addPaymentButton" type="text" selector="#wrapper-payment3 .add-cash"/>
+
+        <element name="payPayItem" type="text" selector="//span[contains(@class, 'image-ppdirectpayment_integration')]/../.."/>
+        <element name="payPayLabel" type="text" selector="//span[contains(@class, 'image-ppdirectpayment_integration')]/../div[@class='price']/div[@class='box']/span[@class='label']"/>
+        <element name="payPayValue" type="text" selector="//span[contains(@class, 'image-ppdirectpayment_integration')]/../div[@class='price']/div[@class='box']/span[@class='value']"/>
+        <element name="payPayReference" type="text" selector="//span[contains(@class, 'image-ppdirectpayment_integration')]/..//div[contains(@class, 'reference')]/span[contains(text(), 'Reference No')]"/>
+        <element name="payPayRemove" type="text" selector="//span[contains(@class, 'image-ppdirectpayment_integration')]/../../span[@class='remove-cash']"/>
+        <element name="payPayLoader" type="text" selector="//span[contains(@class, 'image-ppdirectpayment_integration')]/../../div[contains(@class, 'loader')]"/>
+
+        <element name="authorizeRemove" type="text" selector="//span[contains(@class, 'image-authorizenet_integration')]/../../span[@class='remove-cash']"/>
+        <element name="authorizeLoader" type="text" selector="//span[contains(@class, 'image-authorizenet_integration')]/../../div[contains(@class, 'loader')]"/>
+
+        <element name="stripeItem" type="text" selector="//span[contains(@class, 'image-stripe_integration')]/../.."/>
+        <element name="stripeRemove" type="text" selector="//span[contains(@class, 'image-stripe_integration')]/../../span[@class='remove-cash']"/>
+        <element name="stripeLoader" type="text" selector="//span[contains(@class, 'image-stripe_integration')]/../../div[contains(@class, 'loader')]"/>
+
+        <element name="PopUpCompleteOrder" type="text" selector="#popup-completeOrder .modal-content" timeout="1"/>
+        <element name="CompleteButtonOnPopup" type="text" selector="#popup-completeOrder .modal-content a:nth-child(2)" timeout="1"/>
+        <element name="MessageSuccess" type="text" selector=".messages-success:nth-child(1)" />
+        <element name="grandTotal" type="text" selector=".payment-amount .value" />
+        <element name="paymentTotal" type="text" selector=".payment-total .value" />
+
+        <element name="popupConfirmPartial" type="text" selector="#popup-completeOrder" />
+        <element name="popupConfirmPartialButtonComplete" type="button" selector="//div[contains(@id, 'popup-completeOrder')]//div[contains(@class, 'modal-footer')]/a[2]" />
+    </section>
+</sections>

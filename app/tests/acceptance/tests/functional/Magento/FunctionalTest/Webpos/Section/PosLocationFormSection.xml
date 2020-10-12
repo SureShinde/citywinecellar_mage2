@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Page/etc/SectionObject.xsd">
+    <section name="PosLocationFormSection">
+        <element name="location" type="text" selector="#react-select-2--value"/>
+        <element name="locationItem" type="text" selector="//*[@id='react-select-2--list']/div[contains(text(), '{{var1}}')]" parameterized="true"/>
+        <element name="pos" type="text" selector="#react-select-3--value"/>
+        <element name="posItem" type="text" selector="//*[@id='react-select-3--list']/div[contains(text(), '{{var1}}')]" parameterized="true"/>
+        <element name="enterPos" type="button" selector=".form-group .btn-default"/>
+    </section>
+</sections>

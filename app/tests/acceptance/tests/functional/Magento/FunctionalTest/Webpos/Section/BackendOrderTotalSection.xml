@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Page/etc/SectionObject.xsd">
+    <section name="BackendOrderTotalSection">
+        <element name="paymentMethod" type="text" selector=".order-view-billing-shipping .order-payment-method-title" />
+        <element name="shippingMethod" type="text" selector=".order-view-billing-shipping .order-shipping-method" />
+
+        <element name="subTotal" type="text" selector="//div[contains(@class, 'order-totals')]//td[contains(text(), 'Subtotal')]/..//span[contains(@class, 'price')]"/>
+        <element name="shippingFee" type="text" selector="//div[contains(@class, 'order-totals')]//td[contains(text(), 'Shipping &amp; Handling')]/..//span[contains(@class, 'price')]"/>
+        <element name="customDiscount" type="text" selector="//div[contains(@class, 'order-totals')]//td[contains(text(), 'Custom Discount')]/..//span[contains(@class, 'price')]"/>
+        <element name="tax" type="text" selector="//div[contains(@class, 'order-totals')]//td/div[contains(text(), 'Tax')]/../..//span[contains(@class, 'price')]"/>
+
+        <element name="grandTotal" type="text" selector="//div[contains(@class, 'order-totals')]//td/strong[contains(text(), 'Grand Total')]/../..//span[contains(@class, 'price')]"/>
+        <element name="totalPaid" type="text" selector="//div[contains(@class, 'order-totals')]//td/strong[contains(text(), 'Total Paid')]/../..//span[contains(@class, 'price')]"/>
+        <element name="totalRefund" type="text" selector="//div[contains(@class, 'order-totals')]//td/strong[contains(text(), 'Total Refunded')]/../..//span[contains(@class, 'price')]"/>
+        <element name="totalDue" type="text" selector="//div[contains(@class, 'order-totals')]//td/strong[contains(text(), 'Total Due')]/../..//span[contains(@class, 'price')]"/>
+    </section>
+</sections>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/DataGenerator/etc/dataProfileSchema.xsd">
+    <!-- Admin config -->
+    <entity name="config_base_currency" type="pwa_config">
+        <data key="path">currency/options/base</data>
+        <data key="value">USD</data>
+    </entity>
+    <entity name="config_default_currency" type="pwa_config">
+        <data key="path">currency/options/default</data>
+        <data key="value">EUR</data>
+    </entity>
+    <entity name="config_allow_currency" type="pwa_config">
+        <data key="path">currency/options/allow</data>
+        <data key="value">EUR,USD</data>
+    </entity>
+
+    <entity name="roll_back_base_currency" type="pwa_config">
+        <data key="path">currency/options/base</data>
+        <data key="value">USD</data>
+    </entity>
+    <entity name="roll_back_default_currency" type="pwa_config">
+        <data key="path">currency/options/default</data>
+        <data key="value">USD</data>
+    </entity>
+    <entity name="roll_back_allow_currency" type="pwa_config">
+        <data key="path">currency/options/allow</data>
+        <data key="value">USD</data>
+    </entity>
+
+    <entity name="change_currency_rate_usd_eur" type="change_currency_rate">
+        <data key="currency_code">USD</data>
+        <data key="currency_to">EUR</data>
+        <data key="rate">0.5</data>
+    </entity>
+</entities>

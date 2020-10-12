@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/DataGenerator/etc/dataProfileSchema.xsd">
+    <entity name="multi_currency_refund_order" type="refund_order">
+        <data key="qtyRefund">1</data>
+
+        <data key="symbol">€</data>
+        <data key="adjustmentsShipping">5</data>
+
+        <data key="subtotal">€22.50</data>
+        <data key="shipping">€5.00</data>
+        <data key="adjustmentsRefund">€0.00</data>
+        <data key="adjustmentsFee">€0.00</data>
+        <data key="discount">-€4.00</data>
+        <data key="tax">€1.53</data>
+        <data key="grandTotal">€25.03</data>
+
+        <data key="cashValue">20.00</data>
+        <data key="remaining">€5.03</data>
+    </entity>
+</entities>

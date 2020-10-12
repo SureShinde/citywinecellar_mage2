@@ -399,14 +399,14 @@ class PosOrderRepository implements \Magestore\Webpos\Api\Checkout\PosOrderRepos
         $this->_eventManager->dispatch('sales_order_place_after', ['order' => $newOrder]);
         $this->appendReservationsAfterOrderPlacement($newOrder);
         $this->subtractOrderInventory($newOrder);
-
-        // Check process shipment and invoice
-        $posOrderAdditionalData = $this->processInvoiceAndShipment($newOrder, $createShipment, $createInvoice);
-
+    
         // create webpos order payment
         if ($order->getPayments()) {
             $this->createWebposOrderPayment($newOrder, $order->getPayments());
         }
+        
+        // Check process shipment and invoice
+        $posOrderAdditionalData = $this->processInvoiceAndShipment($newOrder, $createShipment, $createInvoice);
 
         if ($order->getOsPosCustomDiscountReason()) {
             $history = $newOrder->addStatusHistoryComment($order->getOsPosCustomDiscountReason());

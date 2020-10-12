@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+    <test name="MultiCurrencyTest">
+        <annotations>
+            <features value="Place Order"/>
+            <stories value="Place Order with multiple currency"/>
+            <title value="Place Order with multiple currency and currency convert rate is 0.5"/>
+            <description value="Place Order with multiple currency and currency convert rate is 0.5"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="MPO-01"/>
+            <group value="MultiCurrencyTest"/>
+            <group value="pwapos"/>
+        </annotations>
+
+        <before>
+            <createData entity="config_base_currency" stepKey="configBaseCurrency"/>
+            <createData entity="config_default_currency" stepKey="configDefaultCurrency"/>
+            <createData entity="config_allow_currency" stepKey="configAllowCurrency"/>
+            <createData entity="EnableFlatRateShippingMethod" stepKey="enableShippingMethod"/>
+            <createData entity="change_currency_rate_usd_eur" stepKey="ChangeCurrencyRate"/>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+            <!-- Need reload page for apply config -->
+            <reloadPage stepKey="reloadPageBeforeRunTest"/>
+            <waitForElementVisible selector="{{ProductListSection.firstProduct}}" time="90" stepKey="waitForFirstProductVisibleBeforeRunTest"/>
+
+            <actionGroup ref="CreateNewOrderForMultiCurrency" stepKey="CreateNewOrderForMultiCurrency">
+                <argument name="dataProduct" value="pos_simple_product_test_order" />
+                <argument name="dataCustomer" value="default_customer" />
+                <argument name="shippingAddress" value="United States" />
+                <argument name="shippingMethod" value="Flat Rate - Fixed" />
+                <argument name="discountAmount" value="8.00"/>
+            </actionGroup>
+        </before>
+
+        <after>
+            <amOnPage url="admin/admin/auth/logout/" stepKey="amOnLogoutPage"/>
+            <createData entity="roll_back_base_currency" stepKey="rollBackBaseCurrency"/>
+            <createData entity="roll_back_default_currency" stepKey="rollBackDefaultCurrency"/>
+            <createData entity="roll_back_allow_currency" stepKey="rollBackAllowCurrency"/>
+            <wait time="10" stepKey="waitForApiConfigSuccess"/>
+            <!-- Need reload page for apply config for next test case -->
+            <amOnPage url="{{PosLoginPage.url}}" stepKey="reloadPageAfterRunTest"/>
+        </after>
+
+        <actionGroup ref="GetOrderIdFromToast" stepKey="GetOrderIdFromToast"/>
+
+        <!-- ************************************************* FRONTEND ************************************************** -->
+        <!-- Partial refund order -->
+        <actionGroup ref="PartialRefundOrder" stepKey="PartialRefundOrder">
+            <argument name="orderId" value="{$orderIdGetOrderIdFromToast}"/>
+        </actionGroup>
+
+        <!-- Check order detail on frontend -->
+        <actionGroup ref="GoToFirstOrderDetailFrontend" stepKey="GoToFirstOrderDetailFrontend">
+            <argument name="orderId" value="{$orderIdGetOrderIdFromToast}"/>
+        </actionGroup>
+
+        <!-- General information -->
+        <see stepKey="generalCustomerNamePos" selector="{{OrderDetailSection.generalOrder}}" userInput="{{default_customer_info.fullname}}" />
+
+        <!-- Total -->
+        <see stepKey="totalSubtotalPos" selector="{{OrderDetailSection.subTotal}}" userInput="{{multiple_currency_order_total.subTotal}}" />
+        <see stepKey="totalCustomDiscountPos" selector="{{OrderDetailSection.customDiscount}}" userInput="{{multiple_currency_order_total.customDiscount}}" />
+        <see stepKey="totalShippingPos" selector="{{OrderDetailSection.shipping}}" userInput="{{multiple_currency_order_total.shippingFee}}" />
+        <see stepKey="totalTaxPos" selector="{{OrderDetailSection.tax}}" userInput="{{multiple_currency_order_total.tax}}" />
+        <see stepKey="totalFptPos" selector="{{OrderDetailSection.fpt}}" userInput="{{multiple_currency_order_total.fpt}}" />
+        <see stepKey="totalGrandTotalPos" selector="{{OrderDetailSection.grandTotal}}" userInput="{{multiple_currency_order_total.grandTotal}}" />
+        <see stepKey="totalTotalPaidPos" selector="{{OrderDetailSection.totalPaid}}" userInput="{{multiple_currency_order_total.totalPaid}}" />
+        <see stepKey="totalTotalRefundedPos" selector="{{OrderDetailSection.totalRefunded}}" userInput="{{multiple_currency_order_total.totalRefund}}" />
+
+        <!-- Order item -->
+        <see stepKey="itemNamePos" selector="{{OrderDetailSection.firstItemDetail}}" userInput="{{pos_simple_product_test_order.name}}" />
+        <see stepKey="itemSkuPos" selector="{{OrderDetailSection.firstItemDetail}}" userInput="{{pos_simple_product_test_order.sku}}" />
+        <see stepKey="itemTotalRowPos" selector="{{OrderDetailSection.firstItemTotal}}" userInput="{{multiple_currency_order_total.itemRowTotal}}" />
+
+        <!-- Shipping & Payment method -->
+        <see stepKey="paymentMethodPos" selector="{{OrderDetailSection.paymentMethod}}" userInput="Cash" />
+        <see stepKey="shippingMethodPos" selector="{{OrderDetailSection.shippingMethod}}" userInput="Flat Rate - Fixed" />
+
+        <!-- Shipping & Billing address -->
+        <seeElementInDOM stepKey="billingNamePos" selector="{{OrderDetailSection.billingAddress(default_customer_info.fullname)}}" />
+        <seeElementInDOM stepKey="billingCountryPos" selector="{{OrderDetailSection.billingAddress(default_customer_address_info.country_id)}}" />
+        <seeElementInDOM stepKey="billingRegionPos" selector="{{OrderDetailSection.billingAddress(default_customer_address_region_info.region)}}" />
+        <seeElementInDOM stepKey="billingCityPos" selector="{{OrderDetailSection.billingAddress(default_customer_address_info.city)}}" />
+        <seeElementInDOM stepKey="billingStreetPos" selector="{{OrderDetailSection.billingAddress(default_customer_address_info.street[0])}}" />
+        <seeElementInDOM stepKey="billingPostcodePos" selector="{{OrderDetailSection.billingAddress(default_customer_address_info.postcode)}}" />
+        <seeElementInDOM stepKey="shippingNamePos" selector="{{OrderDetailSection.shippingAddress(default_customer_info.fullname)}}" />
+        <seeElementInDOM stepKey="shippingCountryPos" selector="{{OrderDetailSection.shippingAddress(default_customer_address_info.country_id)}}" />
+        <seeElementInDOM stepKey="shippingRegionPos" selector="{{OrderDetailSection.shippingAddress(default_customer_info.fullname)}}" />
+        <seeElementInDOM stepKey="shippingCityPos" selector="{{OrderDetailSection.shippingAddress(default_customer_address_region_info.region)}}" />
+        <seeElementInDOM stepKey="shippingStreetPos" selector="{{OrderDetailSection.shippingAddress(default_customer_address_info.street[0])}}" />
+        <seeElementInDOM stepKey="shippingPostcodePos" selector="{{OrderDetailSection.shippingAddress(default_customer_address_info.postcode)}}" />
+
+        <wait time="5" stepKey="wait5SecondBeforeGoToBackend" />
+
+        <!-- ************************************************* BACKEND *************************************************** -->
+        <!-- Check order detail on backend -->
+        <actionGroup ref="GoToFirstOrderDetailBackend" stepKey="GoToFirstOrderDetailBackend" >
+            <argument name="orderId" value="{$orderIdGetOrderIdFromToast}"/>
+        </actionGroup>
+
+        <!-- General information -->
+        <see stepKey="seeOrderStatus" selector="{{OrderDetailsInformationSection.orderStatus}}" userInput="Processing" />
+        <!-- Customer information -->
+        <see stepKey="seeTitleCustomer" selector="{{OrderDetailsInformationSection.accountInformation}}" userInput="Customer" />
+        <see stepKey="seeCustomerEmail" selector="{{OrderDetailsInformationSection.accountInformation}}" userInput="{{default_customer_info.email}}" />
+        <see stepKey="seeCustomerName" selector="{{OrderDetailsInformationSection.accountInformation}}" userInput="{{default_customer_info.fullname}}" />
+        <see stepKey="seeCustomerGroup" selector="{{OrderDetailsInformationSection.accountInformation}}" userInput="{{default_customer_info.group}}" />
+        <see stepKey="seeCustomerPhone" selector="{{OrderDetailsInformationSection.accountInformation}}" userInput="{{default_customer_address_info.telephone}}" />
+        <!-- Address information -->
+        <see stepKey="billingName" selector="{{OrderDetailsInformationSection.billingAddress}}" userInput="{{default_customer_info.fullname}}" />
+        <see stepKey="billingCountry" selector="{{OrderDetailsInformationSection.billingAddress}}" userInput="{{default_customer_address_info.country}}" />
+        <see stepKey="billingRegion" selector="{{OrderDetailsInformationSection.billingAddress}}" userInput="{{default_customer_address_region_info.region}}" />
+        <see stepKey="billingCity" selector="{{OrderDetailsInformationSection.billingAddress}}" userInput="{{default_customer_address_info.city}}" />
+        <see stepKey="billingStreet" selector="{{OrderDetailsInformationSection.billingAddress}}" userInput="{{default_customer_address_info.street[0]}}" />
+        <see stepKey="billingPostcode" selector="{{OrderDetailsInformationSection.billingAddress}}" userInput="{{default_customer_address_info.postcode}}" />
+        <see stepKey="shippingName" selector="{{OrderDetailsInformationSection.shippingAddress}}" userInput="{{default_customer_info.fullname}}" />
+        <see stepKey="shippingCountry" selector="{{OrderDetailsInformationSection.shippingAddress}}" userInput="{{default_customer_address_info.country}}" />
+        <see stepKey="shippingRegion" selector="{{OrderDetailsInformationSection.shippingAddress}}" userInput="{{default_customer_address_region_info.region}}" />
+        <see stepKey="shippingCity" selector="{{OrderDetailsInformationSection.shippingAddress}}" userInput="{{default_customer_address_info.city}}" />
+        <see stepKey="shippingStreet" selector="{{OrderDetailsInformationSection.shippingAddress}}" userInput="{{default_customer_address_info.street[0]}}" />
+        <see stepKey="shippingPostcode" selector="{{OrderDetailsInformationSection.shippingAddress}}" userInput="{{default_customer_address_info.postcode}}" />
+        <!-- Shipping & Payment method -->
+        <see stepKey="paymentMethod" selector="{{BackendOrderTotalSection.paymentMethod}}" userInput="Cash" />
+        <see stepKey="shippingMethod" selector="{{BackendOrderTotalSection.shippingMethod}}" userInput="Flat Rate - Fixed" />
+        <!-- Item information -->
+        <see stepKey="itemName" selector="{{OrderDetailsInformationSection.itemsOrdered}}" userInput="{{pos_simple_product_test_order.name}}" />
+        <see stepKey="itemSku" selector="{{OrderDetailsInformationSection.itemsOrdered}}" userInput="{{pos_simple_product_test_order.sku}}" />
+        <see stepKey="itemStatus" selector="{{OrderDetailsInformationSection.itemsOrdered}}" userInput="Invoiced" />
+        <see stepKey="itemRowTotal" selector="{{OrderDetailsInformationSection.itemsOrdered}}" userInput="{{multiple_currency_order_total.itemRowTotal}}" />
+        <!-- Total -->
+        <see stepKey="totalSubtotal" selector="{{BackendOrderTotalSection.subTotal}}" userInput="{{multiple_currency_order_total.subTotal}}" />
+        <see stepKey="totalShippingFee" selector="{{BackendOrderTotalSection.shippingFee}}" userInput="{{multiple_currency_order_total.shippingFee}}" />
+        <see stepKey="totalCustomDiscount" selector="{{BackendOrderTotalSection.customDiscount}}" userInput="{{multiple_currency_order_total.customDiscount}}" />
+        <see stepKey="totalTax" selector="{{BackendOrderTotalSection.tax}}" userInput="{{multiple_currency_order_total.tax}}" />
+        <see stepKey="totalGrandTotal" selector="{{BackendOrderTotalSection.grandTotal}}" userInput="{{multiple_currency_order_total.grandTotal}}" />
+        <see stepKey="totalTotalPaid" selector="{{BackendOrderTotalSection.totalPaid}}" userInput="{{multiple_currency_order_total.totalPaid}}" />
+        <see stepKey="totalTotalRefund" selector="{{BackendOrderTotalSection.totalRefund}}" userInput="{{multiple_currency_order_total.totalRefund}}" />
+        <see stepKey="totalTotalDue" selector="{{BackendOrderTotalSection.totalDue}}" userInput="{{multiple_currency_order_total.totalDue}}" />
+    </test>
+</tests>

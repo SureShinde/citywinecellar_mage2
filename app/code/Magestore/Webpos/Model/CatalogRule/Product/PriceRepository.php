@@ -61,6 +61,7 @@ class PriceRepository implements \Magestore\Webpos\Api\CatalogRule\Product\Price
      */
     public function sync(\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria)
     {
+return [];
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         
         /** @var \Magento\Framework\App\Cache\StateInterface $cacheState */

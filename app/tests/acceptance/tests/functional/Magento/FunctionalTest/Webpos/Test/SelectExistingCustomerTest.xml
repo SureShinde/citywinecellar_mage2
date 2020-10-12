@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+    <test name="SelectExistingCustomerTest">
+        <annotations>
+            <features value="Customer"/>
+            <stories value="Select Customer"/>
+            <title value="Checkout as existed customer."/>
+            <description value="Select an existed customer."/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="CWC-02"/>
+            <group value="selectExistingCustomer"/>
+            <group value="pwapos"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+
+        <actionGroup ref="SearchCustomerAndAdd" stepKey="SearchCustomerAndAdd">
+            <argument name="customer" value="default_customer"/>
+        </actionGroup>
+    </test>
+</tests>

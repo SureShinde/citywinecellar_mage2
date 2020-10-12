@@ -69,6 +69,9 @@ class ControllerProductSaveAfter implements ObserverInterface
                 $data = $this->processParams($product, $suppliers['data']);
                 $this->deleteSupplierProduct($product->getId(), array_keys($data));
                 $unsaveData = $this->modifySupplierProduct($product->getId(), $data);
+                // echo "<pre>";
+                // var_dump($unsaveData);
+                // die();
                 if (!empty($unsaveData)) {
                     $this->addSupplierProduct($unsaveData);
                 }
@@ -100,6 +103,9 @@ class ControllerProductSaveAfter implements ObserverInterface
             unset($item['supplier_code']);
             unset($item['position']);
             unset($item['record_id']);
+            if(isset($item['supplier_name'])) {
+                unset($item['supplier_name']);
+            }
             $result[$item['supplier_id']] = $item;
         }
         return $result;

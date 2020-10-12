@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Page/etc/SectionObject.xsd">
+    <section name="ProductListSection">
+        <element name="productList" type="text" selector=".catalog-list"/>
+        <element name="firstProduct" type="text" selector=".product-items li:nth-child(1)"/>
+        <element name="secondProduct" type="text" selector=".product-items li:nth-child(2)"/>
+        <element name="firstProductStock" type="text" selector="//ul[contains(@class, 'product-items')]//li[1]//div[contains(@class, 'product-item-price')]//span[contains(@class, 'avail')]/span[1]"/>
+        <element name="firstProductPrice" type="text" selector=".product-items li:nth-child(1) .product-item-price .price span"/>
+        <element name="loader" type="text" selector=".catalog-list .loader-product"/>
+        <element name="searchBox" type="input" selector=".catalog-input-search"/>
+        <element name="productFoundOnListByName" type="text" selector="//ul[@class='product-items']/li/div/h3/span[contains(text(), '{{var1}}')]" parameterized="true"/>
+
+        <element name="toastSuccessMessage" type="text" selector=".messages-success" />
+        <element name="contentSuccessMessage" type="text" selector="//div[contains(@class, 'messages-success')]/div[contains(text(), '{{val1}}') and contains(text(), '{{val2}}')]" parameterized="true" />
+    </section>
+</sections>

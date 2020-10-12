@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Page/etc/SectionObject.xsd">
+    <section name="PosCheckoutPopupAddConfigurableProductSection">
+        <element name="configProductPopup" type="text" selector="#popup-configurable-product"/>
+        <element name="cancelButton" type="text" selector="#popup-configurable-product .cancel"/>
+        <element name="title" type="text" selector="#popup-configurable-product .modal-title"/>
+        <element name="addToCartButton" type="text" selector="#popup-configurable-product .addtocart"/>
+        <element name="productOptionsAtribute" type="text" selector="#popup-configurable-product .product-options-attribute"/>
+        <element name="sizeOption" type="text" selector="//div[@id='popup-configurable-product']//div[contains(@class, 'size')]/div/div[contains(text(), '{{var1}}')]" parameterized="true"/>
+        <element name="colorOption" type="text" selector="//div[@id='popup-configurable-product']//div[contains(@class, 'color')]/div/div[contains(@style, '{{var1}}')]" parameterized="true"/>
+        <element name="loader" type="text" selector="#popup-configurable-product .loader"/>
+        <element name="loaderProduct" type="text" selector=".loader-product"/>
+        <element name="price" type="text" selector="#popup-configurable-product .product-info-price .value" parameterized="true"/>
+    </section>
+</sections>

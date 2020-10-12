@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Page/etc/SectionObject.xsd">
+    <section name="CustomSaleSection">
+        <element name="buttonAddCustomSale" type="button" selector=".btn-customesale"/>
+        <element name="buttonAddToCart" type="button" selector="#custom-sale-modal .modal-header button.save"/>
+
+        <element name="numpad" type="input" selector="body"/>
+        <element name="closeNumpadPrice" type="button" selector="body div.custom-key-pad ul li:last-child a span"/>
+        <element name="closeNumpadQty" type="button" selector="body div.popover-key-pad ul li:last-child a span"/>
+
+        <element name="fieldName" type="text" selector="#custom-sale-modal #custom-sale-name"/>
+
+        <element name="fieldPrice" type="text" selector="//div[contains(@id, 'popup-custom-sale')]//div[contains(@class, 'col-sm-6')]/label[contains(text(), 'Price')]/../span[contains(@class, 'wrapper-numpad')]"/>
+
+        <element name="fieldQty" type="text" selector="//div[contains(@id, 'popup-custom-sale')]//div[contains(@class, 'col-sm-6')]/label[contains(text(), 'Quantity')]/../span[contains(@class, 'wrapper-numpad')]"/>
+
+        <element name="fieldTax" type="text" selector="#custom-sale-modal #custom-sale-tax_class_id"/>
+        <element name="fieldNote" type="text" selector="#custom-sale-modal #custom-sale-note"/>
+    </section>
+</sections>

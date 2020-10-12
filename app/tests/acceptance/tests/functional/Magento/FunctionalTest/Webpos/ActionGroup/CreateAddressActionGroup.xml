@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="CreateAddress">
+        <arguments>
+            <argument name="address" defaultValue="new_address"/>
+        </arguments>
+        <click selector="{{AddressFormSection.add_address_button}}" stepKey="clickAddAddressButton"/>
+        <fillField userInput="{{address.firstName}}" selector="{{AddressFormSection.firstName}}" stepKey="fillFirstName"/>
+        <fillField userInput="{{address.lastName}}" selector="{{AddressFormSection.lastName}}" stepKey="fillLastName"/>
+        <fillField userInput="{{address.street}}" selector="{{AddressFormSection.street}}" stepKey="fillStreet"/>
+        <fillField userInput="{{address.city}}" selector="{{AddressFormSection.city}}" stepKey="fillCity"/>
+        <fillField userInput="{{address.telephone}}" selector="{{AddressFormSection.telephone}}" stepKey="fillTelephone"/>
+        <fillField userInput="{{address.postcode}}" selector="{{AddressFormSection.postcode}}" stepKey="fillPostCode"/>
+        <click selector="{{AddressFormSection.saveAddress}}" stepKey="saveAddressForm"/>
+        <waitForElementNotVisible selector="{{AddressFormSection.add_address_form}}" time="120" stepKey="waitForElementNotVisible"/>
+    </actionGroup>
+</actionGroups>

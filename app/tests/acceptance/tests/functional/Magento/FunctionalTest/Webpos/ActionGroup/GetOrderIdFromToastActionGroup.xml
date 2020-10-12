@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<actionGroups xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/actionGroupSchema.xsd">
+    <actionGroup name="GetOrderIdFromToast">
+        <executeJS function="
+            message = document.querySelector('.wrapper-messages div:nth-child(1)').innerText;
+            orderId = (/\#([0-9a-zA-Z\-]*)/).exec(message)[1];
+            g = document.querySelector('#test-order-id');
+            if (g) {g.remove();}
+            g = document.createElement('div');
+            g.setAttribute('id', 'test-order-id');
+            g.setAttribute('style', 'z-index:-9999;');
+            g.innerHTML = orderId;
+            document.querySelector('body').append(g);
+        " stepKey="executeJS1"/>
+        <grabTextFrom selector="#test-order-id" stepKey="orderId"/>
+    </actionGroup>
+</actionGroups>

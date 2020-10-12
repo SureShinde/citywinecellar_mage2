@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+    <test name="GetBackSalesOrderPurchaseTest">
+        <annotations>
+            <features value="Purchase Order"/>
+            <stories value="Get Back Order List"/>
+            <title value="Get Back Order List"/>
+            <description value="Get Back Order List"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="PCO-BOP-001"/>
+            <group value="getBackSalesOrderPurchase"/>
+            <group value="pwapos"/>
+        </annotations>
+        <before>
+            <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
+            <amOnPage url="{{PurchasePage.url}}" stepKey="gotoPurchase"/>
+            <waitForPageLoad stepKey="waitpageload1"/>
+        </before>
+        <after>
+            <amOnPage url="admin/admin/auth/logout/" stepKey="amOnLogoutPage"/>
+        </after>
+        <selectOption userInput="{{defaultPurchase.supplier}}" selector="{{GeneralInformationSection.supplier}}" stepKey="fillSupplier"/>
+        <click selector="{{GeneralInformationSection.prepareProductButton}}" stepKey="clickPrepare"/>
+        <waitForPageLoad stepKey="waitpageload2"/>
+
+        <click selector="{{PrepareProductListSection.backSaleButton}}" stepKey="clickBackSaleButton"/>
+        <waitForLoadingMaskToDisappear stepKey="waitForLoadingMaskToDisappear1"/>
+        <click selector="{{AdminBackSalesFiltersSection.filtersButton}}" stepKey="openFilter"/>
+        <fillField userInput="{{product_in_supplier_1.sku}}" selector="{{AdminBackSalesFiltersSection.productSkuInput}}" stepKey="filterSku"/>
+        <click selector="{{AdminBackSalesFiltersSection.apply}}" stepKey="applyFilter"/>
+        <waitForLoadingMaskToDisappear stepKey="waitForLoadingMaskToDisappear2"/>
+
+        <see selector="{{AdminBackSalesFiltersSection.firstRow}}" userInput="{{product_in_supplier_1.qty}}" stepKey="seeQty" />
+        <see selector="{{AdminBackSalesFiltersSection.firstRow}}" userInput="{{product_in_supplier_1.name}}" stepKey="seeName" />
+        <see selector="{{AdminBackSalesFiltersSection.firstRow}}" userInput="{{product_in_supplier_1.sku}}" stepKey="seeSku" />
+    </test>
+</tests>

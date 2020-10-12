@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Page/etc/SectionObject.xsd">
+    <section name="ProductSection">
+        <element name="inputSearchProduct" type="text" selector="//div[contains(@data-bind,'product_listing.product_listing')]/div[contains(@class, 'admin__data-grid-header')]//div[contains(@class, 'data-grid-search-control-wrap')]/input"/>
+        <element name="buttonSearchProduct" type="button" selector="//div[contains(@data-bind,'product_listing.product_listing')]/div[contains(@class, 'admin__data-grid-header')]//div[contains(@class, 'data-grid-search-control-wrap')]/button"/>
+        <element name="checkSourceProduct" type="text" selector="//div[contains(@data-bind,'product_listing.product_listing')]/div[contains(@class,'admin__data-grid-wrap')]//table[contains(@class,'data-grid-draggable')]//td/div[contains(text(),'{{val1}}')]/../../td//ul/li/strong[contains(text(),'{{val2}}')]/../span[text()={{val3}}]" parameterized="true"/>
+    </section>
+</sections>

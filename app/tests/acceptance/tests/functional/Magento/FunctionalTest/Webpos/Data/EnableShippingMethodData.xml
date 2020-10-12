@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<entities xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/DataGenerator/etc/dataProfileSchema.xsd">
+    <entity name="EnableShippingMethod" type="enable_shipping_method">
+        <requiredEntity type="method">flat_rate</requiredEntity>
+    </entity>
+
+    <entity name="EnableFlatRateShippingMethod" type="enable_shipping_method">
+        <requiredEntity type="method">flat_rate</requiredEntity>
+    </entity>
+    <entity name="EnableTableRateShippingMethod" type="enable_shipping_method">
+        <requiredEntity type="method">table_rate</requiredEntity>
+    </entity>
+    <entity name="EnableFreeShippingShippingMethod" type="enable_shipping_method">
+        <requiredEntity type="method">free_shipping</requiredEntity>
+    </entity>
+    <entity name="EnableAllShippingMethod" type="enable_shipping_method">
+        <requiredEntity type="method">all_shipping_method</requiredEntity>
+    </entity>
+
+    <entity name="flat_rate" type="method">
+        <data key="value">flatrate</data>
+    </entity>
+    <entity name="table_rate" type="method">
+        <data key="value">tablerate</data>
+    </entity>
+    <entity name="free_shipping" type="method">
+        <data key="value">freeshipping</data>
+    </entity>
+    <entity name="all_shipping_method" type="method">
+        <data key="value">flatrate,tablerate,freeshipping</data>
+    </entity>
+</entities>

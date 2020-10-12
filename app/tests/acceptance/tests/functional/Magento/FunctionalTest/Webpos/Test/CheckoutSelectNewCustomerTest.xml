@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Test/etc/testSchema.xsd">
+    <test name="CheckoutSelectNewCustomerTest">
+        <annotations>
+            <features value="Customer"/>
+            <stories value="Select Customer"/>
+            <title value="Checkout as new customer"/>
+            <description value="Create a new customer (customer is created during checking out)"/>
+            <severity value="CRITICAL"/>
+            <testCaseId value="CWC-03"/>
+            <group value="selectCustomer"/>
+            <group value="pwapos"/>
+            <group value="demo"/>
+        </annotations>
+        <before>
+            <actionGroup ref="PosOnCheckoutPage" stepKey="PosOnCheckoutPage"/>
+        </before>
+        <actionGroup ref="ClearCart" stepKey="ClearCart" />
+        <!--
+            1. Go to checkout page
+            2. Clear cart
+            3. Click on Guest button
+            4. Click on Create Customer button
+            5. On the New Customer form, fill info for all required fields
+            6. Click on Save button
+        -->
+        <click selector="{{CartSection.clearCartButton}}" stepKey="clearCart"/>
+        <actionGroup ref="CreateCustomer" stepKey="CreateCustomer">
+            <argument name="customer" value="new_customer"/>
+        </actionGroup>
+
+        <!-- 4. Show the form: New Customer -->
+        <grabTextFrom selector="{{CustomerFormSection.title}}" stepKey="grabCreateCustomerTitle"/>
+        <assertEquals stepKey="assertCreateCustomerTitle" message="Assert show New Customer form">
+            <expectedResult type="string">New Customer</expectedResult>
+            <actualResult type="variable">grabCreateCustomerTitle</actualResult>
+        </assertEquals>
+
+        <wait time="3" stepKey="waitSaveButtonEnable"/>
+        <click selector="{{CustomerFormSection.saveCustomer}}" stepKey="saveCustomerForm"/>
+
+        <!--
+            6:
+            + The New Customer form is auto closed
+            + On cart, display customer's name that is just created before
+        -->
+        <waitForElementNotVisible selector="{{CustomerFormSection.title}}" time="3" stepKey="waitForCustomerFormNotVisible"/>
+        <wait time="1" stepKey="waitForChangeCustomerName"/>
+        <grabTextFrom selector="{{CustomerListSection.customer_name}}" stepKey="grabCustomerNameOnCart"/>
+        <assertStringStartsWith stepKey="assertCustomerNameOnCart" message="On cart, display customer's name that is just created before">
+            <expectedResult type="string">{{new_customer.fullName}}</expectedResult>
+            <actualResult type="variable">grabCustomerNameOnCart</actualResult>
+        </assertStringStartsWith>
+    </test>
+</tests>

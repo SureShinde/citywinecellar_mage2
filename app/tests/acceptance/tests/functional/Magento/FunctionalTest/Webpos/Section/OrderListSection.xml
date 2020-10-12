@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Page/etc/SectionObject.xsd">
+    <section name="OrderListSection">
+        <element name="firstItem" type="text" selector=".wrapper-order-left .items:nth-child(1) li.item:nth-child(1)"/>
+        <element name="inputSearch" type="text" selector="//div[contains(@class, 'wrapper-order-left ')]//input[contains(@class, 'input-search')]"/>
+    </section>
+</sections>

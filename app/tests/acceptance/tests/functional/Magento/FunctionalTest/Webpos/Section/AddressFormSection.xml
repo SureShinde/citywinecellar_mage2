@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ /**
+  * Copyright © Magento, Inc. All rights reserved.
+  * See COPYING.txt for license details.
+  */
+-->
+
+<sections xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="../../../../../../../dev/tests/acceptance/vendor/magento/magento2-functional-testing-framework/src/Magento/FunctionalTestingFramework/Page/etc/SectionObject.xsd">
+    <section name="AddressFormSection">
+        <element name="add_address_form" type="input" selector=".popup-addBillingAddress .modal-content"/>
+        <element name="add_address_button" type="input" selector=".toggle-shipping-customer a"/>
+        <element name="add_address_button" type="input" selector=".toggle-shipping-customer a"/>
+        <element name="prefixName" type="input" selector="//label[contains(text(),'Name Prefix')]/../select[contains(@class, 'form-control')]"/>
+        <element name="firstName" type="input" selector="#firstname"/>
+        <element name="middleName" type="input" selector="#middlename"/>
+        <element name="lastName" type="input" selector="#lastname"/>
+        <element name="suffixName" type="input" selector="//label[contains(text(),'Name Suffix')]/../select[contains(@class, 'form-control')]"/>
+        <element name="company" type="input" selector="#company"/>
+        <element name="street" type="input" selector="#street"/>
+        <element name="city" type="input" selector="#city"/>
+        <element name="country" type="input" selector="//label[contains(text(),'Country')]/../select[contains(@class, 'form-control')]"/>
+        <element name="state" type="input" selector="//label[contains(text(),'State or Province')]/../select[contains(@class, 'form-control')]"/>
+        <element name="postcode" type="input" selector="#postcode"/>
+        <element name="telephone" type="input" selector="#telephone"/>
+        <element name="fax" type="input" selector="#fax"/>
+        <element name="vat_id" type="input" selector="#vat_id"/>
+        <element name="saveAddress" type="button" selector=".popup-addBillingAddress .save" />
+    </section>
+</sections>
