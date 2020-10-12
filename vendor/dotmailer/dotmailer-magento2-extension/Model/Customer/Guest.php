@@ -2,10 +2,12 @@
 
 namespace Dotdigitalgroup\Email\Model\Customer;
 
+use Dotdigitalgroup\Email\Model\Sync\SyncInterface;
+
 /**
  * Guest sync cronjob.
  */
-class Guest
+class Guest implements SyncInterface
 {
     /**
      * @var \Dotdigitalgroup\Email\Model\ResourceModel\Contact
@@ -21,7 +23,7 @@ class Guest
      * @var mixed
      */
     private $start;
-    
+
     /**
      * @var \Dotdigitalgroup\Email\Helper\Data
      */
@@ -67,19 +69,21 @@ class Guest
     /**
      * GUEST SYNC.
      *
+     * @param \DateTime|null $from
      * @return null
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function sync()
+    public function sync(\DateTime $from = null)
     {
         $this->start = microtime(true);
         $websites    = $this->helper->getWebsites();
 
         foreach ($websites as $website) {
             //check if the guest is mapped and enabled
-            $addresbook = $this->helper->getGuestAddressBook($website);
+            $addressbook = $this->helper->getGuestAddressBook($website);
             $guestSyncEnabled = $this->helper->isGuestSyncEnabled($website);
             $apiEnabled = $this->helper->isEnabled($website);
-            if ($addresbook && $guestSyncEnabled && $apiEnabled) {
+            if ($addressbook && $guestSyncEnabled && $apiEnabled) {
                 //sync guests for website
                 $this->exportGuestPerWebsite($website);
             }

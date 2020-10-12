@@ -10,35 +10,30 @@
 
 namespace Klarna\Core\Api;
 
-/**
- * Interface ServiceInterface
- *
- * @package Klarna\Core\Api
- */
 interface ServiceInterface
 {
     /**
-     * post
+     * The value for the HTTP POST request
      */
     const POST = 'post';
 
     /**
-     * get
+     * The value for the HTTP GET request
      */
     const GET = 'get';
 
     /**
-     * put
+     * The value for the HTTP PUT request
      */
     const PUT = 'put';
 
     /**
-     * patch
+     * The value for the HTTP PATCH request
      */
     const PATCH = 'patch';
 
     /**
-     * delete
+     * The value for the HTTP DELETE request
      */
     const DELETE = 'delete';
 

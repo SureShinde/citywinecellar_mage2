@@ -2,11 +2,31 @@
 
 namespace Dotdigitalgroup\Email\Model\Apiconnector;
 
+use Dotdigitalgroup\Email\Logger\Logger;
+use Dotdigitalgroup\Email\Helper\File;
+use Dotdigitalgroup\Email\Helper\Data;
+use Magento\Framework\Filesystem\DriverInterface;
+
 /**
  * Rest class to make cURL requests.
  */
 class Rest
 {
+    /**
+     * @var Data
+     */
+    protected $helper;
+
+    /**
+     * @var File
+     */
+    protected $fileHelper;
+
+    /**
+     * @var bool
+     */
+    protected $isNotJson = false;
+
     /**
      * @var string|null
      */
@@ -55,27 +75,38 @@ class Rest
     /**
      * @var string
      */
+    private $responseMessage;
+
+    /**
+     * @var string
+     */
     private $curlError;
 
     /**
-     * @var \Dotdigitalgroup\Email\Helper\Data
+     * @var Logger
      */
-    private $helper;
+    private $logger;
 
     /**
-     * @var bool
+     * @var DriverInterface
      */
-    protected $isNotJson = false;
+    private $driver;
 
     /**
      * Rest constructor.
-     * @param \Dotdigitalgroup\Email\Helper\Data $data
+     * @param Data $data
+     * @param Logger $logger
+     * @param File $fileHelper
      * @param int $website
+     * @param DriverInterface $driver
      *
      * @return null
      */
     public function __construct(
-        \Dotdigitalgroup\Email\Helper\Data $data,
+        Data $data,
+        Logger $logger,
+        File $fileHelper,
+        DriverInterface $driver,
         $website = 0
     ) {
         $this->helper        = $data;
@@ -88,6 +119,9 @@ class Rest
         $this->acceptType    = 'application/json';
         $this->responseBody  = null;
         $this->responseInfo  = null;
+        $this->logger = $logger;
+        $this->fileHelper = $fileHelper;
+        $this->driver = $driver;
 
         if ($this->requestBody !== null) {
             $this->buildPostBody();
@@ -212,6 +246,9 @@ class Rest
      */
     public function execute()
     {
+        // clear any recent error response message
+        $this->responseMessage = null;
+
         $ch = curl_init();
         $this->setAuth($ch);
         try {
@@ -247,7 +284,10 @@ class Rest
          */
         $this->processDebugApi();
 
-        return $this->responseBody;
+        $response = $this->responseBody;
+        $this->responseMessage = $response->message ?? null;
+
+        return $response;
     }
 
     /**
@@ -347,8 +387,8 @@ class Rest
         }
 
         $this->requestLength = strlen($this->requestBody);
-        $fh = fopen('php://memory', 'rw');
-        fwrite($fh, $this->requestBody);
+        $fh = $this->driver->fileOpen('php://memory', 'rw');
+        $this->driver->fileWrite($fh, $this->requestBody);
         rewind($fh);
 
         curl_setopt($ch, CURLOPT_INFILE, $fh);
@@ -357,11 +397,11 @@ class Rest
 
         $this->doExecute($ch);
 
-        fclose($fh);
+        $this->driver->fileClose($fh);
     }
 
     /**
-     * Ececute delete.
+     * Execute delete.
      *
      * @param mixed $ch
      *
@@ -597,5 +637,51 @@ class Rest
         }
 
         return false;
+    }
+
+    /**
+     * Log a REST failure
+     *
+     * @param string $message
+     * @param array $extra
+     * @param int $level
+     * @return $this
+     */
+    protected function addClientLog(string $message, array $extra = [], $level = Logger::WARNING)
+    {
+        $logTitle = sprintf(
+            'Apiconnector Client [%s]: %s',
+            debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 2)[1]['function'],
+            $message
+        );
+
+        $extra += [
+            'api_user' => $this->getApiUsername(),
+            'url' => $this->url,
+            'verb' => $this->verb,
+        ];
+
+        if ($this->responseMessage) {
+            $extra['error_message'] = $this->responseMessage;
+        }
+
+        switch ($level) {
+            case Logger::ERROR:
+                $this->logger->addError($logTitle, $extra);
+                break;
+
+            case Logger::WARNING:
+                $this->logger->addWarning($logTitle, $extra);
+                break;
+
+            case Logger::DEBUG:
+                $this->logger->addDebug($logTitle, $extra);
+                break;
+
+            default:
+                $this->logger->addInfo($logTitle, $extra);
+        }
+
+        return $this;
     }
 }

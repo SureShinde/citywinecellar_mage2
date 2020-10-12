@@ -2,8 +2,10 @@
 
 namespace Dotdigitalgroup\Email\Model\Apiconnector;
 
+use Dotdigitalgroup\Email\Logger\Logger;
+
 /**
- * dotmailer REST V2 api client.
+ * dotdigital REST V2 api client.
  *
  * @SuppressWarnings(PHPMD.ExcessivePublicCount)
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
@@ -20,7 +22,7 @@ class Client extends \Dotdigitalgroup\Email\Model\Apiconnector\Rest
     const REST_CONTACT_WITH_CONSENT_AND_PREFERENCES = '/v2/contacts/with-consent-and-preferences';
     const REST_CONTACTS_IMPORT = '/v2/contacts/import/';
     const REST_ADDRESS_BOOKS = '/v2/address-books/';
-    const REST_DATA_FILEDS = '/v2/data-fields';
+    const REST_DATA_FIELDS = '/v2/data-fields';
     const REST_TRANSACTIONAL_DATA_IMPORT = '/v2/contacts/transactional-data/import/';
     const REST_TRANSACTIONAL_DATA = '/v2/contacts/transactional-data/';
     const REST_CAMPAIGN_SEND = '/v2/campaigns/send';
@@ -34,15 +36,17 @@ class Client extends \Dotdigitalgroup\Email\Model\Apiconnector\Rest
     const REST_TEMPLATES = '/v2/templates';
     const REST_SEND_TRANSACTIONAL_EMAIL = '/v2/email';
     const REST_CAMPAIGNS_WITH_PREPARED_CONTENT = 'prepared-for-transactional-email';
+    const REST_POST_ABANDONED_CART_CARTINSIGHT = '/v2/contacts/transactional-data/cartInsight';
+    const REST_CHAT_SETUP = '/v2/webchat/setup';
 
-    //rest error responces
-    const API_ERROR_API_EXCEEDED = 'Your account has generated excess API activity and is being temporarily capped. 
-        Please contact support. ERROR_APIUSAGE_EXCEEDED';
+    //rest error responses
+    const API_ERROR_API_EXCEEDED = 'Your account has generated excess API activity and is being temporarily capped. ' .
+        'Please contact support. ERROR_APIUSAGE_EXCEEDED';
     const API_ERROR_TRANS_ALLOWANCE = 'TransactionalDataAllowanceInMegabytes';
     const API_ERROR_EMAIL_NOT_VALID = 'Email is not a valid email address. ERROR_PARAMETER_INVALID';
     const API_ERROR_FEATURENOTACTIVE = 'Error: ERROR_FEATURENOTACTIVE';
-    const API_ERROR_REPORT_NOT_FOUND =
-        'Import is not processed yet or completed with error. ERROR_IMPORT_REPORT_NOT_FOUND';
+    const API_ERROR_REPORT_NOT_FOUND = 'Import is not processed yet or completed with error. ' .
+        'ERROR_IMPORT_REPORT_NOT_FOUND';
     const API_ERROR_TRANS_NOT_EXISTS = 'Error: ERROR_TRANSACTIONAL_DATA_DOES_NOT_EXIST';
     const API_ERROR_DATAFIELD_EXISTS = 'Field already exists. ERROR_NON_UNIQUE_DATAFIELD';
     const API_ERROR_CONTACT_NOT_FOUND = 'Error: ERROR_CONTACT_NOT_FOUND';
@@ -52,19 +56,9 @@ class Client extends \Dotdigitalgroup\Email\Model\Apiconnector\Rest
     const API_ERROR_CONTACT_SUPPRESSED = 'Contact is suppressed. ERROR_CONTACT_SUPPRESSED';
     const API_ERROR_AUTHORIZATION_DENIED = 'Authorization has been denied for this request.';
     const API_ERROR_ADDRESSBOOK_NOT_FOUND = 'Error: ERROR_ADDRESSBOOK_NOT_FOUND';
-    const API_ERROR_ADDRESSBOOK_DUPLICATE
-        = 'That name is in use already, please choose another. ERROR_ADDRESSBOOK_DUPLICATE';
+    const API_ERROR_ADDRESSBOOK_DUPLICATE = 'That name is in use already, please choose another. ' .
+        'ERROR_ADDRESSBOOK_DUPLICATE';
     const REST_ACCOUNT_PREFERENCES = "/v2/preferences";
-
-    /**
-     * @var \Dotdigitalgroup\Email\Helper\File
-     */
-    private $fileHelper;
-
-    /**
-     * @var \Dotdigitalgroup\Email\Helper\Data
-     */
-    private $helper;
 
     /**
      * @var string
@@ -72,38 +66,21 @@ class Client extends \Dotdigitalgroup\Email\Model\Apiconnector\Rest
     private $apiEndpoint;
 
     /**
-     * Client constructor.
-     *
-     * @param \Dotdigitalgroup\Email\Helper\Data $data
-     * @param \Dotdigitalgroup\Email\Helper\File $fileHelper
-     */
-    public function __construct(
-        \Dotdigitalgroup\Email\Helper\Data $data,
-        \Dotdigitalgroup\Email\Helper\File $fileHelper
-    ) {
-        $this->helper     = $data;
-        $this->fileHelper = $fileHelper;
-
-        parent::__construct($this->helper);
-    }
-
-    /**
      * Excluded api response that we don't want to send.
      *
      * @var array
      */
-    public $exludeMessages
-        = [
-            self::API_ERROR_FEATURENOTACTIVE,
-            self::API_ERROR_PROGRAM_NOT_ACTIVE,
-            self::API_ERROR_CONTACT_SUPPRESSED,
-            self::API_ERROR_DATAFIELD_EXISTS,
-            self::API_ERROR_AUTHORIZATION_DENIED,
-            self::API_ERROR_ENROLMENT_EXCEEDED,
-            self::API_ERROR_SEND_NOT_PERMITTED,
-            self::API_ERROR_TRANS_NOT_EXISTS,
-            self::API_ERROR_ADDRESSBOOK_NOT_FOUND,
-        ];
+    private $excludeMessages = [
+        self::API_ERROR_FEATURENOTACTIVE,
+        self::API_ERROR_PROGRAM_NOT_ACTIVE,
+        self::API_ERROR_CONTACT_SUPPRESSED,
+        self::API_ERROR_DATAFIELD_EXISTS,
+        self::API_ERROR_AUTHORIZATION_DENIED,
+        self::API_ERROR_ENROLMENT_EXCEEDED,
+        self::API_ERROR_SEND_NOT_PERMITTED,
+        self::API_ERROR_TRANS_NOT_EXISTS,
+        self::API_ERROR_ADDRESSBOOK_NOT_FOUND,
+    ];
 
     /**
      * @param string $apiEndpoint
@@ -120,7 +97,7 @@ class Client extends \Dotdigitalgroup\Email\Model\Apiconnector\Rest
      */
     public function getApiEndpoint()
     {
-        if (!isset($this->apiEndpoint)) {
+        if (is_null($this->apiEndpoint)) {
             throw new \Magento\Framework\Exception\LocalizedException(
                 __('Dotmailer connector API endpoint cannot be empty.')
             );
@@ -147,7 +124,6 @@ class Client extends \Dotdigitalgroup\Email\Model\Apiconnector\Rest
             if (isset($accountInfo->message)) {
                 $message = 'VALIDATION ERROR :  ' . $accountInfo->message;
                 $this->helper->debug('validate', [$message]);
-
                 return false;
             }
 
@@ -203,7 +179,7 @@ class Client extends \Dotdigitalgroup\Email\Model\Apiconnector\Rest
             $this->getApiUsername() . ':' . $this->getApiPassword()
         );
 
-        //case the deprication of @filename for uploading
+        //case the deprecation of @filename for uploading
         if (function_exists('curl_file_create')) {
             $args['file']
                 = curl_file_create(
@@ -212,7 +188,7 @@ class Client extends \Dotdigitalgroup\Email\Model\Apiconnector\Rest
                 );
             curl_setopt($ch, CURLOPT_POSTFIELDS, $args);
         } else {
-            //standart use of curl file
+            //standard use of curl file
             curl_setopt($ch, CURLOPT_POSTFIELDS, [
                 'file' => '@' . $this->fileHelper->getFilePathWithFallback($filename),
             ]);
@@ -255,9 +231,25 @@ class Client extends \Dotdigitalgroup\Email\Model\Apiconnector\Rest
         $response = $this->execute();
 
         if (isset($response->message)) {
-            $message = 'POST ADDRESS BOOK CONTACTS ' . $url . ', '
-                . $response->message;
+            $message = 'POST ADDRESS BOOK CONTACTS ' . $url . ', ' . $response->message;
             $this->helper->debug('postAddressBookContacts', [$message]);
+        }
+
+        return $response;
+    }
+
+    public function postAbandonedCartCartInsight($content)
+    {
+        $url = $this->getApiEndpoint() . self::REST_POST_ABANDONED_CART_CARTINSIGHT;
+        $this->setUrl($url)
+            ->setVerb('POST')
+            ->buildPostBody($content);
+
+        $response = $this->execute();
+
+        if (isset($response->message)) {
+            $message = 'POST CARTINSIGHT ' . $url . ', ' . $response->message;
+            $this->helper->debug('postAbandonedCartInsightData', [$message]);
         }
 
         return $response;
@@ -280,6 +272,7 @@ class Client extends \Dotdigitalgroup\Email\Model\Apiconnector\Rest
             $this->setUrl($url)
                 ->setVerb('DELETE');
             $this->execute();
+
             $this->helper->log(sprintf('Delete-contact %s from addressbook %s', $contactId, $addressBookId));
         }
     }
@@ -301,8 +294,7 @@ class Client extends \Dotdigitalgroup\Email\Model\Apiconnector\Rest
         $response = $this->execute();
 
         if (isset($response->message)) {
-            $message = 'GET CONTACTS IMPORT REPORT  . ' . $url . ' message : '
-                . $response->message;
+            $message = 'GET CONTACTS IMPORT REPORT  . ' . $url . ' message : ' . $response->message;
             $this->helper->debug('getContactsImportReport', [$message]);
         }
 
@@ -325,8 +317,7 @@ class Client extends \Dotdigitalgroup\Email\Model\Apiconnector\Rest
         $response = $this->execute();
 
         if (isset($response->message)) {
-            $message = 'GET CONTACT BY email : ' . $email . ' '
-                . $response->message;
+            $message = 'GET CONTACT BY email : ' . $email . ' ' . $response->message;
             $this->helper->debug('getContactByEmail', [$message]);
         }
 
@@ -348,8 +339,7 @@ class Client extends \Dotdigitalgroup\Email\Model\Apiconnector\Rest
 
         $response = $this->execute();
         if (isset($response->message)) {
-            $message = 'GET ALL ADDRESS BOOKS : ' . $url . ', '
-                . $response->message;
+            $message = 'GET ALL ADDRESS BOOKS : ' . $url . ', ' . $response->message;
             $this->helper->debug('getAddressBooks', [$message]);
         }
 
@@ -412,21 +402,28 @@ class Client extends \Dotdigitalgroup\Email\Model\Apiconnector\Rest
     /**
      * Get list of all campaigns.
      *
+     * @param int $skip     Number of campaigns to skip
+     * @param int $select   Number of campaigns to select
      * @return mixed
      *
      * @throws \Exception
      */
-    public function getCampaigns()
+    public function getCampaigns($skip = 0, $select = 1000)
     {
-        $url = $this->getApiEndpoint() . self::REST_DATA_FIELDS_CAMPAIGNS;
+        $url = sprintf(
+            '%s%s?select=%s&skip=%s',
+            $this->getApiEndpoint(),
+            self::REST_DATA_FIELDS_CAMPAIGNS,
+            $select,
+            $skip
+        );
         $this->setUrl($url)
             ->setVerb('GET');
 
         $response = $this->execute();
 
         if (isset($response->message)) {
-            $message = 'GET CAMPAIGNS ' . $response->message . ' api user : '
-                . $this->getApiUsername();
+            $message = 'GET CAMPAIGNS ' . $response->message . ' api user : ' . $this->getApiUsername();
             $this->helper->debug('getCampaigns', [$message]);
         }
 
@@ -492,7 +489,7 @@ class Client extends \Dotdigitalgroup\Email\Model\Apiconnector\Rest
         $visibility = 'public',
         $defaultValue = false
     ) {
-        $url = $this->getApiEndpoint() . self::REST_DATA_FILEDS;
+        $url = $this->getApiEndpoint() . self::REST_DATA_FIELDS;
         //set default value for the numeric datatype
         if ($type == 'numeric' && !$defaultValue) {
             $defaultValue = 0;
@@ -531,7 +528,7 @@ class Client extends \Dotdigitalgroup\Email\Model\Apiconnector\Rest
      */
     public function getDataFields()
     {
-        $url = $this->getApiEndpoint() . self::REST_DATA_FILEDS;
+        $url = $this->getApiEndpoint() . self::REST_DATA_FIELDS;
         $this->setUrl($url)
             ->setVerb('GET');
 
@@ -561,8 +558,7 @@ class Client extends \Dotdigitalgroup\Email\Model\Apiconnector\Rest
 
         $response = $this->execute();
         if (isset($response->message)) {
-            $message = 'ERROR : UPDATE SINGLE CONTACT : ' . $url . ' message : '
-                . $response->message;
+            $message = 'ERROR : UPDATE SINGLE CONTACT : ' . $url . ' message : ' . $response->message;
             $this->helper->debug('updateContact', [$message]);
             $this->helper->debug('updateContact', $data);
         }
@@ -662,6 +658,7 @@ class Client extends \Dotdigitalgroup\Email\Model\Apiconnector\Rest
         $response = $this->execute();
         if (isset($response->message)) {
             unset($data['password']);
+
             $message = 'SENDING CAMPAIGN ' . $response->message;
             $this->helper->debug('postCampaignsSend', [$message]);
             $this->helper->debug('postCampaignsSend', $data);
@@ -721,9 +718,9 @@ class Client extends \Dotdigitalgroup\Email\Model\Apiconnector\Rest
         $response = $this->execute();
 
         if (isset($response->message)) {
-            $message = 'GET CONTACTS SUPPRESSED SINSE : ' . $dateString
-                . ' select ' . $select . ' skip : ' . $skip . '   response : '
-                . $response->message;
+            $message = 'GET CONTACTS SUPPRESSED SINCE : ' .
+                $dateString . ' select ' . $select . ' skip : ' . $skip .
+                '   response : ' . $response->message;
             $this->helper->debug('getContactsSuppressedSinceDate', [$message]);
         }
 
@@ -762,7 +759,7 @@ class Client extends \Dotdigitalgroup\Email\Model\Apiconnector\Rest
         $response = $this->execute();
 
         if (isset($response->message)) {
-            $message = ' SEND MULTI TRANSACTIONAL DATA ' . $response->message;
+            $message = 'SEND MULTI TRANSACTIONAL DATA ' . $response->message;
             $this->helper->debug('postContactsTransactionalDataImport', [$message]);
         }
 
@@ -807,8 +804,7 @@ class Client extends \Dotdigitalgroup\Email\Model\Apiconnector\Rest
         $response = $this->execute();
 
         if (isset($response->message)) {
-            $message = 'POST CONTACTS TRANSACTIONAL DATA  '
-                . $response->message;
+            $message = 'POST CONTACTS TRANSACTIONAL DATA  ' . $response->message;
             $this->helper->debug('postContactsTransactionalData', [$message]);
             $this->helper->debug('postContactsTransactionalData', $apiData);
         }
@@ -854,8 +850,7 @@ class Client extends \Dotdigitalgroup\Email\Model\Apiconnector\Rest
         $response = $this->execute();
 
         if (isset($response->message)) {
-            $message = 'POST ACCOUNT TRANSACTIONAL DATA  '
-                . $response->message;
+            $message = 'POST ACCOUNT TRANSACTIONAL DATA  ' . $response->message;
             $this->helper->debug('postAccountTransactionalData', [$message]);
             $this->helper->debug('postAccountTransactionalData', $apiData);
         }
@@ -920,8 +915,7 @@ class Client extends \Dotdigitalgroup\Email\Model\Apiconnector\Rest
 
         $response = $this->execute();
         if (isset($response->message)) {
-            $message = 'GET ACCOUNT INFO for api user : '
-                . $this->getApiUsername() . ' ' . $response->message;
+            $message = 'GET ACCOUNT INFO for api user : ' . $this->getApiUsername() . ' ' . $response->message;
             $this->helper->debug('getAccountInfo', [$message]);
         }
 
@@ -949,8 +943,7 @@ class Client extends \Dotdigitalgroup\Email\Model\Apiconnector\Rest
 
         $response = $this->execute();
         if (isset($response->message)) {
-            $message = 'Resubscribe : ' . $url . ', message :'
-                . $response->message;
+            $message = 'Resubscribe : ' . $url . ', message :' . $response->message;
             $this->helper->debug('postContactsResubscribe', [$message]);
             $this->helper->debug('postContactsResubscriber', $data);
         }
@@ -974,8 +967,7 @@ class Client extends \Dotdigitalgroup\Email\Model\Apiconnector\Rest
         $response = $this->execute();
 
         if (isset($response->message)) {
-            $message = 'GET CampaignFromAddressList ' . $response->message
-                . ' api user : ' . $this->getApiUsername();
+            $message = 'GET CampaignFromAddressList ' . $response->message . ' api user : ' . $this->getApiUsername();
             $this->helper->debug('getCustomFromAddresses', [$message]);
         }
 
@@ -1098,8 +1090,7 @@ class Client extends \Dotdigitalgroup\Email\Model\Apiconnector\Rest
         $response = $this->execute();
 
         if (isset($response->message)) {
-            $message = 'Get Campaign Summary ' . $response->message
-                . '  ,url : ' . $url;
+            $message = 'Get Campaign Summary ' . $response->message . '  ,url : ' . $url;
             $this->helper->debug('title', [$message]);
         }
 
@@ -1130,8 +1121,7 @@ class Client extends \Dotdigitalgroup\Email\Model\Apiconnector\Rest
             if (isset($response->message)) {
                 $this->helper->debug(
                     'deleteContactsTransactionalData',
-                    ['DELETE CONTACTS TRANSACTIONAL DATA : ' . $url
-                        . ' ' . $response->message]
+                    ['DELETE CONTACTS TRANSACTIONAL DATA : ' . $url . ' ' . $response->message]
                 );
             }
 
@@ -1159,8 +1149,7 @@ class Client extends \Dotdigitalgroup\Email\Model\Apiconnector\Rest
         $result = $this->execute();
 
         if (isset($result->message)) {
-            $this->helper->debug('postCampaignAttachments', [' CAMPAIGN ATTACHMENT ' .
-                $result->message]);
+            $this->helper->debug('postCampaignAttachments', [' CAMPAIGN ATTACHMENT ' . $result->message]);
         }
 
         return $result;
@@ -1183,8 +1172,7 @@ class Client extends \Dotdigitalgroup\Email\Model\Apiconnector\Rest
         $response = $this->execute();
 
         if (isset($response->message)) {
-            $message = 'GET CONTACTS ADDRESS BOOKS contact: ' . $contactId
-                . $response->message;
+            $message = 'GET CONTACTS ADDRESS BOOKS contact: ' . $contactId . $response->message;
             $this->helper->debug('getContactAddressBooks', [$message]);
         }
 
@@ -1267,12 +1255,37 @@ class Client extends \Dotdigitalgroup\Email\Model\Apiconnector\Rest
         $response = $this->execute();
 
         if (isset($response->message)) {
-            $message = ' SEND MULTI TRANSACTIONAL DATA TO ACCOUNT'
-                . $response->message;
+            $message = ' SEND MULTI TRANSACTIONAL DATA TO ACCOUNT' . $response->message;
             $this->helper->debug('postAccountTransactionalDataImport', [$message]);
         }
 
         return $response;
+    }
+
+    /**
+     * Send integration insight data
+     *
+     * @param array $insightData
+     * @return bool
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function postIntegrationInsightData(array $insightData)
+    {
+        $response = $this->setUrl($this->getApiEndpoint() . self::REST_TRANSACTIONAL_DATA_IMPORT . 'Integrations')
+            ->setVerb('POST')
+            ->buildPostBody([[
+                'Key' => $insightData['recordId'],
+                'ContactIdentifier' => 'account',
+                'Json' => json_encode($insightData),
+            ]])
+            ->execute();
+
+        if (!$response || isset($response->message)) {
+            $this->addClientLog('Error sending integration insight data');
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -1318,8 +1331,7 @@ class Client extends \Dotdigitalgroup\Email\Model\Apiconnector\Rest
         $response = $this->execute();
 
         if (isset($response->message)) {
-            $message = 'GET CONTACTS TRANSACTIONAL DATA IMPORT BY IMPORT ID '
-                . $response->message;
+            $message = 'GET CONTACTS TRANSACTIONAL DATA IMPORT BY IMPORT ID ' . $response->message;
             $this->helper->debug('getContactsTransactionalDataImportByImportId', [$message]);
         }
 
@@ -1343,6 +1355,7 @@ class Client extends \Dotdigitalgroup\Email\Model\Apiconnector\Rest
             ->setVerb('GET');
 
         $response = $this->execute();
+        $this->isNotJson = false;
 
         //if string is JSON than there is a error message
         if (json_decode($response)) {
@@ -1374,11 +1387,10 @@ class Client extends \Dotdigitalgroup\Email\Model\Apiconnector\Rest
         if (isset($response->message)
             && !in_array(
                 $response->message,
-                $this->exludeMessages
+                $this->excludeMessages
             )
         ) {
-            $message = 'GETS THE SEND STATUS USING SEND ID: '
-                . $response->message;
+            $message = 'GETS THE SEND STATUS USING SEND ID: ' . $response->message;
             $this->helper->log($message);
         }
         return $response;
@@ -1407,8 +1419,7 @@ class Client extends \Dotdigitalgroup\Email\Model\Apiconnector\Rest
 
         if ($response === false) {
             $this->helper->error('Error Number: ' . curl_errno($ch), []);
-        }
-        if (isset($response->error)) {
+        } elseif (isset($response->error)) {
             $this->helper->error('OAUTH failed. Error - ' . $response->error, []);
             if (isset($response->error_description)) {
                 $this->helper->error('OAUTH failed. Error description - ' . $response->error_description, []);
@@ -1587,7 +1598,56 @@ class Client extends \Dotdigitalgroup\Email\Model\Apiconnector\Rest
         if (isset($response->message)) {
             $message = $contact['Email'] . ' , url ' . $url . ', ' . $response->message;
             $this->helper->debug('postContactWithConsentAndPreferences', [$message]);
+        }
+
+        return $response;
+    }
+
+    /**
+     * Setup New Chat Account
+     * @param $data
+     * @return mixed
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function setUpChatAccount(array $data = [])
+    {
+        $url = $this->getApiEndpoint() . self::REST_CHAT_SETUP;
+
+        $this->setUrl($url)
+            ->setVerb('POST')
+            ->buildPostBody($data);
+
+        $response = $this->execute();
+
+        if ($response) {
+            $this->helper->log('Initialised for chat');
             return $response;
+        }
+
+        return $response;
+    }
+
+    /**
+     * Resubscribes a previously unsubscribed contact to a given address book
+     *
+     * @param int $addressBookId
+     * @param string $email
+     *
+     * @return mixed
+     */
+    public function postAddressBookContactResubscribe($addressBookId, $email)
+    {
+        $contact = ['unsubscribedContact' => ['email' => $email]];
+        $url = $this->getApiEndpoint() . self::REST_ADDRESS_BOOKS . $addressBookId
+            . '/contacts/resubscribe';
+        $this->setUrl($url)
+            ->setVerb('POST')
+            ->buildPostBody($contact);
+
+        $response = $this->execute();
+
+        if (isset($response->message)) {
+            $this->addClientLog('Error resubscribing address book contact');
         }
 
         return $response;

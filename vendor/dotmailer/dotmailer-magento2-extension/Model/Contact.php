@@ -5,8 +5,8 @@ namespace Dotdigitalgroup\Email\Model;
 class Contact extends \Magento\Framework\Model\AbstractModel
 {
     const EMAIL_CONTACT_IMPORTED = 1;
-    const EMAIL_CONTACT_NOT_IMPORTED = null;
-    const EMAIL_SUBSCRIBER_NOT_IMPORTED = null;
+    const EMAIL_CONTACT_NOT_IMPORTED = 0;
+    const EMAIL_SUBSCRIBER_NOT_IMPORTED = 0;
 
     /**
      * Constructor.
@@ -87,22 +87,22 @@ class Contact extends \Magento\Framework\Model\AbstractModel
     }
 
     /**
-     * Contact subscribers to import for website.
+     * Contact subscribers to import for store.
      *
-     * @param \Magento\Store\Model\Website $website
+     * @param int $storeId
      * @param int $limit
      * @param bool $isCustomerCheck
      *
      * @return \Dotdigitalgroup\Email\Model\ResourceModel\Contact\Collection
      */
     public function getSubscribersToImport(
-        \Magento\Store\Model\Website $website,
+        $storeId,
         $limit = 1000,
         $isCustomerCheck = true
     ) {
         return $this->getCollection()
             ->getSubscribersToImport(
-                $website,
+                $storeId,
                 $limit,
                 $isCustomerCheck
             );
@@ -140,7 +140,7 @@ class Contact extends \Magento\Framework\Model\AbstractModel
      *
      * @return int
      */
-    public function getNumberOfImportedContacs()
+    public function getNumberOfImportedContacts()
     {
         return $this->getCollection()
             ->getNumberOfImportedContacts();

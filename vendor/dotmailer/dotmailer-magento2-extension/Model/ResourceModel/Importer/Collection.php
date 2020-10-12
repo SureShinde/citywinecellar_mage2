@@ -2,14 +2,19 @@
 
 namespace Dotdigitalgroup\Email\Model\ResourceModel\Importer;
 
-class Collection extends
- \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection
-{
+use Dotdigitalgroup\Email\Model\DateIntervalFactory;
 
+class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection
+{
     /**
      * @var string
      */
     protected $_idFieldName = 'id';
+
+    /**
+     * @var DateIntervalFactory
+     */
+    private $dateIntervalFactory;
 
     /**
      * Initialize resource collection.
@@ -25,9 +30,40 @@ class Collection extends
     }
 
     /**
+     * Collection constructor.
+     *
+     * @param \Magento\Framework\Data\Collection\EntityFactoryInterface $entityFactory
+     * @param \Psr\Log\LoggerInterface $logger
+     * @param \Magento\Framework\Data\Collection\Db\FetchStrategyInterface $fetchStrategy
+     * @param \Magento\Framework\Event\ManagerInterface $eventManager
+     * @param DateIntervalFactory $dateIntervalFactory
+     * @param \Magento\Framework\DB\Adapter\AdapterInterface|null $connection
+     * @param \Magento\Framework\Model\ResourceModel\Db\AbstractDb|null $resource
+     */
+    public function __construct(
+        \Magento\Framework\Data\Collection\EntityFactoryInterface $entityFactory,
+        \Psr\Log\LoggerInterface $logger,
+        \Magento\Framework\Data\Collection\Db\FetchStrategyInterface $fetchStrategy,
+        \Magento\Framework\Event\ManagerInterface $eventManager,
+        DateIntervalFactory $dateIntervalFactory,
+        \Magento\Framework\DB\Adapter\AdapterInterface $connection = null,
+        \Magento\Framework\Model\ResourceModel\Db\AbstractDb $resource = null
+    ) {
+        $this->dateIntervalFactory = $dateIntervalFactory;
+        parent::__construct(
+            $entityFactory,
+            $logger,
+            $fetchStrategy,
+            $eventManager,
+            $connection,
+            $resource
+        );
+    }
+
+    /**
      * Reset collection.
      *
-     * @return null
+     * @return void
      */
     public function reset()
     {
@@ -35,21 +71,24 @@ class Collection extends
     }
 
     /**
-     * Get imports marked as importing.
+     * Get imports marked as importing for one or more websites.
      *
      * @param int $limit
+     * @param array $websiteIds
      *
      * @return $this|boolean
      */
-    public function getItemsWithImportingStatus($limit)
+    public function getItemsWithImportingStatus($websiteIds)
     {
         $collection = $this->addFieldToFilter(
             'import_status',
             ['eq' => \Dotdigitalgroup\Email\Model\Importer::IMPORTING]
         )
             ->addFieldToFilter('import_id', ['neq' => ''])
-            ->setPageSize($limit)
-            ->setCurPage(1);
+            ->addFieldToFilter(
+                'website_id',
+                ['in' => $websiteIds]
+            );
 
         if ($collection->getSize()) {
             return $collection;
@@ -61,13 +100,14 @@ class Collection extends
     /**
      * Get the imports by type and mode.
      *
-     * @param string $importType
+     * @param string|array $importType
      * @param string $importMode
      * @param int $limit
+     * @param array $websiteIds
      *
      * @return $this
      */
-    public function getQueueByTypeAndMode($importType, $importMode, $limit)
+    public function getQueueByTypeAndMode($importType, $importMode, $limit, $websiteIds)
     {
         if (is_array($importType)) {
             $condition = [];
@@ -84,14 +124,33 @@ class Collection extends
                 'import_type',
                 ['eq' => $importType]
             );
+
+            /**
+             * Skip orders if one hour has not passed since the created_at time.
+             */
+            if ($importType == 'Orders') {
+                $interval = $this->dateIntervalFactory->create(
+                    ['interval_spec' => 'PT1H']
+                );
+                $fromDate = new \DateTime('now', new \DateTimezone('UTC'));
+                $fromDate->sub($interval);
+
+                $this->addFieldToFilter(
+                    'created_at',
+                    ['lt' => $fromDate]
+                );
+            }
         }
 
         $this->addFieldToFilter('import_mode', ['eq' => $importMode])
             ->addFieldToFilter(
                 'import_status',
                 ['eq' => \Dotdigitalgroup\Email\Model\Importer::NOT_IMPORTED]
-            )
-            ->setPageSize($limit)
+            );
+
+        $this->addFieldToFilter('website_id', ['in' => $websiteIds]);
+
+        $this->setPageSize($limit)
             ->setCurPage(1);
 
         return $this;

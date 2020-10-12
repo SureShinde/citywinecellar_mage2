@@ -12,8 +12,8 @@
         <annotations>
             <stories value="Grid Pagination"/>
             <title value="Pagination worked in Manage Sources grid - Admin user"/>
-            <description value="You should be able to switch between pages on Manage Sources grid"/>
-            <testCaseId value="MSI-933"/>
+            <description value="You should be able to switch between pages on Manage Sources grid."/>
+            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/910317/scenarios/1408745"/>
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="sort_order_test"/>
@@ -57,7 +57,7 @@
             <argument name="value" value="special_source"/>
         </actionGroup>
         <waitForPageLoad time="30" stepKey="waitFilterApplied"/>
-        <actionGroup ref="adminDataGridSelectPerPage" stepKey="select20SourcesPerPage">
+        <actionGroup ref="AdminDataGridSelectPerPageActionGroup" stepKey="select20SourcesPerPage">
             <argument name="perPage" value="20"/>
         </actionGroup>
         <waitForPageLoad time="30" stepKey="waitSelectPerPageApplied"/>

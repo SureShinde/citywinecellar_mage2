@@ -16,12 +16,12 @@ class RemoveWishlist implements \Magento\Framework\Event\ObserverInterface
      * @var \Magento\Customer\Api\CustomerRepositoryInterface
      */
     private $customer;
-    
+
     /**
      * @var \Dotdigitalgroup\Email\Model\ImporterFactory
      */
     private $importerFactory;
-    
+
     /**
      * RemoveWishlist constructor.
      *
@@ -54,7 +54,7 @@ class RemoveWishlist implements \Magento\Framework\Event\ObserverInterface
                 $customer->getWebsiteId()
             );
 
-            //create a queue item to remote single wishlist
+            //create a queue item to remove single wishlist
             if ($isEnabled && $syncEnabled && $wishlist->getId()) {
                 //register in queue with importer
                 $this->importerFactory->create()->registerQueue(

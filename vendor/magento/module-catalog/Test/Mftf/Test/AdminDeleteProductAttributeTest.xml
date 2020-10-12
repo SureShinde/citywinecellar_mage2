@@ -10,6 +10,7 @@
     <test name="DeleteProductAttributeTest">
         <annotations>
             <features value="Catalog"/>
+            <stories value="Product attributes"/>
             <title value="Delete Product Attribute"/>
             <description value="Admin should able to delete a product attribute"/>
             <testCaseId value="MC-10887"/>
@@ -22,6 +23,9 @@
         </before>
         <after>
             <actionGroup ref="logout" stepKey="logout"/>
+
+            <!-- Reindex invalidated indices after product attribute has been created/deleted -->
+            <actionGroup ref="CliRunReindexUsingCronJobsActionGroup" stepKey="reindexInvalidatedIndices"/>
         </after>
         <actionGroup ref="deleteProductAttributeByAttributeCode" stepKey="deleteProductAttribute">
             <argument name="ProductAttributeCode" value="$$createProductAttribute.attribute_code$$"/>

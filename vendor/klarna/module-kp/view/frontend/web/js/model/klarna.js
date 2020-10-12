@@ -19,8 +19,10 @@ define(
   function ($, quote, customer, config, debug) {
     'use strict';
     return {
-      buildAddress: function (address, email) {
+      b2b_enabled: config.b2b_enabled,
+      buildAddress: function (address, email, isShipping = false) {
         var addr = {
+          'organization_name': '',
           'given_name': '',
           'family_name': '',
           'street_address': '',
@@ -66,15 +68,32 @@ define(
         if (address.telephone) {
           addr['phone'] = address.telephone;
         }
+        // Having organization_name in the billing address causes KP/PLSI to return B2B methods
+        // no matter the customer type. So we only want to set this if the merchant has enabled B2B.
+        if (address.company && (this.b2b_enabled || isShipping)) {
+          addr['organization_name'] = address.company;
+        }
         debug.log(addr);
         return addr;
+      },
+      buildCustomer: function (billingAddress) {
+        var type = 'person';
+
+        if (this.b2b_enabled && billingAddress.company) {
+          type = 'organization';
+        }
+
+        return {
+          'type': type
+        };
       },
       getUpdateData: function () {
         var email = '',
           shippingAddress = quote.shippingAddress(),
           data = {
             'billing_address': {},
-            'shipping_address': {}
+            'shipping_address': {},
+            'customer': {}
           };
 
         if (customer.isLoggedIn()) {
@@ -86,7 +105,8 @@ define(
           shippingAddress = quote.billingAddress();
         }
         data.billing_address = this.buildAddress(quote.billingAddress(), email);
-        data.shipping_address = this.buildAddress(shippingAddress, email);
+        data.shipping_address = this.buildAddress(shippingAddress, email, true);
+        data.customer = this.buildCustomer(quote.billingAddress());
         debug.log(data);
         return data;
       },
@@ -96,7 +116,9 @@ define(
         debug.log('Loading container ' + container_id);
         if ($('#' + container_id).length) {
           debug.log('Loading method ' + payment_method);
-          data = this.getUpdateData();
+          if (config.data_sharing_onload) {
+            data = this.getUpdateData();
+          }
           Klarna.Payments.load(
             {
               payment_method_category: payment_method,

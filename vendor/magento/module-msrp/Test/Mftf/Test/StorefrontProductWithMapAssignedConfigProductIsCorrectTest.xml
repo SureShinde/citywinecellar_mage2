@@ -11,6 +11,7 @@
     <test name="StorefrontProductWithMapAssignedConfigProductIsCorrectTest">
         <annotations>
             <features value="Msrp"/>
+            <stories value="Minimum advertised price"/>
             <title value="Check that simple products with MAP assigned to configurable product displayed correctly"/>
             <description value="Check that simple products with MAP assigned to configurable product displayed correctly"/>
             <severity value="CRITICAL"/>
@@ -104,6 +105,9 @@
             <createData entity="MsrpDisableMAP" stepKey="disableMAP"/>
 
             <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
+
+            <!-- Reindex invalidated indices after product attribute has been created/deleted -->
+            <actionGroup ref="CliRunReindexUsingCronJobsActionGroup" stepKey="reindexInvalidatedIndices"/>
         </after>
 
         <!-- Set Manufacturer's Suggested Retail Price to products-->

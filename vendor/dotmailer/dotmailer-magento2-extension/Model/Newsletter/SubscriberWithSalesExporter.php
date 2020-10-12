@@ -2,7 +2,9 @@
 
 namespace Dotdigitalgroup\Email\Model\Newsletter;
 
-use Dotdigitalgroup\Email\Setup\Schema;
+use Dotdigitalgroup\Email\Setup\SchemaInterface as Schema;
+use Dotdigitalgroup\Email\Model\Newsletter\CsvGeneratorFactory;
+use Magento\Framework\Filesystem\DriverInterface;
 
 class SubscriberWithSalesExporter
 {
@@ -12,44 +14,34 @@ class SubscriberWithSalesExporter
     public $importerFactory;
 
     /**
-     * @var \Dotdigitalgroup\Email\Helper\File
+     * @var CsvGeneratorFactory
      */
-    public $file;
+    private $csvGeneratorFactory;
 
     /**
      * @var \Dotdigitalgroup\Email\Helper\Data
      */
-    public $helper;
+    private $helper;
 
     /**
      * @var \Magento\Framework\App\ResourceConnection
      */
-    public $resource;
-
-    /**
-     * @var \Magento\Newsletter\Model\ResourceModel\Subscriber\CollectionFactory
-     */
-    public $subscribersCollection;
-
-    /**
-     * @var \Dotdigitalgroup\Email\Model\Apiconnector\SubscriberFactory
-     */
-    public $emailSubscriber;
+    private $resource;
 
     /**
      * @var \Dotdigitalgroup\Email\Model\ResourceModel\Contact
      */
-    public $emailContactResource;
+    private $emailContactResource;
 
     /**
      * @var \Dotdigitalgroup\Email\Helper\Config
      */
-    public $configHelper;
+    private $configHelper;
 
     /**
      * @var \Magento\Framework\Stdlib\DateTime\DateTime
      */
-    public $dateTime;
+    private $dateTime;
 
     /**
      * @var \Dotdigitalgroup\Email\Model\ResourceModel\Consent
@@ -67,6 +59,11 @@ class SubscriberWithSalesExporter
     private $contactDataFactory;
 
     /**
+     * @var DriverInterface
+     */
+    private $driver;
+
+    /**
      * SubscriberWithSalesExporter constructor.
      * @param \Dotdigitalgroup\Email\Model\ImporterFactory $importerFactory
      * @param \Dotdigitalgroup\Email\Helper\Data $helper
@@ -76,6 +73,8 @@ class SubscriberWithSalesExporter
      * @param \Magento\Framework\Stdlib\DateTime\DateTime $dateTime
      * @param \Dotdigitalgroup\Email\Model\Apiconnector\ContactDataFactory $contactDataFactory
      * @param \Dotdigitalgroup\Email\Model\ResourceModel\Contact $contactResource
+     * @param CsvGeneratorFactory $csvGeneratorFactory
+     * @param DriverInterface $driver
      */
     public function __construct(
         \Dotdigitalgroup\Email\Model\ImporterFactory $importerFactory,
@@ -85,37 +84,40 @@ class SubscriberWithSalesExporter
         \Magento\Framework\App\ResourceConnection $resource,
         \Magento\Framework\Stdlib\DateTime\DateTime $dateTime,
         \Dotdigitalgroup\Email\Model\Apiconnector\ContactDataFactory $contactDataFactory,
-        \Dotdigitalgroup\Email\Model\ResourceModel\Contact $contactResource
+        \Dotdigitalgroup\Email\Model\ResourceModel\Contact $contactResource,
+        CsvGeneratorFactory $csvGeneratorFactory,
+        DriverInterface $driver
     ) {
         $this->dateTime = $dateTime;
         $this->helper           = $helper;
         $this->resource         = $resource;
         $this->importerFactory  = $importerFactory;
-        $this->file             = $this->helper->fileHelper;
+        $this->csvGeneratorFactory = $csvGeneratorFactory;
         $this->configHelper     = $this->helper->configHelperFactory->create();
         $this->consentFactory   = $consentFactory;
         $this->consentResource  = $consentResource;
         $this->contactDataFactory = $contactDataFactory;
         $this->emailContactResource = $contactResource;
+        $this->driver = $driver;
     }
 
     /**
-     * @param \Magento\Store\Model\Website $website
+     * @param \Magento\Store\Api\Data\StoreInterface $store
      * @param \Dotdigitalgroup\Email\Model\ResourceModel\Contact\Collection $contactSubscribers
      *
      * @return int
      */
-    public function exportSubscribersWithSales($website, $contactSubscribers)
+    public function exportSubscribersWithSales($store, $contactSubscribers)
     {
         $updated = 0;
+        $website = $store->getWebsite();
         $websiteId = $website->getId();
-        $stores = [];
         $consentModel = $this->consentFactory->create();
         $mappedHash = $this->helper->getWebsiteSalesDataFields($website);
         $isConsentSubscriberEnabled = $this->configHelper->isConsentSubscriberEnabled($websiteId);
         $emails = $contactSubscribers->getColumnValues('email');
         $emailContactIds = $contactSubscribers->getColumnValues('email_contact_id');
-        $subscribersFile = strtolower($website->getCode() . '_subscribers_with_sales_' . date('d_m_Y_His') . '.csv');
+        $subscribersFile = strtolower($store->getCode() . '_subscribers_with_sales_' . date('d_m_Y_His') . '.csv');
         $this->helper->log('Subscriber file with sales : ' . $subscribersFile);
         $contactSubscriberCollection = $this->emailContactResource->getContactCollectionByEmail($emails);
 
@@ -123,17 +125,21 @@ class SubscriberWithSalesExporter
         if ($contactSubscriberCollection->getSize() == 0) {
             return $updated;
         }
-        $headers = ['Email', 'EmailType', 'OptInType'];
-        $headers =  array_merge($headers, array_values($mappedHash));
-        //consentdata append
+
+        $csv = $this->csvGeneratorFactory->create()
+            ->createCsv($subscribersFile)
+            ->createHeaders($store)
+            ->mergeHeaders($mappedHash);
+
+        //consent data append
         if ($isConsentSubscriberEnabled) {
-            $headers = array_merge($headers, \Dotdigitalgroup\Email\Model\Consent::$bulkFields);
+            $csv->mergeHeaders(\Dotdigitalgroup\Email\Model\Consent::$bulkFields);
             $contactSubscriberCollection->getSelect()
                 ->joinLeft(
                     ['ecc' => $contactSubscriberCollection->getTable(Schema::EMAIL_CONTACT_CONSENT_TABLE)],
                     "ecc.email_contact_id = main_table.email_contact_id",
                     ['consent_url', 'consent_datetime', 'consent_ip', 'consent_user_agent']
-                );
+                )->group('email_contact_id');
         }
 
         //subscribers sales data
@@ -142,8 +148,8 @@ class SubscriberWithSalesExporter
             $websiteId
         );
 
-        //write headers to the file
-        $this->file->outputCSV($this->file->getFilePath($subscribersFile), $headers);
+        $csv->outputHeadersToFile();
+        $optInType = $csv->isOptInTypeDouble($store);
 
         foreach ($contactSubscriberCollection as $subscriber) {
             if (isset($salesDataForSubscribers[$subscriber->getEmail()])) {
@@ -152,33 +158,30 @@ class SubscriberWithSalesExporter
                     $subscriber
                 );
             }
-            if (! isset($stores[$subscriber->getStoreId()])) {
-                $stores[$subscriber->getStoreId()] = $this->helper->storeManager->getStore($subscriber->getStoreId());
+
+            $connectorSubscriber = $this->contactDataFactory->create()
+                ->init($subscriber, $mappedHash)
+                ->setContactData();
+
+            $outputData = [$subscriber->getEmail(), 'Html'];
+            if ($optInType) {
+                $outputData[] = 'Double';
+            }
+            foreach ($connectorSubscriber->toCSVArray() as $item) {
+                $outputData[] = $item;
             }
 
-            $optInType = $this->configHelper->getOptInType($stores[$subscriber->getStoreId()]);
-            $connectorSubscriber = $this->contactDataFactory->create();
-            $connectorSubscriber->setMappingHash($mappedHash);
-            $connectorSubscriber->setContactData($subscriber);
-            $email = $subscriber->getEmail();
-            $outputData = [$email, 'Html', $optInType];
-            $outputData = array_merge($outputData, $connectorSubscriber->toCSVArray());
             $consentUrl = $subscriber->getConsentUrl();
             //check for any subscribe or customer consent enabled
             if ($isConsentSubscriberEnabled && $consentUrl) {
-                $consentUrl = $subscriber->getConsentUrl();
-                $consentText = $consentModel->getConsentTextForWebsite($consentUrl, $websiteId);
-                $consentData = [
-                    $consentText,
-                    $consentUrl,
-                    $this->dateTime->date(\Zend_Date::ISO_8601, $subscriber->getConsentDatetime()),
-                    $subscriber->getConsentIp(),
-                    $subscriber->getConsentUserAgent()
-                ];
-                $outputData = array_merge($outputData, $consentData);
+                $outputData[] = $consentModel->getConsentTextForWebsite($consentUrl, $websiteId);
+                $outputData[] = $consentUrl;
+                $outputData[] = $this->dateTime->date(\Zend_Date::ISO_8601, $subscriber->getConsentDatetime());
+                $outputData[] = $subscriber->getConsentIp();
+                $outputData[] = $subscriber->getConsentUserAgent();
             }
 
-            $this->file->outputCSV($this->file->getFilePath($subscribersFile), $outputData);
+            $csv->outputDataToFile($outputData);
             //clear contactSubscriberCollection and free memory
             $subscriber->clearInstance();
             $updated++;
@@ -213,7 +216,7 @@ class SubscriberWithSalesExporter
     private function registerWithImporter($emailContactIds, $subscribersFile, $websiteId)
     {
         $subscriberNum = count($emailContactIds);
-        if (is_file($this->file->getFilePath($subscribersFile))) {
+        if ($this->driver->isFile($this->csvGeneratorFactory->create()->getFilePath($subscribersFile))) {
             if ($subscriberNum > 0) {
                 //register in queue with importer
                 $check = $this->importerFactory->create()

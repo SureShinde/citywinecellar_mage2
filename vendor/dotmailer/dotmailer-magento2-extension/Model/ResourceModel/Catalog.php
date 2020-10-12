@@ -2,7 +2,7 @@
 
 namespace Dotdigitalgroup\Email\Model\ResourceModel;
 
-use Dotdigitalgroup\Email\Setup\Schema;
+use Dotdigitalgroup\Email\Setup\SchemaInterface as Schema;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -230,9 +230,9 @@ class Catalog extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
     }
 
     /**
-     * Get product collection from ids.
+     * Get product collection from sku.
      *
-     * @param string $productsSku
+     * @param array $productsSku
      * @param int|bool $limit
      *
      * @return array|\Magento\Catalog\Model\ResourceModel\Product\Collection
@@ -245,7 +245,7 @@ class Catalog extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
             $productCollection = $this->productFactory->create()
                 ->getCollection()
                 ->addAttributeToSelect(
-                    ['product_url', 'name', 'store_id', 'small_image', 'price']
+                    ['product_url', 'name', 'store_id', 'small_image', 'price', 'visibility']
                 )->addFieldToFilter('sku', ['in' => $productsSku]);
 
             if ($limit) {
@@ -269,59 +269,15 @@ class Catalog extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
     public function getBestsellerCollection($from, $to, $limit, $storeId)
     {
         //create report collection
-        $reportProductCollection = $this->productSoldFactory->create();
-        $connection = $this->_resources->getConnection();
-        $orderTableAliasName = $connection->quoteIdentifier('order');
-        $fieldName = $orderTableAliasName . '.created_at';
-        $orderTableAliasName = $connection->quoteIdentifier('order');
+        $reportProductCollection = $this->productSoldFactory->create()
+            ->addOrderedQty($from, $to)
+            ->setOrder('ordered_qty', 'desc')
+            ->setStoreIds([$storeId])
+            ->setPageSize($limit);
 
-        $orderJoinCondition = [
-            $orderTableAliasName . '.entity_id = order_items.order_id',
-            $connection->quoteInto(
-                "{$orderTableAliasName}.state <> ?",
-                \Magento\Sales\Model\Order::STATE_CANCELED
-            ),
-        ];
-        $orderJoinCondition[] = $this->prepareBetweenSql($fieldName, $from, $to);
-
-        $reportProductCollection->getSelect()->reset()
-            ->from(
-                ['order_items' => $reportProductCollection->getTable('sales_order_item')],
-                ['ordered_qty' => 'SUM(order_items.qty_ordered)', 'order_items_name' => 'order_items.name']
-            )->joinInner(
-                ['order' => $reportProductCollection->getTable('sales_order')],
-                implode(' AND ', $orderJoinCondition),
-                []
-            )->columns(['sku'])
-            ->where('parent_item_id IS NULL')
-            ->group('order_items.product_id')
-            ->having('SUM(order_items.qty_ordered) > ?', 0)
-            ->order('ordered_qty DESC')
-            ->limit($limit);
-
-        $reportProductCollection->setStoreIds([$storeId]);
-        $productsSku = $reportProductCollection->getColumnValues('sku');
+        $productsSku = $reportProductCollection->getColumnValues('order_items_sku');
 
         return $this->getProductsCollectionBySku($productsSku);
-    }
-
-    /**
-     * Prepare between sql.
-     *
-     * @param string $fieldName Field name with table suffix ('created_at' or 'main_table.created_at')
-     * @param string $from
-     * @param string $to
-     * @return string Formatted sql string
-     */
-    private function prepareBetweenSql($fieldName, $from, $to)
-    {
-        $connection = $this->_resources->getConnection();
-        return sprintf(
-            '(%s BETWEEN %s AND %s)',
-            $fieldName,
-            $connection->quote($from),
-            $connection->quote($to)
-        );
     }
 
     /**
@@ -340,19 +296,16 @@ class Catalog extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
             $where = [
                 'created_at >= ?' => $from . ' 00:00:00',
                 'created_at <= ?' => $to . ' 23:59:59',
-                'imported is ?' => new \Zend_Db_Expr('not null')
+                'last_imported_at IS NOT NULL OR processed = 1'
             ];
         } else {
-            $where = $conn->quoteInto(
-                'imported is ?',
-                new \Zend_Db_Expr('not null')
-            );
+            $where[] = 'last_imported_at IS NOT NULL OR processed = 1';
         }
         $num = $conn->update(
             $this->getTable(Schema::EMAIL_CATALOG_TABLE),
             [
-                'imported' => new \Zend_Db_Expr('null'),
-                'modified' => new \Zend_Db_Expr('null'),
+                'processed' => 0,
+                'last_imported_at' => new \Zend_Db_Expr('null')
             ],
             $where
         );
@@ -361,40 +314,75 @@ class Catalog extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
     }
 
     /**
-     * Set imported in bulk query. If modified true then set modified to null in bulk query.
+     * Set processed flag.
      *
      * @param array $ids
-     * @param bool $modified
      *
      * @return null
      */
-    public function setImportedByIds($ids, $modified = false)
+    public function setProcessedByIds($ids)
     {
         try {
             $coreResource = $this->getConnection();
             $tableName = $this->getTable(Schema::EMAIL_CATALOG_TABLE);
 
-            if ($modified) {
-                $coreResource->update(
-                    $tableName,
-                    [
-                        'modified' => new \Zend_Db_Expr('null'),
-                        'updated_at' => gmdate('Y-m-d H:i:s'),
-                    ],
-                    ["product_id IN (?)" => $ids]
-                );
-            } else {
-                $coreResource->update(
-                    $tableName,
-                    [
-                        'imported' => '1',
-                        'updated_at' => gmdate(
-                            'Y-m-d H:i:s'
-                        ),
-                    ],
-                    ["product_id IN (?)" => $ids]
-                );
-            }
+            $coreResource->update(
+                $tableName,
+                [
+                    'processed' => 1,
+                    'updated_at' => gmdate('Y-m-d H:i:s'),
+                ],
+                ["product_id IN (?)" => $ids]
+            );
+        } catch (\Exception $e) {
+            $this->helper->debug((string)$e, []);
+        }
+    }
+
+    /**
+     * Set 'processed' to 0
+     *
+     * @param array $ids
+     */
+    public function setUnprocessedByIds($ids)
+    {
+        try {
+            $coreResource = $this->getConnection();
+            $tableName = $this->getTable(Schema::EMAIL_CATALOG_TABLE);
+
+            $coreResource->update(
+                $tableName,
+                [
+                    'processed' => 0,
+                    'updated_at' => gmdate('Y-m-d H:i:s'),
+                ],
+                ["product_id IN (?)" => $ids]
+            );
+        } catch (\Exception $e) {
+            $this->helper->debug((string)$e, []);
+        }
+    }
+
+    /**
+     * Set imported date.
+     *
+     * @param array $ids
+     *
+     * @return null
+     */
+    public function setImportedDateByIds($ids)
+    {
+        try {
+            $coreResource = $this->getConnection();
+            $tableName = $this->getTable(Schema::EMAIL_CATALOG_TABLE);
+
+            $coreResource->update(
+                $tableName,
+                [
+                    'last_imported_at' => gmdate('Y-m-d H:i:s'),
+                ],
+                ["product_id IN (?)" => $ids]
+            );
         } catch (\Exception $e) {
             $this->helper->debug((string)$e, []);
         }
@@ -433,21 +421,14 @@ class Catalog extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb
     }
 
     /**
-     * Set modified if already imported
-     *
-     * @param array $ids
+     * @param $products
      */
-    public function setModified($ids)
+    public function bulkProductImport($products)
     {
-        $write     = $this->getConnection();
-        $tableName = $this->getTable(Schema::EMAIL_CATALOG_TABLE);
-        $write->update(
-            $tableName,
-            ['modified' => 1],
-            [
-                $write->quoteInto("product_id IN (?)", $ids),
-                $write->quoteInto("imported = ?", 1)
-            ]
-        );
+        if (! empty($products)) {
+            $connection = $this->getConnection();
+            $tableName = $this->getTable(Schema::EMAIL_CATALOG_TABLE);
+            $connection->insertMultiple($tableName, $products);
+        }
     }
 }

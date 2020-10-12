@@ -3,12 +3,9 @@
 namespace Dotdigitalgroup\Email\Plugin;
 
 use Magento\Framework\Mail\Template\TransportBuilder;
+use Dotdigitalgroup\Email\Model\Email\TemplateFactory;
+use Dotdigitalgroup\Email\Model\Email\TemplateService;
 
-/**
- * Class TransportBuilderPlugin
- *
- * @SuppressWarnings(PHPMD.UnusedFormalParameter)
- */
 class TransportBuilderPlugin
 {
     /**
@@ -17,14 +14,30 @@ class TransportBuilderPlugin
     private $registry;
 
     /**
+     * @var TemplateFactory
+     */
+    private $templateFactory;
+
+    /**
+     * @var TemplateService
+     */
+    private $templateService;
+
+    /**
      * TransportBuilderPlugin constructor.
      *
      * @param \Magento\Framework\Registry $registry
+     * @param TemplateFactory $templateFactory
+     * @param TemplateService $templateService
      */
     public function __construct(
-        \Magento\Framework\Registry $registry
+        \Magento\Framework\Registry $registry,
+        TemplateFactory $templateFactory,
+        TemplateService $templateService
     ) {
         $this->registry = $registry;
+        $this->templateFactory = $templateFactory;
+        $this->templateService = $templateService;
     }
 
     /**
@@ -42,5 +55,17 @@ class TransportBuilderPlugin
 
         $this->registry->register('transportBuilderPluginStoreId', $templateOptions['store']);
         return null;
+    }
+
+    /**
+     * @param TransportBuilder $transportBuilder
+     * @param $templateIdentifier
+     *
+     * @return array
+     */
+    public function beforeSetTemplateIdentifier(TransportBuilder $transportBuilder, $templateIdentifier)
+    {
+        $this->templateService->setTemplateId($templateIdentifier);
+        return [$templateIdentifier];
     }
 }

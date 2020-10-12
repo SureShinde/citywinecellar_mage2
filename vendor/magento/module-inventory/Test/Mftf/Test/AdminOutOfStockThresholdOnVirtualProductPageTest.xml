@@ -13,14 +13,14 @@
             <stories value="Admin user apply 'Only X left Treshhold' for Virtual product on Single stock mode"/>
             <title value="Admin user apply 'Only X left Treshhold' for Virtual product on Single stock mode"/>
             <description value="Admin user apply 'Only X left Treshhold' for Virtual product on Single stock mode."/>
-            <testCaseId value="MSI-1578"/>
+            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/911781/scenarios/2075925"/>
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="single_mode"/>
         </annotations>
-        
+
         <before>
-            <magentoCLI command="config:set cataloginventory/item_options/manage_stock 1" stepKey="magentoCLI1"/>
+            <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="magentoCLI1"/>
             <magentoCLI command="config:set cataloginventory/options/stock_threshold_qty 5" stepKey="setThreshold1"/>
 
             <createData entity="SimpleSubCategory" stepKey="createCategory1"/>
@@ -52,7 +52,7 @@
 
         <click selector="{{AdminProductFormActionSection.saveButton}}" stepKey="saveVirtualProduct1"/>
 
-        <actionGroup ref="navigateToNewOrderPageExistingCustomer" stepKey="newOrderExistingCustomer1">
+        <actionGroup ref="NavigateToNewOrderPageExistingCustomerActionGroup" stepKey="newOrderExistingCustomer1">
             <argument name="customer" value="Simple_US_Customer"/>
         </actionGroup>
 

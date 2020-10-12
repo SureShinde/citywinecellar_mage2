@@ -12,14 +12,11 @@
         <annotations>
             <stories value="Configuration-Sources"/>
             <title value="Select / Deselect manipulations in Manage Source grid by Admin user"/>
-            <description value="You should be able to mass Select and Deselect Sources on Manage Source grid"/>
-            <testCaseId value="MSI-494"/>
+            <description value="You should be able to mass Select and Deselect Sources on Manage Source grid."/>
+            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/910317/scenarios/1408739"/>
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
-            <skip>
-                <issueId value="MSI-1041"/>
-            </skip>
         </annotations>
 
         <before>
@@ -47,9 +44,9 @@
             <createData entity="_minimalSource" stepKey="createSource22"/>
             <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin"/>
         </before>
+
         <after>
-            <!--Test will fail until MSI-1041 is merged-->
-            <actionGroup ref="ChangeAllSourcesStatusActionGroup" stepKey="disableAllSources"/>
+            <actionGroup ref="DisableAllSourcesActionGroup" stepKey="disableAllSources"/>
             <actionGroup ref="logout" stepKey="logoutOfAdmin"/>
         </after>
 
@@ -57,7 +54,7 @@
         <waitForPageLoad time="30" stepKey="waitForAdminManageSourcePageLoad"/>
         <conditionalClick selector="{{AdminDataGridHeaderSection.clearFilters}}" dependentSelector="{{AdminDataGridHeaderSection.clearFilters}}" visible="true" stepKey="clickClearFilters"/>
         <waitForPageLoad time="30" stepKey="waitFilterCleared"/>
-        <actionGroup ref="adminDataGridSelectPerPage" stepKey="select20SourcesPerPage">
+        <actionGroup ref="AdminDataGridSelectPerPageActionGroup" stepKey="select20SourcesPerPage">
             <argument name="perPage" value="20"/>
         </actionGroup>
         <waitForPageLoad time="30" stepKey="waitSelectPerPageApplied"/>

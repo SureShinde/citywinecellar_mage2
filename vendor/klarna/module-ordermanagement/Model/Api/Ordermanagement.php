@@ -24,9 +24,6 @@ use Magento\Sales\Model\Order\Creditmemo;
 use Magento\Sales\Model\Order\Invoice;
 
 /**
- * Class Ordermanagement
- *
- * @package Klarna\Ordermanagement\Model\Api
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Ordermanagement implements ApiInterface
@@ -99,8 +96,6 @@ class Ordermanagement implements ApiInterface
     private $dataObjectFactory;
 
     /**
-     * OrdermanagementApi constructor.
-     *
      * @param OrdermanagementApi $orderManagement
      * @param ConfigHelper       $helper
      * @param KlarnaConfig       $klarnaConfig
@@ -292,7 +287,6 @@ class Ordermanagement implements ApiInterface
         return self::KLARNA_API_SHIPPING_METHOD_HOME;
     }
 
-
     /**
      * @param array                   $data
      * @param Invoice|Creditmemo|null $document
@@ -369,7 +363,7 @@ class Ordermanagement implements ApiInterface
             'refunded_amount' => $this->dataConverter->toApiFloat($amount)
         ];
 
-        if (!is_null($creditMemo->getCustomerNote())) {
+        if ($creditMemo->getCustomerNote() !== null) {
             $data['description'] = $creditMemo->getCustomerNote();
         }
 

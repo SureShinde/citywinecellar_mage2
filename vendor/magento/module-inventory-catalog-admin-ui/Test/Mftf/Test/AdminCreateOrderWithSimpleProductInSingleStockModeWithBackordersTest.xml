@@ -13,7 +13,7 @@
             <stories value="Sales-Backorder"/>
             <title value="Admin user set negative 'Out-of-Stock Threshold' in combination with backorders for Simple product in Single Stock mode"/>
             <description value="In Single Stock mode you should be able to create order with backorders in combination with negative out of stock threshold."/>
-            <testCaseId value="MSI-1469"/>
+            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/913946/scenarios/2066573"/>
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="single_mode"/>
@@ -31,7 +31,7 @@
             <comment userInput="Assign main website to default stock" stepKey="assignChannelToStockComment"/>
             <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockListPageToAssignMainWebsiteToDefaultStock"/>
             <waitForPageLoad time="30" stepKey="waitForStockListPageLoad"/>
-            <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchDefaultStockByNameForAssignMainWebsiteChannel">
+            <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchDefaultStockByNameForAssignMainWebsiteChannel">
                 <argument name="keyword" value="_defaultStock.name"/>
             </actionGroup>
             <click selector="{{AdminGridRow.editByValue(_defaultStock.name)}}" stepKey="clickEditDefaultStock"/>
@@ -48,8 +48,8 @@
             <click selector="{{AdminProductGridSection.productGridXRowYColumnButton('1', '2')}}" stepKey="openProductEditPage"/>
             <waitForPageLoad time="30" stepKey="waitProductPageLoaded"/>
             <comment userInput="Config advanced inventory" stepKey="configAdvancedInventoryComment"/>
-            <click selector="{{AdminProductSourcesSection.advancedInventory}}" stepKey="goToAdvancedInventory"/>
-            <waitForPageLoad time="30" stepKey="waitAdvancedInventoryLoaded"/>
+            <click selector="{{AdminProductFormSection.advancedInventoryLink}}" stepKey="goToAdvancedInventory"/>
+            <waitForElement selector="{{AdminAdvancedInventorySection.outOfStockThresholdUseDefault}}" stepKey="waitTillOutOfStockThresholdIsFound"/>
             <uncheckOption selector="{{AdminAdvancedInventorySection.outOfStockThresholdUseDefault}}" stepKey="clickOnUseDefaultMinQty"/>
             <fillField selector="{{AdminAdvancedInventorySection.outOfStockThreshold}}" userInput="-50" stepKey="setNegativeOutOfStockTreshold"/>
             <uncheckOption selector="{{AdminAdvancedInventorySection.backordersUseDefault}}" stepKey="clickOnUseDefaultBackorders"/>

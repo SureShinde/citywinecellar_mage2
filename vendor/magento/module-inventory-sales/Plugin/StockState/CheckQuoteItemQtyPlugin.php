@@ -118,12 +118,12 @@ class CheckQuoteItemQtyPlugin
         $result = $this->objectFactory->create();
         $result->setHasError(false);
 
-        $qty = $this->getNumber($itemQty);
+        $qty = max($this->getNumber($itemQty), $this->getNumber($qtyToCheck));
 
         $skus = $this->getSkusByProductIds->execute([$productId]);
         $productSku = $skus[$productId];
 
-        $websiteCode = $this->storeManager->getWebsite()->getCode();
+        $websiteCode = $this->storeManager->getWebsite($scopeId)->getCode();
         $stock = $this->stockResolver->execute(SalesChannelInterface::TYPE_WEBSITE, $websiteCode);
         $stockId = $stock->getStockId();
 
@@ -133,15 +133,15 @@ class CheckQuoteItemQtyPlugin
             /** @var ProductSalabilityError $error */
             foreach ($isSalableResult->getErrors() as $error) {
                 $result->setHasError(true)->setMessage($error->getMessage())->setQuoteMessage($error->getMessage())
-                       ->setQuoteMessageIndex('qty');
+                    ->setQuoteMessageIndex('qty');
             }
-        }
-
-        $productSalableResult = $this->backOrderNotifyCustomerCondition->execute($productSku, (int)$stockId, $qty);
-        if ($productSalableResult->getErrors()) {
-            /** @var ProductSalabilityError $error */
-            foreach ($productSalableResult->getErrors() as $error) {
-                $result->setMessage($error->getMessage());
+        } else {
+            $productSalableResult = $this->backOrderNotifyCustomerCondition->execute($productSku, (int)$stockId, $qty);
+            if ($productSalableResult->getErrors()) {
+                /** @var ProductSalabilityError $error */
+                foreach ($productSalableResult->getErrors() as $error) {
+                    $result->setMessage($error->getMessage());
+                }
             }
         }
 

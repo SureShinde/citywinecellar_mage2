@@ -31,7 +31,6 @@ use Psr\Log\LoggerInterface;
 /**
  * Order update from pending status
  *
- * @package Klarna\Ordermanagement\Controller\Api
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Notification extends Action implements CsrfAwareActionInterface
@@ -66,8 +65,6 @@ class Notification extends Action implements CsrfAwareActionInterface
     private $dataObjectFactory;
 
     /**
-     * Notification constructor.
-     *
      * @param Context             $context
      * @param LoggerInterface     $logger
      * @param JsonFactory         $resultJsonFactory
@@ -146,6 +143,7 @@ class Notification extends Action implements CsrfAwareActionInterface
                     $payment->setNotificationResult(true);
                     $payment->setIsFraudDetected(true);
                     $payment->deny(false);
+                    $this->cancelOrderInKlarna($checkoutId);
                     break;
                 case Ordermanagement::ORDER_NOTIFICATION_FRAUD_ACCEPTED:
                     $payment->setNotificationResult(true);
@@ -216,5 +214,21 @@ class Notification extends Action implements CsrfAwareActionInterface
     public function validateForCsrf(RequestInterface $request): ?bool
     {
         return true;
+    }
+
+    /**
+     * Dispatches event to cancel the order in Klarna's systems
+     */
+    private function cancelOrderInKlarna($checkoutId)
+    {
+        $this->_eventManager->dispatch(
+            'klarna_cancel_order',
+            [
+                'klarna_order_id'   => $checkoutId,
+                'method_code'       => $this->configHelper::KP_METHOD_CODE,
+                'controller_action' => $this,
+                'reason'            => 'Order rejected because of suspected fraud'
+            ]
+        );
     }
 }

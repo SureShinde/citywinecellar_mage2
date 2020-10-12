@@ -17,36 +17,41 @@
  * @copyright  Copyright (c) 2017 Skeeller srl (http://www.magespecialist.it)
  * @license    http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
  */
+declare(strict_types=1);
 
 namespace MSP\ReCaptcha\Model;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Phrase;
 use Magento\Store\Model\ScopeInterface;
-use MSP\ReCaptcha\Model\Config\Source\Type;
 
 class Config
 {
-    const XML_PATH_ENABLED_BACKEND = 'msp_securitysuite_recaptcha/backend/enabled';
-    const XML_PATH_ENABLED_FRONTEND = 'msp_securitysuite_recaptcha/frontend/enabled';
+    public const XML_PATH_ENABLED_BACKEND = 'msp_securitysuite_recaptcha/backend/enabled';
+    public const XML_PATH_ENABLED_FRONTEND = 'msp_securitysuite_recaptcha/frontend/enabled';
 
-    const XML_PATH_TYPE_FRONTEND = 'msp_securitysuite_recaptcha/frontend/type';
-    const XML_PATH_LANGUAGE_CODE = 'msp_securitysuite_recaptcha/frontend/lang';
+    public const XML_PATH_TYPE = 'msp_securitysuite_recaptcha/general/type';
+    public const XML_PATH_LANGUAGE_CODE = 'msp_securitysuite_recaptcha/frontend/lang';
 
-    const XML_PATH_POSITION_FRONTEND = 'msp_securitysuite_recaptcha/frontend/position';
+    public const XML_PATH_POSITION_FRONTEND = 'msp_securitysuite_recaptcha/frontend/position';
 
-    const XML_PATH_SIZE_BACKEND = 'msp_securitysuite_recaptcha/backend/size';
-    const XML_PATH_SIZE_FRONTEND = 'msp_securitysuite_recaptcha/frontend/size';
-    const XML_PATH_THEME_BACKEND = 'msp_securitysuite_recaptcha/backend/theme';
-    const XML_PATH_THEME_FRONTEND = 'msp_securitysuite_recaptcha/frontend/theme';
+    public const XML_PATH_SIZE_MIN_SCORE_BACKEND = 'msp_securitysuite_recaptcha/backend/min_score';
+    public const XML_PATH_SIZE_MIN_SCORE_FRONTEND = 'msp_securitysuite_recaptcha/frontend/min_score';
+    public const XML_PATH_SIZE_BACKEND = 'msp_securitysuite_recaptcha/backend/size';
+    public const XML_PATH_SIZE_FRONTEND = 'msp_securitysuite_recaptcha/frontend/size';
+    public const XML_PATH_THEME_BACKEND = 'msp_securitysuite_recaptcha/backend/theme';
+    public const XML_PATH_THEME_FRONTEND = 'msp_securitysuite_recaptcha/frontend/theme';
 
-    const XML_PATH_PUBLIC_KEY = 'msp_securitysuite_recaptcha/general/public_key';
-    const XML_PATH_PRIVATE_KEY = 'msp_securitysuite_recaptcha/general/private_key';
+    public const XML_PATH_PUBLIC_KEY = 'msp_securitysuite_recaptcha/general/public_key';
+    public const XML_PATH_PRIVATE_KEY = 'msp_securitysuite_recaptcha/general/private_key';
 
-    const XML_PATH_ENABLED_FRONTEND_LOGIN = 'msp_securitysuite_recaptcha/frontend/enabled_login';
-    const XML_PATH_ENABLED_FRONTEND_FORGOT = 'msp_securitysuite_recaptcha/frontend/enabled_forgot';
-    const XML_PATH_ENABLED_FRONTEND_CONTACT = 'msp_securitysuite_recaptcha/frontend/enabled_contact';
-    const XML_PATH_ENABLED_FRONTEND_CREATE = 'msp_securitysuite_recaptcha/frontend/enabled_create';
+    public const XML_PATH_ENABLED_FRONTEND_LOGIN = 'msp_securitysuite_recaptcha/frontend/enabled_login';
+    public const XML_PATH_ENABLED_FRONTEND_FORGOT = 'msp_securitysuite_recaptcha/frontend/enabled_forgot';
+    public const XML_PATH_ENABLED_FRONTEND_CONTACT = 'msp_securitysuite_recaptcha/frontend/enabled_contact';
+    public const XML_PATH_ENABLED_FRONTEND_CREATE = 'msp_securitysuite_recaptcha/frontend/enabled_create';
+    public const XML_PATH_ENABLED_FRONTEND_REVIEW = 'msp_securitysuite_recaptcha/frontend/enabled_review';
+    public const XML_PATH_ENABLED_FRONTEND_NEWSLETTER = 'msp_securitysuite_recaptcha/frontend/enabled_newsletter';
+    public const XML_PATH_ENABLED_FRONTEND_SENDFRIEND = 'msp_securitysuite_recaptcha/frontend/enabled_sendfriend';
 
     /**
      * @var ScopeConfigInterface
@@ -54,7 +59,6 @@ class Config
     private $scopeConfig;
 
     /**
-     * Config constructor.
      * @param ScopeConfigInterface $scopeConfig
      */
     public function __construct(ScopeConfigInterface $scopeConfig)
@@ -68,7 +72,11 @@ class Config
      */
     public function getErrorDescription()
     {
-        return __('Incorrect reCAPTCHA');
+        if ($this->getType() === 'recaptcha_v3') {
+            return __('You cannot proceed with such operation, your reCaptcha reputation is too low.');
+        }
+
+        return __('Incorrect ReCaptcha validation');
     }
 
     /**
@@ -77,7 +85,7 @@ class Config
      */
     public function getPublicKey()
     {
-        return trim($this->scopeConfig->getValue(static::XML_PATH_PUBLIC_KEY));
+        return trim((string) $this->scopeConfig->getValue(static::XML_PATH_PUBLIC_KEY, ScopeInterface::SCOPE_WEBSITE));
     }
 
     /**
@@ -86,7 +94,7 @@ class Config
      */
     public function getPrivateKey()
     {
-        return trim($this->scopeConfig->getValue(static::XML_PATH_PRIVATE_KEY));
+        return trim((string) $this->scopeConfig->getValue(static::XML_PATH_PRIVATE_KEY, ScopeInterface::SCOPE_WEBSITE));
     }
 
     /**
@@ -112,7 +120,10 @@ class Config
             return false;
         }
 
-        return (bool) $this->scopeConfig->getValue(static::XML_PATH_ENABLED_FRONTEND);
+        return (bool) $this->scopeConfig->getValue(
+            static::XML_PATH_ENABLED_FRONTEND,
+            ScopeInterface::SCOPE_WEBSITE
+        );
     }
 
     /**
@@ -125,7 +136,10 @@ class Config
             return false;
         }
 
-        return (bool) $this->scopeConfig->getValue(static::XML_PATH_ENABLED_FRONTEND_LOGIN);
+        return (bool) $this->scopeConfig->getValue(
+            static::XML_PATH_ENABLED_FRONTEND_LOGIN,
+            ScopeInterface::SCOPE_WEBSITE
+        );
     }
 
     /**
@@ -138,7 +152,10 @@ class Config
             return false;
         }
 
-        return (bool) $this->scopeConfig->getValue(static::XML_PATH_ENABLED_FRONTEND_FORGOT);
+        return (bool) $this->scopeConfig->getValue(
+            static::XML_PATH_ENABLED_FRONTEND_FORGOT,
+            ScopeInterface::SCOPE_WEBSITE
+        );
     }
 
     /**
@@ -151,7 +168,10 @@ class Config
             return false;
         }
 
-        return (bool) $this->scopeConfig->getValue(static::XML_PATH_ENABLED_FRONTEND_CONTACT);
+        return (bool) $this->scopeConfig->getValue(
+            static::XML_PATH_ENABLED_FRONTEND_CONTACT,
+            ScopeInterface::SCOPE_WEBSITE
+        );
     }
 
     /**
@@ -164,7 +184,66 @@ class Config
             return false;
         }
 
-        return (bool) $this->scopeConfig->getValue(static::XML_PATH_ENABLED_FRONTEND_CREATE);
+        return (bool) $this->scopeConfig->getValue(
+            static::XML_PATH_ENABLED_FRONTEND_CREATE,
+            ScopeInterface::SCOPE_WEBSITE
+        );
+    }
+
+    /**
+     * Return true if enabled on frontend review
+     * @return bool
+     */
+    public function isEnabledFrontendReview()
+    {
+        if (!$this->isEnabledFrontend()) {
+            return false;
+        }
+
+        return (bool) $this->scopeConfig->getValue(
+            static::XML_PATH_ENABLED_FRONTEND_REVIEW,
+            ScopeInterface::SCOPE_WEBSITE
+        );
+    }
+
+    /**
+     * Return true if enabled on frontend newsletter
+     * @return bool
+     */
+    public function isEnabledFrontendNewsletter()
+    {
+        if (!$this->isEnabledFrontend()) {
+            return false;
+        }
+
+        return (bool) $this->scopeConfig->getValue(
+            static::XML_PATH_ENABLED_FRONTEND_NEWSLETTER,
+            ScopeInterface::SCOPE_WEBSITE
+        );
+    }
+
+    /**
+     * Return true if enabled on frontend send to friend
+     * @return bool
+     */
+    public function isEnabledFrontendSendFriend()
+    {
+        if (!$this->isEnabledFrontend()) {
+            return false;
+        }
+
+        return (bool) $this->scopeConfig->getValue(
+            static::XML_PATH_ENABLED_FRONTEND_SENDFRIEND,
+            ScopeInterface::SCOPE_WEBSITE
+        );
+    }
+
+    /**
+     * @return bool
+     */
+    public function isInvisibleRecaptcha(): bool
+    {
+        return in_array($this->getType(), ['invisible', 'recaptcha_v3'], true);
     }
 
     /**
@@ -173,11 +252,14 @@ class Config
      */
     public function getFrontendSize()
     {
-        if ($this->getFrontendType() == Type::TYPE_INVISIBLE) {
+        if ($this->isInvisibleRecaptcha()) {
             return 'invisible';
         }
 
-        return $this->scopeConfig->getValue(static::XML_PATH_SIZE_FRONTEND);
+        return $this->scopeConfig->getValue(
+            static::XML_PATH_SIZE_FRONTEND,
+            ScopeInterface::SCOPE_WEBSITE
+        );
     }
 
     /**
@@ -186,6 +268,10 @@ class Config
      */
     public function getBackendSize()
     {
+        if ($this->isInvisibleRecaptcha()) {
+            return 'invisible';
+        }
+
         return $this->scopeConfig->getValue(static::XML_PATH_SIZE_BACKEND);
     }
 
@@ -195,11 +281,14 @@ class Config
      */
     public function getFrontendTheme()
     {
-        if ($this->getFrontendType() == Type::TYPE_INVISIBLE) {
+        if ($this->isInvisibleRecaptcha()) {
             return null;
         }
 
-        return $this->scopeConfig->getValue(static::XML_PATH_THEME_FRONTEND);
+        return $this->scopeConfig->getValue(
+            static::XML_PATH_THEME_FRONTEND,
+            ScopeInterface::SCOPE_WEBSITE
+        );
     }
 
     /**
@@ -217,20 +306,34 @@ class Config
      */
     public function getFrontendPosition()
     {
-        if ($this->getFrontendType() != Type::TYPE_INVISIBLE) {
+        if (!$this->isInvisibleRecaptcha()) {
             return null;
         }
 
-        return $this->scopeConfig->getValue(static::XML_PATH_POSITION_FRONTEND);
+        return $this->scopeConfig->getValue(
+            static::XML_PATH_POSITION_FRONTEND,
+            ScopeInterface::SCOPE_WEBSITE
+        );
     }
 
     /**
-     * Get data size
+     * Get frontend type
      * @return string
+     * @deprecated since 1.6.0
+     * @see getType
      */
     public function getFrontendType()
     {
-        return $this->scopeConfig->getValue(static::XML_PATH_TYPE_FRONTEND);
+        return $this->scopeConfig->getValue(static::XML_PATH_TYPE);
+    }
+
+    /**
+     * Get reCaptcha type
+     * @return string
+     */
+    public function getType(): string
+    {
+        return (string) $this->scopeConfig->getValue(static::XML_PATH_TYPE);
     }
 
     /**
@@ -239,6 +342,32 @@ class Config
      */
     public function getLanguageCode()
     {
-        return $this->scopeConfig->getValue(static::XML_PATH_LANGUAGE_CODE, ScopeInterface::SCOPE_STORE);
+        return $this->scopeConfig->getValue(
+            static::XML_PATH_LANGUAGE_CODE,
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    /**
+     * Get minimum frontend score
+     * @return float
+     */
+    public function getMinFrontendScore(): float
+    {
+        return min(1.0, max(0.1, (float) $this->scopeConfig->getValue(
+            static::XML_PATH_SIZE_MIN_SCORE_FRONTEND,
+            ScopeInterface::SCOPE_WEBSITE
+        )));
+    }
+
+    /**
+     * Get minimum frontend score
+     * @return float
+     */
+    public function getMinBackendScore(): float
+    {
+        return min(1.0, max(0.1, (float) $this->scopeConfig->getValue(
+            static::XML_PATH_SIZE_MIN_SCORE_BACKEND
+        )));
     }
 }

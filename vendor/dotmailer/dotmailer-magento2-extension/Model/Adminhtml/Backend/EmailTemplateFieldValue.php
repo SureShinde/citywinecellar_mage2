@@ -69,6 +69,7 @@ class EmailTemplateFieldValue extends \Magento\Framework\App\Config\Value
 
     /**
      * @return \Magento\Framework\App\Config\Value
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function beforeDelete()
     {
@@ -83,18 +84,17 @@ class EmailTemplateFieldValue extends \Magento\Framework\App\Config\Value
 
     /**
      * @return \Magento\Framework\App\Config\Value
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function beforeSave()
     {
-        if (! $this->isValueChanged()) {
+        if (!$this->isValueChanged()) {
             return parent::beforeSave();
         }
-
         $dotTemplate = $this->templateFactory->create();
         $templateConfigId = $this->getField();
         $scope = $this->getScope();
         $scopeId = $this->getScopeId();
-
         //email template mapped
         if ($this->getValue()) {
             $templateConfigPath = $dotTemplate->templateConfigMapping[$templateConfigId];
@@ -114,20 +114,43 @@ class EmailTemplateFieldValue extends \Magento\Framework\App\Config\Value
                 );
             }
         } else {
-            //remove the config for core email template
-            $this->helper->deleteConfigData(
-                $dotTemplate->templateConfigMapping[$templateConfigId],
-                $scope,
-                $scopeId
-            );
-            //remove the config for dotmailer template
-            $this->helper->deleteConfigData(
-                $dotTemplate->templateConfigIdToDotmailerConfigPath[$templateConfigId],
-                $scope,
-                $scopeId
-            );
+            if (!$this->isFirstTimeMapped($dotTemplate, $templateConfigId, $scope, $scopeId) && $this->getOldValue()) {
+                //remove the config for core email template
+                $this->helper->deleteConfigData(
+                    $dotTemplate->templateConfigMapping[$templateConfigId],
+                    $scope,
+                    $scopeId
+                );
+                //remove the config for dotmailer template
+                $this->helper->deleteConfigData(
+                    $dotTemplate->templateConfigIdToDotmailerConfigPath[$templateConfigId],
+                    $scope,
+                    $scopeId
+                );
+            }
+        }
+        return parent::beforeSave();
+    }
+
+    /**
+     * @param $dotTemplate
+     * @param $templateConfigId
+     * @param $scope
+     * @param $scopeId
+     * @return bool
+     */
+    private function isFirstTimeMapped($dotTemplate, $templateConfigId, $scope, $scopeId)
+    {
+        $configValue =  $this->helper->getConfigValue(
+            $dotTemplate->templateConfigMapping[$templateConfigId],
+            $scope,
+            $scopeId
+        );
+
+        if (is_numeric($configValue) && !empty($configValue)) {
+            return true;
         }
 
-        return parent::beforeSave();
+        return false;
     }
 }

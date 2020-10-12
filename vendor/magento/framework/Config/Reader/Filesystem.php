@@ -164,7 +164,6 @@ class Filesystem implements \Magento\Framework\Config\ReaderInterface
         if ($this->validationState->isValidationRequired()) {
             $errors = [];
             if ($configMerger && !$configMerger->validate($this->_schemaFile, $errors)) {
-		$errors[] = $key;
                 $message = "Invalid Document \n";
                 throw new \Magento\Framework\Exception\LocalizedException(
                     new \Magento\Framework\Phrase($message . implode("\n", $errors))

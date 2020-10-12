@@ -1,4 +1,40 @@
 
+5.3.0 / 2020-02-11
+==================
+
+  * MAGE-1184 Update styling in the admin configuration
+  * MAGE-1448 Define sensitive and environment specific fields
+  * MAGE-1602 Fix error caused by capturing or refunding orders with a deleted product
+  * MAGE-1624 Code cleanup for new Magento coding standards
+  * MAGE-1640 Update Merchant Portal URLs
+  * MAGE-1707 Add support for Oceania endpoint
+  * MAGE-1808 Removing the merchant url entry from the invoice pdf
+
+5.2.4 / 2019-11-04
+==================
+
+  * MAGE-1481 Clear organizationName if B2B is disabled
+  * MAGE-1504 Fix bug with passing the wrong address object
+
+5.2.1 / 2019-08-02
+==================
+
+  * MAGE-1175 Remove table and column migration from declarative schema
+  * Some misc checkstyle cleanup
+  * Update PHP versions supported
+
+5.2.0 / 2019-07-02
+==================
+
+  * MAGE-484 Converted to declarative database schema
+
+5.1.1 / 2019-06-10
+==================
+
+  * MAGE-58 Update PHP version supported in composer.json to match Magento
+  * MAGE-250 Change coding standards to use Marketplace version
+  * MAGE-315 Add translations
+
 5.1.0 / 2018-12-06
 ==================
 

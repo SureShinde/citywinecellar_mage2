@@ -12,15 +12,16 @@
         <annotations>
             <stories value="Add Downloadable Product"/>
             <title value="Downloadable Product created on Single stock mode by Admin user"/>
-            <description value="Downloadable Product created on Single stock mode by Admin user"/>
-            <testCaseId value="MSI-1748"/>
+            <description value="Downloadable Product created on Single stock mode by Admin user."/>
+            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/912246/scenarios/1698360"/>
             <severity value="MAJOR"/>
             <group value="msi"/>
             <group value="single_mode"/>
         </annotations>
-        
+
         <before>
-            <magentoCLI command="config:set cataloginventory/item_options/manage_stock 1" stepKey="enableStockManagement1"/>
+            <magentoCLI stepKey="addDownloadableDomain" command="downloadable:domains:add static.magento.com example.com"/>
+            <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="enableStockManagement1"/>
 
             <createData entity="SimpleSubCategory" stepKey="simpleCategory1"/>
             <createData entity="DownloadableMsiProduct" stepKey="downloadableProduct1">
@@ -30,6 +31,9 @@
             <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
         </before>
         <after>
+            <magentoCLI stepKey="removeDownloadableDomain" command="downloadable:domains:remove static.magento.com example.com"/>
+            <deleteData createDataKey="simpleCategory1" stepKey="deleteCategory"/>
+            <deleteData createDataKey="downloadableProduct1" stepKey="deleteProduct"/>
             <actionGroup ref="logout" stepKey="logoutOfAdmin1"/>
         </after>
 

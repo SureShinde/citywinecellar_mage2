@@ -9,7 +9,7 @@ $items = $block->getWishlistItems();
 $priceHelper = $block->priceHelper;
 ?>
 <?php if ($items) : ?>
-    <?php $dynamicStyle = $block->helper->getDynamicStyles(); ?>
+    <?php $dynamicStyle = $block->getDynamicStyles(); ?>
     <style>
         .product-name{
             color: <?= $block->escapeHtml($dynamicStyle['nameColor']);?>;
@@ -33,7 +33,7 @@ $priceHelper = $block->priceHelper;
             text-decoration: underline;
         <?php endif; ?>
         }
-        .proudct-url{
+        .product-url{
             color: <?= $block->escapeHtml($dynamicStyle['urlColor']);?>;
             font-size: <?= $block->escapeHtml($dynamicStyle['urlFontSize']);?>;
         <?php if (in_array('bold', $dynamicStyle['linkStyle'])) : ?>
@@ -95,7 +95,7 @@ $priceHelper = $block->priceHelper;
                        true
                    )
                ) ?>" class="product-image">
-                <?= $block->getImage($_product, 'category_page_grid')->toHtml(); ?>
+                <img src="<?= $block->getProductImageUrl($_product, 'category_page_grid') ?>" alt="<?= $_product->getName() ?>">
             </a>
             <div class="product-name" align="center"><b><?= $block->escapeHtml(
                 mb_substr(
@@ -106,7 +106,7 @@ $priceHelper = $block->priceHelper;
             ); ?></b></div>
             <div class="product-price" align="center"><?= $block->escapeHtml($total); ?></div>
             <div align="center">
-                <a class="proudct-url" href="<?= $block->escapeHtml($_product->getProductUrl()); ?>">
+                <a class="product-url" href="<?= $block->escapeHtml($_product->getProductUrl()); ?>">
                     <?php if ($urlText = $block->getTextForUrl($_product->getStoreId())) : ?>
                         <?= $block->escapeHtml($urlText); ?>
                     <?php else : ?>

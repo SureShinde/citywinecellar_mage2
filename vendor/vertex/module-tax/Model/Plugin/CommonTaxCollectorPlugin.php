@@ -14,12 +14,12 @@ use Magento\Framework\Api\SearchCriteriaBuilderFactory;
 use Magento\Quote\Api\Data\ShippingAssignmentInterface;
 use Magento\Quote\Model\Quote\Address;
 use Magento\Quote\Model\Quote\Item\AbstractItem;
-use Magento\Tax\Api\Data\QuoteDetailsItemExtensionFactory;
 use Magento\Tax\Api\Data\QuoteDetailsItemExtensionInterface;
 use Magento\Tax\Api\Data\QuoteDetailsItemInterface;
 use Magento\Tax\Api\Data\QuoteDetailsItemInterfaceFactory;
 use Magento\Tax\Api\Data\TaxClassKeyInterface;
 use Magento\Tax\Model\Sales\Total\Quote\CommonTaxCollector;
+use Vertex\Tax\Model\Api\Utility\IsVirtualLineItemDeterminer;
 use Vertex\Tax\Model\Config;
 use Vertex\Tax\Model\Repository\TaxClassNameRepository;
 
@@ -34,34 +34,34 @@ class CommonTaxCollectorPlugin
     /** @var SearchCriteriaBuilderFactory */
     private $criteriaBuilderFactory;
 
-    /** @var QuoteDetailsItemExtensionFactory */
-    private $extensionFactory;
-
     /** @var ProductRepositoryInterface */
     private $productRepository;
 
     /** @var TaxClassNameRepository */
     private $taxClassNameRepository;
 
+    /** @var IsVirtualLineItemDeterminer */
+    private $virtualLineDeterminer;
+
     /**
-     * @param QuoteDetailsItemExtensionFactory $extensionFactory
      * @param ProductRepositoryInterface $productRepository
      * @param SearchCriteriaBuilderFactory $criteriaBuilderFactory
      * @param TaxClassNameRepository $taxClassNameRepository
+     * @param IsVirtualLineItemDeterminer $virtualLineDeterminer
      * @param Config $config
      */
     public function __construct(
-        QuoteDetailsItemExtensionFactory $extensionFactory,
         ProductRepositoryInterface $productRepository,
         SearchCriteriaBuilderFactory $criteriaBuilderFactory,
         TaxClassNameRepository $taxClassNameRepository,
+        IsVirtualLineItemDeterminer $virtualLineDeterminer,
         Config $config
     ) {
-        $this->extensionFactory = $extensionFactory;
         $this->config = $config;
         $this->productRepository = $productRepository;
         $this->criteriaBuilderFactory = $criteriaBuilderFactory;
         $this->taxClassNameRepository = $taxClassNameRepository;
+        $this->virtualLineDeterminer = $virtualLineDeterminer;
     }
 
     /**
@@ -87,20 +87,24 @@ class CommonTaxCollectorPlugin
             return $items;
         }
 
-        /** @var QuoteDetailsItemInterface[] $processItems indexed by product sku */
-        $processItems = array_reduce(
+        $result = array_reduce(
             $items,
-            function ($carry, QuoteDetailsItemInterface $item) {
+            static function ($result, QuoteDetailsItemInterface $item) {
                 if ($item->getExtensionAttributes() && $item->getExtensionAttributes()->getVertexIsConfigurable()) {
-                    $carry[strtoupper($item->getExtensionAttributes()->getVertexProductCode())] = $item;
+                    $code = strtoupper($item->getExtensionAttributes()->getVertexProductCode());
+                    $result['processItems'][$code] = $item;
+                    $result['productCodes'][] = $code;
                 }
-                return $carry;
+                return $result;
             },
-            []
+            ['processItems' => [], 'productCodes' => []]
         );
 
+        /** @var QuoteDetailsItemInterface[] $processItems indexed by product sku */
+        $processItems = $result['processItems'];
+
         /** @var string[] $productCodes List of SKUs we want to know the tax classes of */
-        $productCodes = array_keys($processItems);
+        $productCodes = $result['productCodes'];
 
         /** @var SearchCriteriaBuilder $criteriaBuilder */
         $criteriaBuilder = $this->criteriaBuilderFactory->create();
@@ -169,7 +173,7 @@ class CommonTaxCollectorPlugin
             return null;
         }
 
-        $extensionAttributes = $this->getExtensionAttributes($itemDataObject);
+        $extensionAttributes = $itemDataObject->getExtensionAttributes();
         $extensionAttributes->setVertexProductCode($shippingAssignment->getShipping()->getMethod());
 
         return $itemDataObject;
@@ -201,7 +205,7 @@ class CommonTaxCollectorPlugin
     }
 
     /**
-     * Add product SKU to a QuoteDetailsItem
+     * Add Vertex data to QuoteDetailsItems
      *
      * @see CommonTaxCollector::mapItem()
      * @param CommonTaxCollector $subject
@@ -230,9 +234,19 @@ class CommonTaxCollectorPlugin
         $taxData = call_user_func_array($super, $arguments);
 
         if ($this->config->isVertexActive($item->getStoreId())) {
-            $extensionData = $this->getExtensionAttributes($taxData);
+            $extensionData = $taxData->getExtensionAttributes();
             $extensionData->setVertexProductCode($item->getProduct()->getSku());
             $extensionData->setVertexIsConfigurable($item->getProduct()->getTypeId() === 'configurable');
+            $extensionData->setStoreId($item->getStore()->getStoreId());
+            $extensionData->setProductId($item->getProduct()->getId());
+            $extensionData->setQuoteItemId($item->getId());
+            $extensionData->setCustomerId($item->getQuote()->getCustomerId());
+            $extensionData->setIsVirtual($this->virtualLineDeterminer->isCartItemVirtual($item));
+
+            if ($quote = $item->getQuote()) {
+                $extensionData->setQuoteId($quote->getId());
+                $extensionData->setCustomerId($quote->getCustomerId());
+            }
         }
 
         return $taxData;
@@ -279,7 +293,7 @@ class CommonTaxCollectorPlugin
             $gwPrefix = $this->config->getGiftWrappingItemCodePrefix($store);
 
             // Set the Product Code
-            $extensionData = $this->getExtensionAttributes($quoteItem);
+            $extensionData = $quoteItem->getExtensionAttributes();
             $extensionData->setVertexProductCode($gwPrefix.$productSku);
 
             // Change the Tax Class ID
@@ -291,25 +305,6 @@ class CommonTaxCollectorPlugin
         }
 
         return $quoteItems;
-    }
-
-    /**
-     * Retrieve an extension attribute object for the QuoteDetailsItem
-     *
-     * @param QuoteDetailsItemInterface $taxData
-     * @return QuoteDetailsItemExtensionInterface
-     */
-    private function getExtensionAttributes(QuoteDetailsItemInterface $taxData)
-    {
-        $extensionAttributes = $taxData->getExtensionAttributes();
-        if ($extensionAttributes instanceof QuoteDetailsItemExtensionInterface) {
-            return $extensionAttributes;
-        }
-
-        $extensionAttributes = $this->extensionFactory->create();
-        $taxData->setExtensionAttributes($extensionAttributes);
-
-        return $extensionAttributes;
     }
 
     /**

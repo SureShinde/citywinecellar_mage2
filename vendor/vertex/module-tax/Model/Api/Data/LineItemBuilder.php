@@ -6,11 +6,15 @@
 
 namespace Vertex\Tax\Model\Api\Data;
 
+use Magento\Framework\Stdlib\StringUtils;
 use Magento\Tax\Api\Data\QuoteDetailsItemInterface;
 use Magento\Tax\Api\Data\TaxClassKeyInterface;
+use Vertex\Data\CustomerInterface;
 use Vertex\Data\LineItemInterface;
 use Vertex\Data\LineItemInterfaceFactory;
-use Vertex\Tax\Model\Config;
+use Vertex\Exception\ConfigurationException;
+use Vertex\Tax\Model\Api\Utility\MapperFactoryProxy;
+use Vertex\Tax\Model\Api\Utility\PriceForTax;
 use Vertex\Tax\Model\Repository\TaxClassNameRepository;
 
 /**
@@ -21,19 +25,45 @@ class LineItemBuilder
     /** @var LineItemInterfaceFactory */
     private $factory;
 
+    /** @var FlexFieldBuilder */
+    private $flexFieldBuilder;
+
     /** @var TaxClassNameRepository */
     private $taxClassNameRepository;
+
+    /** @var StringUtils */
+    private $stringUtilities;
+
+    /** @var MapperFactoryProxy */
+    private $mapperFactory;
+
+    /**
+     * @var PriceForTax
+     */
+    private $priceForTaxCalculation;
 
     /**
      * @param TaxClassNameRepository $taxClassNameRepository
      * @param LineItemInterfaceFactory $factory
+     * @param \Vertex\Tax\Model\Api\Data\FlexFieldBuilder $flexFieldBuilder
+     * @param StringUtils $stringUtil
+     * @param MapperFactoryProxy $mapperFactory
+     * @param PriceForTax $priceForTaxCalculation
      */
     public function __construct(
         TaxClassNameRepository $taxClassNameRepository,
-        LineItemInterfaceFactory $factory
+        LineItemInterfaceFactory $factory,
+        FlexFieldBuilder $flexFieldBuilder,
+        StringUtils $stringUtil,
+        MapperFactoryProxy $mapperFactory,
+        PriceForTax $priceForTaxCalculation
     ) {
         $this->taxClassNameRepository = $taxClassNameRepository;
         $this->factory = $factory;
+        $this->flexFieldBuilder = $flexFieldBuilder;
+        $this->stringUtilities = $stringUtil;
+        $this->mapperFactory = $mapperFactory;
+        $this->priceForTaxCalculation = $priceForTaxCalculation;
     }
 
     /**
@@ -41,26 +71,42 @@ class LineItemBuilder
      *
      * @param QuoteDetailsItemInterface $item
      * @param int|null $qtyOverride
+     * @param null $scopeCode
+     * @param CustomerInterface|null $customer
      * @return LineItemInterface
+     * @throws ConfigurationException
      */
-    public function buildFromQuoteDetailsItem(QuoteDetailsItemInterface $item, $qtyOverride = null)
-    {
+    public function buildFromQuoteDetailsItem(
+        QuoteDetailsItemInterface $item,
+        $qtyOverride = null,
+        $scopeCode = null,
+        CustomerInterface $customer = null
+    ) {
         $lineItem = $this->createLineItem();
+        $lineMapper = $this->mapperFactory->getForClass(LineItemInterface::class, $scopeCode);
 
         $sku = $item->getExtensionAttributes() !== null
             ? $item->getExtensionAttributes()->getVertexProductCode()
             : null;
 
         if ($sku !== null) {
-            $lineItem->setProductCode(substr($sku, 0, Config::MAX_CHAR_PRODUCT_CODE_ALLOWED));
+            $lineItem->setProductCode(
+                $this->stringUtilities->substr($sku, 0, $lineMapper->getProductCodeMaxLength())
+            );
+        }
+
+        if ($customer) {
+            $lineItem->setCustomer($customer);
         }
 
         $taxClassId = $item->getTaxClassKey() && $item->getTaxClassKey()->getType() === TaxClassKeyInterface::TYPE_ID
             ? $item->getTaxClassKey()->getValue()
             : $item->getTaxClassId();
 
+        $taxClassName = $this->taxClassNameRepository->getById($taxClassId);
+
         $lineItem->setProductClass(
-            $this->taxClassNameRepository->getById($taxClassId)
+            $this->stringUtilities->substr($taxClassName, 0, $lineMapper->getProductTaxClassNameMaxLength())
         );
 
         $quantity = (float)($qtyOverride ?: $item->getQuantity());
@@ -68,14 +114,19 @@ class LineItemBuilder
         $lineItem->setQuantity($quantity);
         $lineItem->setUnitPrice($item->getUnitPrice());
 
-        $rowTotal = $item->getUnitPrice() * $quantity;
+        $unitPrice = $item->getUnitPrice();
+        $priceForTax = $this->priceForTaxCalculation
+            ->getPriceForTaxCalculationFromQuoteItem($item, $unitPrice);
+
+        $rowTotal = $priceForTax * $quantity;
 
         $lineItem->setExtendedPrice($rowTotal - $item->getDiscountAmount());
         $lineItem->setLineItemId($item->getCode());
 
+        $lineItem->setFlexibleFields($this->flexFieldBuilder->buildAllFromQuoteDetailsItem($item));
+
         return $lineItem;
     }
-
 
     /**
      * Create a {@see LineItemInterface}

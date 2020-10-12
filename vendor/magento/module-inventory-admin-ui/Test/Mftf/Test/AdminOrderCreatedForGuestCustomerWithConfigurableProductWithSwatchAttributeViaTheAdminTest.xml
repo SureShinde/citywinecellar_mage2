@@ -13,14 +13,14 @@
             <stories value="Add Order"/>
             <title value="Create an Order for a Guest Customer with a Configurable Product with Visual Swatch Attributes via the Admin."/>
             <description value="You should be able to place an Order using a Configurable Product with Visual Swatch Attributes that is assigned to a Source with a Stock."/>
-            <testCaseId value="MSI-1305"/>
+            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/419535/scenarios/1432527"/>
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
         </annotations>
-        
+
         <before>
-            <magentoCLI command="config:set cataloginventory/item_options/manage_stock 1" stepKey="magentoCLI1"/>
+            <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="magentoCLI1"/>
 
             <createData entity="BasicMsiStockWithMainWebsite1" stepKey="createStock1"/>
             <createData entity="FullSource1" stepKey="createSource1"/>
@@ -157,7 +157,7 @@
         <click selector="#order-search .action-add" stepKey="clickOnAddSelectedProductsToOrder1"/>
         <waitForPageLoad time="10" stepKey="waitForPageLoad19"/>
 
-        <actionGroup ref="fillOrderCustomerInformation" stepKey="fillCustomerAddress">
+        <actionGroup ref="FillOrderCustomerInformationActionGroup" stepKey="fillCustomerAddress">
             <argument name="customer" value="MsiCustomer1"/>
             <argument name="address" value="US_Address_TX"/>
         </actionGroup>
@@ -181,7 +181,7 @@
 
         <grabTextFrom selector=".page-title" stepKey="grabTheOrderId1"/>
 
-        <actionGroup ref="verifyBasicOrderInformation" stepKey="verifyOrderInformation">
+        <actionGroup ref="VerifyBasicOrderInformationActionGroup" stepKey="verifyOrderInformation">
             <argument name="customer" value="MsiCustomer1"/>
             <argument name="shippingAddress" value="US_Address_TX"/>
             <argument name="billingAddress" value="US_Address_TX"/>

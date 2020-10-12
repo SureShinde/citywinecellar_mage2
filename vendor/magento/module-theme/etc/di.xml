@@ -53,6 +53,7 @@
     <type name="Magento\Theme\Model\Wysiwyg\Storage">
         <arguments>
             <argument name="helper" xsi:type="object">Magento\Theme\Helper\Storage\Proxy</argument>
+            <argument name="filesystemDriver" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
         </arguments>
     </type>
     <type name="Magento\Framework\Url\ScopeInterface">
@@ -283,6 +284,31 @@
             <argument name="mainTable" xsi:type="string">theme</argument>
             <argument name="resourceModel" xsi:type="string">Magento\Theme\Model\ResourceModel\Theme</argument>
             <argument name="identifierName" xsi:type="string">theme_id</argument>
+        </arguments>
+    </type>
+    <virtualType name="configured_design_cache" type="Magento\Framework\App\Cache">
+        <arguments>
+            <argument name="cacheIdentifier" xsi:type="string">layout</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="design_context" type="Magento\Framework\Model\Context">
+        <arguments>
+            <argument name="cacheManager" xsi:type="object">configured_design_cache</argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\Theme\Model\Design">
+        <arguments>
+            <argument name="context" xsi:type="object">design_context</argument>
+        </arguments>
+    </type>
+    <type name="Magento\Theme\Model\Theme\ThemeProvider">
+        <arguments>
+            <argument name="cache" xsi:type="object">configured_design_cache</argument>
+        </arguments>
+    </type>
+    <type name="Magento\Theme\Helper\Storage">
+        <arguments>
+            <argument name="filesystemDriver" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
         </arguments>
     </type>
 </config>

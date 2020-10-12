@@ -11,12 +11,15 @@
     <test name="UpdateVirtualProductWithTierPriceInStockVisibleInCategoryAndSearchTest">
         <annotations>
             <stories value="Update Virtual Product"/>
-            <title value="Update Virtual Product with Tier Price (In Stock) Visible in Category and Search"/>
+            <title value="DEPRECATED. Update Virtual Product with Tier Price (In Stock) Visible in Category and Search"/>
             <description value="Test log in to Update Virtual Product and Update Virtual Product with Tier Price (In Stock) Visible in Category and Search"/>
             <testCaseId value="MC-6504"/>
             <severity value="CRITICAL"/>
             <group value="catalog"/>
             <group value="mtf_migrated"/>
+            <skip>
+                <issueId value="DEPRECATED">Please use UpdateVirtualProductWithTierPriceInStockVisibleInCategoryAndSearch2Test instead.</issueId>
+            </skip>
         </annotations>
 
         <before>
@@ -28,6 +31,9 @@
             <createData entity="SimpleSubCategory" stepKey="categoryEntity"/>
         </before>
         <after>
+            <actionGroup ref="deleteProductUsingProductGrid" stepKey="deleteVirtualProduct">
+                <argument name="product" value="updateVirtualProductTierPriceInStock"/>
+            </actionGroup>
             <deleteData stepKey="deleteSimpleSubCategory" createDataKey="initialCategoryEntity"/>
             <deleteData stepKey="deleteSimpleSubCategory2" createDataKey="categoryEntity"/>
             <actionGroup ref="logout" stepKey="logout"/>
@@ -62,8 +68,10 @@
         <selectOption selector="{{AdminProductFormSection.stockStatus}}" userInput="{{updateVirtualProductTierPriceInStock.status}}" stepKey="selectStockStatusInStock"/>
         <click selector="{{AdminProductFormSection.categoriesDropdown}}" stepKey="clickCategoriesDropDown"/>
         <fillField selector="{{AdminProductFormSection.searchCategory}}" userInput="$$initialCategoryEntity.name$$" stepKey="fillSearchForInitialCategory" />
+        <waitForPageLoad stepKey="waitForCategory1"/>
         <click selector="{{AdminProductFormSection.selectCategory($$initialCategoryEntity.name$$)}}" stepKey="unselectInitialCategory"/>
         <fillField selector="{{AdminProductFormSection.searchCategory}}" userInput="$$categoryEntity.name$$" stepKey="fillSearchCategory" />
+        <waitForPageLoad stepKey="waitForCategory2"/>
         <click selector="{{AdminProductFormSection.selectCategory($$categoryEntity.name$$)}}" stepKey="clickOnCategory"/>
         <click selector="{{AdminProductFormSection.done}}" stepKey="clickOnDoneAdvancedCategorySelect"/>
         <selectOption selector="{{AdminProductFormSection.visibility}}" userInput="{{updateVirtualProductTierPriceInStock.visibility}}" stepKey="selectVisibility"/>

@@ -37,6 +37,7 @@ class Condition
                 return $this->toOptionArray();
 
             case 'string':
+            case 'email':
                 return $this->optionsForStringType();
         }
 
@@ -53,11 +54,11 @@ class Condition
         $options = $this->toOptionArray();
         $options[] = [
             'value' => 'gteq',
-            'label' => __('equals or greater than'),
+            'label' => __('equal to or greater than'),
         ];
         $options[] = [
             'value' => 'lteq',
-            'label' => __('equals or less then'),
+            'label' => __('equal to or less than'),
         ];
         $options[] = ['value' => 'gt', 'label' => __('greater than')];
         $options[] = ['value' => 'lt', 'label' => __('less than')];
@@ -73,10 +74,13 @@ class Condition
     private function optionsForStringType()
     {
         $options = $this->toOptionArray();
-        $options[] = ['value' => 'like', 'label' => __('contains')];
+        $options[] = [
+            'value' => 'like',
+            'label' => __('contains')
+        ];
         $options[] = [
             'value' => 'nlike',
-            'label' => __('does not contains'),
+            'label' => __('does not contain'),
         ];
 
         return $options;

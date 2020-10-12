@@ -13,14 +13,14 @@
             <stories value="Assign Sources to Products"/>
             <title value="Simple Product created with Default Source assigned by Admin user"/>
             <description value="You should be able to create a New Product, via the Admin, and assign the Default Source to it."/>
-            <testCaseId value="MSI-483"/>
+            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/457014/scenarios/1408726"/>
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="single_mode"/>
         </annotations>
 
         <before>
-            <magentoCLI command="config:set cataloginventory/item_options/manage_stock 1" stepKey="enableStockManagement1"/>
+            <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="enableStockManagement1"/>
 
             <createData entity="_defaultCategory" stepKey="createPreReqCategory1"/>
             <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>

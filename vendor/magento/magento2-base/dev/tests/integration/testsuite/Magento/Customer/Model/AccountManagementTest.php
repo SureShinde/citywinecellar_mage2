@@ -14,6 +14,8 @@ use Magento\Framework\Exception\InputException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\State\ExpiredException;
 use Magento\Framework\Reflection\DataObjectProcessor;
+use Magento\Framework\Session\SessionManagerInterface;
+use Magento\Store\Model\StoreManagerInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 
 /**
@@ -52,6 +54,9 @@ class AccountManagementTest extends \PHPUnit\Framework\TestCase
 
     /** @var \Magento\Framework\Api\ExtensibleDataObjectConverter */
     private $extensibleDataObjectConverter;
+
+    /** @var StoreManagerInterface */
+    private $storeManager;
 
     /** @var  \Magento\Framework\Api\DataObjectHelper */
     protected $dataObjectHelper;
@@ -114,6 +119,9 @@ class AccountManagementTest extends \PHPUnit\Framework\TestCase
 
         $this->extensibleDataObjectConverter = $this->objectManager
             ->create(\Magento\Framework\Api\ExtensibleDataObjectConverter::class);
+
+        $this->storeManager = $this->objectManager
+            ->create(StoreManagerInterface::class);
     }
 
     /**
@@ -170,7 +178,21 @@ class AccountManagementTest extends \PHPUnit\Framework\TestCase
      */
     public function testChangePassword()
     {
+        /** @var SessionManagerInterface $session */
+        $session = $this->objectManager->get(SessionManagerInterface::class);
+        $oldSessionId = $session->getSessionId();
+        $session->setTestData('test');
         $this->accountManagement->changePassword('customer@example.com', 'password', 'new_Password123');
+
+        $this->assertTrue(
+            $oldSessionId !== $session->getSessionId(),
+            'Customer session id wasn\'t regenerated after change password'
+        );
+
+        $session->destroy();
+        $session->setSessionId($oldSessionId);
+
+        $this->assertNull($session->getTestData(), 'Customer session data wasn\'t cleaned');
 
         $this->accountManagement->authenticate('customer@example.com', 'new_Password123');
     }
@@ -841,6 +863,44 @@ class AccountManagementTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(
             $savedCustomer->getId(),
             $this->accountManagement->authenticate($email, $password)->getId()
+        );
+    }
+
+    /**
+     * Customer has two addresses one of it is allowed in website and second is not
+     *
+     * @magentoDataFixture Magento/Customer/_files/customer.php
+     * @magentoDataFixture Magento/Customer/_files/customer_two_addresses.php
+     * @magentoDataFixture Magento/Store/_files/websites_different_countries.php
+     * @magentoConfigFixture fixture_second_store_store general/country/allow UA
+     * @return void
+     */
+    public function testCreateNewCustomerWithPasswordHashWithNotAllowedCountry()
+    {
+        $customerId = 1;
+        $allowedCountryIdForSecondWebsite = 'UA';
+        $store = $this->storeManager->getStore('fixture_second_store');
+        $customerData = $this->customerRepository->getById($customerId);
+        $customerData->getAddresses()[1]->setRegion(null)->setCountryId($allowedCountryIdForSecondWebsite)
+            ->setRegionId(null);
+        $customerData->setStoreId($store->getId())->setWebsiteId($store->getWebsiteId())->setId(null);
+        $encryptor = $this->objectManager->get(\Magento\Framework\Encryption\EncryptorInterface::class);
+        /** @var \Magento\Framework\Math\Random $mathRandom */
+        $password = $this->objectManager->get(\Magento\Framework\Math\Random::class)->getRandomString(8);
+        $passwordHash = $encryptor->getHash($password, true);
+        $savedCustomer = $this->accountManagement->createAccountWithPasswordHash(
+            $customerData,
+            $passwordHash
+        );
+        $this->assertCount(
+            1,
+            $savedCustomer->getAddresses(),
+            'The wrong address quantity was saved'
+        );
+        $this->assertSame(
+            'UA',
+            $savedCustomer->getAddresses()[0]->getCountryId(),
+            'The address with the disallowed country was saved'
         );
     }
 

@@ -6,6 +6,8 @@
 
 namespace Vertex\Tax\Model;
 
+use Magento\Customer\Api\Data\AddressInterface;
+use Magento\Customer\Api\Data\RegionInterface;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\Pricing\PriceCurrencyInterface;
 use Magento\Tax\Api\Data\AppliedTaxInterface;
@@ -21,6 +23,7 @@ use Magento\Tax\Api\Data\TaxDetailsItemInterfaceFactory;
 use Vertex\Data\LineItemInterface;
 use Vertex\Data\TaxInterface;
 use Vertex\Tax\Model\Api\Data\QuotationRequestBuilder;
+use Vertex\Tax\Model\Api\Utility\PriceForTax;
 use Vertex\Tax\Model\Config\Source\SummarizeTax;
 use Vertex\Tax\Model\TaxQuote\TaxQuoteRequest;
 
@@ -29,13 +32,16 @@ use Vertex\Tax\Model\TaxQuote\TaxQuoteRequest;
  */
 class Calculator
 {
-    const TAX_TYPE_PRINTED_CARD_GW = 'printed_card_gw';
-    const TAX_TYPE_QUOTE_GW = 'quote_gw';
-    const TAX_TYPE_SHIPPING = 'shipping';
-    const MESSAGE_KEY = 'vertex-messages';
+    public const MESSAGE_KEY = 'vertex-messages';
+    public const TAX_TYPE_PRINTED_CARD_GW = 'printed_card_gw';
+    public const TAX_TYPE_QUOTE_GW = 'quote_gw';
+    public const TAX_TYPE_SHIPPING = 'shipping';
 
     /** @var bool */
     private $addMessageToVertexGroup;
+
+    /** @var AddressDeterminer */
+    private $addressDeterminer;
 
     /** @var AppliedTaxInterfaceFactory */
     private $appliedTaxFactory;
@@ -46,6 +52,12 @@ class Calculator
     /** @var Config */
     private $config;
 
+    /** @var IncompleteAddressDeterminer */
+    private $incompleteAddressDeterminer;
+
+    /** @var QuoteIsVirtualDeterminer */
+    private $isVirtualDeterminer;
+
     /** @var ExceptionLogger */
     private $logger;
 
@@ -54,6 +66,9 @@ class Calculator
 
     /** @var PriceCurrencyInterface */
     private $priceCurrency;
+
+    /** @var PriceForTax */
+    private $priceForTaxCalculation;
 
     /** @var TaxQuoteRequest */
     private $quoteRequest;
@@ -67,19 +82,6 @@ class Calculator
     /** @var TaxDetailsItemInterfaceFactory */
     private $taxDetailsItemFactory;
 
-    /**
-     * @param TaxDetailsInterfaceFactory $taxDetailsFactory
-     * @param TaxDetailsItemInterfaceFactory $taxDetailsItemFactory
-     * @param QuotationRequestBuilder $requestFactory
-     * @param TaxQuoteRequest $quoteRequest
-     * @param AppliedTaxInterfaceFactory $appliedTaxFactory
-     * @param AppliedTaxRateInterfaceFactory $appliedTaxRateFactory
-     * @param PriceCurrencyInterface $priceCurrency
-     * @param ExceptionLogger $logger
-     * @param Config $config
-     * @param ManagerInterface $messageManager
-     * @param bool $addMessageToVertexGroup
-     */
     public function __construct(
         TaxDetailsInterfaceFactory $taxDetailsFactory,
         TaxDetailsItemInterfaceFactory $taxDetailsItemFactory,
@@ -91,7 +93,11 @@ class Calculator
         ExceptionLogger $logger,
         Config $config,
         ManagerInterface $messageManager,
-        $addMessageToVertexGroup = true
+        PriceForTax $priceForTaxCalculation,
+        QuoteIsVirtualDeterminer $isVirtualDeterminer,
+        AddressDeterminer $addressDeterminer,
+        IncompleteAddressDeterminer $incompleteAddressDeterminer,
+        bool $addMessageToVertexGroup = true
     ) {
         $this->taxDetailsFactory = $taxDetailsFactory;
         $this->requestFactory = $requestFactory;
@@ -104,6 +110,10 @@ class Calculator
         $this->config = $config;
         $this->messageManager = $messageManager;
         $this->addMessageToVertexGroup = $addMessageToVertexGroup;
+        $this->priceForTaxCalculation = $priceForTaxCalculation;
+        $this->isVirtualDeterminer = $isVirtualDeterminer;
+        $this->addressDeterminer = $addressDeterminer;
+        $this->incompleteAddressDeterminer = $incompleteAddressDeterminer;
     }
 
     /**
@@ -112,14 +122,20 @@ class Calculator
      * @param QuoteDetailsInterface $quoteDetails
      * @param string|null $scopeCode
      * @param bool $round
-     * @return TaxDetailsInterface
      */
-    public function calculateTax(QuoteDetailsInterface $quoteDetails, $scopeCode, $round = true)
-    {
+    public function calculateTax(
+        QuoteDetailsInterface $quoteDetails,
+        $scopeCode,
+        bool $round = true
+    ): TaxDetailsInterface {
         $items = $quoteDetails->getItems();
         if (empty($items)
-            || ($quoteDetails->getBillingAddress() === null && $quoteDetails->getShippingAddress() === null)
             || $this->onlyShipping($items)
+            || $this->addressDeterminer->determineAddress(
+                !$this->incompleteAddressDeterminer->isIncompleteAddress($quoteDetails->getShippingAddress())
+                    ? $quoteDetails->getShippingAddress()
+                    : $quoteDetails->getBillingAddress()
+            ) === null
         ) {
             /*
              * Don't perform calculation when:
@@ -188,7 +204,7 @@ class Calculator
 
                     $resultItem = $resultItems[$child->getCode()];
                     $processedItem = $resultItem
-                        ? $this->createTaxDetailsItem($child, $resultItem, $round)
+                        ? $this->createTaxDetailsItem($child, $resultItem, $round, (float)$item->getQuantity())
                         : $this->createEmptyDetailsTaxItem($child);
 
                     // Add this item's tax information to the quote aggregate
@@ -239,12 +255,8 @@ class Calculator
 
     /**
      * Add tax details from an item to the overall tax details
-     *
-     * @param TaxDetailsInterface $taxDetails
-     * @param TaxDetailsItemInterface $taxItemDetails
-     * @return void
      */
-    private function aggregateTaxData(TaxDetailsInterface $taxDetails, TaxDetailsItemInterface $taxItemDetails)
+    private function aggregateTaxData(TaxDetailsInterface $taxDetails, TaxDetailsItemInterface $taxItemDetails): void
     {
         $taxDetails->setSubtotal($taxDetails->getSubtotal() + $taxItemDetails->getRowTotal());
         $taxDetails->setTaxAmount($taxDetails->getTaxAmount() + $taxItemDetails->getRowTax());
@@ -288,7 +300,7 @@ class Calculator
      * @param string $lineItemId
      * @return AppliedTaxInterface[]
      */
-    private function createAppliedTaxes(array $taxes, $lineItemId)
+    private function createAppliedTaxes(array $taxes, $lineItemId): array
     {
         $taxDetailType = SummarizeTax::PRODUCT_AND_SHIPPING;
         if ($lineItemId === static::TAX_TYPE_SHIPPING) {
@@ -344,11 +356,8 @@ class Calculator
      * This method is used to provide Magento the information it expects while
      * avoiding a costly tax calculation when we don't want one (or think it
      * will provide no value)
-     *
-     * @param QuoteDetailsInterface $quoteDetails
-     * @return TaxDetailsInterface
      */
-    private function createEmptyDetails(QuoteDetailsInterface $quoteDetails)
+    private function createEmptyDetails(QuoteDetailsInterface $quoteDetails): TaxDetailsInterface
     {
         /** @var TaxDetailsInterface $details */
         $details = $this->taxDetailsFactory->create();
@@ -376,17 +385,13 @@ class Calculator
      * Create an empty {@see TaxDetailsItemInterface}
      *
      * This is used by {@see self::createEmptyDetails()}
-     *
-     * @param QuoteDetailsItemInterface $quoteDetailsItem
-     * @return TaxDetailsItemInterface
      */
-    private function createEmptyDetailsTaxItem(QuoteDetailsItemInterface $quoteDetailsItem)
+    private function createEmptyDetailsTaxItem(QuoteDetailsItemInterface $quoteDetailsItem): TaxDetailsItemInterface
     {
         /** @var TaxDetailsItemInterface $taxDetailsItem */
         $taxDetailsItem = $this->taxDetailsItemFactory->create();
 
-        $rowTotal = ($quoteDetailsItem->getUnitPrice() * $quoteDetailsItem->getQuantity()) -
-            $quoteDetailsItem->getDiscountAmount();
+        $rowTotal = ($quoteDetailsItem->getUnitPrice() * $quoteDetailsItem->getQuantity());
 
         $taxDetailsItem->setCode($quoteDetailsItem->getCode())
             ->setType($quoteDetailsItem->getType())
@@ -409,35 +414,33 @@ class Calculator
      *
      * Combines information from the {@see QuoteDetailsItemInterface} and resulting {@see LineItemInterface} to assemble
      * a complete {@see TaxDetailsItemInterface}
-     *
-     * @param QuoteDetailsItemInterface $quoteDetailsItem
-     * @param LineItemInterface $vertexLineItem
-     * @param bool $round
-     * @return TaxDetailsItemInterface
      */
     private function createTaxDetailsItem(
         QuoteDetailsItemInterface $quoteDetailsItem,
         LineItemInterface $vertexLineItem,
-        $round = true
-    ) {
-        /** @var TaxDetailsItemInterface $taxDetailsItem */
-        $taxDetailsItem = $this->taxDetailsItemFactory->create();
-
+        bool $round = true,
+        float $parentQty = 1.0
+    ): TaxDetailsItemInterface {
         // Combine the rates of all taxes applicable to the Line Item
         $effectiveRate = array_reduce(
             $vertexLineItem->getTaxes(),
-            function ($result, TaxInterface $tax) {
+            static function ($result, TaxInterface $tax) {
                 return $result + $tax->getEffectiveRate();
             },
             0
         );
 
+        // Vertex QTY includes parent item
         $perItemTax = $vertexLineItem->getTotalTax() / $vertexLineItem->getQuantity();
+        $unitPrice = $quoteDetailsItem->getUnitPrice();
+        $extendedPrice = $this->priceForTaxCalculation->getOriginalItemPriceOnQuote(
+            $quoteDetailsItem,
+            $unitPrice,
+            $parentQty
+        );
 
-        $unitPrice = $vertexLineItem->getUnitPrice();
-
-        // Vertex extended price is less discount - so add it back
-        $extendedPrice = $vertexLineItem->getExtendedPrice() + $quoteDetailsItem->getDiscountAmount();
+        /** @var TaxDetailsItemInterface $taxDetailsItem */
+        $taxDetailsItem = $this->taxDetailsItemFactory->create();
 
         $taxDetailsItem->setCode($vertexLineItem->getLineItemId())
             ->setType($quoteDetailsItem->getType())
@@ -460,12 +463,35 @@ class Calculator
     }
 
     /**
+     * Retrieve tax label
+     *
+     * @param string $code
+     * @return string
+     */
+    private function getTaxLabel($code): string
+    {
+        switch ($code) {
+            case SummarizeTax::PRODUCT_AND_SHIPPING:
+                return __('Sales and Use')->render();
+
+            case static::TAX_TYPE_QUOTE_GW:
+            case static::TAX_TYPE_PRINTED_CARD_GW:
+                return __('Gift Options')->render();
+
+            case static::TAX_TYPE_SHIPPING:
+                return __('Shipping')->render();
+        }
+
+        return $code;
+    }
+
+    /**
      * Determine if an array of QuoteDetailsItemInterface contains only shipping entries
      *
      * @param QuoteDetailsItemInterface[] $items
      * @return bool
      */
-    private function onlyShipping(array $items)
+    private function onlyShipping(array $items): bool
     {
         foreach ($items as $item) {
             if ($item->getCode() !== 'shipping') {
@@ -486,32 +512,5 @@ class Calculator
     private function optionalRound($number, $round = true)
     {
         return $round ? $this->priceCurrency->round($number) : $number;
-    }
-
-    /**
-     * Retrieve tax label
-     *
-     * @param $code
-     * @return string
-     */
-    private function getTaxLabel($code)
-    {
-        switch ($code) {
-            case SummarizeTax::PRODUCT_AND_SHIPPING:
-                $title = __('Sales and Use')->render();
-                break;
-            case static::TAX_TYPE_QUOTE_GW:
-            case static::TAX_TYPE_PRINTED_CARD_GW:
-                $title = __('Gift Options')->render();
-                break;
-            case static::TAX_TYPE_SHIPPING:
-                $title = __('Shipping')->render();
-                break;
-            default:
-                $title = $code;
-                break;
-        }
-
-        return $title;
     }
 }

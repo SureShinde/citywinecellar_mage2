@@ -19,6 +19,7 @@ use Vertex\Tax\Model\CountryGuard;
 use Vertex\Tax\Model\OrderHasInvoiceDeterminer;
 use Vertex\Tax\Model\TaxInvoice;
 use Vertex\Tax\Model\VertexTaxAttributeManager;
+use Vertex\Tax\Model\Loader\GiftwrapExtensionLoader;
 
 /**
  * Observes when a Creditmemo is issued to fire off data to the Vertex Tax Log
@@ -103,7 +104,7 @@ class CreditMemoObserver implements ObserverInterface
         $order = $creditMemo->getOrder();
 
         if ($this->canSend($creditMemo, $order) && $this->hasInvoiceDeterminer->hasInvoice($order->getId())) {
-            $this->extensionLoader->loadOnCreditmemo($creditMemo);
+            $creditMemo = $this->extensionLoader->loadOnCreditmemo($creditMemo);
             $request = $this->invoiceRequestBuilder->buildFromCreditmemo($creditMemo);
             $response = $this->taxInvoice->sendRefundRequest($request, $order);
 

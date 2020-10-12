@@ -6,6 +6,8 @@ use Magento\Framework\Setup\InstallSchemaInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\SchemaSetupInterface;
 use Magento\Framework\DB\Ddl\Table;
+use Dotdigitalgroup\Email\Setup\SchemaInterface as Schema;
+use Dotdigitalgroup\Email\Setup\Schema\Shared;
 
 /**
  * @codeCoverageIgnore
@@ -13,17 +15,17 @@ use Magento\Framework\DB\Ddl\Table;
 class InstallSchema implements InstallSchemaInterface
 {
     /**
-     * @var Schema\Shared
+     * @var Shared
      */
     private $shared;
 
     /**
      * InstallSchema constructor.
      *
-     * @param Schema\Shared $shared
+     * @param Shared $shared
      */
     public function __construct(
-        Schema\Shared $shared
+        Shared $shared
     ) {
         $this->shared = $shared;
     }
@@ -53,6 +55,7 @@ class InstallSchema implements InstallSchemaInterface
         $this->createAbandonedCartTable($installer);
         $this->createConsentTable($installer);
         $this->createFailedAuth($installer);
+        $this->createCouponTable($installer);
 
         /**
          * Modify table
@@ -171,15 +174,15 @@ class InstallSchema implements InstallSchemaInterface
                 'email_imported',
                 \Magento\Framework\DB\Ddl\Table::TYPE_SMALLINT,
                 null,
-                ['unsigned' => true, 'nullable' => true],
+                ['unsigned' => true, 'nullable' => false],
                 'Is Imported'
             )
             ->addColumn(
                 'subscriber_imported',
                 \Magento\Framework\DB\Ddl\Table::TYPE_SMALLINT,
                 null,
-                ['unsigned' => true, 'nullable' => true],
-                'Subscriber Imported'
+                ['unsigned' => true, 'nullable' => false],
+                'Is Subscriber Imported'
             )
             ->addColumn(
                 'suppressed',
@@ -187,6 +190,13 @@ class InstallSchema implements InstallSchemaInterface
                 null,
                 ['unsigned' => true, 'nullable' => true],
                 'Is Suppressed'
+            )
+            ->addColumn(
+                'last_subscribed_at',
+                Table::TYPE_TIMESTAMP,
+                null,
+                [],
+                'Last time user subscribed'
             );
     }
 
@@ -341,7 +351,7 @@ class InstallSchema implements InstallSchemaInterface
             'email_imported',
             \Magento\Framework\DB\Ddl\Table::TYPE_SMALLINT,
             null,
-            ['unsigned' => true, 'nullable' => true],
+            ['unsigned' => true, 'nullable' => false],
             'Is Order Imported'
         )
         ->addColumn(
@@ -728,7 +738,7 @@ class InstallSchema implements InstallSchemaInterface
             'review_imported',
             \Magento\Framework\DB\Ddl\Table::TYPE_SMALLINT,
             null,
-            ['unsigned' => true, 'nullable' => true],
+            ['unsigned' => true, 'nullable' => false],
             'Review Imported'
         )
         ->addColumn(
@@ -880,7 +890,7 @@ class InstallSchema implements InstallSchemaInterface
             'wishlist_imported',
             \Magento\Framework\DB\Ddl\Table::TYPE_SMALLINT,
             null,
-            ['unsigned' => true, 'nullable' => true],
+            ['unsigned' => true, 'nullable' => false],
             'Wishlist Imported'
         )
         ->addColumn(
@@ -1031,14 +1041,21 @@ class InstallSchema implements InstallSchemaInterface
             \Magento\Framework\DB\Ddl\Table::TYPE_SMALLINT,
             null,
             ['unsigned' => true, 'nullable' => true],
-            'Product Imported'
+            'Product imported [deprecated]'
         )
         ->addColumn(
             'modified',
             \Magento\Framework\DB\Ddl\Table::TYPE_SMALLINT,
             null,
             ['unsigned' => true, 'nullable' => true],
-            'Product Modified'
+            'Product modified [deprecated]'
+        )
+        ->addColumn(
+            'processed',
+            \Magento\Framework\DB\Ddl\Table::TYPE_SMALLINT,
+            null,
+            ['unsigned' => true, 'nullable' => false],
+            'Product processed'
         )
         ->addColumn(
             'created_at',
@@ -1053,6 +1070,13 @@ class InstallSchema implements InstallSchemaInterface
             null,
             [],
             'Update Time'
+        )
+        ->addColumn(
+            'last_imported_at',
+            \Magento\Framework\DB\Ddl\Table::TYPE_TIMESTAMP,
+            null,
+            [],
+            'Last imported date'
         );
     }
 
@@ -1073,16 +1097,9 @@ class InstallSchema implements InstallSchemaInterface
         ->addIndex(
             $installer->getIdxName(
                 $installer->getTable(Schema::EMAIL_CATALOG_TABLE),
-                ['imported']
+                ['processed']
             ),
-            ['imported']
-        )
-        ->addIndex(
-            $installer->getIdxName(
-                $installer->getTable(Schema::EMAIL_CATALOG_TABLE),
-                ['modified']
-            ),
-            ['modified']
+            ['processed']
         )
         ->addIndex(
             $installer->getIdxName(
@@ -1097,6 +1114,13 @@ class InstallSchema implements InstallSchemaInterface
                 ['updated_at']
             ),
             ['updated_at']
+        )
+        ->addIndex(
+            $installer->getIdxName(
+                $installer->getTable(Schema::EMAIL_CATALOG_TABLE),
+                ['last_imported_at']
+            ),
+            ['last_imported_at']
         );
     }
 
@@ -1439,7 +1463,7 @@ class InstallSchema implements InstallSchemaInterface
             \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
             255,
             ['nullable' => false],
-            'Entrolment Status'
+            'Enrolment Status'
         )
         ->addColumn(
             'email',
@@ -1618,5 +1642,15 @@ class InstallSchema implements InstallSchemaInterface
         $tableName = $installer->getTable(Schema::EMAIL_FAILED_AUTH_TABLE);
         $this->dropTableIfExists($installer, $tableName);
         $this->shared->createFailedAuthTable($installer, $tableName);
+    }
+
+    /**
+     * @param SchemaSetupInterface $installer
+     */
+    private function createCouponTable($installer)
+    {
+        $tableName = $installer->getTable(Schema::EMAIL_COUPON_TABLE);
+        $this->dropTableIfExists($installer, $tableName);
+        $this->shared->createCouponTable($installer, $tableName);
     }
 }

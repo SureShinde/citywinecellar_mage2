@@ -2,132 +2,48 @@
 
 namespace Dotdigitalgroup\Email\Helper;
 
+use Dotdigitalgroup\Email\Model\Apiconnector\ClientFactory;
+use Dotdigitalgroup\Email\Model\DateIntervalFactory;
+use Dotdigitalgroup\Email\Test\Integration\MocksApiResponses;
+use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use Magento\TestFramework\ObjectManager;
 
 /**
- * Class ApiEndpointTest
- *
- * @package Dotdigitalgroup\Email\Helper
- * @magentoDBIsolation enabled
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @magentoDbIsolation enabled
  */
 class ApiEndpointTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @return void
-     */
-    public function setup()
-    {
-        $this->removeData();
-    }
-
-    /**
-     * @return void
-     */
-    public function tearDown()
-    {
-        $this->removeData();
-    }
-
-    /**
-     * @return void
-     */
-    public function removeData()
-    {
-        /** @var ObjectManager $objectManager */
-        $objectManager = ObjectManager::getInstance();
-
-        /** @var \Magento\Config\Model\ResourceModel\Config $config */
-        $config = $objectManager->create(\Magento\Config\Model\ResourceModel\Config::class);
-        $data = $this->dataProvider();
-
-        foreach ($data as $item) {
-            $config->deleteConfig(Config::PATH_FOR_API_ENDPOINT, $item[2], $item[0]);
-        }
-    }
+    use MocksApiResponses;
 
     /**
      * @param int $website
      * @param string $endPoint
      *
      * @return null
-     *
-     * @dataProvider dataProvider
      */
-    public function testFetchingApiEndpointSuccessful($website, $endPoint)
+    public function testFetchingApiEndpointSuccessful()
     {
-        /** @var ObjectManager $objectManager */
-        $objectManager = ObjectManager::getInstance();
+        $endpoint = 'https://api.dotmailer.com/v2';
 
-        $property = new \stdClass();
-        $property->name = 'ApiEndpoint';
-        $property->value = $endPoint;
+        $this->mockClientFactory();
+        $this->mockClient->method('getAccountInfo')
+            ->willReturn((object) [
+                'properties' => [(object) [
+                    'name' => 'ApiEndpoint',
+                    'value' => $endpoint,
+                ]],
+            ]);
 
-        $accountInfo = new \stdClass();
-        $accountInfo->properties = [$property];
+        $this->setApiConfigFlags([
+            Config::PATH_FOR_API_ENDPOINT => null,
+        ]);
 
-        $mockClient = $this->getMockBuilder(\Dotdigitalgroup\Email\Model\Apiconnector\Client::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $helper = $this->instantiateDataHelper();
+        $apiEndpoint = $helper->getApiEndpoint(1, $this->mockClient);
 
-        $mockClient->method('getAccountInfo')
-            ->willReturn($accountInfo);
-
-        $mockClientFactory = $this->getMockBuilder(
-            \Dotdigitalgroup\Email\Model\Apiconnector\ClientFactory::class
-        )
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $mockClientFactory->method('create')
-            ->willReturn($mockClient);
-
-        /** @var \Dotdigitalgroup\Email\Helper\Data $helper */
-        $helper = new \Dotdigitalgroup\Email\Helper\Data(
-            $objectManager->create(\Magento\Framework\App\ProductMetadata::class),
-            $objectManager->create(\Dotdigitalgroup\Email\Model\ContactFactory::class),
-            $objectManager->create(\Dotdigitalgroup\Email\Model\ResourceModel\Contact::class),
-            $objectManager->create(\Dotdigitalgroup\Email\Helper\File::class),
-            $objectManager->create(\Magento\Config\Model\ResourceModel\Config::class),
-            $objectManager->create(\Magento\Framework\App\ResourceConnection::class),
-            $objectManager->create(\Magento\Framework\App\Helper\Context::class),
-            $objectManager->create(\Magento\Store\Model\StoreManagerInterface::class),
-            $objectManager->create(\Magento\Customer\Model\CustomerFactory::class),
-            $objectManager->create(\Magento\Framework\Module\ModuleListInterface::class),
-            $objectManager->create(\Magento\Store\Model\Store::class),
-            $objectManager->create(\Magento\Framework\App\Config\Storage\Writer::class),
-            $mockClientFactory,
-            $objectManager->create(\Dotdigitalgroup\Email\Helper\ConfigFactory::class),
-            $objectManager->create(\Dotdigitalgroup\Email\Model\Config\Json::class),
-            $objectManager->create(\Magento\Framework\Stdlib\DateTime\DateTime::class),
-            $objectManager->create(\Magento\Quote\Model\ResourceModel\Quote::class),
-            $objectManager->create(\Magento\Quote\Model\QuoteFactory::class),
-            $objectManager->create(\Magento\User\Model\ResourceModel\User::class),
-            $objectManager->create(\Magento\Framework\Encryption\EncryptorInterface::class)
-        );
-        $apiEndpoint = $helper->getApiEndpoint($website, $mockClient);
         $this->assertEquals(
-            $endPoint,
+            $endpoint,
             $apiEndpoint
         );
-    }
-
-    /**
-     * @return array
-     */
-    public function dataProvider()
-    {
-        return [
-            [
-                0,
-                'https://r1.dummy.com',
-                'default'
-            ],
-            [
-                1,
-                'https://r1.dummy.com',
-                'website'
-            ]
-        ];
     }
 }

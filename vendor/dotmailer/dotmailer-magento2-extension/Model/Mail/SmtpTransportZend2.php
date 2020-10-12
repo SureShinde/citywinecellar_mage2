@@ -17,6 +17,12 @@ class SmtpTransportZend2
     private $zendMailTransportSmtp2Factory;
 
     /**
+     * Default encoding
+     */
+    const ENCODING = 'utf-8';
+
+    /**
+     * SmtpTransportZend2 constructor.
      * @param Transactional $transactionalEmailSettings
      * @param ZendMailTransportSmtp2Factory $zendMailTransportSmtp2Factory
      */
@@ -29,13 +35,15 @@ class SmtpTransportZend2
     }
 
     /**
-     * @param \Magento\Framework\Mail\Message $message
+     * @param \Zend\Mail\Message $message
      * @param int $storeId
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function send($message, $storeId)
     {
         $smtpOptions = $this->transactionalEmailSettings->getSmtpOptions($storeId);
         $smtp = $this->zendMailTransportSmtp2Factory->create($smtpOptions);
+        $message->setEncoding(self::ENCODING);
         $smtp->send($message);
     }
 }

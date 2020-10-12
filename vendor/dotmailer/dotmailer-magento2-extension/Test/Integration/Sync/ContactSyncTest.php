@@ -2,8 +2,14 @@
 
 namespace Dotdigitalgroup\Email\Model\Sync;
 
+use Dotdigitalgroup\Email\Model\Apiconnector\CustomerDataFieldProvider;
+use Dotdigitalgroup\Email\Model\Apiconnector\CustomerDataFieldProviderFactory;
+
+if (!class_exists('\Magento\Catalog\Api\Data\ProductExtensionInterfaceFactory')) {
+    require __DIR__ . '/../_files/product_extension_interface_hacktory.php';
+}
+
 /**
- * @magentoDBIsolation enabled
  * @magentoDataFixture Magento/Store/_files/website.php
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
@@ -44,7 +50,7 @@ class ContactSyncTest extends \PHPUnit\Framework\TestCase
         /** @var  \Magento\Store\Model\Store $store */
         $store = $this->objectManager->create(\Magento\Store\Model\Store::class);
         $store->load(1);
-        //load store with the code rathe then id ; $store->load('test', 'code')
+        //load store with the code rather than id: $store->load('test', 'code')
 
         $helper = $this->getMockbuilder(\Dotdigitalgroup\Email\Helper\Data::class)
             ->disableOriginalConstructor()
@@ -55,8 +61,15 @@ class ContactSyncTest extends \PHPUnit\Framework\TestCase
         $helper->method('getWebsites')->willReturn([$store->getWebsite()]);
         $helper->method('getApiUsername')->willReturn('apiuser-dummy@apiconnector.com');
         $helper->method('getApiPassword')->willReturn('dummypass');
-        $helper->method('getWebsiteCustomerMappingDatafields')->willReturn($this->getHashedDataFields());
         $helper->method('getCustomAttributes')->willReturn([]);
+
+        $customerDataFieldProviderMock = $this->createMock(CustomerDataFieldProvider::class);
+        $customerDataFieldProviderFactoryMock = $this->createMock(CustomerDataFieldProviderFactory::class);
+        $customerDataFieldProviderFactoryMock->method('create')
+            ->willReturn($customerDataFieldProviderMock);
+
+        $customerDataFieldProviderMock->method('getCustomerDataFields')
+            ->willReturn($this->getHashedDataFields());
 
         $apiconnectorContact = new \Dotdigitalgroup\Email\Model\Apiconnector\Contact(
             $this->objectManager->create(\Dotdigitalgroup\Email\Model\Apiconnector\CustomerFactory::class),
@@ -64,14 +77,15 @@ class ContactSyncTest extends \PHPUnit\Framework\TestCase
             $helper,
             $this->objectManager->create(\Dotdigitalgroup\Email\Model\ResourceModel\Contact::class),
             $this->objectManager->create(\Dotdigitalgroup\Email\Model\Apiconnector\ContactImportQueueExport::class),
-            $this->objectManager->create(\Dotdigitalgroup\Email\Model\ResourceModel\Contact\CollectionFactory::class)
+            $this->objectManager->create(\Dotdigitalgroup\Email\Model\ResourceModel\Contact\CollectionFactory::class),
+            $customerDataFieldProviderFactoryMock
         );
 
         return $apiconnectorContact->sync();
     }
 
     /**
-     * Test the builk imports with the consent data.
+     * Test the bulk imports with the consent data.
      *
      * @magentoDataFixture Magento/Customer/_files/two_customers.php
      * @magentoConfigFixture default_store sync_settings/sync/customer_enabled 1
@@ -106,7 +120,7 @@ class ContactSyncTest extends \PHPUnit\Framework\TestCase
      * @magentoConfigFixture default_store sync_settings/sync/customer_enabled 1
      * @magentoConfigFixture default_store connector_api_credentials/api/enabled 1
      */
-    public function testContatctWithConsentDataCreated()
+    public function testContactWithConsentDataCreated()
     {
         $this->createSingleModifiedContact();
         $this->prep();
@@ -144,7 +158,7 @@ class ContactSyncTest extends \PHPUnit\Framework\TestCase
             ->setWebsiteId($customer->getWebsiteId())
             ->setStoreId($customer->getStoreId())
             ->setEmail($customer->getEmail())
-            ->setEmailIMpoerted(null);
+            ->setEmailImported(0);
 
         $emailContact->save();
     }

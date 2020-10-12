@@ -5,7 +5,7 @@
             <api>
                 <enabled>0</enabled>
                 <username></username>
-                <password></password>
+                <password backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
             </api>
         </connector_api_credentials>
         <sync_settings>
@@ -145,6 +145,7 @@
         <transactional_emails>
             <ddg_transactional>
                 <enabled>0</enabled>
+                <password backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
             </ddg_transactional>
         </transactional_emails>
         <connector_configuration>
@@ -170,8 +171,10 @@
                 <expire_time>24</expire_time>
             </abandoned_carts>
             <tracking>
-                <roi_enabled>0</roi_enabled>
-                <page_enabled>0</page_enabled>
+                <integration_insights>1</integration_insights>
+                <roi_enabled>1</roi_enabled>
+                <page_enabled>1</page_enabled>
+                <script_version>0</script_version>
             </tracking>
             <consent>
                 <dotmailer_consent_subscriber_enabled>0</dotmailer_consent_subscriber_enabled>
@@ -282,6 +285,7 @@
                 <transactional_data>50</transactional_data>
                 <importer_bulk_limit>1</importer_bulk_limit>
                 <subscriber_sales_data_enabled>0</subscriber_sales_data_enabled>
+                <strip_pub_from_media_paths>0</strip_pub_from_media_paths>
             </import_settings>
             <sync_settings>
                 <setup_data_fields></setup_data_fields>
@@ -298,13 +302,6 @@
                 <debug_enabled>1</debug_enabled>
                 <api_log_time>60</api_log_time>
             </debug>
-            <feed_configuration>
-                <feed_enabled>1</feed_enabled>
-                <feed_url>dotmailerformagento.co.uk/feed.xml</feed_url>
-                <use_https>0</use_https>
-                <frequency>1</frequency>
-                <last_update></last_update>
-            </feed_configuration>
             <oauth>
                 <client_id></client_id>
                 <client_key></client_key>

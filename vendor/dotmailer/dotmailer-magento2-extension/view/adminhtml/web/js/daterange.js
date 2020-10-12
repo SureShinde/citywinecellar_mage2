@@ -30,17 +30,22 @@ require(['jquery', 'domReady!'], function ($) {
         function changeUrls(value) {
             var elmToChange =
                 [
-                    '#connector_developer_settings_sync_settings_reset_orders',
-                    '#connector_developer_settings_sync_settings_reset_reviews',
-                    '#connector_developer_settings_sync_settings_reset_wishlists',
-                    '#connector_developer_settings_sync_settings_reset_catalog'
+                    '#row_connector_developer_settings_sync_settings_reset_orders',
+                    '#row_connector_developer_settings_sync_settings_reset_reviews',
+                    '#row_connector_developer_settings_sync_settings_reset_wishlists',
+                    '#row_connector_developer_settings_sync_settings_reset_catalog'
                 ];
 
+            if ($('#row_connector_developer_settings_sync_settings_reset_quotes').length) {
+                elmToChange.push('#row_connector_developer_settings_sync_settings_reset_quotes');
+            }
+
             $.each(elmToChange, function (k, v) {
-                var str = $(v).attr('onclick'),
+                var button = $(v).find('button'),
+                    str = button.attr('onclick'),
                     updatedUrl = updateUrlParameter(str, value, encodeURIComponent($('#' + value).val()));
 
-                $(v).attr('onclick', updatedUrl);
+                button.attr('onclick', updatedUrl);
             });
         }
 

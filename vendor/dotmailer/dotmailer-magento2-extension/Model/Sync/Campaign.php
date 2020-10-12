@@ -3,9 +3,9 @@
 namespace Dotdigitalgroup\Email\Model\Sync;
 
 /**
- * Send email campaings.
+ * Send email campaigns.
  */
-class Campaign
+class Campaign implements SyncInterface
 {
     //single call contact limit
     const SEND_EMAIL_CONTACT_LIMIT = 10;
@@ -85,8 +85,16 @@ class Campaign
 
             $emailsToSend = $this->_getEmailCampaigns($storeIds);
             $campaignsToSend = $this->getCampaignsToSend($emailsToSend, $website);
-            $this->sendCampaignsViaDotmailer($campaignsToSend);
+            $this->sendCampaignsViaEngagementCloud($campaignsToSend);
         }
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function sync(\DateTime $from = null)
+    {
+        $this->sendCampaigns();
     }
 
     /**
@@ -97,6 +105,7 @@ class Campaign
      */
     public function _checkSendStatus($website, $storeIds)
     {
+        $this->expireExpiredCampaigns($storeIds);
         $campaigns = $this->_getEmailCampaigns(
             $storeIds,
             \Dotdigitalgroup\Email\Model\Campaign::PROCESSING,
@@ -109,8 +118,25 @@ class Campaign
                 $message = isset($response->message) ? $response->message : $response->status;
                 $this->campaignResourceModel->setMessageWithSendId($campaign->getSendId(), $message);
             } elseif ($response->status == 'Sent') {
-                $this->campaignResourceModel->setSent($campaign->getSendId());
+                $this->campaignResourceModel->setSent(
+                    $campaign->getSendId(),
+                    $response->sendDate
+                );
             }
+        }
+    }
+
+    /**
+     * @param array $storeIds
+     */
+    private function expireExpiredCampaigns($storeIds)
+    {
+        $expiredCampaigns = $this->campaignCollection->create()
+            ->getExpiredEmailCampaignsByStoreIds($storeIds);
+        $ids = $expiredCampaigns->getColumnValues('id');
+
+        if (! empty($ids)) {
+            $this->campaignResourceModel->expireCampaigns($ids);
         }
     }
 
@@ -136,14 +162,14 @@ class Campaign
             //Only if valid client is returned
             if ($client && $this->isCampaignValid($campaign)) {
                 $campaignsToSend[$campaignId]['client'] = $client;
-                $contact = $this->helper->getContact(
+                $contact = $this->helper->getOrCreateContact(
                     $campaign->getEmail(),
                     $websiteId
                 );
                 if ($contact && isset($contact->id)) {
                     //update data fields
                     if ($campaign->getEventName() == 'Order Review') {
-                        $this->updateDataFieldsForORderReviewCampaigns($campaign, $websiteId, $client, $email);
+                        $this->updateDataFieldsForOrderReviewCampaigns($campaign, $websiteId, $client, $email);
                     } elseif ($campaign->getEventName() ==
                         \Dotdigitalgroup\Email\Model\Campaign::CAMPAIGN_EVENT_LOST_BASKET
                     ) {
@@ -199,7 +225,7 @@ class Campaign
      *
      * @return null
      */
-    private function sendCampaignsViaDotmailer($campaignsToSend)
+    private function sendCampaignsViaEngagementCloud($campaignsToSend)
     {
         foreach ($campaignsToSend as $campaignId => $data) {
             if (isset($data['contacts']) && isset($data['client'])) {
@@ -246,7 +272,7 @@ class Campaign
      *
      * @return null
      */
-    private function updateDataFieldsForORderReviewCampaigns($campaign, $websiteId, $client, $email)
+    private function updateDataFieldsForOrderReviewCampaigns($campaign, $websiteId, $client, $email)
     {
         $order = $this->salesOrderFactory->create()->loadByIncrementId(
             $campaign->getOrderIncrementId()

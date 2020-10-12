@@ -16,11 +16,6 @@ use Klarna\Kp\Api\Data\ResponseInterface;
 use Klarna\Kp\Model\Payment\Kp;
 use Magento\Checkout\Model\ConfigProviderInterface;
 
-/**
- * Class KpConfigProvider
- *
- * @package Klarna\Kp\Model
- */
 class KpConfigProvider implements ConfigProviderInterface
 {
     /**
@@ -34,8 +29,6 @@ class KpConfigProvider implements ConfigProviderInterface
     private $session;
 
     /**
-     * Constructor
-     *
      * @param ConfigHelper $config
      * @param Session      $session
      */
@@ -57,12 +50,18 @@ class KpConfigProvider implements ConfigProviderInterface
         $paymentConfig = [
             'payment' => [
                 'klarna_kp' => [
-                    'client_token'      => null,
-                    'message'           => null,
-                    'success'           => 0,
-                    'debug'             => $this->config->isApiConfigFlag('debug', $store),
-                    'enabled'           => $this->config->isPaymentConfigFlag('active', $store, Kp::METHOD_CODE),
-                    'available_methods' => [
+                    'client_token'        => null,
+                    'message'             => null,
+                    'success'             => 0,
+                    'debug'               => $this->config->isApiConfigFlag('debug', $store),
+                    'enabled'             => $this->config->isPaymentConfigFlag('active', $store, Kp::METHOD_CODE),
+                    'b2b_enabled'         => $this->config->isPaymentConfigFlag('enable_b2b', $store, Kp::METHOD_CODE),
+                    'data_sharing_onload' => $this->config->isPaymentConfigFlag(
+                        'data_sharing_onload',
+                        $store,
+                        Kp::METHOD_CODE
+                    ),
+                    'available_methods'   => [
                         'type'      => 'klarna_kp',
                         'component' => 'Klarna_Kp/js/view/payments/kp'
                     ]

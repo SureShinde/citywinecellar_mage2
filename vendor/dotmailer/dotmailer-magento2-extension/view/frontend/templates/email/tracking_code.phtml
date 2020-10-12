@@ -1,17 +1,14 @@
 <?php
-/** @var \Magento\Framework\View\Element\Template $block */
-/** @var \Dotdigitalgroup\Email\Helper\Data $helper */
+/** @var \Dotdigitalgroup\Email\Block\Tracking $block */
 ?>
-<?php $helper = $this->helper(\Dotdigitalgroup\Email\Helper\Data::class); ?>
 
-<?php if (! in_array('checkout_onepage_success', $block->getLayout()->getUpdate()->getHandles()) ||
-    ! $helper->isRoiTrackingEnabled()) : ?>
+<?php if ($block->isPageTrackingAvailable()): ?>
     <script>
         require.config({
             paths: {
-                'dmpt':  "<?= $block->escapeUrl($helper->getPageTrackingUrl()) ?>"
-           }
-       });
+                'dmpt':  "<?= $block->escapeUrl($block->getPageTrackingUrl()) ?>"
+            }
+        });
     </script>
     <script type="text/x-magento-init">
         {

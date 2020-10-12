@@ -13,14 +13,14 @@
             <stories value="Add Order"/>
             <title value="Create an Order with a Configurable Product with Drop Down Attributes via the Admin."/>
             <description value="You should be able to place an Order using a Configurable Product with Drop Down Attributes that is assigned to a Source with a Stock."/>
-            <testCaseId value="MSI-1313"/>
+            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/419535/scenarios/1444085"/>
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
         </annotations>
-        
+
         <before>
-            <createData entity="MsiCustomer1" stepKey="createCustomer1"/>
+            <createData entity="Msi_US_Customer" stepKey="createCustomer1"/>
             <createData entity="BasicMsiStockWithMainWebsite1" stepKey="createStock1"/>
             <createData entity="FullSource1" stepKey="createSource1"/>
             <createData entity="FullSource2" stepKey="createSource2"/>
@@ -46,13 +46,13 @@
             </createData>
 
             <actionGroup ref="LoginAsAdmin" stepKey="loginAsAdmin1"/>
-
-            <actionGroup ref="AdminUpdateCustomerGroupByEmailActionGroup" stepKey="updateCustomerGroup1">
-                <argument name="emailAddress" value="$createCustomer1.customer[email]$"/>
-                <argument name="customerGroup" value="General"/>
-            </actionGroup>
         </before>
         <after>
+            <!--Assign Default Stock to Default Website.-->
+            <actionGroup ref="AssignWebsiteToStockActionGroup" stepKey="assignMainWebsiteToDefaultStock">
+                <argument name="stockName" value="{{_defaultStock.name}}"/>
+                <argument name="websiteName" value="{{_defaultWebsite.name}}"/>
+            </actionGroup>
             <actionGroup ref="logout" stepKey="logoutOfAdmin1"/>
             <deleteData createDataKey="simpleCategory1" stepKey="deleteCategory1"/>
         </after>
@@ -149,7 +149,7 @@
         <click selector="#order-search .action-add" stepKey="clickOnAddSelectedProductsToOrder1"/>
         <waitForPageLoad time="10" stepKey="waitForPageLoad12"/>
 
-        <actionGroup ref="fillOrderCustomerInformation" stepKey="fillCustomerAddress">
+        <actionGroup ref="FillOrderCustomerInformationActionGroup" stepKey="fillCustomerAddress">
             <argument name="customer" value="$$createCustomer1$$"/>
             <argument name="address" value="US_Address_TX"/>
         </actionGroup>
@@ -173,7 +173,7 @@
 
         <grabTextFrom selector=".page-title" stepKey="grabTheOrderId1"/>
 
-        <actionGroup ref="verifyBasicOrderInformation" stepKey="verifyOrderInformation">
+        <actionGroup ref="VerifyBasicOrderInformationActionGroup" stepKey="verifyOrderInformation">
             <argument name="customer" value="$$createCustomer1$$"/>
             <argument name="shippingAddress" value="US_Address_TX"/>
             <argument name="billingAddress" value="US_Address_TX"/>
@@ -191,8 +191,8 @@
         <click selector=".data-grid-search-control-wrap button" stepKey="clickOnApplyFilters1"/>
         <waitForPageLoad time="5" stepKey="waitForPageLoad18"/>
 
-        <see selector="{{AdminGridRow.rowOne}}" userInput="{{MsiCustomer1.firstname}}" stepKey="seeFirstName1"/>
-        <see selector="{{AdminGridRow.rowOne}}" userInput="{{MsiCustomer1.lastname}}" stepKey="seeLastName1"/>
+        <see selector="{{AdminGridRow.rowOne}}" userInput="$$createCustomer1.firstname$$" stepKey="seeFirstName1"/>
+        <see selector="{{AdminGridRow.rowOne}}" userInput="$$createCustomer1.lastname$$" stepKey="seeLastName1"/>
         <see selector="{{AdminGridRow.rowOne}}" userInput="Pending" stepKey="seeFirstName3"/>
 
         <amOnPage url="{{AdminProductIndexPage.url}}" stepKey="navigateToProductIndex2"/>

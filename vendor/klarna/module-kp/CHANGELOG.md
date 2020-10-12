@@ -1,4 +1,95 @@
 
+6.5.0 / 2020-02-11
+==================
+
+  * MAGE-1184 Update styling in the admin configuration
+  * MAGE-1565 Add MFTF test for full invoice capture
+  * MAGE-1566 Add MFTF test for full invoice capture with % coupon
+  * MAGE-1567 Add MFTF test for full invoice capture with fixed coupon
+  * MAGE-1646 Add MFTF test for full credit
+  * MAGE-1647 Add MFTF test for full credit with percentage coupon
+  * MAGE-1648 Add MFTF test for full credit of fixed coupon order
+  * MAGE-1649 Add MFTF test for partial credit
+  * MAGE-1650 Add MFTF test for partial credit with % coupon
+  * MAGE-1651 Add MFTF test for partial credit with fixed coupon
+  * MAGE-1653 Add MFTF test for multiple products
+  * MAGE-1671 Add MFTF test for place order with two of one product
+  * MAGE-1675 Add MFTF test for partial credit on multi-qty
+  * MAGE-1676 Add MFTF test for partial credit with % coupon and multi-qty
+  * MAGE-1677 Add MFTF test for partial credit, fixed coupon and multi-qty
+  * MAGE-1707 Add support for Oceania endpoint
+  * MAGE-1732 Fix payment method not displayed / not filterable in order grid
+  * MAGE-1756 Fix issue with iframe not updating with shipping costs
+  * MAGE-1914 Fix payments did not appeared after customer switched to the correct country
+
+6.4.1 / 2019-11-04
+==================
+
+  * MAGE-1410 Add MFTF test for percentage coupon as guest
+  * MAGE-1411 Add MFTF test for percentage coupon as logged in customer
+  * MAGE-1413 Add MFTF test for virtual products with percentage coupon
+  * MAGE-1414 Add MFTF test for partial payment with gift card as guest
+  * MAGE-1415 Add MFTF test for free shipping as guest
+  * MAGE-1416 Add MFTF test for bundled products as logged in customer
+  * MAGE-1417 Add MFTF test for bundled products as guest
+  * MAGE-1481 Clear organizationName if B2B is disabled
+  * MAGE-1501 MFTF: Only login and out of admin when needed
+  * MAGE-1502 MFTF: Create commerce group and split suite into two
+  * MAGE-1504 Fix bug with passing the wrong address object
+
+6.4.0 / 2019-10-22
+==================
+ 
+  * MAGE-2 Add unit tests
+  * MAGE-518 Fix issue with placing a reorder
+  * MAGE-698 Add switch to allow disabling sharing info during load JS call
+  * MAGE-1254 Fix issues with split DB
+  * MAGE-1412 Add MFTF test for virtual products
+
+6.3.4 / 2019-08-28
+==================
+
+  * MAGE-383: Fix issue preventing placing an order after changing billing country
+  * MAGE-518: Fix issue preventing re-order when replacing cart items
+
+6.3.3 / 2019-08-14
+==================
+
+  * Add MFTF tests and custom suite
+
+6.3.2 / 2019-08-02
+==================
+
+  * MAGE-1177: Replace separate style files with one module source
+
+6.3.1 / 2019-08-02
+==================
+
+  * MAGE-803 Fix issue where billing address changes weren't always used
+  * MAGE-1005 Convert CSS to LESS
+  * Some misc checkstyle cleanup
+  * Update PHP versions supported
+
+6.3.0 / 2019-07-02
+==================
+
+  * MAGE-484 Converted to declarative database schema
+
+6.2.0 / 2019-06-10
+==================
+
+  * MAGE-58 Fix issues reported by static tests
+  * MAGE-69 Added option and support to enable B2B payments
+  * MAGE-250 Change coding standards to use Marketplace version
+  * MAGE-315 Add translations
+  * MAGE-398 Add css rules to swap logo and text
+  * MAGE-668 Fix issue with saving organization name
+
+6.1.1 / 2019-04-24
+================
+
+  * Remove MFTF tests for now to avoid breaking default suite
+
 6.1.0 / 2018-12-21
 ================
 

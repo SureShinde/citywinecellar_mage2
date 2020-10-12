@@ -14,7 +14,7 @@ class Roi extends \Magento\Framework\View\Element\Template
      * @var \Dotdigitalgroup\Email\Helper\Data
      */
     public $helper;
-    
+
     /**
      * @var \Magento\Checkout\Model\Session
      */
@@ -42,9 +42,9 @@ class Roi extends \Magento\Framework\View\Element\Template
     /**
      * @return bool
      */
-    public function isRoiTrackingEnabled()
+    public function isRoiTrackingAvailable()
     {
-        return $this->helper->isRoiTrackingEnabled();
+        return $this->helper->isEnabled() && $this->helper->isRoiTrackingEnabled();
     }
 
     /**
@@ -78,5 +78,13 @@ class Roi extends \Magento\Framework\View\Element\Template
             }
         }
         return json_encode($productNames);
+    }
+
+    /**
+     * @return string
+     */
+    public function getPageTrackingUrlForSuccessPage()
+    {
+        return $this->helper->getPageTrackingUrlForSuccessPage();
     }
 }

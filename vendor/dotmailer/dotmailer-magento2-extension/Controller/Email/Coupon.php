@@ -2,17 +2,8 @@
 
 namespace Dotdigitalgroup\Email\Controller\Email;
 
-class Coupon extends \Dotdigitalgroup\Email\Controller\Response
+use Dotdigitalgroup\Email\Controller\Edc;
+
+class Coupon extends Edc
 {
-    /**
-     * @return void
-     */
-    public function execute()
-    {
-        //authenticate
-        if ($this->authenticate()) {
-            $this->_view->loadLayout();
-            $this->_view->renderLayout();
-        }
-    }
 }

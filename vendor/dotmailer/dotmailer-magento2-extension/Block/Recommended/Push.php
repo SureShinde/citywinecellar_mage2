@@ -7,7 +7,7 @@ namespace Dotdigitalgroup\Email\Block\Recommended;
  *
  * @api
  */
-class Push extends \Magento\Catalog\Block\Product\AbstractProduct
+class Push extends \Dotdigitalgroup\Email\Block\Recommended
 {
     /**
      * @var \Dotdigitalgroup\Email\Helper\Data
@@ -22,7 +22,7 @@ class Push extends \Magento\Catalog\Block\Product\AbstractProduct
     /**
      * @var \Dotdigitalgroup\Email\Helper\Recommended
      */
-    public $recommnededHelper;
+    public $recommendedHelper;
 
     /**
      * @var \Dotdigitalgroup\Email\Model\ResourceModel\Catalog
@@ -33,6 +33,8 @@ class Push extends \Magento\Catalog\Block\Product\AbstractProduct
      * Push constructor.
      *
      * @param \Magento\Catalog\Block\Product\Context $context
+     * @param \Dotdigitalgroup\Email\Block\Helper\Font $font
+     * @param \Dotdigitalgroup\Email\Model\Catalog\UrlFinder $urlFinder
      * @param \Dotdigitalgroup\Email\Model\ResourceModel\Catalog $catalog
      * @param \Dotdigitalgroup\Email\Helper\Data $helper
      * @param \Magento\Framework\Pricing\Helper\Data $priceHelper
@@ -41,17 +43,20 @@ class Push extends \Magento\Catalog\Block\Product\AbstractProduct
      */
     public function __construct(
         \Magento\Catalog\Block\Product\Context $context,
+        \Dotdigitalgroup\Email\Block\Helper\Font $font,
+        \Dotdigitalgroup\Email\Model\Catalog\UrlFinder $urlFinder,
         \Dotdigitalgroup\Email\Model\ResourceModel\Catalog $catalog,
         \Dotdigitalgroup\Email\Helper\Data $helper,
         \Magento\Framework\Pricing\Helper\Data $priceHelper,
         \Dotdigitalgroup\Email\Helper\Recommended $recommended,
         array $data = []
     ) {
-        parent::__construct($context, $data);
-        $this->helper            = $helper;
-        $this->catalog    = $catalog;
-        $this->recommnededHelper = $recommended;
-        $this->priceHelper       = $priceHelper;
+        $this->helper = $helper;
+        $this->catalog = $catalog;
+        $this->recommendedHelper = $recommended;
+        $this->priceHelper = $priceHelper;
+
+        parent::__construct($context, $font, $urlFinder, $data);
     }
 
     /**
@@ -68,8 +73,8 @@ class Push extends \Magento\Catalog\Block\Product\AbstractProduct
         }
 
         $mode = $this->getRequest()->getActionName();
-        $limit = $this->recommnededHelper->getDisplayLimitByMode($mode);
-        $productIds = $this->recommnededHelper->getProductPushIds();
+        $limit = $this->recommendedHelper->getDisplayLimitByMode($mode);
+        $productIds = $this->recommendedHelper->getProductPushIds();
         $productCollection = $this->catalog->getProductCollectionFromIds($productIds, $limit);
 
         //important check the salable product in template
@@ -83,7 +88,7 @@ class Push extends \Magento\Catalog\Block\Product\AbstractProduct
      */
     public function getMode()
     {
-        return $this->recommnededHelper->getDisplayType();
+        return $this->recommendedHelper->getDisplayType();
     }
 
     /**

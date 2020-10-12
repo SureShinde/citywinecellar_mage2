@@ -8,7 +8,8 @@ define([
     return Component.extend({
         defaults: {
             template: 'Amazon_Payment/shipping-address/inline-form',
-            formSelector: 'co-shipping-form'
+            formSelector: 'co-shipping-form',
+            accountFormSelector: 'customer-email-fieldset'
         },
 
         /**
@@ -16,29 +17,29 @@ define([
          */
         initObservable: function () {
             this._super();
-            amazonStorage.isAmazonAccountLoggedIn.subscribe(function (value) {
-                var elem = document.getElementById(this.formSelector);
-
-                if (elem && value === false) {
-                    document.getElementById(this.formSelector).style.display = 'block';
-                }
-            }, this);
-
+            amazonStorage.isAmazonAccountLoggedIn.subscribe(this.hideInlineForm, this);
             return this;
+        },
+
+        /**
+         * Show/hide inline form depending on Amazon login status
+         */
+        manipulateInlineForm: function () {
+            this.hideInlineForm(amazonStorage.isAmazonAccountLoggedIn());
         },
 
         /**
          * Show/hide inline form
          */
-        manipulateInlineForm: function () {
-            var elem;
+        hideInlineForm: function(hide) {
+            var shippingForm = document.getElementById(this.formSelector);
+            var accountForm = document.getElementById(this.accountFormSelector);
 
-            if (amazonStorage.isAmazonAccountLoggedIn()) {
-                elem = document.getElementById(this.formSelector);
-
-                if (elem) {
-                    document.getElementById(this.formSelector).style.display = 'none';
-                }
+            if (shippingForm) {
+                shippingForm.style.display = hide ? 'none' : 'block';
+            }
+            if (accountForm) {
+                accountForm.parentElement.style.display = hide ? 'none' : 'block';
             }
         }
     });

@@ -8,8 +8,10 @@
  * Environment initialization
  */
 error_reporting(E_ALL);
-stream_wrapper_unregister('phar');
-ini_set('display_errors', 1);
+if (in_array('phar', \stream_get_wrappers())) {
+    stream_wrapper_unregister('phar');
+}
+#ini_set('display_errors', 1);
 
 /* PHP version validation */
 if (!defined('PHP_VERSION_ID') || PHP_VERSION_ID < 70103) {

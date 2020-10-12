@@ -7,7 +7,7 @@ namespace Dotdigitalgroup\Email\Block\Recommended;
  *
  * @api
  */
-class Mostviewed extends \Magento\Catalog\Block\Product\AbstractProduct
+class Mostviewed extends \Dotdigitalgroup\Email\Block\Recommended
 {
     /**
      * @var \Dotdigitalgroup\Email\Helper\Data
@@ -22,7 +22,7 @@ class Mostviewed extends \Magento\Catalog\Block\Product\AbstractProduct
     /**
      * @var \Dotdigitalgroup\Email\Helper\Recommended
      */
-    public $recommnededHelper;
+    public $recommendedHelper;
 
     /**
      * @var \Dotdigitalgroup\Email\Model\ResourceModel\CatalogFactory
@@ -33,6 +33,8 @@ class Mostviewed extends \Magento\Catalog\Block\Product\AbstractProduct
      * Mostviewed constructor.
      *
      * @param \Magento\Catalog\Block\Product\Context $context
+     * @param \Dotdigitalgroup\Email\Block\Helper\Font $font
+     * @param \Dotdigitalgroup\Email\Model\Catalog\UrlFinder $urlFinder
      * @param \Dotdigitalgroup\Email\Helper\Data $helper
      * @param \Magento\Framework\Pricing\Helper\Data $priceHelper
      * @param \Dotdigitalgroup\Email\Model\ResourceModel\Catalog $catalog
@@ -41,18 +43,20 @@ class Mostviewed extends \Magento\Catalog\Block\Product\AbstractProduct
      */
     public function __construct(
         \Magento\Catalog\Block\Product\Context $context,
+        \Dotdigitalgroup\Email\Block\Helper\Font $font,
+        \Dotdigitalgroup\Email\Model\Catalog\UrlFinder $urlFinder,
         \Dotdigitalgroup\Email\Helper\Data $helper,
         \Magento\Framework\Pricing\Helper\Data $priceHelper,
         \Dotdigitalgroup\Email\Model\ResourceModel\Catalog $catalog,
         \Dotdigitalgroup\Email\Helper\Recommended $recommended,
         array $data = []
     ) {
-        $this->catalog           = $catalog;
+        $this->catalog                  = $catalog;
         $this->helper                   = $helper;
-        $this->recommnededHelper        = $recommended;
+        $this->recommendedHelper        = $recommended;
         $this->priceHelper              = $priceHelper;
 
-        parent::__construct($context, $data);
+        parent::__construct($context, $font, $urlFinder, $data);
     }
 
     /**
@@ -70,8 +74,8 @@ class Mostviewed extends \Magento\Catalog\Block\Product\AbstractProduct
 
         $productsToDisplay = [];
         $mode = $this->getRequest()->getActionName();
-        $limit = $this->recommnededHelper->getDisplayLimitByMode($mode);
-        $from  = $this->recommnededHelper->getTimeFromConfig($mode);
+        $limit = $this->recommendedHelper->getDisplayLimitByMode($mode);
+        $from  = $this->recommendedHelper->getTimeFromConfig($mode);
         $to = $this->_localeDate->date()->format(\Zend_Date::ISO_8601);
         $catId = $this->getRequest()->getParam('category_id');
         $catName = $this->getRequest()->getParam('category_name');
@@ -101,7 +105,7 @@ class Mostviewed extends \Magento\Catalog\Block\Product\AbstractProduct
      */
     public function getMode()
     {
-        return $this->recommnededHelper->getDisplayType();
+        return $this->recommendedHelper->getDisplayType();
     }
 
     /**

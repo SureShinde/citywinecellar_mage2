@@ -17,9 +17,7 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-error_reporting(E_ALL);
-error_reporting(-1);
-ini_set('error_reporting', E_ALL);
+
 try {
     require __DIR__ . '/app/bootstrap.php';
 } catch (\Exception $e) {

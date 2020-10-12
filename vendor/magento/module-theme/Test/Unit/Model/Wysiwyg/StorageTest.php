@@ -9,6 +9,11 @@
  */
 namespace Magento\Theme\Test\Unit\Model\Wysiwyg;
 
+use Magento\Framework\Filesystem\DriverInterface;
+
+/**
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
 class StorageTest extends \PHPUnit\Framework\TestCase
 {
     /**
@@ -56,9 +61,27 @@ class StorageTest extends \PHPUnit\Framework\TestCase
      */
     protected $urlDecoder;
 
+    /**
+     * @var DriverInterface|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $filesystemDriver;
+
     protected function setUp()
     {
         $this->_filesystem = $this->createMock(\Magento\Framework\Filesystem::class);
+
+        $file = $this->createPartialMock(\Magento\Framework\Filesystem\Io\File::class, ['getPathInfo']);
+
+        $file->expects($this->any())
+            ->method('getPathInfo')
+            ->will(
+                $this->returnCallback(
+                    function ($path) {
+                        return pathinfo($path);
+                    }
+                )
+            );
+
         $this->_helperStorage = $this->createPartialMock(
             \Magento\Theme\Helper\Storage::class,
             [
@@ -69,30 +92,40 @@ class StorageTest extends \PHPUnit\Framework\TestCase
                 'getShortFilename',
                 'getSession',
                 'convertPathToId',
-                'getRequestParams'
+                'getRequestParams',
             ]
         );
+
+        $reflection = new \ReflectionClass(\Magento\Theme\Helper\Storage::class);
+        $reflection_property = $reflection->getProperty('file');
+        $reflection_property->setAccessible(true);
+        $reflection_property->setValue($this->_helperStorage, $file);
+
         $this->_objectManager = $this->createMock(\Magento\Framework\ObjectManagerInterface::class);
         $this->_imageFactory = $this->createMock(\Magento\Framework\Image\AdapterFactory::class);
         $this->directoryWrite = $this->createMock(\Magento\Framework\Filesystem\Directory\Write::class);
         $this->urlEncoder = $this->createPartialMock(\Magento\Framework\Url\EncoderInterface::class, ['encode']);
         $this->urlDecoder = $this->createPartialMock(\Magento\Framework\Url\DecoderInterface::class, ['decode']);
+        $this->filesystemDriver = $this->createMock(DriverInterface::class);
 
-        $this->_filesystem->expects(
-            $this->once()
-        )->method(
-            'getDirectoryWrite'
-        )->will(
-            $this->returnValue($this->directoryWrite)
-        );
+        $this->_filesystem->expects($this->once())
+            ->method('getDirectoryWrite')
+            ->willReturn($this->directoryWrite);
 
-        $this->_storageModel = new \Magento\Theme\Model\Wysiwyg\Storage(
-            $this->_filesystem,
-            $this->_helperStorage,
-            $this->_objectManager,
-            $this->_imageFactory,
-            $this->urlEncoder,
-            $this->urlDecoder
+        $objectManager = new \Magento\Framework\TestFramework\Unit\Helper\ObjectManager($this);
+
+        $this->_storageModel = $objectManager->getObject(
+            \Magento\Theme\Model\Wysiwyg\Storage::class,
+            [
+                'filesystem' => $this->_filesystem,
+                'helper' => $this->_helperStorage,
+                'objectManager' => $this->_objectManager,
+                'imageFactory' => $this->_imageFactory,
+                'urlEncoder' => $this->urlEncoder,
+                'urlDecoder' => $this->urlDecoder,
+                'file' => null,
+                'filesystemDriver' => $this->filesystemDriver,
+            ]
         );
 
         $this->_storageRoot = '/root';
@@ -546,5 +579,26 @@ class StorageTest extends \PHPUnit\Framework\TestCase
     public function booleanCasesDataProvider()
     {
         return [[true], [false]];
+    }
+
+    /**
+     * cover \Magento\Theme\Model\Wysiwyg\Storage::deleteDirectory
+     * @expectedException \Magento\Framework\Exception\LocalizedException
+     * @expectedExceptionMessage We can't delete root directory fake/relative/path right now.
+     */
+    public function testDeleteRootDirectoryRelative()
+    {
+        $directoryPath = $this->_storageRoot;
+        $fakePath = 'fake/relative/path';
+        $this->directoryWrite->method('getAbsolutePath')
+            ->with($fakePath)
+            ->willReturn($directoryPath);
+        $this->filesystemDriver->method('getRealPathSafety')
+            ->with($directoryPath)
+            ->willReturn($directoryPath);
+        $this->_helperStorage
+            ->method('getStorageRoot')
+            ->willReturn($directoryPath);
+        $this->_storageModel->deleteDirectory($fakePath);
     }
 }

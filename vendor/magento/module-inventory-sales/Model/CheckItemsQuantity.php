@@ -12,6 +12,9 @@ use Magento\InventorySalesApi\Api\IsProductSalableForRequestedQtyInterface;
 use Magento\InventorySalesApi\Api\Data\ProductSalableResultInterface;
 use Magento\InventorySalesApi\Api\Data\ProductSalabilityErrorInterface;
 
+/**
+ * Verify items are salable for requested quantity.
+ */
 class CheckItemsQuantity
 {
     /**
@@ -36,7 +39,7 @@ class CheckItemsQuantity
      * @return void
      * @throws LocalizedException
      */
-    public function execute(array $items, int $stockId) : void
+    public function execute(array $items, int $stockId): void
     {
         foreach ($items as $sku => $qty) {
             /** @var ProductSalableResultInterface $isSalable */

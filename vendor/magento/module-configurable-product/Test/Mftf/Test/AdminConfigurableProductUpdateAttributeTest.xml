@@ -96,7 +96,7 @@
         </before>
 
         <after>
-            <amOnPage url="admin/admin/auth/logout/" stepKey="logout"/>
+            <actionGroup ref="logout" stepKey="adminLogout"/>
 
             <!-- Delete everything that was created in the before block -->
             <deleteData createDataKey="createCategory" stepKey="deleteCatagory" />
@@ -105,6 +105,9 @@
             <deleteData createDataKey="createConfigChildProduct2" stepKey="deleteConfigChildProduct2"/>
             <deleteData createDataKey="createModifiableProductAttribute" stepKey="deleteModifiableProductAttribute"/>
             <deleteData createDataKey="createConfigProductAttribute" stepKey="deleteConfigProductAttribute"/>
+
+            <!-- Reindex invalidated indices after product attribute has been created/deleted -->
+            <actionGroup ref="CliRunReindexUsingCronJobsActionGroup" stepKey="reindexInvalidatedIndices"/>
         </after>
 
         <!-- Get the current option of the attribute before it was changed -->
@@ -213,7 +216,7 @@
         </before>
 
         <after>
-            <amOnPage url="admin/admin/auth/logout/" stepKey="logout"/>
+            <actionGroup ref="logout" stepKey="adminLogout"/>
 
             <!-- Delete everything that was created in the before block -->
             <deleteData createDataKey="createCategory" stepKey="deleteCatagory" />
@@ -221,6 +224,9 @@
             <deleteData createDataKey="createConfigChildProduct1" stepKey="deleteConfigChildProduct1"/>
             <deleteData createDataKey="createConfigChildProduct2" stepKey="deleteConfigChildProduct2"/>
             <deleteData createDataKey="createConfigProductAttribute" stepKey="deleteConfigProductAttribute"/>
+
+            <!-- Reindex invalidated indices after product attribute has been created/deleted -->
+            <actionGroup ref="CliRunReindexUsingCronJobsActionGroup" stepKey="reindexInvalidatedIndices"/>
         </after>
 
         <!-- Find the product that we just created using the product grid -->
@@ -239,6 +245,7 @@
         <click stepKey="clickEditConfig" selector="{{AdminProductFormConfigurationsSection.createConfigurations}}"/>
         <waitForPageLoad stepKey="waitForEditConfig"/>
         <click stepKey="clickNextWizard" selector="{{AdminCreateProductConfigurationsPanel.next}}"/>
+        <waitForElementVisible selector="{{AdminCreateProductConfigurationsPanel.createNewValue}}" stepKey="waitCreateNewValueAppears"/>
         <click stepKey="createNewValue" selector="{{AdminCreateProductConfigurationsPanel.createNewValue}}"/>
         <fillField stepKey="fillNewAttribute" selector="{{AdminCreateProductConfigurationsPanel.attributeName}}" userInput="simple"/>
         <click stepKey="confirmNewAttribute" selector="{{AdminCreateProductConfigurationsPanel.saveAttribute}}"/>

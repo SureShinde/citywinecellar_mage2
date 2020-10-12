@@ -2,18 +2,20 @@
 
 namespace Dotdigitalgroup\Email\Setup;
 
-use Magento\Framework\Setup\UpgradeDataInterface;
+use Dotdigitalgroup\Email\Helper\Config;
+use Dotdigitalgroup\Email\Helper\Data;
+use Dotdigitalgroup\Email\Helper\Transactional;
+use Dotdigitalgroup\Email\Setup\SchemaInterface as Schema;
+use Magento\Config\Model\ResourceModel\Config\Data\CollectionFactory;
+use Magento\Framework\App\Config\ReinitableConfigInterface;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\Encryption\EncryptorInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
-use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\Setup\UpgradeDataInterface;
 use Magento\Store\Model\ScopeInterface;
-use Dotdigitalgroup\Email\Helper\Config;
-use Dotdigitalgroup\Email\Helper\Transactional;
-use Magento\Config\Model\ResourceModel\Config\Data\CollectionFactory;
-use Dotdigitalgroup\Email\Helper\Data;
-use Magento\Framework\App\Config\ReinitableConfigInterface;
-use Magento\User\Model\ResourceModel\User\CollectionFactory as UserCollectionFactory;
 use Magento\User\Model\ResourceModel\User;
+use Magento\User\Model\ResourceModel\User\CollectionFactory as UserCollectionFactory;
 
 /**
  * @codeCoverageIgnore
@@ -46,26 +48,33 @@ class UpgradeData implements UpgradeDataInterface
     private $userResource;
 
     /**
+     * @var EncryptorInterface
+     */
+    private $encryptor;
+
+    /**
      * UpgradeData constructor.
-     *
      * @param Data $helper
      * @param CollectionFactory $configCollectionFactory
      * @param ReinitableConfigInterface $config
      * @param UserCollectionFactory $userCollectionFactory
      * @param User $userResource
+     * @param EncryptorInterface $encryptor
      */
     public function __construct(
         Data $helper,
         CollectionFactory $configCollectionFactory,
         ReinitableConfigInterface $config,
         UserCollectionFactory $userCollectionFactory,
-        User $userResource
+        User $userResource,
+        EncryptorInterface $encryptor
     ) {
         $this->configCollectionFactory = $configCollectionFactory;
         $this->helper = $helper;
         $this->config = $config;
         $this->userCollectionFactory = $userCollectionFactory;
         $this->userResource = $userResource;
+        $this->encryptor = $encryptor;
     }
 
     /**
@@ -121,6 +130,10 @@ class UpgradeData implements UpgradeDataInterface
             $this->config->reinit();
         }
 
+        $this->upgradeFourOhOne($setup, $context);
+        $this->upgradeFourThreeSix($setup, $context);
+        $this->upgradeFourFourZero($setup, $context);
+
         $installer->endSetup();
     }
 
@@ -145,7 +158,7 @@ class UpgradeData implements UpgradeDataInterface
     private function encryptAndSaveRefreshToken($user)
     {
         $user->setRefreshToken(
-            $this->helper->encryptor->encrypt($user->getRefreshToken())
+            $this->encryptor->encrypt($user->getRefreshToken())
         );
         $this->userResource->save($user);
     }
@@ -197,9 +210,140 @@ class UpgradeData implements UpgradeDataInterface
             if ($value) {
                 $this->helper->saveConfigData(
                     $path,
-                    $this->helper->encryptor->encrypt($value),
+                    $this->encryptor->encrypt($value),
                     $scope,
                     $id
+                );
+            }
+        }
+    }
+
+    /**
+     * Maps 'imported' data to 'processed' in email_catalog.
+     * Released in 4.0.1, this replaces the previous updateThreeFourTwo.
+     * For merchants on 3.4.2 <> 4.0.0 no data upgrade is required.
+     *
+     * @param SchemaSetupInterface $setup
+     * @param ModuleContextInterface $context
+     */
+    private function upgradeFourOhOne(
+        ModuleDataSetupInterface $setup,
+        ModuleContextInterface $context
+    ) {
+        if (version_compare($context->getVersion(), '3.4.2', '<')) {
+            $catalogTable = $setup->getTable(Schema::EMAIL_CATALOG_TABLE);
+
+            $setup->getConnection()->update(
+                $catalogTable,
+                [
+                    'processed' => 1
+                ],
+                [
+                    'imported' => 1,
+                    'modified IS NULL OR modified = 0'
+                ]
+            );
+        }
+    }
+
+    /**
+     * Changes Imported values from null to zero
+     * @param ModuleDataSetupInterface $setup
+     * @param ModuleContextInterface $context
+     */
+    private function upgradeFourThreeSix(
+        ModuleDataSetupInterface $setup,
+        ModuleContextInterface $context
+    ) {
+        if (version_compare($context->getVersion(), '4.3.6', '<')) {
+            $orderTable = $setup->getTable(Schema::EMAIL_ORDER_TABLE);
+            $contactTable = $setup->getTable(Schema::EMAIL_CONTACT_TABLE);
+            $reviewTable = $setup->getTable(Schema::EMAIL_REVIEW_TABLE);
+            $wishlistTable = $setup->getTable(Schema::EMAIL_WISHLIST_TABLE);
+
+            $setup->getConnection()->update(
+                $orderTable,
+                [
+                    'email_imported' => 0
+                ],
+                [
+                    'email_imported IS NULL'
+                ]
+            );
+
+            $setup->getConnection()->update(
+                $contactTable,
+                [
+                    'email_imported' => 0
+                ],
+                [
+                    'email_imported IS NULL'
+                ]
+            );
+
+            $setup->getConnection()->update(
+                $contactTable,
+                [
+                    'subscriber_imported' => 0
+                ],
+                [
+                    'subscriber_imported IS NULL'
+                ]
+            );
+
+            $setup->getConnection()->update(
+                $reviewTable,
+                [
+                    'review_imported' => 0
+                ],
+                [
+                    'review_imported IS NULL'
+                ]
+            );
+
+            $setup->getConnection()->update(
+                $wishlistTable,
+                [
+                    'wishlist_imported' => 0
+                ],
+                [
+                    'wishlist_imported IS NULL'
+                ]
+            );
+        }
+    }
+
+    /**
+     * @param ModuleDataSetupInterface $setup
+     * @param ModuleContextInterface $context
+     */
+    private function upgradeFourFourZero(
+        ModuleDataSetupInterface $setup,
+        ModuleContextInterface $context
+    ) {
+        if (version_compare($context->getVersion(), '4.4.0', '<')) {
+
+            $select = $setup->getConnection()->select()->from(
+                $setup->getTable('core_config_data'),
+                ['config_id', 'value']
+            )->where(
+                'path = ?',
+                \Dotdigitalgroup\Email\Helper\Transactional::XML_PATH_DDG_TRANSACTIONAL_HOST
+            );
+            foreach ($setup->getConnection()->fetchAll($select) as $configRow) {
+                preg_match_all('/\d+/', $configRow['value'], $matches);
+                $value = $matches[0];
+                //Invalid Smtp Host
+                if (!count($value) === 1) {
+                    continue;
+                }
+                $row = [
+                    'value' => reset($value)
+                ];
+                $setup->getConnection()->update(
+                    $setup->getTable('core_config_data'),
+                    $row,
+                    ['config_id = ?' => $configRow['config_id']]
                 );
             }
         }

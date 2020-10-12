@@ -12,32 +12,32 @@ class RemoveProduct implements \Magento\Framework\Event\ObserverInterface
      * @var \Dotdigitalgroup\Email\Model\ResourceModel\Catalog
      */
     private $catalogResource;
-    
+
     /**
      * @var \Dotdigitalgroup\Email\Helper\Data
      */
     private $helper;
-    
+
     /**
      * @var \Psr\Log\LoggerInterface
      */
     private $scopeConfig;
-    
+
     /**
      * @var \Magento\Store\Model\StoreManagerInterface
      */
     private $storeManager;
-    
+
     /**
      * @var \Dotdigitalgroup\Email\Model\CatalogFactory
      */
     private $catalogFactory;
-    
+
     /**
      * @var \Dotdigitalgroup\Email\Model\ResourceModel\Catalog\CollectionFactory
      */
     private $catalogCollection;
-    
+
     /**
      * @var \Dotdigitalgroup\Email\Model\ImporterFactory
      */
@@ -87,7 +87,7 @@ class RemoveProduct implements \Magento\Framework\Event\ObserverInterface
             $emailCatalog = $this->catalogFactory->create();
             if ($item = $emailCatalog->loadProductById($productId)) {
                 //if imported delete from account
-                if ($item->getImported()) {
+                if ($item->getProcessed()) {
                     $this->deleteFromAccount($productId);
                 }
             }

@@ -195,25 +195,6 @@ class Save extends Attribute implements HttpPostActionInterface
                 ? $model->getAttributeCode()
                 : $this->getRequest()->getParam('attribute_code');
             $attributeCode = $attributeCode ?: $this->generateCode($this->getRequest()->getParam('frontend_label')[0]);
-            if (strlen($attributeCode) > 0) {
-                $validatorAttrCode = new \Zend_Validate_Regex(
-                    ['pattern' => '/^[a-zA-Z\x{600}-\x{6FF}][a-zA-Z\x{600}-\x{6FF}_0-9]{0,30}$/u']
-                );
-                if (!$validatorAttrCode->isValid($attributeCode)) {
-                    $this->messageManager->addErrorMessage(
-                        __(
-                            'Attribute code "%1" is invalid. Please use only letters (a-z or A-Z), ' .
-                            'numbers (0-9) or underscore(_) in this field, first character should be a letter.',
-                            $attributeCode
-                        )
-                    );
-                    return $this->returnResult(
-                        'catalog/*/edit',
-                        ['attribute_id' => $attributeId, '_current' => true],
-                        ['error' => true]
-                    );
-                }
-            }
             $data['attribute_code'] = $attributeCode;
 
             //validate frontend_input
@@ -240,7 +221,7 @@ class Save extends Attribute implements HttpPostActionInterface
                     return $this->returnResult('catalog/*/', [], ['error' => true]);
                 }
                 // entity type check
-                if ($model->getEntityTypeId() != $this->_entityTypeId) {
+                if ($model->getEntityTypeId() != $this->_entityTypeId || array_key_exists('backend_model', $data)) {
                     $this->messageManager->addErrorMessage(__('We can\'t update the attribute.'));
                     $this->_session->setAttributeData($data);
                     return $this->returnResult('catalog/*/', [], ['error' => true]);
@@ -276,6 +257,8 @@ class Save extends Attribute implements HttpPostActionInterface
                 // Unset attribute field for system attributes
                 unset($data['apply_to']);
             }
+
+            unset($data['entity_type_id']);
 
             $model->addData($data);
 

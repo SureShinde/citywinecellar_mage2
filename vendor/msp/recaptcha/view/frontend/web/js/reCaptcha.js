@@ -29,7 +29,8 @@ define(
         return Component.extend({
 
             defaults: {
-                template: 'MSP_ReCaptcha/reCaptcha'
+                template: 'MSP_ReCaptcha/reCaptcha',
+                reCaptchaId: 'msp-recaptcha'
             },
             _isApiRegistered: undefined,
 
@@ -78,6 +79,14 @@ define(
              */
             getIsVisible: function () {
                 return this.settings.enabled[this.zone];
+            },
+
+            /**
+             * Checking that reCaptcha is invisible type
+             * @returns {Boolean}
+             */
+            getIsInvisibleRecaptcha: function () {
+                return this.settings.size === 'invisible';
             },
 
             /**
@@ -131,10 +140,14 @@ define(
                     'badge': this.badge ? this.badge : this.settings.badge,
                     'callback': function (token) { // jscs:ignore jsDoc
                         me.reCaptchaCallback(token);
+                        me.validateReCaptcha(true);
+                    },
+                    'expired-callback': function () {
+                        me.validateReCaptcha(false);
                     }
                 });
 
-                if (this.settings.size === 'invisible') {
+                if (this.settings.size === 'invisible' && $parentForm.length > 0) {
                     $parentForm.submit(function (event) {
                         if (!me.tokenField.value) {
                             // eslint-disable-next-line no-undef
@@ -162,6 +175,13 @@ define(
 
             },
 
+
+            validateReCaptcha: function(state){
+                if (this.settings.size !== 'invisible') {
+                    return $(document).find('input[type=checkbox].required-captcha').prop( "checked", state );
+                }
+            },
+
             /**
              * Render reCaptcha
              */
@@ -184,10 +204,6 @@ define(
              * @returns {String}
              */
             getReCaptchaId: function () {
-                if (!this.reCaptchaId) {
-                    return 'msp-recaptcha';
-                }
-
                 return this.reCaptchaId;
             }
         });

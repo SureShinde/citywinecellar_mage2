@@ -13,7 +13,7 @@
             <stories value="Create order with virtual product on default stock from admin area."/>
             <title value="Create order with virtual product on default stock from admin area"/>
             <description value="Check, admin user able to create order with virtual product on default stock from admin area."/>
-            <testCaseId value="MSI-1297"/>
+            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/419536/scenarios/1444010"/>
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
@@ -35,7 +35,7 @@
             <comment userInput="Assign Default Stock to Main Website " stepKey="assignDefaultStockToMainWebsiteComment"/>
             <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockListPage"/>
             <waitForPageLoad time="30" stepKey="waitForStockListPageLoad"/>
-            <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchDefaultStockByName">
+            <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchDefaultStockByName">
                 <argument name="keyword" value="_defaultStock.name"/>
             </actionGroup>
             <click selector="{{AdminGridRow.editByValue(_defaultStock.name)}}" stepKey="clickEditDefaultStock"/>
@@ -76,20 +76,19 @@
         <actionGroup ref="AdminFormSaveAndClose" stepKey="saveAndCloseCreatedVirtualProduct"/>
 
         <comment userInput="Create order with virtual product from admin area." stepKey="createOrderWithVirtualProductComment"/>
-        <actionGroup ref="navigateToNewOrderPageExistingCustomer" stepKey="createNewOrderForCustomer">
+        <actionGroup ref="NavigateToNewOrderPageExistingCustomerActionGroup" stepKey="createNewOrderForCustomer">
             <argument name="customer" value="$$customer$$"/>
         </actionGroup>
 
         <conditionalClick selector="#store_1" dependentSelector="#order-store-selector" visible="true" stepKey="clickOnDefaultStoreViewIfPresent1"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad20"/>
 
-        <actionGroup ref="addSimpleProductToOrder" stepKey="addVirtualProductToOrder">
+        <actionGroup ref="AddSimpleProductToOrderActionGroup" stepKey="addVirtualProductToOrder">
             <argument name="product" value="$$product$$"/>
         </actionGroup>
 
         <comment userInput="Check order grand total and shipping cost." stepKey="checkOrderGrandTotalComment"/>
         <see selector="{{AdminOrderFormTotalSection.total('Subtotal')}}" userInput="$99.99" stepKey="seeOrderSubTotal"/>
-        <see selector="{{AdminOrderFormTotalSection.total('Shipping')}}" userInput="0" stepKey="seeOrderShipping"/>
         <see selector="{{AdminOrderFormTotalSection.grandTotal}}" userInput="$99.99" stepKey="seeCorrectGrandTotal"/>
 
         <comment userInput="Submit order." stepKey="submitOrderComment"/>

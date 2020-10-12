@@ -13,14 +13,14 @@
             <stories value="Source Selection Algorithm by source priority with simple product on custom stock."/>
             <title value="Source Selection Algorithm by source priority with simple product on custom stock."/>
             <description value="Check, 'Source Selection Algorithm' by source priority select corrects source for simple product on custom stock."/>
-            <testCaseId value="MSI-1126"/>
+            <testCaseId value="https://app.hiptest.com/projects/69435/test-plan/folders/790998/scenarios/1624282"/>
             <severity value="CRITICAL"/>
             <group value="msi"/>
             <group value="multi_mode"/>
         </annotations>
 
         <before>
-            <magentoCLI command="config:set cataloginventory/item_options/manage_stock 1" stepKey="magentoCLI1"/>
+            <magentoCLI command="config:set {{TurnOnManageStockConfig.path}} {{TurnOnManageStockConfig.value}}" stepKey="magentoCLI1"/>
             <createData entity="SimpleSubCategory" stepKey="category"/>
             <createData entity="SimpleProduct" stepKey="product">
                 <requiredEntity createDataKey="category"/>
@@ -36,7 +36,7 @@
             <comment userInput="Assign sources and sales channel to stock." stepKey="assignSourcesToStockComment"/>
             <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockListPage"/>
             <waitForPageLoad time="30" stepKey="waitForStockGridLoad"/>
-            <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchCustomStockByName">
+            <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchCustomStockByName">
                 <argument name="keyword" value="$$customStock.stock[name]$$"/>
             </actionGroup>
             <click selector="{{AdminGridRow.editByValue($$customStock.stock[name]$$)}}" stepKey="clickEditCustomStock"/>
@@ -44,14 +44,14 @@
             <selectOption selector="{{AdminEditStockSalesChannelsSection.websites}}" userInput="Main Website" stepKey="selectWebsiteAsSalesChannelForCustomStock"/>
 
             <click selector="{{AdminEditStockSourcesSection.assignSources}}" stepKey="clickOnAssignSourcesToAssignHighPrioritySource"/>
-            <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchHighPrioritySourceByName">
+            <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchHighPrioritySourceByName">
                 <argument name="keyword" value="$$highPrioritySource.source[name]$$"/>
             </actionGroup>
             <click selector="{{AdminGridRow.checkboxByValue($$highPrioritySource.source[name]$$)}}" stepKey="selectHighPrioritySourceForCustomStock"/>
             <click selector="{{AdminManageSourcesGridControls.done}}" stepKey="clickDoneOnHighPrioritySourcesAssignment"/>
 
             <click selector="{{AdminEditStockSourcesSection.assignSources}}" stepKey="clickOnAssignSourcesToAssignLowPrioritySource"/>
-            <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchLowPrioritySourceByName">
+            <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchLowPrioritySourceByName">
                 <argument name="keyword" value="$$lowPrioritySource.source[name]$$"/>
             </actionGroup>
             <click selector="{{AdminGridRow.checkboxByValue($$lowPrioritySource.source[name]$$)}}" stepKey="selectLowPrioritySourceForCustomStock"/>
@@ -89,7 +89,7 @@
             <comment userInput="Assign Default Stock to Main Website " stepKey="assignDefaultStockToMainWebsiteComment"/>
             <amOnPage url="{{AdminManageStockPage.url}}" stepKey="navigateToStockListPage"/>
             <waitForPageLoad time="30" stepKey="waitForStockListPageLoad"/>
-            <actionGroup ref="searchAdminDataGridByKeyword" stepKey="searchDefaultStockByName">
+            <actionGroup ref="SearchAdminDataGridByKeywordActionGroup" stepKey="searchDefaultStockByName">
                 <argument name="keyword" value="_defaultStock.name"/>
             </actionGroup>
             <click selector="{{AdminGridRow.editByValue(_defaultStock.name)}}" stepKey="clickEditDefaultStock"/>
@@ -134,9 +134,7 @@
         <click selector="{{AdminAssignSourcesSlideOutGridSection.checkboxByCode($$highPrioritySource.source[source_code]$$)}}" stepKey="selectHighPrioritySource"/>
         <click selector="{{AdminAssignSourcesSlideOutSection.done}}" stepKey="doneSelectHighPrioritySource"/>
 
-        <see selector="{{AdminProductSourcesGrid.rowByIndex('0')}}" userInput="$$lowPrioritySource.source[source_code]$$" stepKey="checkLowPrioritySourceCode"/>
         <see selector="{{AdminProductSourcesGrid.rowByIndex('0')}}" userInput="$$lowPrioritySource.source[name]$$" stepKey="checkLowPrioritySourceName"/>
-        <see selector="{{AdminProductSourcesGrid.rowByIndex('1')}}" userInput="$$highPrioritySource.source[source_code]$$" stepKey="checkHighPrioritySourceCode"/>
         <see selector="{{AdminProductSourcesGrid.rowByIndex('1')}}" userInput="$$highPrioritySource.source[name]$$" stepKey="checkHighPrioritySourceName"/>
 
         <fillField selector="{{AdminProductSourcesGrid.rowQty('0')}}" userInput="{{SimpleProduct.quantity}}" stepKey="fillSourceQtyFieldForLowPrioritySource"/>
@@ -182,6 +180,8 @@
 
         <amOnPage url="{{AdminOrdersPage.url}}" stepKey="navigateToOrderListPage"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad6"/>
+        <actionGroup ref="AdminOrdersGridClearFiltersActionGroup" stepKey="clearFilters"/>
+        <waitForLoadingMaskToDisappear stepKey="waitForOrderGrid"/>
         <fillField selector="{{AdminOrdersGridSection.search}}" userInput="{$grabOrderNumber}" stepKey="searchOrder"/>
         <click selector="{{AdminOrdersGridSection.submitSearch}}" stepKey="submitSearch"/>
         <waitForPageLoad time="30" stepKey="waitForPageLoad7"/>

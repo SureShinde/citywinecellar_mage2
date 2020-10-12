@@ -1,4 +1,31 @@
 
+5.0.8 / 2020-02-11
+==================
+
+  * MAGE-1624 Code cleanup for new Magento coding standards
+
+5.0.6 / 2019-08-02
+==================
+
+  * Update PHP versions supported
+
+5.0.5 / 2019-07-02
+==================
+
+  * Add missing entries to CHANGELOG.md
+
+5.0.4 / 2018-06-10
+==================
+
+  * MAGE-315 Add translations
+  * MAGE-519 Fix issue where orders that were rejected after manual review weren't cancelled in Klarna's order system
+
+5.0.3 / 2018-04-24
+==================
+
+  * MAGE-58 Update PHP version supported in composer.json to match Magento
+  * MAGE-250 Change coding standards to use Marketplace version
+
 5.0.2 / 2018-11-12
 ==================
 
@@ -235,13 +262,13 @@
   * Update dependency requirements to 2.0
   * Move setting of correct OM to calling function
   * Change code to pull composer package version for UserAgent
-  * Change event prefix from kco to klarna
+  * Change event prefix from kco to Klarna
   * Refactor to allow reading order_id from request body when it isn't provided as query parameter
   * Update copyright years
   * Remove references to unused class
   * Change to allow KP for payment method
   * Change user-agent to report as OM instead of KCO_OM
-  * Change route URL from kco to klarna to make more generic
+  * Change route URL from kco to Klarna to make more generic
   * Fix call to getReservationId()
   * Relocate quote to kco module
   * Remove unneeded preference as it is handled in core module

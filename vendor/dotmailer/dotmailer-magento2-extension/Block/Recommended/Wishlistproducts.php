@@ -7,7 +7,7 @@ namespace Dotdigitalgroup\Email\Block\Recommended;
  *
  * @api
  */
-class Wishlistproducts extends \Magento\Catalog\Block\Product\AbstractProduct
+class Wishlistproducts extends \Dotdigitalgroup\Email\Block\Recommended
 {
     /**
      * @var \Dotdigitalgroup\Email\Helper\Data
@@ -22,7 +22,7 @@ class Wishlistproducts extends \Magento\Catalog\Block\Product\AbstractProduct
     /**
      * @var \Dotdigitalgroup\Email\Helper\Recommended
      */
-    public $recommnededHelper;
+    public $recommendedHelper;
 
     /**
      * @var \Magento\Customer\Model\CustomerFactory
@@ -48,6 +48,8 @@ class Wishlistproducts extends \Magento\Catalog\Block\Product\AbstractProduct
      * Wishlistproducts constructor.
      *
      * @param \Magento\Catalog\Block\Product\Context $context
+     * @param \Dotdigitalgroup\Email\Block\Helper\Font $font
+     * @param \Dotdigitalgroup\Email\Model\Catalog\UrlFinder $urlFinder
      * @param \Magento\Customer\Model\ResourceModel\Customer $customerResource
      * @param \Dotdigitalgroup\Email\Model\ResourceModel\Catalog $catalog
      * @param \Dotdigitalgroup\Email\Model\ResourceModel\Wishlist $wishlist
@@ -59,6 +61,8 @@ class Wishlistproducts extends \Magento\Catalog\Block\Product\AbstractProduct
      */
     public function __construct(
         \Magento\Catalog\Block\Product\Context $context,
+        \Dotdigitalgroup\Email\Block\Helper\Font $font,
+        \Dotdigitalgroup\Email\Model\Catalog\UrlFinder $urlFinder,
         \Magento\Customer\Model\ResourceModel\Customer $customerResource,
         \Dotdigitalgroup\Email\Model\ResourceModel\Catalog $catalog,
         \Dotdigitalgroup\Email\Model\ResourceModel\Wishlist $wishlist,
@@ -68,14 +72,15 @@ class Wishlistproducts extends \Magento\Catalog\Block\Product\AbstractProduct
         \Dotdigitalgroup\Email\Helper\Recommended $recommended,
         array $data = []
     ) {
-        parent::__construct($context, $data);
         $this->helper            = $helper;
         $this->customerFactory   = $customerFactory;
-        $this->recommnededHelper = $recommended;
+        $this->recommendedHelper = $recommended;
         $this->priceHelper       = $priceHelper;
-        $this->wishlist   = $wishlist;
-        $this->catalog    = $catalog;
-        $this->customerResource = $customerResource;
+        $this->wishlist          = $wishlist;
+        $this->catalog           = $catalog;
+        $this->customerResource  = $customerResource;
+
+        parent::__construct($context, $font, $urlFinder, $data);
     }
 
     /**
@@ -86,7 +91,7 @@ class Wishlistproducts extends \Magento\Catalog\Block\Product\AbstractProduct
     public function _getWishlistItems()
     {
         $wishlist = $this->_getWishlist();
-        if ($wishlist && ! empty($wishlist->getItemCollection())) {
+        if ($wishlist && $wishlist->getItemCollection()->getSize()) {
             return $wishlist->getItemCollection();
         } else {
             return [];
@@ -135,7 +140,7 @@ class Wishlistproducts extends \Magento\Catalog\Block\Product\AbstractProduct
         //display mode based on the action name
         $mode = $this->getRequest()->getActionName();
         //number of product items to be displayed
-        $limit = (int) $this->recommnededHelper->getDisplayLimitByMode($mode);
+        $limit = (int) $this->recommendedHelper->getDisplayLimitByMode($mode);
         $items = $this->_getWishlistItems();
         $numItems = count($items);
 
@@ -262,7 +267,7 @@ class Wishlistproducts extends \Magento\Catalog\Block\Product\AbstractProduct
      */
     private function fillProductsToDisplay($productsToDisplay, &$productsToDisplayCounter, $limit)
     {
-        $fallbackIds = $this->recommnededHelper->getFallbackIds();
+        $fallbackIds = $this->recommendedHelper->getFallbackIds();
         $productCollection = $this->catalog->getProductCollectionFromIds($fallbackIds);
 
         foreach ($productCollection as $product) {
@@ -307,13 +312,13 @@ class Wishlistproducts extends \Magento\Catalog\Block\Product\AbstractProduct
     }
 
     /**
-     * Diplay mode type.
+     * Display mode type.
      *
      * @return string|boolean
      */
     public function getMode()
     {
-        return $this->recommnededHelper->getDisplayType();
+        return $this->recommendedHelper->getDisplayType();
     }
 
     /**
@@ -323,7 +328,7 @@ class Wishlistproducts extends \Magento\Catalog\Block\Product\AbstractProduct
      */
     public function getColumnCount()
     {
-        return $this->recommnededHelper->getDisplayLimitByMode(
+        return $this->recommendedHelper->getDisplayLimitByMode(
             $this->getRequest()->getActionName()
         );
     }

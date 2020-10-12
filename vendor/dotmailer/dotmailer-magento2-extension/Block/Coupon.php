@@ -4,9 +4,10 @@ namespace Dotdigitalgroup\Email\Block;
 
 use Dotdigitalgroup\Email\Helper\Config;
 use Dotdigitalgroup\Email\Helper\Data;
-use Dotdigitalgroup\Email\Model\DateIntervalFactory;
-use Dotdigitalgroup\Email\Model\SalesRule\DotmailerCouponGenerator;
+use Dotdigitalgroup\Email\Model\SalesRule\DotdigitalCouponRequestProcessor;
+use Dotdigitalgroup\Email\Model\SalesRule\DotdigitalCouponRequestProcessorFactory;
 use Magento\Framework\View\Element\Template\Context;
+use Dotdigitalgroup\Email\Block\Helper\Font;
 
 /**
  * Coupon block
@@ -19,65 +20,71 @@ class Coupon extends \Magento\Framework\View\Element\Template
      * @var Data
      */
     public $helper;
-    
-    /**
-     * @var DotmailerCouponGenerator
-     */
-    private $dotmailerCouponGenerator;
 
     /**
-     * @var DateIntervalFactory
+     * @var DotdigitalCouponRequestProcessorFactory
      */
-    private $dateIntervalFactory;
+    private $dotdigitalCouponRequestProcessorFactory;
+
+    /**
+     * @var DotdigitalCouponRequestProcessor
+     */
+    private $dotdigitalCouponRequestProcessor;
+
+    /**
+     * @var Font
+     */
+    private $font;
 
     /**
      * Coupon constructor.
      *
      * @param Context $context
      * @param Data $helper
-     * @param DotmailerCouponGenerator $dotmailerCouponGenerator
-     * @param DateIntervalFactory $dateIntervalFactory
+     * @param DotdigitalCouponGeneratorFactory $dotdigitalCouponGeneratorFactory
+     * @param Font $font
      * @param array $data
      */
     public function __construct(
         Context $context,
         Data $helper,
-        DotmailerCouponGenerator $dotmailerCouponGenerator,
-        DateIntervalFactory $dateIntervalFactory,
+        DotdigitalCouponRequestProcessorFactory $dotdigitalCouponRequestProcessorFactory,
+        Font $font,
         array $data = []
     ) {
-        $this->dateIntervalFactory = $dateIntervalFactory;
         $this->helper = $helper;
-        $this->dotmailerCouponGenerator = $dotmailerCouponGenerator;
+        $this->dotdigitalCouponRequestProcessorFactory = $dotdigitalCouponRequestProcessorFactory;
+        $this->font = $font;
         parent::__construct($context, $data);
     }
 
     /**
      * Generates the coupon code based on the code id.
      *
-     * @return bool
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @return string|null
      */
     public function generateCoupon()
     {
-        $params = $this->getRequest()->getParams();
-        //check for param code and id
-        if (! isset($params['code']) ||
-            ! $this->helper->isCodeValid($params['code'])
-        ) {
-            return false;
+        try {
+            return $this->getCouponRequestProcessor()
+                ->processCouponRequest($this->getRequest()->getParams())
+                ->getCouponCode();
+        } catch (\ErrorException $e) {
+            $this->helper->debug('Problem generating coupon', [
+                'message' => $e->getMessage(),
+            ]);
         }
 
-        $priceRuleId = (int) $params['id'];
-        $expireDate = false;
+        return null;
+    }
 
-        if (isset($params['expire_days']) && is_numeric($params['expire_days']) && $params['expire_days'] > 0) {
-            $days = (int) $params['expire_days'];
-            $expireDate = $this->_localeDate->date()
-                ->add($this->dateIntervalFactory->create(['interval_spec' => sprintf('P%sD', $days)]));
-        }
-
-        return $this->dotmailerCouponGenerator->generateCoupon($priceRuleId, $expireDate);
+    /**
+     * @return DotdigitalCouponRequestProcessor
+     */
+    public function getCouponRequestProcessor()
+    {
+        return $this->dotdigitalCouponRequestProcessor
+            ?: $this->dotdigitalCouponRequestProcessor = $this->dotdigitalCouponRequestProcessorFactory->create();
     }
 
     /**
@@ -116,15 +123,11 @@ class Coupon extends \Magento\Framework\View\Element\Template
     }
 
     /**
-     * Coupon Font from config.
-     *
-     * @return string|boolean
+     * @return bool|string
      */
-    public function getFont()
+    public function getHtmlFontFamily()
     {
-        return $this->helper->getWebsiteConfig(
-            Config::XML_PATH_CONNECTOR_DYNAMIC_COUPON_FONT
-        );
+        return $this->font->getEscapedFontFamilyForCoupon();
     }
 
     /**

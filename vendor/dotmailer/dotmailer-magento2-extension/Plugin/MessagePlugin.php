@@ -3,10 +3,12 @@
 namespace Dotdigitalgroup\Email\Plugin;
 
 use Dotdigitalgroup\Email\Helper\Transactional;
-use Magento\Email\Model\ResourceModel\Template;
-use Magento\Email\Model\TemplateFactory;
 use Magento\Framework\Mail\MessageInterface;
 use Magento\Framework\Registry;
+use Zend\Mime\Mime;
+use Zend\Mime\Part;
+use Dotdigitalgroup\Email\Model\Mail\SmtpTransportZend2;
+use Dotdigitalgroup\Email\Model\Email\TemplateService;
 
 class MessagePlugin
 {
@@ -16,64 +18,80 @@ class MessagePlugin
     private $transactionalHelper;
 
     /**
-     * @var Template
-     */
-    private $templateResource;
-
-    /**
-     * @var TemplateFactory
-     */
-    private $templateFactory;
-
-    /**
      * @var Registry
      */
     private $registry;
 
     /**
+     * @var TemplateService
+     */
+    private $templateService;
+
+    /**
      * MessagePlugin constructor.
      * @param Registry $registry
      * @param Transactional $transactionalHelper
-     * @param Template $templateResource
-     * @param TemplateFactory $template
+     * @param TemplateService $templateService
      */
     public function __construct(
         Registry $registry,
         Transactional $transactionalHelper,
-        Template $templateResource,
-        TemplateFactory $template
+        TemplateService $templateService
     ) {
         $this->registry = $registry;
-        $this->templateFactory = $template;
-        $this->templateResource = $templateResource;
         $this->transactionalHelper = $transactionalHelper;
+        $this->templateService = $templateService;
     }
 
     /**
      * @param MessageInterface $message
-     * @param string $body
+     * @param mixed $body
      *
      * @return mixed
      */
-    public function afterSetBody(MessageInterface $message, $body)
+    public function beforeSetBody(MessageInterface $message, $body)
     {
-        $templateId = $this->isTemplate();
-        if ($templateId && $this->shouldIntercept()) {
-            $template = $this->loadTemplate($templateId);
-            if ($this->isDotmailerTemplateCode($template->getTemplateCode())) {
-                $this->handleZendMailMessage($message);
-                $this->setMessageFromAddressFromTemplate($message, $template);
+        if ($this->shouldIntercept()) {
+            if ($body instanceof \Zend\Mime\Message && $body->getParts()) {
+                foreach ($body->getParts() as $bodyPart) {
+                    if ($bodyPart instanceof Part) {
+                        $bodyPart->setEncoding(Mime::ENCODING_QUOTEDPRINTABLE);
+                    }
+                }
+                return [$body];
+            }
+            $templateId = $this->templateService->getTemplateId();
+            if ($templateId && is_string($body) && !$message instanceof \Zend_Mail) {
+                return [self::createMimeFromString($body)];
             }
         }
-        return $body;
+        return null;
     }
 
     /**
-     * @return int
+     * @param $string
+     * @return bool
      */
-    private function isTemplate()
+    private function isHTML($string)
     {
-        return $this->registry->registry('dotmailer_current_template_id');
+        return $string != strip_tags($string);
+    }
+
+    /**
+     * Create HTML mime message from the string.
+     *
+     * @param string $body
+     * @return \Zend\Mime\Message
+     */
+    private function createMimeFromString($body)
+    {
+        $bodyPart = new Part($body);
+        $bodyPart->setEncoding(Mime::ENCODING_QUOTEDPRINTABLE);
+        $bodyPart->setCharset(SmtpTransportZend2::ENCODING);
+        ($this->isHTML($body)) ? $bodyPart->setType(Mime::TYPE_HTML) : $bodyPart->setType(Mime::TYPE_TEXT);
+        $mimeMessage = new \Zend\Mime\Message();
+        $mimeMessage->addPart($bodyPart);
+        return $mimeMessage;
     }
 
     /**
@@ -83,47 +101,5 @@ class MessagePlugin
     {
         $storeId = $this->registry->registry('transportBuilderPluginStoreId');
         return $this->transactionalHelper->isEnabled($storeId);
-    }
-
-    /**
-     * @param $templateId
-     *
-     * @return \Magento\Email\Model\Template
-     */
-    private function loadTemplate($templateId)
-    {
-        $template = $this->templateFactory->create();
-        $this->templateResource->load($template, $templateId);
-
-        return $template;
-    }
-
-    /**
-     * @param $templateCode
-     *
-     * @return bool
-     */
-    private function isDotmailerTemplateCode($templateCode)
-    {
-        return $this->transactionalHelper->isDotmailerTemplate($templateCode);
-    }
-
-    /**
-     * @param MessageInterface $message
-     */
-    private function handleZendMailMessage($message)
-    {
-        if ($message instanceof \Zend_Mail) {
-            $message->clearFrom();
-        }
-    }
-
-    /**
-     * @param MessageInterface $message
-     * @param \Magento\Email\Model\Template $template
-     */
-    private function setMessageFromAddressFromTemplate($message, $template)
-    {
-        $message->setFrom($template->getTemplateSenderEmail(), $template->getTemplateSenderName());
     }
 }

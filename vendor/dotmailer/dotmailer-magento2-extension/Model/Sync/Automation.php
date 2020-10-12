@@ -2,12 +2,14 @@
 
 namespace Dotdigitalgroup\Email\Model\Sync;
 
+use Magento\Framework\Serialize\SerializerInterface;
+
 /**
  * Sync automation by type.
  *
  * @SuppressWarnings(PHPMD.TooManyFields)
  */
-class Automation
+class Automation implements SyncInterface
 {
     const AUTOMATION_TYPE_NEW_CUSTOMER = 'customer_automation';
     const AUTOMATION_TYPE_NEW_SUBSCRIBER = 'subscriber_automation';
@@ -16,8 +18,11 @@ class Automation
     const AUTOMATION_TYPE_NEW_REVIEW = 'review_automation';
     const AUTOMATION_TYPE_NEW_WISHLIST = 'wishlist_automation';
     const AUTOMATION_STATUS_PENDING = 'pending';
-    const ORDER_STATUS_AUTOMATION = 'order_automation_';
+    const AUTOMATION_STATUS_SUPPRESSED = 'Suppressed';
+    const AUTOMATION_STATUS_CANCELLED = 'Cancelled';
     const AUTOMATION_TYPE_CUSTOMER_FIRST_ORDER = 'first_order_automation';
+    const AUTOMATION_TYPE_ABANDONED_CART_PROGRAM_ENROLMENT = 'abandoned_cart_automation';
+    const ORDER_STATUS_AUTOMATION = 'order_automation_';
     const CONTACT_STATUS_PENDING = "PendingOptIn";
     const CONTACT_STATUS_CONFIRMED = "Confirmed";
     const CONTACT_STATUS_EXPIRED = "Expired";
@@ -39,7 +44,9 @@ class Automation
         self::AUTOMATION_TYPE_NEW_WISHLIST =>
             \Dotdigitalgroup\Email\Helper\Config::XML_PATH_CONNECTOR_AUTOMATION_STUDIO_WISHLIST,
         self::AUTOMATION_TYPE_CUSTOMER_FIRST_ORDER =>
-            \Dotdigitalgroup\Email\Helper\Config::XML_PATH_CONNECTOR_AUTOMATION_STUDIO_FIRST_ORDER
+            \Dotdigitalgroup\Email\Helper\Config::XML_PATH_CONNECTOR_AUTOMATION_STUDIO_FIRST_ORDER,
+        self::AUTOMATION_TYPE_ABANDONED_CART_PROGRAM_ENROLMENT =>
+            \Dotdigitalgroup\Email\Helper\Config::XML_PATH_LOSTBASKET_ENROL_TO_PROGRAM_ID,
     ];
 
     /**
@@ -112,6 +119,18 @@ class Automation
      */
     private $timeZone;
 
+    // this doesn't seem right but how else to access core Quote methods as well as custom ones defined in our module?
+
+    /**
+     * @var \Dotdigitalgroup\Email\Model\Automation\UpdateFields\Update
+     */
+    private $updateAbandoned;
+
+    /**
+     * @var SerializerInterface
+     */
+    private $serializer;
+
     /**
      * Automation constructor.
      *
@@ -122,7 +141,9 @@ class Automation
      * @param \Magento\Sales\Model\OrderFactory $orderFactory
      * @param \Dotdigitalgroup\Email\Model\ResourceModel\Automation $automationResource
      * @param \Dotdigitalgroup\Email\Model\DateIntervalFactory $dateIntervalFactory,
-     * @param \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timeZone
+     * @param \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timeZone,
+     * @param \Magento\Quote\Model\QuoteFactory $quoteFactory
+     * @param SerializerInterface $serializer
      */
     public function __construct(
         \Dotdigitalgroup\Email\Model\ResourceModel\Automation\CollectionFactory $automationFactory,
@@ -132,7 +153,9 @@ class Automation
         \Magento\Sales\Model\OrderFactory $orderFactory,
         \Dotdigitalgroup\Email\Model\ResourceModel\Automation $automationResource,
         \Dotdigitalgroup\Email\Model\DateIntervalFactory $dateIntervalFactory,
-        \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timeZone
+        \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timeZone,
+        \Dotdigitalgroup\Email\Model\Automation\UpdateFields\Update $updateAbandoned,
+        SerializerInterface $serializer
     ) {
         $this->automationFactory = $automationFactory;
         $this->helper            = $helper;
@@ -142,6 +165,8 @@ class Automation
         $this->automationResource = $automationResource;
         $this->dateIntervalFactory = $dateIntervalFactory;
         $this->timeZone = $timeZone;
+        $this->updateAbandoned = $updateAbandoned;
+        $this->serializer = $serializer;
     }
 
     /**
@@ -149,9 +174,10 @@ class Automation
      *
      * @throws \Magento\Framework\Exception\LocalizedException
      *
+     * @param \DateTime|null $from
      * @return null
      */
-    public function sync()
+    public function sync(\DateTime $from = null)
     {
         $this->checkStatusForPendingContacts();
         $this->setupAutomationTypes();
@@ -174,29 +200,33 @@ class Automation
                 if (strpos($typeDouble, self::ORDER_STATUS_AUTOMATION) !== false) {
                     $typeDouble = self::ORDER_STATUS_AUTOMATION;
                 }
-                $contact = $this->helper->getContact($email, $websiteId);
+                $contact = $this->helper->getOrCreateContact($email, $websiteId);
                 //contact id is valid, can update datafields
                 if ($contact && isset($contact->id)) {
                     if ($contact->status === self::CONTACT_STATUS_PENDING) {
-                        $automation->setEnrolmentStatus(self::CONTACT_STATUS_PENDING);
-                        $this->automationResource->save($automation);
+                        $this->setStatusAndSaveAutomation($automation, self::CONTACT_STATUS_PENDING);
                         continue;
                     }
 
                     //need to update datafields
-                    $this->updateDatafieldsByType(
+                    $updated = $this->updateDatafieldsByType(
                         $typeDouble,
                         $email,
                         $websiteId
                     );
+
+                    // Cancel the enrolment if update datafields failed
+                    if (!$updated) {
+                        $this->setStatusAndSaveAutomation($automation, self::AUTOMATION_STATUS_CANCELLED);
+                        continue;
+                    }
                     $contacts[$automation->getWebsiteId()]['contacts'][$automation->getId()] = $contact->id;
                 } else {
                     // the contact is suppressed or the request failed
-                    $automation->setEnrolmentStatus('Suppressed');
-                    $this->automationResource->save($automation);
+                    $this->setStatusAndSaveAutomation($automation, self::AUTOMATION_STATUS_SUPPRESSED);
                 }
             }
-            $this->sendAutomationEnrolements($contacts, $type);
+            $this->sendAutomationEnrolments($contacts, $type);
         }
     }
 
@@ -214,7 +244,7 @@ class Automation
             $idsToUpdateDate = [];
 
             foreach ($collection as $item) {
-                $contact = $this->helper->getContact($item->getEmail(), $item->getWebsiteId());
+                $contact = $this->helper->getOrCreateContact($item->getEmail(), $item->getWebsiteId());
                 if (isset($contact->id) && $contact->status !== self::CONTACT_STATUS_PENDING) {
                     //add to array for update status
                     $idsToUpdateStatus[] = $item->getId();
@@ -296,11 +326,13 @@ class Automation
      * @param string $email
      * @param int $websiteId
      *
-     * @return null
+     * @return bool
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     private function updateDatafieldsByType($type, $email, $websiteId)
     {
+        $updated = true;
+
         switch ($type) {
             case self::AUTOMATION_TYPE_NEW_ORDER:
             case self::AUTOMATION_TYPE_NEW_GUEST_ORDER:
@@ -308,10 +340,20 @@ class Automation
             case self::AUTOMATION_TYPE_CUSTOMER_FIRST_ORDER:
                 $this->updateNewOrderDatafields($websiteId);
                 break;
+            case self::AUTOMATION_TYPE_ABANDONED_CART_PROGRAM_ENROLMENT:
+                $updated = $this->updateAbandoned->updateAbandonedCartDatafields(
+                    $email,
+                    $websiteId,
+                    $this->typeId,
+                    $this->storeName
+                );
+                break;
             default:
                 $this->updateDefaultDatafields($email, $websiteId);
                 break;
         }
+
+        return $updated;
     }
 
     /**
@@ -418,7 +460,7 @@ class Automation
      * @return bool
      * @throws \Exception
      */
-    private function checkCampignEnrolmentActive($programId, $websiteId)
+    private function checkCampaignEnrolmentActive($programId, $websiteId)
     {
         //program is not set
         if (!$programId) {
@@ -488,17 +530,19 @@ class Automation
         $websites = $this->helper->getWebsites(true);
         foreach ($websites as $website) {
             if (strpos($type, self::ORDER_STATUS_AUTOMATION) !== false) {
-                $configValue = $this->helper->serializer->unserialize(
-                    $this->helper->getWebsiteConfig($config, $website)
-                );
+                try {
+                    $configValue = $this->serializer->unserialize(
+                        $this->helper->getWebsiteConfig($config, $website)
+                    );
 
-                if (is_array($configValue) && !empty($configValue)) {
                     foreach ($configValue as $one) {
                         if (strpos($type, $one['status']) !== false) {
                             $contacts[$website->getId()]['programId']
                                 = $one['automation'];
                         }
                     }
+                } catch (\InvalidArgumentException $e) {
+                    continue;
                 }
             } else {
                 $contacts[$website->getId()]['programId']
@@ -518,7 +562,7 @@ class Automation
     private function sendSubscribedContactsToAutomation($contactsArray, $websiteId)
     {
         if (!empty($contactsArray) &&
-            $this->checkCampignEnrolmentActive($this->programId, $websiteId)
+            $this->checkCampaignEnrolmentActive($this->programId, $websiteId)
         ) {
             $result = $this->sendContactsToAutomation(
                 array_values($contactsArray),
@@ -541,7 +585,7 @@ class Automation
      * @param $contacts
      * @param $type
      */
-    private function sendAutomationEnrolements($contacts, $type)
+    private function sendAutomationEnrolments($contacts, $type)
     {
         foreach ($contacts as $websiteId => $websiteContacts) {
             if (isset($websiteContacts['contacts'])) {
@@ -564,5 +608,17 @@ class Automation
                     );
             }
         }
+    }
+
+    /**
+     * @param \Dotdigitalgroup\Email\Model\Automation $automation
+     * @param string $status
+     *
+     * @return void
+     */
+    private function setStatusAndSaveAutomation($automation, $status)
+    {
+        $automation->setEnrolmentStatus($status);
+        $this->automationResource->save($automation);
     }
 }
