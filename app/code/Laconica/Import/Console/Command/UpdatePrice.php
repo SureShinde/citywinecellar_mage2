@@ -67,7 +67,8 @@ class UpdatePrice extends Command
 
         //$this->process('cwc');
         //$this->process('tls');
-        $this->useDefaultValues();
+        $this->useDefaultValues($this->attributeIdPrice);
+        $this->useDefaultValues($this->attributeIdSpecialPrice);
 
         $end = gmdate("H:i:s", microtime(true) - $start);
         $output->writeln($end);
@@ -188,28 +189,28 @@ class UpdatePrice extends Command
         echo '.';
     }
 
-    protected function useDefaultValues()
+    protected function useDefaultValues($attributeId)
     {
-        $prices = $this->getEqualAttributes($this->attributeIdPrice);
+        echo "useDefaultValues(" . $attributeId . ")\n";
+
+        $prices = $this->getEqualAttributes($attributeId);
         $entityIds = array_column($prices, 'entity_id');
 
         foreach ($prices as $row) {
             $this->connection->update(
                 'catalog_product_entity_decimal',
                 ['value' => $row['value']],
-                'entity_id=' . $row['entity_id'] . ' and store_id=0 and attribute_id=' . $this->attributeIdPrice
+                'entity_id=' . $row['entity_id'] . ' and store_id=0 and attribute_id=' . $attributeId
             );
 
             echo '.';
         }
 
         $this->connection->delete('catalog_product_entity_decimal', [
-            'attribute_id=?'   => $this->attributeIdPrice,
+            'attribute_id=?'   => $attributeId,
             'store_id > ?' => '0',
             'entity_id in (?)' => $entityIds
         ]);
-
-        //$specialPrices = $this->getEqualAttributes($this->attributeIdSpecialPrice);
     }
 
     protected function getEqualAttributes($attributeId)
