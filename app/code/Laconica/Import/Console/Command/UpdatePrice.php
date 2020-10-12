@@ -66,7 +66,8 @@ class UpdatePrice extends Command
         $start = microtime(true);
 
         //$this->process('cwc');
-        $this->process('tls');
+        //$this->process('tls');
+        $this->useDefaultValues();
 
         $end = gmdate("H:i:s", microtime(true) - $start);
         $output->writeln($end);
@@ -81,7 +82,7 @@ class UpdatePrice extends Command
         $websiteId = $website == 'cwc' ? 1 : 2;
 
         foreach ($items as $item) {
-            $sku = $item['ID'] ?? false;
+            $sku = $item['HQID'] ?? false;
             $price = $item['Price'] ?? false;
             if (!$price || !$sku) {
                 continue;
@@ -185,6 +186,52 @@ class UpdatePrice extends Command
         );
 
         echo '.';
+    }
+
+    protected function useDefaultValues()
+    {
+        $prices = $this->getEqualAttributes($this->attributeIdPrice);
+        $entityIds = array_column($prices, 'entity_id');
+
+        foreach ($prices as $row) {
+            $this->connection->update(
+                'catalog_product_entity_decimal',
+                ['value' => $row['value']],
+                'entity_id=' . $row['entity_id'] . ' and store_id=0 and attribute_id=' . $this->attributeIdPrice
+            );
+
+            echo '.';
+        }
+
+        $this->connection->delete('catalog_product_entity_decimal', [
+            'attribute_id=?'   => $this->attributeIdPrice,
+            'store_id > ?' => '0',
+            'entity_id in (?)' => $entityIds
+        ]);
+
+        //$specialPrices = $this->getEqualAttributes($this->attributeIdSpecialPrice);
+    }
+
+    protected function getEqualAttributes($attributeId)
+    {
+        $select = $this->connection->select()
+            ->from(['cpe' => 'catalog_product_entity'], 'entity_id')
+            ->joinInner(
+                ['price_1' => 'catalog_product_entity_decimal'],
+                'price_1.entity_id=cpe.entity_id and price_1.attribute_id=' . $attributeId . ' and price_1.store_id=1',
+                []
+            )
+            ->joinInner(
+                ['price_2' => 'catalog_product_entity_decimal'],
+                'price_2.entity_id=cpe.entity_id and price_2.attribute_id=' . $attributeId . ' and price_2.store_id=2',
+                []
+            )
+            ->columns(['value' => 'price_1.value'])
+            ->where('price_1.value=price_2.value');
+
+        $rows = $this->connection->fetchAll($select);
+
+        return $rows;
     }
 
     private function readCsvFile(string $website): array
