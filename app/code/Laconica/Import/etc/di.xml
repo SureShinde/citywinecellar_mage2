@@ -4,6 +4,7 @@
         <arguments>
             <argument name="commands" xsi:type="array">
                 <item name="la_import_update_price" xsi:type="object">Laconica\Import\Console\Command\UpdatePrice</item>
+                <item name="la_import_update_customer" xsi:type="object">Laconica\Import\Console\Command\UpdateCustomer</item>
             </argument>
         </arguments>
     </type>
