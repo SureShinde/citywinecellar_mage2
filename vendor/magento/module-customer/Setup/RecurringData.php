@@ -37,6 +37,10 @@ class RecurringData implements InstallDataInterface
      */
     public function install(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
     {
+        // CUSTOM CODE
+        return;
+        // CUSTOM CODE END
+
         $indexer = $this->indexerRegistry->get(Customer::CUSTOMER_GRID_INDEXER_ID);
         $indexer->reindexAll();
     }
