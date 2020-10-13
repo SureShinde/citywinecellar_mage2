@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <feed>
+            <general>
+                <enable>1</enable>
+                <filter_list>ml|L|Litre</filter_list>
+                <ignore_category>CWC Root Category/, TLS Root Category/, Other Wine/</ignore_category>
+            </general>
+        </feed>
+    </default>
+</config>
