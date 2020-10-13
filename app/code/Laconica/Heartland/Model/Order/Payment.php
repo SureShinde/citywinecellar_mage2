@@ -95,6 +95,11 @@ class Payment extends \Magento\Sales\Model\Order\Payment
      */
     public function canVoid()
     {
+        // CUSTOM CODE
+        if($this->getMethod() != "hps_heartland"){
+            return parent::canVoid();
+        }
+        // END CUSTOM CODE
         try {
             if ($this->getHPS() === null) {
                 return false;
@@ -113,6 +118,11 @@ class Payment extends \Magento\Sales\Model\Order\Payment
      */
     public function canCapturePartial()
     {
+        // CUSTOM CODE
+        if($this->getMethod() != "hps_heartland"){
+            return parent::canCapturePartial();
+        }
+        // END CUSTOM CODE
         try {
             if (preg_match(
                     "/(".\Magento\Sales\Api\Data\TransactionInterface::TYPE_AUTH."|"
