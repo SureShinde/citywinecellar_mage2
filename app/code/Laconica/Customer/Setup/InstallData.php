@@ -2,10 +2,13 @@
 
 namespace Laconica\Customer\Setup;
 
+use Magento\Customer\Setup\CustomerSetupFactory;
+use Magento\Customer\Model\Customer;
+use Magento\Eav\Model\Entity\Attribute\Set as AttributeSet;
+use Magento\Eav\Model\Entity\Attribute\SetFactory as AttributeSetFactory;
 use Magento\Framework\Setup\InstallDataInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
-use Magento\Customer\Model\Customer;
 
 class InstallData implements InstallDataInterface
 {
@@ -54,8 +57,8 @@ class InstallData implements InstallDataInterface
             'required'     => false,
             'visible'      => true,
             'user_defined' => true,
-            'sort_order'   => 90,
-            'position'     => 90,
+            'sort_order'   => 1000,
+            'position'     => 1000,
             'system'       => 0,
         ]);
 

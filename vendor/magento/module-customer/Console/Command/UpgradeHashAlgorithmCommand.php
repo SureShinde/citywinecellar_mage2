@@ -66,6 +66,13 @@ class UpgradeHashAlgorithmCommand extends Command
         /** @var $customer Customer */
         foreach ($customerCollection as $customer) {
             $customer->load($customer->getId());
+
+            // CUSTOM CODE
+            if (!$customer->getPasswordHash()) {
+                continue;
+            }
+            // CUSTOM CODE END
+
             if (!$this->encryptor->validateHashVersion($customer->getPasswordHash())) {
                 list($hash, $salt, $version) = explode(Encryptor::DELIMITER, $customer->getPasswordHash(), 3);
                 $version .= Encryptor::DELIMITER . $this->encryptor->getLatestHashVersion();

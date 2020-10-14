@@ -81,7 +81,7 @@ class UpdateCustomer extends Command
     protected function process($website)
     {
         $items = $this->readCsvFile($website);
-        echo $website . ':' . count($items) . "\n";
+        echo "\n" . $website . ':' . count($items) . "\n";
         $websiteId = $website == 'cwc' ? 1 : 2;
 
         foreach ($items as $item) {
