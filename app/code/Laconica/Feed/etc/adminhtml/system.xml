@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="feed" translate="label" sortOrder="150" showInDefault="1" showInWebsite="1" showInStore="0">
+            <class>separator-top</class>
+            <label>Product Feed</label>
+            <tab>laconica</tab>
+            <resource>Laconica_Feed::conf</resource>
+            <group id="general" translate="label" sortOrder="20" showInDefault="1" showInWebsite="1"
+                   showInStore="1">
+                <label>Configuration</label>
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1"
+                       showInStore="0">
+                    <label>Enable Title Replace</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="invalid_category" translate="label" type="multiselect"
+                       sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Invalid Categories</label>
+                    <source_model>Laconica\Checkout\Model\Config\Source\Category</source_model>
+                    <comment>Select invalid categories for product title replace</comment>
+                </field>
+                <field id="filter_list" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Filter List</label>
+                    <comment>This parameter is using for regex search</comment>
+                </field>
+                <field id="ignore_category" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Ignore categories</label>
+                    <comment>This categories will be ignored as root</comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>
