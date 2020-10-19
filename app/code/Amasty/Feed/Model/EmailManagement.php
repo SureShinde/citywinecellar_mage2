@@ -18,9 +18,6 @@ use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
 use Magento\Store\Model\StoreManagerInterface;
 
-/**
- * Class EmailManagement
- */
 class EmailManagement extends AbstractModel
 {
     /**

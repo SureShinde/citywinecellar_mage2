@@ -29,7 +29,7 @@ class NewsTest extends \PHPUnit\Framework\TestCase
      */
     private $moduleInfoProvider;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $moduleList = $this->createMock(\Magento\Framework\Module\ModuleListInterface::class);
         $this->moduleInfoProvider = $this->createMock(ModuleInfoProvider::class);

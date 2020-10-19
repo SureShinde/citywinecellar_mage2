@@ -10,18 +10,12 @@ namespace Amasty\Feed\Block\Adminhtml\System\Config;
 
 use Magento\Framework\Data\Form\Element\AbstractElement;
 
-/**
- * Class Information
- *
- * @package Amasty\Feed
- */
 class Information extends \Magento\Config\Block\System\Config\Form\Fieldset
 {
     /**
      * @var string
      */
-    private $userGuide = 'https://amasty.com/docs/doku.php?id=magento_2%3Aproduct_feed&utm_source=extension&' .
-    'utm_medium=link&utm_campaign=productfeed-m2-guide';
+    private $userGuide = 'https://amasty.com/docs/doku.php?id=magento_2:product_feed';
 
     /**
      * @var array

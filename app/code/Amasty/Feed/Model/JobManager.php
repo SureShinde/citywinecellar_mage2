@@ -115,12 +115,7 @@ class JobManager
 
     public function waitForAllJobs()
     {
-        $result = [];
-        foreach ($this->waitForJobCompletion() as $pid) {
-            $result[] = $pid;
-        }
-
-        return $result;
+        return $this->waitForJobs($this->allPids);
     }
 
     /**

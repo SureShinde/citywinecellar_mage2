@@ -33,13 +33,13 @@ class UnsubscribeTest extends \PHPUnit\Framework\TestCase
     {
         $model = $this->createPartialMock(
             Unsubscribe::class,
-            ['generateMessage', 'getValue', 'getOldValue']
+            ['generateMessage', 'getOldValue']
         );
+        $model->setValue('test');
         $messageManager = $this->createMock(\Amasty\Base\Model\AdminNotification\Messages::class);
 
         $model->expects($this->any())->method('generateMessage')->willReturn(10);
         $model->expects($this->any())->method('getOldValue')->willReturnOnConsecutiveCalls('test', null);
-        $model->expects($this->any())->method('getValue')->willReturn('test');
         $messageManager->expects($this->once())->method('addMessage');
         $messageManager->expects($this->once())->method('clear');
 

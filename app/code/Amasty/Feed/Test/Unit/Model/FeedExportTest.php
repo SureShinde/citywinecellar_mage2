@@ -62,7 +62,7 @@ class FeedExportTest extends \PHPUnit\Framework\TestCase
 
     private $abstractAdapter;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->feedExport = $this->createPartialMock(
             FeedExport::class,

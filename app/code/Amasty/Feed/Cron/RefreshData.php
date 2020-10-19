@@ -130,6 +130,7 @@ class RefreshData
             ->addFieldToFilter(FeedInterface::EXECUTE_MODE, ExecuteModeList::CRON);
 
         $events = $this->config->getSelectedEvents();
+        $emails = $this->config->getEmails();
         $events = explode(",", $events);
 
         try {
@@ -218,15 +219,16 @@ class RefreshData
                     $feedExport->combineChunks($feed);
                     $feed->setProductsAmount($vProductsCollection->getSize());
                     $feed->setStatus(FeedStatus::READY);
+                    $feed->setGeneratedAt($generationTime);
                     $this->feedRepository->save($feed);
                 }
 
-                if ($events && in_array(Events::SUCCESS, $events)) {
+                if ($emails && $events && in_array(Events::SUCCESS, $events)) {
                     $emailTemplate = $this->config->getSuccessEmailTemplate();
                     $this->emailManagement->sendEmail($feed, $emailTemplate);
                 }
             } catch (\Exception $e) {
-                if ($events && in_array(Events::UNSUCCESS, $events)) {
+                if ($emails && $events && in_array(Events::UNSUCCESS, $events)) {
                     $emailTemplate = $this->config->getUnsuccessEmailTemplate();
                     $this->emailManagement->sendEmail($feed, $emailTemplate, $e->getMessage());
                 }
@@ -267,7 +269,7 @@ class RefreshData
     {
         $currentDateTime = $this->dateTime->gmtDate();
         $lastValidDate = date(
-            'Y:m:d H:i:s',
+            'Y-m-d H:i:s',
             strtotime($currentDateTime . '-' . CronProvider::MINUTES_IN_STEP . ' minutes')
         );
 

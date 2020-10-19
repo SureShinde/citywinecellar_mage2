@@ -47,6 +47,11 @@ class Info extends \Magento\Config\Block\System\Config\Form\Fieldset
      */
     private $magentoVersion;
 
+    /**
+     * @var Module
+     */
+    private $moduleHelper;
+
     public function __construct(
         \Amasty\Base\Model\MagentoVersion $magentoVersion,
         \Magento\Backend\Block\Context $context,
@@ -58,6 +63,7 @@ class Info extends \Magento\Config\Block\System\Config\Form\Fieldset
         \Magento\Framework\App\DeploymentConfig\Reader $reader,
         \Magento\Framework\App\ResourceConnection $resourceConnection,
         \Magento\Framework\App\ProductMetadataInterface $productMetadata,
+        \Amasty\Base\Helper\Module $moduleHelper,
         array $data = []
     ) {
         parent::__construct($context, $authSession, $jsHelper, $data);
@@ -69,6 +75,7 @@ class Info extends \Magento\Config\Block\System\Config\Form\Fieldset
         $this->productMetadata = $productMetadata;
         $this->reader = $reader;
         $this->magentoVersion = $magentoVersion;
+        $this->moduleHelper = $moduleHelper;
     }
 
     /**
@@ -130,14 +137,17 @@ class Info extends \Magento\Config\Block\System\Config\Form\Fieldset
         $crontabCollection->addFieldToFilter('job_code', ['eq' => 'amfeed_feed_refresh']);
         $crontabCollection->setOrder('schedule_id')->setPageSize(5);
 
+        $knowledgeBaseUrl = 'https://amasty.com/knowledge-base/magento-cron.html' .
+            "?utm_source=extension&utm_medium=link&utm_campaign=product-feed-m2-e-cron-faq";
+        if ($this->moduleHelper->isOriginMarketplace()) {
+            $knowledgeBaseUrl = "https://amasty.com/docs/doku.php?id=magento_2:cron-scheduler" .
+                "&utm_source=extension&utm_medium=link&utm_campaign=cronscheduler_m2_guide";
+        }
+
         if ($crontabCollection->count() === 0) {
             $value = '<div class="red">';
             $value .= __('No cron jobs found') . "</div>";
-            $value .=
-                "<a target='_blank'
-                  href='https://support.amasty.com/index.php?/Knowledgebase/Article/View/72/24/magento-cron'>" .
-                __("Learn more") .
-                "</a>";
+            $value .= "<a target='_blank' href='" . $knowledgeBaseUrl . "'>" . __("Learn more") . "</a>";
         } else {
             $value = '<table>';
             foreach ($crontabCollection as $crontabRow) {

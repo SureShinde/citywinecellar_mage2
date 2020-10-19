@@ -8,10 +8,10 @@
 
 namespace Amasty\Feed\Test\Unit\Model;
 
-use Magento\Backend\Model\Session;
-use Amasty\Feed\Model\GoogleWizard\ElementFactory;
 use Amasty\Feed\Model\GoogleWizard;
+use Amasty\Feed\Model\GoogleWizard\Element;
 use Amasty\Feed\Test\Unit\Traits;
+use Magento\Backend\Model\Session;
 use PHPUnit_Framework_MockObject_MockObject as MockObject;
 
 /**
@@ -54,8 +54,7 @@ class GoogleWizardTest extends \PHPUnit\Framework\TestCase
     public function testGetCurrency($format, $expectedResult)
     {
         /** @var Session $session */
-        $session = $this->createPartialMock(Session::class, ['getAmastyFeedGoogleRequestData']);
-        $session->expects($this->any())->method('getAmastyFeedGoogleRequestData')->willReturn(1);
+        $session = $this->createMock(Session::class);
         /** @var \Amasty\Base\Model\Serializer $serializer */
         $serializer = $this->createMock(\Amasty\Base\Model\Serializer::class);
         $serializer->expects($this->any())->method('unserialize')->willReturn($format);
@@ -91,8 +90,8 @@ class GoogleWizardTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetBasicAttributes($key)
     {
-        /** @var ElementFactory|MockObject $googleElement */
-        $googleElement = $this->createPartialMock(ElementFactory::class, ['create', 'getRequired']);
+        /** @var Element|MockObject $googleElement */
+        $googleElement = $this->createPartialMock(Element::class, ['getRequired']);
         $googleElement->expects($this->any())->method('getRequired')->willReturn(true);
         /** @var GoogleWizard|MockObject $model */
         $model = $this->createPartialMock(GoogleWizard::class, ['loadAttribute', 'setAttributeData']);

@@ -449,4 +449,16 @@ class Csv extends \Magento\ImportExport\Model\Export\Adapter\Csv
 //
 //        return isset($this->_rates[$this->_formatPriceCurrency]) ? $this->_rates[$this->_formatPriceCurrency] : 1;
     }
+
+    /**
+     * Method which caused files deleting on Magento 2.3.5 was redefined
+     *
+     * @return void
+     */
+    public function destruct()
+    {
+        if (is_object($this->_fileHandler)) {
+            $this->_fileHandler->close();
+        }
+    }
 }

@@ -9,8 +9,10 @@
 namespace Amasty\Feed\Model\Export;
 
 use Amasty\Feed\Model\Config\Source\NumberFormat;
+use Amasty\Feed\Model\InventoryResolver;
 use Magento\CatalogImportExport\Model\Import\Product as ImportProduct;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\DB\Select;
 use Magento\ImportExport\Model\Export;
 use Magento\ImportExport\Model\Import as Import;
 
@@ -192,6 +194,11 @@ class Product extends \Magento\CatalogImportExport\Model\Export\Product
      */
     private $stockRegistry;
 
+    /**
+     * @var InventoryResolver
+     */
+    private $inventoryResolver;
+
     public function __construct(
         \Magento\CatalogInventory\Model\StockRegistry $stockRegistry,
         \Magento\Framework\Stdlib\DateTime\TimezoneInterface $localeDate,
@@ -213,6 +220,7 @@ class Product extends \Magento\CatalogImportExport\Model\Export\Product
         ScopeConfigInterface $scopeConfig,
         \Amasty\Feed\Model\ResourceModel\Product\CollectionFactory $collectionAmastyFactory,
         NumberFormat $numberFormat,
+        InventoryResolver $inventoryResolver,
         $storeId = null
     ) {
         $this->_rowCustomizer = $rowCustomizer->create();
@@ -221,6 +229,7 @@ class Product extends \Magento\CatalogImportExport\Model\Export\Product
         $this->numberFormat = $numberFormat;
         $this->_storeId = $storeId;
         $this->stockRegistry = $stockRegistry;
+        $this->inventoryResolver = $inventoryResolver;
 
         return parent::__construct(
             $localeDate,
@@ -474,10 +483,9 @@ class Product extends \Magento\CatalogImportExport\Model\Export\Product
 
         $rawData = $this->collectRawData();
         $multiRowData = $this->collectMultiRowData();
-
         $productIds = array_keys($rawData);
 
-        $stockItemRows = $this->prepareCatalogInventory($productIds);
+        $stockItemRows = $this->inventoryResolver->getInventoryData($productIds);
 
         $this->rowCustomizer->init($this);
 
@@ -632,11 +640,16 @@ class Product extends \Magento\CatalogImportExport\Model\Export\Product
                         ?: $this->getAttributeValue($childDataRow, $code);
 
                     if ($code === 'is_in_stock') {
-                        $attributeValue = $this->stockRegistry->getStockStatusBySku(
+                        $stockStatusBySku = $this->stockRegistry->getStockStatusBySku(
                             $dataRow['sku'],
                             $this->_storeManager->getWebsite()->getId()
                         )->getStockStatus();
 
+                        if ($stockStatusBySku !== null) {
+                            $attributeValue = $stockStatusBySku;
+                        } else {
+                            $attributeValue = $this->getAttributeValue($dataRow, $code);
+                        }
                     }
 
                     if ($attributeValue !== false) {

@@ -8,12 +8,13 @@
 
 namespace Amasty\Feed\Model\Rule;
 
-use Amasty\Feed\Model\Rule\RuleFactory;
+use Amasty\Feed\Model\InventoryResolver;
 use Magento\Catalog\Model\Product\Attribute\Source\Status;
+use Amasty\Feed\Model\ValidProduct\ResourceModel\ValidProduct;
 use Magento\Catalog\Model\Product\Visibility;
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
+use Magento\Framework\DB\Select;
 use Magento\Rule\Model\Condition\Sql\Builder;
-use Amasty\Feed\Model\ValidProduct\ResourceModel\ValidProduct;
 
 class GetValidFeedProducts
 {
@@ -37,14 +38,21 @@ class GetValidFeedProducts
      */
     protected $sqlBuilder;
 
+    /**
+     * @var InventoryResolver
+     */
+    private $inventoryResolver;
+
     public function __construct(
         RuleFactory $ruleFactory,
         CollectionFactory $productCollectionFactory,
-        Builder $sqlBuilder
+        Builder $sqlBuilder,
+        InventoryResolver $inventoryResolver
     ) {
         $this->productCollectionFactory = $productCollectionFactory;
         $this->ruleFactory = $ruleFactory;
         $this->sqlBuilder = $sqlBuilder;
+        $this->inventoryResolver = $inventoryResolver;
     }
 
     /**
@@ -76,14 +84,17 @@ class GetValidFeedProducts
          * several allowed values from condition simultaneously
          */
         $productCollection->distinct(true);
-        $productCollection->getSelect()->reset(\Magento\Framework\DB\Select::COLUMNS);
+        $productCollection->getSelect()->reset(Select::COLUMNS);
         $select = $productCollection->getSelect()->columns(
             [
                 'entity_id' => new \Zend_Db_Expr('null'),
-                'feed_id' => new \Zend_Db_Expr($model->getEntityId()),
+                'feed_id' => new \Zend_Db_Expr((int)$model->getEntityId()),
                 'valid_product_id' => 'e.' . $productCollection->getEntity()->getIdFieldName()
             ]
         );
+        //fix for magento 2.3.2 for big number of products
+        $select->reset(Select::ORDER);
+
         $query = $select->insertFromSelect($productCollection->getResource()->getTable(ValidProduct::TABLE_NAME));
         $productCollection->getConnection()->query($query);
     }
@@ -106,21 +117,26 @@ class GetValidFeedProducts
 
         // DBEST-1250
         if ($model->getExcludeDisabled()) {
-            $productCollection->addAttributeToFilter('status', ['eq' => Status::STATUS_ENABLED]);
+            $productCollection->addAttributeToFilter(
+                'status',
+                ['eq' => Status::STATUS_ENABLED]
+            );
         }
         if ($model->getExcludeNotVisible()) {
-            $productCollection->addAttributeToFilter('visibility', ['neq' => Visibility::VISIBILITY_NOT_VISIBLE]);
+            $productCollection->addAttributeToFilter(
+                'visibility',
+                ['neq' => Visibility::VISIBILITY_NOT_VISIBLE]
+            );
         }
         if ($model->getExcludeOutOfStock()) {
-            $productCollection->getSelect()->joinInner(
-                ['s' => $productCollection->getTable('cataloginventory_stock_item')],
-                $productCollection->getSelect()->getConnection()->quoteInto(
-                    's.product_id = e.entity_id AND s.is_in_stock = ?',
-                    1,
-                    \Zend_Db::INT_TYPE
-                ),
-                'is_in_stock'
-            );
+            $outOfStockProductIds = $this->inventoryResolver->getOutOfStockProductIds();
+
+            if (!empty($outOfStockProductIds)) {
+                $productCollection->addFieldToFilter(
+                    'entity_id',
+                    ['nin' => $outOfStockProductIds]
+                );
+            }
         }
 
         $model->getRule()->getConditions()->collectValidatedAttributes($productCollection);

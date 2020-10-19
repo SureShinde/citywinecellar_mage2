@@ -25,10 +25,10 @@ class CsvTest extends \PHPUnit\Framework\TestCase
     use Traits\ObjectManagerTrait;
     use Traits\ReflectionTrait;
 
-    const PRICE = [
+    const DATE = [
             'format' => 'date'
     ];
-    const DATE = [
+    const PRICE = [
             'format' => 'price'
     ];
     const INTEGER = [
@@ -42,11 +42,11 @@ class CsvTest extends \PHPUnit\Framework\TestCase
      *
      * @throws \ReflectionException
      */
-    public function testFormatValue($field, $expectedResult)
+    public function testFormatValue($field, $value, $expectedResult)
     {
         /** @var Csv|MockObject $model */
         $model = $this->createPartialMock(Csv::class, ['getCurrencyRate']);
-        $model->expects($this->any())->method('getCurrencyRate')->willReturn(100);
+        $model->expects($this->any())->method('getCurrencyRate')->willReturn(2);
 
         $this->setProperty($model, '_formatDate', "Y", Csv::class);
         $this->setProperty($model, '_formatPriceDecimals', 2, Csv::class);
@@ -55,7 +55,7 @@ class CsvTest extends \PHPUnit\Framework\TestCase
         $this->setProperty($model, '_formatPriceCurrencyShow', true, Csv::class);
         $this->setProperty($model, '_formatPriceCurrency', "$", Csv::class);
 
-        $result = $this->invokeMethod($model, '_formatValue', [$field, 1]);
+        $result = $this->invokeMethod($model, '_formatValue', [$field, $value]);
         $this->assertEquals($expectedResult, $result);
     }
 
@@ -66,10 +66,10 @@ class CsvTest extends \PHPUnit\Framework\TestCase
     public function formatValueDataProvider()
     {
         return [
-            [self::DATE, '100,00 $'],
-            [self::PRICE, 1969],
-            [self::INTEGER, 1],
-            ['wrongFormat', 1],
+            [self::PRICE, 50, '100,00 $'],
+            [self::DATE, '10 September 2000', 2000],
+            [self::INTEGER, 1, 1],
+            ['wrongFormat', 1, 1],
         ];
     }
 }

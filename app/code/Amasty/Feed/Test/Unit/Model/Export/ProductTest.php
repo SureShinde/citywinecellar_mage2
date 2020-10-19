@@ -9,7 +9,8 @@
 namespace Amasty\Feed\Test\Unit\Model\Export;
 
 use Amasty\Feed\Model\Export\Product;
-use Amasty\Feed\Model\Export\RowCustomizer\CustomField;
+use Amasty\Feed\Model\Export\RowCustomizer\Composite;
+use Amasty\Feed\Model\InventoryResolver;
 use Amasty\Feed\Test\Unit\Traits;
 use Magento\Catalog\Model\ResourceModel\Eav\Attribute;
 use Magento\Catalog\Model\ResourceModel\Product\Attribute\Collection;
@@ -30,12 +31,20 @@ class ProductTest extends \PHPUnit\Framework\TestCase
     use Traits\ObjectManagerTrait;
     use Traits\ReflectionTrait;
 
+    const EXPORT_RAW_DATA = [
+        1 => [
+            'test1' => [
+                1 => 'test2'
+            ]
+        ]
+    ];
+
     /**
      * @var Product|MockObject
      */
     private $product;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->product = $this->createPartialMock(
             Product::class,
@@ -48,15 +57,30 @@ class ProductTest extends \PHPUnit\Framework\TestCase
             ]
         );
         $rowCustomizer = $this->createPartialMock(
-            CustomField::class,
+            Composite::class,
             [
                 'init',
                 'prepareData',
                 'addHeaderColumns'
             ]
         );
+
         $this->setProperty($this->product, 'rowCustomizer', $rowCustomizer, Product::class);
         $this->setProperty($this->product, '_entityCollection', 'collection', Product::class);
+        $inventoryResolver = $this->createPartialMock(
+            InventoryResolver::class,
+            [
+                'getInventoryData'
+            ]
+        );
+        $stockItemRows = [
+            1 => [
+                1 => 'test_row'
+            ]
+        ];
+        $inventoryResolver->expects($this->any())->method('getInventoryData')
+            ->with(array_keys(self::EXPORT_RAW_DATA))->willReturn($stockItemRows);
+        $this->setProperty($this->product, 'inventoryResolver', $inventoryResolver, Product::class);
     }
 
     /**
@@ -64,29 +88,14 @@ class ProductTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetExportData()
     {
-        $rawData = [
-            1 => [
-                'test1' => [
-                    1 => 'test2'
-                ]
-            ]
-        ];
         $this->product->expects($this->once())->method('collectRawData')
-            ->willReturn($rawData);
+            ->willReturn(self::EXPORT_RAW_DATA);
 
         $multiRowData = [
             'customOptionsData' => ''
         ];
         $this->product->expects($this->once())->method('collectMultiRowData')
             ->willReturn($multiRowData);
-
-        $stockItemRows = [
-            1 => [
-                1 => 'test_row'
-            ]
-        ];
-        $this->product->expects($this->once())->method('prepareCatalogInventory')
-            ->with([1])->willReturn($stockItemRows);
 
         $exportData = $this->invokeMethod($this->product, 'getExportData', []);
         $this->assertEquals([0 => ['test2', 'test_row']], $exportData);
@@ -155,8 +164,8 @@ class ProductTest extends \PHPUnit\Framework\TestCase
         $attribute->expects($this->any())->method('getSource')
             ->willReturn($source);
 
-       $result = $this->product->getAttributeOptions($attribute);
-       $this->assertEquals($expected, $result);
+        $result = $this->product->getAttributeOptions($attribute);
+        $this->assertEquals($expected, $result);
     }
 
     /**

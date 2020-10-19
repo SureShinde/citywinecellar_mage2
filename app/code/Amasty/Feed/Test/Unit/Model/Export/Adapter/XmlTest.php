@@ -34,11 +34,11 @@ class XmlTest extends \PHPUnit\Framework\TestCase
      */
     private $xml;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->xml = $this->createPartialMock(
             Xml::class,
-            ['_modify']
+            ['_modify', 'destruct']
         );
     }
 

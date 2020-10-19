@@ -8,9 +8,6 @@
 
 namespace Amasty\Feed\Model;
 
-/**
- * Class Config
- */
 class Config
 {
     /**#@+
@@ -134,11 +131,22 @@ class Config
     }
 
     /**
-     * @return string
+     * @return array|null
+     * @throws \Zend_Validate_Exception
      */
     public function getEmails()
     {
-        return $this->getScopeValue(self::NOTIFICATION_GROUP, self::EMAILS_FIELD);
+        if ($emails = $this->getScopeValue(self::NOTIFICATION_GROUP, self::EMAILS_FIELD)) {
+            $emails = array_map('trim', explode(',', $emails));
+
+            foreach ($emails as $key => $email) {
+                if (!\Zend_Validate::is($email, 'EmailAddress')) {
+                    unset($emails[$key]);
+                }
+            }
+        }
+
+        return $emails;
     }
 
     /**

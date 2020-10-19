@@ -8,7 +8,6 @@
 
 namespace Amasty\Base\Test\Unit\Observer;
 
-use Amasty\Base\Helper\Module;
 use Amasty\Base\Model\Feed\ExtensionsProvider;
 use Amasty\Base\Model\ModuleInfoProvider;
 use Amasty\Base\Observer\GenerateInformationTab;
@@ -33,19 +32,18 @@ class GenerateInformationTabTest extends \PHPUnit\Framework\TestCase
      */
     private $observer;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $block = $this->createPartialMock(
             \Magento\Config\Block\System\Config\Form\Fieldset::class,
-            ['getAdditionalModuleContent']
+            []
         );
+        $block->setAdditionalModuleContent('test');
 
         $this->observer = $this->getObjectManager()->getObject(
             GenerateInformationTab::class,
             []
         );
-
-        $block->expects($this->any())->method('getAdditionalModuleContent')->willReturn('test');
 
         $this->setProperty($this->observer, 'block', $block, GenerateInformationTab::class);
     }
@@ -77,13 +75,13 @@ class GenerateInformationTabTest extends \PHPUnit\Framework\TestCase
         $this->observer->expects($this->any())->method('getModuleName')->willReturn('test');
         $this->observer->expects($this->any())->method('getLogoHtml')->willReturn('test');
         $this->observer->expects($this->any())->method('getChangeLogLink')->willReturn('test');
-        $this->assertContains(
-            'upgrade-error',
-            $this->invokeMethod($this->observer, 'showVersionInfo')
+
+        $result = $this->invokeMethod($this->observer, 'showVersionInfo');
+        $this->assertTrue(
+            (bool)strpos($result, 'upgrade-error')
         );
-        $this->assertNotContains(
-            'last-version',
-            $this->invokeMethod($this->observer, 'showVersionInfo')
+        $this->assertFalse(
+            (bool)strpos($result, 'last-version')
         );
     }
 
