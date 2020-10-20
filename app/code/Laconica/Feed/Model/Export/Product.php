@@ -60,7 +60,7 @@ class Product extends \Amasty\Feed\Model\Export\Product
         $categoriesString = str_replace($searchData, $replaceData, $dataRow['_category']);
         $storeCategories = explode(",", $categoriesString);
         $storeIndex = (intval($storeId) > 0) ? intval($storeId) - 1 : 0;
-        $categories = ($storeCategories[$storeIndex]) ? explode("/", $storeCategories[$storeIndex]) : [];
+        $categories = (isset($storeCategories[$storeIndex]) && $storeCategories[$storeIndex]) ? explode("/", $storeCategories[$storeIndex]) : [];
 
         return (!empty($categories)) ? array_shift($categories) : '';
     }
